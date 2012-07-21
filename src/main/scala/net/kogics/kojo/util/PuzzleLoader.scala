@@ -48,7 +48,7 @@ object PuzzleLoader {
   def readPuzzle(str: String): Option[String] = {
     val je = jEntries.get(str)
     if (je == null) return None
-    Some(Utils.readFile(f.getInputStream(je)))
+    Some(Utils.readStream(f.getInputStream(je)))
   }
 
   def listPuzzles = puzzles

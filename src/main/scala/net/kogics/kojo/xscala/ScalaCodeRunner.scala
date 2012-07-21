@@ -390,14 +390,6 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     var cmodeInit = ""
     var mode: CodingMode = _
 
-    def copyFile(in: File, out: File) {
-      val sourceChannel = new FileInputStream(in).getChannel
-      val destinationChannel = new FileOutputStream(out).getChannel
-      sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel)
-      sourceChannel.close();
-      destinationChannel.close();
-    }
-
     @volatile var classp: String = _
     def makeSettings() = {
       val iSettings = new Settings()
@@ -410,7 +402,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
           val jarFile = u.openConnection.asInstanceOf[JarURLConnection].getJarFile
           val tempFile = File.createTempFile("kojolite-", ".jar");
           tempFile.deleteOnExit()
-          copyFile(new File(jarFile.getName()), tempFile);
+          Utils.copyFile(new File(jarFile.getName()), tempFile);
           // val jarLocation = "file:" + tempFile.getAbsolutePath()
           lb += tempFile.getAbsolutePath()
         }
