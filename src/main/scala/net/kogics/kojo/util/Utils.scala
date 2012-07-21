@@ -28,6 +28,7 @@ import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import java.util.ResourceBundle
 import java.util.Locale
+import java.net.URL
 
 object Utils {
   
@@ -175,7 +176,7 @@ object Utils {
   // actually - the dir with the jars, one level under the actual install dir
   def installDir = System.getProperty("user.home")
   
-  def readFile(is: InputStream): String = {
+  def readStream(is: InputStream): String = {
     val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
     val buf = new Array[Char](1024)
     var nbytes = reader.read(buf)
@@ -186,6 +187,16 @@ object Utils {
     }
     reader.close()
     sb.toString
+  }
+  
+  def readUrl(url: String) = readStream(new URL(url).openConnection().getInputStream)
+
+  def copyFile(in: File, out: File) {
+    val sourceChannel = new FileInputStream(in).getChannel
+    val destinationChannel = new FileOutputStream(out).getChannel
+    sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel)
+    sourceChannel.close();
+    destinationChannel.close();
   }
 
   def stackTraceAsString(t: Throwable): String = {
@@ -328,7 +339,7 @@ object Utils {
   def sanitizeDoubleString(d: String) = {
     if (needsSanitizing) d.replaceAll(decimalSep, ".") else d
   }
-  
+
   case class RunCode(code: () => Unit)
   import scala.actors._
   import scala.actors.Actor._

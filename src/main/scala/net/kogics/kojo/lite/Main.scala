@@ -36,6 +36,8 @@ import net.kogics.kojo.lite.topc.StoryTellerHolder
 import java.awt.Frame
 import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.lite.topc.MathworldHolder
+import javax.swing.JTextField
+import javax.swing.JLabel
 
 object Main {
 
@@ -54,8 +56,101 @@ object Main {
       frame.setLayout(new GridLayout(1, 1))
       frame.add(control.getContentArea)
 
+      val ctx = new KojoCtx()
+      SpriteCanvas.initedInstance(ctx)
+      StoryTeller.initedInstance(ctx)
+      GeoGebraCanvas.initedInstance(ctx)
+
+      val codePane = new RSyntaxTextArea(20, 60)
+      codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+      codePane.setCodeFoldingEnabled(true)
+      codePane.setAntiAliasingEnabled(true)
+      val sp = new RTextScrollPane(codePane)
+      sp.setFoldIndicatorEnabled(true);
+
+      val codeSupport = CodeExecutionSupport.initedInstance(codePane)
+
+      val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance)
+
+      val scriptEditor = new JPanel()
+      scriptEditor.setLayout(new BorderLayout)
+      scriptEditor.add(codeSupport.toolbar, BorderLayout.NORTH)
+      scriptEditor.add(sp, BorderLayout.CENTER)
+      val scriptEditorH = new ScriptEditorHolder(scriptEditor)
+      codeSupport.toolbar.setOpaque(true)
+      codeSupport.toolbar.setBackground(new Color(230, 230, 230))
+
+      val outputHolder = new OutputWindowHolder(new JScrollPane(codeSupport.outputWindow))
+
+      val storyHolder = new StoryTellerHolder(StoryTeller.instance)
+      val mwHolder = new MathworldHolder(GeoGebraCanvas.instance)
+
+      ctx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder)
+
+      val grid = new CGrid(control)
+      grid.add(1, 0, 4, 2, mwHolder)
+      grid.add(1, 0, 4, 2, drawingCanvasH)
+      grid.add(1, 2, 2.5, 1, scriptEditorH)
+      grid.add(3.5, 2, 1.5, 1, outputHolder)
+      grid.add(0, 0, 1, 4, storyHolder)
+      control.getContentArea.deploy(grid)
+
       val menuBar = new JMenuBar
-      menuBar.add(new JMenu("Samples"))
+
+      val fileMenu = new JMenu("File")
+      val openWeb = new JMenuItem("Open From Web")
+      openWeb.addActionListener(new ActionListener {
+        def actionPerformed(ev: ActionEvent) {
+          val urlGetter = new JDialog(frame)
+          urlGetter.setTitle("Open From Web")
+
+          val urlPanel = new JPanel
+          urlPanel.setLayout(new BoxLayout(urlPanel, BoxLayout.Y_AXIS))
+
+          val url = new JPanel
+          url.add(new JLabel("URL: "))
+          val urlBox = new JTextField(30)
+          url.add(urlBox)
+          urlPanel.add(url)
+
+          val okCancel = new JPanel
+          val ok = new JButton("Ok")
+          ok.addActionListener(new ActionListener {
+            def actionPerformed(ev: ActionEvent) {
+              urlGetter.setVisible(false)
+              val url = urlBox.getText
+              codePane.setText("Loading code from URL: %s ..." format(url))
+              Utils.runAsyncMonitored {
+                val code = Utils.readUrl(url)
+                Utils.runInSwingThread {
+                  codePane.setText(code)
+                }
+              }
+            }
+          })
+          val cancel = new JButton("Cancel")
+          cancel.addActionListener(new ActionListener {
+            def actionPerformed(ev: ActionEvent) {
+              urlGetter.setVisible(false)
+            }
+          })
+          okCancel.add(ok); okCancel.add(cancel)
+          urlPanel.add(okCancel)
+
+          urlGetter.getContentPane.add(urlPanel)
+          urlGetter.setBounds(300, 300, 450, 300)
+          urlGetter.pack
+          urlGetter.setVisible(true)
+        }
+      })
+      fileMenu.add(openWeb)
+      menuBar.add(fileMenu)
+
+      val samplesMenu = new JMenu("Samples")
+      val soon = new JMenuItem("Coming Soon")
+      samplesMenu.add(soon)
+      menuBar.add(samplesMenu)
+
       val helpMenu = new JMenu("Help")
       menuBar.add(helpMenu)
       val about = new JMenuItem("About")
@@ -91,45 +186,6 @@ object Main {
       })
       helpMenu.add(about)
       frame.setJMenuBar(menuBar)
-
-      val ctx = new KojoCtx()
-      SpriteCanvas.initedInstance(ctx)
-      StoryTeller.initedInstance(ctx)
-      GeoGebraCanvas.initedInstance(ctx)
-
-      val textArea = new RSyntaxTextArea(20, 60)
-      textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
-      textArea.setCodeFoldingEnabled(true)
-      textArea.setAntiAliasingEnabled(true)
-      val sp = new RTextScrollPane(textArea)
-      sp.setFoldIndicatorEnabled(true);
-
-      val codeSupport = CodeExecutionSupport.initedInstance(textArea)
-
-      val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance)
-
-      val scriptEditor = new JPanel()
-      scriptEditor.setLayout(new BorderLayout)
-      scriptEditor.add(codeSupport.toolbar, BorderLayout.NORTH)
-      scriptEditor.add(sp, BorderLayout.CENTER)
-      val scriptEditorH = new ScriptEditorHolder(scriptEditor)
-      codeSupport.toolbar.setOpaque(true)
-      codeSupport.toolbar.setBackground(new Color(230, 230, 230))
-
-      val outputHolder = new OutputWindowHolder(new JScrollPane(codeSupport.outputWindow))
-      
-      val storyHolder = new StoryTellerHolder(StoryTeller.instance)
-      val mwHolder = new MathworldHolder(GeoGebraCanvas.instance)
-
-      ctx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder)
-      
-      val grid = new CGrid(control)
-      grid.add(1, 0, 4, 2, mwHolder)
-      grid.add(1, 0, 4, 2, drawingCanvasH)
-      grid.add(1, 2, 2.5, 1, scriptEditorH)
-      grid.add(3.5, 2, 1.5, 1, outputHolder)
-      grid.add(0, 0, 1, 4, storyHolder)
-      control.getContentArea.deploy(grid)
 
       frame.setVisible(true)
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
