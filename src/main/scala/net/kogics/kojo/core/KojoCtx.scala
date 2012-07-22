@@ -16,6 +16,7 @@
 package net.kogics.kojo.core
 
 trait KojoCtx {
+  def activateDrawingCanvas()
   def makeStagingVisible()
   def makeTurtleWorldVisible()
   def makeMathWorldVisible()
