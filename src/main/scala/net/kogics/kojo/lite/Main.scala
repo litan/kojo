@@ -97,19 +97,20 @@ object Main {
       control.getContentArea.deploy(grid)
 
       def _loadUrl(url: String)(postfn: => Unit = {}) {
-        val msg = "\nLoading code from URL: %s ..." format (url)
-        codePane.setText(msg); println(msg)
+        codePane.setText("// Loading code from URL: %s ...\n" format (url))
         Utils.runAsyncMonitored {
-          val code = try {
-            Utils.readUrl(url)
-          } catch {
-            case t: Throwable => println("Problem loading code: %s" format (t.getMessage)); ""
-          }
-          Utils.runInSwingThread {
-            codePane.setText(code)
-            if (code.trim != "") {
+          try {
+            val code = Utils.readUrl(url)
+            Utils.runInSwingThread {
+              codePane.append("// Done.\n")
+              codePane.append("// Running loaded code. Please wait for a few seconds ...\n\n" format (url))
+              codePane.append(code)
+              codePane.setCaretPosition(0)
               postfn
             }
+
+          } catch {
+            case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
           }
         }
       }
@@ -117,7 +118,6 @@ object Main {
       def loadUrl(url: String) = _loadUrl(url) {}
 
       def loadAndRunUrl(url: String) = _loadUrl(url) {
-        println("Running code from URL: %s" format(url))
         Builtins.instance.stClickRunButton
       }
 
