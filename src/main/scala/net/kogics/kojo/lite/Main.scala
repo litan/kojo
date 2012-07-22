@@ -38,6 +38,7 @@ import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.lite.topc.MathworldHolder
 import javax.swing.JTextField
 import javax.swing.JLabel
+import net.kogics.kojo.xscala.Builtins
 
 object Main {
 
@@ -95,6 +96,31 @@ object Main {
       grid.add(0, 0, 1, 4, storyHolder)
       control.getContentArea.deploy(grid)
 
+      def _loadUrl(url: String)(postfn: => Unit = {}) {
+        val msg = "\nLoading code from URL: %s ..." format (url)
+        codePane.setText(msg); println(msg)
+        Utils.runAsyncMonitored {
+          val code = try {
+            Utils.readUrl(url)
+          } catch {
+            case t: Throwable => println("Problem loading code: %s" format (t.getMessage)); ""
+          }
+          Utils.runInSwingThread {
+            codePane.setText(code)
+            if (code.trim != "") {
+              postfn
+            }
+          }
+        }
+      }
+
+      def loadUrl(url: String) = _loadUrl(url) {}
+
+      def loadAndRunUrl(url: String) = _loadUrl(url) {
+        println("Running code from URL: %s" format(url))
+        Builtins.instance.stClickRunButton
+      }
+
       val menuBar = new JMenuBar
 
       val fileMenu = new JMenu("File")
@@ -118,14 +144,7 @@ object Main {
           ok.addActionListener(new ActionListener {
             def actionPerformed(ev: ActionEvent) {
               urlGetter.setVisible(false)
-              val url = urlBox.getText
-              codePane.setText("Loading code from URL: %s ..." format(url))
-              Utils.runAsyncMonitored {
-                val code = Utils.readUrl(url)
-                Utils.runInSwingThread {
-                  codePane.setText(code)
-                }
-              }
+              loadUrl(urlBox.getText)
             }
           })
           val cancel = new JButton("Cancel")
@@ -189,6 +208,10 @@ object Main {
 
       frame.setVisible(true)
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
+
+      if (args.length == 1) {
+        loadAndRunUrl(args(0))
+      }
     }
   }
 

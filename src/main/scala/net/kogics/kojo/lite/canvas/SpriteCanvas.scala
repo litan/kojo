@@ -666,7 +666,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   
   def activate() {
     def grabFocus() {
-      kojoCtx.makeTurtleWorldVisible
+      kojoCtx.activateDrawingCanvas()
       getRoot.getDefaultInputManager.setKeyboardFocus(globalEl)
     }
     Utils.schedule(0) {

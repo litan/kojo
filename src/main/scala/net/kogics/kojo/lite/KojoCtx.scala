@@ -28,11 +28,13 @@ class KojoCtx extends core.KojoCtx {
 
   var topcs: TopCs = _
   
-  // Todo KojoLite - support activateCanvas, now that requestFocusInWindow has been commented out below 
+  def activateDrawingCanvas() {
+    topcs.dch.toFront
+    topcs.dch.dc.requestFocusInWindow
+  }
 
   def makeTurtleWorldVisible() {
     topcs.dch.toFront
-//    topcs.dch.dc.requestFocusInWindow
   }
 
   def makeStagingVisible() = makeTurtleWorldVisible()
