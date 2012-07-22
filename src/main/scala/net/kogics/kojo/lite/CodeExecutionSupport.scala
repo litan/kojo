@@ -446,6 +446,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         def setScript(code: String) {
           Utils.runInSwingThreadAndWait {
             codePane.setText(code)
+            codePane.setCaretPosition(0)
           }
         }
 
