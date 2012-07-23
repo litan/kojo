@@ -165,10 +165,21 @@ object Main {
       })
       fileMenu.add(openWeb)
       menuBar.add(fileMenu)
-
+      
+      def menuItemFor(label: String, file: String) = {
+        val item = new JMenuItem(label)
+        item.addActionListener(new ActionListener {
+          def actionPerformed(ev: ActionEvent) {
+            loadAndRunUrl("http://www.kogics.net/public/kojolite/samples/" + file)
+          }
+        })
+        item
+      }
+      
       val samplesMenu = new JMenu("Samples")
-      val soon = new JMenuItem("Coming Soon")
-      samplesMenu.add(soon)
+      samplesMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
+      samplesMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
+      samplesMenu.add(menuItemFor("Spiral Hexangonal Tiles", "spiral-hexagon-tiles.kojo"))
       menuBar.add(samplesMenu)
 
       val helpMenu = new JMenu("Help")

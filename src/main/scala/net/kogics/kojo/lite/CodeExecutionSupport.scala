@@ -167,12 +167,17 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   }
 
   def doWelcome() = {
-    val msg = """Welcome to Kojo! 
-    |* To use code completion and see online help ->  Press Ctrl+Space within the Script Editor
-    |* To interactively manipulate program output ->  Ctrl+Click on numbers within the Script Editor
-    |* To access the context actions for a window ->  Right-Click on the window to bring up its context menu
-    |* To Pan or Zoom the Drawing Canvas          ->  Drag the left mouse button or Roll the mouse wheel
-    |  * To reset Pan and Zoom levels             ->  Use the Drawing Canvas context menu
+    val msg = """Welcome to KojoLite! 
+      
+    |* To Pan or Zoom the Drawing Canvas          
+    |  ->  Drag the left mouse button or Roll the mouse wheel
+    |* To reset Pan and Zoom levels             
+    |  ->  Use the Drawing Canvas context menu
+    |
+    | KojoLite (for the Web) contains a subset of the functionality 
+    | of Kojo (the Desktop App).
+    |
+    |   For the real deal, get Kojo (www.kogics.net/kojo)!
     |""".stripMargin
     
     showOutput(msg)
