@@ -102,9 +102,7 @@ object Main {
           try {
             val code = Utils.readUrl(url)
             Utils.runInSwingThread {
-              codePane.append("// Done.\n")
-              codePane.append("// Running loaded code. Please wait for a few seconds ...\n\n" format (url))
-              codePane.append(code)
+              codePane.setText(code)
               codePane.setCaretPosition(0)
               postfn
             }
@@ -118,6 +116,7 @@ object Main {
       def loadUrl(url: String) = _loadUrl(url) {}
 
       def loadAndRunUrl(url: String) = _loadUrl(url) {
+        codePane.insert("// Running code (loaded from %s).\n// Please wait for a few seconds ...\n\n" format (url), 0)
         Builtins.instance.stClickRunButton
       }
 
@@ -156,6 +155,8 @@ object Main {
           okCancel.add(ok); okCancel.add(cancel)
           urlPanel.add(okCancel)
 
+          urlGetter.setModal(true)
+          urlGetter.getRootPane.setDefaultButton(ok)
           urlGetter.getContentPane.add(urlPanel)
           urlGetter.setBounds(300, 300, 450, 300)
           urlGetter.pack
@@ -197,6 +198,9 @@ object Main {
             }
           })
           aboutPanel.add(ok)
+          
+          aboutBox.setModal(true)
+          aboutBox.getRootPane.setDefaultButton(ok)
           aboutBox.getContentPane.add(aboutPanel)
           aboutBox.setBounds(300, 300, 450, 300)
           aboutBox.pack
