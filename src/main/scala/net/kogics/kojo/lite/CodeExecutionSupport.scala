@@ -177,7 +177,11 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     | KojoLite (for the Web) contains a subset of the functionality 
     | of Kojo (the Desktop App).
     |
-    |   For the real deal, get Kojo (www.kogics.net/kojo)!
+    | For the real deal, get Kojo (www.kogics.net/kojo)!
+    | 
+    | Kojo features missing in KojoLite include:
+    | Code Completion, Code Templates, Context Help, 
+    | Error Hyperlinks, and Code History.
     |""".stripMargin
     
     showOutput(msg)
