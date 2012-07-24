@@ -43,7 +43,7 @@ import net.kogics.kojo.xscala.Builtins
 object Main {
 
   def main(args: Array[String]): Unit = {
-    System.setSecurityManager(null)
+//    System.setSecurityManager(null)
     Utils.runInSwingThread {
       import javax.swing.UIManager
 
