@@ -192,7 +192,7 @@ object Main {
           aboutPanel.setLayout(new BoxLayout(aboutPanel, BoxLayout.Y_AXIS))
           val aboutText = new JTextArea
           aboutText.setText("""
-              |                        Kojo Lite
+              |                        KojoLite
               |
               | Copyright © 2009-2012 Lalit Pant (pant.lalit@gmail.com) 
               |                     And the Kojo Dev Team
@@ -221,6 +221,8 @@ object Main {
       helpMenu.add(about)
       frame.setJMenuBar(menuBar)
 
+      frame.setBounds(200, 200, 600, 500)
+      frame.pack()
       frame.setVisible(true)
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
 
@@ -228,12 +230,5 @@ object Main {
         loadAndRunUrl(args(0))
       }
     }
-  }
-
-  def create(title: String, color: Color) = {
-    val panel = new JPanel()
-    panel.setOpaque(true)
-    panel.setBackground(color)
-    new DefaultSingleCDockable(title, title, panel)
   }
 }
