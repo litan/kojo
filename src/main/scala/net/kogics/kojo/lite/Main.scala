@@ -5,16 +5,20 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Dimension
 import java.awt.Frame
 import java.awt.GridLayout
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants
 import org.fife.ui.rtextarea.RTextScrollPane
+
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.CGrid
 import javax.jnlp.ServiceManager
 import javax.jnlp.SingleInstanceListener
 import javax.jnlp.SingleInstanceService
+import javax.swing.text.html.HTMLEditorKit
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JDialog
@@ -39,8 +43,6 @@ import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.xscala.Builtins
 import net.kogics.kojo.CodeExecutionSupport
 import util.Utils
-import javax.swing.text.html.HTMLEditorKit
-import java.awt.Dimension
 
 object Main {
 
@@ -225,14 +227,20 @@ object Main {
           val aboutBox = new JDialog
           val aboutPanel = new JPanel
           aboutPanel.setLayout(new BoxLayout(aboutPanel, BoxLayout.Y_AXIS))
+
+          val kojoIcon = new JLabel();
+          kojoIcon.setIcon(Utils.loadIcon("/images/splash.png"))
+          kojoIcon.setSize(430, 280);
+          aboutPanel.add(kojoIcon)
+
           val aboutText = new JEditorPane
           aboutText.setEditorKit(new HTMLEditorKit)
           aboutText.setEditable(false)
           aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
-              <strong>KojoLite</strong>(Early Access)<br/>
-              KojoLite is the online version of Kojo.<br/>
-              <br/>Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com). Please visit <em>http://www.kogics.net/kojolite</em> for more information about KojoLite.<br/><br/>
+              <strong>KojoLite</strong> (Early Access)<br/>
+              <br/>Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com).<br/><br/> 
+              KojoLite is the online version of Kojo. Please visit <em>http://www.kogics.net/kojolite</em> and <em>http://www.kogics.net/kojo</em> for more information.<br/><br/>
               KojoLite Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>(The late) Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Bj\u00f6rn Regnell</li></ul>
               KojoLite is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
               The list of third-party software used by KojoLite includes:
@@ -251,7 +259,8 @@ object Main {
               </div>
               </body></html>
               """)
-          aboutText.setPreferredSize(new Dimension(500, 450))
+          aboutText.setPreferredSize(new Dimension(430, 300))
+          aboutText.setMaximumSize(new Dimension(430, 300))
           aboutText.setCaretPosition(0)
           aboutPanel.add(new JScrollPane(aboutText))
           val ok = new JButton("Ok")
@@ -263,9 +272,9 @@ object Main {
           aboutPanel.add(ok)
 
           aboutBox.setModal(true)
-          aboutBox.getRootPane.setDefaultButton(ok)
           aboutBox.getContentPane.add(aboutPanel)
-          aboutBox.setSize(400, 500)
+          aboutBox.getRootPane.setDefaultButton(ok)
+          aboutBox.setSize(430, 600)
           aboutBox.setLocationRelativeTo(null)
           aboutBox.pack
           aboutBox.setVisible(true)
