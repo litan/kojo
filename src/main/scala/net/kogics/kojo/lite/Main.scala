@@ -5,46 +5,42 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Frame
 import java.awt.GridLayout
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants
+import org.fife.ui.rtextarea.RTextScrollPane
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.CGrid
-import bibliothek.gui.dock.common.DefaultSingleCDockable
+import javax.jnlp.ServiceManager
+import javax.jnlp.SingleInstanceListener
+import javax.jnlp.SingleInstanceService
+import javax.swing.BoxLayout
+import javax.swing.JButton
+import javax.swing.JDialog
 import javax.swing.JEditorPane
 import javax.swing.JFrame
+import javax.swing.JLabel
 import javax.swing.JMenu
 import javax.swing.JMenuBar
 import javax.swing.JMenuItem
 import javax.swing.JPanel
 import javax.swing.JScrollPane
+import javax.swing.JTextField
 import javax.swing.UIManager
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.lite.topc.DrawingCanvasHolder
+import net.kogics.kojo.lite.topc.MathworldHolder
 import net.kogics.kojo.lite.topc.OutputWindowHolder
 import net.kogics.kojo.lite.topc.ScriptEditorHolder
+import net.kogics.kojo.lite.topc.StoryTellerHolder
+import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.story.StoryTeller
+import net.kogics.kojo.xscala.Builtins
 import net.kogics.kojo.CodeExecutionSupport
 import util.Utils
-import java.awt.TextArea
-import javax.swing.JButton
-import javax.swing.JDialog
-import javax.swing.BoxLayout
-import javax.swing.JTextArea
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants
-import org.fife.ui.rtextarea.RTextScrollPane
-import net.kogics.kojo.lite.topc.StoryTellerHolder
-import java.awt.Frame
-import net.kogics.kojo.mathworld.GeoGebraCanvas
-import net.kogics.kojo.lite.topc.MathworldHolder
-import javax.swing.JTextField
-import javax.swing.JLabel
-import net.kogics.kojo.xscala.Builtins
-import javax.jnlp.ServiceManager
-import javax.jnlp.SingleInstanceListener
-import javax.jnlp.SingleInstanceService
-import java.awt.event.WindowListener
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
+import javax.swing.text.html.HTMLEditorKit
+import java.awt.Dimension
 
 object Main {
 
@@ -100,7 +96,7 @@ object Main {
   }
 
   def realMain(args: Array[String]): Unit = {
-    //    System.setSecurityManager(null)
+    System.setSecurityManager(null)
 
     Utils.runInSwingThread {
       splash = new SplashScreen()
@@ -229,18 +225,35 @@ object Main {
           val aboutBox = new JDialog
           val aboutPanel = new JPanel
           aboutPanel.setLayout(new BoxLayout(aboutPanel, BoxLayout.Y_AXIS))
-          val aboutText = new JTextArea
-          aboutText.setText("""
-              |                        KojoLite
-              |
-              | Copyright © 2009-2012 Lalit Pant (pant.lalit@gmail.com) 
-              |                     And the Kojo Dev Team
-              |
-              |                      www.kogics.net/kojo
-              """.stripMargin)
+          val aboutText = new JEditorPane
+          aboutText.setEditorKit(new HTMLEditorKit)
           aboutText.setEditable(false)
-          //          aboutText.setBackground(Color.white)
-          aboutPanel.add(aboutText)
+          aboutText.setText("""<html><body>
+<div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
+              <strong>KojoLite</strong>(Early Access)<br/>
+              KojoLite is the online version of Kojo.<br/>
+              <br/>Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com). Please visit <em>http://www.kogics.net/kojolite</em> for more information about KojoLite.<br/><br/>
+              KojoLite Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>(The late) Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Bj\u00f6rn Regnell</li></ul>
+              KojoLite is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
+              The list of third-party software used by KojoLite includes:
+              <ul>
+              <li>The Scala Programming Language (http://www.scala-lang.org)</li>
+              <li>Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows</li>
+              <li>RSyntaxTextArea (http://fifesoft.com/rsyntaxtextarea/) for Syntax highlighting within the Script Editor</li>
+              <li>Piccolo2D (http://www.piccolo2d.org) for 2D Graphics</li>
+              <li>JTS Topology Suite (http://tsusiatsoftware.net/jts/main.html) for Collision Detection</li>
+              <li>JFugue (http://www.jfugue.org) for computer generated music</li>
+              <li>GeoGebra (http://www.geogebra.org) for Interactive Geometry and Algebra</li>
+              <li>HttpUnit (http://httpunit.sourceforge.net/) for HTTP communication</li>
+              <li>JLaTeXMath (http://forge.scilab.org/index.php/p/jlatexmath/) to display LaTeX commands</li>
+              <li>JLayer (http://www.javazoom.net/javalayer/javalayer.html) to play MP3 files</li>
+              </ul>
+              </div>
+              </body></html>
+              """)
+          aboutText.setPreferredSize(new Dimension(500, 450))
+          aboutText.setCaretPosition(0)
+          aboutPanel.add(new JScrollPane(aboutText))
           val ok = new JButton("Ok")
           ok.addActionListener(new ActionListener {
             def actionPerformed(ev: ActionEvent) {
@@ -252,7 +265,8 @@ object Main {
           aboutBox.setModal(true)
           aboutBox.getRootPane.setDefaultButton(ok)
           aboutBox.getContentPane.add(aboutPanel)
-          aboutBox.setBounds(300, 300, 450, 300)
+          aboutBox.setSize(400, 500)
+          aboutBox.setLocationRelativeTo(null)
           aboutBox.pack
           aboutBox.setVisible(true)
         }
