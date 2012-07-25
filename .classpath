@@ -31,5 +31,6 @@
 	<classpathentry kind="lib" path="lib/geogebra_properties.jar"/>
 	<classpathentry kind="lib" path="lib/geogebra.jar"/>
 	<classpathentry kind="lib" path="lib/netscape_javascript.jar"/>
+	<classpathentry kind="lib" path="lib/javaws.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

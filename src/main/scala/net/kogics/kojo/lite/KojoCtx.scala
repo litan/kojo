@@ -56,4 +56,8 @@ class KojoCtx extends core.KojoCtx {
   def stopInterpreter() = Utils.runInSwingThread {
     CodeExecutionSupport.instance.stopInterpreter()
   }
+  
+  def scrollOutputToEnd() {
+    topcs.owh.scrollToEnd()
+  }
 }

@@ -24,4 +24,5 @@ trait KojoCtx {
   def baseDir: String
   def stopInterpreter(): Unit
   def stopAnimation(): Unit
+  def scrollOutputToEnd(): Unit
 }

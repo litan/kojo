@@ -27,7 +27,6 @@ import java.io.PrintStream
 import java.io.Writer
 import java.util.concurrent.CountDownLatch
 import java.util.logging.Logger
-
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.JButton
@@ -42,11 +41,13 @@ import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import util.Utils
+import net.kogics.kojo.lite.KojoCtx
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
-  def initedInstance(codePane: JTextArea) = synchronized {
+  def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
     instanceInit()
     val ret = instance()
+    ret.kojoCtx = ctx
     ret.setCodePane(codePane)
     ret
   }
@@ -73,7 +74,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
   @volatile var runMonitor: RunMonitor = new NoOpRunMonitor()
   @volatile var codePane: JTextArea = _
+  @volatile var kojoCtx: KojoCtx = _
   val outputWindow = new JTextArea
+  outputWindow.setEditable(false)
 
   val codeRunner = makeCodeRunner()
 
@@ -364,8 +367,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         codePane.requestFocusInWindow
         enableRunButton(true)
         Utils.schedule(0.2) {
-          // Todo Kojo Lite
-          // OutputTopComponent.findInstance().scrollToEnd()
+          kojoCtx.scrollOutputToEnd()
         }
       }
 
@@ -373,8 +375,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         interpreterDone()
         Utils.runInSwingThread {
           statusStrip.onSuccess()
-          // TODO Kojo Lite
-          // undoRedoManager.discardAllEdits()
         }
       }
 
@@ -426,8 +426,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
           }
 
           Utils.schedule(0.2) {
-            // TODO Kojo Lite
-            // OutputTopComponent.findInstance().scrollToEnd()
+            kojoCtx.scrollOutputToEnd()
           }
         }
         runMonitor.onRunEnd()

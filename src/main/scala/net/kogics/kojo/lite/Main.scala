@@ -39,11 +39,66 @@ import net.kogics.kojo.lite.topc.MathworldHolder
 import javax.swing.JTextField
 import javax.swing.JLabel
 import net.kogics.kojo.xscala.Builtins
+import javax.jnlp.ServiceManager
+import javax.jnlp.SingleInstanceListener
+import javax.jnlp.SingleInstanceService
+import java.awt.event.WindowListener
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 
 object Main {
 
+  @volatile var codePane: RSyntaxTextArea = _
+  @volatile var frame: JFrame = _
+
   def main(args: Array[String]): Unit = {
-//    System.setSecurityManager(null)
+    realMain(args)
+    if (System.getProperty("ide.run") != "true") {
+      val sis = ServiceManager.lookup("javax.jnlp.SingleInstanceService").asInstanceOf[SingleInstanceService]
+      val sisl = new SingleInstanceListener {
+        def newActivation(params: Array[String]) {
+          Utils.runInSwingThread {
+            frame.toFront()
+            loadAndRunUrl(params(0))
+          }
+        }
+      }
+      sis.addSingleInstanceListener(sisl)
+      Runtime.getRuntime.addShutdownHook(new Thread(new Runnable {
+        def run() {
+          println("Shutting down")
+          sis.removeSingleInstanceListener(sisl)
+        }
+      }))
+    }
+  }
+
+  def _loadUrl(url: String)(postfn: => Unit = {}) {
+    codePane.setText("// Loading code from URL: %s ...\n" format (url))
+    Utils.runAsyncMonitored {
+      try {
+        val code = Utils.readUrl(url)
+        Utils.runInSwingThread {
+          codePane.setText(code)
+          codePane.setCaretPosition(0)
+          postfn
+        }
+
+      } catch {
+        case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
+      }
+    }
+  }
+
+  def loadUrl(url: String) = _loadUrl(url) {}
+
+  def loadAndRunUrl(url: String) = _loadUrl(url) {
+    codePane.insert("// Running code (loaded from %s).\n// Please wait for a few seconds ...\n\n" format (url), 0)
+    Builtins.instance.stClickRunButton
+  }
+
+  def realMain(args: Array[String]): Unit = {
+    //    System.setSecurityManager(null)
     Utils.runInSwingThread {
       import javax.swing.UIManager
 
@@ -51,7 +106,7 @@ object Main {
         UIManager.setLookAndFeel(nim.getClassName)
       }
 
-      val frame = new JFrame("Kojo Lite")
+      frame = new JFrame("Kojo Lite")
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
       val control = new CControl(frame)
       frame.setLayout(new GridLayout(1, 1))
@@ -62,14 +117,14 @@ object Main {
       StoryTeller.initedInstance(ctx)
       GeoGebraCanvas.initedInstance(ctx)
 
-      val codePane = new RSyntaxTextArea(20, 60)
+      codePane = new RSyntaxTextArea(20, 60)
       codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
       codePane.setCodeFoldingEnabled(true)
       codePane.setAntiAliasingEnabled(true)
       val sp = new RTextScrollPane(codePane)
       sp.setFoldIndicatorEnabled(true);
 
-      val codeSupport = CodeExecutionSupport.initedInstance(codePane)
+      val codeSupport = CodeExecutionSupport.initedInstance(codePane, ctx)
 
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance)
 
@@ -77,11 +132,12 @@ object Main {
       scriptEditor.setLayout(new BorderLayout)
       scriptEditor.add(codeSupport.toolbar, BorderLayout.NORTH)
       scriptEditor.add(sp, BorderLayout.CENTER)
+      scriptEditor.add(codeSupport.statusStrip, BorderLayout.EAST)
       val scriptEditorH = new ScriptEditorHolder(scriptEditor)
       codeSupport.toolbar.setOpaque(true)
       codeSupport.toolbar.setBackground(new Color(230, 230, 230))
 
-      val outputHolder = new OutputWindowHolder(new JScrollPane(codeSupport.outputWindow))
+      val outputHolder = new OutputWindowHolder(codeSupport.outputWindow)
 
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance)
@@ -95,30 +151,6 @@ object Main {
       grid.add(3.5, 2, 1.5, 1, outputHolder)
       grid.add(0, 0, 1, 4, storyHolder)
       control.getContentArea.deploy(grid)
-
-      def _loadUrl(url: String)(postfn: => Unit = {}) {
-        codePane.setText("// Loading code from URL: %s ...\n" format (url))
-        Utils.runAsyncMonitored {
-          try {
-            val code = Utils.readUrl(url)
-            Utils.runInSwingThread {
-              codePane.setText(code)
-              codePane.setCaretPosition(0)
-              postfn
-            }
-
-          } catch {
-            case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
-          }
-        }
-      }
-
-      def loadUrl(url: String) = _loadUrl(url) {}
-
-      def loadAndRunUrl(url: String) = _loadUrl(url) {
-        codePane.insert("// Running code (loaded from %s).\n// Please wait for a few seconds ...\n\n" format (url), 0)
-        Builtins.instance.stClickRunButton
-      }
 
       val menuBar = new JMenuBar
 
@@ -165,7 +197,7 @@ object Main {
       })
       fileMenu.add(openWeb)
       menuBar.add(fileMenu)
-      
+
       def menuItemFor(label: String, file: String) = {
         val item = new JMenuItem(label)
         item.addActionListener(new ActionListener {
@@ -175,7 +207,7 @@ object Main {
         })
         item
       }
-      
+
       val samplesMenu = new JMenu("Samples")
       samplesMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
       samplesMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
@@ -209,7 +241,7 @@ object Main {
             }
           })
           aboutPanel.add(ok)
-          
+
           aboutBox.setModal(true)
           aboutBox.getRootPane.setDefaultButton(ok)
           aboutBox.getContentPane.add(aboutPanel)
