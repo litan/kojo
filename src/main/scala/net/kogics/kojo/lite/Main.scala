@@ -50,6 +50,7 @@ object Main {
 
   @volatile var codePane: RSyntaxTextArea = _
   @volatile var frame: JFrame = _
+  @volatile var splash: SplashScreen = _
 
   def main(args: Array[String]): Unit = {
     realMain(args)
@@ -81,6 +82,7 @@ object Main {
         Utils.runInSwingThread {
           codePane.setText(code)
           codePane.setCaretPosition(0)
+          codePane.requestFocusInWindow()
           postfn
         }
 
@@ -99,7 +101,12 @@ object Main {
 
   def realMain(args: Array[String]): Unit = {
     //    System.setSecurityManager(null)
+
     Utils.runInSwingThread {
+      splash = new SplashScreen()
+    }
+
+    Utils.schedule(0.3) {
       import javax.swing.UIManager
 
       val xx = UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
@@ -253,6 +260,8 @@ object Main {
       helpMenu.add(about)
       frame.setJMenuBar(menuBar)
 
+      splash.close()
+
       frame.setBounds(200, 200, 600, 500)
       frame.pack()
       frame.setVisible(true)
@@ -260,6 +269,10 @@ object Main {
 
       if (args.length == 1) {
         loadAndRunUrl(args(0))
+      } else {
+        Utils.schedule(1) {
+          codePane.requestFocusInWindow()
+        }
       }
     }
   }
