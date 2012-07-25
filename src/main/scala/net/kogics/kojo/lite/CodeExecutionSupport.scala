@@ -69,16 +69,16 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   @volatile var pendingCommands = false
 
   val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
-       clearSButton, clearButton, cexButton) = makeToolbar()
+    clearSButton, clearButton, cexButton) = makeToolbar()
 
   @volatile var runMonitor: RunMonitor = new NoOpRunMonitor()
   @volatile var codePane: JTextArea = _
   val outputWindow = new JTextArea
 
   val codeRunner = makeCodeRunner()
-  
+
   val statusStrip = new StatusStrip()
-  
+
   val promptMarkColor = new Color(0x2fa600)
   val promptColor = new Color(0x883300)
   val codeColor = new Color(0x009b00)
@@ -90,13 +90,12 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   val OutputDelimiter = "---\n"
   @volatile var lastOutput = ""
 
-
   setSpriteListener()
   doWelcome()
-  
+
   import java.io._
   System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
-  
+
   class OutputWindowWriter extends Writer {
     override def write(s: String) {
       showOutput(s)
@@ -109,7 +108,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     def close() {}
     def flush() {}
   }
-  
+
   class WriterOutputStream(writer: Writer) extends OutputStream {
 
     private val buf = new Array[Byte](1)
@@ -136,29 +135,28 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         write(buf)
       }
     }
-  }   
-  
+  }
 
   def setCodePane(cp: JTextArea) {
     codePane = cp;
     addCodePaneHandlers()
     statusStrip.linkToPane()
     codePane.getDocument.addDocumentListener(new DocumentListener {
-        def insertUpdate(e: DocumentEvent) {
-          // runButton.setEnabled(true)
-          clearSButton.setEnabled(true)
-          // cexButton.setEnabled(true)
+      def insertUpdate(e: DocumentEvent) {
+        // runButton.setEnabled(true)
+        clearSButton.setEnabled(true)
+        // cexButton.setEnabled(true)
 
+      }
+      def removeUpdate(e: DocumentEvent) {
+        if (codePane.getDocument.getLength == 0) {
+          // runButton.setEnabled(false) // interferes with enabling/disabling of run button with interpreter start/stop
+          clearSButton.setEnabled(false)
+          // cexButton.setEnabled(false) // makes the icon look horrible
         }
-        def removeUpdate(e: DocumentEvent) {
-          if (codePane.getDocument.getLength == 0) {
-            // runButton.setEnabled(false) // interferes with enabling/disabling of run button with interpreter start/stop
-            clearSButton.setEnabled(false)
-            // cexButton.setEnabled(false) // makes the icon look horrible
-          }
-        }
-        def changedUpdate(e: DocumentEvent) {}
-      })
+      }
+      def changedUpdate(e: DocumentEvent) {}
+    })
   }
 
   def enableRunButton(enable: Boolean) {
@@ -183,7 +181,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     | Code Completion, Code Templates, Context Help, 
     | Error Hyperlinks, and Code History.
     |""".stripMargin
-    
+
     showOutput(msg)
   }
 
@@ -202,37 +200,34 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         case RunScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             compileRunCode()
-          }
-          else {
+          } else {
             runCode()
           }
         case CompileScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             parseCode(false)
-          }
-          else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
+          } else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
             parseCode(true)
-          }
-          else {
+          } else {
             compileCode()
           }
         case StopScript =>
           stopScript()
         case HistoryNext =>
-          // loadCodeFromHistoryNext()
+        // loadCodeFromHistoryNext()
         case HistoryPrev =>
-          // loadCodeFromHistoryPrev()
+        // loadCodeFromHistoryPrev()
         case ClearEditor =>
           clearEditor()
         case ClearOutput =>
           clrOutput()
         case UploadCommand =>
-          // upload()
+        // upload()
       }
     }
 
     def makeNavigationButton(imageFile: String, actionCommand: String,
-                             toolTipText: String, altText: String): JButton = {
+      toolTipText: String, altText: String): JButton = {
       val button = new JButton()
       button.setActionCommand(actionCommand)
       button.setToolTipText(toolTipText)
@@ -242,10 +237,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       button;
     }
 
-
     val toolbar = new JToolBar
     toolbar.setPreferredSize(new Dimension(100, 24))
-    
+
     val runButton = makeNavigationButton("/images/run24.png", RunScript, Utils.loadString("S_RunScript"), "Run the Code")
     val compileButton = makeNavigationButton("/images/check.png", CompileScript, Utils.loadString("S_CheckScript"), "Check the Code")
     val stopButton = makeNavigationButton("/images/stop24.png", StopScript, Utils.loadString("S_StopScript"), "Stop the Code")
@@ -286,13 +280,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   }
 
   def isSingleLine(code: String): Boolean = {
-//    val n = code.count {c => c == '\n'}
-//    if (n > 1) false else true
+    //    val n = code.count {c => c == '\n'}
+    //    if (n > 1) false else true
 
     val len = code.length
     var idx = 0
     var count = 0
-    while(idx < len) {
+    while (idx < len) {
       if (code.charAt(idx) == '\n') {
         count += 1
         if (count > 1) {
@@ -303,12 +297,10 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     }
     if (count == 0) {
       return true
-    }
-    else {
-      if (code.charAt(len-1) == '\n') {
+    } else {
+      if (code.charAt(len - 1) == '\n') {
         return true
-      }
-      else {
+      } else {
         return false
       }
     }
@@ -317,152 +309,151 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def makeRealCodeRunner: core.CodeRunner = {
     val codeRunner = new xscala.ScalaCodeRunner(new RunContext {
 
-        @volatile var suppressInterpOutput = false
+      @volatile var suppressInterpOutput = false
 
-        def onInterpreterInit() = {
-          showOutput(" " * 38 + "_____\n\n")
-          lastOutput = ""
+      def onInterpreterInit() = {
+        showOutput(" " * 38 + "_____\n\n")
+        lastOutput = ""
+      }
+
+      def onInterpreterStart(code: String) {
+        if (verboseOutput || isSingleLine(code)) {
+          suppressInterpOutput = false
+        } else {
+          suppressInterpOutput = true
         }
 
-        def onInterpreterStart(code: String) {
-          if (verboseOutput || isSingleLine(code)) {
-            suppressInterpOutput = false
-          }
-          else {
-            suppressInterpOutput = true
-          }
+        showNormalCursor()
+        enableRunButton(false)
+        stopButton.setEnabled(true)
+        runMonitor.onRunStart()
+      }
 
-          showNormalCursor()
-          enableRunButton(false)
-          stopButton.setEnabled(true)
-          runMonitor.onRunStart()
+      def onCompileStart() {
+        showNormalCursor()
+        enableRunButton(false)
+      }
+
+      def onRunError() {
+        interpreterDone()
+        onError()
+      }
+
+      def onCompileError() {
+        compileDone()
+        onError()
+      }
+
+      private def onError() {
+        Utils.runInSwingThread {
+          statusStrip.onError()
+        }
+        // just in case this was a story
+        // bad coupling here!
+        storyTeller.storyAborted()
+      }
+
+      def onCompileSuccess() {
+        compileDone()
+        Utils.runInSwingThread {
+          statusStrip.onSuccess()
+        }
+      }
+
+      private def compileDone() {
+        codePane.requestFocusInWindow
+        enableRunButton(true)
+        Utils.schedule(0.2) {
+          // Todo Kojo Lite
+          // OutputTopComponent.findInstance().scrollToEnd()
+        }
+      }
+
+      def onRunSuccess() = {
+        interpreterDone()
+        Utils.runInSwingThread {
+          statusStrip.onSuccess()
+          // TODO Kojo Lite
+          // undoRedoManager.discardAllEdits()
+        }
+      }
+
+      def onRunInterpError() = {
+        showErrorMsg("Kojo is unable to process your script. Please modify your code and try again.\n")
+        showOutput("More information about the problem - can be viewed - by clicking the red icon at the bottom right of the Kojo screen.\n")
+        onRunError()
+      }
+
+      def onInternalCompilerError() = {
+        showErrorMsg("Kojo is unable to process your script. Please modify your code and try again.\n")
+        showOutput("More information about the problem - can be viewed - by clicking the red icon at the bottom right of the Kojo screen.\n")
+        onCompileError()
+      }
+
+      def kprintln(outText: String) {
+        showOutput(outText)
+        runMonitor.reportOutput(outText)
+      }
+
+      def reportOutput(outText: String) {
+        if (suppressInterpOutput) {
+          return
         }
 
-        def onCompileStart() {
-          showNormalCursor()
-          enableRunButton(false)
-        }
+        kprintln(outText)
+      }
 
-        def onRunError() {
-          interpreterDone()
-          onError()
-        }
+      def reportErrorMsg(errMsg: String) {
+        showErrorMsg(errMsg)
+        runMonitor.reportOutput(errMsg)
+      }
 
-        def onCompileError() {
-          compileDone()
-          onError()
-        }
+      def reportErrorText(errText: String) {
+        showErrorText(errText)
+        runMonitor.reportOutput(errText)
+      }
 
-        private def onError() {
-          Utils.runInSwingThread {
-            statusStrip.onError()
-          }
-          // just in case this was a story
-          // bad coupling here!
-          storyTeller.storyAborted()
-        }
+      def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
+        showSmartErrorText(errText, line, column, offset)
+        runMonitor.reportOutput(errText)
+      }
 
-        def onCompileSuccess() {
-          compileDone()
-          Utils.runInSwingThread {
-            statusStrip.onSuccess()
-          }
-        }
-
-        private def compileDone() {
-          codePane.requestFocusInWindow
+      private def interpreterDone() = {
+        Utils.runInSwingThread {
           enableRunButton(true)
+          if (!pendingCommands) {
+            stopButton.setEnabled(false)
+          }
+
           Utils.schedule(0.2) {
-            // Todo Kojo Lite
+            // TODO Kojo Lite
             // OutputTopComponent.findInstance().scrollToEnd()
           }
         }
+        runMonitor.onRunEnd()
+      }
 
-        def onRunSuccess() = {
-          interpreterDone()
-          Utils.runInSwingThread {
-            statusStrip.onSuccess()
-            // TODO Kojo Lite
-            // undoRedoManager.discardAllEdits()
-          }
+      def showScriptInOutput() { showCode = true }
+      def hideScriptInOutput() { showCode = false }
+      def showVerboseOutput() { verboseOutput = true }
+      def hideVerboseOutput() { verboseOutput = false }
+      def retainSingleLineCode() { retainCode = true }
+      def clearSingleLineCode() { retainCode = false }
+      def readInput(prompt: String): String = CodeExecutionSupport.this.readInput(prompt)
+
+      def clearOutput() = clrOutput()
+
+      def setScript(code: String) {
+        Utils.runInSwingThreadAndWait {
+          codePane.setText(code)
+          codePane.setCaretPosition(0)
         }
+      }
 
-        def onRunInterpError() = {
-          showErrorMsg("Kojo is unable to process your script. Please modify your code and try again.\n")
-          showOutput("More information about the problem - can be viewed - by clicking the red icon at the bottom right of the Kojo screen.\n")
-          onRunError()
-        }
-
-        def onInternalCompilerError() = {
-          showErrorMsg("Kojo is unable to process your script. Please modify your code and try again.\n")
-          showOutput("More information about the problem - can be viewed - by clicking the red icon at the bottom right of the Kojo screen.\n")
-          onCompileError()
-        }
-
-        def kprintln(outText: String) {
-          showOutput(outText)
-          runMonitor.reportOutput(outText)
-        }
-
-        def reportOutput(outText: String) {
-          if (suppressInterpOutput) {
-            return
-          }
-
-          kprintln(outText)
-        }
-
-        def reportErrorMsg(errMsg: String) {
-          showErrorMsg(errMsg)
-          runMonitor.reportOutput(errMsg)
-        }
-
-        def reportErrorText(errText: String) {
-          showErrorText(errText)
-          runMonitor.reportOutput(errText)
-        }
-
-        def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
-          showSmartErrorText(errText, line, column, offset)
-          runMonitor.reportOutput(errText)
-        }
-
-        private def interpreterDone() = {
-          Utils.runInSwingThread {
-            enableRunButton(true)
-            if (!pendingCommands) {
-              stopButton.setEnabled(false)
-            }
-
-            Utils.schedule(0.2) {
-              // TODO Kojo Lite
-              // OutputTopComponent.findInstance().scrollToEnd()
-            }
-          }
-          runMonitor.onRunEnd()
-        }
-
-        def showScriptInOutput() {showCode = true}
-        def hideScriptInOutput() {showCode = false}
-        def showVerboseOutput() {verboseOutput = true}
-        def hideVerboseOutput() {verboseOutput = false}
-        def retainSingleLineCode() {retainCode = true}
-        def clearSingleLineCode() {retainCode = false}
-        def readInput(prompt: String): String = CodeExecutionSupport.this.readInput(prompt)
-
-        def clearOutput() = clrOutput()
-
-        def setScript(code: String) {
-          Utils.runInSwingThreadAndWait {
-            codePane.setText(code)
-            codePane.setCaretPosition(0)
-          }
-        }
-
-        def stopAnimation() {
-          CodeExecutionSupport.this.stopAnimation()
-        }
-      }, tCanvas)
+      def stopAnimation() {
+        CodeExecutionSupport.this.stopAnimation()
+      }
+    }, tCanvas)
     codeRunner
   }
 
@@ -470,46 +461,46 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
   def addCodePaneHandlers() {
     codePane.addKeyListener(new KeyAdapter {
-        override def keyPressed(evt: KeyEvent) {
-          evt.getKeyCode match {
-            case KeyEvent.VK_ENTER =>
-              if(evt.isControlDown && (isRunningEnabled || evt.isShiftDown)) {
-                runCode()
-                evt.consume
-              }
-            case KeyEvent.VK_UP =>
-              if(evt.isControlDown) {
-                // loadCodeFromHistoryPrev
-                evt.consume
-              }
-            case KeyEvent.VK_DOWN =>
-              if(evt.isControlDown) {
-                // loadCodeFromHistoryNext
-                evt.consume
-              }
-            case _ => // do nothing special
-          }
+      override def keyPressed(evt: KeyEvent) {
+        evt.getKeyCode match {
+          case KeyEvent.VK_ENTER =>
+            if (evt.isControlDown && (isRunningEnabled || evt.isShiftDown)) {
+              runCode()
+              evt.consume
+            }
+          case KeyEvent.VK_UP =>
+            if (evt.isControlDown) {
+              // loadCodeFromHistoryPrev
+              evt.consume
+            }
+          case KeyEvent.VK_DOWN =>
+            if (evt.isControlDown) {
+              // loadCodeFromHistoryNext
+              evt.consume
+            }
+          case _ => // do nothing special
         }
+      }
 
-      })
+    })
   }
 
   def setSpriteListener() {
     tCanvas.setTurtleListener(new core.AbstractSpriteListener {
-        def interpreterDone = runButton.isEnabled
-        override def hasPendingCommands {
-          pendingCommands = true
-          stopButton.setEnabled(true)
-        }
-        override def pendingCommandsDone {
-          pendingCommands = false
-          if (interpreterDone) stopButton.setEnabled(false)
-        }
-      })
+      def interpreterDone = runButton.isEnabled
+      override def hasPendingCommands {
+        pendingCommands = true
+        stopButton.setEnabled(true)
+      }
+      override def pendingCommandsDone {
+        pendingCommands = false
+        if (interpreterDone) stopButton.setEnabled(false)
+      }
+    })
   }
 
   def locateError(errorText0: String) {
-	  // TODO Kojo Lite
+    // TODO Kojo Lite
   }
 
   def switchFocusToCodeEditor() {
@@ -640,9 +631,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   }
 
   def compileRunCode() {
-    preProcessCode() map { codeToRun => codeRunner.compileRunCode(codeToRun)}
+    preProcessCode() map { codeToRun => codeRunner.compileRunCode(codeToRun) }
   }
-  
+
   // For IPM
   def runCode(code: String) = codeRunner.runCode(code)
 
@@ -651,8 +642,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     preProcessCode() map { codeToRun =>
       if (isStory(codeToRun)) {
         codeRunner.compileRunCode(codeToRun)
-      }
-      else {
+      } else {
         codeRunner.runCode(codeToRun)
       }
     }
@@ -664,7 +654,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     if (invalidCode(code)) {
       return None
     }
-    
+
     // now that we use the proxy code runner, disable the run button right away and change
     // the cursor so that the user gets some feedback the first time he runs something
     // - relevant if the proxy is still loading the real runner
@@ -688,8 +678,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       showOutput("\n>>>\n", promptColor)
       showOutput(codeToRun, codeColor)
       showOutput("\n<<<\n", promptColor)
-    }
-    else {
+    } else {
       maybeOutputDelimiter()
     }
     Some(codeToRun)
@@ -709,29 +698,29 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def keywordCompletions(prefix: Option[String]) = codeRunner.keywordCompletions(prefix)
   def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = codeRunner.memberCompletions(Utils.stripCR(codePane.getText), caretOffset, objid, prefix)
   def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) = xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
-  
+
   def runCodeWithOutputCapture(): String = {
     runMonitor = new OutputCapturingRunner()
     val ret = runMonitor.asInstanceOf[OutputCapturingRunner].go()
     runMonitor = new NoOpRunMonitor()
     ret
   }
-  
+
   def activateEditor() {
     Utils.schedule(0.3) {
       codePane.requestFocusInWindow();
     }
   }
-  
+
   @volatile var codingMode: CodingMode = TwMode // default mode for interp
-  
+
   def activateTw() {
     if (codingMode != TwMode) {
       codingMode = TwMode
       codeRunner.activateTw()
     }
   }
-  
+
   def activateStaging() {
     if (codingMode != StagingMode) {
       codingMode = StagingMode
@@ -780,10 +769,10 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
     def linkToPane() {
       codePane.getDocument.addDocumentListener(new DocumentListener {
-          def insertUpdate(e: DocumentEvent) = onDocChange()
-          def removeUpdate(e: DocumentEvent) = onDocChange()
-          def changedUpdate(e: DocumentEvent) {}
-        })
+        def insertUpdate(e: DocumentEvent) = onDocChange()
+        def removeUpdate(e: DocumentEvent) = onDocChange()
+        def changedUpdate(e: DocumentEvent) {}
+      })
     }
 
     def onSuccess() {
