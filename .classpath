@@ -32,5 +32,8 @@
 	<classpathentry kind="lib" path="lib/geogebra.jar"/>
 	<classpathentry kind="lib" path="lib/netscape_javascript.jar"/>
 	<classpathentry kind="lib" path="lib/javaws.jar"/>
+	<classpathentry kind="lib" path="lib/httpunit.jar"/>
+	<classpathentry kind="lib" path="lib/js-1.6R5.jar"/>
+	<classpathentry kind="lib" path="lib/jtidy-4aug2000r7-dev.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

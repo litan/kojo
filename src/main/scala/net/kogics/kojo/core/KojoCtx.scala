@@ -15,8 +15,11 @@
 
 package net.kogics.kojo.core
 
+import javax.swing.JFrame
+
 trait KojoCtx {
   def activateDrawingCanvas()
+  def activateScriptEditor()
   def makeStagingVisible()
   def makeTurtleWorldVisible()
   def makeMathWorldVisible()
@@ -25,4 +28,5 @@ trait KojoCtx {
   def stopInterpreter(): Unit
   def stopAnimation(): Unit
   def scrollOutputToEnd(): Unit
+  def frame: JFrame
 }

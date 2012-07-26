@@ -65,7 +65,6 @@ object Main {
       sis.addSingleInstanceListener(sisl)
       Runtime.getRuntime.addShutdownHook(new Thread(new Runnable {
         def run() {
-          println("Shutting down")
           sis.removeSingleInstanceListener(sisl)
         }
       }))
@@ -93,7 +92,7 @@ object Main {
   def loadUrl(url: String) = _loadUrl(url) {}
 
   def loadAndRunUrl(url: String) = _loadUrl(url) {
-    codePane.insert("// Running code (loaded from %s).\n// Please wait for a few seconds ...\n\n" format (url), 0)
+    codePane.insert("// Running code loaded from URL: %s.\n// Please wait, this might take a few seconds ...\n\n" format (url), 0)
     Builtins.instance.stClickRunButton
   }
 
@@ -117,7 +116,7 @@ object Main {
       frame.setLayout(new GridLayout(1, 1))
       frame.add(control.getContentArea)
 
-      val ctx = new KojoCtx()
+      val ctx = new KojoCtx
       SpriteCanvas.initedInstance(ctx)
       StoryTeller.initedInstance(ctx)
       GeoGebraCanvas.initedInstance(ctx)
@@ -138,7 +137,7 @@ object Main {
       scriptEditor.add(codeSupport.toolbar, BorderLayout.NORTH)
       scriptEditor.add(sp, BorderLayout.CENTER)
       scriptEditor.add(codeSupport.statusStrip, BorderLayout.EAST)
-      val scriptEditorH = new ScriptEditorHolder(scriptEditor)
+      val scriptEditorH = new ScriptEditorHolder(scriptEditor, codePane)
       codeSupport.toolbar.setOpaque(true)
       codeSupport.toolbar.setBackground(new Color(230, 230, 230))
 
@@ -148,6 +147,7 @@ object Main {
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance)
 
       ctx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder)
+      ctx.frame = frame
 
       val grid = new CGrid(control)
       grid.add(1, 0, 4, 2, mwHolder)
