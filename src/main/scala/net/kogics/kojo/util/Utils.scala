@@ -215,6 +215,12 @@ object Utils {
   def loadString(key: String)(implicit klass: Class[_]) = {
     messages.getString(key)
   }  
+  def loadString(klass: Class[_], key: String) = {
+    messages.getString(key)
+  }  
+  def loadString(klass: Class[_], key: String, args: AnyRef *) = {
+    messages.getString(key) format(args:_*)
+  }  
 
   def filesInDir(dir: String, ext: String): List[String] = {
     val osDir = new File(dir)

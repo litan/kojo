@@ -225,7 +225,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         case ClearOutput =>
           clrOutput()
         case UploadCommand =>
-        // upload()
+          upload()
       }
     }
 
@@ -498,6 +498,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     })
   }
 
+  def upload() {
+    val dlg = new codex.CodeExchangeForm(kojoCtx, true)
+    dlg.setCanvas(tCanvas)
+    dlg.setCode(Utils.stripCR(codePane.getText()))
+    dlg.centerScreen()
+  }
+  
   def locateError(errorText0: String) {
     // TODO Kojo Lite
   }

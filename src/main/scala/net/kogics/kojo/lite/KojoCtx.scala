@@ -19,6 +19,7 @@ package lite
 import net.kogics.kojo.util.Utils
 import java.io.File
 import bibliothek.gui.dock.common.CLocation
+import javax.swing.JFrame
 
 object KojoCtx extends core.Singleton[KojoCtx] {
   protected def newInstance = new KojoCtx
@@ -27,20 +28,25 @@ object KojoCtx extends core.Singleton[KojoCtx] {
 class KojoCtx extends core.KojoCtx {
 
   var topcs: TopCs = _
+  var frame: JFrame = _
   
   def activateDrawingCanvas() {
-    topcs.dch.toFront
-    topcs.dch.dc.requestFocusInWindow
+    topcs.dch.toFront()
+    topcs.dch.dc.requestFocusInWindow()
+  }
+
+  def activateScriptEditor() {
+    topcs.seh.activate()
   }
 
   def makeTurtleWorldVisible() {
-    topcs.dch.toFront
+    topcs.dch.toFront()
   }
 
   def makeStagingVisible() = makeTurtleWorldVisible()
 
   def makeMathWorldVisible() {
-    topcs.mwh.toFront
+    topcs.mwh.toFront()
   }
 
   def makeStoryTellerVisible() {
