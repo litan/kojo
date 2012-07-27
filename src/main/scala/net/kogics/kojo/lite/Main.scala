@@ -93,6 +93,7 @@ object Main {
 
   def loadAndRunUrl(url: String) = _loadUrl(url) {
     codePane.insert("// Running code loaded from URL: %s.\n// Please wait, this might take a few seconds ...\n\n" format (url), 0)
+    codePane.setCaretPosition(0)
     Builtins.instance.stClickRunButton
   }
 

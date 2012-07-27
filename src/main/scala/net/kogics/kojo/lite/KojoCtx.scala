@@ -51,6 +51,7 @@ class KojoCtx extends core.KojoCtx {
 
   def makeStoryTellerVisible() {
     topcs.sth.setLocation(CLocation.base.normalWest(0.5))
+//    topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
   }
 
   def baseDir: String = System.getProperty("user.dir")
