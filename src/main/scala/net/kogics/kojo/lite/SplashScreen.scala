@@ -4,13 +4,13 @@ package lite
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.Color
-
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JProgressBar
 import javax.swing.JWindow
 import javax.swing.Timer
 import util.Utils
+import java.awt.Cursor
 
 class SplashScreen extends JWindow {
 
@@ -34,6 +34,7 @@ class SplashScreen extends JWindow {
   panel.add(kojoIcon);
   setSize(430, 280);
   setLocationRelativeTo(null);
+  setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
   setVisible(true);
 
   def close() {
