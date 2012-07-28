@@ -718,8 +718,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
     commandHistory.setListener(new HistoryListener {
       def itemAdded {
-    	println("Item Added")
-    	println("History: " + commandHistory.history)
         hPrevButton.setEnabled(true)
         hNextButton.setEnabled(false)
       }
