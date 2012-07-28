@@ -42,6 +42,8 @@ import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import util.Utils
 import net.kogics.kojo.lite.KojoCtx
+import net.kogics.kojo.history.CommandHistory
+import net.kogics.kojo.history.HistoryListener
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -181,8 +183,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     | For the real deal, get Kojo (www.kogics.net/kojo)!
     | 
     | Kojo features missing in KojoLite include:
-    | Code Completion, Code Templates, Context Help, 
-    | Error Hyperlinks, and Code History.
+    | Interactive Program Moulding, Code Completion, Code Templates, 
+    | Context Help, and Error Hyperlinks.
     |""".stripMargin
 
     showOutput(msg)
@@ -217,9 +219,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         case StopScript =>
           stopScript()
         case HistoryNext =>
-        // loadCodeFromHistoryNext()
+          loadCodeFromHistoryNext()
         case HistoryPrev =>
-        // loadCodeFromHistoryPrev()
+          loadCodeFromHistoryPrev()
         case ClearEditor =>
           clearEditor()
         case ClearOutput =>
@@ -504,7 +506,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     dlg.setCode(Utils.stripCR(codePane.getText()))
     dlg.centerScreen()
   }
-  
+
   def locateError(errorText0: String) {
     // TODO Kojo Lite
   }
@@ -646,6 +648,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def runCode() {
     // Runs on swing thread
     preProcessCode() map { codeToRun =>
+      historyManager.codeRun(codeToRun)
       if (isStory(codeToRun)) {
         codeRunner.compileRunCode(codeToRun)
       } else {
@@ -704,6 +707,85 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def keywordCompletions(prefix: Option[String]) = codeRunner.keywordCompletions(prefix)
   def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = codeRunner.memberCompletions(Utils.stripCR(codePane.getText), caretOffset, objid, prefix)
   def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) = xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
+
+  val commandHistory = CommandHistory.instance
+  val historyManager = new HistoryManager
+  def loadCodeFromHistoryPrev() = historyManager.historyMoveBack
+  def loadCodeFromHistoryNext() = historyManager.historyMoveForward
+  def loadCodeFromHistory(historyIdx: Int) = historyManager.setCode(historyIdx)
+
+  class HistoryManager {
+
+    commandHistory.setListener(new HistoryListener {
+      def itemAdded {
+    	println("Item Added")
+    	println("History: " + commandHistory.history)
+        hPrevButton.setEnabled(true)
+        hNextButton.setEnabled(false)
+      }
+      def selectionChanged(n: Int) {
+        setCode(n)
+      }
+      def ensureVisible(n: Int) {}
+    })
+
+    def historyMoveBack {
+      // depend on history listener mechanism to move back
+      val prevCode = commandHistory.previous
+      hPrevButton.setEnabled(commandHistory.hasPrevious)
+      hNextButton.setEnabled(true)
+      commandHistory.ensureLastEntryVisible()
+    }
+
+    def historyMoveForward {
+      // depend on history listener mechanism to move forward
+      val nextCode = commandHistory.next
+      if (!nextCode.isDefined) {
+        hNextButton.setEnabled(false)
+      }
+      hPrevButton.setEnabled(true)
+      commandHistory.ensureLastEntryVisible()
+    }
+
+    def setCode(historyIdx: Int) {
+      if (commandHistory.size > 0 && historyIdx != 0)
+        hPrevButton.setEnabled(true)
+      else
+        hPrevButton.setEnabled(false)
+
+      if (historyIdx < commandHistory.size)
+        hNextButton.setEnabled(true)
+      else
+        hNextButton.setEnabled(false)
+
+      val codeAtIdx = commandHistory.toPosition(historyIdx)
+      Utils.runInSwingThread {
+        if (codeAtIdx.isDefined) {
+          codePane.setText(codeAtIdx.get)
+          codePane.setCaretPosition(0)
+        } else {
+          codePane.setText(null)
+        }
+        codePane.requestFocusInWindow
+      }
+    }
+
+    def codeRunError() = {
+    }
+
+    def codeRun(code: String) {
+      val tcode = code.trim()
+      val prevIndex = commandHistory.hIndex
+      commandHistory.add(code)
+
+      if (commandHistory.hIndex == prevIndex + 1) {
+        // the last entry within history was selected
+        commandHistory.ensureLastEntryVisible()
+      } else {
+        commandHistory.ensureVisible(prevIndex)
+      }
+    }
+  }
 
   def runCodeWithOutputCapture(): String = {
     runMonitor = new OutputCapturingRunner()
