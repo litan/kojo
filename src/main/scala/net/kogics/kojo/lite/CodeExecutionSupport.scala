@@ -471,12 +471,12 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
             }
           case KeyEvent.VK_UP =>
             if (evt.isControlDown) {
-              // loadCodeFromHistoryPrev
+               loadCodeFromHistoryPrev
               evt.consume
             }
           case KeyEvent.VK_DOWN =>
             if (evt.isControlDown) {
-              // loadCodeFromHistoryNext
+               loadCodeFromHistoryNext
               evt.consume
             }
           case _ => // do nothing special
