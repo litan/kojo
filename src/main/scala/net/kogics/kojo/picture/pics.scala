@@ -452,15 +452,17 @@ class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher wit
     println("Tnode: " + System.identityHashCode(tnode))
     println("<<< Pic End\n")
   }
-  
+
   def morph(fn: Seq[PolyLine] => Seq[PolyLine]) = Utils.runInSwingThread {
     val newPaths = fn(t.penPaths)
-    t.penPaths.foreach { tnode.removeChild }
-    t.penPaths.clear()
-    t.penPaths ++= newPaths
-    t.penPaths.foreach { tnode.addChild }
-    _picGeom = null
-    tnode.repaint()
+    if (t.penPaths != newPaths) {
+      t.penPaths.foreach { tnode.removeChild }
+      t.penPaths.clear()
+      t.penPaths ++= newPaths
+      t.penPaths.foreach { tnode.addChild }
+      _picGeom = null
+      tnode.repaint()
+    }
   }
 }
 
