@@ -19,8 +19,7 @@ package xscala
 object CodeCompletionUtils {
   val NotIdChars = """ .(){}!%&+\-<=>?@\\^`|~#:/*""" + "\n\r\t"
 
-  val Keywords = List() // TODO Kojo Lite 
-    
+  val Keywords = List("for") // TODO Kojo Lite 
 
   val KeywordTemplates = Map(
     "for" -> "for (i <- 1 to ${n}) {\n    ${cursor}\n}",
