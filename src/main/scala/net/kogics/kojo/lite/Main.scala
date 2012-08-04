@@ -8,7 +8,15 @@ import java.awt.Color
 import java.awt.Dimension
 import java.awt.Frame
 import java.awt.GridLayout
+import java.awt.Point
+import java.util.ArrayList
 
+import scala.collection.JavaConversions.seqAsJavaList
+
+import org.fife.ui.autocomplete.AutoCompletion
+import org.fife.ui.autocomplete.BasicCompletion
+import org.fife.ui.autocomplete.Completion
+import org.fife.ui.autocomplete.CompletionProviderBase
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants
 import org.fife.ui.rtextarea.RTextScrollPane
@@ -19,6 +27,7 @@ import javax.jnlp.ServiceManager
 import javax.jnlp.SingleInstanceListener
 import javax.jnlp.SingleInstanceService
 import javax.swing.text.html.HTMLEditorKit
+import javax.swing.text.JTextComponent
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JDialog
@@ -130,6 +139,11 @@ object Main {
       sp.setFoldIndicatorEnabled(true);
 
       val codeSupport = CodeExecutionSupport.initedInstance(codePane, ctx)
+      val provider = new KojoCompletionProvider(codeSupport)
+      val ac = new AutoCompletion(provider)
+      ac.install(codePane)
+      ac.setParameterAssistanceEnabled(true)
+      ac.setAutoActivationEnabled(true)
 
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance)
 

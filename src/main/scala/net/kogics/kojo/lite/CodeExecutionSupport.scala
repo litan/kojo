@@ -183,8 +183,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     | For the real deal, get Kojo (www.kogics.net/kojo)!
     | 
     | Kojo features missing in KojoLite include:
-    | Interactive Program Moulding, Code Completion, Code Templates, 
-    | Context Help, and Error Hyperlinks.
+    | Interactive Program Moulding, Code Templates, Context Help, 
+    | and Error Hyperlinks.
     |""".stripMargin
 
     showOutput(msg)
@@ -508,10 +508,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   }
 
   def locateError(errorText0: String) {
-    // TODO Kojo Lite
-  }
-
-  def switchFocusToCodeEditor() {
     // TODO Kojo Lite
   }
 
