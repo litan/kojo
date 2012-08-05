@@ -59,7 +59,6 @@ object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
 
 class CodeExecutionSupport private extends core.CodeCompletionSupport {
   val Log = Logger.getLogger(getClass.getName);
-  implicit val klass = getClass
 
   val tCanvas = SpriteCanvas.instance
   tCanvas.outputFn = showOutput _

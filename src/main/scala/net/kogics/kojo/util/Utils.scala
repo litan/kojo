@@ -212,7 +212,7 @@ object Utils {
   def stripCR(str: String) = str.replaceAll("\r\n", "\n")
 
   val messages = ResourceBundle.getBundle("net.kogics.kojo.lite.Bundle")
-  def loadString(key: String)(implicit klass: Class[_]) = {
+  def loadString(key: String) = {
     messages.getString(key)
   }  
   def loadString(klass: Class[_], key: String) = {

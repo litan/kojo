@@ -742,7 +742,6 @@ class SpriteCanvas private extends PCanvas with SCanvas {
 
   class Popup() extends JPopupMenu {
 
-    implicit val klass = getClass
     val axesItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowAxes"))
     axesItem.addActionListener(new ActionListener {
         override def actionPerformed(e: ActionEvent) {

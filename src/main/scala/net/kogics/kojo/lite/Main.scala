@@ -3,23 +3,11 @@ package lite
 
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.Dimension
 import java.awt.Frame
 import java.awt.GridLayout
-import java.awt.Point
-import java.util.ArrayList
 
-import scala.collection.JavaConversions.seqAsJavaList
-
-import org.fife.ui.autocomplete.AutoCompletion
-import org.fife.ui.autocomplete.BasicCompletion
-import org.fife.ui.autocomplete.Completion
-import org.fife.ui.autocomplete.CompletionProviderBase
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants
-import org.fife.ui.rtextarea.RTextScrollPane
 
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.CGrid
@@ -27,7 +15,6 @@ import javax.jnlp.ServiceManager
 import javax.jnlp.SingleInstanceListener
 import javax.jnlp.SingleInstanceService
 import javax.swing.text.html.HTMLEditorKit
-import javax.swing.text.JTextComponent
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JDialog
@@ -137,32 +124,10 @@ object Main {
       GeoGebraCanvas.initedInstance(ctx)
 
       codePane = new RSyntaxTextArea(20, 60)
-      codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
-      codePane.setCodeFoldingEnabled(true)
-      codePane.setAntiAliasingEnabled(true)
-      val sp = new RTextScrollPane(codePane)
-      sp.setFoldIndicatorEnabled(true);
-
       val codeSupport = CodeExecutionSupport.initedInstance(codePane, ctx)
-      val provider = new KojoCompletionProvider(codeSupport)
-      val ac = new AutoCompletion(provider)
-      ac.install(codePane)
-      ac.setParameterAssistanceEnabled(true)
-      ac.setAutoActivationEnabled(true)
-
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance)
-
-      val scriptEditor = new JPanel()
-      scriptEditor.setLayout(new BorderLayout)
-      scriptEditor.add(codeSupport.toolbar, BorderLayout.NORTH)
-      scriptEditor.add(sp, BorderLayout.CENTER)
-      scriptEditor.add(codeSupport.statusStrip, BorderLayout.EAST)
-      val scriptEditorH = new ScriptEditorHolder(scriptEditor, codePane)
-      codeSupport.toolbar.setOpaque(true)
-      codeSupport.toolbar.setBackground(new Color(230, 230, 230))
-
+      val scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport)
       val outputHolder = new OutputWindowHolder(codeSupport.outputWindow)
-
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance)
 
