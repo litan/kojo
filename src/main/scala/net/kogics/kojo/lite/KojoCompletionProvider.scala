@@ -15,6 +15,7 @@ import net.kogics.kojo.core.CompletionInfo
 import org.fife.ui.autocomplete.TemplateCompletion
 import org.fife.ui.autocomplete.CompletionCellRenderer
 import com.sun.xml.internal.ws.server.UnsupportedMediaException
+import net.kogics.kojo.xscala.Help
 
 class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) extends CompletionProviderBase {
   val METHOD = 10
@@ -35,7 +36,8 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
   }
 
   def proposal(offset: Int, completion: String, kind: Int, template: String) = {
-    new TemplateCompletion(this, completion, completion, rtsaTemplate(if (template == null) completion else template)) {
+    new TemplateCompletion(this, completion, completion, rtsaTemplate(if (template == null) completion else template),
+      null, Help(completion)) {
       setRelevance(kind)
       override def getIcon = kindIcon(kind)
     }
@@ -72,7 +74,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
       fm.toString
     }
     def rhs: String = completion.ret
-    def defn = lhs + ": " + rhs
+    def defn = "%s : %s" format(lhs, rhs)
     def template = {
       val c0 = methodTemplate(completion.name)
       if (c0 != null) {
@@ -87,8 +89,31 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
         }
       }
     }
-//    println(template)
-    new TemplateCompletion(this, completion.name, defn, rtsaTemplate(template)) {
+
+    def signature = {
+      val sb = new StringBuilder
+      sb.append("<strong>%s</strong>" format (completion.name))
+      if (valOrNoargItem) {
+        // do nothing
+      } else if (completion.isClass) {
+        sb.append(completion.params.mkString("[", ", ", "]"))
+      } else {
+        sb.append(completion.params.zip(completion.paramTypes).
+          map { p => "%s: %s" format (p._1, p._2) }.
+          mkString("(", ", ", ")"))
+      }
+      sb.append(": ")
+      sb.append("<em>%s</em>" format (completion.ret))
+      sb.toString
+    }
+
+    def help = {
+      val hlp = Help(completion.name)
+      if (hlp != null) hlp else signature
+    }
+
+    //    println(template)
+    new TemplateCompletion(this, defn, defn, rtsaTemplate(template), null, help) {
       setRelevance(-completion.prio)
       override def getIcon = kindIcon(kind)
     }
@@ -153,7 +178,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
   override def getParameterizedCompletions(comp: JTextComponent) = throw new UnsupportedMediaException
   override def getCompletionsAt(comp: JTextComponent, pt: Point) = throw new UnsupportedMediaException
   override def getAlreadyEnteredText(comp: JTextComponent) = {
-//    println("already entered: " + alreadyEntered)
+    //    println("already entered: " + alreadyEntered)
     alreadyEntered
   }
 }
