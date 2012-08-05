@@ -87,7 +87,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
         }
       }
     }
-    println(template)
+//    println(template)
     new TemplateCompletion(this, completion.name, defn, rtsaTemplate(template)) {
       setRelevance(-completion.prio)
       override def getIcon = kindIcon(kind)
@@ -153,7 +153,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
   override def getParameterizedCompletions(comp: JTextComponent) = throw new UnsupportedMediaException
   override def getCompletionsAt(comp: JTextComponent, pt: Point) = throw new UnsupportedMediaException
   override def getAlreadyEnteredText(comp: JTextComponent) = {
-    println("already entered: " + alreadyEntered)
+//    println("already entered: " + alreadyEntered)
     alreadyEntered
   }
 }
