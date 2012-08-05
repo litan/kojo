@@ -86,7 +86,7 @@ object Main {
       try {
         val code = Utils.readUrl(url)
         Utils.runInSwingThread {
-          codePane.setText(code)
+          codePane.setText(Utils.stripCR(code))
           codePane.setCaretPosition(0)
           codePane.requestFocusInWindow()
           postfn
@@ -101,9 +101,14 @@ object Main {
   def loadUrl(url: String) = _loadUrl(url) {}
 
   def loadAndRunUrl(url: String) = _loadUrl(url) {
-    codePane.insert("// Running code loaded from URL: %s.\n// Please wait, this might take a few seconds ...\n\n" format (url), 0)
-    codePane.setCaretPosition(0)
-    Builtins.instance.stClickRunButton
+    if (codePane.getText.toLowerCase.contains("file")) {
+      codePane.insert("// Loaded code from URL: %s\n// ** Not running it automatically ** because it references files.\n// Look carefully at the code before running it.\n\n" format (url), 0)
+      codePane.setCaretPosition(0)
+    } else {
+      codePane.insert("// Running code loaded from URL: %s\n// Please wait, this might take a few seconds ...\n\n" format (url), 0)
+      codePane.setCaretPosition(0)
+      Builtins.instance.stClickRunButton
+    }
   }
 
   def realMain(args: Array[String]): Unit = {
