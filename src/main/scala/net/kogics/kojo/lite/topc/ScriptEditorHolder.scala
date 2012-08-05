@@ -33,6 +33,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   ac.install(codePane)
   ac.setParameterAssistanceEnabled(true)
   ac.setAutoActivationEnabled(true)
+  ac.setShowDescWindow(true)
 
   val sp = new RTextScrollPane(codePane)
   se.setLayout(new BorderLayout)
