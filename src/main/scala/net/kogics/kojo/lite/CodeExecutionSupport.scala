@@ -529,8 +529,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def enableClearButton() = if (!clearButton.isEnabled) clearButton.setEnabled(true)
 
   def readInput(prompt: String): String = {
-    ""
-    // TODO Kojo Lite
+    throw new UnsupportedOperationException("Input reading is not available in KojoLite.")
   }
 
   def showOutput(outText: String): Unit = showOutput(outText, outputColor)
