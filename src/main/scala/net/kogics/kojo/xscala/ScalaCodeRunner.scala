@@ -42,6 +42,7 @@ import core.StagingMode
 import core.TwMode
 import util.Utils
 import net.kogics.kojo.util.Typeclasses
+import com.sun.deploy.cache.CachedJarFile
 
 class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRunner {
   val Log = Logger.getLogger(getClass.getName)
@@ -391,7 +392,23 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     var mode: CodingMode = _
 
     @volatile var classp: String = _
+    val cachedJarsData = new ListBuffer[AnyRef]
+    @volatile var numCachedJars = 0
+
     def makeSettings() = {
+
+      def callMethod(m: String, obj: AnyRef, klass: Class[_]): AnyRef = {
+        val method = klass.getDeclaredMethod(m)
+        method.setAccessible(true)
+        method.invoke(obj)
+      }
+
+      def readField(f: String, obj: AnyRef, klass: Class[_]): AnyRef = {
+        val field = klass.getDeclaredField(f)
+        field.setAccessible(true)
+        field.get(obj)
+      }
+
       val iSettings = new Settings()
 
       if (classp == null) {
@@ -400,6 +417,28 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
         while (e2.hasMoreElements) {
           val u = e2.nextElement
           val jarFile = u.openConnection.asInstanceOf[JarURLConnection].getJarFile
+          // Work around webstart issue:
+          // http://bugs.sun.com/view_bug.do?bug_id=6967414
+          jarFile match {
+            case cjf: CachedJarFile =>
+              numCachedJars += 1
+              val klass = cjf.getClass
+              try {
+                callMethod("getSigners", cjf, klass)
+                callMethod("getSignerMap", cjf, klass)
+                callMethod("getCodeSourceCache", cjf, klass)
+                cachedJarsData += readField("signersRef", cjf, klass)
+                cachedJarsData += readField("signerMapRef", cjf, klass)
+                cachedJarsData += readField("codeSourceCacheRef", cjf, klass)
+              }
+              catch {
+                case t: Throwable =>
+                  println("Problem: "  + t.getMessage)
+                  t.printStackTrace()
+              }
+            case _ =>
+          }
+//          println("Jar file name - %s, class - %s" format (jarFile.getName, jarFile.getClass.getName))
           val tempFile = File.createTempFile("kojolite-", ".jar");
           tempFile.deleteOnExit()
           Utils.copyFile(new File(jarFile.getName()), tempFile);
@@ -407,6 +446,8 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
           lb += tempFile.getAbsolutePath()
         }
         classp = createCp(lb.toList)
+//        println("Num Cached Jars - %d, Num Entries: %d" format(numCachedJars, cachedJarsData.size))
+//        println("cachedJarsData: " + cachedJarsData)
       }
 
       if (System.getProperty("ide.run") == "true") {
@@ -417,7 +458,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
       iSettings
     }
-    
+
     def compilerInitCode: Option[String] = {
       import Typeclasses._
       some(cmodeInit)

@@ -36,5 +36,6 @@
 	<classpathentry kind="lib" path="lib/js-1.6R5.jar"/>
 	<classpathentry kind="lib" path="lib/jtidy-4aug2000r7-dev.jar"/>
 	<classpathentry kind="lib" path="lib/autocomplete.jar"/>
+	<classpathentry kind="lib" path="lib/deploy.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

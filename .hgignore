@@ -6,7 +6,6 @@
 ecbuild
 build/
 target
-lib
 dist
 proguard
 nsis
