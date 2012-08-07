@@ -19,6 +19,7 @@ package codingmode
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
+import net.kogics.kojo.lite.CodeExecutionSupport
 
 class SwitchMode extends AbstractAction {
   def actionPerformed(e: ActionEvent) {

@@ -20,6 +20,7 @@ import net.kogics.kojo.util.Utils
 import java.io.File
 import bibliothek.gui.dock.common.CLocation
 import javax.swing.JFrame
+import net.kogics.kojo.action.CloseFile
 
 object KojoCtx extends core.Singleton[KojoCtx] {
   protected def newInstance = new KojoCtx
@@ -29,7 +30,7 @@ class KojoCtx extends core.KojoCtx {
 
   var topcs: TopCs = _
   var frame: JFrame = _
-  
+
   def activateDrawingCanvas() {
     topcs.dch.toFront()
     topcs.dch.dc.requestFocusInWindow()
@@ -51,7 +52,7 @@ class KojoCtx extends core.KojoCtx {
 
   def makeStoryTellerVisible() {
     topcs.sth.setLocation(CLocation.base.normalWest(0.5))
-//    topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
+    //    topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
   }
 
   def baseDir: String = System.getProperty("user.dir")
@@ -63,8 +64,24 @@ class KojoCtx extends core.KojoCtx {
   def stopInterpreter() = Utils.runInSwingThread {
     CodeExecutionSupport.instance.stopInterpreter()
   }
-  
+
   def scrollOutputToEnd() {
     topcs.owh.scrollToEnd()
+  }
+
+  def fileOpened(file: File) {
+    topcs.seh.setTitleText("%s - %s" format ("Script Editor", file.getName()))
+    CloseFile.onFileOpen()
+  }
+
+  def fileClosed() {
+    topcs.seh.setTitleText("Script Editor")
+    CloseFile.onFileClose()
+  }
+
+  @volatile var lastLoadStoreDir = ""
+  def getLastLoadStoreDir() = lastLoadStoreDir 
+  def setLastLoadStoreDir(dir: String) {
+    lastLoadStoreDir = dir
   }
 }

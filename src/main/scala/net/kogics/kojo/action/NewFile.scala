@@ -13,24 +13,24 @@
  *
  */
 
-package net.kogics.kojo.core
+package net.kogics.kojo
+package action
 
-import javax.swing.JFrame
+import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
+import lite.CodeExecutionSupport
+import net.kogics.kojo.core.KojoCtx
 
-trait KojoCtx {
-  def activateDrawingCanvas()
-  def activateScriptEditor()
-  def makeStagingVisible()
-  def makeTurtleWorldVisible()
-  def makeMathWorldVisible()
-  def makeStoryTellerVisible()
-  def baseDir: String
-  def stopInterpreter(): Unit
-  def stopAnimation(): Unit
-  def scrollOutputToEnd(): Unit
-  def frame: JFrame
-  def fileOpened(file: java.io.File): Unit
-  def fileClosed(): Unit
-  def getLastLoadStoreDir(): String
-  def setLastLoadStoreDir(dir: String): Unit
+class NewFile(ctx: KojoCtx) extends AbstractAction("New...") {
+  val saveAs = new SaveAs(ctx)
+  
+  def actionPerformed(e: ActionEvent) {
+    try {
+      CodeExecutionSupport.instance.closeFileAndClrEditor()
+      saveAs.actionPerformed(e);
+    }
+    catch {
+      case e: RuntimeException => // user cancelled
+    }
+  }
 }
