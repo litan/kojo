@@ -175,8 +175,8 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
     complete(comp)
   }
 
-  override def getParameterizedCompletions(comp: JTextComponent) = throw new UnsupportedMediaException
-  override def getCompletionsAt(comp: JTextComponent, pt: Point) = throw new UnsupportedMediaException
+  override def getParameterizedCompletions(comp: JTextComponent) = throw new UnsupportedOperationException
+  override def getCompletionsAt(comp: JTextComponent, pt: Point) = throw new UnsupportedOperationException
   override def getAlreadyEnteredText(comp: JTextComponent) = {
     //    println("already entered: " + alreadyEntered)
     alreadyEntered
