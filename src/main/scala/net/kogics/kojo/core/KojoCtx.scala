@@ -33,4 +33,5 @@ trait KojoCtx {
   def fileClosed(): Unit
   def getLastLoadStoreDir(): String
   def setLastLoadStoreDir(dir: String): Unit
+  def saveAsFile(): Unit
 }
