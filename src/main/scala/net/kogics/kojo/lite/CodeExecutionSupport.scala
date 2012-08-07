@@ -787,6 +787,24 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     }
   }
 
+  def closing() {
+    if (openedFile.isDefined) {
+      closeFileIfOpen()
+    } else {
+      if (codePane.getText.size > 0) {
+        val doSave = JOptionPane.showConfirmDialog(
+          kojoCtx.frame,
+          "You have unsaved work. Do you want to save your script to a file?")
+        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
+          throw new RuntimeException("Veto Shutdown")
+        }
+        else if (doSave == JOptionPane.YES_OPTION) {
+          kojoCtx.saveAsFile()
+        }
+      }
+    }
+  }
+
   val commandHistory = CommandHistory.instance
   val historyManager = new HistoryManager
   def loadCodeFromHistoryPrev() = historyManager.historyMoveBack

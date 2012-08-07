@@ -21,6 +21,8 @@ import java.io.File
 import bibliothek.gui.dock.common.CLocation
 import javax.swing.JFrame
 import net.kogics.kojo.action.CloseFile
+import java.awt.event.ActionListener
+import java.awt.event.ActionEvent
 
 object KojoCtx extends core.Singleton[KojoCtx] {
   protected def newInstance = new KojoCtx
@@ -30,6 +32,7 @@ class KojoCtx extends core.KojoCtx {
 
   var topcs: TopCs = _
   var frame: JFrame = _
+  var saveAsActionListener: ActionListener = _
 
   def activateDrawingCanvas() {
     topcs.dch.toFront()
@@ -83,5 +86,9 @@ class KojoCtx extends core.KojoCtx {
   def getLastLoadStoreDir() = lastLoadStoreDir 
   def setLastLoadStoreDir(dir: String) {
     lastLoadStoreDir = dir
+  }
+  
+  def saveAsFile() {
+	saveAsActionListener.actionPerformed(new ActionEvent(frame, 0, "Save As"))  
   }
 }

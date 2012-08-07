@@ -41,6 +41,9 @@ import net.kogics.kojo.action.LoadFrom
 import net.kogics.kojo.action.SaveAs
 import net.kogics.kojo.action.Save
 import net.kogics.kojo.action.CloseFile
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
+import javax.swing.WindowConstants
 
 object Main {
 
@@ -115,7 +118,7 @@ object Main {
       }
 
       frame = new JFrame("Kojo Lite")
-      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE)
+      frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
       val control = new CControl(frame)
       frame.setLayout(new GridLayout(1, 1))
       frame.add(control.getContentArea)
@@ -198,15 +201,17 @@ object Main {
       saveFile.addActionListener(new Save(ctx))
       fileMenu.add(saveFile)
 
+      val saveAsActionListener = new SaveAs(ctx)
       val saveAsFile = new JMenuItem("Save As...")
-      saveAsFile.addActionListener(new SaveAs(ctx))
+      saveAsFile.addActionListener(saveAsActionListener)
       fileMenu.add(saveAsFile)
-      
+
       fileMenu.add(new JMenuItem(new CloseFile))
 
       fileMenu.add(openWeb)
-      
+
       menuBar.add(fileMenu)
+      ctx.saveAsActionListener = saveAsActionListener
 
       def menuItemFor(label: String, file: String) = {
         val item = new JMenuItem(label)
@@ -291,6 +296,18 @@ object Main {
       splash.close()
 
       frame.setBounds(200, 200, 600, 500)
+      frame.addWindowListener(new WindowAdapter {
+        override def windowClosing(e: WindowEvent) {
+          try {
+            codeSupport.closing()
+            frame.dispose()
+            System.exit(0)
+          }
+          catch {
+            case rte: RuntimeException => 
+          }
+        }
+      })
       frame.pack()
       frame.setVisible(true)
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
