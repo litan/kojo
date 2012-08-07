@@ -6,9 +6,7 @@ import java.awt.event.ActionListener
 import java.awt.Dimension
 import java.awt.Frame
 import java.awt.GridLayout
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.CGrid
 import javax.jnlp.ServiceManager
@@ -37,8 +35,12 @@ import net.kogics.kojo.lite.topc.StoryTellerHolder
 import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.xscala.Builtins
-import net.kogics.kojo.CodeExecutionSupport
 import util.Utils
+import net.kogics.kojo.action.NewFile
+import net.kogics.kojo.action.LoadFrom
+import net.kogics.kojo.action.SaveAs
+import net.kogics.kojo.action.Save
+import net.kogics.kojo.action.CloseFile
 
 object Main {
 
@@ -185,7 +187,25 @@ object Main {
           urlGetter.setVisible(true)
         }
       })
+
+      fileMenu.add(new JMenuItem(new NewFile(ctx)))
+
+      val openFile = new JMenuItem("Open...")
+      openFile.addActionListener(new LoadFrom(ctx))
+      fileMenu.add(openFile)
+
+      val saveFile = new JMenuItem("Save...")
+      saveFile.addActionListener(new Save(ctx))
+      fileMenu.add(saveFile)
+
+      val saveAsFile = new JMenuItem("Save As...")
+      saveAsFile.addActionListener(new SaveAs(ctx))
+      fileMenu.add(saveAsFile)
+      
+      fileMenu.add(new JMenuItem(new CloseFile))
+
       fileMenu.add(openWeb)
+      
       menuBar.add(fileMenu)
 
       def menuItemFor(label: String, file: String) = {

@@ -16,12 +16,30 @@
 package net.kogics.kojo
 package xscala
 
-import core._
+import java.awt.{Color => JColor}
 import java.awt.GradientPaint
 import java.awt.Paint
-import java.io.File
+
+import core.InitedSingleton
+import core.Rectangle
+import core.Style
+import core.TSCanvasFeatures
+import core.TurtleMover
+import core.UnitLen
+import core.Voice
 import javax.swing.JComponent
-import util._
+import net.kogics.kojo.core.InitedSingleton
+import net.kogics.kojo.lite.CodeExecutionSupport
+import net.kogics.kojo.story.HandlerHolder
+import net.kogics.kojo.util.Read
+import story.HandlerHolder
+import story.IntHandlerHolder
+import story.StringHandlerHolder
+import story.VoidHandlerHolder
+import util.PuzzleLoader
+import util.Read
+import util.Throttler
+import util.Utils
 
 object Builtins extends InitedSingleton[Builtins] {
   def initedInstance(scalaCodeRunner: ScalaCodeRunner) = synchronized {
@@ -33,8 +51,6 @@ object Builtins extends InitedSingleton[Builtins] {
 
   protected def newInstance = new Builtins
 }
-
-import java.awt.{Color => JColor}
 
 class Builtins extends RepeatCommands {
   @volatile var astStopPhase = "typer"

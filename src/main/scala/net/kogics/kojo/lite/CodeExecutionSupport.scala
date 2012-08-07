@@ -13,6 +13,7 @@
  *
  */
 package net.kogics.kojo
+package lite
 
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -41,9 +42,9 @@ import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import util.Utils
-import net.kogics.kojo.lite.KojoCtx
 import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.history.HistoryListener
+import javax.swing.JOptionPane
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -222,7 +223,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         case HistoryPrev =>
           loadCodeFromHistoryPrev()
         case ClearEditor =>
-          clearEditor()
+          closeFileAndClrEditorIgnoringCancel()
         case ClearOutput =>
           clrOutput()
         case UploadCommand =>
@@ -470,12 +471,12 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
             }
           case KeyEvent.VK_UP =>
             if (evt.isControlDown) {
-               loadCodeFromHistoryPrev
+              loadCodeFromHistoryPrev
               evt.consume
             }
           case KeyEvent.VK_DOWN =>
             if (evt.isControlDown) {
-               loadCodeFromHistoryNext
+              loadCodeFromHistoryNext
               evt.consume
             }
           case _ => // do nothing special
@@ -517,12 +518,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       codePane.requestFocusInWindow
     }
     lastOutput = ""
-  }
-
-  def clearEditor() {
-    this.codePane.setText(null)
-    clearSButton.setEnabled(false)
-    codePane.requestFocusInWindow
   }
 
   def enableClearButton() = if (!clearButton.isEnabled) clearButton.setEnabled(true)
@@ -701,6 +696,96 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def keywordCompletions(prefix: Option[String]) = codeRunner.keywordCompletions(prefix)
   def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = codeRunner.memberCompletions(Utils.stripCR(codePane.getText), caretOffset, objid, prefix)
   def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) = xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
+
+  var openedFile: Option[File] = None
+  var fileData: String = _
+  def saveFileData(d: String) {
+    fileData = Utils.stripCR(d)
+  }
+  def fileChanged = fileData != Utils.stripCR(codePane.getText)
+
+  def hasOpenFile = openedFile.isDefined
+
+  def openFileWithoutClose(file: java.io.File) {
+    openedFile = Some(file)
+    import util.RichFile._
+    val script = file.readAsString
+    codePane.setText(script)
+    codePane.setCaretPosition(0)
+    kojoCtx.fileOpened(file)
+    saveFileData(script)
+  }
+
+  def openFile(file: java.io.File) {
+    try {
+      closeFileIfOpen()
+      openFileWithoutClose(file)
+    } catch {
+      case e: RuntimeException =>
+    }
+  }
+
+  def closeFileIfOpen() {
+    if (openedFile.isDefined) {
+      if (fileChanged) {
+        val doSave = JOptionPane.showConfirmDialog(
+          null,
+          Utils.loadString("S_FileChanged") format (openedFile.get.getName, openedFile.get.getName))
+        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
+          throw new RuntimeException("Cancel File Close")
+        }
+        if (doSave == JOptionPane.YES_OPTION) {
+          saveFile()
+        }
+      }
+      openedFile = None
+      kojoCtx.fileClosed()
+    }
+  }
+
+  def closeFileAndClrEditorIgnoringCancel() {
+    try {
+      closeFileAndClrEditor()
+    } catch {
+      case e: RuntimeException => // ignore user cancel
+    }
+  }
+
+  def closeFileAndClrEditor() {
+    closeFileIfOpen() // can throw runtime exception if user cancels
+    this.codePane.setText(null)
+    clearSButton.setEnabled(false)
+    codePane.requestFocusInWindow
+  }
+
+  def saveFile() {
+    saveTo(openedFile.get)
+  }
+
+  import java.io.File
+  private def saveTo(file: File) {
+    import util.RichFile._
+    val script = codePane.getText()
+    file.write(script)
+    saveFileData(script)
+  }
+
+  def saveAs(file: java.io.File) {
+    if (file.exists) {
+      val doSave = JOptionPane.showConfirmDialog(
+        null,
+        Utils.loadString("S_FileExists") format (file.getName))
+      if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
+        throw new RuntimeException("Cancel File SaveAs")
+      } else if (doSave == JOptionPane.NO_OPTION) {
+        throw new IllegalArgumentException("Redo 'Save As' to select new file")
+      } else if (doSave == JOptionPane.YES_OPTION) {
+        saveTo(file)
+      }
+    } else {
+      saveTo(file)
+    }
+  }
 
   val commandHistory = CommandHistory.instance
   val historyManager = new HistoryManager

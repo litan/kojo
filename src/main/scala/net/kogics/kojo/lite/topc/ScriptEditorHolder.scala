@@ -15,7 +15,7 @@ import javax.swing.JPopupMenu
 import net.kogics.kojo.codingmode.SwitchMode
 import net.kogics.kojo.lite.KojoCompletionProvider
 import net.kogics.kojo.util.Utils
-import net.kogics.kojo.CodeExecutionSupport
+import net.kogics.kojo.lite.CodeExecutionSupport
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends DefaultSingleCDockable("SE", "Script Editor", se) {
