@@ -123,7 +123,7 @@ object Main {
       StoryTeller.initedInstance(ctx)
       GeoGebraCanvas.initedInstance(ctx)
 
-      codePane = new RSyntaxTextArea(20, 60)
+      codePane = new RSyntaxTextArea(20, 80)
       val codeSupport = CodeExecutionSupport.initedInstance(codePane, ctx)
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance)
       val scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport)

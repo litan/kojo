@@ -1,24 +1,22 @@
 package net.kogics.kojo.lite.topc
 
-import javax.swing.JComponent
-import bibliothek.gui.dock.common.DefaultSingleCDockable
-import java.awt.Color
-import javax.swing.JTextArea
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-import javax.swing.JMenuItem
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants
-import javax.swing.JPopupMenu
-import net.kogics.kojo.lite.KojoCompletionProvider
-import org.fife.ui.autocomplete.AutoCompletion
-import net.kogics.kojo.CodeExecutionSupport
 import java.awt.BorderLayout
-import javax.swing.JPanel
+import java.awt.Color
+import org.fife.ui.autocomplete.AutoCompletion
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants
 import org.fife.ui.rtextarea.RTextScrollPane
-import net.kogics.kojo.codingmode.SwitchMode
-import javax.swing.JCheckBoxMenuItem
-import net.kogics.kojo.util.Utils
-import javax.swing.event.PopupMenuListener
+import bibliothek.gui.dock.common.DefaultSingleCDockable
 import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
+import javax.swing.JCheckBoxMenuItem
+import javax.swing.JPanel
+import javax.swing.JPopupMenu
+import net.kogics.kojo.codingmode.SwitchMode
+import net.kogics.kojo.lite.KojoCompletionProvider
+import net.kogics.kojo.util.Utils
+import net.kogics.kojo.CodeExecutionSupport
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends DefaultSingleCDockable("SE", "Script Editor", se) {
   se.setBackground(Color.white)
@@ -27,13 +25,14 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
   codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
   codePane.setAntiAliasingEnabled(true)
+  new IncreaseFontSizeAction().actionPerformedImpl(null, codePane)
 
   val provider = new KojoCompletionProvider(codeSupport)
   val ac = new AutoCompletion(provider)
-  ac.install(codePane)
   ac.setParameterAssistanceEnabled(true)
   ac.setAutoActivationEnabled(true)
   ac.setShowDescWindow(true)
+  ac.install(codePane)
 
   val sp = new RTextScrollPane(codePane)
   se.setLayout(new BorderLayout)

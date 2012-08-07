@@ -182,8 +182,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     | For the real deal, get Kojo (www.kogics.net/kojo)!
     | 
     | Kojo features missing in KojoLite include:
-    | Interactive Program Moulding, Code Templates, Context Help, 
-    | and Error Hyperlinks.
+    | Interactive Program Moulding, Code Templates, 
+    | Error Hyperlinks, etc..
     |""".stripMargin
 
     showOutput(msg)
