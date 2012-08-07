@@ -16,15 +16,13 @@ package net.kogics.kojo
 package xscala
 
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.PrintWriter
 import java.io.Writer
-import java.net.JarURLConnection
 import java.util.logging.Level
 import java.util.logging.Logger
 import scala.actors.Actor
 import scala.collection.mutable.ListBuffer
+import com.sun.jnlp.JNLPClassLoader
 import CodeCompletionUtils.InternalMethodsRe
 import CodeCompletionUtils.InternalVarsRe
 import CodeCompletionUtils.Keywords
@@ -40,9 +38,9 @@ import core.RunContext
 import core.SCanvas
 import core.StagingMode
 import core.TwMode
+import net.kogics.kojo.util.Typeclasses.some
 import util.Utils
 import net.kogics.kojo.util.Typeclasses
-import com.sun.deploy.cache.CachedJarFile
 
 class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRunner {
   val Log = Logger.getLogger(getClass.getName)
@@ -411,48 +409,44 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
       val iSettings = new Settings()
 
-      if (classp == null) {
-        val e2 = Thread.currentThread().getContextClassLoader().getResources("META-INF/MANIFEST.MF")
-        val lb = new ListBuffer[String]
-        while (e2.hasMoreElements) {
-          val u = e2.nextElement
-          val jarFile = u.openConnection.asInstanceOf[JarURLConnection].getJarFile
-          // Work around webstart issue:
-          // http://bugs.sun.com/view_bug.do?bug_id=6967414
-          jarFile match {
-            case cjf: CachedJarFile =>
-              numCachedJars += 1
-              val klass = cjf.getClass
-              try {
-                callMethod("getSigners", cjf, klass)
-                callMethod("getSignerMap", cjf, klass)
-                callMethod("getCodeSourceCache", cjf, klass)
-                cachedJarsData += readField("signersRef", cjf, klass)
-                cachedJarsData += readField("signerMapRef", cjf, klass)
-                cachedJarsData += readField("codeSourceCacheRef", cjf, klass)
-              }
-              catch {
-                case t: Throwable =>
-                  println("Problem: "  + t.getMessage)
-                  t.printStackTrace()
-              }
-            case _ =>
-          }
-//          println("Jar file name - %s, class - %s" format (jarFile.getName, jarFile.getClass.getName))
-          val tempFile = File.createTempFile("kojolite-", ".jar");
-          tempFile.deleteOnExit()
-          Utils.copyFile(new File(jarFile.getName()), tempFile);
-          // val jarLocation = "file:" + tempFile.getAbsolutePath()
-          lb += tempFile.getAbsolutePath()
-        }
-        classp = createCp(lb.toList)
-//        println("Num Cached Jars - %d, Num Entries: %d" format(numCachedJars, cachedJarsData.size))
-//        println("cachedJarsData: " + cachedJarsData)
-      }
-
       if (System.getProperty("ide.run") == "true") {
         iSettings.usejavacp.value = true
       } else {
+        if (classp == null) {
+          val jnlpLoader = JNLPClassLoader.getInstance
+          val jds = jnlpLoader.getLaunchDesc.getResources.getEagerOrAllJarDescs(true)
+          val lb = new ListBuffer[String]
+          jds.foreach { jd =>
+            //            println(jd)
+            val jarFile = jnlpLoader.getJarFile(jd.getLocation)
+            //            println("Jar file name - %s, class - %s" format (jarFile.getName, jarFile.getClass.getName))
+            numCachedJars += 1
+            val klass = jarFile.getClass
+            try {
+              callMethod("getSigners", jarFile, klass)
+              callMethod("getSignerMap", jarFile, klass)
+              callMethod("getCodeSourceCache", jarFile, klass)
+              cachedJarsData += readField("signersRef", jarFile, klass)
+              cachedJarsData += readField("signerMapRef", jarFile, klass)
+              cachedJarsData += readField("codeSourceCacheRef", jarFile, klass)
+            } catch {
+              case t: Throwable =>
+                println("Problem: " + t.getMessage)
+                t.printStackTrace()
+            }
+
+            val tempFile = File.createTempFile("kojolite-", ".jar");
+            tempFile.deleteOnExit()
+            Utils.copyFile(new File(jarFile.getName()), tempFile);
+            // val jarLocation = "file:" + tempFile.getAbsolutePath()
+            lb += tempFile.getAbsolutePath()
+          }
+
+          classp = createCp(lb.toList)
+          //          println("Num Cached Jars - %d, Num Entries: %d" format (numCachedJars, cachedJarsData.size))
+          //          println("cachedJarsData: " + cachedJarsData)
+        }
+
         iSettings.classpath.append(classp)
       }
 
