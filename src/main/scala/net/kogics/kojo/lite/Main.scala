@@ -295,7 +295,7 @@ object Main {
 
       splash.close()
 
-      frame.setBounds(200, 200, 600, 500)
+//      frame.setBounds(0, 0, 0, 0)
       frame.addWindowListener(new WindowAdapter {
         override def windowClosing(e: WindowEvent) {
           try {
@@ -308,7 +308,7 @@ object Main {
           }
         }
       })
-      frame.pack()
+//      frame.pack()
       frame.setVisible(true)
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
 
