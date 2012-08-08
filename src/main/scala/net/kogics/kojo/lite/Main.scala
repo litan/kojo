@@ -46,6 +46,7 @@ import java.awt.event.WindowEvent
 import javax.swing.WindowConstants
 import net.kogics.kojo.lite.topc.D3CanvasHolder
 import net.kogics.kojo.d3.Canvas3D
+import bibliothek.gui.dock.common.mode.ExtendedMode
 
 object Main {
 
@@ -131,7 +132,7 @@ object Main {
       GeoGebraCanvas.initedInstance(ctx)
       Canvas3D.initedInstance(ctx)
 
-      codePane = new RSyntaxTextArea(20, 80)
+      codePane = new RSyntaxTextArea(5, 80)
       val codeSupport = CodeExecutionSupport.initedInstance(codePane, ctx)
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, ctx)
       val scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport)
@@ -151,6 +152,8 @@ object Main {
       grid.add(3.5, 2, 1.5, 1, outputHolder)
       grid.add(0, 0, 1, 4, storyHolder)
       control.getContentArea.deploy(grid)
+
+      storyHolder.setExtendedMode(ExtendedMode.MINIMIZED)
 
       val menuBar = new JMenuBar
 
