@@ -11,7 +11,10 @@ import sun.swing.SwingUtilities2
 
 class OutputWindowHolder(val ow: JTextArea) extends DefaultSingleCDockable("OW", "Output Pane", new JScrollPane(ow)) {
   ow.setBackground(Color.white)
-  ow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12))
+  ow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13))
+  ow.setForeground(new Color(32, 32, 32))
+  ow.setLineWrap(true)
+  ow.setWrapStyleWord(true)
 
   // should be called in swing thread
   def scrollToEnd() {
