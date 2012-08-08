@@ -44,6 +44,8 @@ import net.kogics.kojo.action.CloseFile
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import javax.swing.WindowConstants
+import net.kogics.kojo.lite.topc.D3CanvasHolder
+import net.kogics.kojo.d3.Canvas3D
 
 object Main {
 
@@ -127,6 +129,7 @@ object Main {
       SpriteCanvas.initedInstance(ctx)
       StoryTeller.initedInstance(ctx)
       GeoGebraCanvas.initedInstance(ctx)
+      Canvas3D.initedInstance(ctx)
 
       codePane = new RSyntaxTextArea(20, 80)
       val codeSupport = CodeExecutionSupport.initedInstance(codePane, ctx)
@@ -135,11 +138,13 @@ object Main {
       val outputHolder = new OutputWindowHolder(codeSupport.outputWindow)
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance)
+      val d3Holder = new D3CanvasHolder(Canvas3D.instance)
 
-      ctx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder)
+      ctx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder)
       ctx.frame = frame
 
       val grid = new CGrid(control)
+      grid.add(1, 0, 4, 2, d3Holder)
       grid.add(1, 0, 4, 2, mwHolder)
       grid.add(1, 0, 4, 2, drawingCanvasH)
       grid.add(1, 2, 2.5, 1, scriptEditorH)

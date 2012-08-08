@@ -24,6 +24,7 @@ trait KojoCtx {
   def makeTurtleWorldVisible()
   def makeMathWorldVisible()
   def makeStoryTellerVisible()
+  def make3DCanvasVisible()
   def baseDir: String
   def stopInterpreter(): Unit
   def stopAnimation(): Unit

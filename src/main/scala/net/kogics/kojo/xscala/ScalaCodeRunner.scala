@@ -478,6 +478,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
         // TODO: reevaluate other binds
         interp.interpret("val Staging = net.kogics.kojo.staging.API")
         interp.interpret("val Mw = net.kogics.kojo.mathworld.MathWorld.instance")
+        interp.interpret("val D3 = net.kogics.kojo.d3.API.instance")
       }
     }
 
