@@ -67,6 +67,14 @@ class KojoCtx extends core.KojoCtx {
       topcs.d3h.toFront()
     }
   }
+  
+  def drawingCanvasActivated() {
+    topcs.d3h.otherPaneActivated()
+  }
+  
+  def mwActivated() {
+    topcs.d3h.otherPaneActivated()
+  }
 
   def baseDir: String = System.getProperty("user.dir")
 

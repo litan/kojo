@@ -35,4 +35,6 @@ trait KojoCtx {
   def getLastLoadStoreDir(): String
   def setLastLoadStoreDir(dir: String): Unit
   def saveAsFile(): Unit
+  def drawingCanvasActivated(): Unit
+  def mwActivated(): Unit
 }

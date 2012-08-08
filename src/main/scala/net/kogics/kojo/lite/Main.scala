@@ -133,11 +133,11 @@ object Main {
 
       codePane = new RSyntaxTextArea(20, 80)
       val codeSupport = CodeExecutionSupport.initedInstance(codePane, ctx)
-      val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance)
+      val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, ctx)
       val scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport)
       val outputHolder = new OutputWindowHolder(codeSupport.outputWindow)
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
-      val mwHolder = new MathworldHolder(GeoGebraCanvas.instance)
+      val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, ctx)
       val d3Holder = new D3CanvasHolder(Canvas3D.instance)
 
       ctx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder)
