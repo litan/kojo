@@ -52,12 +52,20 @@ class KojoCtx extends core.KojoCtx {
   def makeStagingVisible() = makeTurtleWorldVisible()
 
   def makeMathWorldVisible() {
-    topcs.mwh.toFront()
+    if (!topcs.mwh.isShowing) {
+      topcs.mwh.toFront()
+    }
   }
 
   def makeStoryTellerVisible() {
     topcs.sth.setLocation(CLocation.base.normalWest(0.5))
     //    topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
+  }
+  
+  def make3DCanvasVisible() {
+    if (!topcs.d3h.isShowing) {
+      topcs.d3h.toFront()
+    }
   }
 
   def baseDir: String = System.getProperty("user.dir")

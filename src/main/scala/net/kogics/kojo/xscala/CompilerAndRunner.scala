@@ -57,6 +57,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
   import builtins._
   val Staging = net.kogics.kojo.staging.API
   val Mw = net.kogics.kojo.mathworld.MathWorld.instance
+  val D3 = net.kogics.kojo.d3.API.instance
   def entry() {
     // noop
   }
