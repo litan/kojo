@@ -44,7 +44,9 @@ class KojoCtx extends core.KojoCtx {
   }
 
   def makeTurtleWorldVisible() {
-    topcs.dch.toFront()
+    if (!topcs.dch.isShowing) {
+      topcs.dch.toFront()
+    }
   }
 
   def makeStagingVisible() = makeTurtleWorldVisible()
@@ -83,12 +85,12 @@ class KojoCtx extends core.KojoCtx {
   }
 
   @volatile var lastLoadStoreDir = ""
-  def getLastLoadStoreDir() = lastLoadStoreDir 
+  def getLastLoadStoreDir() = lastLoadStoreDir
   def setLastLoadStoreDir(dir: String) {
     lastLoadStoreDir = dir
   }
-  
+
   def saveAsFile() {
-	saveAsActionListener.actionPerformed(new ActionEvent(frame, 0, "Save As"))  
+    saveAsActionListener.actionPerformed(new ActionEvent(frame, 0, "Save As"))
   }
 }
