@@ -96,7 +96,7 @@ object Main {
   def loadUrl(url: String) = _loadUrl(url) {}
 
   def loadAndRunUrl(url: String) = _loadUrl(url) {
-    if (codePane.getText.toLowerCase.contains("file")) {
+    if (!url.startsWith("http://www.kogics.net/public/kojolite/samples/") && codePane.getText.toLowerCase.contains("file")) {
       codePane.insert("// Loaded code from URL: %s\n// ** Not running it automatically ** because it references files.\n// Look carefully at the code before running it.\n\n" format (url), 0)
       codePane.setCaretPosition(0)
     } else {
