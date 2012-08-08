@@ -295,7 +295,7 @@ object Main {
 
       splash.close()
 
-//      frame.setBounds(0, 0, 0, 0)
+      frame.setBounds(100, 100, 600, 500)
       frame.addWindowListener(new WindowAdapter {
         override def windowClosing(e: WindowEvent) {
           try {
