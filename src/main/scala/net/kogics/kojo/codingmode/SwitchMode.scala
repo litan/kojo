@@ -27,6 +27,7 @@ class SwitchMode extends AbstractAction {
       case "Tw" => CodeExecutionSupport.instance.activateTw()
       case "Staging" => CodeExecutionSupport.instance.activateStaging()
       case "Mw" => CodeExecutionSupport.instance.activateMw()
+      case "D3" => CodeExecutionSupport.instance.activateD3()
     }
   }
   
@@ -35,6 +36,7 @@ class SwitchMode extends AbstractAction {
       case "Tw" => cb.setSelected(CodeExecutionSupport.instance.isTwActive)
       case "Staging" => cb.setSelected(CodeExecutionSupport.instance.isStagingActive)
       case "Mw" => cb.setSelected(CodeExecutionSupport.instance.isMwActive)
+      case "D3" => cb.setSelected(CodeExecutionSupport.instance.isD3Active)
     }
   }
 }

@@ -257,15 +257,15 @@ object Main {
           aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>KojoLite</strong> (Early Access)<br/>
-              <br/>Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com).<br/><br/> 
+              <br/>Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/> 
               KojoLite is the online version of Kojo. Please visit <em>http://www.kogics.net/kojolite</em> and <em>http://www.kogics.net/kojo</em> for more information.<br/><br/>
-              KojoLite Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>(The late) Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Bj\u00f6rn Regnell</li></ul>
+              KojoLite Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>Jerzy Redlarski</li><li>(The late) Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Bj\u00f6rn Regnell</li></ul>
               KojoLite is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
               The list of third-party software used by KojoLite includes:
               <ul>
               <li>The Scala Programming Language (http://www.scala-lang.org)</li>
               <li>Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows</li>
-              <li>RSyntaxTextArea (http://fifesoft.com/rsyntaxtextarea/) for Syntax highlighting within the Script Editor</li>
+              <li>RSyntaxTextArea (http://fifesoft.com/rsyntaxtextarea/) for Syntax Highlighting and Code Completion within the Script Editor</li>
               <li>Piccolo2D (http://www.piccolo2d.org) for 2D Graphics</li>
               <li>JTS Topology Suite (http://tsusiatsoftware.net/jts/main.html) for Collision Detection</li>
               <li>JFugue (http://www.jfugue.org) for computer generated music</li>

@@ -29,6 +29,7 @@ trait CodeRunner {
   def activateTw(): Unit
   def activateStaging(): Unit
   def activateMw(): Unit
+  def activateD3(): Unit
 }
 
 trait RunContext {
@@ -126,5 +127,10 @@ class ProxyCodeRunner(codeRunnerMaker: () => CodeRunner) extends CodeRunner {
   def activateMw() {
     latch.await()
     codeRunner.activateMw()
+  }
+  
+  def activateD3() {
+    latch.await()
+    codeRunner.activateD3()
   }
 }

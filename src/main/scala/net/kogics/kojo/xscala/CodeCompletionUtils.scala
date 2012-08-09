@@ -205,6 +205,12 @@ object CodeCompletionUtils {
     "erase" -> "erase()"
   )
   
+  val D3MethodTemplates = Map(
+    "pitch" -> "pitch(${angle})"
+  ) 
+  
+  
+  
   @volatile var ExtraMethodTemplates: collection.Map[String, String] = TwMethodTemplates
 
   def activateTw() {
@@ -223,6 +229,12 @@ object CodeCompletionUtils {
     ExtraMethodTemplates = StagingMethodTemplates
     clearLangTemplates()
     Help.activateStaging()
+  }
+
+  def activateD3() {
+    ExtraMethodTemplates = D3MethodTemplates
+    clearLangTemplates()
+    Help.activateD3()
   }
 
   val langTemplates: collection.mutable.Map[String, Map[String, String]] = collection.mutable.Map()
