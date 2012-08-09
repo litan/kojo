@@ -45,6 +45,7 @@ import util.Utils
 import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.history.HistoryListener
 import javax.swing.JOptionPane
+import net.kogics.kojo.core.D3Mode
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -914,9 +915,17 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     }
   }
 
+  def activateD3() {
+    if (codingMode != D3Mode) {
+      codingMode = D3Mode
+      codeRunner.activateD3()
+    }
+  }
+
   def isTwActive = codingMode == TwMode
   def isStagingActive = codingMode == StagingMode
   def isMwActive = codingMode == MwMode
+  def isD3Active = codingMode == D3Mode
 
   class OutputCapturingRunner extends RunMonitor {
     val outputx: StringBuilder = new StringBuilder()

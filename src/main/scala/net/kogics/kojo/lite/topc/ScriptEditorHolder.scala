@@ -67,11 +67,18 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   mwCb.setActionCommand("Mw")
   popup.add(mwCb, 5)
 
+  val d3Cb = new JCheckBoxMenuItem(switcher)
+  d3Cb.setText(Utils.loadString("S_D3Mode"))
+  d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
+  d3Cb.setActionCommand("D3")
+  popup.add(d3Cb, 6)
+
   popup.addPopupMenuListener(new PopupMenuListener {
     def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       switcher.updateCb(twCb)
       switcher.updateCb(stagingCb)
       switcher.updateCb(mwCb)
+      switcher.updateCb(d3Cb)
     }
     def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
 

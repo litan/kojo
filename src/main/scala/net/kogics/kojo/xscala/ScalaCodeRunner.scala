@@ -41,6 +41,7 @@ import core.TwMode
 import net.kogics.kojo.util.Typeclasses.some
 import util.Utils
 import net.kogics.kojo.util.Typeclasses
+import net.kogics.kojo.core.D3Mode
 
 class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRunner {
   val Log = Logger.getLogger(getClass.getName)
@@ -87,6 +88,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
   case object ActivateTw
   case object ActivateStaging
   case object ActivateMw
+  case object ActivateD3
 
   def varCompletions(prefix: Option[String]): (List[String], Int) = {
     val resp = (codeRunner !? VarCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
@@ -120,6 +122,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
   def activateMw() {
     codeRunner ! ActivateMw
+  }
+
+  def activateD3() {
+    codeRunner ! ActivateD3
   }
 
   object InterruptionManager {
@@ -266,6 +272,19 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
               cmodeInit = imports
               mode = MwMode
               CodeCompletionUtils.activateMw()
+            }
+
+          case ActivateD3 =>
+            Utils.safeProcess {
+              interp.reset()
+              initInterp()
+              val imports = "import D3._"
+              outputHandler.withOutputSuppressed {
+                interp.interpret(imports)
+              }
+              cmodeInit = imports
+              mode = D3Mode
+              CodeCompletionUtils.activateD3()
             }
 
           case CompileCode(code) =>

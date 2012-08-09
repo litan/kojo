@@ -1075,6 +1075,10 @@ object Help {
   )
 
   val MwContent = Map[String, String]()
+  
+  val D3Content = Map[String, String](
+    "pitch" -> "help info about pitch [Todo]"
+  )
 
   @volatile var modeSpecificContent: Map[String, String] = TwContent
   
@@ -1090,6 +1094,11 @@ object Help {
 
   def activateStaging() {
     modeSpecificContent = StagingContent
+    clearLangContent()
+  }
+
+  def activateD3() {
+    modeSpecificContent = D3Content
     clearLangContent()
   }
 

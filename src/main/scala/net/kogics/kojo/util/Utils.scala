@@ -22,7 +22,6 @@ import javax.swing._
 import java.awt.event.{ActionListener, ActionEvent}
 import java.io._
 import net.kogics.kojo.core.CodingMode
-import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.lite.canvas.SpriteCanvas
