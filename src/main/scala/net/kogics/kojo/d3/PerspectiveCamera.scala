@@ -21,24 +21,27 @@ import java.awt.Color
 
 class PerspectiveCamera(position : Vector3d = Vector3d(0d, 10d, 0d),
              orientation : Quaternion4d = Quaternion4d(),
-             width : Int = 64,
-             height : Int = 48,
+             width : Int = Defaults.cameraWidth,
+             height : Int = Defaults.cameraHeight,
              val angle : Double = 90d,
-             axesVisible : Boolean = true,
-             frequency : Int = 30) extends Camera(position, orientation, width, height, axesVisible, frequency) {
+             axesVisible : Boolean = Defaults.axesVisible,
+             defaultLightsOn : Boolean = Defaults.defaultLightsOn,
+             frequency : Int = Defaults.frequency) extends Camera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency) {
   
   def setPosition(position : Vector3d) =
-    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, frequency)
+    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)
   def setOrientation(orientation : Quaternion4d) =
-    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, frequency)
+    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)
   def setPictureDimensions(width : Int, height : Int) =
-    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, frequency)
+    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)
   def setAngle(angle : Double) =
-    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, frequency)
+    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)
   def setAxesVisibility(axesVisible : Boolean) =
-    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, frequency)
+    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)
   def setFrequency(frequency : Int) =
-    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, frequency)
+    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)
+  def setDefaultLights(defaultLightsOn : Boolean) =
+    new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)
 
   override def render(shapes : List[Shape], lights : List[Light], turtle : Turtle3d) = {
     
@@ -69,6 +72,13 @@ class PerspectiveCamera(position : Vector3d = Vector3d(0d, 10d, 0d),
             withTurtle
         }
         
+        val allLights = {
+          if(defaultLightsOn)
+            DefaultLights.lights ::: lights
+          else
+            lights
+        }
+        
         val (distance, closestShape) = allShapes.foldLeft(
           (Double.MaxValue, None : Option[Shape]))(
           (result, shape) => shape.intersection(ray) match {
@@ -83,7 +93,7 @@ class PerspectiveCamera(position : Vector3d = Vector3d(0d, 10d, 0d),
         val color = closestShape match {
           case Some(t) => {
             val point = ray.origin + ray.direction * distance
-            t.shade(point, lights)
+            t.shade(point, allLights)
           }
           case None => {
             new Vector3d(0.4d, 0.5d, 0.6d)

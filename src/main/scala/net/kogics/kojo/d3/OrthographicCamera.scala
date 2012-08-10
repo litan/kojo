@@ -21,23 +21,26 @@ import java.awt.Color
 
 class OrthographicCamera(position : Vector3d = Vector3d(0d, 0d, 10d),
              orientation : Quaternion4d = Quaternion4d(),
-             width : Int = 64,
-             height : Int = 48,
-             axesVisible : Boolean = true,
-             frequency : Int = 30) extends Camera(position, orientation, width, height, axesVisible, frequency) {
+             width : Int = Defaults.cameraWidth,
+             height : Int = Defaults.cameraHeight,
+             axesVisible : Boolean = Defaults.axesVisible,
+             defaultLightsOn : Boolean = Defaults.defaultLightsOn,
+             frequency : Int = Defaults.frequency) extends Camera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency) {
   
   def setPosition(position : Vector3d) =
-    new OrthographicCamera(position, orientation, width, height, axesVisible, frequency)
+    new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
   def setOrientation(orientation : Quaternion4d) =
-    new OrthographicCamera(position, orientation, width, height, axesVisible, frequency)
+    new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
   def setPictureDimensions(width : Int, height : Int) =
-    new OrthographicCamera(position, orientation, width, height, axesVisible, frequency)
+    new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
   def setAngle(angle : Double) =
-    new OrthographicCamera(position, orientation, width, height, axesVisible, frequency)
+    new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
   def setAxesVisibility(axesVisible : Boolean) =
-    new OrthographicCamera(position, orientation, width, height, axesVisible, frequency)
+    new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
   def setFrequency(frequency : Int) =
-    new OrthographicCamera(position, orientation, width, height, axesVisible, frequency)
+    new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
+  def setDefaultLights(defaultLightsOn : Boolean) =
+    new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
 
   override def render(shapes : List[Shape], lights : List[Light], turtle : Turtle3d) = {
     
@@ -71,6 +74,13 @@ class OrthographicCamera(position : Vector3d = Vector3d(0d, 0d, 10d),
             withTurtle
         }
         
+        val allLights = {
+          if(defaultLightsOn)
+            DefaultLights.lights ::: lights
+          else
+            lights
+        }
+        
         val (distance, closestShape) = allShapes.foldLeft(
           (Double.MaxValue, None : Option[Shape]))(
           (result, shape) => shape.intersection(ray) match {
@@ -85,7 +95,7 @@ class OrthographicCamera(position : Vector3d = Vector3d(0d, 0d, 10d),
         val color = closestShape match {
           case Some(t) => {
             val point = ray.origin + ray.direction * distance
-            t.shade(point, lights)
+            t.shade(point, allLights)
           }
           case None => {
             new Vector3d(0.4d, 0.5d, 0.6d)

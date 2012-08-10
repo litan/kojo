@@ -22,7 +22,7 @@ import javax.swing.SwingConstants
 import javax.swing.event.ChangeListener
 import javax.swing.event.ChangeEvent
 
-class QualitySlider(val canvas : Canvas3D) extends JSlider(SwingConstants.VERTICAL, 0, 30, 15)
+class QualitySlider(val canvas : Canvas3D) extends JSlider(SwingConstants.VERTICAL, 0, 30, Defaults.quality)
 	with ChangeListener{
 
   setMajorTickSpacing(5);
