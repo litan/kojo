@@ -97,12 +97,13 @@ object Main {
 
   def loadUrl(url: String) = _loadUrl(url) {}
 
-  def loadAndRunUrl(url: String) = _loadUrl(url) {
+  def loadAndRunUrl(url: String, onStartup: Boolean = false) = _loadUrl(url) {
     if (!url.startsWith("http://www.kogics.net/public/kojolite/samples/") && codePane.getText.toLowerCase.contains("file")) {
       codePane.insert("// Loaded code from URL: %s\n// ** Not running it automatically ** because it references files.\n// Look carefully at the code before running it.\n\n" format (url), 0)
       codePane.setCaretPosition(0)
     } else {
-      codePane.insert("// Running code loaded from URL: %s\n// Please wait, this might take a few seconds ...\n\n" format (url), 0)
+      val msg2 = if (onStartup) "\n// Please wait, this might take a few seconds as Kojo starts up..." else ""
+      codePane.insert("// Running code loaded from URL: %s%s\n\n" format (url, msg2), 0)
       codePane.setCaretPosition(0)
       Builtins.instance.stClickRunButton
     }
@@ -337,7 +338,7 @@ object Main {
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
 
       if (args.length == 1) {
-        loadAndRunUrl(args(0))
+        loadAndRunUrl(args(0), true)
       } else {
         Utils.schedule(1) {
           codePane.requestFocusInWindow()
