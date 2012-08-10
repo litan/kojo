@@ -20,8 +20,8 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeActi
 import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.Style
 
-class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends DefaultSingleCDockable("SE", "Script Editor", se) {
-  se.setBackground(Color.white)
+class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends BaseHolder("SE", "Script Editor", se) {
+
   codeSupport.toolbar.setOpaque(true)
   codeSupport.toolbar.setBackground(new Color(230, 230, 230))
 

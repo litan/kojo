@@ -9,8 +9,8 @@ import javax.swing.JScrollPane
 import javax.swing.JTextArea
 import sun.swing.SwingUtilities2
 
-class OutputWindowHolder(val ow: JTextArea) extends DefaultSingleCDockable("OW", "Output Pane", new JScrollPane(ow)) {
-  ow.setBackground(Color.white)
+class OutputWindowHolder(val ow: JTextArea) extends BaseHolder("OW", "Output Pane", new JScrollPane(ow)) {
+
   ow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13))
   ow.setForeground(new Color(32, 32, 32))
   ow.setLineWrap(true)
