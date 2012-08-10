@@ -7,8 +7,7 @@ import bibliothek.gui.dock.common.event.CFocusListener
 import bibliothek.gui.dock.common.intern.CDockable
 import net.kogics.kojo.core.KojoCtx
 
-class DrawingCanvasHolder(val dc: JComponent, ctx: KojoCtx) extends DefaultSingleCDockable("DC", "Drawing Canvas", dc) {
-  dc.setBackground(Color.white)
+class DrawingCanvasHolder(val dc: JComponent, ctx: KojoCtx) extends BaseHolder("DC", "Drawing Canvas", dc) {
 
   this.addFocusListener(new CFocusListener {
     override def focusGained(dockable: CDockable) {

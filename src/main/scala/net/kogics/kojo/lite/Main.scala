@@ -3,16 +3,20 @@ package lite
 
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import java.awt.Dimension
 import java.awt.Frame
 import java.awt.GridLayout
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import bibliothek.gui.dock.common.mode.ExtendedMode
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.CGrid
 import javax.jnlp.ServiceManager
 import javax.jnlp.SingleInstanceListener
 import javax.jnlp.SingleInstanceService
 import javax.swing.text.html.HTMLEditorKit
+import javax.swing.Action
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JDialog
@@ -26,7 +30,15 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextField
 import javax.swing.UIManager
+import javax.swing.WindowConstants
+import net.kogics.kojo.action.CloseFile
+import net.kogics.kojo.action.LoadFrom
+import net.kogics.kojo.action.NewFile
+import net.kogics.kojo.action.Save
+import net.kogics.kojo.action.SaveAs
+import net.kogics.kojo.d3.Canvas3D
 import net.kogics.kojo.lite.canvas.SpriteCanvas
+import net.kogics.kojo.lite.topc.D3CanvasHolder
 import net.kogics.kojo.lite.topc.DrawingCanvasHolder
 import net.kogics.kojo.lite.topc.MathworldHolder
 import net.kogics.kojo.lite.topc.OutputWindowHolder
@@ -36,17 +48,7 @@ import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.xscala.Builtins
 import util.Utils
-import net.kogics.kojo.action.NewFile
-import net.kogics.kojo.action.LoadFrom
-import net.kogics.kojo.action.SaveAs
-import net.kogics.kojo.action.Save
-import net.kogics.kojo.action.CloseFile
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
-import javax.swing.WindowConstants
-import net.kogics.kojo.lite.topc.D3CanvasHolder
-import net.kogics.kojo.d3.Canvas3D
-import bibliothek.gui.dock.common.mode.ExtendedMode
+import javax.swing.AbstractAction
 
 object Main {
 
@@ -120,7 +122,7 @@ object Main {
         UIManager.setLookAndFeel(nim.getClassName)
       }
 
-      frame = new JFrame("Kojo Lite")
+      frame = new JFrame("Kojo  \u2248Ray")
       frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
       val control = new CControl(frame)
       frame.setLayout(new GridLayout(1, 1))
@@ -154,6 +156,16 @@ object Main {
       control.getContentArea.deploy(grid)
 
       storyHolder.setExtendedMode(ExtendedMode.MINIMIZED)
+      
+      def appExit() {
+        try {
+          codeSupport.closing()
+          frame.dispose()
+          System.exit(0)
+        } catch {
+          case rte: RuntimeException =>
+        }
+      }
 
       val menuBar = new JMenuBar
 
@@ -217,6 +229,14 @@ object Main {
       fileMenu.add(new JMenuItem(new CloseFile))
 
       fileMenu.add(openWeb)
+      
+      fileMenu.addSeparator()
+
+      fileMenu.add(new JMenuItem(new AbstractAction("Exit") {
+        def actionPerformed(e: ActionEvent) {
+          appExit()
+        }
+      }))
 
       menuBar.add(fileMenu)
       ctx.saveAsActionListener = saveAsActionListener
@@ -232,13 +252,16 @@ object Main {
       }
 
       val samplesMenu = new JMenu("Samples")
-      samplesMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
-      samplesMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
       samplesMenu.add(menuItemFor("Spiral Hexangonal Tiles", "spiral-hexagon-tiles.kojo"))
       menuBar.add(samplesMenu)
 
       val helpMenu = new JMenu("Help")
       menuBar.add(helpMenu)
+
+      helpMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
+      helpMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
+      helpMenu.addSeparator()
+      
       val about = new JMenuItem("About")
       about.addActionListener(new ActionListener {
         def actionPerformed(ev: ActionEvent) {
@@ -256,12 +279,12 @@ object Main {
           aboutText.setEditable(false)
           aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
-              <strong>KojoLite</strong> (Early Access)<br/>
+              <strong>Kojo</strong> \u2248Ray (Early Access)<br/>
               <br/>Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/> 
-              KojoLite is the online version of Kojo. Please visit <em>http://www.kogics.net/kojolite</em> and <em>http://www.kogics.net/kojo</em> for more information.<br/><br/>
-              KojoLite Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>Jerzy Redlarski</li><li>(The late) Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Bj\u00f6rn Regnell</li></ul>
-              KojoLite is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
-              The list of third-party software used by KojoLite includes:
+              <strong>Kojo</strong> \u2248Ray is the online version of Kojo. Please visit <em>http://www.kogics.net/kojolite</em> and <em>http://www.kogics.net/kojo</em> for more information.<br/><br/>
+              <strong>Kojo</strong> \u2248Ray Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>Jerzy Redlarski</li><li>(The late) Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Bj\u00f6rn Regnell</li></ul>
+              <strong>Kojo</strong> \u2248Ray is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
+              The list of third-party software used by <strong>Kojo</strong> \u2248Ray includes:
               <ul>
               <li>The Scala Programming Language (http://www.scala-lang.org)</li>
               <li>Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows</li>
@@ -306,17 +329,10 @@ object Main {
       frame.setBounds(100, 100, 600, 500)
       frame.addWindowListener(new WindowAdapter {
         override def windowClosing(e: WindowEvent) {
-          try {
-            codeSupport.closing()
-            frame.dispose()
-            System.exit(0)
-          }
-          catch {
-            case rte: RuntimeException => 
-          }
+          appExit()
         }
       })
-//      frame.pack()
+      //      frame.pack()
       frame.setVisible(true)
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
 

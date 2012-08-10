@@ -9,8 +9,7 @@ import bibliothek.gui.dock.common.intern.CDockable
 import bibliothek.gui.dock.common.mode.ExtendedMode
 import bibliothek.gui.dock.common.event.CFocusListener
 
-class D3CanvasHolder(val d3: JComponent) extends DefaultSingleCDockable("D3", "3D Canvas", null.asInstanceOf[JComponent]) {
-  d3.setBackground(Color.white)
+class D3CanvasHolder(val d3: JComponent) extends BaseHolder("D3", "3D Canvas", null.asInstanceOf[JComponent]) {
 
   var added = false
 
