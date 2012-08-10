@@ -164,6 +164,6 @@ class Canvas3D extends JPanel with ComponentListener {
     image.setDimensions(width, height)
     val cameraScale = sqrt(((width * height) toDouble) / ((camera.width * camera.height) toDouble))
     camera = camera.setPictureDimensions((width / cameraScale) toInt, (height / cameraScale) toInt)
-    renderSynchronous()
+    renderAsynchronous()
   }
 }
