@@ -57,7 +57,8 @@ class Canvas3D extends JPanel with ComponentListener {
   var lights = List[Light]()
   var intermediateRendering = true
   var turtle = new Turtle3d()
-  var camera : Camera = new PerspectiveCamera().pitch(90d).setFrequency(qualitySlider.getValue())
+  @volatile var camera: Camera = new PerspectiveCamera().pitch(90d).setFrequency(qualitySlider.getValue())
+  @volatile var inRender = false
   var mouseControl = false
 
   def clear() {
@@ -73,13 +74,17 @@ class Canvas3D extends JPanel with ComponentListener {
 
   private def render() {
     renderLock.acquire()
+    inRender = true
+    // temporary fix to force rendering of unlimited quality images via slider
+    if (camera.frequency == 0) {
+      camera = camera.setPictureDimensions(
+        image.getWidth(), image.getHeight())
+    }
     val time = System.currentTimeMillis()
     val buffer = camera.render(shapes, lights, turtle)
     val frameTime = System.currentTimeMillis() - time
     image.fillWith(buffer)
-    Utils.runInSwingThread {
-      image.repaint()
-    }
+    image.repaint()
     //System.out.println(frameTime)
 
     if (frameTime / 1.3 > (1000d / camera.frequency)) {
@@ -96,7 +101,8 @@ class Canvas3D extends JPanel with ComponentListener {
           (camera.height * 1.1) toInt)
       }
     }
-	renderLock.release()
+    inRender = false
+    renderLock.release()
   }
 
   def renderSynchronous() {
@@ -154,7 +160,7 @@ class Canvas3D extends JPanel with ComponentListener {
 
   def fixDimensions() {
     val width = if(image.getWidth() > 0) image.getWidth() else 640
-    val height = if(image.getHeight() > 0) image.getHeight() else 480
+    val height = if(image.getHeight() > 0) image.getHeight() else 480 
     image.setDimensions(width, height)
     val cameraScale = sqrt(((width * height) toDouble) / ((camera.width * camera.height) toDouble))
     camera = camera.setPictureDimensions((width / cameraScale) toInt, (height / cameraScale) toInt)
