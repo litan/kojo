@@ -25,18 +25,18 @@ object Axes {
         new Cylinder(Vector3d(0d, 0d, 0d),
             Quaternion4d.fromAxisAngle(Vector3d(0d, 1d, 0d), -90),
             Material(1d, 0d, 0d),
-            axesWidth,
-            axesLength),
+            Defaults.axisRadius,
+            Defaults.axisLength),
         new Cylinder(Vector3d(0d, 0d, 0d),
             Quaternion4d.fromAxisAngle(Vector3d(1d, 0d, 0d), 90),
             Material(0d, 1d, 0d),
-            axesWidth,
-            axesLength),
+            Defaults.axisRadius,
+            Defaults.axisLength),
         new Cylinder(Vector3d(0d, 0d, 0d),
             Quaternion4d(),
             Material(0d, 0d, 1d),
-            axesWidth,
-            axesLength))
+            Defaults.axisRadius,
+            Defaults.axisLength))
 	list
   }
 }

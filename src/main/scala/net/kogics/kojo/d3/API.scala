@@ -172,8 +172,22 @@ class API {
   }
   
   def strafeUp(distance : Double) = {
-    renderIfTurtleVisible {
-      _canvas.turtle = _canvas.turtle.strafeUp(distance)
+    if (_canvas.turtle.trail) {
+      renderIfIntermediateRenderingOn {
+        _canvas.turtle = _canvas.turtle.pitch(-90)
+        if (distance > 0d) {
+          _canvas.cylinder(_canvas.turtle.lineWidth, distance)
+          _canvas.turtle = _canvas.turtle.forward(distance)
+        } else {
+          _canvas.turtle = _canvas.turtle.forward(distance)
+          _canvas.cylinder(_canvas.turtle.lineWidth, -distance)
+        }
+        _canvas.turtle = _canvas.turtle.pitch(90)
+      }
+    } else {
+      renderIfTurtleVisible {
+        _canvas.turtle = _canvas.turtle.strafeUp(distance)
+      }
     }
   }
   
@@ -182,8 +196,22 @@ class API {
   }
   
   def strafeLeft(distance : Double) = {
-    renderIfTurtleVisible {
-      _canvas.turtle = _canvas.turtle.strafeLeft(distance)
+    if (_canvas.turtle.trail) {
+      renderIfIntermediateRenderingOn {
+        _canvas.turtle = _canvas.turtle.turn(90)
+        if (distance > 0d) {
+          _canvas.cylinder(_canvas.turtle.lineWidth, distance)
+          _canvas.turtle = _canvas.turtle.forward(distance)
+        } else {
+          _canvas.turtle = _canvas.turtle.forward(distance)
+          _canvas.cylinder(_canvas.turtle.lineWidth, -distance)
+        }
+        _canvas.turtle = _canvas.turtle.turn(-90)
+      }
+    } else {
+      renderIfTurtleVisible {
+        _canvas.turtle = _canvas.turtle.strafeLeft(distance)
+      }
     }
   }
   
@@ -343,6 +371,18 @@ class API {
   def axesOff() {
     renderIfIntermediateRenderingOn {
     	_canvas.camera = _canvas.camera.setAxesVisibility(false)
+    }
+  }
+  
+  def defaultLightsOn() {
+    renderIfIntermediateRenderingOn {
+    	_canvas.camera = _canvas.camera.setDefaultLights(true)
+    }
+  }
+  
+  def defaultLightsOff() {
+    renderIfIntermediateRenderingOn {
+    	_canvas.camera = _canvas.camera.setDefaultLights(false)
     }
   }
   

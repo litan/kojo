@@ -23,7 +23,7 @@ class Turtle3d(val position : Vector3d = Vector3d(),
                val material : Material = Material(1d, 1d, 1d),
                val visible : Boolean = true,
                val trail : Boolean = true,
-               val lineWidth : Double = 0.05d) extends Mover[Turtle3d]{
+               val lineWidth : Double = Defaults.lineWidth) extends Mover[Turtle3d]{
   
   def setPosition(position : Vector3d) =
     new Turtle3d(position, orientation, material, visible, trail, lineWidth)
@@ -49,17 +49,17 @@ class Turtle3d(val position : Vector3d = Vector3d(),
                                 Vector3d(-0.25d, -0.25d, -0.25d),Vector3d(0.25d, -0.25d, -0.25d))
 
     for(sphere <- spherePositions) {
-      val absolutePosition = position + (-orientation).rotate(sphere)
+      val absolutePosition = position + (-orientation).rotate(sphere*Defaults.turtleSize)
       if(sphere == spherePositions.head)
         list = new Sphere(absolutePosition,
         			      orientation,
         			      Material(0.05d, 0.3d, 0.05d),
-        			      0.5) :: list
+        			      0.5*Defaults.turtleSize) :: list
       else
         list = new Sphere(absolutePosition,
         			      orientation,
         			      Material(0.2d, 0.6d, 0.2d),
-        			      0.25) :: list
+        			      0.25*Defaults.turtleSize) :: list
     }
     list
   }

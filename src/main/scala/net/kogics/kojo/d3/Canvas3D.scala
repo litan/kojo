@@ -55,19 +55,23 @@ class Canvas3D extends JPanel with ComponentListener {
 
   var shapes = List[Shape]()
   var lights = List[Light]()
-  var intermediateRendering = true
+  var intermediateRendering = Defaults.intermediateRendering
   var turtle = new Turtle3d()
-  @volatile var camera: Camera = new PerspectiveCamera().pitch(90d).setFrequency(qualitySlider.getValue())
+  @volatile var camera: Camera = new PerspectiveCamera().pitch(90d).setFrequency(qualitySlider.getValue()).moveTo(5, 5, 5).lookAt(0, 0, 0).roll(15)
   @volatile var inRender = false
-  var mouseControl = false
+  var mouseControl = Defaults.mouseControl
+  if(mouseControl)
+    image.canvas = Option(this)
+  var defaultLightsOn = Defaults.defaultLightsOn
 
   def clear() {
     shapes = List[Shape]()
     lights = List[Light]()
-    intermediateRendering = true
+    intermediateRendering = Defaults.intermediateRendering
     turtle = new Turtle3d()
-    camera = new PerspectiveCamera().pitch(90d).setFrequency(qualitySlider.getValue())
-    mouseControl = false
+    camera = new PerspectiveCamera().pitch(90d).setFrequency(qualitySlider.getValue()).moveTo(5, 5, 5).lookAt(0, 0, 0).roll(15)
+    mouseControl = Defaults.mouseControl
+    defaultLightsOn = Defaults.defaultLightsOn
     fixDimensions()
   }
   val renderLock = new Lock
@@ -84,7 +88,9 @@ class Canvas3D extends JPanel with ComponentListener {
     val buffer = camera.render(shapes, lights, turtle)
     val frameTime = System.currentTimeMillis() - time
     image.fillWith(buffer)
-    image.repaint()
+    Utils.runInSwingThread {
+    	image.repaint()
+    }
     //System.out.println(frameTime)
 
     if (frameTime / 1.3 > (1000d / camera.frequency)) {

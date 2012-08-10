@@ -20,16 +20,18 @@ import java.awt.image.BufferedImage
 
 abstract class Camera(val position : Vector3d = Vector3d(0d, 0d, 10d),
              val orientation : Quaternion4d = Quaternion4d(),
-             val width : Int = 64,
-             val height : Int = 48,
-             val axesVisible : Boolean = true,
-             val frequency : Int = 30) extends Mover[Camera] {
+             val width : Int = Defaults.cameraWidth,
+             val height : Int = Defaults.cameraHeight,
+             val axesVisible : Boolean = Defaults.axesVisible,
+             val defaultLightsOn : Boolean = Defaults.defaultLightsOn,
+             val frequency : Int = Defaults.frequency) extends Mover[Camera] {
   
   def setPosition(position : Vector3d) : Camera
   def setOrientation(orientation : Quaternion4d) : Camera
   def setPictureDimensions(width : Int, height : Int) : Camera
   def setAxesVisibility(axesVisible : Boolean) : Camera
   def setFrequency(frequency : Int) : Camera
+  def setDefaultLights(defaultLightsOn : Boolean) : Camera
   
   def render(shapes : List[Shape], lights : List[Light], turtle : Turtle3d) : BufferedImage
 
