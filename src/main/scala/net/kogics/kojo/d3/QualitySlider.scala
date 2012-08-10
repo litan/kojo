@@ -27,22 +27,29 @@ class QualitySlider(val canvas : Canvas3D) extends JSlider(SwingConstants.VERTIC
 
   setMajorTickSpacing(5);
   setMinorTickSpacing(1)
-  val labelTable = new Hashtable[Integer, JLabel]
-  labelTable.put(new Integer(0), new JLabel("Unlimited"))
-  labelTable.put(new Integer(3), new JLabel("High"))
-  labelTable.put(new Integer(6), new JLabel("Good"))
-  labelTable.put(new Integer(15), new JLabel("Balanced"))
-  labelTable.put(new Integer(21), new JLabel("Fast"))
-  labelTable.put(new Integer(30), new JLabel("Very fast"))
+  val labelTable = new Hashtable[Int, JLabel]
+  labelTable.put(0, new JLabel("Unlimited"))
+  labelTable.put(3, new JLabel("High"))
+  labelTable.put(6, new JLabel("Good"))
+  labelTable.put(15, new JLabel("Balanced"))
+  labelTable.put(21, new JLabel("Fast"))
+  labelTable.put(30, new JLabel("Very fast"))
   setLabelTable(labelTable)
   setPaintLabels(true)
   setPaintTicks(true)
   setSnapToTicks(true)
   addChangeListener(this)
-  
-  override def stateChanged(e : ChangeEvent) {
-    canvas.camera = canvas.camera.setFrequency(getValue())
-    if(canvas.renderLock.available)
-    	canvas.renderAsynchronous()
+  var lastFreq: Int = _
+
+  override def stateChanged(e: ChangeEvent) {
+    if (!getValueIsAdjusting) {
+      if (canvas.inRender) {
+    	setValue(lastFreq)
+      } else {
+        canvas.camera = canvas.camera.setFrequency(getValue())
+        canvas.renderAsynchronous()
+        lastFreq = getValue
+      }
+    }
   }
 }
