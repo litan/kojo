@@ -25,6 +25,7 @@ import javax.swing.event.ChangeEvent
 class QualitySlider(val canvas : Canvas3D) extends JSlider(SwingConstants.VERTICAL, 0, 30, Defaults.quality)
 	with ChangeListener{
 
+  setInverted(true)
   setMajorTickSpacing(5);
   setMinorTickSpacing(1)
   val labelTable = new Hashtable[Int, JLabel]

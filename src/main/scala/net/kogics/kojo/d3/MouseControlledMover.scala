@@ -46,8 +46,6 @@ trait MouseControlledMover extends MouseMotionListener with MouseListener {
       rightIsPressed = false
   }
 
-  val movementSpeed = 0.1
-
   override def mouseDragged(e : MouseEvent) {
     // shift - panning (strafe)
     // zoom - changes angle in perspective, scale in orthographic
@@ -66,13 +64,14 @@ trait MouseControlledMover extends MouseMotionListener with MouseListener {
           if (leftIsPressed) {
             if (e.isControlDown()) {
               // restrict to left/right
-              canvas.camera = canvas.camera.strafeRight(xDiff * 0.1)
+              canvas.camera = canvas.camera.strafeRight(xDiff * Defaults.mouseControlDistanceRatio)
             } else if (e.isAltDown()) {
               // restrict to up/down
-              canvas.camera = canvas.camera.strafeDown(yDiff * 0.1)
+              canvas.camera = canvas.camera.strafeDown(yDiff * Defaults.mouseControlDistanceRatio)
             } else {
               // unrestricted panning
-              canvas.camera = canvas.camera.strafeRight(xDiff * 0.1).strafeDown(yDiff * 0.1)
+              canvas.camera = canvas.camera.strafeRight(xDiff * Defaults.mouseControlDistanceRatio)
+            		  .strafeDown(yDiff * Defaults.mouseControlDistanceRatio)
             }
           }
         } else {
@@ -80,26 +79,28 @@ trait MouseControlledMover extends MouseMotionListener with MouseListener {
           if (e.isControlDown()) {
             // restrict to yaw and roll
             if (leftIsPressed) {
-              canvas.camera = canvas.camera.turn(-xDiff)
+              canvas.camera = canvas.camera.turn(-xDiff * Defaults.mouseControlAngleRatio)
             }
             if (rightIsPressed) {
-              canvas.camera = canvas.camera.roll(xDiff)
+              canvas.camera = canvas.camera.roll(xDiff * Defaults.mouseControlAngleRatio)
             }
           } else if (e.isAltDown()) {
             // restrict to pitch and movement
             if (leftIsPressed) {
-              canvas.camera = canvas.camera.pitch(-yDiff)
+              canvas.camera = canvas.camera.pitch(-yDiff * Defaults.mouseControlAngleRatio)
             }
             if (rightIsPressed) {
-              canvas.camera = canvas.camera.forward(yDiff * 0.1)
+              canvas.camera = canvas.camera.forward(yDiff * Defaults.mouseControlDistanceRatio)
             }
           } else {
             // unrestricted movement
             if (leftIsPressed) {
-              canvas.camera = canvas.camera.turn(-xDiff).pitch(yDiff)
+              canvas.camera = canvas.camera.turn(-xDiff * Defaults.mouseControlAngleRatio)
+            		  .pitch(yDiff * Defaults.mouseControlAngleRatio)
             }
             if (rightIsPressed) {
-              canvas.camera = canvas.camera.roll(xDiff).forward(yDiff * 0.1)
+              canvas.camera = canvas.camera.roll(xDiff * Defaults.mouseControlAngleRatio)
+            		  .forward(yDiff * Defaults.mouseControlDistanceRatio)
             }
           }
         }
