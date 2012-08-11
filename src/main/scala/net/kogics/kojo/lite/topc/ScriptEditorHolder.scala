@@ -29,6 +29,9 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codePane.setAntiAliasingEnabled(true)
   codePane.setAnimateBracketMatching(false)
   codePane.setCloseCurlyBraces(true)
+  codePane.setTabsEmulated(true)
+  codePane.setTabSize(4)
+//  codePane.setMarkOccurrences(true)
   codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
   new IncreaseFontSizeAction().actionPerformedImpl(null, codePane)
 
