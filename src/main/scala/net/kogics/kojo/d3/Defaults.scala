@@ -29,6 +29,8 @@ object Defaults {
   val mouseControl = true
   val defaultLightsOn = true
   val axesVisible = true
+  val mouseControlAngleRatio = 0.3		// pixels to degrees
+  val mouseControlDistanceRatio = 0.03	// pixels to length units
 }
 
 object DefaultLights {

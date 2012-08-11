@@ -82,7 +82,7 @@ class Canvas3D extends JPanel with ComponentListener {
     // temporary fix to force rendering of unlimited quality images via slider
     if (camera.frequency == 0) {
       camera = camera.setPictureDimensions(
-        image.getWidth(), image.getHeight())
+        image.image.getWidth(), image.image.getHeight())
     }
     val time = System.currentTimeMillis()
     val buffer = camera.render(shapes, lights, turtle)
@@ -156,12 +156,14 @@ class Canvas3D extends JPanel with ComponentListener {
   override def componentHidden(e: ComponentEvent) {}
   override def componentShown(e: ComponentEvent) {
     fixDimensions()
+    renderAsynchronous()
   }
 
   override def componentMoved(e: ComponentEvent) {}
 
   override def componentResized(e: ComponentEvent) {
     fixDimensions()
+    renderAsynchronous()
   }
 
   def fixDimensions() {
@@ -170,6 +172,5 @@ class Canvas3D extends JPanel with ComponentListener {
     image.setDimensions(width, height)
     val cameraScale = sqrt(((width * height) toDouble) / ((camera.width * camera.height) toDouble))
     camera = camera.setPictureDimensions((width / cameraScale) toInt, (height / cameraScale) toInt)
-    renderAsynchronous()
   }
 }

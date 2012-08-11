@@ -44,6 +44,7 @@ class PerspectiveCamera(position : Vector3d = Vector3d(0d, 10d, 0d),
     new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)
 
   override def render(shapes : List[Shape], lights : List[Light], turtle : Turtle3d) = {
+    require(width > 0 && height > 0, "Width and height must be > 0")
     
     val cameraDistanceFromScreen = 1d / tan(toRadians(angle / 2))
     val buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
