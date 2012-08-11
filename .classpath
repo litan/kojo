@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" output="target/scala-2.9.2/classes" path="src/main/scala"/>
+	<classpathentry kind="src" output="target/scala-2.9.2/classes" path="src/main/java"/>
+	<classpathentry kind="src" output="target/scala-2.9.2/test-classes" path="src/test/scala"/>
+	<classpathentry kind="src" output="target/scala-2.9.2/test-classes" path="src/test/java"/>
+	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="lib" path="lib/docking-frames-common.jar" sourcepath="/home/lalit/work/docking-frames/src/docking-frames-common">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/lalit/work/docking-frames/doc/docking-frames-common/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="lib/docking-frames-core.jar" sourcepath="/home/lalit/work/docking-frames/src/docking-frames-core"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/jfugue-4.1.jar"/>
+	<classpathentry kind="lib" path="lib/piccolo2d-core-1.3.1.jar" sourcepath="/home/lalit/work/piccolo/piccolo2d-core-1.3.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/piccolo2d-extras-1.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/jts-1.12.jar"/>
+	<classpathentry kind="lib" path="lib/jl1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/jlatexmath-0.9.3.jar"/>
+	<classpathentry kind="lib" path="lib/group-panel.jar"/>
+	<classpathentry kind="lib" path="lib/scala-compiler.jar"/>
+	<classpathentry kind="lib" path="lib/scala-library.jar"/>
+	<classpathentry kind="lib" path="lib/scala-swing.jar"/>
+	<classpathentry kind="lib" path="lib/rsyntaxtextarea.jar" sourcepath="/home/lalit/work/RSyntaxTextArea/src"/>
+	<classpathentry kind="lib" path="lib/AppleJavaExtensions.jar"/>
+	<classpathentry kind="lib" path="lib/geogebra_cas.jar"/>
+	<classpathentry kind="lib" path="lib/geogebra_export.jar"/>
+	<classpathentry kind="lib" path="lib/geogebra_gui.jar"/>
+	<classpathentry kind="lib" path="lib/geogebra_main.jar"/>
+	<classpathentry kind="lib" path="lib/geogebra_properties.jar"/>
+	<classpathentry kind="lib" path="lib/geogebra.jar"/>
+	<classpathentry kind="lib" path="lib/netscape_javascript.jar"/>
+	<classpathentry kind="lib" path="lib/javaws.jar"/>
+	<classpathentry kind="lib" path="lib/httpunit.jar"/>
+	<classpathentry kind="lib" path="lib/js-1.6R5.jar"/>
+	<classpathentry kind="lib" path="lib/jtidy-4aug2000r7-dev.jar"/>
+	<classpathentry kind="lib" path="lib/autocomplete.jar"/>
+	<classpathentry kind="lib" path="lib/deploy.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
