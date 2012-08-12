@@ -25,7 +25,7 @@ import java.awt.Dimension
 class Image extends JPanel with MouseControlledMover {
 
   var canvas : Option[Canvas3D] = None
-  var image = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB)
+  var image = new BufferedImage(Defaults.cameraWidth, Defaults.cameraHeight, BufferedImage.TYPE_INT_RGB)
   var interpolate = false
   addMouseListener(this)
   addMouseMotionListener(this)
@@ -35,6 +35,8 @@ class Image extends JPanel with MouseControlledMover {
   }
   
   def setDimensions(width : Int, height : Int) {
+    val nonZeroWidth = if(width < 1) Defaults.cameraWidth else width
+    val nonZeroHeight = if(height < 1) Defaults.cameraHeight else height
     image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
   }
   
