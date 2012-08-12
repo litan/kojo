@@ -68,7 +68,7 @@ class OrthographicCamera(position : Vector3d = Vector3d(0d, 0d, 10d),
             shapes
           
           if(axesVisible) {
-            Axes.avatar ::: withTurtle
+            Axes.avatarWithTicks ::: withTurtle
           }
           else
             withTurtle

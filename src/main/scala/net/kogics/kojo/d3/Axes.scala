@@ -16,12 +16,8 @@
 package net.kogics.kojo.d3
 
 object Axes {
-  
-  val axesWidth = 0.05d
-  val axesLength = 1d
 
-  def avatar = {
-    var list = List[Shape](
+  def avatar = List[Shape](
         new Cylinder(Vector3d(0d, 0d, 0d),
             Quaternion4d.fromAxisAngle(Vector3d(0d, 1d, 0d), -90),
             Material(1d, 0d, 0d),
@@ -37,6 +33,23 @@ object Axes {
             Material(0d, 0d, 1d),
             Defaults.axisRadius,
             Defaults.axisLength))
-	list
+  
+  def avatarWithTicks = 
+      ticks(0,
+      Quaternion4d.fromAxisAngle(Vector3d(0d, 1d, 0d), -90),
+      Material(1d, 0d, 0d)) :::
+      ticks(0,
+      Quaternion4d.fromAxisAngle(Vector3d(1d, 0d, 0d), 90),
+      Material(0d, 1d, 0d)) :::
+      ticks(0,
+      Quaternion4d(),
+      Material(0d, 0d, 1d)) ::: avatar
+  
+  def ticks(distance : Double, direction : Quaternion4d, material : Material) : List[Shape] = {
+    if(distance > Defaults.axisLength) Nil
+    else new Sphere((-direction).rotate(Vector3d(0d, 0d, distance)),
+            direction,
+            material,
+            Defaults.axisTickSize) :: ticks(distance + Defaults.axisTickInterval, direction, material)
   }
 }
