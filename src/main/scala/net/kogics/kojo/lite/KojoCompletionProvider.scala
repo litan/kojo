@@ -143,7 +143,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
       val name = kv._1; val value = kv._2
       proposals.add(
         new TemplateCompletion(this, name, name, value, null, CodeTemplates.asString(name)) {
-          setRelevance(KEYWORD)
+          setRelevance(TEMPLATE)
           override def getIcon = kindIcon(TEMPLATE)
         })
     }
