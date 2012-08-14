@@ -46,6 +46,7 @@ import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.history.HistoryListener
 import javax.swing.JOptionPane
 import net.kogics.kojo.core.D3Mode
+import java.io.File
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -61,6 +62,16 @@ object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
 
 class CodeExecutionSupport private extends core.CodeCompletionSupport {
   val Log = Logger.getLogger(getClass.getName);
+  val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
+    clearSButton, clearButton, cexButton) = makeToolbar()
+  val outputWindow = new JTextArea
+  outputWindow.setEditable(false)
+  System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
+  doWelcome()
+
+  val commandHistory = CommandHistory.instance
+  val historyManager = new HistoryManager
+  hPrevButton.setEnabled(commandHistory.hasPrevious)
 
   val tCanvas = SpriteCanvas.instance
   tCanvas.outputFn = showOutput _
@@ -71,15 +82,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   val mp3player = music.KMp3.instance
 
   @volatile var pendingCommands = false
-
-  val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
-    clearSButton, clearButton, cexButton) = makeToolbar()
-
   @volatile var runMonitor: RunMonitor = new NoOpRunMonitor()
   @volatile var codePane: JTextArea = _
   @volatile var kojoCtx: KojoCtx = _
-  val outputWindow = new JTextArea
-  outputWindow.setEditable(false)
 
   val codeRunner = makeCodeRunner()
 
@@ -97,10 +102,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   @volatile var lastOutput = ""
 
   setSpriteListener()
-  doWelcome()
-
-  import java.io._
-  System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
 
   class OutputWindowWriter extends Writer {
     override def write(s: String) {
@@ -254,7 +255,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
     toolbar.add(compileButton)
 
-    hPrevButton.setEnabled(false)
     toolbar.add(hPrevButton)
 
     hNextButton.setEnabled(false)
@@ -464,13 +464,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
               evt.consume
             }
           case KeyEvent.VK_UP =>
-            if (evt.isControlDown) {
-              loadCodeFromHistoryPrev
+            if (evt.isControlDown && hPrevButton.isEnabled) {
+              loadCodeFromHistoryPrev()
               evt.consume
             }
           case KeyEvent.VK_DOWN =>
-            if (evt.isControlDown) {
-              loadCodeFromHistoryNext
+            if (evt.isControlDown && hNextButton.isEnabled) {
+              loadCodeFromHistoryNext()
               evt.consume
             }
           case _ => // do nothing special
@@ -784,23 +784,22 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def closing() {
     if (openedFile.isDefined) {
       closeFileIfOpen()
-    } else {
-      if (codePane.getText.size > 0) {
-        val doSave = JOptionPane.showConfirmDialog(
-          kojoCtx.frame,
-          "You have unsaved work. Do you want to save your script to a file?")
-        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
-          throw new RuntimeException("Veto Shutdown")
-        }
-        else if (doSave == JOptionPane.YES_OPTION) {
-          kojoCtx.saveAsFile()
-        }
-      }
-    }
+    } 
+//    else {
+//      if (codePane.getText.size > 0) {
+//        val doSave = JOptionPane.showConfirmDialog(
+//          kojoCtx.frame,
+//          "You have unsaved work. Do you want to save your script to a file?")
+//        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
+//          throw new RuntimeException("Veto Shutdown")
+//        }
+//        else if (doSave == JOptionPane.YES_OPTION) {
+//          kojoCtx.saveAsFile()
+//        }
+//      }
+//    }
   }
 
-  val commandHistory = CommandHistory.instance
-  val historyManager = new HistoryManager
   def loadCodeFromHistoryPrev() = historyManager.historyMoveBack
   def loadCodeFromHistoryNext() = historyManager.historyMoveForward
   def loadCodeFromHistory(historyIdx: Int) = historyManager.setCode(historyIdx)
