@@ -53,6 +53,7 @@ import javax.swing.AbstractAction
 object Main {
 
   @volatile var codePane: RSyntaxTextArea = _
+  @volatile var scriptEditorH: ScriptEditorHolder = _
   @volatile var frame: JFrame = _
   @volatile var splash: SplashScreen = _
 
@@ -85,13 +86,13 @@ object Main {
         Utils.runInSwingThread {
           codePane.setText(Utils.stripCR(code))
           codePane.setCaretPosition(0)
-          codePane.requestFocusInWindow()
           postfn
         }
 
       } catch {
         case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
       }
+      scriptEditorH.activate()
     }
   }
 
@@ -138,7 +139,7 @@ object Main {
       codePane = new RSyntaxTextArea(5, 80)
       val codeSupport = CodeExecutionSupport.initedInstance(codePane, ctx)
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, ctx)
-      val scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport)
+      scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport)
       val outputHolder = new OutputWindowHolder(codeSupport.outputWindow)
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, ctx)
@@ -157,7 +158,7 @@ object Main {
       control.getContentArea.deploy(grid)
 
       storyHolder.setExtendedMode(ExtendedMode.MINIMIZED)
-      
+
       def appExit() {
         try {
           codeSupport.closing()
@@ -230,7 +231,7 @@ object Main {
       fileMenu.add(new JMenuItem(new CloseFile))
 
       fileMenu.add(openWeb)
-      
+
       fileMenu.addSeparator()
 
       fileMenu.add(new JMenuItem(new AbstractAction("Exit") {
@@ -262,7 +263,7 @@ object Main {
       helpMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
       helpMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
       helpMenu.addSeparator()
-      
+
       val about = new JMenuItem("About")
       about.addActionListener(new ActionListener {
         def actionPerformed(ev: ActionEvent) {
@@ -293,6 +294,7 @@ object Main {
               <li>Piccolo2D (http://www.piccolo2d.org) for 2D Graphics</li>
               <li>JTS Topology Suite (http://tsusiatsoftware.net/jts/main.html) for Collision Detection</li>
               <li>JFugue (http://www.jfugue.org) for computer generated music</li>
+              <li>The H2 Database Engine (http://www.h2database.com) for storing history</li>
               <li>GeoGebra (http://www.geogebra.org) for Interactive Geometry and Algebra</li>
               <li>HttpUnit (http://httpunit.sourceforge.net/) for HTTP communication</li>
               <li>JLaTeXMath (http://forge.scilab.org/index.php/p/jlatexmath/) to display LaTeX commands</li>
@@ -341,7 +343,7 @@ object Main {
         loadAndRunUrl(args(0), true)
       } else {
         Utils.schedule(1) {
-          codePane.requestFocusInWindow()
+          scriptEditorH.activate()
         }
       }
     }
