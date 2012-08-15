@@ -21,7 +21,8 @@ import java.util.Date
 
 case class HistoryItem(
   script: String,
-  id: Long = 0,
+  file: String = "",
+  var id: Long = 0,
   starred: Boolean = false,
   tags: String = "",
   at: Date = new Date)
@@ -33,12 +34,12 @@ trait HistoryListener {
 }
 
 trait HistorySaver {
-  def save(code: String): HistoryItem
+  def save(code: String, file: Option[String]): HistoryItem
   def readAll(): Seq[HistoryItem]
 }
 
 class NoopHistorySaver extends HistorySaver {
-  def save(code: String) = HistoryItem(code)
+  def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
   def readAll(): Seq[HistoryItem] = Seq()
 }
 
@@ -79,9 +80,9 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
     hIndex = history.size
   }
 
-  def add(code: String) {
+  def add(code: String, file: Option[String]) {
     try {
-      val hi = historySaver.save(code)
+      val hi = historySaver.save(code, file)
       internalAdd(hi)
       if (listener.isDefined) listener.get.itemAdded
     }

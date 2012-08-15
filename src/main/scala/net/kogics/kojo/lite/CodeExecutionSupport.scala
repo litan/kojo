@@ -864,7 +864,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     def codeRun(code: String) {
       val tcode = code.trim()
       val prevIndex = commandHistory.hIndex
-      commandHistory.add(code)
+      commandHistory.add(code, openedFile.map(f => "%s (%s)" format(f.getName, f.getParent)))
 
       if (commandHistory.hIndex == prevIndex + 1) {
         // the last entry within history was selected
