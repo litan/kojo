@@ -68,6 +68,7 @@ class DBHistorySaver extends HistorySaver {
   val saveStatement = conn.prepareStatement("INSERT INTO HISTORY(SCRIPT, FILE, STARRED, TAGS, AT) VALUES(?, ?, ?, ?, ?)")
   val idCall = conn.prepareCall("{? = CALL IDENTITY()}")
   idCall.registerOutParameter(1, Types.BIGINT);
+  val updateStatement = conn.prepareStatement("UPDATE HISTORY SET STARRED = ? WHERE ID = ?")
 
   import Control._
 
@@ -95,7 +96,7 @@ class DBHistorySaver extends HistorySaver {
 
   def readAll() = {
     queryEach(conn, "SELECT * FROM HISTORY ORDER BY AT DESC LIMIT 1000") { rs =>
-      HistoryItem(rs.getString("SCRIPT"), rs.getString("FILE"), rs.getLong("ID"), rs.getBoolean("STARRED"), rs.getString("TAGS"), rs.getDate("AT"))
+      HistoryItem(rs.getString("SCRIPT"), rs.getString("FILE"), rs.getLong("ID"), rs.getBoolean("STARRED"), rs.getString("TAGS"), rs.getTimestamp("AT"))
     }
   }
 
@@ -112,6 +113,12 @@ class DBHistorySaver extends HistorySaver {
     idCall.execute()
     h.id = idCall.getLong(1)
     h
+  }
+  
+  def updateStar(hi: HistoryItem) {
+    updateStatement.setBoolean(1, hi.starred)
+    updateStatement.setLong(2, hi.id)
+    updateStatement.executeUpdate()
   }
 }
 

@@ -23,8 +23,8 @@ case class HistoryItem(
   script: String,
   file: String = "",
   var id: Long = 0,
-  starred: Boolean = false,
-  tags: String = "",
+  var starred: Boolean = false,
+  var tags: String = "",
   at: Date = new Date)
 
 trait HistoryListener {
@@ -36,11 +36,13 @@ trait HistoryListener {
 trait HistorySaver {
   def save(code: String, file: Option[String]): HistoryItem
   def readAll(): Seq[HistoryItem]
+  def updateStar(hi: HistoryItem)
 }
 
 class NoopHistorySaver extends HistorySaver {
   def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
   def readAll(): Seq[HistoryItem] = Seq()
+  def updateStar(hi: HistoryItem) {}
 }
 
 object CommandHistory extends Singleton[CommandHistory] {
@@ -85,8 +87,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
       val hi = historySaver.save(code, file)
       internalAdd(hi)
       if (listener.isDefined) listener.get.itemAdded
-    }
-    catch {
+    } catch {
       case t: Throwable => println("\nProblem adding code to history: " + t.getMessage)
     }
   }
@@ -137,5 +138,24 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
 
   def ensureLastEntryVisible() {
     ensureVisible(hIndex)
+  }
+
+  def starHelper(hi: HistoryItem, on: Boolean) {
+    try {
+      hi.starred = on
+      historySaver.updateStar(hi)
+    } catch {
+      case t: Throwable =>
+        println("\nProblem saving star to history: " + t.getMessage)
+        hi.starred = !on
+    }
+  }
+
+  def star(hi: HistoryItem) {
+	  starHelper(hi, true)
+  }
+
+  def unstar(hi: HistoryItem) {
+	  starHelper(hi, false)
   }
 }
