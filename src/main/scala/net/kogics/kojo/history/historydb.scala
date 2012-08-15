@@ -16,6 +16,10 @@ package net.kogics.kojo.history
 
 import java.sql.DriverManager
 import java.io.File
+import java.sql.ResultSet
+import java.sql.Connection
+import java.sql.Timestamp
+import java.sql.Types
 
 // code to simplify jdbc queries from: 
 // http://zcox.wordpress.com/2009/08/17/simple-jdbc-queries-in-scala/
@@ -34,8 +38,6 @@ object Control {
     while (test) ret += block
     ret.toList
   }
-
-  import java.sql._
 
   /** Executes the SQL and processes the result set using the specified function. */
   def query[B](connection: Connection, sql: String)(process: ResultSet => B): B =
@@ -57,35 +59,32 @@ object Control {
 }
 
 class DBHistorySaver extends HistorySaver {
-
-  var needCreate = false
-  val userDir = System.getProperty("user.home")
-  if (!new File(userDir + "/.kojo/lite/db").exists) {
-    println("\nCreating Kojo Database...\nKojo conf Dir: %s/.kojo" format (userDir))
-    needCreate = true
-  }
-
-  import java.sql._
   Class.forName("org.h2.Driver")
   val conn = DriverManager.getConnection("jdbc:h2:~/.kojo/lite/db/kojo", "sa", "");
   // need to think about connection closing and possible timeout
   conn.setAutoCommit(true)
+  createTableIfNeeded()
 
-  if (needCreate) {
-    createTable()
-  }
+  val saveStatement = conn.prepareStatement("INSERT INTO HISTORY(SCRIPT, FILE, STARRED, TAGS, AT) VALUES(?, ?, ?, ?, ?)")
+  val idCall = conn.prepareCall("{? = CALL IDENTITY()}")
+  idCall.registerOutParameter(1, Types.BIGINT);
 
   import Control._
 
-  def createTable() {
+  def createTableIfNeeded() {
     using(conn.createStatement) { statement =>
-      statement.executeUpdate("""CREATE TABLE HISTORY(ID IDENTITY PRIMARY KEY, 
+      statement.executeUpdate("""CREATE TABLE IF NOT EXISTS HISTORY(ID IDENTITY PRIMARY KEY, 
           SCRIPT CLOB, 
-          STARRED BOOLEAN, 
+          STARRED BOOLEAN,
+          FILE VARCHAR(1024),
           TAGS VARCHAR(1024), 
           AT TIMESTAMP)""")
+
+      statement.executeUpdate("CREATE INDEX IF NOT EXISTS IDXFILE ON HISTORY(FILE)")
     }
-    // ALTER TABLE HISTORY ADD COLUMN IF NOT EXISTS USER VARCHAR(255)  
+
+    // ALTER TABLE HISTORY ADD COLUMN IF NOT EXISTS USER VARCHAR(255)
+    // CREATE INDEX IF NOT EXISTS IDXFILE ON HISTORY(FILE)
   }
 
   def deleteTable() {
@@ -96,20 +95,22 @@ class DBHistorySaver extends HistorySaver {
 
   def readAll() = {
     queryEach(conn, "SELECT * FROM HISTORY ORDER BY AT DESC LIMIT 1000") { rs =>
-      HistoryItem(rs.getString("SCRIPT"), rs.getLong("ID"), rs.getBoolean("STARRED"), rs.getString("TAGS"), rs.getDate("AT"))
+      HistoryItem(rs.getString("SCRIPT"), rs.getString("FILE"), rs.getLong("ID"), rs.getBoolean("STARRED"), rs.getString("TAGS"), rs.getDate("AT"))
     }
   }
 
-  def save(code: String): HistoryItem = {
-    val h = HistoryItem(code)
-    using(conn.prepareStatement("INSERT INTO HISTORY(SCRIPT, STARRED, TAGS, AT) VALUES(?, ?, ?, ?)")) { statement =>
-      statement.setString(1, h.script)
-      statement.setBoolean(2, h.starred)
-      statement.setString(3, h.tags)
-      statement.setTimestamp(4, new Timestamp(h.at.getTime))
-      statement.executeUpdate()
-    }
-    // read h from db for new id
+  def save(code: String, file: Option[String]): HistoryItem = {
+    val h = HistoryItem(code, file.getOrElse(""))
+    saveStatement.setString(1, h.script)
+    saveStatement.setString(2, h.file)
+    saveStatement.setBoolean(3, h.starred)
+    saveStatement.setString(4, h.tags)
+    saveStatement.setTimestamp(5, new Timestamp(h.at.getTime))
+    saveStatement.executeUpdate()
+
+    // load generated id
+    idCall.execute()
+    h.id = idCall.getLong(1)
     h
   }
 }

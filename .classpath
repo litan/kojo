@@ -20,7 +20,7 @@
 	<classpathentry kind="lib" path="lib/jlatexmath-0.9.3.jar"/>
 	<classpathentry kind="lib" path="lib/group-panel.jar"/>
 	<classpathentry kind="lib" path="lib/scala-compiler.jar"/>
-	<classpathentry kind="lib" path="lib/scala-library.jar"/>
+	<classpathentry kind="lib" path="lib/scala-library.jar" sourcepath="/home/lalit/work/scala-2.9.2/src/scala-library-src.jar"/>
 	<classpathentry kind="lib" path="lib/scala-swing.jar"/>
 	<classpathentry kind="lib" path="lib/rsyntaxtextarea.jar" sourcepath="/home/lalit/work/RSyntaxTextArea/src"/>
 	<classpathentry kind="lib" path="lib/AppleJavaExtensions.jar"/>
@@ -35,7 +35,8 @@
 	<classpathentry kind="lib" path="lib/httpunit.jar"/>
 	<classpathentry kind="lib" path="lib/js-1.6R5.jar"/>
 	<classpathentry kind="lib" path="lib/jtidy-4aug2000r7-dev.jar"/>
-	<classpathentry kind="lib" path="lib/autocomplete.jar"/>
 	<classpathentry kind="lib" path="lib/deploy.jar"/>
+	<classpathentry kind="lib" path="lib/autocomplete.jar"/>
+	<classpathentry kind="lib" path="lib/h2-1.3.168.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
