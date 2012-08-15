@@ -19,7 +19,7 @@ object Defaults {
 
   val lineWidth = 0.02
   val axisRadius = 0.01
-  val axisLength = 10.0
+  val axisLength = 3.0
   val axisTickInterval = 1.0
   val axisTickSize = 0.03
   val turtleSize = 0.25

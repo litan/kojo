@@ -19,6 +19,10 @@ import net.kogics.kojo.lite.CodeExecutionSupport
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.Style
+import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
+import javax.swing.KeyStroke
+import java.awt.event.KeyEvent
+import net.kogics.kojo.xscala.CodeTemplates
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends BaseHolder("SE", "Script Editor", se) {
 
@@ -29,8 +33,21 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codePane.setAntiAliasingEnabled(true)
   codePane.setAnimateBracketMatching(false)
   codePane.setCloseCurlyBraces(true)
+  codePane.setTabsEmulated(true)
+  codePane.setTabSize(4)
+  //  codePane.setMarkOccurrences(true)
   codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
   new IncreaseFontSizeAction().actionPerformedImpl(null, codePane)
+
+  RSyntaxTextArea.setTemplatesEnabled(true)
+  val ctm = RSyntaxTextArea.getCodeTemplateManager()
+  //  ctm.setInsertTrigger(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0))
+
+  CodeTemplates.templates.foreach { kv =>
+    val name = kv._1; val value = kv._2
+    val ct = new StaticCodeTemplate(name, CodeTemplates.beforeCursor(name), CodeTemplates.afterCursor(name))
+    ctm.addTemplate(ct)
+  }
 
   val provider = new KojoCompletionProvider(codeSupport)
   val ac = new AutoCompletion(provider)

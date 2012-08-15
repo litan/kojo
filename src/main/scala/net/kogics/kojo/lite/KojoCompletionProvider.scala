@@ -16,6 +16,7 @@ import org.fife.ui.autocomplete.TemplateCompletion
 import org.fife.ui.autocomplete.CompletionCellRenderer
 import com.sun.xml.internal.ws.server.UnsupportedMediaException
 import net.kogics.kojo.xscala.Help
+import net.kogics.kojo.xscala.CodeTemplates
 
 class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) extends CompletionProviderBase {
   val METHOD = 10
@@ -23,6 +24,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
   val CLASS = 8
   val PACKAGE = 7
   val KEYWORD = 6
+  val TEMPLATE = 5
 
   setListCellRenderer(new CompletionCellRenderer)
   setAutoActivationRules(false, ".")
@@ -74,7 +76,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
       fm.toString
     }
     def rhs: String = completion.ret
-    def defn = "%s : %s" format(lhs, rhs)
+    def defn = "%s : %s" format (lhs, rhs)
     def template = {
       val c0 = methodTemplate(completion.name)
       if (c0 != null) {
@@ -126,6 +128,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
       case PACKAGE => "/images/kindpackage.gif"
       case METHOD => "/images/kindmethod.png"
       case KEYWORD => "/images/scala16x16.png"
+      case TEMPLATE => "/images/kindtemplate.png"
     }
     Utils.loadIcon(fname, "Blah blah")
 
@@ -133,6 +136,17 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
 
   def methodTemplate(completion: String) = {
     CodeCompletionUtils.methodTemplate(completion)
+  }
+
+  def addTemplateProposals(proposals: java.util.ArrayList[Completion], prefix: String, caretOffset: Int) {
+    CodeTemplates.templates.filter { kv => kv._1.startsWith(prefix)}.foreach { kv =>
+      val name = kv._1; val value = kv._2
+      proposals.add(
+        new TemplateCompletion(this, name, name, value, null, CodeTemplates.asString(name)) {
+          setRelevance(TEMPLATE)
+          override def getIcon = kindIcon(TEMPLATE)
+        })
+    }
   }
 
   def complete(comp: JTextComponent): List[Completion] = {
@@ -157,8 +171,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
           CodeCompletionUtils.keywordTemplate(completion)))
       }
 
-      // temporary fix for NB7.1.1 not showing code templates
-      //      addTemplateProposals(proposals, prefix, caretOffset)
+      addTemplateProposals(proposals, prefix.getOrElse(""), caretOffset)
     }
 
     if (objid.isDefined) {
