@@ -41,26 +41,32 @@ class Turtle3d(val position : Vector3d = Vector3d(),
     new Turtle3d(position, orientation, material.setColor(r, g, b), visible, trail, lineWidth)
   def setColor(color : Color) =
     new Turtle3d(position, orientation, material.setColor(color), visible, trail, lineWidth)
-  
-  def avatar = {
-    var list = List[Shape]()
-    val spherePositions = Array(Vector3d(0d, 0d, 0d), Vector3d(0d, 0d, 0.55d),
-                                Vector3d(-0.25d, -0.25d, 0.25d), Vector3d(0.25d, -0.25d, 0.25d),
-                                Vector3d(-0.25d, -0.25d, -0.25d),Vector3d(0.25d, -0.25d, -0.25d))
 
-    for(sphere <- spherePositions) {
-      val absolutePosition = position + (-orientation).rotate(sphere*Defaults.turtleSize)
-      if(sphere == spherePositions.head)
-        list = new Sphere(absolutePosition,
-        			      orientation,
-        			      Material(0.05d, 0.3d, 0.05d),
-        			      0.5*Defaults.turtleSize) :: list
-      else
-        list = new Sphere(absolutePosition,
-        			      orientation,
-        			      Material(0.2d, 0.6d, 0.2d),
-        			      0.25*Defaults.turtleSize) :: list
-    }
-    list
-  }
+  def avatar = List[Shape](
+    new Sphere(absolutePosition(Vector3d(0d, 0d, 0d)),
+      orientation,
+      Material(0.05d, 0.3d, 0.05d),
+      0.5 * Defaults.turtleSize),
+    new Sphere(absolutePosition(Vector3d(0d, 0d, 0.55d)),
+      orientation,
+      Material(0.2d, 0.6d, 0.7d),
+      0.25 * Defaults.turtleSize),
+    new Sphere(absolutePosition(Vector3d(-0.25d, -0.25d, 0.25d)),
+      orientation,
+      Material(0.4d, 0.8d, 0.6d),
+      0.25 * Defaults.turtleSize),
+    new Sphere(absolutePosition(Vector3d(0.25d, -0.25d, 0.25d)),
+      orientation,
+      Material(0.4d, 0.8d, 0.6d),
+      0.25 * Defaults.turtleSize),
+    new Sphere(absolutePosition(Vector3d(-0.25d, -0.25d, -0.25d)),
+      orientation,
+      Material(0.5d, 0.4d, 0.2d),
+      0.25 * Defaults.turtleSize),
+    new Sphere(absolutePosition(Vector3d(0.25d, -0.25d, -0.25d)),
+      orientation,
+      Material(0.5d, 0.4d, 0.2d),
+      0.25 * Defaults.turtleSize))
+  
+  def absolutePosition(local : Vector3d) = position + (-orientation).rotate(local*Defaults.turtleSize)
 }
