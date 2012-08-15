@@ -46,6 +46,7 @@ import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.history.HistoryListener
 import javax.swing.JOptionPane
 import net.kogics.kojo.core.D3Mode
+import java.io.File
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -61,6 +62,16 @@ object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
 
 class CodeExecutionSupport private extends core.CodeCompletionSupport {
   val Log = Logger.getLogger(getClass.getName);
+  val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
+    clearSButton, clearButton, cexButton) = makeToolbar()
+  val outputWindow = new JTextArea
+  outputWindow.setEditable(false)
+  System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
+  doWelcome()
+
+  val commandHistory = CommandHistory.instance
+  val historyManager = new HistoryManager
+  hPrevButton.setEnabled(commandHistory.hasPrevious)
 
   val tCanvas = SpriteCanvas.instance
   tCanvas.outputFn = showOutput _
@@ -71,15 +82,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   val mp3player = music.KMp3.instance
 
   @volatile var pendingCommands = false
-
-  val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
-    clearSButton, clearButton, cexButton) = makeToolbar()
-
   @volatile var runMonitor: RunMonitor = new NoOpRunMonitor()
   @volatile var codePane: JTextArea = _
   @volatile var kojoCtx: KojoCtx = _
-  val outputWindow = new JTextArea
-  outputWindow.setEditable(false)
 
   val codeRunner = makeCodeRunner()
 
@@ -97,10 +102,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   @volatile var lastOutput = ""
 
   setSpriteListener()
-  doWelcome()
-
-  import java.io._
-  System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
 
   class OutputWindowWriter extends Writer {
     override def write(s: String) {
@@ -171,17 +172,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   }
 
   def doWelcome() = {
-    val msg = """Welcome to KojoLite!
-    |* To Pan or Zoom the Drawing Canvas          
-    |  ->  Drag the left mouse button or Roll the mouse wheel
-    |* To reset Pan and Zoom levels             
-    |  ->  Use the Drawing Canvas context menu
+    val msg = """Welcome to Kojo\u2248Ray!
+    |* To use code completion and see online help ->  Press Ctrl+Space within the Script Editor
+    |* To Pan or Zoom the Drawing Canvas          ->  Drag the left mouse button or Roll the mouse wheel
+    |  * To reset Pan and Zoom levels             ->  Use the Drawing Canvas context menu
     |
-    |KojoLite (for the Web) contains a subset of the functionality of Kojo (the Desktop App).
+    |Kojo\u2248Ray (for the Web) contains a subset of the functionality of Kojo (the Desktop App).
     |For the real deal, get Kojo (www.kogics.net/kojo)!
-    | 
-    |Kojo features missing in KojoLite include:
-    |Interactive Program Moulding, Code Templates, Error Hyperlinks, etc..
     |""".stripMargin
 
     showOutput(msg)
@@ -258,7 +255,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
     toolbar.add(compileButton)
 
-    hPrevButton.setEnabled(false)
     toolbar.add(hPrevButton)
 
     hNextButton.setEnabled(false)
@@ -443,6 +439,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
       def setScript(code: String) {
         Utils.runInSwingThreadAndWait {
+          closeFileAndClrEditor()
           codePane.setText(code)
           codePane.setCaretPosition(0)
         }
@@ -467,13 +464,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
               evt.consume
             }
           case KeyEvent.VK_UP =>
-            if (evt.isControlDown) {
-              loadCodeFromHistoryPrev
+            if (evt.isControlDown && hPrevButton.isEnabled) {
+              loadCodeFromHistoryPrev()
               evt.consume
             }
           case KeyEvent.VK_DOWN =>
-            if (evt.isControlDown) {
-              loadCodeFromHistoryNext
+            if (evt.isControlDown && hNextButton.isEnabled) {
+              loadCodeFromHistoryNext()
               evt.consume
             }
           case _ => // do nothing special
@@ -787,39 +784,27 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def closing() {
     if (openedFile.isDefined) {
       closeFileIfOpen()
-    } else {
-      if (codePane.getText.size > 0) {
-        val doSave = JOptionPane.showConfirmDialog(
-          kojoCtx.frame,
-          "You have unsaved work. Do you want to save your script to a file?")
-        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
-          throw new RuntimeException("Veto Shutdown")
-        }
-        else if (doSave == JOptionPane.YES_OPTION) {
-          kojoCtx.saveAsFile()
-        }
-      }
     }
+    //    else {
+    //      if (codePane.getText.size > 0) {
+    //        val doSave = JOptionPane.showConfirmDialog(
+    //          kojoCtx.frame,
+    //          "You have unsaved work. Do you want to save your script to a file?")
+    //        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
+    //          throw new RuntimeException("Veto Shutdown")
+    //        }
+    //        else if (doSave == JOptionPane.YES_OPTION) {
+    //          kojoCtx.saveAsFile()
+    //        }
+    //      }
+    //    }
   }
 
-  val commandHistory = CommandHistory.instance
-  val historyManager = new HistoryManager
   def loadCodeFromHistoryPrev() = historyManager.historyMoveBack
   def loadCodeFromHistoryNext() = historyManager.historyMoveForward
   def loadCodeFromHistory(historyIdx: Int) = historyManager.setCode(historyIdx)
 
   class HistoryManager {
-
-    commandHistory.setListener(new HistoryListener {
-      def itemAdded {
-        hPrevButton.setEnabled(true)
-        hNextButton.setEnabled(false)
-      }
-      def selectionChanged(n: Int) {
-        setCode(n)
-      }
-      def ensureVisible(n: Int) {}
-    })
 
     def historyMoveBack {
       // depend on history listener mechanism to move back
@@ -839,7 +824,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       commandHistory.ensureLastEntryVisible()
     }
 
-    def setCode(historyIdx: Int) {
+    def updateButtons(historyIdx: Int) {
       if (commandHistory.size > 0 && historyIdx != 0)
         hPrevButton.setEnabled(true)
       else
@@ -849,17 +834,18 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         hNextButton.setEnabled(true)
       else
         hNextButton.setEnabled(false)
+    }
 
+    def setCode(historyIdx: Int) {
+      updateButtons(historyIdx)
       val codeAtIdx = commandHistory.toPosition(historyIdx)
-      Utils.runInSwingThread {
-        if (codeAtIdx.isDefined) {
-          codePane.setText(codeAtIdx.get)
-          codePane.setCaretPosition(0)
-        } else {
-          codePane.setText(null)
-        }
-        codePane.requestFocusInWindow
+
+      if (codeAtIdx.isDefined) {
+        codePane.setText(codeAtIdx.get)
+        codePane.setCaretPosition(0)
       }
+
+      //        codePane.requestFocusInWindow
     }
 
     def codeRunError() = {
@@ -867,15 +853,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
     def codeRun(code: String) {
       val tcode = code.trim()
-      val prevIndex = commandHistory.hIndex
-      commandHistory.add(code)
+      commandHistory.add(code, openedFile.map(f => "%s (%s)" format (f.getName, f.getParent)))
+      //      updateButtons(commandHistory.hIndex)
 
-      if (commandHistory.hIndex == prevIndex + 1) {
-        // the last entry within history was selected
-        commandHistory.ensureLastEntryVisible()
-      } else {
-        commandHistory.ensureVisible(prevIndex)
-      }
+      //      if (commandHistory.hIndex == prevIndex + 1) {
+      //        // the last entry within history was selected
+      //        commandHistory.ensureLastEntryVisible()
+      //      } else {
+      //        commandHistory.ensureVisible(prevIndex)
+      //      }
     }
   }
 

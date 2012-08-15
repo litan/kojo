@@ -19,7 +19,47 @@ package xscala
 object CodeCompletionUtils {
   val NotIdChars = """ .(){}!%&+\-<=>?@\\^`|~#:/*""" + "\n\r\t"
 
-  val Keywords = List("for") // TODO Kojo Lite 
+  val Keywords = List(
+    "abstract",
+    "case",
+    "catch",
+    "class",
+    "def",
+    "do",
+    "else",
+    "extends",
+    "false",
+    "final",
+    "finally",
+    "for",
+    "forSome",
+    "if",
+    "implicit",
+    "import",
+    "lazy",
+    "match",
+    "new",
+    "null",
+    "object",
+    "override",
+    "package",
+    "private",
+    "protected",
+    "requires",
+    "return",
+    "sealed",
+    "super",
+    "this",
+    "throw",
+    "trait",
+    "try",
+    "true",
+    "type",
+    "val",
+    "var",
+    "while",
+    "with",
+    "yield")
 
   val KeywordTemplates = Map(
     "for" -> "for (i <- 1 to ${n}) {\n    ${cursor}\n}",

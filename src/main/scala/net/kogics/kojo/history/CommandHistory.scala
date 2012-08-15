@@ -15,8 +15,21 @@
 package net.kogics.kojo
 package history
 
+import java.util.Date
+
+import scala.collection.Seq
+import scala.collection.mutable
+
 import core.Singleton
-import scala.collection._
+import net.kogics.kojo.core.Singleton
+
+case class HistoryItem(
+  script: String,
+  file: String = "",
+  var id: Long = 0,
+  var starred: Boolean = false,
+  var tags: String = "",
+  at: Date = new Date)
 
 trait HistoryListener {
   def itemAdded
@@ -25,38 +38,41 @@ trait HistoryListener {
 }
 
 trait HistorySaver {
-  def append(code: String)
-  def appendStar(idx: Int)
-  def write(items: mutable.ArrayBuffer[String])
-  def writeStars(stars: mutable.ArrayBuffer[Int]) {}
+  def save(code: String, file: Option[String]): HistoryItem
+  def readAll(): Seq[HistoryItem]
+  def updateStar(hi: HistoryItem)
+  def updateTags(hi: HistoryItem)
 }
 
 class NoopHistorySaver extends HistorySaver {
-  def append(code: String) {}
-  def appendStar(idx: Int) {}
-  def write(items: mutable.ArrayBuffer[String]) {}
+  def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
+  def readAll(): Seq[HistoryItem] = Seq()
+  def updateStar(hi: HistoryItem) {}
+  def updateTags(hi: HistoryItem) {}
 }
 
 object CommandHistory extends Singleton[CommandHistory] {
-  //  val Log = java.util.logging.Logger.getLogger("CommandHistoryO");
-  val Separator = "---Seperator---"
-  val StarSeparator = ", "
-  val MaxHistorySize = 1000
-  val userDir = System.getProperty("netbeans.user")
 
   protected def newInstance = {
-    new CommandHistory(new NoopHistorySaver, CommandHistory.MaxHistorySize)
+    try {
+      new CommandHistory(new DBHistorySaver)
+    } catch {
+      case t: Throwable =>
+        println("\nProblem initializing savable history: " + t.getMessage)
+        println("\nUnable to save history during this session")
+        new CommandHistory(new NoopHistorySaver)
+    }
   }
 }
 
-class CommandHistory private[kojo] (historySaver: HistorySaver, maxHistorySize: Int) {
-  val Log = java.util.logging.Logger.getLogger(getClass.getName)
-
-  val history = new mutable.ArrayBuffer[String]
-  val stars = new scala.collection.mutable.HashSet[Int]
-
+class CommandHistory private[kojo] (historySaver: HistorySaver) {
+  val history = new mutable.ArrayBuffer[HistoryItem]
   @volatile var hIndex = 0
   @volatile var listener: Option[HistoryListener] = None
+
+  historySaver.readAll.reverse.foreach { hi =>
+    internalAdd(hi)
+  }
 
   def setListener(l: HistoryListener) {
     //    if (listener.isDefined) throw new IllegalArgumentException("Listener already defined")
@@ -67,15 +83,19 @@ class CommandHistory private[kojo] (historySaver: HistorySaver, maxHistorySize: 
     listener = None
   }
 
-  def internalAdd(code: String) {
-    history += code
+  def internalAdd(hi: HistoryItem) {
+    history += hi
     hIndex = history.size
   }
 
-  def add(code: String) {
-    internalAdd(code)
-    if (listener.isDefined) listener.get.itemAdded
-    historySaver.append(code)
+  def add(code: String, file: Option[String]) {
+    try {
+      val hi = historySaver.save(code, file)
+      internalAdd(hi)
+      if (listener.isDefined) listener.get.itemAdded
+    } catch {
+      case t: Throwable => println("\nProblem adding code to history: " + t.getMessage)
+    }
   }
 
   def hasPrevious = hIndex > 0
@@ -87,7 +107,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver, maxHistorySize: 
         hIndex = idx
         if (listener.isDefined) listener.get.selectionChanged(hIndex)
       }
-      if (hIndex == history.size) None else Some(history(hIndex))
+      if (hIndex == history.size) None else Some(history(hIndex).script)
     }
   }
 
@@ -96,7 +116,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver, maxHistorySize: 
     else {
       hIndex -= 1
       if (listener.isDefined) listener.get.selectionChanged(hIndex)
-      Some(history(hIndex))
+      Some(history(hIndex).script)
     }
   }
 
@@ -105,7 +125,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver, maxHistorySize: 
     else {
       hIndex += 1
       if (listener.isDefined) listener.get.selectionChanged(hIndex)
-      if (hIndex == history.size) None else Some(history(hIndex))
+      if (hIndex == history.size) None else Some(history(hIndex).script)
     }
   }
 
@@ -118,62 +138,42 @@ class CommandHistory private[kojo] (historySaver: HistorySaver, maxHistorySize: 
     listener = None
   }
 
-  def loadFrom(stringHistory: String, stringStars: String) {
-    //    Log.info("Loading History from: " + stringHistory)
-    if (stringHistory == null || stringHistory.trim() == "") return
-
-    val itemsA = stringHistory.split(CommandHistory.Separator)
-    val starsA = stringStars.split(CommandHistory.StarSeparator)
-
-    var items = new mutable.ArrayBuffer[String](); items.appendAll(itemsA)
-    var stars0 = new mutable.ArrayBuffer[String](); stars0.appendAll(starsA)
-
-    var stars1 = stars0.filter { sidx => sidx.trim() != "" }.map { sidx => sidx.toInt }
-
-    if (items.size > maxHistorySize) {
-      val extraItems = items.size - maxHistorySize
-      val gone = stars1.filter { idx => idx < extraItems }.sortWith((e1, e2) => e1 < e2)
-      val droppedStarredItems = gone.map { idx => items(idx) }
-
-      items = items.slice(extraItems, items.size)
-      items.insert(0, droppedStarredItems: _*)
-      historySaver.write(items)
-
-      stars1 = stars1.filterNot { idx => idx < extraItems }.map { idx => idx - extraItems + droppedStarredItems.size }
-      val gone2 = new mutable.ArrayBuffer[Int]
-      var dropped = 0
-      var prev = -1
-      for (i <- 0 until gone.size) {
-        dropped += gone(i) - prev - 1
-        prev = gone(i)
-        gone2 += gone(i) - dropped
-      }
-      stars1.insert(0, gone2: _*)
-      historySaver.writeStars(stars1)
-    }
-
-    items.foreach { hItem => internalAdd(hItem) }
-    stars1.foreach { idx => stars += idx }
-  }
-
-  def addStar(idx: Int) {
-    stars += idx
-    historySaver.appendStar(idx)
-  }
-
-  def removeStar(idx: Int) {
-    stars -= idx
-    val stars0 = new mutable.ArrayBuffer[Int](); stars0.appendAll(stars)
-    historySaver.writeStars(stars0)
-  }
-
-  def isStarred(idx: Int) = stars.contains(idx)
-
   def ensureVisible(idx: Int) {
     if (listener.isDefined) listener.get.ensureVisible(idx)
   }
 
   def ensureLastEntryVisible() {
     ensureVisible(hIndex)
+  }
+
+  def starHelper(hi: HistoryItem, on: Boolean) {
+    try {
+      hi.starred = on
+      historySaver.updateStar(hi)
+    } catch {
+      case t: Throwable =>
+        println("\nProblem saving star to history: " + t.getMessage)
+        hi.starred = !on
+    }
+  }
+
+  def star(hi: HistoryItem) {
+    starHelper(hi, true)
+  }
+
+  def unstar(hi: HistoryItem) {
+    starHelper(hi, false)
+  }
+
+  def saveTags(hi: HistoryItem, tags: String) {
+    val oldTags = hi.tags
+    try {
+      hi.tags = tags
+      historySaver.updateTags(hi)
+    } catch {
+      case t: Throwable =>
+        println("\nProblem saving tags to history: " + t.getMessage)
+        hi.tags = oldTags
+    }
   }
 }
