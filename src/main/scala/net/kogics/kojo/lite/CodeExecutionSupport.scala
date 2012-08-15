@@ -823,8 +823,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       hPrevButton.setEnabled(true)
       commandHistory.ensureLastEntryVisible()
     }
-
-    def setCode(historyIdx: Int) {
+    
+    def updateButtons(historyIdx: Int) {
       if (commandHistory.size > 0 && historyIdx != 0)
         hPrevButton.setEnabled(true)
       else
@@ -834,7 +834,10 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         hNextButton.setEnabled(true)
       else
         hNextButton.setEnabled(false)
+    }
 
+    def setCode(historyIdx: Int) {
+      updateButtons(historyIdx)
       val codeAtIdx = commandHistory.toPosition(historyIdx)
       Utils.runInSwingThread {
         if (codeAtIdx.isDefined) {
@@ -852,15 +855,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
     def codeRun(code: String) {
       val tcode = code.trim()
-      val prevIndex = commandHistory.hIndex
       commandHistory.add(code, openedFile.map(f => "%s (%s)" format(f.getName, f.getParent)))
-
-      if (commandHistory.hIndex == prevIndex + 1) {
-        // the last entry within history was selected
-        commandHistory.ensureLastEntryVisible()
-      } else {
-        commandHistory.ensureVisible(prevIndex)
-      }
+//      updateButtons(commandHistory.hIndex)
+      
+//      if (commandHistory.hIndex == prevIndex + 1) {
+//        // the last entry within history was selected
+//        commandHistory.ensureLastEntryVisible()
+//      } else {
+//        commandHistory.ensureVisible(prevIndex)
+//      }
     }
   }
 

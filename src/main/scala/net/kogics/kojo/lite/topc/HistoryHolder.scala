@@ -92,9 +92,6 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
   for (i <- 0 until colNames.size) {
     val column = table.getColumnModel().getColumn(i);
     column.setPreferredWidth(colWidths(i))
-    //    if (i == 0) {
-    //      column.setCellEditor(new DefaultCellEditor(new JCheckBox))
-    //    }
   }
 
   hw.setLayout(new BorderLayout)
@@ -103,7 +100,7 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
   codeSupport.commandHistory.setListener(new HistoryListener {
     def itemAdded {
       tableModel.fireTableRowsInserted(cmdh.size - 1, cmdh.size - 1)
-      //      table.setRowSelectionInterval(cmdh.size, cmdh.size)
+      table.setRowSelectionInterval(cmdh.size-1, cmdh.size-1)
     }
 
     def selectionChanged(n: Int) {
