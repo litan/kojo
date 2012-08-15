@@ -49,6 +49,7 @@ import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.xscala.Builtins
 import util.Utils
 import javax.swing.AbstractAction
+import net.kogics.kojo.lite.topc.HistoryHolder
 
 object Main {
 
@@ -144,6 +145,7 @@ object Main {
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, ctx)
       val d3Holder = new D3CanvasHolder(Canvas3D.instance)
+      val historyHolder = new HistoryHolder(new JPanel(), ctx, codeSupport)
 
       ctx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder)
       ctx.frame = frame
@@ -154,9 +156,11 @@ object Main {
       grid.add(1, 0, 4, 2, drawingCanvasH)
       grid.add(1, 2, 2.5, 1, scriptEditorH)
       grid.add(3.5, 2, 1.5, 1, outputHolder)
+      grid.add(0, 0, 2, 4, historyHolder)
       grid.add(0, 0, 1, 4, storyHolder)
       control.getContentArea.deploy(grid)
 
+      historyHolder.setExtendedMode(ExtendedMode.MINIMIZED)
       storyHolder.setExtendedMode(ExtendedMode.MINIMIZED)
 
       def appExit() {
