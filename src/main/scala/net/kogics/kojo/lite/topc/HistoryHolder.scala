@@ -100,7 +100,7 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
   codeSupport.commandHistory.setListener(new HistoryListener {
     def itemAdded {
       tableModel.fireTableRowsInserted(cmdh.size - 1, cmdh.size - 1)
-      table.setRowSelectionInterval(cmdh.size-1, cmdh.size-1)
+      table.setRowSelectionInterval(cmdh.size, cmdh.size)
     }
 
     def selectionChanged(n: Int) {

@@ -784,20 +784,20 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def closing() {
     if (openedFile.isDefined) {
       closeFileIfOpen()
-    } 
-//    else {
-//      if (codePane.getText.size > 0) {
-//        val doSave = JOptionPane.showConfirmDialog(
-//          kojoCtx.frame,
-//          "You have unsaved work. Do you want to save your script to a file?")
-//        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
-//          throw new RuntimeException("Veto Shutdown")
-//        }
-//        else if (doSave == JOptionPane.YES_OPTION) {
-//          kojoCtx.saveAsFile()
-//        }
-//      }
-//    }
+    }
+    //    else {
+    //      if (codePane.getText.size > 0) {
+    //        val doSave = JOptionPane.showConfirmDialog(
+    //          kojoCtx.frame,
+    //          "You have unsaved work. Do you want to save your script to a file?")
+    //        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
+    //          throw new RuntimeException("Veto Shutdown")
+    //        }
+    //        else if (doSave == JOptionPane.YES_OPTION) {
+    //          kojoCtx.saveAsFile()
+    //        }
+    //      }
+    //    }
   }
 
   def loadCodeFromHistoryPrev() = historyManager.historyMoveBack
@@ -823,7 +823,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       hPrevButton.setEnabled(true)
       commandHistory.ensureLastEntryVisible()
     }
-    
+
     def updateButtons(historyIdx: Int) {
       if (commandHistory.size > 0 && historyIdx != 0)
         hPrevButton.setEnabled(true)
@@ -839,15 +839,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     def setCode(historyIdx: Int) {
       updateButtons(historyIdx)
       val codeAtIdx = commandHistory.toPosition(historyIdx)
-      Utils.runInSwingThread {
-        if (codeAtIdx.isDefined) {
-          codePane.setText(codeAtIdx.get)
-          codePane.setCaretPosition(0)
-        } else {
-          codePane.setText(null)
-        }
-//        codePane.requestFocusInWindow
+
+      if (codeAtIdx.isDefined) {
+        codePane.setText(codeAtIdx.get)
+        codePane.setCaretPosition(0)
       }
+
+      //        codePane.requestFocusInWindow
     }
 
     def codeRunError() = {
@@ -855,15 +853,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
     def codeRun(code: String) {
       val tcode = code.trim()
-      commandHistory.add(code, openedFile.map(f => "%s (%s)" format(f.getName, f.getParent)))
-//      updateButtons(commandHistory.hIndex)
-      
-//      if (commandHistory.hIndex == prevIndex + 1) {
-//        // the last entry within history was selected
-//        commandHistory.ensureLastEntryVisible()
-//      } else {
-//        commandHistory.ensureVisible(prevIndex)
-//      }
+      commandHistory.add(code, openedFile.map(f => "%s (%s)" format (f.getName, f.getParent)))
+      //      updateButtons(commandHistory.hIndex)
+
+      //      if (commandHistory.hIndex == prevIndex + 1) {
+      //        // the last entry within history was selected
+      //        commandHistory.ensureLastEntryVisible()
+      //      } else {
+      //        commandHistory.ensureVisible(prevIndex)
+      //      }
     }
   }
 
