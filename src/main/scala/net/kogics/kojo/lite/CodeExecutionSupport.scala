@@ -806,17 +806,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
 
   class HistoryManager {
 
-    commandHistory.setListener(new HistoryListener {
-      def itemAdded {
-        hPrevButton.setEnabled(true)
-        hNextButton.setEnabled(false)
-      }
-      def selectionChanged(n: Int) {
-        setCode(n)
-      }
-      def ensureVisible(n: Int) {}
-    })
-
     def historyMoveBack {
       // depend on history listener mechanism to move back
       val prevCode = commandHistory.previous
@@ -854,7 +843,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         } else {
           codePane.setText(null)
         }
-        codePane.requestFocusInWindow
+//        codePane.requestFocusInWindow
       }
     }
 

@@ -15,9 +15,13 @@
 package net.kogics.kojo
 package history
 
-import core.Singleton
-import scala.collection._
 import java.util.Date
+
+import scala.collection.Seq
+import scala.collection.mutable
+
+import core.Singleton
+import net.kogics.kojo.core.Singleton
 
 case class HistoryItem(
   script: String,
@@ -37,12 +41,14 @@ trait HistorySaver {
   def save(code: String, file: Option[String]): HistoryItem
   def readAll(): Seq[HistoryItem]
   def updateStar(hi: HistoryItem)
+  def updateTags(hi: HistoryItem)
 }
 
 class NoopHistorySaver extends HistorySaver {
   def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
   def readAll(): Seq[HistoryItem] = Seq()
   def updateStar(hi: HistoryItem) {}
+  def updateTags(hi: HistoryItem) {}
 }
 
 object CommandHistory extends Singleton[CommandHistory] {
@@ -152,10 +158,22 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
   }
 
   def star(hi: HistoryItem) {
-	  starHelper(hi, true)
+    starHelper(hi, true)
   }
 
   def unstar(hi: HistoryItem) {
-	  starHelper(hi, false)
+    starHelper(hi, false)
+  }
+
+  def saveTags(hi: HistoryItem, tags: String) {
+    val oldTags = hi.tags
+    try {
+      hi.tags = tags
+      historySaver.updateTags(hi)
+    } catch {
+      case t: Throwable =>
+        println("\nProblem saving tags to history: " + t.getMessage)
+        hi.tags = oldTags
+    }
   }
 }
