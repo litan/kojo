@@ -3,11 +3,15 @@ package net.kogics.kojo.lite.topc
 import java.awt.BorderLayout
 import java.awt.Color
 import java.text.DateFormat
+
+import javax.swing.border.CompoundBorder
+import javax.swing.border.EmptyBorder
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.BorderFactory
+import javax.swing.DefaultCellEditor
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JScrollPane
@@ -18,9 +22,6 @@ import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.history.HistoryListener
 import net.kogics.kojo.lite.CodeExecutionSupport
 import sun.swing.table.DefaultTableCellHeaderRenderer
-import javax.swing.border.EmptyBorder
-import javax.swing.border.CompoundBorder
-import javax.swing.DefaultCellEditor
 
 class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecutionSupport) extends BaseHolder("HW", "History Pane", hw) {
   val cmdh = codeSupport.commandHistory
@@ -43,7 +44,8 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
           case 0 => new java.lang.Boolean(false)
           case _ => ""
         }
-      } else {
+      }
+      else {
         val hi = cmdh(row)
         col match {
           case 0 => new java.lang.Boolean(hi.starred)
@@ -71,7 +73,8 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
           case 0 =>
             if (value.asInstanceOf[java.lang.Boolean]) {
               cmdh.star(hi)
-            } else {
+            }
+            else {
               cmdh.unstar(hi)
             }
           case 2 => cmdh.saveTags(hi, value.asInstanceOf[String])
@@ -88,7 +91,6 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
   table.setRowHeight(table.getRowHeight + 4)
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   table.setRowSelectionInterval(cmdh.size, cmdh.size)
-
   table.getTableHeader.getDefaultRenderer.asInstanceOf[DefaultTableCellHeaderRenderer].setHorizontalAlignment(SwingConstants.CENTER)
   table.setDefaultRenderer(classOf[AnyRef], new DefaultTableCellRenderer {
     override def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean,
@@ -139,4 +141,5 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
       //      myList.ensureIndexIsVisible(n)
     }
   })
+  table.scrollRectToVisible(table.getCellRect(cmdh.size, 0, true))
 }
