@@ -3,20 +3,22 @@ package net.kogics.kojo.lite.topc
 import java.awt.BorderLayout
 import java.awt.Color
 import java.text.DateFormat
+
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.AbstractTableModel
+import javax.swing.table.DefaultTableCellRenderer
+import javax.swing.BorderFactory
 import javax.swing.JComponent
+import javax.swing.JLabel
 import javax.swing.JScrollPane
 import javax.swing.JTable
+import javax.swing.ListSelectionModel
+import javax.swing.SwingConstants
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.history.HistoryListener
 import net.kogics.kojo.lite.CodeExecutionSupport
 import sun.swing.table.DefaultTableCellHeaderRenderer
-import javax.swing.SwingConstants
-import javax.swing.ListSelectionModel
-import javax.swing.DefaultCellEditor
-import javax.swing.JCheckBox
 
 class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecutionSupport) extends BaseHolder("HW", "History Pane", hw) {
   val cmdh = codeSupport.commandHistory
@@ -78,9 +80,19 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
   val table = new JTable(tableModel)
 
   table.setBackground(Color.white)
-  table.setShowGrid(true)
+//  table.setShowGrid(true)
+  table.setRowHeight(table.getRowHeight + 4)
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   table.getTableHeader.getDefaultRenderer.asInstanceOf[DefaultTableCellHeaderRenderer].setHorizontalAlignment(SwingConstants.CENTER)
+  table.setDefaultRenderer(classOf[AnyRef], new DefaultTableCellRenderer {
+    override def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean,
+      hasFocus: Boolean, row: Int, column: Int) = {
+      val component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).asInstanceOf[JComponent]
+      component.setBorder(BorderFactory.createLineBorder(new Color(240, 240, 240)))
+      component
+    }
+
+  })
   table.getSelectionModel.addListSelectionListener(new ListSelectionListener {
     override def valueChanged(event: ListSelectionEvent) {
       if (!event.getValueIsAdjusting) {
@@ -96,6 +108,10 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
 
   hw.setLayout(new BorderLayout)
   hw.add(new JScrollPane(table), BorderLayout.CENTER)
+  val comingSoon = new JLabel("History Search coming soon...")
+  comingSoon.setHorizontalAlignment(SwingConstants.CENTER)
+  comingSoon.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
+  hw.add(comingSoon, BorderLayout.SOUTH)
 
   codeSupport.commandHistory.setListener(new HistoryListener {
     def itemAdded {
