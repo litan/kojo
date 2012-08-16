@@ -23,6 +23,11 @@ import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
 import javax.swing.KeyStroke
 import java.awt.event.KeyEvent
 import net.kogics.kojo.xscala.CodeTemplates
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.awt.Point
+import javax.swing.text.Utilities
+import net.kogics.kojo.livecoding.IpmProvider
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends BaseHolder("SE", "Script Editor", se) {
 
@@ -106,4 +111,24 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
     toFront()
     codePane.requestFocusInWindow()
   }
+
+  val ipmProvider = new IpmProvider(codeSupport)
+  codePane.addMouseListener(new MouseAdapter {
+    override def mouseClicked(e: MouseEvent) {
+      try {
+        val pt = new Point(e.getX(), e.getY());
+        val offset = codePane.viewToModel(pt);
+        if (ipmProvider.isHyperlinkPoint(codePane, offset)) {
+          // ipmProvider.getHyperlinkSpan(codePane, offset)
+          ipmProvider.performClickAction(codePane, offset)
+        }
+        else {
+          codeSupport.imanip.foreach { _ close () }
+        }
+      }
+      catch {
+        case t: Throwable => println("IPM Problem: " + t.getMessage)
+      }
+    }
+  })
 }
