@@ -47,6 +47,8 @@ import net.kogics.kojo.history.HistoryListener
 import javax.swing.JOptionPane
 import net.kogics.kojo.core.D3Mode
 import java.io.File
+import net.kogics.kojo.livecoding.ManipulationContext
+import net.kogics.kojo.livecoding.InteractiveManipulator
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -60,7 +62,7 @@ object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   protected def newInstance = new CodeExecutionSupport()
 }
 
-class CodeExecutionSupport private extends core.CodeCompletionSupport {
+class CodeExecutionSupport private extends core.CodeCompletionSupport with ManipulationContext {
   val Log = Logger.getLogger(getClass.getName);
   val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
@@ -457,6 +459,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def addCodePaneHandlers() {
     codePane.addKeyListener(new KeyAdapter {
       override def keyPressed(evt: KeyEvent) {
+        imanip.foreach { _ close () }
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (isRunningEnabled || evt.isShiftDown)) {
@@ -800,6 +803,14 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     //    }
   }
 
+  var imanip: Option[InteractiveManipulator] = None
+  def addManipulator(im: InteractiveManipulator) {
+    imanip = Some(im)
+  }
+  def removeManipulator(im: InteractiveManipulator) {
+    imanip = None
+  }
+
   def loadCodeFromHistoryPrev() = historyManager.historyMoveBack
   def loadCodeFromHistoryNext() = historyManager.historyMoveForward
   def loadCodeFromHistory(historyIdx: Int) = historyManager.setCode(historyIdx)
@@ -958,7 +969,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     }
 
     def onDocChange() {
-      if (getBackground != NeutralColor) setBackground(NeutralColor)
+      if (imanip.isEmpty) {
+        if (getBackground != NeutralColor) setBackground(NeutralColor)
+      } else {
+        if (!imanip.get.inSliderChange) {
+          imanip.get.close()
+        }
+      }
     }
   }
 }

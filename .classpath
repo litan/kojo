@@ -4,7 +4,7 @@
 	<classpathentry kind="src" output="target/scala-2.9.2/classes" path="src/main/java"/>
 	<classpathentry kind="src" output="target/scala-2.9.2/test-classes" path="src/test/scala"/>
 	<classpathentry kind="src" output="target/scala-2.9.2/test-classes" path="src/test/java"/>
-	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" output="target/scala-2.9.2/classes" path="src/main/resources"/>
 	<classpathentry kind="lib" path="lib/docking-frames-common.jar" sourcepath="/home/lalit/work/docking-frames/src/docking-frames-common">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/home/lalit/work/docking-frames/doc/docking-frames-common/"/>
