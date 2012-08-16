@@ -3,20 +3,25 @@ package net.kogics.kojo.lite.topc
 import java.awt.BorderLayout
 import java.awt.Color
 import java.text.DateFormat
+
+import javax.swing.border.CompoundBorder
+import javax.swing.border.EmptyBorder
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.AbstractTableModel
+import javax.swing.table.DefaultTableCellRenderer
+import javax.swing.BorderFactory
+import javax.swing.DefaultCellEditor
 import javax.swing.JComponent
+import javax.swing.JLabel
 import javax.swing.JScrollPane
 import javax.swing.JTable
+import javax.swing.ListSelectionModel
+import javax.swing.SwingConstants
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.history.HistoryListener
 import net.kogics.kojo.lite.CodeExecutionSupport
 import sun.swing.table.DefaultTableCellHeaderRenderer
-import javax.swing.SwingConstants
-import javax.swing.ListSelectionModel
-import javax.swing.DefaultCellEditor
-import javax.swing.JCheckBox
 
 class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecutionSupport) extends BaseHolder("HW", "History Pane", hw) {
   val cmdh = codeSupport.commandHistory
@@ -39,7 +44,8 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
           case 0 => new java.lang.Boolean(false)
           case _ => ""
         }
-      } else {
+      }
+      else {
         val hi = cmdh(row)
         col match {
           case 0 => new java.lang.Boolean(hi.starred)
@@ -61,26 +67,44 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
       }
     }
     override def setValueAt(value: Object, row: Int, col: Int) {
-      val hi = cmdh(row)
-      col match {
-        case 0 =>
-          if (value.asInstanceOf[java.lang.Boolean]) {
-            cmdh.star(hi)
-          } else {
-            cmdh.unstar(hi)
-          }
-        case 2 => cmdh.saveTags(hi, value.asInstanceOf[String])
-        case _ =>
+      if (row < cmdh.size) {
+        val hi = cmdh(row)
+        col match {
+          case 0 =>
+            if (value.asInstanceOf[java.lang.Boolean]) {
+              cmdh.star(hi)
+            }
+            else {
+              cmdh.unstar(hi)
+            }
+          case 2 => cmdh.saveTags(hi, value.asInstanceOf[String])
+          case _ =>
+        }
+        fireTableCellUpdated(row, col);
       }
-      fireTableCellUpdated(row, col);
     }
   }
   val table = new JTable(tableModel)
 
   table.setBackground(Color.white)
-  table.setShowGrid(true)
+  //  table.setShowGrid(true)
+  table.setRowHeight(table.getRowHeight + 4)
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+  table.setRowSelectionInterval(cmdh.size, cmdh.size)
   table.getTableHeader.getDefaultRenderer.asInstanceOf[DefaultTableCellHeaderRenderer].setHorizontalAlignment(SwingConstants.CENTER)
+  table.setDefaultRenderer(classOf[AnyRef], new DefaultTableCellRenderer {
+    override def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean,
+      hasFocus: Boolean, row: Int, column: Int) = {
+      val component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).asInstanceOf[JComponent]
+
+      val outsideBorder = BorderFactory.createLineBorder(new Color(240, 240, 240))
+      val insideBorder = new EmptyBorder(0, 3, 0, 2)
+      val border = new CompoundBorder(outsideBorder, insideBorder)
+
+      component.setBorder(border)
+      component
+    }
+  })
   table.getSelectionModel.addListSelectionListener(new ListSelectionListener {
     override def valueChanged(event: ListSelectionEvent) {
       if (!event.getValueIsAdjusting) {
@@ -90,12 +114,17 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
   })
 
   for (i <- 0 until colNames.size) {
-    val column = table.getColumnModel().getColumn(i);
+    val column = table.getColumnModel().getColumn(i)
     column.setPreferredWidth(colWidths(i))
   }
+  table.getDefaultEditor(classOf[String]).asInstanceOf[DefaultCellEditor].setClickCountToStart(1)
 
   hw.setLayout(new BorderLayout)
   hw.add(new JScrollPane(table), BorderLayout.CENTER)
+  val comingSoon = new JLabel("History Search coming soon...")
+  comingSoon.setHorizontalAlignment(SwingConstants.CENTER)
+  comingSoon.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
+  hw.add(comingSoon, BorderLayout.SOUTH)
 
   codeSupport.commandHistory.setListener(new HistoryListener {
     def itemAdded {
@@ -112,4 +141,5 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
       //      myList.ensureIndexIsVisible(n)
     }
   })
+  table.scrollRectToVisible(table.getCellRect(cmdh.size, 0, true))
 }

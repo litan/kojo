@@ -18,7 +18,7 @@ import com.sun.xml.internal.ws.server.UnsupportedMediaException
 import net.kogics.kojo.xscala.Help
 import net.kogics.kojo.xscala.CodeTemplates
 
-class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) extends CompletionProviderBase {
+class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends CompletionProviderBase {
   val METHOD = 10
   val VARIABLE = 9
   val CLASS = 8
@@ -50,11 +50,14 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
     def kind = {
       if (completion.isValue) {
         VARIABLE
-      } else if (completion.isClass || completion.isType) {
+      }
+      else if (completion.isClass || completion.isType) {
         CLASS
-      } else if (completion.isPackage) {
+      }
+      else if (completion.isPackage) {
         PACKAGE
-      } else {
+      }
+      else {
         METHOD
       }
     }
@@ -66,9 +69,11 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
       fm.append(completion.name)
       if (valOrNoargItem) {
         // do nothing
-      } else if (completion.isClass) {
+      }
+      else if (completion.isClass) {
         fm.append(completion.params.mkString("[", ", ", "]"))
-      } else {
+      }
+      else {
         fm.append(completion.params.zip(completion.paramTypes).
           map { p => "%s: %s" format (p._1, p._2) }.
           mkString("(", ", ", ")"))
@@ -81,12 +86,15 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
       val c0 = methodTemplate(completion.name)
       if (c0 != null) {
         c0
-      } else {
+      }
+      else {
         if (valOrNoargItem) {
           completion.name
-        } else if (completion.isClass) {
+        }
+        else if (completion.isClass) {
           "%s[%s]" format (completion.name, completion.params.map { "${%s}" format (_) }.mkString(", "))
-        } else {
+        }
+        else {
           "%s(%s)" format (completion.name, completion.params.map { "${%s}" format (_) }.mkString(", "))
         }
       }
@@ -97,9 +105,11 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
       sb.append("<strong>%s</strong>" format (completion.name))
       if (valOrNoargItem) {
         // do nothing
-      } else if (completion.isClass) {
+      }
+      else if (completion.isClass) {
         sb.append(completion.params.mkString("[", ", ", "]"))
-      } else {
+      }
+      else {
         sb.append(completion.params.zip(completion.paramTypes).
           map { p => "%s: %s" format (p._1, p._2) }.
           mkString("(", ", ", ")"))
@@ -139,7 +149,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
   }
 
   def addTemplateProposals(proposals: java.util.ArrayList[Completion], prefix: String, caretOffset: Int) {
-    CodeTemplates.templates.filter { kv => kv._1.startsWith(prefix)}.foreach { kv =>
+    CodeTemplates.templates.filter { kv => kv._1.startsWith(prefix) }.foreach { kv =>
       val name = kv._1; val value = kv._2
       proposals.add(
         new TemplateCompletion(this, name, name, value, null, CodeTemplates.asString(name)) {
@@ -153,18 +163,18 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
     val proposals = new java.util.ArrayList[Completion]
     val caretOffset = comp.getCaretPosition
 
-    val (objid, prefix) = completionSupport.objidAndPrefix(caretOffset)
+    val (objid, prefix) = codeSupport.objidAndPrefix(caretOffset)
     alreadyEntered = prefix.getOrElse("")
 
     if (objid.isEmpty) {
-      val (varCompletions, voffset) = completionSupport.varCompletions(prefix)
+      val (varCompletions, voffset) = codeSupport.varCompletions(prefix)
       varCompletions.foreach { completion =>
         proposals.add(proposal(caretOffset - voffset, completion,
           VARIABLE,
           methodTemplate(completion)))
       }
 
-      val (keywordCompletions, koffset) = completionSupport.keywordCompletions(prefix)
+      val (keywordCompletions, koffset) = codeSupport.keywordCompletions(prefix)
       keywordCompletions.foreach { completion =>
         proposals.add(proposal(caretOffset - koffset, completion,
           KEYWORD,
@@ -175,7 +185,7 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
     }
 
     if (objid.isDefined) {
-      val (memberCompletions, coffset) = completionSupport.memberCompletions(caretOffset, objid.get, prefix)
+      val (memberCompletions, coffset) = codeSupport.memberCompletions(caretOffset, objid.get, prefix)
       memberCompletions.foreach { completion =>
         proposals.add(proposal2(caretOffset - coffset, completion))
       }
@@ -185,7 +195,23 @@ class KojoCompletionProvider(completionSupport: core.CodeCompletionSupport) exte
   }
 
   override def getCompletionsImpl(comp: JTextComponent) = {
-    complete(comp)
+    if (codeSupport.startingUp) {
+      val proposals = new java.util.ArrayList[Completion]
+      val completion = "Please try again soon..."
+      proposals.add(new TemplateCompletion(this, completion, completion, "${cursor}", null, 
+          "Kojo is starting up, and the Code Completion Engine is not available yet."))
+      proposals
+    }
+    else if (codeSupport.isRunningEnabled) {
+      complete(comp)
+    }
+    else {
+      val proposals = new java.util.ArrayList[Completion]
+      val completion = "Please try again soon..."
+      proposals.add(new TemplateCompletion(this, completion, completion, "${cursor}", null, 
+          "The Code Completion Engine is currently blocked (probably because a script is running)."))
+      proposals
+    }
   }
 
   override def getParameterizedCompletions(comp: JTextComponent) = throw new UnsupportedOperationException

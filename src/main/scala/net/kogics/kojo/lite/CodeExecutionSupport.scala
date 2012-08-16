@@ -47,6 +47,8 @@ import net.kogics.kojo.history.HistoryListener
 import javax.swing.JOptionPane
 import net.kogics.kojo.core.D3Mode
 import java.io.File
+import net.kogics.kojo.livecoding.ManipulationContext
+import net.kogics.kojo.livecoding.InteractiveManipulator
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -60,7 +62,7 @@ object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   protected def newInstance = new CodeExecutionSupport()
 }
 
-class CodeExecutionSupport private extends core.CodeCompletionSupport {
+class CodeExecutionSupport private extends core.CodeCompletionSupport with ManipulationContext {
   val Log = Logger.getLogger(getClass.getName);
   val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
@@ -85,6 +87,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   @volatile var runMonitor: RunMonitor = new NoOpRunMonitor()
   @volatile var codePane: JTextArea = _
   @volatile var kojoCtx: KojoCtx = _
+  @volatile var startingUp = true
 
   val codeRunner = makeCodeRunner()
 
@@ -172,13 +175,11 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   }
 
   def doWelcome() = {
-    val msg = """Welcome to Kojo\u2248Ray!
+    val msg = """Welcome to Kojo\u2248Ray, the online version of Kojo!
     |* To use code completion and see online help ->  Press Ctrl+Space within the Script Editor
+    |* To interactively manipulate program output ->  Click on numbers within the Script Editor
     |* To Pan or Zoom the Drawing Canvas          ->  Drag the left mouse button or Roll the mouse wheel
     |  * To reset Pan and Zoom levels             ->  Use the Drawing Canvas context menu
-    |
-    |Kojo\u2248Ray (for the Web) contains a subset of the functionality of Kojo (the Desktop App).
-    |For the real deal, get Kojo (www.kogics.net/kojo)!
     |""".stripMargin
 
     showOutput(msg)
@@ -199,15 +200,18 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         case RunScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             compileRunCode()
-          } else {
+          }
+          else {
             runCode()
           }
         case CompileScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             parseCode(false)
-          } else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
+          }
+          else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
             parseCode(true)
-          } else {
+          }
+          else {
             compileCode()
           }
         case StopScript =>
@@ -295,10 +299,12 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     }
     if (count == 0) {
       return true
-    } else {
+    }
+    else {
       if (code.charAt(len - 1) == '\n') {
         return true
-      } else {
+      }
+      else {
         return false
       }
     }
@@ -312,12 +318,14 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       def onInterpreterInit() = {
         showOutput(" " * 38 + "_____\n\n")
         lastOutput = ""
+        startingUp = false
       }
 
       def onInterpreterStart(code: String) {
         if (verboseOutput || isSingleLine(code)) {
           suppressInterpOutput = false
-        } else {
+        }
+        else {
           suppressInterpOutput = true
         }
 
@@ -457,6 +465,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def addCodePaneHandlers() {
     codePane.addKeyListener(new KeyAdapter {
       override def keyPressed(evt: KeyEvent) {
+        imanip.foreach { _ close () }
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (isRunningEnabled || evt.isShiftDown)) {
@@ -634,7 +643,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       historyManager.codeRun(codeToRun)
       if (isStory(codeToRun)) {
         codeRunner.compileRunCode(codeToRun)
-      } else {
+      }
+      else {
         codeRunner.runCode(codeToRun)
       }
     }
@@ -670,7 +680,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
       showOutput("\n>>>\n", promptColor)
       showOutput(codeToRun, codeColor)
       showOutput("\n<<<\n", promptColor)
-    } else {
+    }
+    else {
       maybeOutputDelimiter()
     }
     Some(codeToRun)
@@ -714,7 +725,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     try {
       closeFileIfOpen()
       openFileWithoutClose(file)
-    } catch {
+    }
+    catch {
       case e: RuntimeException =>
     }
   }
@@ -740,7 +752,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
   def closeFileAndClrEditorIgnoringCancel() {
     try {
       closeFileAndClrEditor()
-    } catch {
+    }
+    catch {
       case e: RuntimeException => // ignore user cancel
     }
   }
@@ -771,12 +784,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
         Utils.loadString("S_FileExists") format (file.getName))
       if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
         throw new RuntimeException("Cancel File SaveAs")
-      } else if (doSave == JOptionPane.NO_OPTION) {
+      }
+      else if (doSave == JOptionPane.NO_OPTION) {
         throw new IllegalArgumentException("Redo 'Save As' to select new file")
-      } else if (doSave == JOptionPane.YES_OPTION) {
+      }
+      else if (doSave == JOptionPane.YES_OPTION) {
         saveTo(file)
       }
-    } else {
+    }
+    else {
       saveTo(file)
     }
   }
@@ -798,6 +814,14 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     //        }
     //      }
     //    }
+  }
+
+  var imanip: Option[InteractiveManipulator] = None
+  def addManipulator(im: InteractiveManipulator) {
+    imanip = Some(im)
+  }
+  def removeManipulator(im: InteractiveManipulator) {
+    imanip = None
   }
 
   def loadCodeFromHistoryPrev() = historyManager.historyMoveBack
@@ -958,7 +982,14 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport {
     }
 
     def onDocChange() {
-      if (getBackground != NeutralColor) setBackground(NeutralColor)
+      if (imanip.isEmpty) {
+        if (getBackground != NeutralColor) setBackground(NeutralColor)
+      }
+      else {
+        if (!imanip.get.inSliderChange) {
+          imanip.get.close()
+        }
+      }
     }
   }
 }
