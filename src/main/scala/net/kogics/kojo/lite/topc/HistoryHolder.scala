@@ -20,6 +20,7 @@ import net.kogics.kojo.lite.CodeExecutionSupport
 import sun.swing.table.DefaultTableCellHeaderRenderer
 import javax.swing.border.EmptyBorder
 import javax.swing.border.CompoundBorder
+import javax.swing.DefaultCellEditor
 
 class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecutionSupport) extends BaseHolder("HW", "History Pane", hw) {
   val cmdh = codeSupport.commandHistory
@@ -101,7 +102,6 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
       component.setBorder(border)
       component
     }
-
   })
   table.getSelectionModel.addListSelectionListener(new ListSelectionListener {
     override def valueChanged(event: ListSelectionEvent) {
@@ -112,9 +112,10 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
   })
 
   for (i <- 0 until colNames.size) {
-    val column = table.getColumnModel().getColumn(i);
+    val column = table.getColumnModel().getColumn(i)
     column.setPreferredWidth(colWidths(i))
   }
+  table.getDefaultEditor(classOf[String]).asInstanceOf[DefaultCellEditor].setClickCountToStart(1)
 
   hw.setLayout(new BorderLayout)
   hw.add(new JScrollPane(table), BorderLayout.CENTER)
