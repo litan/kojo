@@ -63,26 +63,30 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
       }
     }
     override def setValueAt(value: Object, row: Int, col: Int) {
-      val hi = cmdh(row)
-      col match {
-        case 0 =>
-          if (value.asInstanceOf[java.lang.Boolean]) {
-            cmdh.star(hi)
-          } else {
-            cmdh.unstar(hi)
-          }
-        case 2 => cmdh.saveTags(hi, value.asInstanceOf[String])
-        case _ =>
+      if (row < cmdh.size) {
+        val hi = cmdh(row)
+        col match {
+          case 0 =>
+            if (value.asInstanceOf[java.lang.Boolean]) {
+              cmdh.star(hi)
+            } else {
+              cmdh.unstar(hi)
+            }
+          case 2 => cmdh.saveTags(hi, value.asInstanceOf[String])
+          case _ =>
+        }
+        fireTableCellUpdated(row, col);
       }
-      fireTableCellUpdated(row, col);
     }
   }
   val table = new JTable(tableModel)
 
   table.setBackground(Color.white)
-//  table.setShowGrid(true)
+  //  table.setShowGrid(true)
   table.setRowHeight(table.getRowHeight + 4)
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+  table.setRowSelectionInterval(cmdh.size, cmdh.size)
+
   table.getTableHeader.getDefaultRenderer.asInstanceOf[DefaultTableCellHeaderRenderer].setHorizontalAlignment(SwingConstants.CENTER)
   table.setDefaultRenderer(classOf[AnyRef], new DefaultTableCellRenderer {
     override def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean,
