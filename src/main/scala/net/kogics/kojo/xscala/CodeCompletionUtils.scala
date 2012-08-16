@@ -268,7 +268,7 @@ object CodeCompletionUtils {
     "strafeDown" -> "strafeDown(${distance})",
     "strafeLeft" -> "strafeLeft(${distance})",
     "strafeRight" -> "strafeRight(${distance})",
-    "invisivle" -> "invisible()",
+    "invisible" -> "invisible()",
     "visible" -> "visible()",
     "trailOn" -> "trailOn()",
     "trailOff" -> "trailOff()",
