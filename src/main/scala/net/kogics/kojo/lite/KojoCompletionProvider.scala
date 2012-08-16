@@ -195,7 +195,14 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   }
 
   override def getCompletionsImpl(comp: JTextComponent) = {
-    if (codeSupport.isRunningEnabled) {
+    if (codeSupport.startingUp) {
+      val proposals = new java.util.ArrayList[Completion]
+      val completion = "Please try again soon..."
+      proposals.add(new TemplateCompletion(this, completion, completion, "${cursor}", null, 
+          "Kojo is starting up, and the Code Completion Engine is not available yet."))
+      proposals
+    }
+    else if (codeSupport.isRunningEnabled) {
       complete(comp)
     }
     else {
