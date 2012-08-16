@@ -87,6 +87,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   @volatile var runMonitor: RunMonitor = new NoOpRunMonitor()
   @volatile var codePane: JTextArea = _
   @volatile var kojoCtx: KojoCtx = _
+  @volatile var startingUp = true
 
   val codeRunner = makeCodeRunner()
 
@@ -174,13 +175,11 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   }
 
   def doWelcome() = {
-    val msg = """Welcome to Kojo\u2248Ray!
+    val msg = """Welcome to Kojo\u2248Ray, the online version of Kojo!
     |* To use code completion and see online help ->  Press Ctrl+Space within the Script Editor
+    |* To interactively manipulate program output ->  Click on numbers within the Script Editor
     |* To Pan or Zoom the Drawing Canvas          ->  Drag the left mouse button or Roll the mouse wheel
     |  * To reset Pan and Zoom levels             ->  Use the Drawing Canvas context menu
-    |
-    |Kojo\u2248Ray (for the Web) contains a subset of the functionality of Kojo (the Desktop App).
-    |For the real deal, get Kojo (www.kogics.net/kojo)!
     |""".stripMargin
 
     showOutput(msg)
@@ -201,15 +200,18 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         case RunScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             compileRunCode()
-          } else {
+          }
+          else {
             runCode()
           }
         case CompileScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             parseCode(false)
-          } else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
+          }
+          else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
             parseCode(true)
-          } else {
+          }
+          else {
             compileCode()
           }
         case StopScript =>
@@ -297,10 +299,12 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     }
     if (count == 0) {
       return true
-    } else {
+    }
+    else {
       if (code.charAt(len - 1) == '\n') {
         return true
-      } else {
+      }
+      else {
         return false
       }
     }
@@ -314,12 +318,14 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       def onInterpreterInit() = {
         showOutput(" " * 38 + "_____\n\n")
         lastOutput = ""
+        startingUp = false
       }
 
       def onInterpreterStart(code: String) {
         if (verboseOutput || isSingleLine(code)) {
           suppressInterpOutput = false
-        } else {
+        }
+        else {
           suppressInterpOutput = true
         }
 
@@ -637,7 +643,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       historyManager.codeRun(codeToRun)
       if (isStory(codeToRun)) {
         codeRunner.compileRunCode(codeToRun)
-      } else {
+      }
+      else {
         codeRunner.runCode(codeToRun)
       }
     }
@@ -673,7 +680,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       showOutput("\n>>>\n", promptColor)
       showOutput(codeToRun, codeColor)
       showOutput("\n<<<\n", promptColor)
-    } else {
+    }
+    else {
       maybeOutputDelimiter()
     }
     Some(codeToRun)
@@ -717,7 +725,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     try {
       closeFileIfOpen()
       openFileWithoutClose(file)
-    } catch {
+    }
+    catch {
       case e: RuntimeException =>
     }
   }
@@ -743,7 +752,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def closeFileAndClrEditorIgnoringCancel() {
     try {
       closeFileAndClrEditor()
-    } catch {
+    }
+    catch {
       case e: RuntimeException => // ignore user cancel
     }
   }
@@ -774,12 +784,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         Utils.loadString("S_FileExists") format (file.getName))
       if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
         throw new RuntimeException("Cancel File SaveAs")
-      } else if (doSave == JOptionPane.NO_OPTION) {
+      }
+      else if (doSave == JOptionPane.NO_OPTION) {
         throw new IllegalArgumentException("Redo 'Save As' to select new file")
-      } else if (doSave == JOptionPane.YES_OPTION) {
+      }
+      else if (doSave == JOptionPane.YES_OPTION) {
         saveTo(file)
       }
-    } else {
+    }
+    else {
       saveTo(file)
     }
   }
@@ -971,7 +984,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     def onDocChange() {
       if (imanip.isEmpty) {
         if (getBackground != NeutralColor) setBackground(NeutralColor)
-      } else {
+      }
+      else {
         if (!imanip.get.inSliderChange) {
           imanip.get.close()
         }
