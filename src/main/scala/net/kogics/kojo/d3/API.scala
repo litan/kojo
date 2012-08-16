@@ -94,13 +94,6 @@ class API {
     }
   }
   
-  def pointLight(r : Double, g : Double, b : Double) {
-    require(r >= 0 && g >= 0 && b >= 0, "All components of the light source's color must be non-negative")
-    renderIfIntermediateRenderingOn {
-      _canvas.pointLight(r, g, b)
-    }
-  }
-  
   def pointLight(r : Double, g : Double, b : Double,
                  x : Double, y : Double, z : Double) {
     require(r >= 0 && g >= 0 && b >= 0, "All components of the light source's color must be non-negative")
