@@ -3,7 +3,6 @@ package net.kogics.kojo.lite.topc
 import java.awt.BorderLayout
 import java.awt.Color
 import java.text.DateFormat
-
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.AbstractTableModel
@@ -19,6 +18,8 @@ import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.history.HistoryListener
 import net.kogics.kojo.lite.CodeExecutionSupport
 import sun.swing.table.DefaultTableCellHeaderRenderer
+import javax.swing.border.EmptyBorder
+import javax.swing.border.CompoundBorder
 
 class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecutionSupport) extends BaseHolder("HW", "History Pane", hw) {
   val cmdh = codeSupport.commandHistory
@@ -92,7 +93,12 @@ class HistoryHolder(val hw: JComponent, ctx: KojoCtx, codeSupport: CodeExecution
     override def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean,
       hasFocus: Boolean, row: Int, column: Int) = {
       val component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).asInstanceOf[JComponent]
-      component.setBorder(BorderFactory.createLineBorder(new Color(240, 240, 240)))
+
+      val outsideBorder = BorderFactory.createLineBorder(new Color(240, 240, 240))
+      val insideBorder = new EmptyBorder(0, 3, 0, 2)
+      val border = new CompoundBorder(outsideBorder, insideBorder)
+
+      component.setBorder(border)
       component
     }
 
