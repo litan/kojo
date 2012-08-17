@@ -16,6 +16,7 @@
 package net.kogics.kojo.core
 
 import javax.swing.JFrame
+import java.awt.Color
 
 trait KojoCtx {
   def activateDrawingCanvas()
@@ -37,4 +38,7 @@ trait KojoCtx {
   def saveAsFile(): Unit
   def drawingCanvasActivated(): Unit
   def mwActivated(): Unit
+  def lastColor: Color
+  def lastColor_=(c: Color)
+  def knownColors: List[String]
 }

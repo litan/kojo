@@ -936,6 +936,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def isStagingActive = codingMode == StagingMode
   def isMwActive = codingMode == MwMode
   def isD3Active = codingMode == D3Mode
+  
+  def knownColors = kojoCtx.knownColors
 
   class OutputCapturingRunner extends RunMonitor {
     val outputx: StringBuilder = new StringBuilder()
