@@ -23,6 +23,7 @@ trait ManipulationContext {
   def addManipulator(im: InteractiveManipulator)
   def removeManipulator(im: InteractiveManipulator)
   def activateEditor()
+  def knownColors: List[String]
 }
 
 trait InteractiveManipulator {

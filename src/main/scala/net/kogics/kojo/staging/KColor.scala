@@ -37,5 +37,9 @@ class KColor {
   val darkGray = new Color(64, 64, 64);
   val magenta = new Color(255, 0, 255);
   val cyan = new Color(0, 255, 255);
-  val noColor = new Color(0,0,0,0)
+  val noColor = new Color(0, 0, 0, 0)
+
+  def knownColors = List("blue", "red", "yellow", "green", "orange", "purple", "pink", "brown", "black", "white",
+    "gray", "lightGray", "darkGray", "magenta", "cyan", "noColor"
+  )
 }

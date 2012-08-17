@@ -21,7 +21,7 @@ import net.kogics.kojo.lite.CodeExecutionSupport
 import javax.swing.text.JTextComponent
 
 class IpmProvider(ces: CodeExecutionSupport) {
-  val manips = List(new IntManipulator(ces), new FloatManipulator(ces))
+  val manips = List(new IntManipulator(ces), new FloatManipulator(ces), new ColorManipulator(ces))
   
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
     manips.exists {_ isHyperlinkPoint(pane, offset)}
