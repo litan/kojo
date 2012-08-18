@@ -8,13 +8,15 @@ import bibliothek.gui.dock.common.event.CDockableAdapter
 import bibliothek.gui.dock.common.intern.CDockable
 import bibliothek.gui.dock.common.mode.ExtendedMode
 import bibliothek.gui.dock.common.event.CFocusListener
+import net.kogics.kojo.core.KojoCtx
 
-class D3CanvasHolder(val d3: JComponent) extends BaseHolder("D3", "3D Canvas", null.asInstanceOf[JComponent]) {
+class D3CanvasHolder(val d3: JComponent, ctx: KojoCtx) extends BaseHolder("D3", "3D Canvas", null.asInstanceOf[JComponent]) {
 
   var added = false
 
   this.addFocusListener(new CFocusListener {
     override def focusGained(dockable: CDockable) {
+      ctx.d3Activated()
       if (!added) {
         add(d3)
         added = true

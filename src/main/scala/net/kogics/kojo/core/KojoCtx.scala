@@ -38,6 +38,7 @@ trait KojoCtx {
   def saveAsFile(): Unit
   def drawingCanvasActivated(): Unit
   def mwActivated(): Unit
+  def d3Activated(): Unit
   def lastColor: Color
   def lastColor_=(c: Color)
   def knownColors: List[String]

@@ -144,7 +144,7 @@ object Main {
       val outputHolder = new OutputWindowHolder(codeSupport.outputWindow)
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, ctx)
-      val d3Holder = new D3CanvasHolder(Canvas3D.instance)
+      val d3Holder = new D3CanvasHolder(Canvas3D.instance, ctx)
       val historyHolder = new HistoryHolder(new JPanel(), ctx, codeSupport)
 
       ctx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder)
