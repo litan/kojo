@@ -91,7 +91,12 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
           if (oldColor != newColor) {
             inSliderChange = true
             doc.remove(targetStart, target.length())
-            target = "Color(%d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue)
+            target = if (newColor.getAlpha == 255) {
+              "Color(%d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue)
+            }
+            else {
+              "Color(%d, %d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
+            }
             doc.insertString(targetStart, target, null);
             inSliderChange = false
             oldColor = newColor
