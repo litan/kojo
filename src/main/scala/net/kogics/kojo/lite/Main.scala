@@ -286,6 +286,7 @@ object Main {
           aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> \u2248Ray (Early Access)<br/>
+              Version: 180812-1 <br/>
               <br/>Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/> 
               <strong>Kojo</strong> \u2248Ray is the online version of Kojo (Ray - partly because it comes in through the cloud!).<br/>Please visit <em>http://www.kogics.net/webkojo</em> and <em>http://www.kogics.net/kojo</em> for more information.<br/><br/>
               <strong>Kojo</strong> \u2248Ray Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>Jerzy Redlarski</li><li>(The late) Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Bj\u00f6rn Regnell</li></ul>
