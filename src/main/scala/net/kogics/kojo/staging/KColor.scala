@@ -21,7 +21,7 @@ import java.awt.Color
 // inside the C builtin do not show up nicely 
 // because the colors get into C via inheritence, and show up lower down
 // in the list of completions
-class KColor {
+object KColor {
   val blue = Color.blue
   val red = Color.red
   val yellow = Color.yellow
