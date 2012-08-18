@@ -29,7 +29,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
   def isAbsent = colorPopup == null
   def isPresent = !isAbsent
 
-  lazy val ColorPattern = Pattern.compile(ctx.knownColors.mkString("|"))
+  lazy val ColorPattern = Pattern.compile("""(C\.)?(%s)""" format(ctx.knownColors.mkString("|")))
   def matcher(possibleColor: String) = ColorPattern.matcher(possibleColor)
 
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
@@ -120,7 +120,6 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "esc")
     panel.getActionMap.put("esc", closeAction)
 
-    println(cc.getHeight)
     colorPopup = factory.getPopup(ctx.codePane, panel, pt.x + 50, pt.y - 300)
     colorPopup.show()
   }

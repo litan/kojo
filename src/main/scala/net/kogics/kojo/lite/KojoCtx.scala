@@ -123,5 +123,5 @@ class KojoCtx extends core.KojoCtx {
     _lastColor = c
   }
   
-  def knownColors = Builtins.instance.C.knownColors
+  def knownColors = staging.KColor.knownColors
 }
