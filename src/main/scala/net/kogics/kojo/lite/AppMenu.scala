@@ -120,6 +120,7 @@ trait AppMenu { self: Main.type =>
 
     helpMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
     helpMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
+    helpMenu.add(menuItemFor("Introduction to 3D", "d3-intro.kojo"))
     helpMenu.addSeparator()
 
     val about = new JMenuItem("About")
