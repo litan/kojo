@@ -59,48 +59,9 @@ class OrthographicCamera(position : Vector3d = Vector3d(0d, 0d, 10d),
 
         val ray = new Ray(rayOrigin,
             (-orientation).rotate(Vector3d(0, 0, 1)))
-          
-        val allShapes = {
-          val withTurtle = if(turtle.visible) {
-            turtle.avatar ::: shapes
-          }
-          else
-            shapes
-          
-          if(axesVisible) {
-            Axes.avatarWithTicks ::: withTurtle
-          }
-          else
-            withTurtle
-        }
-        
-        val allLights = {
-          if(defaultLightsOn)
-            DefaultLights.lights ::: lights
-          else
-            lights
-        }
-        
-        val (distance, closestShape) = allShapes.foldLeft(
-          (Double.MaxValue, None : Option[Shape]))(
-          (result, shape) => shape.intersection(ray) match {
-            case Some(t) => {
-                if(t < result._1) (t, Option(shape))
-                else result
-            }
-            case None => result
-          }
-        )
 
-        val color = closestShape match {
-          case Some(t) => {
-            val point = ray.origin + ray.direction * distance
-            t.shade(point, allLights)
-          }
-          case None => {
-            new Vector3d(0.4d, 0.5d, 0.6d)
-          }
-        }
+        val color = ray.trace(shapes, lights, turtle, axesVisible, defaultLightsOn)
+        
         g2d.setColor(new Color(clip(color.x), clip(color.y), clip(color.z)))
         g2d.drawLine(column, row, column, row)
       }
