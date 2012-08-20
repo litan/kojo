@@ -86,7 +86,7 @@ class Builtins extends RepeatCommands {
   val magenta = JColor.magenta
   val cyan = JColor.cyan
 
-  val C = new staging.KColor
+  val C = staging.KColor
   val noColor = C.noColor
   
   val Kc = new staging.KeyCodes

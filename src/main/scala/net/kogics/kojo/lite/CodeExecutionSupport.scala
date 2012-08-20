@@ -177,7 +177,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def doWelcome() = {
     val msg = """Welcome to Kojo\u2248Ray, the online version of Kojo!
     |* To use code completion and see online help ->  Press Ctrl+Space within the Script Editor
-    |* To interactively manipulate program output ->  Click on numbers within the Script Editor
+    |* To interactively manipulate program output ->  Click on numbers and colors within the Script Editor
     |* To Pan or Zoom the Drawing Canvas          ->  Drag the left mouse button or Roll the mouse wheel
     |  * To reset Pan and Zoom levels             ->  Use the Drawing Canvas context menu
     |""".stripMargin
@@ -529,11 +529,16 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     throw new UnsupportedOperationException("Input reading is not available in KojoLite.")
   }
 
+  def appendOutput(s: String) {
+    outputWindow.append(s)
+    outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
+  }
+
   def showOutput(outText: String): Unit = showOutput(outText, outputColor)
 
   def showOutput(outText: String, color: Color): Unit = {
     Utils.runInSwingThread {
-      outputWindow.append(outText)
+      appendOutput(outText)
       enableClearButton()
     }
     lastOutput = outText
@@ -541,7 +546,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def showErrorMsg(errMsg: String) {
     Utils.runInSwingThread {
-      outputWindow.append(errMsg)
+      appendOutput(errMsg)
       enableClearButton()
     }
     lastOutput = errMsg
@@ -549,7 +554,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def showErrorText(errText: String) {
     Utils.runInSwingThread {
-      outputWindow.append(errText)
+      appendOutput(errText)
       enableClearButton()
     }
     lastOutput = errText
@@ -557,7 +562,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def showSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
     Utils.runInSwingThread {
-      outputWindow.append(errText)
+      appendOutput(errText)
       enableClearButton()
     }
     lastOutput = errText
@@ -936,6 +941,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def isStagingActive = codingMode == StagingMode
   def isMwActive = codingMode == MwMode
   def isD3Active = codingMode == D3Mode
+
+  def knownColors = kojoCtx.knownColors
 
   class OutputCapturingRunner extends RunMonitor {
     val outputx: StringBuilder = new StringBuilder()
