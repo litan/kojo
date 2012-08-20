@@ -174,7 +174,7 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
     panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "esc")
     panel.getActionMap.put("esc", closeAction)
 
-    numberTweakPopup = factory.getPopup(ctx.codePane, panel, pt.x - 50, pt.y + (rect.height * 1.5).toInt)
+    numberTweakPopup = factory.getPopup(ctx.codePane, panel, pt.x - 50, pt.y - (rect.height * 3.5).toInt)
     numberTweakPopup.show()
     //    Utils.schedule(0.3) {
     //      slider.requestFocus()

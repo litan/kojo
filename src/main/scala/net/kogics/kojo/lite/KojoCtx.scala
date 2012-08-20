@@ -23,6 +23,8 @@ import javax.swing.JFrame
 import net.kogics.kojo.action.CloseFile
 import java.awt.event.ActionListener
 import java.awt.event.ActionEvent
+import java.awt.Color
+import net.kogics.kojo.xscala.Builtins
 
 object KojoCtx extends core.Singleton[KojoCtx] {
   protected def newInstance = new KojoCtx
@@ -70,10 +72,15 @@ class KojoCtx extends core.KojoCtx {
   
   def drawingCanvasActivated() {
     topcs.d3h.otherPaneActivated()
+    topcs.mwh.otherPaneActivated()
   }
   
   def mwActivated() {
     topcs.d3h.otherPaneActivated()
+  }
+
+  def d3Activated() {
+    topcs.mwh.otherPaneActivated()
   }
 
   def baseDir: String = System.getProperty("user.dir")
@@ -109,4 +116,12 @@ class KojoCtx extends core.KojoCtx {
   def saveAsFile() {
     saveAsActionListener.actionPerformed(new ActionEvent(frame, 0, "Save As"))
   }
+
+  @volatile var _lastColor = Color.white
+  def lastColor: Color = _lastColor 
+  def lastColor_=(c: Color) {
+    _lastColor = c
+  }
+  
+  def knownColors = staging.KColor.knownColors
 }
