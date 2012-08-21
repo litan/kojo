@@ -18,4 +18,45 @@ package net.kogics.kojo.d3
 class Ray(val origin : Vector3d, dir : Vector3d) {
 
   val direction = dir.normalized
+
+  def trace(shapes : List[Shape], lights : List[Light], turtle : Turtle3d, axesVisible : Boolean, defaultLightsOn : Boolean) = {
+    val allShapes = {
+      val withTurtle = if (turtle.visible) {
+        turtle.avatar ::: shapes
+      } else
+        shapes
+
+      if (axesVisible) {
+        Axes.avatarWithTicks ::: withTurtle
+      } else
+        withTurtle
+    }
+
+    val allLights = {
+      if (defaultLightsOn)
+        DefaultLights.lights ::: lights
+      else
+        lights
+    }
+
+    val (distance, closestShape) = allShapes.foldLeft(
+      (Double.MaxValue, None : Option[Shape]))(
+        (result, shape) => shape.intersection(this) match {
+          case Some(t) => {
+            if (t < result._1) (t, Option(shape))
+            else result
+          }
+          case None => result
+        })
+
+    closestShape match {
+      case Some(t) => {
+        val point = origin + direction * distance
+        t.shade(point, allLights)
+      }
+      case None => {
+        new Vector3d(0.4d, 0.5d, 0.6d)
+      }
+    }
+  }
 }
