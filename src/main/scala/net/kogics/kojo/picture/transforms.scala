@@ -76,7 +76,6 @@ trait Transformer extends Picture {
   def visible() = tpic.visible()
   def invisible() = tpic.invisible()
   def isDrawn() = tpic.isDrawn()
-  def act(fn: Picture => Unit) = tpic.act(fn)
   def myCanvas = tpic.myCanvas
 }
 

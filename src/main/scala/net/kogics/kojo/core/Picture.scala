@@ -1,4 +1,5 @@
-package net.kogics.kojo.core
+package net.kogics.kojo
+package core
 
 import java.awt.Paint
 import edu.umd.cs.piccolo.util.PBounds
@@ -59,7 +60,16 @@ trait Picture extends InputAware {
   def setPenColor(color: Color)
   def setPenThickness(th: Double)
   def setFillColor(color: Paint)
-  def act(fn: Picture => Unit)
+  def act(fn: Picture => Unit) {
+    if (!isDrawn) {
+      throw new IllegalStateException("Ask picture to act after you draw it.")
+    }
+    // bad dependence from core to staging!
+    staging.API.loop {
+      fn(this)
+    }
+  }
+
   // provide these explicitly, so that subclasses that are case
   // classes can live within sets and maps
   override def equals(other: Any) = this eq other.asInstanceOf[AnyRef]

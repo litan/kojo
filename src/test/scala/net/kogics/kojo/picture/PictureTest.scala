@@ -172,6 +172,7 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
     val pic = rot(30) -> testPic
     pic.draw()
     pic.act { me =>
+      // test should be done in test runner thread
       me should be(pic)
       staging.API.stop()
     }
