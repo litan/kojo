@@ -282,16 +282,6 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     picGeom.getLength
   }
 
-  def act(fn: Picture => Unit) {
-    if (!isDrawn) {
-      throw new IllegalStateException("Ask picture to act after you draw it.")
-    }
- 
-    staging.API.loop {
-      fn(this)
-    }
-  }
-
   def myCanvas = Impl.canvas
 }
 
