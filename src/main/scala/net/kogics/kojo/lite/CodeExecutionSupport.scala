@@ -15,40 +15,45 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
+import java.awt.CardLayout
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Event
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
+import java.io.File
 import java.io.OutputStream
 import java.io.PrintStream
 import java.io.Writer
 import java.util.concurrent.CountDownLatch
 import java.util.logging.Logger
-import javax.swing.event.DocumentEvent
-import javax.swing.event.DocumentListener
 import javax.swing.JButton
+import javax.swing.JEditorPane
+import javax.swing.JOptionPane
 import javax.swing.JPanel
+import javax.swing.JScrollPane
 import javax.swing.JTextArea
 import javax.swing.JToolBar
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
+import javax.swing.event.HyperlinkListener
 import net.kogics.kojo.core.CodingMode
+import net.kogics.kojo.core.D3Mode
 import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
-import net.kogics.kojo.lite.canvas.SpriteCanvas
-import util.Utils
 import net.kogics.kojo.history.CommandHistory
-import net.kogics.kojo.history.HistoryListener
-import javax.swing.JOptionPane
-import net.kogics.kojo.core.D3Mode
-import java.io.File
-import net.kogics.kojo.livecoding.ManipulationContext
+import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.livecoding.InteractiveManipulator
+import net.kogics.kojo.livecoding.ManipulationContext
+import net.kogics.kojo.util.RichFile.enrichFile
+import util.Utils
+import javax.swing.event.HyperlinkEvent
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -67,7 +72,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
   val outputWindow = new JTextArea
+  val errorWindow = new JEditorPane
+  errorWindow.setContentType("text/html")
+
+  val outPanel = new JPanel(new CardLayout)
+  outPanel.add(new JScrollPane(outputWindow), "Output")
+  outPanel.add(new JScrollPane(errorWindow), "Error")
+
   outputWindow.setEditable(false)
+  errorWindow.setEditable(false)
   System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
   doWelcome()
 
@@ -230,7 +243,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     }
 
     def makeNavigationButton(imageFile: String, actionCommand: String,
-      toolTipText: String, altText: String): JButton = {
+                             toolTipText: String, altText: String): JButton = {
       val button = new JButton()
       button.setActionCommand(actionCommand)
       button.setToolTipText(toolTipText)
@@ -322,6 +335,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       }
 
       def onInterpreterStart(code: String) {
+        resetErrInfo()
         if (verboseOutput || isSingleLine(code)) {
           suppressInterpOutput = false
         }
@@ -336,6 +350,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       }
 
       def onCompileStart() {
+        resetErrInfo()
         showNormalCursor()
         enableRunButton(false)
       }
@@ -532,6 +547,64 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def appendOutput(s: String) {
     outputWindow.append(s)
     outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
+    val cl = outPanel.getLayout().asInstanceOf[CardLayout]
+    cl.show(outPanel, "Output")
+  }
+
+  @volatile var errText = ""
+  @volatile var errOffset = 0
+  @volatile var errCount = 0
+
+  errorWindow.addHyperlinkListener(new HyperlinkListener {
+    val linkRegex = """(?i)http://error/(\d+)""".r
+    def hyperlinkUpdate(e: HyperlinkEvent) {
+      if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
+        e.getURL.toString match {
+          case linkRegex(offset) =>
+            codePane.select(offset.toInt, offset.toInt + 1)
+            kojoCtx.activateScriptEditor()
+          case _ =>
+        }
+      }
+    }
+  })
+
+  def resetErrInfo() {
+    errText = ""
+    errOffset = 0
+    errCount = 0
+  }
+
+  def appendError(s: String, offset: Option[Int] = None) {
+    errText += xml.Unparsed(s)
+    if (offset.isDefined) {
+      errCount += 1
+      if (errCount == 1) {
+        errOffset = offset.get
+      }
+    }
+
+    def errorLink = "http://error/" + errOffset
+
+    val errMsg =
+      <body style="">
+        <h2>There's a problem in your script!</h2>
+        <div style="color:red;margin:5px;font-size:large;">
+          <pre>{ errText }</pre>
+        </div>
+        { if (errCount > 1) { <div style="margin:5px;font-size:large;">
+        	<a href={ errorLink }>Locate first error in script</a>
+          </div> } else if (errCount == 1) { <div style="margin:5px;font-size:large;">
+        	<a href={ errorLink }>Locate error in script</a>
+          </div> } else { <div style="margin:5px;font-size:large;">
+        	  Use the 'Check Script' button for better error recovery.
+            </div> } }
+      </body>
+
+    errorWindow.setText(errMsg.toString)
+    errorWindow.setCaretPosition(errorWindow.getDocument.getLength)
+    val cl = outPanel.getLayout().asInstanceOf[CardLayout]
+    cl.show(outPanel, "Error")
   }
 
   def showOutput(outText: String): Unit = showOutput(outText, outputColor)
@@ -546,7 +619,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def showErrorMsg(errMsg: String) {
     Utils.runInSwingThread {
-      appendOutput(errMsg)
+      appendError(errMsg)
       enableClearButton()
     }
     lastOutput = errMsg
@@ -554,7 +627,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def showErrorText(errText: String) {
     Utils.runInSwingThread {
-      appendOutput(errText)
+      appendError(errText)
       enableClearButton()
     }
     lastOutput = errText
@@ -562,7 +635,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def showSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
     Utils.runInSwingThread {
-      appendOutput(errText)
+      appendError(errText, Some(offset))
       enableClearButton()
     }
     lastOutput = errText

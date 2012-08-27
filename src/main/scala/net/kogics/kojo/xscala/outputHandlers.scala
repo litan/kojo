@@ -97,7 +97,7 @@ class InterpOutputHandler(ctx: RunContext) {
         ctx.reportErrorMsg(output)
         currMode = HatMode
       case HatMode =>
-        ctx.kprintln(output)
+        ctx.reportErrorMsg(output)
         currMode = OutputMode
     }
   }
@@ -130,7 +130,7 @@ class CompilerOutputHandler(ctx: RunContext) extends CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String) {
     ctx.reportErrorMsg("Error[%d,%d]: %s\n" format(line, column, msg))
     ctx.reportSmartErrorText("%s\n" format(lineContent), line, column, offset)
-    ctx.kprintln(" " * (column-1) + "^\n")
+    ctx.reportErrorMsg(" " * (column-1) + "^\n")
   }
 
   def warning(msg: String, line: Int, column: Int) {
