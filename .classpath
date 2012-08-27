@@ -41,5 +41,12 @@
 	<classpathentry kind="lib" path="lib/junit-4.10.jar"/>
 	<classpathentry kind="lib" path="lib/scalacheck_2.9.2-1.10.0.jar"/>
 	<classpathentry kind="lib" path="lib/scalatest_2.9.0-1.8.jar"/>
+	<classpathentry kind="lib" path="lib/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="lib/hamcrest-core-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/hamcrest-library-1.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock-junit4-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/jmock-legacy-2.5.1.jar"/>
+	<classpathentry kind="lib" path="lib/objenesis-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
