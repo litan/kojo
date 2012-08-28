@@ -6,7 +6,6 @@ import java.awt.Point
 import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-
 import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JMenuItem
@@ -15,7 +14,6 @@ import javax.swing.JPopupMenu
 import javax.swing.KeyStroke
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
-
 import org.fife.ui.autocomplete.AutoCompletion
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
@@ -24,15 +22,14 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants
 import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
 import org.fife.ui.rtextarea.RTextScrollPane
-
 import net.kogics.kojo.codingmode.SwitchMode
 import net.kogics.kojo.lite.CodeExecutionSupport
 import net.kogics.kojo.lite.KojoCompletionProvider
 import net.kogics.kojo.livecoding.IpmProvider
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
-
 import scalariform.formatter.ScalaFormatter
+import scalariform.formatter.preferences.FormattingPreferences
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends BaseHolder("SE", "Script Editor", se) {
 
@@ -99,16 +96,18 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
   d3Cb.setActionCommand("D3")
   popup.add(d3Cb, 6)
-  
+
   popup.add(new JPopupMenu.Separator, 7)
 
-  
   val formatAction = new AbstractAction("Format Source") {
+    import scalariform.formatter.preferences.IndentSpaces
     def actionPerformed(ev: ActionEvent) {
-      codePane.setText(ScalaFormatter.format(codePane.getText))
+      codePane.setText(ScalaFormatter.format(
+        codePane.getText,
+        new FormattingPreferences(Map(IndentSpaces -> 4))))
     }
   }
-  
+
   val formatItem = new JMenuItem(formatAction)
   val cst = KeyStroke.getKeyStroke("control shift F")
   val im = codePane.getInputMap()
