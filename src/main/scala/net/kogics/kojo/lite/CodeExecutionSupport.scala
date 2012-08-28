@@ -532,6 +532,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def clrOutput() {
     Utils.runInSwingThread {
       outputWindow.setText("")
+      errorWindow.setText("")
       clearButton.setEnabled(false)
       codePane.requestFocusInWindow
     }
@@ -547,8 +548,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def appendOutput(s: String) {
     outputWindow.append(s)
     outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
-    val cl = outPanel.getLayout().asInstanceOf[CardLayout]
-    cl.show(outPanel, "Output")
   }
 
   @volatile var errText = ""
@@ -573,6 +572,11 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     errText = ""
     errOffset = 0
     errCount = 0
+    Utils.runInSwingThread {
+      errorWindow.setText("")
+      val cl = outPanel.getLayout().asInstanceOf[CardLayout]
+      cl.show(outPanel, "Output")
+    }
   }
 
   def appendError(s: String, offset: Option[Int] = None) {
@@ -622,7 +626,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       appendError(errMsg)
       enableClearButton()
     }
-    lastOutput = errMsg
+    //    lastOutput = errMsg
   }
 
   def showErrorText(errText: String) {
@@ -630,7 +634,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       appendError(errText)
       enableClearButton()
     }
-    lastOutput = errText
+    //    lastOutput = errText
   }
 
   def showSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
@@ -638,7 +642,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       appendError(errText, Some(offset))
       enableClearButton()
     }
-    lastOutput = errText
+    //    lastOutput = errText
   }
 
   def showWaitCursor() {
