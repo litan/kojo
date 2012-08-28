@@ -2,32 +2,37 @@ package net.kogics.kojo.lite.topc
 
 import java.awt.BorderLayout
 import java.awt.Color
-import org.fife.ui.autocomplete.AutoCompletion
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants
-import org.fife.ui.rtextarea.RTextScrollPane
-import bibliothek.gui.dock.common.DefaultSingleCDockable
-import javax.swing.event.PopupMenuEvent
-import javax.swing.event.PopupMenuListener
-import javax.swing.JCheckBoxMenuItem
-import javax.swing.JPanel
-import javax.swing.JPopupMenu
-import net.kogics.kojo.codingmode.SwitchMode
-import net.kogics.kojo.lite.KojoCompletionProvider
-import net.kogics.kojo.util.Utils
-import net.kogics.kojo.lite.CodeExecutionSupport
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
-import org.fife.ui.rsyntaxtextarea.TokenTypes
-import org.fife.ui.rsyntaxtextarea.Style
-import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
-import javax.swing.KeyStroke
-import java.awt.event.KeyEvent
-import net.kogics.kojo.xscala.CodeTemplates
+import java.awt.Point
+import java.awt.event.ActionEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import java.awt.Point
-import javax.swing.text.Utilities
+
+import javax.swing.AbstractAction
+import javax.swing.JCheckBoxMenuItem
+import javax.swing.JMenuItem
+import javax.swing.JPanel
+import javax.swing.JPopupMenu
+import javax.swing.KeyStroke
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
+
+import org.fife.ui.autocomplete.AutoCompletion
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
+import org.fife.ui.rsyntaxtextarea.Style
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants
+import org.fife.ui.rsyntaxtextarea.TokenTypes
+import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
+import org.fife.ui.rtextarea.RTextScrollPane
+
+import net.kogics.kojo.codingmode.SwitchMode
+import net.kogics.kojo.lite.CodeExecutionSupport
+import net.kogics.kojo.lite.KojoCompletionProvider
 import net.kogics.kojo.livecoding.IpmProvider
+import net.kogics.kojo.util.Utils
+import net.kogics.kojo.xscala.CodeTemplates
+
+import scalariform.formatter.ScalaFormatter
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends BaseHolder("SE", "Script Editor", se) {
 
@@ -94,6 +99,24 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
   d3Cb.setActionCommand("D3")
   popup.add(d3Cb, 6)
+  
+  popup.add(new JPopupMenu.Separator, 7)
+
+  
+  val formatAction = new AbstractAction("Format Source") {
+    def actionPerformed(ev: ActionEvent) {
+      codePane.setText(ScalaFormatter.format(codePane.getText))
+    }
+  }
+  
+  val formatItem = new JMenuItem(formatAction)
+  val cst = KeyStroke.getKeyStroke("control shift F")
+  val im = codePane.getInputMap()
+  im.put(cst, "format-src")
+  val am = codePane.getActionMap()
+  am.put("format-src", formatAction)
+  formatItem.setAccelerator(cst)
+  popup.add(formatItem, 8)
 
   popup.addPopupMenuListener(new PopupMenuListener {
     def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
