@@ -16,10 +16,10 @@ package net.kogics.kojo
 package util
 
 import lite.canvas.SpriteCanvas
-import java.awt.{List => _, _}
+import java.awt.{ List => _, _ }
 import java.util.concurrent.locks.Lock
 import javax.swing._
-import java.awt.event.{ActionListener, ActionEvent}
+import java.awt.event.{ ActionListener, ActionEvent }
 import java.io._
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.MwMode
@@ -30,13 +30,19 @@ import java.util.Locale
 import java.net.URL
 
 object Utils {
-  
-  def loadImage(fname: String) : Image = {
+
+  val imageCache = Map("/images/turtle32.png" -> loadImage0("/images/turtle32.png"))
+
+  def loadImage0(fname: String): Image = {
     val url = getClass.getResource(fname)
     Toolkit.getDefaultToolkit.getImage(url)
   }
 
-  def loadIcon(fname: String, desc: String = "") : ImageIcon = {
+  def loadImage(fname: String): Image = {
+    imageCache.get(fname).getOrElse { loadImage0(fname) }
+  }
+
+  def loadIcon(fname: String, desc: String = ""): ImageIcon = {
     new ImageIcon(loadImage(fname), desc)
   }
 
@@ -44,18 +50,18 @@ object Utils {
 
   def runAsync(fn: => Unit) {
     new Thread(new Runnable {
-        def run {
-          fn
-        }
-      }).start
+      def run {
+        fn
+      }
+    }).start
   }
-  
-  import collection.mutable.{HashSet, SynchronizedSet}
+
+  import collection.mutable.{ HashSet, SynchronizedSet }
   val threads = new HashSet[Thread] with SynchronizedSet[Thread]
   lazy val listener = SpriteCanvas.instance().megaListener // hack!
   var timer: Timer = _
   var startCount = 0
-  
+
   def startPumpingEvents() = synchronized {
     startCount += 1
     if (startCount == 1) {
@@ -77,65 +83,65 @@ object Utils {
       }
     }
   }
-  
+
   def runAsyncMonitored(fn: => Unit) {
     lazy val t: Thread = new Thread(new Runnable {
-        def run {
-          startPumpingEvents()
-          try {
-            fn
-          }
-          catch {
-            case e: InterruptedException => // println("Background Thread Interrupted.")
-            case t: Throwable => reportException(t)
-          }
-          finally {
-            threads.remove(t)
-            stopPumpingEvents()
-          }
+      def run {
+        startPumpingEvents()
+        try {
+          fn
         }
-      })
+        catch {
+          case e: InterruptedException => // println("Background Thread Interrupted.")
+          case t: Throwable            => reportException(t)
+        }
+        finally {
+          threads.remove(t)
+          stopPumpingEvents()
+        }
+      }
+    })
     threads.add(t)
     t.start()
   }
-  
+
   def stopMonitoredThreads() {
-    threads.foreach {t => t.interrupt()}
+    threads.foreach { t => t.interrupt() }
     threads.clear()
   }
-  
+
   def invokeLaterInSwingThread(fn: => Unit) {
     javax.swing.SwingUtilities.invokeLater(new Runnable {
-        override def run {
-          fn
-        }
-      })
+      override def run {
+        fn
+      }
+    })
   }
 
   def runInSwingThread(fn: => Unit) {
-    if(inSwingThread) {
+    if (inSwingThread) {
       fn
     }
     else {
       javax.swing.SwingUtilities.invokeLater(new Runnable {
-          override def run {
-            fn
-          }
-        })
+        override def run {
+          fn
+        }
+      })
     }
   }
 
   def runInSwingThreadAndWait[T](fn: => T): T = {
-    if(inSwingThread) {
+    if (inSwingThread) {
       fn
     }
     else {
       var t: T = null.asInstanceOf[T]
       javax.swing.SwingUtilities.invokeAndWait(new Runnable {
-          override def run {
-            t = fn
-          }
-        })
+        override def run {
+          t = fn
+        }
+      })
       t
     }
   }
@@ -148,21 +154,21 @@ object Utils {
 
   def schedule(secs: Double)(f: => Unit): Timer = {
     lazy val t: Timer = new Timer((secs * 1000).toInt, new ActionListener {
-        def actionPerformed(e: ActionEvent) {
-          t.stop
-          f
-        }
-      })
+      def actionPerformed(e: ActionEvent) {
+        t.stop
+        f
+      }
+    })
     t.start
     t
   }
 
   def scheduleRec(secs: Double)(f: => Unit): Timer = {
     val t: Timer = new Timer((secs * 1000).toInt, new ActionListener {
-        def actionPerformed(e: ActionEvent) {
-          f
-        }
-      })
+      def actionPerformed(e: ActionEvent) {
+        f
+      }
+    })
     t.start
     t
   }
@@ -174,7 +180,7 @@ object Utils {
 
   // actually - the dir with the jars, one level under the actual install dir
   def installDir = System.getProperty("user.home")
-  
+
   def readStream(is: InputStream): String = {
     val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
     val buf = new Array[Char](1024)
@@ -187,7 +193,7 @@ object Utils {
     reader.close()
     sb.toString
   }
-  
+
   def readUrl(url: String) = readStream(new URL(url).openConnection().getInputStream)
 
   def copyFile(in: File, out: File) {
@@ -213,22 +219,22 @@ object Utils {
   val messages = ResourceBundle.getBundle("net.kogics.kojo.lite.Bundle")
   def loadString(key: String) = {
     messages.getString(key)
-  }  
+  }
   def loadString(klass: Class[_], key: String) = {
     messages.getString(key)
-  }  
-  def loadString(klass: Class[_], key: String, args: AnyRef *) = {
-    messages.getString(key) format(args:_*)
-  }  
+  }
+  def loadString(klass: Class[_], key: String, args: AnyRef*) = {
+    messages.getString(key) format (args: _*)
+  }
 
   def filesInDir(dir: String, ext: String): List[String] = {
     val osDir = new File(dir)
     if (osDir.exists) {
       osDir.list(new FilenameFilter {
-          override def accept(dir: File, name: String) = {
-            name.endsWith("." + ext)
-          }
-        }).toList.sorted
+        override def accept(dir: File, name: String) = {
+          name.endsWith("." + ext)
+        }
+      }).toList.sorted
     }
     else {
       Nil
@@ -244,22 +250,22 @@ object Utils {
   import edu.umd.cs.piccolo.nodes.PText
   def textNode(text: String, x: Double, y: Double, camScale: Double): PText = {
     val tnode = new PText(text)
-    tnode.getTransformReference(true).setToScale(1/camScale, -1/camScale)
+    tnode.getTransformReference(true).setToScale(1 / camScale, -1 / camScale)
     tnode.setOffset(x, y)
     tnode
   }
-  
+
   def textNode(text: String, x: Double, y: Double, camScale: Double, n: Int): PText = {
     val tnode = textNode(text, x, y, camScale)
     val font = new Font(tnode.getFont.getName, Font.PLAIN, n)
     tnode.setFont(font)
     tnode
   }
-  
+
   def reportException(t: Throwable) {
     println("Problem - " + t.getMessage)
   }
-  
+
   def safeProcess(fn: => Unit) {
     try {
       fn
@@ -268,7 +274,7 @@ object Utils {
       case t: Throwable => reportException(t)
     }
   }
-  
+
   def withLock[T](lock: Lock)(fn: => T): T = {
     lock.lock()
     try {
@@ -278,7 +284,7 @@ object Utils {
       lock.unlock()
     }
   }
-  
+
   def giveupLock(lock: Lock)(fn: => Unit) {
     lock.unlock()
     try {
@@ -291,15 +297,15 @@ object Utils {
       lock.lock()
     }
   }
-  
+
   private def rgbComps(color: Color) = (color.getRed, color.getGreen, color.getBlue)
-  
+
   def checkHsbModFactor(f: Double) {
     if (f < -1 || f > 1) {
       throw new IllegalArgumentException("mod factor needs to be between -1 and 1")
     }
   }
-  
+
   private def modHsb(q: Double, f: Double) = {
     checkHsbModFactor(f)
 
@@ -310,37 +316,37 @@ object Utils {
       q * (1 + f)
     }
   }
-  
+
   def hueMod(c: Color, f: Double) = {
     val (r, g, b) = rgbComps(c)
     val hsb = Color.RGBtoHSB(r, g, b, null)
     val h = modHsb(hsb(0), f).toFloat
-    Color.getHSBColor(h, hsb(1), hsb(2))    
+    Color.getHSBColor(h, hsb(1), hsb(2))
   }
-  
+
   def satMod(c: Color, f: Double) = {
     val (r, g, b) = rgbComps(c)
     val hsb = Color.RGBtoHSB(r, g, b, null)
     val s = modHsb(hsb(1), f).toFloat
     Color.getHSBColor(hsb(0), s, hsb(2))
   }
-  
+
   def britMod(c: Color, f: Double) = {
     val (r, g, b) = rgbComps(c)
     val hsb = Color.RGBtoHSB(r, g, b, null)
     val br = modHsb(hsb(2), f).toFloat
     Color.getHSBColor(hsb(0), hsb(1), br)
   }
-  
+
   def stripTrailingChar(s: String, c: Char): String = s.reverse.dropWhile(_ == c).reverse
   def stripTrailingDots(s: String) = stripTrailingChar(s, '.')
-  def stripDots(s: String): String = s.filterNot {_ == '.'}
-  
+  def stripDots(s: String): String = s.filterNot { _ == '.' }
+
   lazy val (needsSanitizing, decimalSep) = {
-    val tester = "%.1f" format(0.0)
+    val tester = "%.1f" format (0.0)
     (tester != "0.0", tester(1).toString)
   }
-  
+
   def sanitizeDoubleString(d: String) = {
     if (needsSanitizing) d.replaceAll(decimalSep, ".") else d
   }
@@ -351,7 +357,7 @@ object Utils {
   val asyncRunner = actor {
     loop {
       react {
-        case RunCode(code) => 
+        case RunCode(code) =>
           safeProcess {
             code()
           }
