@@ -31,7 +31,15 @@ import java.net.URL
 
 object Utils {
 
-  val imageCache = Map("/images/turtle32.png" -> loadImage0("/images/turtle32.png"))
+  val imageCache = Map(
+    "/images/turtle32.png" -> loadImage0("/images/turtle32.png"),
+    "/images/kindvar.png" -> loadImage0("/images/kindvar.png"),
+    "/images/kindclass.png" -> loadImage0("/images/kindclass.png"),
+    "/images/kindpackage.gif" -> loadImage0("/images/kindpackage.gif"),
+    "/images/kindmethod.png" -> loadImage0("/images/kindmethod.png"),
+    "/images/scala16x16.png" -> loadImage0("/images/scala16x16.png"),
+    "/images/kindtemplate.png" -> loadImage0("/images/kindtemplate.png")
+  )
 
   def loadImage0(fname: String): Image = {
     val url = getClass.getResource(fname)
