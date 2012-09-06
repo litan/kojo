@@ -49,5 +49,6 @@
 	<classpathentry kind="lib" path="lib/jmock-legacy-2.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/objenesis-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/scalariform_2.9.2-0.1.2.jar"/>
+	<classpathentry kind="lib" path="lib/rstaui.jar" sourcepath="/home/lalit/work/RSTAUI/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
