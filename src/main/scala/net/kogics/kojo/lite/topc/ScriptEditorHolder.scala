@@ -30,8 +30,14 @@ import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
 import scalariform.formatter.ScalaFormatter
 import scalariform.formatter.preferences.FormattingPreferences
+import org.fife.rsta.ui.search.ReplaceDialog
+import java.awt.event.ActionListener
+import org.fife.rsta.ui.search.AbstractFindReplaceDialog
+import org.fife.ui.rtextarea.SearchContext
+import org.fife.ui.rtextarea.SearchEngine
+import javax.swing.JFrame
 
-class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport) extends BaseHolder("SE", "Script Editor", se) {
+class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport, frame: JFrame) extends BaseHolder("SE", "Script Editor", se) {
 
   codeSupport.toolbar.setOpaque(true)
   codeSupport.toolbar.setBackground(new Color(230, 230, 230))
@@ -42,6 +48,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codePane.setCloseCurlyBraces(true)
   codePane.setTabsEmulated(true)
   codePane.setTabSize(4)
+  //  codePane.setCodeFoldingEnabled(true)
   //  codePane.setMarkOccurrences(true)
   codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
   new IncreaseFontSizeAction().actionPerformedImpl(null, codePane)
@@ -64,6 +71,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   ac.install(codePane)
 
   val sp = new RTextScrollPane(codePane)
+  //  sp.setFoldIndicatorEnabled(true)
   se.setLayout(new BorderLayout)
   se.add(codeSupport.toolbar, BorderLayout.NORTH)
   se.add(sp, BorderLayout.CENTER)
@@ -100,22 +108,61 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(new JPopupMenu.Separator, 7)
 
   val formatAction = new AbstractAction("Format Source") {
-    import scalariform.formatter.preferences.IndentSpaces
+    import scalariform.formatter.preferences._
+
     def actionPerformed(ev: ActionEvent) {
+      val pos = codePane.getCaretPosition()
       codePane.setText(ScalaFormatter.format(
         codePane.getText,
-        new FormattingPreferences(Map(IndentSpaces -> 4))))
+        new FormattingPreferences(
+          Map(
+            IndentSpaces -> 4,
+            CompactControlReadability -> true,
+            AlignParameters -> true,
+            AlignSingleLineCaseStatements -> true,
+            PreserveDanglingCloseParenthesis -> true
+          )
+        )
+      ))
+      codePane.setCaretPosition(pos)
     }
   }
 
   val formatItem = new JMenuItem(formatAction)
-  val cst = KeyStroke.getKeyStroke("control shift F")
+  val csf = KeyStroke.getKeyStroke("control shift F")
   val im = codePane.getInputMap()
-  im.put(cst, "format-src")
+  im.put(csf, "format-src")
   val am = codePane.getActionMap()
   am.put("format-src", formatAction)
-  formatItem.setAccelerator(cst)
+  formatItem.setAccelerator(csf)
   popup.add(formatItem, 8)
+
+  val findReplaceAction = new AbstractAction("Find/Replace") {
+    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener)
+    lazy val listener = new ActionListener {
+      def actionPerformed(ev: ActionEvent) {
+        ev.getActionCommand match {
+          case AbstractFindReplaceDialog.ACTION_FIND =>
+            val found = SearchEngine.find(codePane, dialog.getSearchContext());
+          case AbstractFindReplaceDialog.ACTION_REPLACE =>
+            val found = SearchEngine.replace(codePane, dialog.getSearchContext());
+          case AbstractFindReplaceDialog.ACTION_REPLACE_ALL =>
+            val found = SearchEngine.replaceAll(codePane, dialog.getSearchContext());
+          case _ =>
+        }
+      }
+    }
+    def actionPerformed(ev: ActionEvent) {
+      dialog.setTitle("Find / Replace")
+      dialog.setVisible(true)
+    }
+  }
+  val findReplaceItem = new JMenuItem(findReplaceAction)
+  val cf = KeyStroke.getKeyStroke("control F")
+  im.put(cf, "find-replace")
+  am.put("find-replace", findReplaceAction)
+  findReplaceItem.setAccelerator(cf)
+  popup.add(findReplaceItem, 9)
 
   popup.addPopupMenuListener(new PopupMenuListener {
     def popupMenuWillBecomeVisible(e: PopupMenuEvent) {

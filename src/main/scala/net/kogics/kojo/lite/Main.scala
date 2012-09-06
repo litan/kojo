@@ -134,7 +134,7 @@ object Main extends AppMenu {
       codePane = new RSyntaxTextArea(5, 80)
       codeSupport = CodeExecutionSupport.initedInstance(codePane, kojoCtx)
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, kojoCtx)
-      scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport)
+      scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport, frame)
       val outputHolder = new OutputWindowHolder(codeSupport.outputWindow, codeSupport.errorWindow, codeSupport.outPanel)
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, kojoCtx)
