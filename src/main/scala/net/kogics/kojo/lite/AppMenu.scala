@@ -124,7 +124,7 @@ trait AppMenu { self: Main.type =>
     val simpleMenu = new JMenu("Getting Started")
     simpleMenu.add(menuItemFor("Colors and Shapes", "square.kojo"))
     samplesMenu.add(simpleMenu)
-    
+
     val mgeomMenu = new JMenu("Math and Geometry")
     mgeomMenu.add(menuItemFor("Spiral Square Tiles", "spiral-square-tiles.kojo"))
     mgeomMenu.add(menuItemFor("Spiral Hexangonal Tiles", "spiral-hexagon-tiles.kojo"))
@@ -136,7 +136,7 @@ trait AppMenu { self: Main.type =>
     fractalsMenu.add(menuItemFor("Fibonacci Tree", "fib-tree.kojo"))
     fractalsMenu.add(menuItemFor("Snowflake", "snowflake.kojo"))
     fractalsMenu.add(menuItemFor("Sierpinski Triangle", "sierpinski-tri.kojo"))
-    
+
     samplesMenu.add(fractalsMenu)
     menuBar.add(samplesMenu)
 
@@ -166,8 +166,9 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> \u2248Ray (Early Access)<br/>
-              Version: 280812-2 <br/>
-              <br/>Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/> 
+              Version: 070912-1 <br/>
+              <em>Java version: %s. Scala version: %s</em> <br/><br/>
+              Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               <strong>Kojo</strong> \u2248Ray is the online version of Kojo (Ray - partly because it comes in through the cloud!).<br/>Please visit <em>http://www.kogics.net/webkojo</em> and <em>http://www.kogics.net/kojo</em> for more information.<br/><br/>
               <strong>Kojo</strong> \u2248Ray Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>Jerzy Redlarski</li><li>(The late) Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Bj\u00f6rn Regnell</li></ul>
               <strong>Kojo</strong> \u2248Ray is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
@@ -189,7 +190,8 @@ trait AppMenu { self: Main.type =>
               </ul>
               </div>
               </body></html>
-              """)
+              """ format (System.getProperty("java.version"), scala.tools.nsc.Properties.versionString.substring("version ".length))
+        )
         aboutText.setPreferredSize(new Dimension(430, 300))
         aboutText.setMaximumSize(new Dimension(430, 300))
         aboutText.setCaretPosition(0)
