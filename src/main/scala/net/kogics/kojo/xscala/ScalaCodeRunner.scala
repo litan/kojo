@@ -450,8 +450,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
               cachedJarsData += readField("codeSourceCacheRef", jarFile, klass)
             } catch {
               case t: Throwable =>
-                println("Problem: " + t.getMessage)
-                t.printStackTrace()
+                // signersRef field is no longer present in JDK 1.7.0_06
+                // so suppress the error printing
+                // println("Problem: " + t.getMessage)
+                // t.printStackTrace()
             }
 
             val tempFile = File.createTempFile("kojolite-", ".jar");
