@@ -50,7 +50,9 @@ object Main extends AppMenu {
         def newActivation(params: Array[String]) {
           Utils.runInSwingThread {
             frame.toFront()
-            loadAndRunUrl(params(0))
+            if (params.length > 0) {
+              loadAndRunUrl(params(0))
+            }
           }
         }
       }
@@ -68,7 +70,8 @@ object Main extends AppMenu {
       codeSupport.closing()
       frame.dispose()
       System.exit(0)
-    } catch {
+    }
+    catch {
       case rte: RuntimeException =>
     }
   }
@@ -84,7 +87,8 @@ object Main extends AppMenu {
           postfn
         }
 
-      } catch {
+      }
+      catch {
         case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
       }
       scriptEditorH.activate()
@@ -97,7 +101,8 @@ object Main extends AppMenu {
     if (!url.startsWith("http://www.kogics.net/public/kojolite/samples/") && codePane.getText.toLowerCase.contains("file")) {
       codePane.insert("// Loaded code from URL: %s\n// ** Not running it automatically ** because it references files.\n// Look carefully at the code before running it.\n\n" format (url), 0)
       codePane.setCaretPosition(0)
-    } else {
+    }
+    else {
       val msg2 = if (onStartup) "\n// Please wait, this might take a few seconds as Kojo starts up..." else ""
       codePane.insert("// Running code loaded from URL: %s%s\n\n" format (url, msg2), 0)
       codePane.setCaretPosition(0)
@@ -173,7 +178,8 @@ object Main extends AppMenu {
 
       if (args.length == 1) {
         loadAndRunUrl(args(0), true)
-      } else {
+      }
+      else {
         Utils.schedule(1) {
           scriptEditorH.activate()
         }
