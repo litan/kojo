@@ -37,3 +37,5 @@ nbproject/platform.xml
 installer.log
 bin/
 security/
+.idea/
+.idea_modules/
