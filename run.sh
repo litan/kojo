@@ -6,4 +6,4 @@ do
   CLASSPATH=${CLASSPATH}:$f
 done
 
-java -Xmx512m -cp ${CLASSPATH} net.kogics.kojo.lite.Main $*
+java -Xmx512m -cp ${CLASSPATH} -Dide.run=true net.kogics.kojo.lite.Main $*
