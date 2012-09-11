@@ -26,8 +26,8 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   val KEYWORD = 6
   val TEMPLATE = 5
 
-  setListCellRenderer(new CompletionCellRenderer)
-  setAutoActivationRules(false, ".")
+  setListCellRenderer(new CompletionCellRenderer) // needed for icons to show up
+  setAutoActivationRules(false, null)
 
   var alreadyEntered = ""
 
@@ -134,10 +134,10 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   def kindIcon(kind: Int) = {
     val fname = kind match {
       case VARIABLE => "/images/kindvar.png"
-      case CLASS => "/images/kindclass.png"
-      case PACKAGE => "/images/kindpackage.gif"
-      case METHOD => "/images/kindmethod.png"
-      case KEYWORD => "/images/scala16x16.png"
+      case CLASS    => "/images/kindclass.png"
+      case PACKAGE  => "/images/kindpackage.gif"
+      case METHOD   => "/images/kindmethod.png"
+      case KEYWORD  => "/images/scala16x16.png"
       case TEMPLATE => "/images/kindtemplate.png"
     }
     Utils.loadIcon(fname, "Blah blah")
@@ -198,8 +198,8 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     if (codeSupport.startingUp) {
       val proposals = new java.util.ArrayList[Completion]
       val completion = "Please try again soon..."
-      proposals.add(new TemplateCompletion(this, completion, completion, "${cursor}", null, 
-          "Kojo is starting up, and the Code Completion Engine is not available yet."))
+      proposals.add(new TemplateCompletion(this, completion, completion, "${cursor}", null,
+        "Kojo is starting up, and the Code Completion Engine is not available yet."))
       proposals
     }
     else if (codeSupport.isRunningEnabled) {
@@ -208,8 +208,8 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     else {
       val proposals = new java.util.ArrayList[Completion]
       val completion = "Please try again soon..."
-      proposals.add(new TemplateCompletion(this, completion, completion, "${cursor}", null, 
-          "The Code Completion Engine is currently blocked (probably because a script is running)."))
+      proposals.add(new TemplateCompletion(this, completion, completion, "${cursor}", null,
+        "The Code Completion Engine is currently blocked (probably because a script is running)."))
       proposals
     }
   }
