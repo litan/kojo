@@ -157,11 +157,11 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     }
   }
 
+  var (objid: Option[String], prefix: Option[String]) = (None, None)
+
   def complete(comp: JTextComponent): List[Completion] = {
     val proposals = new java.util.ArrayList[Completion]
     val caretOffset = comp.getCaretPosition
-
-    val (objid, prefix) = codeSupport.objidAndPrefix(caretOffset)
 
     if (objid.isEmpty) {
       val (varCompletions, voffset) = codeSupport.varCompletions(prefix)
@@ -197,7 +197,8 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     }
     else {
       val caretOffset = comp.getCaretPosition
-      val (objid, prefix) = codeSupport.objidAndPrefix(caretOffset)
+      val (oid, pfx) = codeSupport.objidAndPrefix(caretOffset)
+      objid = oid; prefix = pfx
       prefix.getOrElse("")
     }
   }
