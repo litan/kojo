@@ -29,8 +29,6 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   setListCellRenderer(new CompletionCellRenderer) // needed for icons to show up
   setAutoActivationRules(false, null)
 
-  var alreadyEntered = ""
-
   def rtsaTemplate(t: String) = {
     val res = if (t.contains("${")) t else "%s${cursor}" format (t)
     //    println("template: " + res)
@@ -164,7 +162,6 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     val caretOffset = comp.getCaretPosition
 
     val (objid, prefix) = codeSupport.objidAndPrefix(caretOffset)
-    alreadyEntered = prefix.getOrElse("")
 
     if (objid.isEmpty) {
       val (varCompletions, voffset) = codeSupport.varCompletions(prefix)
@@ -194,6 +191,17 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     proposals
   }
 
+  override def getAlreadyEnteredText(comp: JTextComponent) = {
+    if (codeSupport.startingUp || !codeSupport.isRunningEnabled) {
+      ""
+    }
+    else {
+      val caretOffset = comp.getCaretPosition
+      val (objid, prefix) = codeSupport.objidAndPrefix(caretOffset)
+      prefix.getOrElse("")
+    }
+  }
+
   override def getCompletionsImpl(comp: JTextComponent) = {
     if (codeSupport.startingUp) {
       val proposals = new java.util.ArrayList[Completion]
@@ -216,8 +224,4 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
 
   override def getParameterizedCompletions(comp: JTextComponent) = throw new UnsupportedOperationException
   override def getCompletionsAt(comp: JTextComponent, pt: Point) = throw new UnsupportedOperationException
-  override def getAlreadyEnteredText(comp: JTextComponent) = {
-    //    println("already entered: " + alreadyEntered)
-    alreadyEntered
-  }
 }
