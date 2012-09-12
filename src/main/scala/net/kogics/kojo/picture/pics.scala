@@ -56,6 +56,11 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     realDraw()
   }
   
+  def erase() = Utils.runInSwingThread {
+    Impl.picLayer.removeChild(tnode)
+//    Impl.picLayer.repaint()
+  }
+  
   def t2t(t: AffineTransform): AffineTransformation = {
     val ms = Array.fill(6)(0.0)
     val ms2 = Array.fill(6)(0.0)
