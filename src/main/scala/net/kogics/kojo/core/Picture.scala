@@ -14,6 +14,7 @@ trait Picture extends InputAware {
   def myNode = tnode
   def decorateWith(painter: Painter): Unit
   def draw(): Unit
+  def erase(): Unit
   def isDrawn(): Boolean
   def bounds: PBounds
   def rotate(angle: Double): Picture

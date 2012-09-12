@@ -77,6 +77,7 @@ trait Transformer extends Picture {
   def invisible() = tpic.invisible()
   def isDrawn() = tpic.isDrawn()
   def myCanvas = tpic.myCanvas
+  def erase() = tpic.erase()
 }
 
 abstract class Transform(pic: Picture) extends Transformer {
