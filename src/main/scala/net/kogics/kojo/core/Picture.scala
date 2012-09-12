@@ -69,7 +69,11 @@ trait Picture extends InputAware {
       fn(this)
     }
   }
-
+  def animate(fn: => Unit) {
+    act { me =>
+      fn
+    }
+  }
   // provide these explicitly, so that subclasses that are case
   // classes can live within sets and maps
   override def equals(other: Any) = this eq other.asInstanceOf[AnyRef]
