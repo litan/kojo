@@ -155,7 +155,8 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
         })
         outputHandler.interpOutputSuppressed = true
         stoppable.get.stop(interpreterThread.get)
-      } else {
+      }
+      else {
         //        kprintln("Animation Stopped.\n")
       }
     }
@@ -198,7 +199,8 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     def safeProcessCompletionReq(fn: => (List[String], Int)) {
       try {
         reply(CompletionResponse(fn))
-      } catch {
+      }
+      catch {
         case t: Throwable =>
           Log.warning("Problem finding completions: " + t.getMessage)
           reply(CompletionResponse(List(), 0))
@@ -208,7 +210,8 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     def safeProcessCompletionReq2(fn: => (List[CompletionInfo], Int)) {
       try {
         reply(CompletionResponse2(fn))
-      } catch {
+      }
+      catch {
         case t: Throwable =>
           Log.warning("Problem finding completions: " + t.getMessage)
           reply(CompletionResponse2(List(), 0))
@@ -298,14 +301,17 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
               if (ret == IR.Success) {
                 ctx.onCompileSuccess()
-              } else {
+              }
+              else {
                 ctx.onCompileError()
               }
-            } catch {
+            }
+            catch {
               case t: Throwable =>
                 Log.log(Level.SEVERE, "Compiler Problem", t)
                 ctx.onInternalCompilerError()
-            } finally {
+            }
+            finally {
               Log.info("CodeRunner actor doing final handling for code.")
               InterruptionManager.onInterpreterFinish()
             }
@@ -321,15 +327,18 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
               if (ret == IR.Success) {
                 ctx.onRunSuccess()
-              } else {
+              }
+              else {
                 if (InterruptionManager.interruptionInProgress) ctx.onRunSuccess() // user cancelled running code; no errors
                 else ctx.onRunError()
               }
-            } catch {
+            }
+            catch {
               case t: Throwable =>
                 Log.log(Level.SEVERE, "CompilerAndRunner Problem", t)
                 ctx.onRunInterpError
-            } finally {
+            }
+            finally {
               Log.info("CodeRunner actor doing final handling for code.")
               InterruptionManager.onInterpreterFinish()
             }
@@ -348,14 +357,17 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
               if (ret == IR.Success) {
                 ctx.onCompileSuccess()
-              } else {
+              }
+              else {
                 ctx.onCompileError()
               }
-            } catch {
+            }
+            catch {
               case t: Throwable =>
                 Log.log(Level.SEVERE, "Compiler Problem", t)
                 ctx.onInternalCompilerError()
-            } finally {
+            }
+            finally {
               Log.info("CodeRunner actor doing final handling for code.")
               InterruptionManager.onInterpreterFinish()
             }
@@ -391,15 +403,18 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
         if (ret == IR.Success) {
           ctx.onRunSuccess()
-        } else {
+        }
+        else {
           if (InterruptionManager.interruptionInProgress) ctx.onRunSuccess() // user cancelled running code; no errors
           else ctx.onRunError()
         }
-      } catch {
+      }
+      catch {
         case t: Throwable =>
           Log.log(Level.SEVERE, "Interpreter Problem", t)
           ctx.onRunInterpError
-      } finally {
+      }
+      finally {
         Log.info("CodeRunner actor doing final handling for code.")
         InterruptionManager.onInterpreterFinish()
       }
@@ -413,7 +428,6 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     @volatile var numCachedJars = 0
 
     def makeSettings() = {
-
       def callMethod(m: String, obj: AnyRef, klass: Class[_]): AnyRef = {
         val method = klass.getDeclaredMethod(m)
         method.setAccessible(true)
@@ -430,16 +444,16 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
       if (System.getProperty("ide.run") == "true") {
         iSettings.usejavacp.value = true
-      } else {
+      }
+      else {
         if (classp == null) {
           val jnlpLoader = JNLPClassLoader.getInstance
           val jds = jnlpLoader.getLaunchDesc.getResources.getEagerOrAllJarDescs(true)
           val lb = new ListBuffer[String]
           jds.foreach { jd =>
-            //            println(jd)
             val jarFile = jnlpLoader.getJarFile(jd.getLocation)
-            //            println("Jar file name - %s, class - %s" format (jarFile.getName, jarFile.getClass.getName))
             numCachedJars += 1
+            // work around webstart bug
             val klass = jarFile.getClass
             try {
               callMethod("getSigners", jarFile, klass)
@@ -448,26 +462,29 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
               cachedJarsData += readField("signersRef", jarFile, klass)
               cachedJarsData += readField("signerMapRef", jarFile, klass)
               cachedJarsData += readField("codeSourceCacheRef", jarFile, klass)
-            } catch {
-              case t: Throwable =>
-                // signersRef field is no longer present in JDK 1.7.0_06
-                // so suppress the error printing
-                // println("Problem: " + t.getMessage)
-                // t.printStackTrace()
             }
+            catch {
+              case t: Throwable =>
+              // signersRef field is no longer present in JDK 1.7.0_06
+              // so suppress the error printing
+              // println("Problem: " + t.getMessage)
+              // t.printStackTrace()
+            }
+            // end - work around webstart bug
 
-            val tempFile = File.createTempFile("kojolite-", ".jar");
-            tempFile.deleteOnExit()
-            Utils.copyFile(new File(jarFile.getName()), tempFile);
-            // val jarLocation = "file:" + tempFile.getAbsolutePath()
-            lb += tempFile.getAbsolutePath()
+            val jarPath = jd.getLocation().getPath()
+            val jarName = jarPath.substring(jarPath.lastIndexOf('/') + 1)
+            if (Utils.kojoJars.contains(jarName)) {
+              val tempFile = File.createTempFile("kojolite-", ".jar");
+              tempFile.deleteOnExit()
+              Utils.copyFile(new File(jarFile.getName()), tempFile);
+              // val jarLocation = "file:" + tempFile.getAbsolutePath()
+              lb += tempFile.getAbsolutePath()
+            }
           }
 
           classp = createCp(lb.toList)
-          //          println("Num Cached Jars - %d, Num Entries: %d" format (numCachedJars, cachedJarsData.size))
-          //          println("cachedJarsData: " + cachedJarsData)
         }
-
         iSettings.classpath.append(classp)
       }
 
@@ -524,11 +541,11 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       case code :: tail =>
         //        Log.info("Interpreting code: %s\n" format(code))
         interp.interpret(code) match {
-          case IR.Error => IR.Error
+          case IR.Error   => IR.Error
           case IR.Success => interpretLine(lines.tail)
           case IR.Incomplete =>
             tail match {
-              case Nil => IR.Incomplete
+              case Nil            => IR.Incomplete
               case code2 :: tail2 => interpretLine(code + "\n" + code2 :: tail2)
             }
         }
