@@ -189,6 +189,23 @@ object Utils {
   // actually - the dir with the jars, one level under the actual install dir
   def installDir = System.getProperty("user.home")
 
+  val kojoJars = Set(
+    "scala-library.jar",
+    "scala-compiler.jar",
+    "scala-swing.jar",
+    "group-panel.jar",
+    "kojolite_2.9.2-1.0.jar",
+    "piccolo2d-core-1.3.1.jar",
+    "piccolo2d-extras-1.3.1.jar",
+    "geogebra_main.jar",
+    "geogebra_gui.jar",
+    "geogebra_cas.jar",
+    "geogebra.jar",
+    "jfugue-4.1.jar",
+    "jl1.0.1.jar",
+    "jts-1.12.jar"
+  )
+
   def readStream(is: InputStream): String = {
     val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
     val buf = new Array[Char](1024)
