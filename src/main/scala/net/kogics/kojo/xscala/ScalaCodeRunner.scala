@@ -443,7 +443,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       val iSettings = new Settings()
 
       if (System.getProperty("ide.run") == "true") {
-        iSettings.usejavacp.value = true
+//        iSettings.usejavacp.value = true
         iSettings.classpath.value = getClassPathForCurrentThread
       } else {
         if (classp == null) {
