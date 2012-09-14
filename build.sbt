@@ -27,3 +27,5 @@ libraryDependencies ++= Seq(
     ("org.scalacheck" % "scalacheck_2.9.2" % "1.10.0" intransitive()) % "test",
     "org.scalatest" % "scalatest_2.9.2" % "1.8" % "test"
 )
+
+EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
