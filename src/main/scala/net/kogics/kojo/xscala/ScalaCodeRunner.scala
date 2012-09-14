@@ -444,8 +444,8 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
       if (System.getProperty("ide.run") == "true") {
         iSettings.usejavacp.value = true
-      }
-      else {
+        iSettings.classpath.value = getClassPathForCurrentThread
+      } else {
         if (classp == null) {
           val jnlpLoader = JNLPClassLoader.getInstance
           val jds = jnlpLoader.getLaunchDesc.getResources.getEagerOrAllJarDescs(true)
@@ -489,6 +489,16 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       }
 
       iSettings
+    }
+
+    //temp fix for classpath issue when running the interpreter via sbt based on SO answer: http://goo.gl/4Km95
+    private lazy val getClassPathForCurrentThread =  {
+      val urls = Thread.currentThread.getContextClassLoader match {
+        case cl: java.net.URLClassLoader => cl.getURLs.toList
+        case _ => error("classloader is not a URLClassLoader")
+      }
+      val classpath = urls map {_.toString}
+      classpath.distinct.mkString(java.io.File.pathSeparator)
     }
 
     def compilerInitCode: Option[String] = {
