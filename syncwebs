@@ -1,2 +1,2 @@
-sbt clean package
+./sbt.sh clean package
 cp target/scala-2.9.2/kojolite_2.9.2-1.0.jar ~/work/kogics-web/public/kojolite/
