@@ -81,6 +81,8 @@ trait Picture extends InputAware {
   override def hashCode = System.identityHashCode(this)
   
   def morph(fn: Seq[PolyLine] => Seq[PolyLine])
+  def foreachPolyLine(fn: PolyLine => Unit) 
+
   // Todo
   // def bounceOff(other: Picture, vec: Vector2D)
 }
