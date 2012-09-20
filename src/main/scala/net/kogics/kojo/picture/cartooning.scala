@@ -355,31 +355,25 @@ trait SpeakBaloon {
     import staging.KColor._
 
     def doSchedule(): Unit = speaker.schedule { wi =>
-      wi.pic foreach { _.erase() }
-      wi.timeStamp = System.currentTimeMillis
-      wi.pic = getFromAgenda
-      wi.pic.foreach(_.draw())
-      Utils.schedule(showTime) {
-        lock.synchronized {
-          hide(wi)
-          sip = None
-          if (!isAgendaEmpty) {
-            doSchedule()
-          }
+      if (sip.isEmpty) {
+        wi.pic foreach { _.erase() }
+        wi.timeStamp = System.currentTimeMillis
+        wi.pic = getFromAgenda
+        wi.pic.foreach(_.draw())
+        Utils.schedule(showTime) {
+            hide(wi)
+            sip = None
+            if (!isAgendaEmpty) {
+              doSchedule()
+            }
         }
       }
     }
 
-    if (isSipEmpty) {
-      addToAgenda(fillColor(white) * penColor(black) ->
-        speakPicture(lines: _*))
+    addToAgenda(fillColor(white) * penColor(black) ->
+      speakPicture(lines: _*))
 
-      doSchedule()
-    }
-    else {
-      addToAgenda(fillColor(white) * penColor(black) ->
-        speakPicture(lines: _*))
-    }
+    doSchedule()
   }
 }
 
