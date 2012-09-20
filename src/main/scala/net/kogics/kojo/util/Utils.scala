@@ -181,6 +181,21 @@ object Utils {
     t
   }
 
+  def scheduleRecN(n: Int, secs: Double)(f: => Unit): Timer = {
+    @volatile var count = 0
+    lazy val t: Timer = new Timer((secs * 1000).toInt, new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        count += 1
+        if (count == n) {
+          t.stop()
+        }
+        f
+      }
+    })
+    t.start
+    t
+  }
+
   def replAssertEquals(a: Any, b: Any) {
     if (a != b) println("Not Good. First: %s, Second: %s" format (a.toString, b.toString))
     else println("Good")

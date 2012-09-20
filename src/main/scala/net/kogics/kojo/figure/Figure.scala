@@ -23,12 +23,13 @@ import edu.umd.cs.piccolo.util._
 import edu.umd.cs.piccolo.event._
 import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
-
 import javax.swing._
-import java.awt.{Point => _, List => _, _}
-
+import java.awt.{ Point => _, List => _, _ }
 import net.kogics.kojo.util.Utils
 import core._
+import java.util.concurrent.Future
+import java.util.concurrent.FutureTask
+import java.util.concurrent.Callable
 
 object Figure {
   def apply(canvas: SpriteCanvas, initX: Double = 0d, initY: Double = 0): Figure = {
@@ -52,7 +53,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
     }
     catch { case e => throw e }
   }
-  
+
   // if fgLayer is bigger than bgLayer, (re)painting does not happen very cleanly
   // needs a better fix than the one below
   bgLayer.setBounds(-500, -500, 1000, 1000)
@@ -60,7 +61,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
   private val camera = canvas.getCamera
   val DefaultColor = Color.red
   val DefaultFillColor: Color = null
-  def DefaultStroke = new BasicStroke((2/canvas.camScale).toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
+  def DefaultStroke = new BasicStroke((2 / canvas.camScale).toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
   @volatile private var listener: SpriteListener = NoopSpriteListener
 
   private var figAnimations: List[PActivity] = Nil
@@ -166,38 +167,45 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
     currLayer.repaint
     node
   }
-  
+
   def removePnode(node: PNode): Unit = Utils.runInSwingThread {
     currLayer.removeChild(node)
     currLayer.repaint
   }
 
+  def refresh(fn: => Unit): Future[PActivity] = {
+    @volatile var figAnimation: PActivity = null
+    val promise = new FutureTask(new Callable[PActivity] {
+      def call: PActivity = {
+        figAnimation
+      }
+    })
 
-  def refresh(fn: => Unit) = Utils.runInSwingThread {
-    val figAnimation = new PActivity(-1) {
-      override def activityStep(elapsedTime: Long) {
-        currLayer = fgLayer
-        try {
-          staging.Inputs.activityStep
-          fn
-          if (isStepping) {
-            listener.hasPendingCommands()
+    Utils.runInSwingThread {
+      figAnimation = new PActivity(-1) {
+        override def activityStep(elapsedTime: Long) {
+          currLayer = fgLayer
+          try {
+            staging.Inputs.activityStep
+            fn
+            if (isStepping) {
+              listener.hasPendingCommands()
+            }
+          }
+          catch {
+            case t: Throwable =>
+              canvas.outputFn("Problem: " + t.toString())
+              terminate(PActivity.TERMINATE_AND_FINISH)
+              figAnimations = figAnimations filter { _ != this }
+          }
+          finally {
+            repaint()
+            currLayer = bgLayer
           }
         }
-        catch {
-          case t: Throwable =>
-            canvas.outputFn("Problem: " + t.toString())
-            terminate(PActivity.TERMINATE_AND_FINISH)
-            figAnimations = figAnimations filter {_ != this}
-        }
-        finally {
-          repaint()
-          currLayer = bgLayer
-        }
       }
-    }
 
-    figAnimation.setDelegate(new PActivityDelegate {
+      figAnimation.setDelegate(new PActivityDelegate {
         override def activityStarted(activity: PActivity) {}
         override def activityStepped(activity: PActivity) {}
         override def activityFinished(activity: PActivity) {
@@ -205,8 +213,11 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
         }
       })
 
-    figAnimations = figAnimation :: figAnimations
-    canvas.getRoot.addActivity(figAnimation)
+      figAnimations = figAnimation :: figAnimations
+      canvas.getRoot.addActivity(figAnimation)
+      promise.run()
+    }
+    promise
   }
 
   def stopRefresh() = stop()
@@ -223,20 +234,28 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
     }
   }
 
-  def onMouseMove(fn: (Double, Double) => Unit) {
-    canvas.addInputEventListener(new PBasicInputEventHandler {
-        override def mouseMoved(e: PInputEvent) {
-          val pos = e.getPosition
-          fn(pos.getX, pos.getY)
-          currLayer.repaint()
-        }
-      })
+  def stopAnimation(f: Future[PActivity]) {
+    Utils.runInSwingThread {
+      val figAnimation = f.get
+      figAnimation.terminate(PActivity.TERMINATE_AND_FINISH)
+      figAnimations = figAnimations.filterNot {_ == figAnimation}
+    }
   }
 
-  private [kojo] def setSpriteListener(l: SpriteListener) {
+  def onMouseMove(fn: (Double, Double) => Unit) {
+    canvas.addInputEventListener(new PBasicInputEventHandler {
+      override def mouseMoved(e: PInputEvent) {
+        val pos = e.getPosition
+        fn(pos.getX, pos.getY)
+        currLayer.repaint()
+      }
+    })
+  }
+
+  private[kojo] def setSpriteListener(l: SpriteListener) {
     listener = l
   }
-  
+
   var stopFn: Option[() => Unit] = None
   def onStop(fn: => Unit) = Utils.runInSwingThread {
     stopFn = Some(fn _)

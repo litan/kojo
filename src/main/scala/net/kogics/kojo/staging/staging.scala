@@ -31,6 +31,8 @@ import java.awt.Paint
 import net.kogics.kojo.core.UnitLen
 import net.kogics.kojo.core.InputAware
 import lite.canvas.SpriteCanvas
+import java.util.concurrent.Future
+import edu.umd.cs.piccolo.activities.PActivity
 
 object Impl {
   val canvas = SpriteCanvas.instance
@@ -379,6 +381,7 @@ object API {
   def loop(fn: => Unit) = Impl.figure0.refresh(fn)
   def animate(fn: => Unit) = loop(fn)
   def stop() = Impl.figure0.stopRefresh()
+  def stopActivity(a: Future[PActivity]) = Impl.figure0.stopAnimation(a)
   def reset() = {
     Impl.canvas.clearStaging()
     Impl.canvas.turtle0.invisible()

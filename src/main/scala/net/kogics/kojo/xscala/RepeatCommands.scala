@@ -16,6 +16,8 @@
 package net.kogics.kojo
 package xscala
 
+object RepeatCommands extends RepeatCommands
+
 trait RepeatCommands {
   def repeat(n: Int) (fn: => Unit) {
     var i = 0

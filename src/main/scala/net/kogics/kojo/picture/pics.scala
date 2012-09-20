@@ -49,18 +49,18 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   var axes: PNode = _
   var _picGeom: Geometry = _
   var pgTransform = new AffineTransformation
-  
+
   def realDraw(): Unit
 
   def draw() {
     realDraw()
   }
-  
+
   def erase() = Utils.runInSwingThread {
     Impl.picLayer.removeChild(tnode)
-//    Impl.picLayer.repaint()
+    //    Impl.picLayer.repaint()
   }
-  
+
   def t2t(t: AffineTransform): AffineTransformation = {
     val ms = Array.fill(6)(0.0)
     val ms2 = Array.fill(6)(0.0)
@@ -76,7 +76,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 
   def transformBy(trans: AffineTransform) = Utils.runInSwingThread {
     tnode.transformBy(trans)
-//    pgTransform.composeBefore(t2t(trans))
+    //    pgTransform.composeBefore(t2t(trans))
     pgTransform = t2t(tnode.getTransformReference(true))
     tnode.repaint()
   }
@@ -91,17 +91,17 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     transformBy(AffineTransform.getRotateInstance(angle.toRadians))
     this
   }
-  
+
   def scale(factor: Double) = {
     transformBy(AffineTransform.getScaleInstance(factor, factor))
     this
   }
-  
+
   def scale(x: Double, y: Double) = {
     transformBy(AffineTransform.getScaleInstance(x, y))
     this
   }
-  
+
   def translate(x: Double, y: Double) = {
     transformBy(AffineTransform.getTranslateInstance(x, y))
     this
@@ -112,56 +112,56 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     pgTransform = t2t(tnode.getTransformReference(true))
     tnode.repaint()
   }
-  
+
   def opacityMod(f: Double) = Utils.runInSwingThread {
-    tnode.setTransparency(Math.constrain(tnode.getTransparency * (1+f), 0, 1).toFloat)
+    tnode.setTransparency(Math.constrain(tnode.getTransparency * (1 + f), 0, 1).toFloat)
     tnode.repaint()
   }
-  
+
   def position = Utils.runInSwingThreadAndWait {
     val o = tnode.getOffset
     new core.Point(o.getX, o.getY)
-  }  
-  
+  }
+
   def setPosition(x: Double, y: Double) = Utils.runInSwingThread {
     tnode.setOffset(x, y)
     pgTransform = t2t(tnode.getTransformReference(true))
     tnode.repaint()
   }
-  
+
   def heading = Utils.runInSwingThreadAndWait {
     tnode.getRotation.toDegrees
-  }  
-  
+  }
+
   def setHeading(angle: Double) = Utils.runInSwingThread {
-    rotate(angle-heading)
+    rotate(angle - heading)
     pgTransform = t2t(tnode.getTransformReference(true))
     tnode.repaint()
   }
-  
+
   def flipX() = {
     transformBy(AffineTransform.getScaleInstance(1, -1))
     this
   }
-  
+
   def flipY() = {
     transformBy(AffineTransform.getScaleInstance(-1, 1))
     this
   }
-  
+
   def axesOn() = Utils.runInSwingThread {
     if (axes == null) {
       val (size, delta, num, bigt) = Impl.canvas.unitLen match {
         case Pixel => (200.0f, 20.0f, 10, 5)
-        case Inch => (4.0f, 0.25f, 16, 4)
-        case Cm => (10f, .5f, 20, 2)
+        case Inch  => (4.0f, 0.25f, 16, 4)
+        case Cm    => (10f, .5f, 20, 2)
       }
       val camScale = Impl.canvas.camScale.toFloat
-      val tickSize = 3/camScale
-      val overrun = 5/camScale
+      val tickSize = 3 / camScale
+      val overrun = 5 / camScale
       def line(x1: Float, y1: Float, x2: Float, y2: Float) = {
         val l = PPath.createLine(x1, y1, x2, y2)
-        l.setStroke(new BasicStroke(2/camScale))
+        l.setStroke(new BasicStroke(2 / camScale))
         l
       }
       def text(s: String, x: Double, y: Double) = {
@@ -171,14 +171,14 @@ trait CorePicOps { self: Picture with RedrawStopper =>
       axes.addChild(line(-overrun, 0, size, 0))
       axes.addChild(line(0, -overrun, 0, size))
       for (i <- 1 to num) {
-        val ts = if (i % bigt == 0) 2* tickSize else tickSize
-        axes.addChild(line(i*delta, ts, i*delta, -ts))
-        axes.addChild(line(-ts, i*delta, ts, i*delta))
+        val ts = if (i % bigt == 0) 2 * tickSize else tickSize
+        axes.addChild(line(i * delta, ts, i * delta, -ts))
+        axes.addChild(line(-ts, i * delta, ts, i * delta))
       }
-      axes.addChild(text("x", size - delta/2, delta))
-      axes.addChild(text("y", delta/2, size))
+      axes.addChild(text("x", size - delta / 2, delta))
+      axes.addChild(text("y", delta / 2, size))
       tnode.addChild(axes)
-    } 
+    }
     else {
       axes.setVisible(true)
     }
@@ -191,21 +191,21 @@ trait CorePicOps { self: Picture with RedrawStopper =>
       tnode.repaint()
     }
   }
-  
+
   def visible() = Utils.runInSwingThread {
     if (!tnode.getVisible) {
       tnode.setVisible(true)
       tnode.repaint()
     }
   }
-  
+
   def invisible() = Utils.runInSwingThread {
     if (tnode.getVisible) {
       tnode.setVisible(false)
       tnode.repaint()
     }
   }
-  
+
   def toggleV() = Utils.runInSwingThread {
     if (tnode.getVisible) {
       tnode.setVisible(false)
@@ -227,7 +227,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
         _picGeom = initGeom()
       }
       catch {
-        case ise: IllegalStateException => 
+        case ise: IllegalStateException =>
           throw ise
         case t: Throwable =>
           throw new IllegalStateException("Unable to create geometry for picture - " + t.getMessage, t)
@@ -235,7 +235,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     }
     pgTransform.transform(_picGeom)
   }
-    
+
   def intersects(other: Picture) = Utils.runInSwingThreadAndWait {
     if (this == other) {
       false
@@ -247,7 +247,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
       false
     }
   }
-  
+
   def intersection(other: Picture) = Utils.runInSwingThreadAndWait {
     if (this == other) {
       Impl.Gf.createGeometryCollection(null)
@@ -257,7 +257,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
         picGeom.intersection(other.picGeom)
       }
       catch {
-        case te: TopologyException => 
+        case te: TopologyException =>
           println("Unable to determine intersection - " + te.getMessage())
           Impl.Gf.createGeometryCollection(null)
       }
@@ -266,11 +266,11 @@ trait CorePicOps { self: Picture with RedrawStopper =>
       Impl.Gf.createGeometryCollection(null)
     }
   }
-  
+
   def distanceTo(other: Picture) = Utils.runInSwingThreadAndWait {
     picGeom.distance(other.picGeom)
   }
-  
+
   def toPolygon(g: Geometry) = {
     val gc = g.getCoordinates
     val ab = new ArrayBuffer[Coordinate]
@@ -278,11 +278,11 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     ab += gc(0)
     Impl.Gf.createPolygon(Impl.Gf.createLinearRing(ab.toArray), null)
   }
-  
+
   def area = Utils.runInSwingThreadAndWait {
     toPolygon(picGeom).getArea
   }
-  
+
   def perimeter = Utils.runInSwingThreadAndWait {
     picGeom.getLength
   }
@@ -316,12 +316,12 @@ trait TNodeCacher {
 }
 
 object Pic {
-  def apply(painter: Painter) = new Pic(painter) 
+  def apply(painter: Painter) = new Pic(painter)
 }
 
 class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
   @volatile var _t: turtle.Turtle = _
-  
+
   def t = {
     if (_t == null) Utils.runInSwingThreadAndWait {
       if (_t == null) {
@@ -340,9 +340,9 @@ class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher wit
     }
     _t
   }
-  
+
   def makeTnode = t.tlayer
-  
+
   def decorateWith(painter: Painter) = painter(t)
   def realDraw() {
     painter(t)
@@ -353,16 +353,16 @@ class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher wit
       Impl.picLayer.repaint
     }
   }
-  
+
   def bounds = Utils.runInSwingThreadAndWait {
     tnode.getFullBounds
   }
-  
+
   def initGeom() = {
     val cab = new ArrayBuffer[Coordinate]
     val pp = t.penPaths
     pp.foreach { pl =>
-      pl.points.foreach {pt =>
+      pl.points.foreach { pt =>
         cab += new Coordinate(pt.x, pt.y)
       }
     }
@@ -371,80 +371,74 @@ class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher wit
     }
     Impl.Gf.createLineString(cab.toArray)
   }
-  
+
   private def fillColor(fillPaint: Paint) = fillPaint match {
-    case null => Color.white
+    case null     => Color.white
     case c: Color => c
-    case _ => throw new IllegalStateException("You can't extract rgb values of non Color paints")
+    case _        => throw new IllegalStateException("You can't extract rgb values of non Color paints")
   }
-  
+
   def hueMod(f: Double) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
-      if (pl.points.size > 2) {
-        pl.setPaint(Utils.hueMod(fillColor(pl.getPaint), f))
-        pl.repaint()
-      }
+      pl.setPaint(Utils.hueMod(fillColor(pl.getPaint), f))
+      pl.repaint()
     }
   }
-  
+
   def satMod(f: Double) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
-      if (pl.points.size > 2) {
-        pl.setPaint(Utils.satMod(fillColor(pl.getPaint), f))
-        pl.repaint()
-      }
+      pl.setPaint(Utils.satMod(fillColor(pl.getPaint), f))
+      pl.repaint()
     }
   }
-  
+
   def britMod(f: Double) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
-      if (pl.points.size > 2) {
-        pl.setPaint(Utils.britMod(fillColor(pl.getPaint), f))
-        pl.repaint()
-      }
+      pl.setPaint(Utils.britMod(fillColor(pl.getPaint), f))
+      pl.repaint()
     }
   }
-  
+
   def setPenColor(color: Color) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
-      if (pl.points.size > 1) {
-        pl.setStrokePaint(color)
-        pl.repaint()
-      }
+      pl.setStrokePaint(color)
+      pl.repaint()
     }
   }
-  
+
   def setPenThickness(th: Double) = Utils.runInSwingThread {
     val pp = t.penPaths
     t.setPenThickness(th)
     pp.foreach { pl =>
-      if (pl.points.size > 1) {
-        pl.setStroke(t.lineStroke)
-        pl.repaint()
-      }
+      pl.setStroke(t.lineStroke)
+      pl.repaint()
     }
   }
-  
+
   def setFillColor(color: Paint) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
-      if (pl.points.size > 2) {
-        pl.setPaint(color)
-        pl.repaint()
-      }
+      pl.setPaint(color)
+      pl.repaint()
     }
   }
 
   def copy: Picture = Pic(painter)
-    
+
   def dumpInfo() = Utils.runInSwingThreadAndWait {
-    println(">>> Pic Start - " +  System.identityHashCode(this))
+    println(">>> Pic Start - " + System.identityHashCode(this))
     println("Bounds: " + bounds)
     println("Tnode: " + System.identityHashCode(tnode))
+    println("Turtle Polylines")
+    val pp = t.penPaths
+    pp.foreach { pl =>
+      println(pl.points)
+      println(pl.getPaint)
+    }
     println("<<< Pic End\n")
   }
 
@@ -459,10 +453,15 @@ class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher wit
       tnode.repaint()
     }
   }
+  
+  def foreachPolyLine(fn: PolyLine => Unit) {
+    val plines = Utils.runInSwingThreadAndWait {t.penPaths.toArray}
+    plines.foreach { fn }
+  }
 }
 
 object Pic0 {
-  def apply(painter: Painter) = new Pic0(painter) 
+  def apply(painter: Painter) = new Pic0(painter)
 }
 
 class Pic0(painter: Painter) extends Pic(painter) {
@@ -478,8 +477,8 @@ class Pic0(painter: Painter) extends Pic(painter) {
   override def copy: Picture = Pic0(painter)
 }
 
-abstract class BasePicList(val pics: List[Picture]) 
-extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
+abstract class BasePicList(val pics: List[Picture])
+    extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
   if (pics.size == 0) {
     throw new IllegalArgumentException("A Picture List needs to have at least one Picture.")
   }
@@ -497,43 +496,43 @@ extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
   def bounds = Utils.runInSwingThreadAndWait {
     tnode.getFullBounds
   }
-  
+
   def decorateWith(painter: Painter) {
     pics.foreach { pic =>
       pic.decorateWith(painter)
     }
   }
-  
+
   def hueMod(f: Double) {
     pics.foreach { pic =>
       pic.hueMod(f)
     }
   }
-  
+
   def satMod(f: Double) {
     pics.foreach { pic =>
       pic.satMod(f)
     }
   }
-  
+
   def britMod(f: Double) {
     pics.foreach { pic =>
       pic.britMod(f)
     }
   }
-  
+
   def setPenColor(color: Color) {
     pics.foreach { pic =>
       pic.setPenColor(color)
     }
   }
-  
+
   def setPenThickness(th: Double) {
     pics.foreach { pic =>
       pic.setPenThickness(th)
     }
   }
-  
+
   def setFillColor(color: Paint) {
     pics.foreach { pic =>
       pic.setFillColor(color)
@@ -545,12 +544,18 @@ extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
       pic.morph(fn)
     }
   }
-   
+
+  def foreachPolyLine(fn: PolyLine => Unit) {
+    pics.foreach { pic =>
+      pic.foreachPolyLine(fn)
+    }
+  }
+
   def withGap(n: Double): Picture = {
     padding = n
     this
   }
-  
+
   def initGeom() = {
     var pg = pics(0).picGeom
     pics.tail.foreach { pic =>
@@ -559,14 +564,14 @@ extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
     pg
   }
 
-  protected def picsCopy: List[Picture] = pics.map {_ copy}
-  
+  protected def picsCopy: List[Picture] = pics.map { _ copy }
+
   def dumpInfo() {
     println("--- ")
     println("Pic List Bounds: " + bounds)
     println("Pic List Tnode: " + System.identityHashCode(tnode))
     println("--- ")
-    
+
     pics.foreach { pic =>
       pic.dumpInfo
     }
@@ -574,7 +579,7 @@ extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
 }
 
 object HPics {
-  def apply(pics: Picture *): HPics = new HPics(pics.toList) 
+  def apply(pics: Picture*): HPics = new HPics(pics.toList)
   def apply(pics: List[Picture]): HPics = new HPics(pics)
 }
 
@@ -596,11 +601,11 @@ class HPics(pics: List[Picture]) extends BasePicList(pics) {
     super.dumpInfo()
     println("<<< HPics End\n\n")
   }
-} 
+}
 
 object VPics {
-  def apply(pics: Picture *): VPics = new VPics(pics.toList) 
-  def apply(pics: List[Picture]): VPics = new VPics(pics) 
+  def apply(pics: Picture*): VPics = new VPics(pics.toList)
+  def apply(pics: List[Picture]): VPics = new VPics(pics)
 }
 
 class VPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -622,10 +627,10 @@ class VPics(pics: List[Picture]) extends BasePicList(pics) {
     println("<<< VPics End\n\n")
   }
 }
-  
+
 object GPics {
-  def apply(pics: Picture *): GPics = new GPics(pics.toList) 
-  def apply(pics: List[Picture]): GPics = new GPics(pics) 
+  def apply(pics: Picture*): GPics = new GPics(pics.toList)
+  def apply(pics: List[Picture]): GPics = new GPics(pics)
 }
 
 class GPics(pics: List[Picture]) extends BasePicList(pics) {

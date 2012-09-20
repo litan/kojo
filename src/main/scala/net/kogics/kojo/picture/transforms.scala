@@ -22,6 +22,7 @@ import java.awt.Paint
 import java.awt.geom.AffineTransform
 import net.kogics.kojo.kgeom.PolyLine
 import util.Utils
+import kgeom.PolyLine
 
 trait Transformer extends Picture {
   val tpic: Picture
@@ -53,6 +54,7 @@ trait Transformer extends Picture {
   def setPenThickness(th: Double) = tpic.setPenThickness(th)
   def setFillColor(color: Paint) = tpic.setFillColor(color)
   def morph(fn: Seq[PolyLine] => Seq[PolyLine]) = tpic.morph(fn)
+  def foreachPolyLine(fn: PolyLine => Unit) = tpic.foreachPolyLine(fn)
   def intersects(other: Picture) = {
       if (this == other) {
         false
