@@ -14,7 +14,11 @@
  */
 package net.kogics.kojo.lite
 
+import java.io.File
+
 import scala.sys.process.stringToProcess
+
+import net.kogics.kojo.util.Utils
 
 trait StubMain {
   def classpath: String
@@ -23,25 +27,37 @@ trait StubMain {
   def nthMain(args: Array[String]): Unit
 
   def main(args: Array[String]): Unit = {
-    if (firstInstance) {
-      println("First Kojo~Ray Instance Requested...")
-      firstMain(args)
-      realMain(args)
+    Utils.safeProcess {
+      if (firstInstance) {
+        println("First Kojo~Ray Instance Requested...")
+        firstMain(args)
+        realMain(args)
+      }
+      else {
+        println("Nth Kojo~Ray instance Requested: " + args)
+        nthMain(args)
+      }
     }
-    else {
-      println("Nth Kojo~Ray instance Requested: " + args)
-      nthMain(args)
-    }
-
     println("Kojo~Ray Launcher Done.")
     System.exit(0)
   }
 
   def realMain(args: Array[String]) {
-    val command = "%s/bin/java -cp %s -client -Xms32m -Xmx512m " +
+    val javaHome = System.getProperty("java.home")
+    println("Java Home: " + javaHome)
+    val javaExec = {
+      if (new File(javaHome + "/bin/javaw.exe").exists) {
+        println("Using javaw")
+        javaHome + "/bin/javaw"
+      } 
+      else {
+        javaHome + "/bin/java"
+      }
+    } 
+    val command = "%s -cp %s -client -Xms32m -Xmx512m " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
-      "-XX:+CMSPermGenSweepingEnabled net.kogics.kojo.lite.Main %s" format (System.getProperty("java.home"), classpath, args.mkString(" "))
+      "-XX:+CMSPermGenSweepingEnabled net.kogics.kojo.lite.Main %s" format (javaExec, classpath, args.mkString(" "))
 
     println("Starting Real Kojo~Ray...")
     command!
