@@ -5,9 +5,6 @@ import java.awt.GridLayout
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 
-import javax.jnlp.ServiceManager
-import javax.jnlp.SingleInstanceListener
-import javax.jnlp.SingleInstanceService
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.UIManager
@@ -44,25 +41,6 @@ object Main extends AppMenu {
 
   def main(args: Array[String]): Unit = {
     realMain(args)
-    if (System.getProperty("ide.run") != "true") {
-      val sis = ServiceManager.lookup("javax.jnlp.SingleInstanceService").asInstanceOf[SingleInstanceService]
-      val sisl = new SingleInstanceListener {
-        def newActivation(params: Array[String]) {
-          Utils.runInSwingThread {
-            frame.toFront()
-            if (params.length > 0) {
-              loadAndRunUrl(params(0))
-            }
-          }
-        }
-      }
-      sis.addSingleInstanceListener(sisl)
-      Runtime.getRuntime.addShutdownHook(new Thread(new Runnable {
-        def run() {
-          sis.removeSingleInstanceListener(sisl)
-        }
-      }))
-    }
   }
 
   def appExit() {
@@ -112,6 +90,7 @@ object Main extends AppMenu {
 
   def realMain(args: Array[String]): Unit = {
     System.setSecurityManager(null)
+    runMultiInstancehandler()
 
     Utils.runInSwingThread {
       splash = new SplashScreen()
@@ -185,5 +164,9 @@ object Main extends AppMenu {
         }
       }
     }
+  }
+
+  def runMultiInstancehandler() {
+    MultiInstanceHandler.run()
   }
 }

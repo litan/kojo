@@ -22,7 +22,8 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import scala.actors.Actor
 import scala.collection.mutable.ListBuffer
-import com.sun.jnlp.JNLPClassLoader
+import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.util.Typeclasses.some
 import CodeCompletionUtils.InternalMethodsRe
 import CodeCompletionUtils.InternalVarsRe
 import CodeCompletionUtils.Keywords
@@ -38,10 +39,8 @@ import core.RunContext
 import core.SCanvas
 import core.StagingMode
 import core.TwMode
-import net.kogics.kojo.util.Typeclasses.some
 import util.Utils
 import net.kogics.kojo.util.Typeclasses
-import net.kogics.kojo.core.D3Mode
 
 class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRunner {
   val Log = Logger.getLogger(getClass.getName)
@@ -428,77 +427,9 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     @volatile var numCachedJars = 0
 
     def makeSettings() = {
-      def callMethod(m: String, obj: AnyRef, klass: Class[_]): AnyRef = {
-        val method = klass.getDeclaredMethod(m)
-        method.setAccessible(true)
-        method.invoke(obj)
-      }
-
-      def readField(f: String, obj: AnyRef, klass: Class[_]): AnyRef = {
-        val field = klass.getDeclaredField(f)
-        field.setAccessible(true)
-        field.get(obj)
-      }
-
       val iSettings = new Settings()
-
-      if (System.getProperty("ide.run") == "true") {
-//        iSettings.usejavacp.value = true
-        iSettings.classpath.value = getClassPathForCurrentThread
-      } else {
-        if (classp == null) {
-          val jnlpLoader = JNLPClassLoader.getInstance
-          val jds = jnlpLoader.getLaunchDesc.getResources.getEagerOrAllJarDescs(true)
-          val lb = new ListBuffer[String]
-          jds.foreach { jd =>
-            val jarFile = jnlpLoader.getJarFile(jd.getLocation)
-            numCachedJars += 1
-            // work around webstart bug
-            val klass = jarFile.getClass
-            try {
-              callMethod("getSigners", jarFile, klass)
-              callMethod("getSignerMap", jarFile, klass)
-              callMethod("getCodeSourceCache", jarFile, klass)
-              cachedJarsData += readField("signersRef", jarFile, klass)
-              cachedJarsData += readField("signerMapRef", jarFile, klass)
-              cachedJarsData += readField("codeSourceCacheRef", jarFile, klass)
-            }
-            catch {
-              case t: Throwable =>
-              // signersRef field is no longer present in JDK 1.7.0_06
-              // so suppress the error printing
-              // println("Problem: " + t.getMessage)
-              // t.printStackTrace()
-            }
-            // end - work around webstart bug
-
-            val jarPath = jd.getLocation().getPath()
-            val jarName = jarPath.substring(jarPath.lastIndexOf('/') + 1)
-            if (Utils.kojoJars.contains(jarName)) {
-              val tempFile = File.createTempFile("kojolite-", ".jar");
-              tempFile.deleteOnExit()
-              Utils.copyFile(new File(jarFile.getName()), tempFile);
-              // val jarLocation = "file:" + tempFile.getAbsolutePath()
-              lb += tempFile.getAbsolutePath()
-            }
-          }
-
-          classp = createCp(lb.toList)
-        }
-        iSettings.classpath.append(classp)
-      }
-
+      iSettings.usejavacp.value = true
       iSettings
-    }
-
-    //temp fix for classpath issue when running the interpreter via sbt based on SO answer: http://goo.gl/4Km95
-    private lazy val getClassPathForCurrentThread =  {
-      val urls = Thread.currentThread.getContextClassLoader match {
-        case cl: java.net.URLClassLoader => cl.getURLs.toList
-        case _ => error("classloader is not a URLClassLoader")
-      }
-      val classpath = urls map {_.toString}
-      classpath.distinct.mkString(java.io.File.pathSeparator)
     }
 
     def compilerInitCode: Option[String] = {
