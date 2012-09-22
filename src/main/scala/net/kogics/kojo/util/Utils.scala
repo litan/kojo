@@ -243,6 +243,16 @@ object Utils {
     sourceChannel.close();
     destinationChannel.close();
   }
+  
+  def readFileIntoMem(f: File) {
+    val fis = new FileInputStream(f)
+    val bs = new BufferedInputStream(fis)
+    val buf = new Array[Byte](1024)
+    var nbytes = bs.read(buf)
+    while (nbytes != -1) {
+      nbytes = bs.read(buf)
+    }
+  }
 
   def stackTraceAsString(t: Throwable): String = {
     val result = new StringWriter()

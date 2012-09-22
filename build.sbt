@@ -6,7 +6,7 @@ scalaVersion := "2.9.2"
 
 fork in run := true
 
-javaOptions in run ++= Seq("-Dide.run=true", "-Xmx512m")
+// javaOptions in run ++= Seq("-Dide.run=true", "-Xmx512m")
 
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-compiler" % "2.9.2",
