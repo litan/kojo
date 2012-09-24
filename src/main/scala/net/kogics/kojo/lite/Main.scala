@@ -119,7 +119,7 @@ object Main extends AppMenu {
       codeSupport = CodeExecutionSupport.initedInstance(codePane, kojoCtx)
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, kojoCtx)
       scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport, frame)
-      val outputHolder = new OutputWindowHolder(codeSupport.outputWindow, codeSupport.errorWindow, codeSupport.outPanel)
+      val outputHolder = new OutputWindowHolder(codeSupport.outputWindow, codeSupport.errorWindow, codeSupport.outPanel, kojoCtx)
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, kojoCtx)
       val d3Holder = new D3CanvasHolder(Canvas3D.instance, kojoCtx)
@@ -127,6 +127,7 @@ object Main extends AppMenu {
 
       kojoCtx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder)
       kojoCtx.frame = frame
+      kojoCtx.codeSupport = codeSupport
 
       val grid = new CGrid(control)
       grid.add(1, 0, 4, 2, d3Holder)

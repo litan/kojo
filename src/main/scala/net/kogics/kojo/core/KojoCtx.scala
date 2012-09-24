@@ -42,4 +42,11 @@ trait KojoCtx {
   def lastColor: Color
   def lastColor_=(c: Color)
   def knownColors: List[String]
+  def isVerboseOutput: Boolean
+  def showVerboseOutput(): Unit
+  def hideVerboseOutput(): Unit
+  def isSriptShownInOutput: Boolean
+  def showScriptInOutput(): Unit
+  def hideScriptInOutput(): Unit
+  def clearOutput(): Unit
 }

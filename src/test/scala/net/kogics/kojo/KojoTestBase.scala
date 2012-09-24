@@ -45,6 +45,13 @@ class KojoTestContext extends core.KojoCtx {
   def lastColor = lc
   def lastColor_=(c: Color) {lc = c}
   def knownColors: List[String] = List()
+  def isVerboseOutput = false
+  def showVerboseOutput() {}
+  def hideVerboseOutput() {}
+  def isSriptShownInOutput = false
+  def showScriptInOutput() {}
+  def hideScriptInOutput() {}
+  def clearOutput() {}
 }
 
 class KojoTestBase {
