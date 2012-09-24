@@ -35,6 +35,7 @@ class KojoCtx extends core.KojoCtx {
   var topcs: TopCs = _
   var frame: JFrame = _
   var saveAsActionListener: ActionListener = _
+  var codeSupport: CodeExecutionSupport = _
 
   def activateDrawingCanvas() {
     topcs.dch.toFront()
@@ -63,18 +64,18 @@ class KojoCtx extends core.KojoCtx {
     topcs.sth.setLocation(CLocation.base.normalWest(0.5))
     //    topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
   }
-  
+
   def make3DCanvasVisible() {
     if (!topcs.d3h.isShowing) {
       topcs.d3h.toFront()
     }
   }
-  
+
   def drawingCanvasActivated() {
     topcs.d3h.otherPaneActivated()
     topcs.mwh.otherPaneActivated()
   }
-  
+
   def mwActivated() {
     topcs.d3h.otherPaneActivated()
   }
@@ -118,10 +119,39 @@ class KojoCtx extends core.KojoCtx {
   }
 
   @volatile var _lastColor = Color.white
-  def lastColor: Color = _lastColor 
+  def lastColor: Color = _lastColor
   def lastColor_=(c: Color) {
     _lastColor = c
   }
-  
+
   def knownColors = staging.KColor.knownColors
+
+  def isVerboseOutput = {
+    codeSupport.verboseOutput == true
+  }
+  
+  def showVerboseOutput() {
+    codeSupport.verboseOutput = true
+  }
+  
+  def hideVerboseOutput() = {
+    codeSupport.verboseOutput = false
+  }
+  
+  def isSriptShownInOutput = {
+    codeSupport.showCode == true
+  }
+
+  def showScriptInOutput() {
+    codeSupport.showCode = true
+  }
+  
+  def hideScriptInOutput() {
+    codeSupport.showCode = false
+  }
+
+  def clearOutput() {
+    codeSupport.clrOutput()
+  }
+
 }
