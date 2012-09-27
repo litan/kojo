@@ -32,9 +32,11 @@ import java.util.concurrent.CountDownLatch
 
 object Cartooning {
   implicit def point2DtoPoint(p: Point2D): Point = new Point(p.x, p.y)
+  implicit def pointtoPoint2D(p: Point): Point2D = Point2D(p.x, p.y)
   implicit def pimpPicture(pic: Picture): RichPicture = RichPicture(pic)
   type ListDD = List[(Double, Double)]
   implicit def pimpListDD(listDD: ListDD): RichListDD = RichListDD(listDD)
+  type AnimationStep = Long => Unit // elapsed time to Unit
 }
 
 object Cartooning2 {
@@ -243,14 +245,12 @@ object Skeleton {
 
 } // end Skeleton
 
-trait ItemAnimator[T] {
-  def workItem: T
-  type Work = T => Unit
-  var agenda = Queue.empty[Work]
-  def addToAgenda(w: Work) = synchronized {
+class Animator {
+  var agenda = Queue.empty[AnimationStep]
+  def addToAgenda(w: AnimationStep) = synchronized {
     agenda :+= w
   }
-  def getFromAgenda: Option[Work] = synchronized {
+  def getFromAgenda: Option[AnimationStep] = synchronized {
     if (agenda.isEmpty) {
       None
     }
@@ -262,46 +262,89 @@ trait ItemAnimator[T] {
   }
   def isAgendaEmpty = synchronized { agenda.isEmpty }
 
-  def schedule(w: Work) {
-    //    if (Utils.inSwingThread) {
-    //      val msg = "You cannot schedule item animations from Swing thread."
-    //      println(msg)
-    //      throw new RuntimeException(msg)
-    //    }
+  def schedule(w: AnimationStep) {
     addToAgenda(w)
   }
 
-  def scheduleRepeat(n: Int)(w: Work) = repeat(n) {
-    schedule(w)
-  }
-
-  def stopWith(doFinal: Work) = schedule { wi =>
-    doFinal(wi)
-    staging.API.stopActivity(animation)
-  }
-
-  def stop() = stopWith { wi => }
-
+  def currTime = System.currentTimeMillis()
+  val startTime = currTime
   val animation = staging.API.animate {
     val work = getFromAgenda
     if (work.isDefined) {
-      work.get(workItem)
+      work.get(currTime - startTime)
     }
   }
 }
 
-trait SpeakBaloon {
-  class WorkItem(var timeStamp: Long, var pic: Option[Picture]) {}
-  val speaker = new ItemAnimator[WorkItem] {
-    override val workItem = new WorkItem(0L, None)
+trait AnimClip extends AnimationStep { outer: AnimClip =>
+  def name: String
+  def animator: Animator
+  def apply(t: Long)
+  def schedule(step: AnimationStep) = animator.schedule(step)
+
+  def run() {
+    schedule { t =>
+      apply(t)
+    }
   }
-  val showTime = 3 // seconds
+
+  def signalDone() = schedule { t =>
+    doneFn.foreach { _(t) }
+  }
+
+  @volatile var doneFn: Option[AnimationStep] = None
+  def whenDone(fn: AnimationStep) {
+    doneFn = Some(fn)
+  }
+
+  def ~(as2: AnimClip): AnimClip = new AnimClip {
+    val name = outer.name + "~" + as2.name
+    val animator = outer.animator
+    def apply(t: Long) {
+      outer.run()
+      outer.whenDone { t =>
+        as2.run()
+        as2.whenDone { t =>
+          signalDone()
+        }
+      }
+    }
+  }
+
+  def |(as2: AnimClip): AnimClip = new AnimClip {
+    val name = outer.name + "!" + as2.name
+    val animator = outer.animator
+    def apply(t: Long) {
+      outer.run()
+      as2.run()
+      var outerDone = false
+      var as2Done = false
+      outer.whenDone { t =>
+        outerDone = true
+        if (as2Done) {
+          signalDone()
+        }
+      }
+      as2.whenDone { t =>
+        as2Done = true
+        if (outerDone) {
+          signalDone()
+        }
+      }
+    }
+  }
+}
+
+trait SpeakBalloon { self: AnimClip =>
+  case class WorkItem(var timeStamp: Long, var pic: Option[Picture])
+  val wi = WorkItem(0, None)
+  val showTimeMillis = 3 // seconds
   def textPos: Point2D
   def textSize = 30
   def speakPicture(lines: String*): Picture = Pic { t =>
     import t._
     import java.awt.Font
-    val (x, y) = (textPos.getX(), textPos.getY())
+    val (x, y) = (textPos.x, textPos.y)
     val space = textSize / 2
     val tip = textSize * 2
     val txt = lines.mkString("\n")
@@ -322,58 +365,49 @@ trait SpeakBaloon {
     moveTo(x, y)
     restorePosHe()
   }
-  var x = 0
-  def hide(wi: WorkItem) {
-    wi.pic.foreach(_.invisible())
+
+  def hide() {
+    wi.pic.foreach(_.erase())
     wi.pic = None
-    //    speaker.stopWith { wi => }
   }
 
-  val lock = new AnyRef
-  var agenda = Queue.empty[Picture]
-  var sip: Option[Picture] = None
-  def addToAgenda(w: Picture) = lock.synchronized {
-    agenda :+= w
-  }
-  def getFromAgenda: Option[Picture] = lock.synchronized {
-    if (agenda.isEmpty) {
-      None
+  def speak(lines: String*) = new AnimClip { outer: AnimClip =>
+    val name = "speaker"
+    val animator = self.animator
+    def apply(t: Long) {
+      applyNoHide(t)
+      Utils.schedule(showTimeMillis) {
+        hide()
+        signalDone()
+      }
     }
-    else {
-      val (firstWork, agendaMinusFirst) = agenda.dequeue
-      agenda = agendaMinusFirst
-      sip = Some(firstWork)
-      sip
+
+    def applyNoHide(t: Long) {
+      val fillColor = fill _
+      val penColor = stroke _
+      import staging.KColor._
+      wi.pic map { _.erase() }
+      wi.timeStamp = System.currentTimeMillis
+      wi.pic = Some(fillColor(white) * penColor(black) ->
+        speakPicture(lines: _*))
+      wi.pic.foreach(_.draw())
     }
-  }
-  def isAgendaEmpty = lock.synchronized { agenda.isEmpty }
-  def isSipEmpty = lock.synchronized { sip.isEmpty }
 
-  def speakBalloon(lines: String*) = {
-    val fillColor = fill _
-    val penColor = stroke _
-    import staging.KColor._
-
-    def doSchedule(): Unit = speaker.schedule { wi =>
-      if (sip.isEmpty) {
-        wi.pic foreach { _.erase() }
-        wi.timeStamp = System.currentTimeMillis
-        wi.pic = getFromAgenda
-        wi.pic.foreach(_.draw())
-        Utils.schedule(showTime) {
-            hide(wi)
-            sip = None
-            if (!isAgendaEmpty) {
-              doSchedule()
-            }
+    override def ~(as2: AnimClip): AnimClip = new AnimClip {
+      val name = outer.name + "~" + as2.name
+      val animator = outer.animator
+      def apply(t: Long) {
+        outer.applyNoHide(t)
+        Utils.schedule(showTimeMillis) {
+          hide()
+          as2.run()
+          as2.whenDone { t =>
+            signalDone()
+          }
         }
       }
     }
 
-    addToAgenda(fillColor(white) * penColor(black) ->
-      speakPicture(lines: _*))
-
-    doSchedule()
   }
 }
 
@@ -386,50 +420,24 @@ trait Movable {
   def down(step: Double = 1) = translate(0, -step)
 }
 
-trait Morphable extends ItemAnimator[Picture] {
+trait Morphable { self: AnimClip =>
   def workItem: Picture
-  def transformschedule(skel: Skeleton)(maxDistToPolyLine: (Double, PolyLine) => PolyLine) {
-    schedule { p =>
-      p.foreachPolyLine { pl =>
-        if (!isZero(pl)) maxDistToPolyLine(skel.maxDistTo(pl), pl)
-        else pl
-      }
-    }
+  def morphTo(skel: Skeleton) = {
+    schedule { t => workItem.morphTo(skel) }
   }
-
-  def morphTo(skel: Skeleton) {
-    schedule { p => p.morphTo(skel) }
-  }
-  def morphToStepwise(skel: Skeleton, step: Double = 1.0) {
-    val latch = new CountDownLatch(1)
+  def morphToStepwise(skel: Skeleton, step: Double = 1.0) = {
     workItem.foreachPolyLine { pl =>
-      val ret = if (!isZero(pl)) {
+      if (!isZero(pl)) {
         val maxDist = skel.maxDistTo(pl)
         for (i <- 0 to (maxDist / step).toInt) {
-          schedule { p =>
-            p.morphTowards(skel, step)
+          schedule { t =>
+            workItem.morphTowards(skel, step)
           }
         }
-        pl
       }
-      else {
-        pl
-      }
-      latch.countDown()
-      ret
     }
-    latch.await()
+    signalDone()
   }
 
   def printPicture(): Unit = workItem.printPicture()
-}
-
-class PictureAnimator(val pic: Picture)
-    extends ItemAnimator[Picture]
-    with Movable with Morphable {
-  override val workItem = pic
-  def pos: Point2D = Point2D(pic.position.x, pic.position.y)
-  def translate(x: Double, y: Double) = schedule { pic => pic.translate(x, y) }
-  // Init:
-  if (!pic.isDrawn) pic.draw()
 }

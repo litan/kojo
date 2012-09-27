@@ -36,36 +36,36 @@ class CartooningTest extends KojoTestBase with FunSuite with RepeatCommands {
     }
   }
 
-  class PicA(p: Picture) extends ItemAnimator[Picture] {
-    val workItem = p
-  }
-
-  val testItem = new PicA(p)
-
-  test("scheduling") {
-    @volatile var inSwingT = false
-    val latch = new CountDownLatch(1)
-    testItem.schedule { p =>
-      inSwingT = Utils.inSwingThread
-      latch.countDown()
-    }
-    latch.await(1, TimeUnit.SECONDS)
-    inSwingT should be(true)
-  }
-
-  test("repeated scheduling") {
-    @volatile var inSwingT = false
-    @volatile var count = 0
-    val latch = new CountDownLatch(1)
-    testItem.scheduleRepeat(3) { p =>
-      inSwingT = Utils.inSwingThread
-      count += 1
-    }
-    testItem.schedule { p =>
-      latch.countDown()
-    }
-    latch.await(5, TimeUnit.SECONDS)
-    inSwingT should be(true)
-    count should be(3)
-  }
+//  class PicA(p: Picture) extends ItemAnimator[Picture] {
+//    val workItem = p
+//  }
+//
+//  val testItem = new PicA(p)
+//
+//  test("scheduling") {
+//    @volatile var inSwingT = false
+//    val latch = new CountDownLatch(1)
+//    testItem.schedule { p =>
+//      inSwingT = Utils.inSwingThread
+//      latch.countDown()
+//    }
+//    latch.await(1, TimeUnit.SECONDS)
+//    inSwingT should be(true)
+//  }
+//
+//  test("repeated scheduling") {
+//    @volatile var inSwingT = false
+//    @volatile var count = 0
+//    val latch = new CountDownLatch(1)
+//    testItem.scheduleRepeat(3) { p =>
+//      inSwingT = Utils.inSwingThread
+//      count += 1
+//    }
+//    testItem.schedule { p =>
+//      latch.countDown()
+//    }
+//    latch.await(5, TimeUnit.SECONDS)
+//    inSwingT should be(true)
+//    count should be(3)
+//  }
 }
