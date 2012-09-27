@@ -24,7 +24,7 @@ import net.kogics.kojo.kgeom.PolyLine
 import util.Utils
 import kgeom.PolyLine
 
-trait Transformer extends Picture {
+trait Transformer extends Picture with CorePicOps2 {
   val tpic: Picture
   def bounds = tpic.bounds
   def dumpInfo() = tpic.dumpInfo()

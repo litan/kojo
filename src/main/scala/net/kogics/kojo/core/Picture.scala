@@ -61,15 +61,7 @@ trait Picture extends InputAware {
   def setPenColor(color: Color)
   def setPenThickness(th: Double)
   def setFillColor(color: Paint)
-  def act(fn: Picture => Unit) {
-    if (!isDrawn) {
-      throw new IllegalStateException("Ask picture to act after you draw it.")
-    }
-    // bad dependence from core to staging!
-    staging.API.loop {
-      fn(this)
-    }
-  }
+  def act(fn: Picture => Unit)
   def animate(fn: => Unit) {
     act { me =>
       fn
