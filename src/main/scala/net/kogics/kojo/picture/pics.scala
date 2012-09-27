@@ -153,8 +153,8 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     if (axes == null) {
       val (size, delta, num, bigt) = Impl.canvas.unitLen match {
         case Pixel => (200.0f, 20.0f, 10, 5)
-        case Inch  => (4.0f, 0.25f, 16, 4)
-        case Cm    => (10f, .5f, 20, 2)
+        case Inch => (4.0f, 0.25f, 16, 4)
+        case Cm => (10f, .5f, 20, 2)
       }
       val camScale = Impl.canvas.camScale.toFloat
       val tickSize = 3 / camScale
@@ -290,6 +290,19 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def myCanvas = Impl.canvas
 }
 
+trait CorePicOps2 { self: Picture =>
+  // TODO: need to get intersection methods in here too
+  // they follow same pattern with respect to transforms
+  def act(fn: Picture => Unit) {
+    if (!isDrawn) {
+      throw new IllegalStateException("Ask picture to act after you draw it.")
+    }
+    staging.API.loop {
+      fn(this)
+    }
+  }
+}
+
 trait RedrawStopper extends Picture {
   @volatile var drawn = false
   def isDrawn = drawn
@@ -319,11 +332,12 @@ object Pic {
   def apply(painter: Painter) = new Pic(painter)
 }
 
-class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
+class Pic(painter: Painter) extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
   @volatile var _t: turtle.Turtle = _
+  val ErrMsg = "Unable to create picture turtle. This could be because you have a draw() call after an animate{ } or morph{ } call"
 
   def t = {
-    if (_t == null) Utils.runInSwingThreadAndWait {
+    if (_t == null) Utils.runInSwingThreadAndWait(1000, ErrMsg) {
       if (_t == null) {
         val tt = Impl.canvas.newInvisibleTurtle(0, 0)
         tt.setAnimationDelay(0)
@@ -373,9 +387,9 @@ class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher wit
   }
 
   private def fillColor(fillPaint: Paint) = fillPaint match {
-    case null     => Color.white
+    case null => Color.white
     case c: Color => c
-    case _        => throw new IllegalStateException("You can't extract rgb values of non Color paints")
+    case _ => throw new IllegalStateException("You can't extract rgb values of non Color paints")
   }
 
   def hueMod(f: Double) = Utils.runInSwingThread {
@@ -453,9 +467,9 @@ class Pic(painter: Painter) extends Picture with CorePicOps with TNodeCacher wit
       tnode.repaint()
     }
   }
-  
+
   def foreachPolyLine(fn: PolyLine => Unit) {
-    val plines = Utils.runInSwingThreadAndWait {t.penPaths.toArray}
+    val plines = Utils.runInSwingThreadAndWait { t.penPaths.toArray }
     plines.foreach { fn }
   }
 }
@@ -478,7 +492,7 @@ class Pic0(painter: Painter) extends Pic(painter) {
 }
 
 abstract class BasePicList(val pics: List[Picture])
-    extends Picture with CorePicOps with TNodeCacher with RedrawStopper {
+  extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
   if (pics.size == 0) {
     throw new IllegalArgumentException("A Picture List needs to have at least one Picture.")
   }

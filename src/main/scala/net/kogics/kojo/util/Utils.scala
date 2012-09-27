@@ -28,6 +28,8 @@ import net.kogics.kojo.lite.canvas.SpriteCanvas
 import java.util.ResourceBundle
 import java.util.Locale
 import java.net.URL
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
 
 object Utils {
 
@@ -101,7 +103,7 @@ object Utils {
         }
         catch {
           case e: InterruptedException => // println("Background Thread Interrupted.")
-          case t: Throwable            => reportException(t)
+          case t: Throwable => reportException(t)
         }
         finally {
           threads.remove(t)
@@ -151,6 +153,29 @@ object Utils {
         }
       })
       t
+    }
+  }
+
+  def runInSwingThreadAndWait[T](timeout: Long, msg: String)(fn: => T): T = {
+    if (inSwingThread) {
+      fn
+    }
+    else {
+      var t: T = null.asInstanceOf[T]
+      val latch = new CountDownLatch(1)
+      javax.swing.SwingUtilities.invokeLater(new Runnable {
+        override def run {
+          t = fn
+          latch.countDown()
+        }
+      })
+      val timedOut = !latch.await(timeout, TimeUnit.MILLISECONDS)
+      if (timedOut) {
+        throw new RuntimeException(msg)
+      }
+      else {
+        t
+      }
     }
   }
 
@@ -243,7 +268,7 @@ object Utils {
     sourceChannel.close();
     destinationChannel.close();
   }
-  
+
   def readFileIntoMem(f: File) {
     val fis = new FileInputStream(f)
     val bs = new BufferedInputStream(fis)

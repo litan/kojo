@@ -21,19 +21,20 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 import org.scalatest.junit.ShouldMatchersForJUnit._
 import util.Utils._
+import java.util.concurrent.CountDownLatch
 
 @RunWith(classOf[JUnitRunner])
 class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands {
-  
+
   val size = 50
   val pt = 2.0
   val w = size + pt
   val h = size + pt
-  val bx = -pt/2
-  val by = -pt/2
+  val bx = -pt / 2
+  val by = -pt / 2
   val w2 = w * 2
   val bx2 = size * 2
-  
+
   def testPic = Pic { t =>
     import t._
     invisible()
@@ -43,12 +44,12 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
       right
     }
   }
-  
+
   def testHpic3(a1: Double, a2: Double) = HPics(
-    testPic, 
-    testPic, 
+    testPic,
+    testPic,
     rot(a1) -> HPics(
-      testPic, 
+      testPic,
       testPic,
       rot(a2) -> HPics(testPic, testPic)
     ),
@@ -68,27 +69,27 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
     b.x should be(bx plusOrMinus 0.01)
     b.y should be(by plusOrMinus 0.01)
     b.width should be(w plusOrMinus 0.01)
-    b.height should be(h  plusOrMinus 0.01)
-  }  
-  
+    b.height should be(h plusOrMinus 0.01)
+  }
+
   test("picture translation") {
     val p = trans(50, 0) -> testPic
     p.draw()
     val b = p.bounds
-    b.x should be(50 + bx  plusOrMinus 0.01)
-  }  
+    b.x should be(50 + bx plusOrMinus 0.01)
+  }
 
   test("picture scaling") {
-    val p = scale(2,2) -> testPic
+    val p = scale(2, 2) -> testPic
     p.draw()
     val b = p.bounds
     b.x should be(bx * 2 plusOrMinus 0.01)
     b.width should be(w * 2 plusOrMinus 0.01)
     b.height should be(h * 2 plusOrMinus 0.01)
-  }  
+  }
 
   test("picture scaling after translation") {
-    val p = trans(50, 0) * scale(2,2) -> testPic
+    val p = trans(50, 0) * scale(2, 2) -> testPic
     p.draw()
     val b = p.bounds
     b.x should be(50 + 2 * bx plusOrMinus 0.01)
@@ -97,14 +98,14 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
   }
 
   test("picture translation after scaling") {
-    val p = scale(2,2) * trans(50, 0) -> testPic
+    val p = scale(2, 2) * trans(50, 0) -> testPic
     p.draw()
     val b = p.bounds
-    b.x should be(50*2 + 2 * bx plusOrMinus 0.01)
+    b.x should be(50 * 2 + 2 * bx plusOrMinus 0.01)
     b.width should be(w * 2 plusOrMinus 0.01)
     b.height should be(h * 2 plusOrMinus 0.01)
   }
-  
+
   test("3-hpics hp3 bounds") {
     val a1 = 30.0
     val a2 = 40.0
@@ -115,9 +116,9 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
     val hp3 = hp2.pics(2).asInstanceOf[Rot].tpic.asInstanceOf[HPics]
 
     val b3 = hp3.bounds
-    doublesEqual(b3.x, bx2 - math.cos((90-a2).toRadians) * h, 3.0) should be (true)
-    doublesEqual(b3.width, math.cos((90-a2).toRadians) * h + math.cos(a2.toRadians) * w2, 1.0) should be (true)
-    doublesEqual(b3.height, math.cos(a2.toRadians) * h + math.sin(a2.toRadians) * w2, 1.0) should be (true)
+    doublesEqual(b3.x, bx2 - math.cos((90 - a2).toRadians) * h, 3.0) should be(true)
+    doublesEqual(b3.width, math.cos((90 - a2).toRadians) * h + math.cos(a2.toRadians) * w2, 1.0) should be(true)
+    doublesEqual(b3.height, math.cos(a2.toRadians) * h + math.sin(a2.toRadians) * w2, 1.0) should be(true)
   }
 
   test("3-hpics hp2 bounds") {
@@ -131,11 +132,11 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
 
     val b3 = hp3.bounds
     val b2 = hp2.bounds
-    doublesEqual(b2.x, bx2 - b3.height * math.cos((90-a1).toRadians), 3.0) should be (true)
-    doublesEqual(b2.width, (b3.width - math.cos((90-a2).toRadians) * h + w2) * math.cos(a1.toRadians) + b3.height * math.cos((90-a1).toRadians), 1.0) should be (true)
-    doublesEqual(b2.height, b3.height * math.sin((90-a1).toRadians) + (b3.width - math.cos((90-a2).toRadians) * h + w2) * math.cos((90-a1).toRadians), 1.0) should be (true)
+    doublesEqual(b2.x, bx2 - b3.height * math.cos((90 - a1).toRadians), 3.0) should be(true)
+    doublesEqual(b2.width, (b3.width - math.cos((90 - a2).toRadians) * h + w2) * math.cos(a1.toRadians) + b3.height * math.cos((90 - a1).toRadians), 1.0) should be(true)
+    doublesEqual(b2.height, b3.height * math.sin((90 - a1).toRadians) + (b3.width - math.cos((90 - a2).toRadians) * h + w2) * math.cos((90 - a1).toRadians), 1.0) should be(true)
   }
-  
+
   test("heading 1") {
     val pic = testLine
     pic.rotate(390)
@@ -144,7 +145,7 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
 
   test("heading 2") {
     val pic = testLine
-    pic.setHeading(2*360+20)
+    pic.setHeading(2 * 360 + 20)
     pic.heading should be(20.0 plusOrMinus 0.001)
   }
 
@@ -161,20 +162,24 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
     pic.translate(100, 0)
     pic.position.x should be(100 * math.cos(30.toRadians) plusOrMinus 0.001)
     pic.position.y should be(100 * math.sin(30.toRadians) plusOrMinus 0.001)
-    
+
     pic.setPosition(150, 50)
     pic.position.x should be(150)
     pic.position.y should be(50)
     pic.heading should be(30.0 plusOrMinus 0.001)
   }
-  
+
   test("act provides correct me for transforms") {
     val pic = rot(30) -> testPic
+    @volatile var pic2: core.Picture = null
     pic.draw()
+    val latch = new CountDownLatch(1)
     pic.act { me =>
-      // test should be done in test runner thread
-      me should be(pic)
+      pic2 = me
       staging.API.stop()
+      latch.countDown()
     }
+    latch.await()
+    pic2 should be(pic)
   }
 }
