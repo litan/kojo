@@ -153,6 +153,7 @@ object Main extends AppMenu {
         }
       })
       //      frame.pack()
+      frame.setIconImage(Utils.loadImage("/images/kojo48.png"))
       frame.setVisible(true)
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
 
