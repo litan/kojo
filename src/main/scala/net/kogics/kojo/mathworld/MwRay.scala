@@ -15,12 +15,10 @@
 
 package net.kogics.kojo.mathworld
 
-import geogebra.kernel.GeoRay
-import geogebra.kernel.GeoPoint
-import geogebra.plugin.GgbAPI
 import net.kogics.kojo.util.Utils
-
 import net.kogics.kojo.core._
+import geogebra.common.plugin.GgbAPI
+import geogebra.common.kernel.geos.GeoRay
 
 object MwRay {
 
@@ -30,7 +28,7 @@ object MwRay {
     net.kogics.kojo.util.Throttler.throttle()
     val ray = Utils.runInSwingThreadAndWait {
       val gRay = ggbApi.getKernel.Ray(lGen.next(), p1.gPoint, p2.gPoint)
-      new MwRay(ggbApi, gRay, p1, p2)
+      new MwRay(ggbApi, gRay.asInstanceOf[GeoRay], p1, p2)
     }
     ray
   }

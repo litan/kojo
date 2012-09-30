@@ -16,17 +16,17 @@
 package net.kogics.kojo.mathworld
 
 import net.kogics.kojo.core.InitedSingleton
-
-import geogebra.GeoGebraPanel;
+import geogebra.GeoGebraPanel
 import geogebra.gui.menubar.GeoGebraMenuBar
 import net.kogics.kojo.core.KojoCtx
 import java.io.File
+import geogebra.common.main.App
 
 object GeoGebraCanvas extends InitedSingleton[GeoGebraCanvas] {
   def initedInstance(kojoCtx: KojoCtx) = synchronized {
     instanceInit()
     val ret = instance()
-    MathWorld.initedInstance(kojoCtx, ret.ggbApi)
+    MathWorld.initedInstance(kojoCtx, ret.ggbApi, ret)
     ret
   }
 
@@ -40,31 +40,13 @@ class GeoGebraCanvas extends GeoGebraPanel {
   setShowMenubar(false)
   setShowToolbar(true)
 
+  setShowMenubar(true)
+  setShowToolbar(true)
   buildGUI()
-  app.getGuiManager().initMenubar()
 
   val ggbApi = getGeoGebraAPI
+  App.logger.setLogLevel("INFO")
 
-  def selectAllAction = app.getGuiManager().getMenuBar().asInstanceOf[GeoGebraMenuBar].getSelectAllAction
+//   def selectAllAction = app.getGuiManager().getMenuBar().asInstanceOf[GeoGebraMenuBar].getSelectAllAction
 
-  def lastLoadStoreFile = {
-    val cf = app.getCurrentFile
-    if (cf == null) "" else cf.getAbsolutePath
-  }
-
-  def setLastLoadStoreFile(fileName: String) {
-    if (fileName == null || fileName.trim() == "") {
-      return
-    }
-
-    val file = new File(fileName)
-    val parent = new File(file.getParent())
-    if (parent.exists && parent.isDirectory) {
-      app.setCurrentFile(file)
-    }
-  }
-
-  def ensureWorkSaved(): Boolean = {
-    app.isSaved || app.getGuiManager().saveCurrentFile()
-  }
 }

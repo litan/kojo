@@ -15,18 +15,17 @@
 
 package net.kogics.kojo.mathworld
 
-import geogebra.kernel.GeoText
-import geogebra.plugin.GgbAPI
 import net.kogics.kojo.util.Utils
-
 import net.kogics.kojo.core.Text
+import geogebra.common.plugin.GgbAPI
+import geogebra.common.kernel.geos.GeoText
 
 object MwText {
   def apply(ggbApi: GgbAPI, content: String, x: Double, y: Double): MwText = {
     net.kogics.kojo.util.Throttler.throttle()
     val text = Utils.runInSwingThreadAndWait {
       if (content.indexOf('"') < 0) {
-        val gText = ggbApi.getKernel.Text("T", content)
+        val gText = ggbApi.getKernel.getAlgebraProcessor.Text("T", content)
         new MwText(ggbApi, gText, x, y)
       }
       else {
