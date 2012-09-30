@@ -16,10 +16,10 @@
 package net.kogics.kojo.mathworld
 
 import geogebra.kernel._
-import geogebra.plugin.GgbAPI
 import net.kogics.kojo.util.Utils
-
 import net.kogics.kojo.core._
+import geogebra.common.kernel.geos.GeoPoint
+import geogebra.common.plugin.GgbAPI
 
 object MwPoint {
 
@@ -28,7 +28,7 @@ object MwPoint {
   def apply(ggbApi: GgbAPI, x: Double, y: Double, label: Option[String]): MwPoint = {
     net.kogics.kojo.util.Throttler.throttle()
     val pt = Utils.runInSwingThreadAndWait {
-      val ret = new MwPoint(ggbApi, ggbApi.getKernel.Point(label.getOrElse(lGen.next()), x, y))
+      val ret = new MwPoint(ggbApi, ggbApi.getKernel.getAlgoDispatcher.Point(label.getOrElse(lGen.next()), x, y, false))
       if (label.isDefined) {
         ret.showLabel()
       }
@@ -39,7 +39,7 @@ object MwPoint {
 
   def apply(ggbApi: GgbAPI, on: MwLine, x: Double, y: Double) = {
     val pt = Utils.runInSwingThreadAndWait {
-      new MwPoint(ggbApi, ggbApi.getKernel.Point(lGen.next(), on.gLine, x, y))
+      new MwPoint(ggbApi, ggbApi.getKernel.getAlgoDispatcher.Point(lGen.next(), on.gLine, x, y, true, false))
     }
     pt
   }

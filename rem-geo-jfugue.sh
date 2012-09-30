@@ -1,0 +1,1 @@
+zip -d geogebra_algos.jar org/jfugue/*

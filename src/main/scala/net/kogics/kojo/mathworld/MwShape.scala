@@ -16,12 +16,11 @@
 package net.kogics.kojo.mathworld
 
 import java.util.logging._
-
-import geogebra.kernel.GeoElement
-import geogebra.plugin.GgbAPI
 import net.kogics.kojo.util.Utils
-
 import net.kogics.kojo.core.Labelled
+import geogebra.common.plugin.GgbAPI
+import geogebra.common.kernel.geos.GeoElement
+import geogebra.awt.GColorD
 
 trait MwShape extends Labelled {
 
@@ -57,7 +56,7 @@ trait MwShape extends Labelled {
 
   def setColor(color: java.awt.Color) {
     Utils.runInSwingThread {
-      geogebraElement.setObjColor(color)
+      geogebraElement.setObjColor(new GColorD(color))
       repaint()
     }
   }
@@ -117,7 +116,7 @@ trait MwShape extends Labelled {
 
   def label = {
     Utils.runInSwingThreadAndWait {
-      geogebraElement.getLabel()
+      geogebraElement.getLabelSimple()
     }
   }
 }

@@ -15,11 +15,10 @@
 
 package net.kogics.kojo.mathworld
 
-import geogebra.kernel.GeoLine
-import geogebra.plugin.GgbAPI
 import net.kogics.kojo.util.Utils
-
 import net.kogics.kojo.core._
+import geogebra.common.plugin.GgbAPI
+import geogebra.common.kernel.geos.GeoLine
 
 object MwLine {
   val lGen = new LabelGenerator("Ln")
@@ -27,7 +26,7 @@ object MwLine {
   def apply(ggbApi: GgbAPI, p1: MwPoint, p2: MwPoint) = {
     net.kogics.kojo.util.Throttler.throttle()
     val line = Utils.runInSwingThreadAndWait {
-      val gLine = ggbApi.getKernel.Line(lGen.next(), p1.gPoint, p2.gPoint)
+      val gLine = ggbApi.getKernel.getAlgoDispatcher.Line(lGen.next(), p1.gPoint, p2.gPoint)
       new MwLine(ggbApi, gLine, p1, p2)
     }
     line

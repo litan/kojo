@@ -15,12 +15,11 @@
 
 package net.kogics.kojo.mathworld
 
-import geogebra.kernel.GeoConic
-import geogebra.kernel.GeoNumeric
-import geogebra.plugin.GgbAPI
 import net.kogics.kojo.util.Utils
-
 import net.kogics.kojo.core._
+import geogebra.common.plugin.GgbAPI
+import geogebra.common.kernel.geos.GeoConic
+import geogebra.common.kernel.geos.GeoNumeric
 
 object MwCircle {
   val lGen = new LabelGenerator("Crc")
@@ -28,7 +27,7 @@ object MwCircle {
   def apply(ggbApi: GgbAPI, p1: MwPoint, r: Double) = {
     net.kogics.kojo.util.Throttler.throttle()
     val circle = Utils.runInSwingThreadAndWait {
-      val gCircle = ggbApi.getKernel.Circle(lGen.next(), p1.gPoint, new GeoNumeric(ggbApi.getConstruction, r))
+      val gCircle = ggbApi.getKernel.getAlgoDispatcher.Circle(lGen.next(), p1.gPoint, new GeoNumeric(ggbApi.getConstruction, r))
       new MwCircle(ggbApi, gCircle, p1, r)
     }
     circle

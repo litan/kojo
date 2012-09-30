@@ -15,13 +15,12 @@
 
 package net.kogics.kojo.mathworld
 
-import geogebra.kernel.GeoSegment
-import geogebra.kernel.GeoNumeric
-import geogebra.kernel.GeoPoint
-import geogebra.plugin.GgbAPI
 import net.kogics.kojo.util.Utils
-
 import net.kogics.kojo.core._
+import geogebra.common.kernel.geos.GeoPoint
+import geogebra.common.kernel.geos.GeoSegment
+import geogebra.common.plugin.GgbAPI
+import geogebra.common.kernel.geos.GeoNumeric
 
 object MwLineSegment {
 
@@ -31,7 +30,7 @@ object MwLineSegment {
     net.kogics.kojo.util.Throttler.throttle()
     val lineSegment = Utils.runInSwingThreadAndWait {
       val gLineSegment = ggbApi.getKernel.Segment(lGen.next(), p1.gPoint, p2.gPoint)
-      new MwLineSegment(ggbApi, gLineSegment, p1, p2)
+      new MwLineSegment(ggbApi, gLineSegment.asInstanceOf[GeoSegment], p1, p2)
     }
     lineSegment
   }
@@ -39,7 +38,7 @@ object MwLineSegment {
   def apply(ggbApi: GgbAPI, p: MwPoint, len: Double) = {
     net.kogics.kojo.util.Throttler.throttle()
     val lineSegment = Utils.runInSwingThreadAndWait {
-      val segP = ggbApi.getKernel.Segment(Array(lGen.next(), MwPoint.lGen.next()),
+      val segP = ggbApi.getKernel.getAlgoDispatcher.Segment(Array(lGen.next(), MwPoint.lGen.next()),
                                                   p.gPoint, new GeoNumeric(ggbApi.getConstruction, len))
       val p2 = new MwPoint(ggbApi, segP(1).asInstanceOf[GeoPoint])
       new MwLineSegment(ggbApi, segP(0).asInstanceOf[GeoSegment], p, p2)

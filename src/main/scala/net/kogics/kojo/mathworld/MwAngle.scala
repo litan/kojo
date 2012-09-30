@@ -15,12 +15,11 @@
 
 package net.kogics.kojo.mathworld
 
-import geogebra.kernel.GeoAngle
-import geogebra.kernel.GeoPoint
-import geogebra.kernel.GeoNumeric
-import geogebra.kernel.arithmetic.NumberValue
-import geogebra.plugin.GgbAPI
 import net.kogics.kojo.util.Utils
+import geogebra.common.plugin.GgbAPI
+import geogebra.common.kernel.geos.GeoAngle
+import geogebra.common.kernel.geos.GeoNumeric
+import geogebra.common.kernel.geos.GeoPoint
 
 object MwAngle {
 
@@ -29,7 +28,7 @@ object MwAngle {
   def apply(ggbApi: GgbAPI, p1: MwPoint, p2: MwPoint, p3: MwPoint) = {
     net.kogics.kojo.util.Throttler.throttle()
     val angle = Utils.runInSwingThreadAndWait {
-      new MwAngle(ggbApi, ggbApi.getKernel.Angle(lGen.next(), p1.gPoint, p2.gPoint, p3.gPoint),
+      new MwAngle(ggbApi, ggbApi.getKernel.getAlgoDispatcher.Angle(lGen.next(), p1.gPoint, p2.gPoint, p3.gPoint),
                   p1, p2, p3)
     }
     angle
@@ -38,9 +37,9 @@ object MwAngle {
   def apply(ggbApi: GgbAPI, p1: MwPoint, p2: MwPoint, size: Double) = {
     net.kogics.kojo.util.Throttler.throttle()
     val angle = Utils.runInSwingThreadAndWait {
-      val ap = ggbApi.getKernel.Angle(Array(lGen.next(),
+      val ap = ggbApi.getKernel.getAlgoDispatcher.Angle(Array(lGen.next(),
                                             MwPoint.lGen.next()), p1.gPoint, p2.gPoint,
-                                      new GeoNumeric(ggbApi.getConstruction, size))
+                                      new GeoNumeric(ggbApi.getConstruction, size), true)
       new MwAngle(ggbApi, ap(0).asInstanceOf[GeoAngle], p1, p2, new MwPoint(ggbApi, ap(1).asInstanceOf[GeoPoint]))
     }
     angle
