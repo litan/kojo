@@ -316,6 +316,11 @@ object Utils {
     }
   }
 
+  lazy val userDir = System.getProperty("user.home")
+  lazy val libDir = userDir + File.separatorChar + ".kojo/lite/libk"
+  lazy val libJars: List[String] = filesInDir(libDir, "jar")
+  
+  
   def runAsyncQueued(fn: => Unit) {
     asyncRunner ! RunCode { () =>
       fn
