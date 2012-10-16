@@ -22,6 +22,7 @@ object DesktopMain extends StubMain with RmiMultiInstance {
       case cl: java.net.URLClassLoader => cl.getURLs.toList
       case _                           => error("classloader is not a URLClassLoader")
     }
-    urls map { _.getPath() } mkString (File.pathSeparator)
+    
+    createCp(urls map { _.getPath() })
   }
 }
