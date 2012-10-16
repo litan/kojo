@@ -1,0 +1,1 @@
+zip -d lib/geogebra_properties.jar geogebra/properties/*_*.properties
