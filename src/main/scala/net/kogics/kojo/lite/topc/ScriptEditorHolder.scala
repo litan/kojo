@@ -36,6 +36,9 @@ import org.fife.rsta.ui.search.AbstractFindReplaceDialog
 import org.fife.ui.rtextarea.SearchContext
 import org.fife.ui.rtextarea.SearchEngine
 import javax.swing.JFrame
+import java.awt.event.KeyEvent
+import java.awt.Toolkit
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport, frame: JFrame) extends BaseHolder("SE", "Script Editor", se) {
 
@@ -44,13 +47,18 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
   codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
   codePane.setAntiAliasingEnabled(true)
+  codePane.setBracketMatchingEnabled(false)
   codePane.setAnimateBracketMatching(false)
-  codePane.setCloseCurlyBraces(true)
+  codePane.setCloseCurlyBraces(false)
   codePane.setTabsEmulated(true)
   codePane.setTabSize(4)
   //  codePane.setCodeFoldingEnabled(true)
   //  codePane.setMarkOccurrences(true)
   codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
+
+  val inputMap = codePane.getInputMap()
+  inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
+  
   new IncreaseFontSizeAction().actionPerformedImpl(null, codePane)
 
   RSyntaxTextArea.setTemplatesEnabled(true)
@@ -120,7 +128,8 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
             CompactControlReadability -> true,
             AlignParameters -> true,
             AlignSingleLineCaseStatements -> true,
-            PreserveDanglingCloseParenthesis -> true
+            PreserveDanglingCloseParenthesis -> true,
+            FormatXml -> false
           )
         )
       ))
@@ -130,8 +139,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
   val formatItem = new JMenuItem(formatAction)
   val csf = KeyStroke.getKeyStroke("control shift F")
-  val im = codePane.getInputMap()
-  im.put(csf, "format-src")
+  inputMap.put(csf, "format-src")
   val am = codePane.getActionMap()
   am.put("format-src", formatAction)
   formatItem.setAccelerator(csf)
@@ -159,7 +167,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   }
   val findReplaceItem = new JMenuItem(findReplaceAction)
   val cf = KeyStroke.getKeyStroke("control F")
-  im.put(cf, "find-replace")
+  inputMap.put(cf, "find-replace")
   am.put("find-replace", findReplaceAction)
   findReplaceItem.setAccelerator(cf)
   popup.add(findReplaceItem, 9)
