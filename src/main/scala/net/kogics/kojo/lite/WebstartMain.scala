@@ -28,9 +28,6 @@ import java.rmi.RemoteException
 
 object WebstartMain extends StubMain with RmiMultiInstance {
   val classpath = {
-    def createCp(xs: List[String]): String = {
-      xs.mkString(File.pathSeparator)
-    }
 
     val jnlpLoader = JNLPClassLoader.getInstance
     val jds = jnlpLoader.getLaunchDesc.getResources.getEagerOrAllJarDescs(true)
