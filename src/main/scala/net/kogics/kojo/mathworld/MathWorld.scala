@@ -28,6 +28,8 @@ import geogebra.GeoGebraPanel
 import geogebra.euclidianND.EuclidianViewND
 import geogebra.common.euclidian.EuclidianViewInterfaceCommon
 import geogebra.common.main.settings.EuclidianSettings
+import geogebra.common.main.App
+import geogebra.gui.GuiManagerD
 
 object MathWorld extends InitedSingleton[MathWorld] {
   def initedInstance(kojoCtx: KojoCtx, ggbApi: GgbAPID, ggbPanel: GeoGebraPanel) = synchronized {
@@ -49,6 +51,11 @@ class MathWorld {
   @volatile var _ggbPanel: GeoGebraPanel = _
   @volatile var _Algo: Algo = _
 
+  lazy val _app = _ggbApi.getApplication.asInstanceOf[AppD]
+  lazy val _guim = _app.getGuiManager.asInstanceOf[GuiManagerD]
+  lazy val _kernel = _app.getKernel
+  lazy val casView = new CasView()
+
   private def ensureVisible() {
     _kojoCtx.makeMathWorldVisible()
   }
@@ -56,16 +63,17 @@ class MathWorld {
   def clear() {
     Utils.runInSwingThreadAndWait {
       ensureVisible()
-      _ggbApi.getApplication.asInstanceOf[AppD].setSaved()
-      _ggbApi.getApplication.fileNew()
+      _app.setSaved()
+      _app.fileNew()
+      casView.clear()
     }
   }
 
   // for unit tests
   private[mathworld] def _clear2() {
     Utils.runInSwingThread {
-      _ggbApi.getApplication.asInstanceOf[AppD].setSaved()
-      _ggbApi.getApplication.fileNew()
+      _app.setSaved()
+      _app.fileNew()
     }
   }
 
@@ -99,20 +107,40 @@ class MathWorld {
 
   def showAlgebraView() {
     Utils.runInSwingThread {
-      _ggbPanel.setShowAlgebraView(true)
-      //      _ggbApi.getApplication.updateCenterPanel(true)
-      _ggbApi.getApplication.setDefaultCursor()
+      _guim.setShowView(true, App.VIEW_ALGEBRA)
+      _kojoCtx.activateScriptEditor()
     }
   }
 
   def hideAlgebraView() {
     Utils.runInSwingThread {
-      _ggbPanel.setShowAlgebraView(false)
-      //      _ggbApi.getApplication.updateCenterPanel(true)
-      _ggbApi.getApplication.setDefaultCursor()
+      _guim.setShowView(false, App.VIEW_ALGEBRA)
+      _kojoCtx.activateScriptEditor()
     }
   }
 
+  def showCASView() {
+    Utils.runInSwingThread {
+      _guim.setShowView(true, App.VIEW_CAS)
+      _kojoCtx.activateScriptEditor()
+    }
+  }
+
+  def hideCASView() {
+    Utils.runInSwingThread {
+      _guim.setShowView(false, App.VIEW_CAS)
+      _kojoCtx.activateScriptEditor()
+    }
+  }
+
+  def clearCASView() {
+    casView.clear()
+  }
+  
+  def casEval(in: String) = {
+    _kernel.getGeoGebraCAS().evaluateGeoGebraCAS(in, null)
+  }
+  
   def zoom(factor: Double, cx: Double, cy: Double) {
     Utils.runInSwingThread {
       val view = _ggbApi.getApplication.getEuclidianView1
@@ -194,4 +222,6 @@ class MathWorld {
       new MwTurtle(x, y)
     }
   }
+  
+  
 }
