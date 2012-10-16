@@ -49,11 +49,11 @@ trait StubMain {
       if (new File(javaHome + "/bin/javaw.exe").exists) {
         println("Using javaw")
         javaHome + "/bin/javaw"
-      } 
+      }
       else {
         javaHome + "/bin/java"
       }
-    } 
+    }
     val command = "%s -cp %s -client -Xms32m -Xmx512m " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
@@ -61,5 +61,33 @@ trait StubMain {
 
     println("Starting Real Kojo~Ray...")
     command!
+  }
+
+  def createCp(xs: List[String]): String = {
+    val ourCp = new StringBuilder
+//    Bad stuff on the classpath can clobber the launch of the Real Kojo~Ray     
+//    val oldCp = System.getenv("CLASSPATH")
+//    if (oldCp != null) {
+//      ourCp.append(oldCp)
+//      ourCp.append(File.pathSeparatorChar)
+//    }
+
+    // allow another way to customize classpath
+    val kojoCp = System.getenv("KOJO_CLASSPATH")
+    if (kojoCp != null) {
+      ourCp.append(kojoCp)
+      ourCp.append(File.pathSeparatorChar)
+    }
+
+    // add all jars in user's kojo lib dir to classpath
+    Utils.libJars.foreach { x =>
+      ourCp.append(Utils.libDir)
+      ourCp.append(File.separatorChar)
+      ourCp.append(x)
+      ourCp.append(File.pathSeparatorChar)
+    }
+
+    ourCp.append(xs.mkString(File.pathSeparator))
+    ourCp.toString
   }
 }

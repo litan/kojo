@@ -41,6 +41,6 @@ object DevelMain extends StubMain with RmiMultiInstance {
         lb += fp
       }
     }
-    lb.toList.mkString(File.pathSeparator)
+    createCp(lb.toList)
   }
 }
