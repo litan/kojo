@@ -16,20 +16,22 @@
 package net.kogics.kojo
 package mathworld
 
-import net.kogics.kojo.core._
-import net.kogics.kojo.util._
-import geogebra.common.kernel.geos.GeoNumeric
-import geogebra.common.plugin.GgbAPI
-import geogebra.common.kernel.geos.GeoElement
-import geogebra.common.euclidian.EuclidianView
-import geogebra.plugin.GgbAPID
-import geogebra.main.AppD
+import net.kogics.kojo.core.InitedSingleton
+import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.core.VisualElement
+import net.kogics.kojo.util.Throttler
+import net.kogics.kojo.util.Utils
+
 import geogebra.GeoGebraPanel
-import geogebra.euclidianND.EuclidianViewND
-import geogebra.common.euclidian.EuclidianViewInterfaceCommon
-import geogebra.common.main.settings.EuclidianSettings
+import geogebra.common.euclidian.EuclidianView
+import geogebra.common.kernel.StringTemplate
+import geogebra.common.kernel.arithmetic.ValidExpression
+import geogebra.common.kernel.geos.GeoElement
+import geogebra.common.kernel.geos.GeoNumeric
 import geogebra.common.main.App
 import geogebra.gui.GuiManagerD
+import geogebra.main.AppD
+import geogebra.plugin.GgbAPID
 
 object MathWorld extends InitedSingleton[MathWorld] {
   def initedInstance(kojoCtx: KojoCtx, ggbApi: GgbAPID, ggbPanel: GeoGebraPanel) = synchronized {
@@ -136,11 +138,14 @@ class MathWorld {
   def clearCASView() {
     casView.clear()
   }
-  
-  def casEval(in: String) = {
-    _kernel.getGeoGebraCAS().evaluateGeoGebraCAS(in, null)
+
+  def casEval(in: String) = _kernel.getGeoGebraCAS().evaluateGeoGebraCAS(in, null)
+  def casParse(in: String) = _kernel.getParser().parseGeoGebraCAS(in)
+  def asString(ve: ValidExpression) = ve.toString(StringTemplate.defaultTemplate)
+  def isEqualExpr(e1: String, e2: String) = {
+    asString(casParse(e1)) == asString(casParse(e2))
   }
-  
+
   def zoom(factor: Double, cx: Double, cy: Double) {
     Utils.runInSwingThread {
       val view = _ggbApi.getApplication.getEuclidianView1
@@ -222,6 +227,5 @@ class MathWorld {
       new MwTurtle(x, y)
     }
   }
-  
-  
+
 }
