@@ -24,13 +24,13 @@ class CasView {
     cview.clearView()
   }
 
-  def evaluate(input: String): Future[ValidExpression] = {
+  def doer(input: String, mode: Int): Future[ValidExpression] = {
     val ret = new FutureResult[ValidExpression]
     Utils.runInSwingThread {
       val cell = new GeoCasCell(_kernel.getConstruction)
       cell.setInput(input)
       cast.insertRow(cell, true)
-      cview.setMode(EuclidianConstants.MODE_CAS_EVALUATE)
+      cview.setMode(mode)
       try {
         ret.set(cell.getOutputValidExpression)
       }
@@ -43,11 +43,6 @@ class CasView {
     ret
   }
 
-  def keep(input: String) = Utils.runInSwingThread {
-    val cell = new GeoCasCell(_kernel.getConstruction)
-    cell.setInput(input)
-    cast.insertRow(cell, true)
-    cview.setMode(EuclidianConstants.MODE_CAS_KEEP_INPUT)
-    _kojoCtx.activateScriptEditor()
-  }
+  def keep(input: String) = doer(input, EuclidianConstants.MODE_CAS_KEEP_INPUT) 
+  def evaluate(input: String) = doer(input, EuclidianConstants.MODE_CAS_EVALUATE) 
 }
