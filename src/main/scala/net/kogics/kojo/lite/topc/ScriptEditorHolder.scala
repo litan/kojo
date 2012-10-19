@@ -48,7 +48,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
   codePane.setAntiAliasingEnabled(true)
   codePane.setBracketMatchingEnabled(true)
-  codePane.setMatchedBracketBGColor(new Color(244, 244, 244))
+  codePane.setMatchedBracketBGColor(new Color(247, 247, 247))
   codePane.setMatchedBracketBorderColor(new Color(192, 192, 192))
   codePane.setAnimateBracketMatching(false)
   codePane.setCloseCurlyBraces(false)
