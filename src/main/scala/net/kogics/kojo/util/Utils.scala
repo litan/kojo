@@ -15,21 +15,42 @@
 package net.kogics.kojo
 package util
 
-import lite.canvas.SpriteCanvas
-import java.awt.{ List => _, _ }
-import java.util.concurrent.locks.Lock
-import javax.swing._
-import java.awt.event.{ ActionListener, ActionEvent }
-import java.io._
-import net.kogics.kojo.core.CodingMode
-import net.kogics.kojo.core.MwMode
-import net.kogics.kojo.core.TwMode
-import net.kogics.kojo.lite.canvas.SpriteCanvas
-import java.util.ResourceBundle
-import java.util.Locale
+import java.awt.Color
+import java.awt.EventQueue
+import java.awt.Font
+import java.awt.Image
+import java.awt.Toolkit
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.io.BufferedInputStream
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.FilenameFilter
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.io.PrintWriter
+import java.io.StringWriter
 import java.net.URL
+import java.util.ResourceBundle
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.Lock
+import scala.actors.Actor.actor
+import scala.actors.Actor.loop
+import scala.actors.Actor.react
+import scala.collection.mutable.HashSet
+import scala.collection.mutable.SynchronizedSet
+import net.kogics.kojo.core.CodingMode
+import net.kogics.kojo.core.MwMode
+import net.kogics.kojo.core.StagingMode
+import net.kogics.kojo.core.TwMode
+import edu.umd.cs.piccolo.nodes.PText
+import javax.swing.ImageIcon
+import javax.swing.Timer
+import lite.canvas.SpriteCanvas
+import net.kogics.kojo.core.D3Mode
 
 object Utils {
 
@@ -42,7 +63,7 @@ object Utils {
     "/images/scala16x16.png" -> loadImage0("/images/scala16x16.png"),
     "/images/kindtemplate.png" -> loadImage0("/images/kindtemplate.png")
   )
-
+  
   def loadImage0(fname: String): Image = {
     val url = getClass.getResource(fname)
     Toolkit.getDefaultToolkit.getImage(url)
@@ -279,6 +300,19 @@ object Utils {
     }
   }
 
+  def readFile(is: InputStream): String = {
+    val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
+    val buf = new Array[Char](1024)
+    var nbytes = reader.read(buf)
+    val sb = new StringBuffer
+    while (nbytes != -1) {
+      sb.append(buf, 0, nbytes)
+      nbytes = reader.read(buf)
+    }
+    reader.close()
+    sb.toString
+  }
+
   def stackTraceAsString(t: Throwable): String = {
     val result = new StringWriter()
     val printWriter = new PrintWriter(result)
@@ -318,9 +352,67 @@ object Utils {
 
   lazy val userDir = System.getProperty("user.home")
   lazy val libDir = userDir + File.separatorChar + ".kojo/lite/libk"
+  lazy val initScriptDir = userDir + File.separatorChar + ".kojo/lite/initk"
+
   lazy val libJars: List[String] = filesInDir(libDir, "jar")
-  
-  
+  lazy val initScripts: List[String] = filesInDir(initScriptDir, "kojo")
+  lazy val installLibJars: List[String] = Nil
+  lazy val installInitScripts: List[String] = Nil
+
+  def modeFilter(scripts: List[String], mode: CodingMode): List[String] = mode match {
+    case TwMode =>
+      scripts.filter { f => !(f.endsWith(".st.kojo") || f.endsWith(".mw.kojo") || f.endsWith(".d3.kojo")) }
+    case StagingMode =>
+      scripts.filter { f => !(f.endsWith(".tw.kojo") || f.endsWith(".mw.kojo") || f.endsWith(".d3.kojo")) }
+    case MwMode =>
+      scripts.filter { f => !(f.endsWith(".tw.kojo") || f.endsWith(".st.kojo") || f.endsWith(".d3.kojo")) }
+    case D3Mode =>
+      scripts.filter { f => !(f.endsWith(".tw.kojo") || f.endsWith(".st.kojo") || f.endsWith(".mw.kojo")) }
+  }
+
+  import Typeclasses._
+  def kojoInitCode(mode: CodingMode): Option[String] = {
+    codeFromScripts(modeFilter(initScripts, mode), initScriptDir)
+    // |+| codeFromUrl(...)
+    // |+| codeFromScripts(modeFilter(installInitScripts, mode), installInitScriptDir)
+  }
+
+  def isScalaTestAvailable = (libJars ++ installLibJars).exists { fname => fname.toLowerCase contains "scalatest" }
+
+  val scalaTestHelperCode = """
+  import org.scalatest.FunSuite
+  import org.scalatest.matchers.ShouldMatchers
+
+  class TestRun extends FunSuite {
+      override def suiteName = "test"
+      def register(name: String)(fn: => Unit) = test(name)(fn)
+      def registerIgnored(name: String)(fn: => Unit) = ignore(name)(fn)
+  }
+
+  def test(name: String)(fn: => Unit) {
+      val suite = new TestRun()
+      suite.register(name)(fn)
+      suite.execute()
+  }
+
+  def ignore(name: String)(fn: => Unit) {
+      val suite = new TestRun()
+      suite.registerIgnored(name)(fn)
+      suite.execute()
+  }
+
+  import ShouldMatchers._
+"""
+
+  def codeFromScripts(scripts: List[String], scriptDir: String): Option[String] = scripts match {
+    case Nil => None
+    case files => Some(
+      files.map { file =>
+        "// File: %s\n%s\n" format (file, readFile(new FileInputStream(scriptDir + File.separatorChar + file)))
+      }.mkString("\n")
+    )
+  }
+
   def runAsyncQueued(fn: => Unit) {
     asyncRunner ! RunCode { () =>
       fn

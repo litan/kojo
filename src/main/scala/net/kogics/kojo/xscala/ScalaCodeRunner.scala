@@ -23,6 +23,7 @@ import java.util.logging.Logger
 import scala.actors.Actor
 import scala.collection.mutable.ListBuffer
 import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.util.Typeclasses.mkIdentity
 import net.kogics.kojo.util.Typeclasses.some
 import CodeCompletionUtils.InternalMethodsRe
 import CodeCompletionUtils.InternalVarsRe
@@ -52,6 +53,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
   @volatile var pcompiler: scala.tools.nsc.interactive.Global = _
 
   val codeRunner = startCodeRunner()
+
+  if (Utils.libJars.size > 0) {
+    kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
+  }
 
   def kprintln(s: String) = ctx.kprintln(s)
 
@@ -225,7 +230,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       cmodeInit = "import TSCanvas._; import Tw._"
       mode = TwMode
       CodeCompletionUtils.activateTw()
-      //      loadInitScripts(TwMode)
+      loadInitScripts(TwMode)
     }
 
     def act() {
@@ -261,6 +266,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
               cmodeInit = imports
               mode = StagingMode
               CodeCompletionUtils.activateStaging()
+              loadInitScripts(StagingMode)
             }
 
           case ActivateMw =>
@@ -274,6 +280,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
               cmodeInit = imports
               mode = MwMode
               CodeCompletionUtils.activateMw()
+              loadInitScripts(MwMode)
             }
 
           case ActivateD3 =>
@@ -287,6 +294,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
               cmodeInit = imports
               mode = D3Mode
               CodeCompletionUtils.activateD3()
+              loadInitScripts(D3Mode)
             }
 
           case CompileCode(code) =>
@@ -434,7 +442,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
     def compilerInitCode: Option[String] = {
       import Typeclasses._
-      some(cmodeInit)
+      some(cmodeInit) |+| initCode(mode)
     }
 
     def loadCompiler() {
@@ -462,6 +470,28 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     }
 
     def printInitScriptsLoadMsg() {
+      if (Utils.initScripts.size > 0) {
+        kprintln(Utils.initScripts.mkString("\n---\nLoading Init Scripts (from initk):\n * ", "\n * ", "\n---\n"))
+      }
+
+      if (Utils.installInitScripts.size > 0) {
+        kprintln(Utils.installInitScripts.mkString("\n---\nLoading Init Scripts (from install initk):\n * ", "\n * ", "\n---\n"))
+      }
+    }
+
+    def loadInitScripts(mode: CodingMode) {
+      println("\nRunning initk code...")
+      initCode(mode).foreach(runCode)
+    }
+
+    def initCode(mode: CodingMode): Option[String] = {
+      import Typeclasses._
+      if (Utils.isScalaTestAvailable) {
+        some(Utils.scalaTestHelperCode) |+| Utils.kojoInitCode(mode)
+      }
+      else {
+        Utils.kojoInitCode(mode)
+      }
     }
 
     def loadInterp() {
@@ -482,11 +512,11 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       case code :: tail =>
         //        Log.info("Interpreting code: %s\n" format(code))
         interp.interpret(code) match {
-          case IR.Error   => IR.Error
+          case IR.Error => IR.Error
           case IR.Success => interpretLine(lines.tail)
           case IR.Incomplete =>
             tail match {
-              case Nil            => IR.Incomplete
+              case Nil => IR.Incomplete
               case code2 :: tail2 => interpretLine(code + "\n" + code2 :: tail2)
             }
         }
