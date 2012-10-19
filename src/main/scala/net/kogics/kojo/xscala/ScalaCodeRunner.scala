@@ -480,8 +480,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     }
 
     def loadInitScripts(mode: CodingMode) {
-      println("\nRunning initk code...")
-      initCode(mode).foreach(runCode)
+      initCode(mode).foreach { code =>
+        println("\nRunning initk code...")
+        runCode(code)
+      }
     }
 
     def initCode(mode: CodingMode): Option[String] = {
