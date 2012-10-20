@@ -10,5 +10,5 @@ class BaseHolder(id: String, title: String, component: JComponent) extends Defau
   if (component != null) {
     component.setBackground(Color.white)
   }
-  setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base.minimalNorth)
+  setDefaultLocation(ExtendedMode.MINIMIZED, CLocation.base.minimalWest)
 }
