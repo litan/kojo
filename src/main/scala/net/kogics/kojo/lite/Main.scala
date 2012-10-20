@@ -4,14 +4,11 @@ import java.awt.Frame
 import java.awt.GridLayout
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.WindowConstants
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-
 import net.kogics.kojo.d3.Canvas3D
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.lite.topc.D3CanvasHolder
@@ -25,10 +22,10 @@ import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.Builtins
-
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.CGrid
 import bibliothek.gui.dock.common.mode.ExtendedMode
+import bibliothek.gui.dock.common.theme.ThemeMap
 
 object Main extends AppMenu {
 
@@ -106,6 +103,8 @@ object Main extends AppMenu {
       frame = new JFrame("Kojo  \u2248Ray")
       frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
       val control = new CControl(frame)
+      val themes = control.getThemes()
+      themes.select(ThemeMap.KEY_ECLIPSE_THEME)
       frame.setLayout(new GridLayout(1, 1))
       frame.add(control.getContentArea)
 
