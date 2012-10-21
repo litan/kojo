@@ -166,7 +166,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> \u2248Ray (Early Access)<br/>
-              Version: 150912-1 <br/>
+              Version: 211012-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               <strong>Kojo</strong> \u2248Ray is the online version of Kojo (Ray - partly because it comes in through the cloud!).<br/>Please visit <em>http://www.kogics.net/webkojo</em> and <em>http://www.kogics.net/kojo</em> for more information.<br/><br/>
@@ -190,7 +190,7 @@ trait AppMenu { self: Main.type =>
               </ul>
               </div>
               </body></html>
-              """ format (System.getProperty("java.version"), scala.tools.nsc.Properties.versionString.substring("version ".length))
+              """ format (geogebra.main.AppD.getJavaVersion, scala.tools.nsc.Properties.versionString.substring("version ".length))
         )
         aboutText.setPreferredSize(new Dimension(430, 300))
         aboutText.setMaximumSize(new Dimension(430, 300))
