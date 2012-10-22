@@ -58,6 +58,10 @@ import java.awt.BorderLayout
 import javax.swing.JTextField
 import javax.swing.JLabel
 import net.kogics.kojo.util.FutureResult
+import java.awt.FlowLayout
+import javax.swing.BoxLayout
+import javax.swing.SwingConstants
+import java.awt.Component
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -553,14 +557,18 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def readInput(prompt: String): String = {
     val input = new FutureResult[String]
     Utils.runInSwingThread {
-      readInputPanel = new JPanel
-      val inputField = new JTextField(20)
-      readInputPanel.add(new JLabel(prompt + ": "))
+      readInputPanel = new JPanel()
+      readInputPanel.setLayout(new BoxLayout(readInputPanel, BoxLayout.Y_AXIS))
+      val label = new JLabel(" %s:" format(prompt))
+      label.setAlignmentX(Component.LEFT_ALIGNMENT)
+      val inputField = new JTextField
+      inputField.setAlignmentX(Component.LEFT_ALIGNMENT)
+      readInputPanel.add(label)
       readInputPanel.add(inputField)
       outoutPanel.add(readInputPanel, BorderLayout.SOUTH)
       outoutPanel.revalidate()
       kojoCtx.activateOutputPane()
-      Utils.schedule(0.5) {inputField.requestFocusInWindow()}
+      Utils.schedule(0.25) {inputField.requestFocusInWindow()}
       Utils.schedule(1) {inputField.requestFocusInWindow()}
       inputField.addActionListener(new ActionListener {
         def actionPerformed(e: ActionEvent) {
