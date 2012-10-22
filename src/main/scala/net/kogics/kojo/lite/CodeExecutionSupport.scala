@@ -54,6 +54,10 @@ import net.kogics.kojo.livecoding.ManipulationContext
 import net.kogics.kojo.util.RichFile.enrichFile
 import util.Utils
 import javax.swing.event.HyperlinkEvent
+import java.awt.BorderLayout
+import javax.swing.JTextField
+import javax.swing.JLabel
+import net.kogics.kojo.util.FutureResult
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -76,7 +80,10 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   errorWindow.setContentType("text/html")
 
   val outPanel = new JPanel(new CardLayout)
-  outPanel.add(new JScrollPane(outputWindow), "Output")
+  val outoutPanel = new JPanel(new BorderLayout)
+  outoutPanel.add(new JScrollPane(outputWindow), BorderLayout.CENTER)
+  var readInputPanel: JPanel = _
+  outPanel.add(outoutPanel, "Output")
   outPanel.add(new JScrollPane(errorWindow), "Error")
 
   outputWindow.setEditable(false)
@@ -243,7 +250,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     }
 
     def makeNavigationButton(imageFile: String, actionCommand: String,
-                             toolTipText: String, altText: String): JButton = {
+      toolTipText: String, altText: String): JButton = {
       val button = new JButton()
       button.setActionCommand(actionCommand)
       button.setToolTipText(toolTipText)
@@ -533,6 +540,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     Utils.runInSwingThread {
       outputWindow.setText("")
       errorWindow.setText("")
+      outoutPanel.remove(readInputPanel)
+      outoutPanel.revalidate()
       clearButton.setEnabled(false)
       codePane.requestFocusInWindow
     }
@@ -542,7 +551,28 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def enableClearButton() = if (!clearButton.isEnabled) clearButton.setEnabled(true)
 
   def readInput(prompt: String): String = {
-    throw new UnsupportedOperationException("Input reading is not available in KojoLite.")
+    val input = new FutureResult[String]
+    Utils.runInSwingThread {
+      readInputPanel = new JPanel
+      val inputField = new JTextField(20)
+      readInputPanel.add(new JLabel(prompt + ": "))
+      readInputPanel.add(inputField)
+      outoutPanel.add(readInputPanel, BorderLayout.SOUTH)
+      outoutPanel.revalidate()
+      kojoCtx.activateOutputPane()
+      Utils.schedule(0.5) {inputField.requestFocusInWindow()}
+      Utils.schedule(1) {inputField.requestFocusInWindow()}
+      inputField.addActionListener(new ActionListener {
+        def actionPerformed(e: ActionEvent) {
+          println("%s: %s" format(prompt, inputField.getText))
+          input.set(inputField.getText)
+          outoutPanel.remove(readInputPanel)
+          outoutPanel.revalidate()
+          kojoCtx.activateScriptEditor()
+        }
+      })
+    }
+    input.get
   }
 
   def appendOutput(s: String) {
@@ -596,13 +626,23 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         <div style="color:red;margin:5px;font-size:large;">
           <pre>{ errText }</pre>
         </div>
-        { if (errCount > 1) { <div style="margin:5px;font-size:large;">
-        	<a href={ errorLink }>Locate first error in script</a>
-          </div> } else if (errCount == 1) { <div style="margin:5px;font-size:large;">
-        	<a href={ errorLink }>Locate error in script</a>
-          </div> } else { <div style="margin:5px;font-size:large;">
-        	  Use the 'Check Script' button for better error recovery.
-            </div> } }
+        {
+          if (errCount > 1) {
+            <div style="margin:5px;font-size:large;">
+              <a href={ errorLink }>Locate first error in script</a>
+            </div>
+          }
+          else if (errCount == 1) {
+            <div style="margin:5px;font-size:large;">
+              <a href={ errorLink }>Locate error in script</a>
+            </div>
+          }
+          else {
+            <div style="margin:5px;font-size:large;">
+              Use the 'Check Script' button for better error recovery.
+            </div>
+          }
+        }
       </body>
 
     errorWindow.setText(errMsg.toString)
