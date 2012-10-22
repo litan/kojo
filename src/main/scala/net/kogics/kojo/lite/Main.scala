@@ -89,7 +89,7 @@ object Main extends AppMenu {
     System.setSecurityManager(null)
     runMultiInstancehandler()
 
-    Utils.runInSwingThread {
+    Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }
 
