@@ -46,6 +46,11 @@ class KojoCtx extends core.KojoCtx {
     topcs.seh.activate()
   }
 
+  def activateOutputPane() {
+    topcs.owh.toFront()
+//    topcs.owh.ow.requestFocusInWindow()
+  }
+
   def makeTurtleWorldVisible() {
     if (!topcs.dch.isShowing) {
       topcs.dch.toFront()

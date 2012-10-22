@@ -21,6 +21,7 @@ import java.awt.Color
 trait KojoCtx {
   def activateDrawingCanvas()
   def activateScriptEditor()
+  def activateOutputPane()
   def makeStagingVisible()
   def makeTurtleWorldVisible()
   def makeMathWorldVisible()

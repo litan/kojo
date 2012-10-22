@@ -22,6 +22,7 @@ import java.awt.Color
 class KojoTestContext extends core.KojoCtx {
   def activateDrawingCanvas() {}
   def activateScriptEditor() {}
+  def activateOutputPane() {}
   def makeStagingVisible() {}
   def makeTurtleWorldVisible() {}
   def makeMathWorldVisible() {}
