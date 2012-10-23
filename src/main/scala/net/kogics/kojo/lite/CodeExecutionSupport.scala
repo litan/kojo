@@ -559,7 +559,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     Utils.runInSwingThread {
       readInputPanel = new JPanel()
       readInputPanel.setLayout(new BoxLayout(readInputPanel, BoxLayout.Y_AXIS))
-      val label = new JLabel(" %s:" format(prompt))
+      val label = new JLabel(" %s" format(prompt))
       label.setAlignmentX(Component.LEFT_ALIGNMENT)
       val inputField = new JTextField
       inputField.setAlignmentX(Component.LEFT_ALIGNMENT)
