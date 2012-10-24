@@ -14,6 +14,7 @@
  */
 
 package net.kogics.kojo
+package action
 
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
@@ -22,22 +23,22 @@ import java.awt.Color
 import net.kogics.kojo.lite.CodeExecutionSupport
 import net.kogics.kojo.core.KojoCtx
 
-class ChooseColor(ctx: KojoCtx) extends AbstractAction {
+class ChooseColor(ctx: KojoCtx) extends AbstractAction("Choose Color...") {
   def actionPerformed(e: ActionEvent) {
     val sColor = JColorChooser.showDialog(null, util.Utils.stripDots(e.getActionCommand), ctx.lastColor)
     if (sColor != null) {
       val cprint = CodeExecutionSupport.instance.showOutput(_: String, _: Color)
       cprint("\u2500" * 3 + "\n", sColor)
-      print("Selected Color:   ")
-      cprint("\u2588" * 6 + "\n", sColor)
+      println("Selected Color:   ")
+      // cprint("\u2588" * 6 + "\n", sColor)
       val color = if (sColor.getAlpha < 255) {
-        "Color(%d, %d, %d, %d)" format(sColor.getRed, sColor.getGreen, sColor.getBlue, sColor.getAlpha)
+        "Color(%d, %d, %d, %d)" format (sColor.getRed, sColor.getGreen, sColor.getBlue, sColor.getAlpha)
       }
       else {
-        "Color(%d, %d, %d)" format(sColor.getRed, sColor.getGreen, sColor.getBlue)
+        "Color(%d, %d, %d)" format (sColor.getRed, sColor.getGreen, sColor.getBlue)
       }
       println(color)
-      println("Example usage: setPenColor(%s)" format(color))
+      println("Example usage: setPenColor(%s)" format (color))
       cprint("\u2500" * 3 + "\n", sColor)
       ctx.lastColor = sColor
     }

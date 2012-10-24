@@ -25,6 +25,7 @@ import java.awt.event.ActionListener
 import java.awt.event.ActionEvent
 import java.awt.Color
 import net.kogics.kojo.xscala.Builtins
+import java.util.prefs.Preferences
 
 object KojoCtx extends core.Singleton[KojoCtx] {
   protected def newInstance = new KojoCtx
@@ -113,20 +114,23 @@ class KojoCtx extends core.KojoCtx {
     CloseFile.onFileClose()
   }
 
-  @volatile var lastLoadStoreDir = ""
+  val prefs = Preferences.userRoot().node("Kojolite-Prefs")
+  @volatile var lastLoadStoreDir = prefs.get("lastLoadStoreDir", "")
   def getLastLoadStoreDir() = lastLoadStoreDir
   def setLastLoadStoreDir(dir: String) {
     lastLoadStoreDir = dir
+    prefs.put("lastLoadStoreDir", lastLoadStoreDir)
   }
 
   def saveAsFile() {
     saveAsActionListener.actionPerformed(new ActionEvent(frame, 0, "Save As"))
   }
 
-  @volatile var _lastColor = Color.white
+  @volatile var _lastColor = new Color(Integer.parseInt(prefs.get("lastColor", Integer.toString(Color.red.getRGB()))), true)
   def lastColor: Color = _lastColor
   def lastColor_=(c: Color) {
     _lastColor = c
+    prefs.put("lastColor", Integer.toString(_lastColor.getRGB()))
   }
 
   def knownColors = staging.KColor.knownColors
