@@ -3,42 +3,51 @@ package net.kogics.kojo.lite.topc
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Point
+import java.awt.Toolkit
 import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import javax.swing.AbstractAction
-import javax.swing.JCheckBoxMenuItem
-import javax.swing.JMenuItem
-import javax.swing.JPanel
-import javax.swing.JPopupMenu
-import javax.swing.KeyStroke
-import javax.swing.event.PopupMenuEvent
-import javax.swing.event.PopupMenuListener
+
+import org.fife.rsta.ui.search.AbstractFindReplaceDialog
+import org.fife.rsta.ui.search.ReplaceDialog
 import org.fife.ui.autocomplete.AutoCompletion
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.Style
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants
 import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
 import org.fife.ui.rtextarea.RTextScrollPane
+import org.fife.ui.rtextarea.SearchEngine
+
+import net.kogics.kojo.action.ChooseColor
 import net.kogics.kojo.codingmode.SwitchMode
 import net.kogics.kojo.lite.CodeExecutionSupport
 import net.kogics.kojo.lite.KojoCompletionProvider
 import net.kogics.kojo.livecoding.IpmProvider
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
-import scalariform.formatter.ScalaFormatter
-import scalariform.formatter.preferences.FormattingPreferences
-import org.fife.rsta.ui.search.ReplaceDialog
-import java.awt.event.ActionListener
-import org.fife.rsta.ui.search.AbstractFindReplaceDialog
-import org.fife.ui.rtextarea.SearchContext
-import org.fife.ui.rtextarea.SearchEngine
+
+import javax.swing.AbstractAction
+import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
-import java.awt.event.KeyEvent
-import java.awt.Toolkit
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
+import javax.swing.JMenuItem
+import javax.swing.JPanel
+import javax.swing.JPopupMenu
+import javax.swing.KeyStroke
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
+import scalariform.formatter.ScalaFormatter
+import scalariform.formatter.preferences.AlignParameters
+import scalariform.formatter.preferences.AlignSingleLineCaseStatements
+import scalariform.formatter.preferences.CompactControlReadability
+import scalariform.formatter.preferences.FormatXml
+import scalariform.formatter.preferences.FormattingPreferences
+import scalariform.formatter.preferences.IndentSpaces
+import scalariform.formatter.preferences.PreserveDanglingCloseParenthesis
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport, frame: JFrame) extends BaseHolder("SE", "Script Editor", se) {
 
@@ -173,6 +182,9 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   am.put("find-replace", findReplaceAction)
   findReplaceItem.setAccelerator(cf)
   popup.add(findReplaceItem, 9)
+
+  val chooseColorItem = new JMenuItem(new ChooseColor(codeSupport.kojoCtx))
+  popup.add(chooseColorItem, 10)
 
   popup.addPopupMenuListener(new PopupMenuListener {
     def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
