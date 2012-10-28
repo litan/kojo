@@ -6,6 +6,7 @@ import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
@@ -15,6 +16,7 @@ import org.fife.rsta.ui.search.ReplaceDialog
 import org.fife.ui.autocomplete.AutoCompletion
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.DecreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.Style
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants
@@ -64,12 +66,11 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codePane.setTabsEmulated(true)
   codePane.setTabSize(4)
   //  codePane.setCodeFoldingEnabled(true)
-  //  codePane.setMarkOccurrences(true)
   codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
 
   val inputMap = codePane.getInputMap()
   inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
-  
+
   new IncreaseFontSizeAction().actionPerformedImpl(null, codePane)
 
   RSyntaxTextArea.setTemplatesEnabled(true)
@@ -96,8 +97,10 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   se.add(sp, BorderLayout.CENTER)
   se.add(codeSupport.statusStrip, BorderLayout.EAST)
 
+  var idx = 2
   val popup = codePane.getPopupMenu
   popup.add(new JPopupMenu.Separator, 2)
+  idx += 1
 
   val switcher = new SwitchMode()
   val twCb = new JCheckBoxMenuItem(switcher)
@@ -105,26 +108,45 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   twCb.setToolTipText(Utils.loadString("S_TurtleModeTT"))
   twCb.setActionCommand("Tw")
   popup.add(twCb, 3)
+  idx += 1
 
   val stagingCb = new JCheckBoxMenuItem(switcher)
   stagingCb.setText(Utils.loadString("S_StagingMode"))
   stagingCb.setToolTipText(Utils.loadString("S_StagingModeTT"))
   stagingCb.setActionCommand("Staging")
   popup.add(stagingCb, 4)
+  idx += 1
 
   val mwCb = new JCheckBoxMenuItem(switcher)
   mwCb.setText(Utils.loadString("S_MwMode"))
   mwCb.setToolTipText(Utils.loadString("S_MwModeTT"))
   mwCb.setActionCommand("Mw")
   popup.add(mwCb, 5)
+  idx += 1
 
   val d3Cb = new JCheckBoxMenuItem(switcher)
   d3Cb.setText(Utils.loadString("S_D3Mode"))
   d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
   d3Cb.setActionCommand("D3")
   popup.add(d3Cb, 6)
+  idx += 1
 
-  popup.add(new JPopupMenu.Separator, 7)
+  popup.add(new JPopupMenu.Separator, idx)
+  idx += 1
+
+  val markOccurancesAction = new AbstractAction("Mark Occurances") {
+    def actionPerformed(ev: ActionEvent) {
+      if (markOccurancesItem.isSelected()) {
+        codePane.setMarkOccurrences(true)
+      }
+      else {
+        codePane.setMarkOccurrences(false)
+      }
+    }
+  }
+  val markOccurancesItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(markOccurancesAction)
+  popup.add(markOccurancesItem, idx)
+  idx += 1
 
   val formatAction = new AbstractAction("Format Source") {
     import scalariform.formatter.preferences._
@@ -154,7 +176,8 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   val am = codePane.getActionMap()
   am.put("format-src", formatAction)
   formatItem.setAccelerator(csf)
-  popup.add(formatItem, 8)
+  popup.add(formatItem, idx)
+  idx += 1
 
   val findReplaceAction = new AbstractAction("Find/Replace") {
     lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener)
@@ -181,10 +204,35 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   inputMap.put(cf, "find-replace")
   am.put("find-replace", findReplaceAction)
   findReplaceItem.setAccelerator(cf)
-  popup.add(findReplaceItem, 9)
+  popup.add(findReplaceItem, idx)
+  idx += 1
 
   val chooseColorItem = new JMenuItem(new ChooseColor(codeSupport.kojoCtx))
-  popup.add(chooseColorItem, 10)
+  popup.add(chooseColorItem, idx)
+  idx += 1
+
+  popup.add(new JPopupMenu.Separator, idx)
+  idx += 1
+
+  val increaseFontSizeAction = new IncreaseFontSizeAction()
+  val increaseFontItem = new JMenuItem(increaseFontSizeAction)
+  increaseFontItem.setText("Increase Font Size")
+  val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
+  inputMap.put(controlPlus, "increase-font-size")
+  am.put("increase-font-size", increaseFontSizeAction)
+  increaseFontSizeAction.setAccelerator(controlPlus)
+  popup.add(increaseFontItem, idx)
+  idx += 1
+
+  val decreaseFontSizeAction = new DecreaseFontSizeAction()
+  val decreaseFontItem = new JMenuItem(decreaseFontSizeAction)
+  decreaseFontItem.setText("Decrease Font Size")
+  val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
+  inputMap.put(controlMinus, "decrease-font-size")
+  am.put("decrease-font-size", decreaseFontSizeAction)
+  decreaseFontSizeAction.setAccelerator(controlMinus)
+  popup.add(decreaseFontItem, idx)
+  idx += 1
 
   popup.addPopupMenuListener(new PopupMenuListener {
     def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
