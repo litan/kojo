@@ -45,15 +45,6 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
   private val fgLayer = new PLayer
   private var currLayer = bgLayer
 
-  def dumpLastChild = currLayer.getChild(currLayer.getChildrenCount - 1)
-
-  def dumpChild(n: Int): PNode = {
-    try {
-      currLayer.getChild(n)
-    }
-    catch { case e => throw e }
-  }
-
   // if fgLayer is bigger than bgLayer, (re)painting does not happen very cleanly
   // needs a better fix than the one below
   bgLayer.setBounds(-500, -500, 1000, 1000)
