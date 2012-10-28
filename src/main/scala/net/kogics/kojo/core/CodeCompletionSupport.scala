@@ -15,17 +15,17 @@
 
 package net.kogics.kojo.core
 
+import tools.nsc.interactive.CompilerControl
+
 case class CompletionInfo(
   name: String,
-  params: List[String],
-  paramTypes: List[String],
-  ret: String,
-  prio: Int,
-  isValue: Boolean = false,
-  isClass: Boolean = false,
-  isPackage: Boolean = false,
-  isType: Boolean = false
-)
+  member: CompilerControl#Member,
+  prio: Int) {
+  def isValue: Boolean = member.sym.isValue
+  def isClass: Boolean = member.sym.isClass
+  def isPackage: Boolean = member.sym.isPackage
+  def isType: Boolean = member.sym.isType
+}
 
 trait CodeCompletionSupport {
   def varCompletions(prefix: Option[String]): (List[String], Int)

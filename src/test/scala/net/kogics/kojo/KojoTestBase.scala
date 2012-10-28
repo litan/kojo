@@ -56,8 +56,9 @@ class KojoTestContext extends core.KojoCtx {
 }
 
 class KojoTestBase {
-  SpriteCanvas.initedInstance(new KojoTestContext)
-//  mathworld.GeoGebraCanvas.initedInstance(KojoCtx.instance())
-//  story.StoryTeller.initedInstance(KojoCtx.instance())
+  val kojoTestCtx = new KojoTestContext
+  SpriteCanvas.initedInstance(kojoTestCtx)
+  mathworld.GeoGebraCanvas.initedInstance(kojoTestCtx)
+  story.StoryTeller.initedInstance(kojoTestCtx)
 }
 

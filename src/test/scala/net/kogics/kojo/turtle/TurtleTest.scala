@@ -71,7 +71,7 @@ class TurtleTest extends KojoTestBase {
     turtle.turn(45)
     turtle.forward(100)
     val p = turtle.position
-    val l = Math.sqrt(100 * 100 / 2)
+    val l = math.sqrt(100 * 100 / 2)
 
     assertEquals(-l, p.x, 0.001)
     assertEquals(l, p.y, 0.001)
@@ -93,7 +93,7 @@ class TurtleTest extends KojoTestBase {
     turtle.moveTo(-100, -100)
     turtle.setHeading(90)
     turtle.turn(-45)
-    turtle.forward(Math.sqrt(2 * 100 * 100))
+    turtle.forward(math.sqrt(2 * 100 * 100))
     val p = turtle.position
 
     assertEquals(0, p.x, 0.001)
@@ -237,10 +237,10 @@ class TurtleTest extends KojoTestBase {
   @Test
   def testManyTowardsQ1 {
     val propTowards = forAll { n: Double =>
-      val x = Math.abs(n)
+      val x = math.abs(n)
       val y = x+10
       turtle.towards(x, y)
-      doublesEqual(Math.atan(y/x), deg2radians(turtle.heading), 0.001)
+      doublesEqual(math.atan(y/x), deg2radians(turtle.heading), 0.001)
     }
     assertTrue(SCTest.check(new Default {}, propTowards).passed)
   }
@@ -248,10 +248,10 @@ class TurtleTest extends KojoTestBase {
   @Test
   def testManyTowardsQ2 {
     val propTowards = forAll { n: Double =>
-      val x = -Math.abs(n)
-      val y = Math.abs(n+20)
+      val x = -math.abs(n)
+      val y = math.abs(n+20)
       turtle.towards(x, y)
-      doublesEqual(Math.Pi + Math.atan(y/x), deg2radians(turtle.heading), 0.001)
+      doublesEqual(math.Pi + math.atan(y/x), deg2radians(turtle.heading), 0.001)
     }
     assertTrue(SCTest.check(new Default {}, propTowards).passed)
   }
@@ -259,10 +259,10 @@ class TurtleTest extends KojoTestBase {
   @Test
   def testManyTowardsQ3 {
     val propTowards = forAll { n: Double =>
-      val x = -Math.abs(n) - 1
+      val x = -math.abs(n) - 1
       val y = x - 30
       turtle.towards(x, y)
-      doublesEqual(Math.Pi + Math.atan(y/x), deg2radians(turtle.heading), 0.001)
+      doublesEqual(math.Pi + math.atan(y/x), deg2radians(turtle.heading), 0.001)
     }
     assertTrue(SCTest.check(new Default {}, propTowards).passed)
   }
@@ -270,10 +270,10 @@ class TurtleTest extends KojoTestBase {
   @Test
   def testManyTowardsQ4 {
     val propTowards = forAll { n: Double =>
-      val x = Math.abs(n)
+      val x = math.abs(n)
       val y = -x - 10
       turtle.towards(x, y)
-      doublesEqual(2*Math.Pi + Math.atan(y/x), deg2radians(turtle.heading), 0.001)
+      doublesEqual(2*math.Pi + math.atan(y/x), deg2radians(turtle.heading), 0.001)
     }
     assertTrue(SCTest.check(new Default {}, propTowards).passed)
   }
@@ -305,13 +305,13 @@ class TurtleTest extends KojoTestBase {
   @Test
   def testDistanceTo3 {
     turtle.changePos(10, 10)
-    assertEquals(Math.sqrt(90*90*2), turtle.distanceTo(100, 100), 0.001)
+    assertEquals(math.sqrt(90*90*2), turtle.distanceTo(100, 100), 0.001)
   }
 
   @Test
   def testDistanceTo4 {
     turtle.changePos(-10, -10)
-    assertEquals(Math.sqrt(90*90*2), turtle.distanceTo(-100, -100), 0.001)
+    assertEquals(math.sqrt(90*90*2), turtle.distanceTo(-100, -100), 0.001)
   }
 
   @Test

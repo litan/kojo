@@ -16,23 +16,27 @@
 package net.kogics.kojo
 package xscala
 
-import util.Utils
-
-import scala.tools.nsc._
-import reporters._
-import util._
-import io._
-import java.io._
-import interpreter.AbstractFileClassLoader
-
-import java.lang.{ Class, ClassLoader }
-import scala.tools.nsc.util.ScalaClassLoader
-import ScalaClassLoader.URLClassLoader
-import java.net.{ MalformedURLException, URL }
-import scala.tools.util.PathResolver
+import java.lang.ClassLoader
 import java.lang.reflect
-import reflect.InvocationTargetException
+import java.net.URL
+
+import scala.reflect.internal.util.BatchSourceFile
+import scala.reflect.internal.util.OffsetPosition
+import scala.reflect.internal.util.Position
+import scala.tools.nsc.Global
+import scala.tools.nsc.Settings
+import scala.tools.nsc.interactive
+import scala.tools.nsc.interactive.Response
+import scala.tools.nsc.interpreter.AbstractFileClassLoader
+import scala.tools.nsc.io.VirtualDirectory
+import scala.tools.nsc.reporters.Reporter
+import scala.tools.nsc.util.ScalaClassLoader
+import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
+import scala.tools.util.PathResolver
+
 import KojoInterpreter.IR
+import core.CompletionInfo
+import util.Utils
 
 trait CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String)
@@ -43,8 +47,8 @@ trait CompilerListener {
 
 // This class borrows code and ideas from scala.tools.nsc.Interpreter
 class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String], listener: CompilerListener) extends StoppableCodeRunner {
-  
-  var counter = 0 
+
+  var counter = 0
   // The Counter above is used to define/create a new wrapper object for every run. The calling of the entry() 
   //.method within this object results in the initialization of the object, which causes the user submitted 
   // code to run.
@@ -61,9 +65,9 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
   def entry() {
     // noop
   }
-""" 
+"""
 
-  def prefix = "%s%s\n" format(prefix0, initCode.getOrElse(""))
+  def prefix = "%s%s\n" format (prefix0, initCode.getOrElse(""))
 
   def prefixLines = prefix.lines.size
 
@@ -82,9 +86,9 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     stng.deprecation.value = true
     stng
   }
-  
+
   val settings = makeSettings2()
-  
+
   lazy val compilerClasspath: List[URL] = new PathResolver(settings) asURLs
 
   private var _classLoader: AbstractFileClassLoader = null
@@ -97,8 +101,8 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
   }
   private def makeClassLoader(): AbstractFileClassLoader = {
     val parent =
-      if (parentClassLoader == null)  ScalaClassLoader fromURLs compilerClasspath
-    else                            new URLClassLoader(compilerClasspath, parentClassLoader)
+      if (parentClassLoader == null) ScalaClassLoader fromURLs compilerClasspath
+      else new URLClassLoader(compilerClasspath, parentClassLoader)
 
     new AbstractFileClassLoader(virtualDirectory, parent)
   }
@@ -133,13 +137,13 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
   }
 
   val compiler = new Global(settings, reporter)
-  
-  def pfxWithCounter = Utils.stripCR("%s%d%s" format(prefixHeader, counter, prefix))
+
+  def pfxWithCounter = Utils.stripCR("%s%d%s" format (prefixHeader, counter, prefix))
 
   def compile(code0: String, stopPhase: List[String] = List("selectiveanf")) = {
     val pfx = pfxWithCounter
     offsetDelta = pfx.length
-    val code = Utils.stripCR(codeTemplate format(pfx, code0))
+    val code = Utils.stripCR(codeTemplate format (pfx, code0))
     compiler.settings.stopAfter.value = stopPhase
     val run = new compiler.Run
     reporter.reset
@@ -149,8 +153,8 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
 
   def compileAndRun(code0: String) = {
     counter += 1
-    val result = compile(code0, Nil) 
-    
+    val result = compile(code0, Nil)
+
     if (result == IR.Success) {
       if (Thread.interrupted) {
         listener.message("Thread interrupted")
@@ -158,7 +162,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
       }
       else {
         try {
-          val loadedResultObject = loadByName("Wrapper%d" format(counter))
+          val loadedResultObject = loadByName("Wrapper%d" format (counter))
           loadedResultObject.getMethod("entry").invoke(loadedResultObject)
           IR.Success
         }
@@ -188,10 +192,10 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
   }
 
   def parse(code0: String, browseAst: Boolean) = {
-    compiler.settings = makeSettings2()
+    compiler.currentSettings = makeSettings2()
     val pfx = pfxWithCounter
     offsetDelta = pfx.length
-    val code = Utils.stripCR(codeTemplate format(pfx, code0))
+    val code = Utils.stripCR(codeTemplate format (pfx, code0))
 
     compiler.settings.stopAfter.value = stopPhase()
     if (browseAst) {
@@ -203,17 +207,15 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
       run.compileSources(List(new BatchSourceFile("scripteditor", code)))
     }
     finally {
-      compiler.settings = makeSettings2()
+      compiler.currentSettings = makeSettings2()
     }
-
-//    compiler.settings.browse.value = List()
 
     if (reporter.hasErrors) {
       IR.Error
     }
     else {
-//      val tree = run.units.next.body
-//      listener.message(tree.toString)
+      //      val tree = run.units.next.body
+      //      listener.message(tree.toString)
       compiler.printAllUnits()
       IR.Success
     }
@@ -225,29 +227,28 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     if (ret != null && ret != "") List(ret) else Nil
   }
 
-  
   val preporter = new Reporter {
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
     }
   }
-  val pcompiler = new interactive.Global(settings, preporter) 
-  
+  val pcompiler = new interactive.Global(settings, preporter)
+
   import core.CompletionInfo
   def completions(code0: String, offset: Int): List[CompletionInfo] = {
     def addParensAfterOffset(c: String) = {
-      "%s  () // %s" format(c.substring(0, offset), c.substring(offset, c.length))
+      "%s  () // %s" format (c.substring(0, offset), c.substring(offset, c.length))
     }
     def addResultColon(str: String) = {
       val li = str.lastIndexOf(')')
-      "%s: %s" format(str.substring(0,li+1), str.substring(li+1, str.length))
+      "%s: %s" format (str.substring(0, li + 1), str.substring(li + 1, str.length))
     }
-   
+
     import interactive._
 
     val pfx = pfxWithCounter
     val offsetDelta = pfx.length
-    val code = Utils.stripCR(codeTemplate format(pfx, addParensAfterOffset(code0)))
-    
+    val code = Utils.stripCR(codeTemplate format (pfx, addParensAfterOffset(code0)))
+
     val source = new BatchSourceFile("scripteditor", code)
     val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
@@ -257,82 +258,31 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     var resp = new Response[List[pcompiler.Member]]
     pcompiler.askTypeCompletion(pos, resp)
     resp.get match {
-      case Left(x) => 
-        x filter { e =>  
+      case Left(x) =>
+        x filter { e =>
           (
-            (e.sym.isMethod && !e.sym.isConstructor && e.sym.isPublic) || 
+            (e.sym.isMethod && !e.sym.isConstructor && e.sym.isPublic) ||
             (e.sym.isValue && !e.sym.isMethod && e.sym.nameString != "this") ||
             ((e.sym.isPackage || e.sym.isClass || e.sym.isType) && e.sym.isPublic)
           ) &&
-          (
-            e.tpe != pcompiler.NoType && 
-            e.tpe != pcompiler.ErrorType  
-          )
-        } map { e => 
-          
-//          println("Type Member: " + e.sym.nameString)
-//          println("IsClass: " + e.sym.isClass)
-//          println("IsPackage: " + e.sym.isPackage)
-//          println("IsMethod: " + e.sym.isMethod)
-//          println("IsValue: " + e.sym.isValue)
-//          println("IsPublic: " + e.sym.isPublic)
-//          println("Tpe: " + e.tpe)
-//          println("Tpe Class: " + e.tpe.getClass)
-//          println("**************")
-
+            (
+              e.tpe != pcompiler.NoType &&
+              e.tpe != pcompiler.ErrorType
+            )
+        } map { e =>
           var prio = 100
           val tm = e.asInstanceOf[pcompiler.TypeMember]
-          if (tm.viaView != pcompiler.NoSymbol) prio += 20
-          if (tm.inherited == true) prio += 10
+          if (tm.implicitlyAdded) prio += 20
+          if (tm.inherited) prio += 10
           // give vals and vars lower priority because we can't seem to distinguish 
           // between private and public vals/vars.
           // This way they go below the methods
-          if (e.sym.isValue && !e.sym.isMethod) prio += 5 
+          if (e.sym.isValue && !e.sym.isMethod) prio += 5
           if (e.sym.isClass || e.sym.isType) prio += 100
           if (e.sym.isPackage) prio += 200
-
-          if (e.sym.isMethod || e.sym.isValue) {
-            e.tpe match {
-              case mt: pcompiler.MethodType => CompletionInfo(e.sym.nameString, 
-                                                              mt.params.map(_.nameString.replace("$", "")), 
-                                                              mt.paramTypes.map(_.toString), 
-                                                              mt.resultType.toString,
-                                                              prio)
-              case pt: pcompiler.PolyType => CompletionInfo(e.sym.nameString, 
-                                                            pt.resultType.params.map(_.nameString.replace("$", "")), 
-                                                            pt.resultType.paramTypes.map(_.toString), 
-                                                            pt.resultType.resultType.toString,
-                                                            prio)
-              case nt: pcompiler.NullaryMethodType => CompletionInfo(e.sym.nameString, 
-                                                                     Nil, 
-                                                                     Nil, 
-                                                                     nt.resultType.toString,
-                                                                     prio)
-              case vt: pcompiler.UniqueTypeRef => CompletionInfo(e.sym.nameString, 
-                                                                 Nil, 
-                                                                 Nil, 
-                                                                 vt.resultType.toString,
-                                                                 prio,
-                                                                 true)
-              case t @ _ => CompletionInfo(e.sym.nameString, List(t.getClass.getName), List("Unknown"), "[Todo] MorV", prio)
-            }
-          }
-          else {
-            e.tpe match {
-              case vt: pcompiler.UniqueTypeRef => CompletionInfo(e.sym.nameString, 
-                                                                 vt.typeParams.map(_.nameString.replace("$", "")),  
-                                                                 Nil, 
-                                                                 vt.resultType.toString,
-                                                                 prio,
-                                                                 false,
-                                                                 e.sym.isClass,
-                                                                 e.sym.isPackage,
-                                                                 e.sym.isType)
-              case t @ _ => CompletionInfo(e.sym.nameString, List(t.getClass.getName), List("Unknown"), "[Todo] CorP", prio)
-            }
-          }
+          CompletionInfo(e.sym.nameString, e, prio)
         }
-      case Right(y) => /* println("Completion warning: %s" format(y)); */ Nil  
+      case Right(y) => /* println("Completion warning: %s" format(y)); */ Nil
     }
   }
 }

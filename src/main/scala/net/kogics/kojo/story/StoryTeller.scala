@@ -24,7 +24,7 @@ import util.Read
 import javax.swing.text.html.HTMLDocument
 import java.util.logging._
 import net.kogics.kojo.core.InitedSingleton
-import net.kogics.kojo.lite.KojoCtx
+import net.kogics.kojo.core.KojoCtx
 
 object StoryTeller extends InitedSingleton[StoryTeller] {
   def initedInstance(kojoCtx: KojoCtx) = synchronized {

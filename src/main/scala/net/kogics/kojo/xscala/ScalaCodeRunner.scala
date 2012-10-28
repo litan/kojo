@@ -591,7 +591,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       compilerAndRunner.completions(code, caretOffset - pfx.length) match {
         case Nil =>
           val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
-          (ics.map { CompletionInfo(_, Nil, Nil, "", 100) }, pfx.length)
+          (ics.map { CompletionInfo(_, null, 100) }, pfx.length)
         case _@ ccs =>
           (ccs.filter { ci => ignoreCaseStartsWith(ci.name, pfx) }, pfx.length)
       }

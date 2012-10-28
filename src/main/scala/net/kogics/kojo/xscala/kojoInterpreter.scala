@@ -35,7 +35,8 @@ class KojoInterpreter(settings: KojoInterpreter.Settings, out: PrintWriter) exte
   def completions(id: String) = completer.completions(id)
   def unqualifiedIds = interp.unqualifiedIds
   def stop(interpThread: Thread) {
-    interp.lineManager.cancel()
+    interpThread.interrupt()
+//    interp.lineManager.cancel()
   }
   def reset() = interp.reset()
   
