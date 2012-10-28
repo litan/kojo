@@ -25,7 +25,7 @@ class InterpOutputHandler(ctx: RunContext) {
   @volatile var errorSeen = false
 
   val OutputMode = 1
-//  val ErrorMsgMode = 2
+  //  val ErrorMsgMode = 2
   val ErrorTextMode = 3
   val HatMode = 4
   val ErrorTextWithoutLinkMode = 5
@@ -53,52 +53,12 @@ class InterpOutputHandler(ctx: RunContext) {
   }
 
   private def reportNonExceptionOutput(output: String) {
-    // Note - the call sequence has changed, with \r\ns coming
-    // in separate calls. Hence the if block right at the beginning
-    // of the method below
-    // Interp sends in one line at a time for error output
-    // we get three calls for an error:
-    // (1) err msg (2) err text (3) hat
-    // Scala compiler code reference:
-    // ConsoleReporter.printMessage() calls:
-    // - ConsoleReporter.printMessage() [overloaded] to print error message
-    // - printSourceLines(pos), which calls:
-    // -- ConsoleReporter.printMessage() [overloaded] to print error text
-    // -- printColumnMarker(pos) - to print hat
-
-    def isBadMsg(msg: String) = {
-      msg.contains("Unmatched closing brace")
+    val m = errorPattern.matcher(output)
+    if (m.find) {
+      ctx.reportErrorMsg(output.substring(m.group(1).length, output.length))
     }
-
-    if ((currMode != OutputMode) && (output == "\r\n" || output == "\n")) {
-      ctx.kprintln(output)
-      return
-    }
-
-    currMode match {
-      case OutputMode =>
-        val m = errorPattern.matcher(output)
-        if (m.find) {
-          ctx.reportErrorMsg(output.substring(m.group(1).length, output.length))
-          if (isBadMsg(output)) {
-            currMode = ErrorTextWithoutLinkMode
-          }
-          else {
-            currMode = ErrorTextMode
-          }
-        }
-        else {
-          ctx.reportOutput(output)
-        }
-      case ErrorTextMode =>
-        ctx.reportErrorText(output)
-        currMode = HatMode
-      case ErrorTextWithoutLinkMode =>
-        ctx.reportErrorMsg(output)
-        currMode = HatMode
-      case HatMode =>
-        ctx.reportErrorMsg(output)
-        currMode = OutputMode
+    else {
+      ctx.reportOutput(output)
     }
   }
 
@@ -128,20 +88,20 @@ class InterpOutputHandler(ctx: RunContext) {
 
 class CompilerOutputHandler(ctx: RunContext) extends CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String) {
-    ctx.reportErrorMsg("Error[%d,%d]: %s\n" format(line, column, msg))
-    ctx.reportSmartErrorText("%s\n" format(lineContent), line, column, offset)
-    ctx.reportErrorMsg(" " * (column-1) + "^\n")
+    ctx.reportErrorMsg("Error[%d,%d]: %s\n" format (line, column, msg))
+    ctx.reportSmartErrorText("%s\n" format (lineContent), line, column, offset)
+    ctx.reportErrorMsg(" " * (column - 1) + "^\n")
   }
 
   def warning(msg: String, line: Int, column: Int) {
-    ctx.kprintln("Warning: %s\n" format(msg))
+    ctx.kprintln("Warning: %s\n" format (msg))
   }
 
   def info(msg: String, line: Int, column: Int) {
-    ctx.kprintln("Info: %s\n" format(msg))
+    ctx.kprintln("Info: %s\n" format (msg))
   }
 
   def message(msg: String) {
-    ctx.kprintln("%s\n" format(msg))
+    ctx.kprintln("%s\n" format (msg))
   }
 }

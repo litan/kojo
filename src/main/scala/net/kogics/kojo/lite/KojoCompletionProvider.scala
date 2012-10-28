@@ -60,25 +60,32 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
       }
     }
 
-    val valOrNoargItem = completion.isValue || completion.params.size == 0 && completion.ret != "Unit"
+    val valOrNoargItem = completion.isValue &&
+      completion.member.tpe.params.size == 0 &&
+      completion.member.tpe.resultType.toString != "Unit"
 
     def lhs: String = {
       val fm = new StringBuilder
       fm.append(completion.name)
-      if (valOrNoargItem) {
-        // do nothing
+      val tpe = completion.member.tpe
+      if (tpe.typeParams.size > 0) {
+        val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
+        fm.append(completionTypeParams.mkString("[", ", ", "]"))
       }
-      else if (completion.isClass) {
-        fm.append(completion.params.mkString("[", ", ", "]"))
-      }
-      else {
-        fm.append(completion.params.zip(completion.paramTypes).
+      if (tpe.params.size > 0) {
+        val completionParams = tpe.params.map(_.nameString.replace("$", ""))
+        fm.append(completionParams.zip(tpe.paramTypes).
           map { p => "%s: %s" format (p._1, p._2) }.
           mkString("(", ", ", ")"))
       }
       fm.toString
     }
-    def rhs: String = completion.ret
+
+    def rhs: String = if (completion.member.tpe.paramss.size > 1)
+      completion.member.tpe.resultType.toString
+    else
+      completion.member.tpe.finalResultType.toString
+
     def defn = "%s : %s" format (lhs, rhs)
     def template = {
       val c0 = methodTemplate(completion.name)
@@ -86,36 +93,22 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
         c0
       }
       else {
-        if (valOrNoargItem) {
-          completion.name
+        val fm = new StringBuilder
+        fm.append(completion.name)
+        val tpe = completion.member.tpe
+        if (tpe.typeParams.size > 0) {
+          val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
+          fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
         }
-        else if (completion.isClass) {
-          "%s[%s]" format (completion.name, completion.params.map { "${%s}" format (_) }.mkString(", "))
+        if (tpe.params.size > 0) {
+          val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
+          fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
         }
-        else {
-          "%s(%s)" format (completion.name, completion.params.map { "${%s}" format (_) }.mkString(", "))
-        }
+        fm.toString
       }
     }
 
-    def signature = {
-      val sb = new StringBuilder
-      sb.append("<strong>%s</strong>" format (completion.name))
-      if (valOrNoargItem) {
-        // do nothing
-      }
-      else if (completion.isClass) {
-        sb.append(completion.params.mkString("[", ", ", "]"))
-      }
-      else {
-        sb.append(completion.params.zip(completion.paramTypes).
-          map { p => "%s: %s" format (p._1, p._2) }.
-          mkString("(", ", ", ")"))
-      }
-      sb.append(": ")
-      sb.append("<em>%s</em>" format (completion.ret))
-      sb.toString
-    }
+    def signature = "<strong>%s</strong> : <em>%s</em>" format (lhs, rhs)
 
     def help = {
       val hlp = Help(completion.name)
@@ -132,10 +125,10 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   def kindIcon(kind: Int) = {
     val fname = kind match {
       case VARIABLE => "/images/kindvar.png"
-      case CLASS    => "/images/kindclass.png"
-      case PACKAGE  => "/images/kindpackage.gif"
-      case METHOD   => "/images/kindmethod.png"
-      case KEYWORD  => "/images/scala16x16.png"
+      case CLASS => "/images/kindclass.png"
+      case PACKAGE => "/images/kindpackage.gif"
+      case METHOD => "/images/kindmethod.png"
+      case KEYWORD => "/images/scala16x16.png"
       case TEMPLATE => "/images/kindtemplate.png"
     }
     Utils.loadIcon(fname, "Blah blah")
@@ -180,8 +173,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
 
       addTemplateProposals(proposals, prefix.getOrElse(""), caretOffset)
     }
-
-    if (objid.isDefined) {
+    else {
       val (memberCompletions, coffset) = codeSupport.memberCompletions(caretOffset, objid.get, prefix)
       memberCompletions.foreach { completion =>
         proposals.add(proposal2(caretOffset - coffset, completion))

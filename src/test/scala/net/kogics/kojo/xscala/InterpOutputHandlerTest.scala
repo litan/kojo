@@ -65,82 +65,25 @@ class InterpOutputHandlerTest {
 
   @Test
   def testErrorPattern1 = {
-    val output1 = "<console>:1: error: Invalid literal number\n"
-    val output11 = "error: Invalid literal number\n"
-    val output2 = "       12x\n"
-    val output3 = "       ^\n"
+    val output1 = """<console>:1: error: Invalid literal number
+error: Invalid literal number
+       12x\n
+  
+"""      
+    val output2 = """error: Invalid literal number
+error: Invalid literal number
+       12x\n
+  
+"""      
 
+      
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).reportErrorMsg(output11)
-        one(runCtx).reportErrorText(output2)
-        one(runCtx).reportErrorMsg(output3)
+        one(runCtx).reportErrorMsg(output2)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
     outputHandler.reportInterpOutput(output1)
-    outputHandler.reportInterpOutput(output2)
-    outputHandler.reportInterpOutput(output3)
-  }
-
-  @Test
-  def testErrorPattern2 = {
-    val output1 = "<console>:8: error: not enough arguments for constructor Range: (start: Int,end: Int,step: Int)scala.collection.immutable.Range.\nUnspecified value parameters start, end, step.\n"
-    val output11 = "error: not enough arguments for constructor Range: (start: Int,end: Int,step: Int)scala.collection.immutable.Range.\nUnspecified value parameters start, end, step.\n"
-    val output2 = "val l = new Range\n"
-    val output3 = "        ^\n"
-
-    val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
-    context.checking (new Expectations {
-        one(runCtx).reportErrorMsg(output11)
-        one(runCtx).reportErrorText(output2)
-        one(runCtx).reportErrorMsg(output3)
-      })
-
-    val outputHandler = new InterpOutputHandler(runCtx)
-    outputHandler.reportInterpOutput(output1)
-    outputHandler.reportInterpOutput(output2)
-    outputHandler.reportInterpOutput(output3)
-  }
-
-  @Test
-  def testErrorPattern3 = {
-    val output1 = "<console>:12: error: Invalid literal number\n"
-    val output11 = "error: Invalid literal number\n"
-    val output2 = "       12x\n"
-    val output3 = "       ^\n"
-
-    val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
-    context.checking (new Expectations {
-        one(runCtx).reportErrorMsg(output11)
-        one(runCtx).reportErrorText(output2)
-        one(runCtx).reportErrorMsg(output3)
-      })
-
-    val outputHandler = new InterpOutputHandler(runCtx)
-    outputHandler.reportInterpOutput(output1)
-    outputHandler.reportInterpOutput(output2)
-    outputHandler.reportInterpOutput(output3)
-  }
-
-  @Test
-  def testErrorPattern4 = {
-    val output1 = "<console>:1257: error: Invalid literal number\n"
-    val output11 = "error: Invalid literal number\n"
-    val output2 = "       12x\n"
-    val output3 = "       ^\n"
-
-    val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
-    context.checking (new Expectations {
-        one(runCtx).reportErrorMsg(output11)
-        one(runCtx).reportErrorText(output2)
-        one(runCtx).reportErrorMsg(output3)
-      })
-
-    val outputHandler = new InterpOutputHandler(runCtx)
-    outputHandler.reportInterpOutput(output1)
-    outputHandler.reportInterpOutput(output2)
-    outputHandler.reportInterpOutput(output3)
   }
 
   @Test
