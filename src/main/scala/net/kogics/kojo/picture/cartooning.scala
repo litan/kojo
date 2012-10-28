@@ -265,6 +265,8 @@ class Animator {
   def schedule(w: AnimationStep) {
     addToAgenda(w)
   }
+  
+  def stop() = staging.API.stopActivity(animation)
 
   def currTime = System.currentTimeMillis()
   val startTime = currTime
