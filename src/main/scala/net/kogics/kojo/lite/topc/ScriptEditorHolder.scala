@@ -166,7 +166,13 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
           )
         )
       ))
-      codePane.setCaretPosition(pos)
+      try {
+        codePane.setCaretPosition(pos)
+      }
+      catch {
+        case badPos: IllegalArgumentException =>
+          codePane.setCaretPosition(codePane.getText().length())
+      }
     }
   }
 
