@@ -13,7 +13,7 @@ libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-reflect" % "2.10.0-RC1",
     "org.scala-lang" % "scala-actors" % "2.10.0-RC1",
     "org.scala-lang" % "scala-swing" % "2.10.0-RC1",
-    "org.scalariform" % "scalariform_2.10.0-SNAPSHOT" % "0.1.1",
+    "org.scalariform" % "scalariform_2.10" % "0.1.3",
     "org.piccolo2d" % "piccolo2d-core" % "1.3.1",
     "org.piccolo2d" % "piccolo2d-extras" % "1.3.1",
     "com.vividsolutions" % "jts" % "1.12" intransitive(),
