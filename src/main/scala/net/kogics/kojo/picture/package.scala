@@ -1,11 +1,16 @@
 package net.kogics.kojo
+
 import java.awt.Color
 import java.awt.Paint
-import core.Turtle
+
+import net.kogics.kojo.picture.AxesOnc
+import net.kogics.kojo.picture.FlipXc
+import net.kogics.kojo.picture.FlipYc
+
 import core.Picture
 
 package object picture {
-  type Painter = Turtle => Unit
+  type Painter = core.Painter
   def rot(angle: Double) = Rotc(angle)  
   def rotp(angle: Double, x: Double, y: Double) = Rotpc(angle, x, y)  
   def scale(factor: Double) = Scalec(factor)
