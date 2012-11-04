@@ -86,7 +86,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val outPanel = new JPanel(new CardLayout)
   val outoutPanel = new JPanel(new BorderLayout)
   outoutPanel.add(new JScrollPane(outputWindow), BorderLayout.CENTER)
-  var readInputPanel: JPanel = _
+  var readInputPanel: JPanel = new JPanel
   outPanel.add(outoutPanel, "Output")
   outPanel.add(new JScrollPane(errorWindow), "Error")
 
@@ -831,6 +831,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def keywordCompletions(prefix: Option[String]) = codeRunner.keywordCompletions(prefix)
   def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = codeRunner.memberCompletions(Utils.stripCR(codePane.getText), caretOffset, objid, prefix)
   def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) = xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
+  def typeAt(caretOffset: Int) = codeRunner.typeAt(Utils.stripCR(codePane.getText), caretOffset)
 
   var openedFile: Option[File] = None
   var fileData: String = _

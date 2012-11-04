@@ -87,6 +87,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
   case class VarCompletionRequest(prefix: Option[String])
   case class KeywordCompletionRequest(prefix: Option[String])
   case class MemberCompletionRequest(code: String, caretOffset: Int, objid: String, prefix: Option[String])
+  case class TypeAtRequest(code: String, caretOffset: Int)
   case class CompletionResponse(data: (List[String], Int))
   case class CompletionResponse2(data: (List[CompletionInfo], Int))
   case object ActivateTw
@@ -107,6 +108,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
   def memberCompletions(code: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
     val resp = (codeRunner !? MemberCompletionRequest(code, caretOffset, objid, prefix)).asInstanceOf[CompletionResponse2]
     resp.data
+  }
+
+  def typeAt(code: String, caretOffset: Int): String = {
+    (codeRunner !? TypeAtRequest(code, caretOffset)).asInstanceOf[String]
   }
 
   def startCodeRunner(): Actor = {
@@ -200,6 +205,17 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     //    val storyPattern = java.util.regex.Pattern.compile("\\bstClear()\\b")
     val lblPattern = java.util.regex.Pattern.compile("""^\s*//\s*#line-by-line""")
 
+    def safeProcessResponse[T](default: T)(fn: => T) {
+      try {
+        reply(fn)
+      }
+      catch {
+        case t: Throwable =>
+          Log.warning("Problem returning response: " + t.getMessage)
+          reply(default)
+      }
+    }
+    
     def safeProcessCompletionReq(fn: => (List[String], Int)) {
       try {
         reply(CompletionResponse(fn))
@@ -392,6 +408,11 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
           case MemberCompletionRequest(code, caretOffset, objid, prefix) =>
             safeProcessCompletionReq2 {
               memberCompletions(code, caretOffset, objid, prefix)
+            }
+
+          case TypeAtRequest(code, caretOffset) =>
+            safeProcessResponse("") {
+              typeAt(code, caretOffset)
             }
         }
       }
@@ -595,6 +616,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
         case _@ ccs =>
           (ccs.filter { ci => ignoreCaseStartsWith(ci.name, pfx) }, pfx.length)
       }
+    }
+    
+    def typeAt(code: String, caretOffset: Int): String = {
+      compilerAndRunner.typeAt(code, caretOffset)
     }
   }
 

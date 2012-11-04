@@ -19,7 +19,6 @@ package xscala
 import java.lang.ClassLoader
 import java.lang.reflect
 import java.net.URL
-
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.OffsetPosition
 import scala.reflect.internal.util.Position
@@ -33,7 +32,6 @@ import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.util.ScalaClassLoader
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 import scala.tools.util.PathResolver
-
 import KojoInterpreter.IR
 import core.CompletionInfo
 import util.Utils
@@ -232,6 +230,37 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     }
   }
   val pcompiler = new interactive.Global(settings, preporter)
+
+  def typeAt(code0: String, offset: Int): String = {
+    import interactive._
+    import scala.reflect.internal.Trees
+
+    val pfx = pfxWithCounter
+    val offsetDelta = pfx.length
+    val code = Utils.stripCR(codeTemplate format (pfx, code0))
+
+    val source = new BatchSourceFile("scripteditor", code)
+    val pos = new OffsetPosition(source, offset + offsetDelta + 1)
+
+    var r1 = new Response[Unit]
+    pcompiler.askReload(List(source), r1)
+
+    var resp = new Response[pcompiler.Tree]
+    pcompiler.askTypeAt(pos, resp)
+    resp.get match {
+      case Left(x) =>
+        x match {
+          case t: pcompiler.ValOrDefDef => t.tpt.toString
+          case t: pcompiler.TypeDef => t.name.toString
+          case t: pcompiler.ClassDef => t.name.toString
+          case _ => x.tpe.toString
+        }
+
+      case Right(y) =>
+        // println("Right:" + y)
+        ""
+    }
+  }
 
   import core.CompletionInfo
   def completions(code0: String, offset: Int): List[CompletionInfo] = {

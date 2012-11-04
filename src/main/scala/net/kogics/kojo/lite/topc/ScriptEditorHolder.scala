@@ -10,7 +10,6 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-
 import org.fife.rsta.ui.search.AbstractFindReplaceDialog
 import org.fife.rsta.ui.search.ReplaceDialog
 import org.fife.ui.autocomplete.AutoCompletion
@@ -24,7 +23,6 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
 import org.fife.ui.rtextarea.RTextScrollPane
 import org.fife.ui.rtextarea.SearchEngine
-
 import net.kogics.kojo.action.ChooseColor
 import net.kogics.kojo.codingmode.SwitchMode
 import net.kogics.kojo.lite.CodeExecutionSupport
@@ -32,7 +30,6 @@ import net.kogics.kojo.lite.KojoCompletionProvider
 import net.kogics.kojo.livecoding.IpmProvider
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
-
 import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
@@ -50,6 +47,7 @@ import scalariform.formatter.preferences.FormatXml
 import scalariform.formatter.preferences.FormattingPreferences
 import scalariform.formatter.preferences.IndentSpaces
 import scalariform.formatter.preferences.PreserveDanglingCloseParenthesis
+import javax.swing.text.Utilities
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport, frame: JFrame) extends BaseHolder("SE", "Script Editor", se) {
 
@@ -134,20 +132,6 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(new JPopupMenu.Separator, idx)
   idx += 1
 
-  val markOccurancesAction = new AbstractAction("Mark Occurances") {
-    def actionPerformed(ev: ActionEvent) {
-      if (markOccurancesItem.isSelected()) {
-        codePane.setMarkOccurrences(true)
-      }
-      else {
-        codePane.setMarkOccurrences(false)
-      }
-    }
-  }
-  val markOccurancesItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(markOccurancesAction)
-  popup.add(markOccurancesItem, idx)
-  idx += 1
-
   val formatAction = new AbstractAction("Format Source") {
     import scalariform.formatter.preferences._
 
@@ -215,6 +199,32 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
   val chooseColorItem = new JMenuItem(new ChooseColor(codeSupport.kojoCtx))
   popup.add(chooseColorItem, idx)
+  idx += 1
+
+  popup.add(new JPopupMenu.Separator, idx)
+  idx += 1
+
+  val typeAtAction = new AbstractAction("Show type under curser") {
+    def actionPerformed(ev: ActionEvent) {
+      println(codeSupport.typeAt(codePane.getCaretPosition()))
+    }
+  }
+  val typeAtItem = new JMenuItem(typeAtAction)
+  popup.add(typeAtItem, idx)
+  idx += 1
+
+  val markOccurancesAction = new AbstractAction("Mark Occurances") {
+    def actionPerformed(ev: ActionEvent) {
+      if (markOccurancesItem.isSelected()) {
+        codePane.setMarkOccurrences(true)
+      }
+      else {
+        codePane.setMarkOccurrences(false)
+      }
+    }
+  }
+  val markOccurancesItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(markOccurancesAction)
+  popup.add(markOccurancesItem, idx)
   idx += 1
 
   popup.add(new JPopupMenu.Separator, idx)
