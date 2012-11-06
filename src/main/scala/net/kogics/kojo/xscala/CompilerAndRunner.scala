@@ -82,6 +82,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     val stng = makeSettings()
     stng.outputDirs.setSingleOutput(virtualDirectory)
     stng.deprecation.value = true
+    stng.feature.value = true
     stng
   }
 
