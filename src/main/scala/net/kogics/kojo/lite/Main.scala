@@ -26,6 +26,7 @@ import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.CGrid
 import bibliothek.gui.dock.common.mode.ExtendedMode
 import bibliothek.gui.dock.common.theme.ThemeMap
+import net.kogics.kojo.util.JUtils
 
 object Main extends AppMenu {
 
@@ -96,6 +97,7 @@ object Main extends AppMenu {
     Utils.schedule(0.3) {
       import javax.swing.UIManager
 
+      println("Desktop Session is: " + System.getenv("DESKTOP_SESSION"))
       val xx = UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
         UIManager.setLookAndFeel(nim.getClassName)
       }
@@ -145,16 +147,16 @@ object Main extends AppMenu {
 
       splash.close()
 
-      frame.setBounds(100, 100, 600, 500)
+      //      frame.setBounds(100, 100, 600, 500)
       frame.addWindowListener(new WindowAdapter {
         override def windowClosing(e: WindowEvent) {
           appExit()
         }
       })
-      //      frame.pack()
       frame.setIconImage(Utils.loadImage("/images/kojo48.png"))
-      frame.setVisible(true)
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
+      frame.pack()
+      frame.setVisible(true)
 
       if (args.length == 1) {
         loadAndRunUrl(args(0), true)
