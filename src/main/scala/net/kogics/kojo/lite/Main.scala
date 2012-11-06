@@ -96,8 +96,8 @@ object Main extends AppMenu {
 
     Utils.schedule(0.3) {
       import javax.swing.UIManager
-
-      println("Desktop Session is: " + System.getenv("DESKTOP_SESSION"))
+      // using println here clobbers output redirection in CodeExecutionSupport
+      // System.out.println("Desktop Session is: " + System.getenv("DESKTOP_SESSION"))
       val xx = UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
         UIManager.setLookAndFeel(nim.getClassName)
       }
