@@ -137,25 +137,31 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
     def actionPerformed(ev: ActionEvent) {
       val pos = codePane.getCaretPosition()
-      codePane.setText(ScalaFormatter.format(
-        codePane.getText,
-        new FormattingPreferences(
-          Map(
-            IndentSpaces -> 4,
-            CompactControlReadability -> true,
-            AlignParameters -> true,
-            AlignSingleLineCaseStatements -> true,
-            PreserveDanglingCloseParenthesis -> true,
-            FormatXml -> false
-          )
-        )
-      ))
       try {
-        codePane.setCaretPosition(pos)
+        codePane.setText(ScalaFormatter.format(
+          codePane.getText,
+          new FormattingPreferences(
+            Map(
+              IndentSpaces -> 4,
+              CompactControlReadability -> true,
+              AlignParameters -> true,
+              AlignSingleLineCaseStatements -> true,
+              PreserveDanglingCloseParenthesis -> true,
+              FormatXml -> false
+            )
+          )
+        ))
+        try {
+          codePane.setCaretPosition(pos)
+        }
+        catch {
+          case badPos: IllegalArgumentException =>
+            codePane.setCaretPosition(codePane.getText().length())
+        }
       }
       catch {
-        case badPos: IllegalArgumentException =>
-          codePane.setCaretPosition(codePane.getText().length())
+        case t: Throwable =>
+          println("Unable to format: " + t.getMessage())
       }
     }
   }
