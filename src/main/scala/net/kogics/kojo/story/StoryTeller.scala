@@ -16,15 +16,33 @@
 package net.kogics.kojo
 package story
 
-import java.awt._
-import java.awt.event._
-import javax.swing._
-import util.Utils
-import util.Read
-import javax.swing.text.html.HTMLDocument
-import java.util.logging._
+import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.Cursor
+import java.awt.Dimension
+import java.awt.Font
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
+import java.util.logging.Logger
+
 import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.util.Read
+
+import javax.swing.BorderFactory
+import javax.swing.BoxLayout
+import javax.swing.JButton
+import javax.swing.JComponent
+import javax.swing.JEditorPane
+import javax.swing.JLabel
+import javax.swing.JPanel
+import javax.swing.JScrollPane
+import javax.swing.JTextField
+import javax.swing.text.html.HTMLDocument
+import util.Read
+import util.Utils
 
 object StoryTeller extends InitedSingleton[StoryTeller] {
   def initedInstance(kojoCtx: KojoCtx) = synchronized {
@@ -89,9 +107,18 @@ class StoryTeller extends JPanel with music.Mp3Player {
   holder.setBackground(Color.white)
   holder.setLayout(new BoxLayout(holder, BoxLayout.Y_AXIS))
 
-  val uc = new JPanel
-  uc.setBackground(Color.white)
-  holder.add(uc)
+  var uc = new JPanel
+  //  var ucSp = new JScrollPane(uc)
+
+  def removeOldUc() {
+    holder.remove(uc)
+  }
+
+  def addNewUc() {
+    uc = new JPanel
+    uc.setBackground(Color.white)
+    holder.add(uc, 0)
+  }
 
   val (cp, prevButton, nextButton) = makeControlPanel()
   holder.add(cp)
@@ -211,16 +238,32 @@ class StoryTeller extends JPanel with music.Mp3Player {
     }
   }
 
+  def viewPage(page: Int, view: Int) {
+    // needs to run on GUI thread
+    kojoCtx.stopInterpreter()
+    newPage()
+
+    if (story.hasView(page, view)) {
+      story.goto(page, view)
+      displayContent(story.view)
+      updateCp()
+    }
+    else {
+      showStatusError("Nonexistent page#view - %d#%d" format (page, view))
+    }
+  }
+
   private def newPage() {
     // needs to run on GUI thread
-    uc.removeAll()
-    uc.setBorder(BorderFactory.createEmptyBorder())
-
+    removeOldUc()
+    addNewUc()
     pageFields.clear()
     //    clearStatusBar()
+    holder.revalidate()
+    sp.revalidate()
+    repaint()
 
     kojoCtx.stopAnimation()
-    repaint()
     stopMp3()
   }
 
@@ -236,17 +279,6 @@ class StoryTeller extends JPanel with music.Mp3Player {
   }
 
   def pageNumber(name: String): Option[Int] = story.pageNumber(name)
-
-  def viewPage(page: Int, view: Int) {
-    if (story.hasView(page, view)) {
-      story.goto(page, view)
-      displayContent(story.view)
-      updateCp()
-    }
-    else {
-      showStatusError("Nonexistent page#view - %d#%d" format (page, view))
-    }
-  }
 
   def done() {
     kojoCtx.stopInterpreter()
@@ -365,13 +397,6 @@ class StoryTeller extends JPanel with music.Mp3Player {
     Utils.runInSwingThread {
       uc.add(c)
       uc.setBorder(BorderFactory.createEtchedBorder())
-      val numC = uc.getComponentCount
-      if (numC > 4) {
-        // hack to allow second row of components
-        val spacing = 5
-        val rowHeight = 20
-        uc.setPreferredSize(new Dimension(20, rowHeight * (numC / 4 + 1) + spacing))
-      }
       uc.revalidate()
       uc.repaint()
       scrollEp()
