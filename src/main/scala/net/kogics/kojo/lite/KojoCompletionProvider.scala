@@ -60,7 +60,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
       }
     }
 
-    val valOrNoargItem = completion.isValue &&
+    val valOrNoargFunction = completion.isValue &&
       completion.member.tpe.params.size == 0 &&
       completion.member.tpe.resultType.toString != "Unit"
 
@@ -72,11 +72,18 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
         val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
         fm.append(completionTypeParams.mkString("[", ", ", "]"))
       }
+
       if (tpe.params.size > 0) {
         val completionParams = tpe.params.map(_.nameString.replace("$", ""))
         fm.append(completionParams.zip(tpe.paramTypes).
           map { p => "%s: %s" format (p._1, p._2) }.
           mkString("(", ", ", ")"))
+      }
+      else {
+        if (!valOrNoargFunction) {
+          // it's a no-arg command
+          fm.append("()")
+        }
       }
       fm.toString
     }
@@ -103,6 +110,12 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
         if (tpe.params.size > 0) {
           val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
           fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
+        }
+        else {
+          if (!valOrNoargFunction) {
+            // it's a no-arg command
+            fm.append("()")
+          }
         }
         fm.toString
       }
