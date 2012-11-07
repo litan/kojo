@@ -60,9 +60,12 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
       }
     }
 
-    val valOrNoargFunction = completion.isValue &&
-      completion.member.tpe.params.size == 0 &&
-      completion.member.tpe.resultType.toString != "Unit"
+    val valOrNoargItem =
+      (completion.isValue &&
+        completion.member.tpe.resultType.toString != "Unit") ||
+        completion.isPackage ||
+        completion.isClass ||
+        completion.isType
 
     def lhs: String = {
       val fm = new StringBuilder
@@ -80,7 +83,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
           mkString("(", ", ", ")"))
       }
       else {
-        if (!valOrNoargFunction) {
+        if (!valOrNoargItem) {
           // it's a no-arg command
           fm.append("()")
         }
@@ -112,7 +115,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
           fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
         }
         else {
-          if (!valOrNoargFunction) {
+          if (!valOrNoargItem) {
             // it's a no-arg command
             fm.append("()")
           }
