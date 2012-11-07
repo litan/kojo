@@ -54,19 +54,23 @@ class StoryTeller extends JPanel with music.Mp3Player {
   val pageFields = new collection.mutable.HashMap[String, JTextField]()
   val defaultMsg =
     <div style="text-align:center;color:#808080;font-size:15px">
-      {for (idx <- 1 to 6) yield {
+      {
+        for (idx <- 1 to 6) yield {
           <br/>
-        }}
+        }
+      }
       <p>
-        Run a story by loading/writing your story script within the <em>Script Editor</em>, and
-        then clicking the <em>Run</em> button.
+        Run a story by loading/writing your story script within the<em>Script Editor</em>
+        , and
+        then clicking the<em>Run</em>
+        button.
       </p>
       <p>
         You can control a running story via buttons that appear at the bottom of this pane.
       </p>
     </div>
 
-//  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  //  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setLayout(new BorderLayout())
 
   val ep = new JEditorPane()
@@ -95,7 +99,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
   val statusBar = new JLabel()
   val pageNumBar = new JLabel()
   pageNumBar.setBorder(BorderFactory.createEtchedBorder())
-//  statusBar.setPreferredSize(new Dimension(100, 16))
+  //  statusBar.setPreferredSize(new Dimension(100, 16))
   val sHolder = new JPanel()
   sHolder.setLayout(new BorderLayout())
   sHolder.add(statusBar, BorderLayout.CENTER)
@@ -114,30 +118,30 @@ class StoryTeller extends JPanel with music.Mp3Player {
     prevBut.setIcon(Utils.loadIcon("/images/back.png"))
     prevBut.setToolTipText("Previous View")
     prevBut.addActionListener(new ActionListener {
-        def actionPerformed(e: ActionEvent) {
-          prevPage()
-        }
-      })
+      def actionPerformed(e: ActionEvent) {
+        prevPage()
+      }
+    })
     cp.add(prevBut)
 
     val stopBut = new JButton()
     stopBut.setIcon(Utils.loadIcon("/images/stop.png"))
     stopBut.setToolTipText("Stop Story")
     stopBut.addActionListener(new ActionListener {
-        def actionPerformed(e: ActionEvent) {
-          done()
-        }
-      })
+      def actionPerformed(e: ActionEvent) {
+        done()
+      }
+    })
     cp.add(stopBut)
 
     val nextBut = new JButton()
     nextBut.setIcon(Utils.loadIcon("/images/forward.png"))
     nextBut.setToolTipText("Next View")
     nextBut.addActionListener(new ActionListener {
-        def actionPerformed(e: ActionEvent) {
-          nextPage()
-        }
-      })
+      def actionPerformed(e: ActionEvent) {
+        nextPage()
+      }
+    })
     cp.add(nextBut)
 
     cp.setVisible(false)
@@ -211,9 +215,9 @@ class StoryTeller extends JPanel with music.Mp3Player {
     // needs to run on GUI thread
     uc.removeAll()
     uc.setBorder(BorderFactory.createEmptyBorder())
-    
+
     pageFields.clear()
-//    clearStatusBar()
+    //    clearStatusBar()
 
     kojoCtx.stopAnimation()
     repaint()
@@ -240,7 +244,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
       updateCp()
     }
     else {
-      showStatusError("Nonexistent page#view - %d#%d" format(page, view))
+      showStatusError("Nonexistent page#view - %d#%d" format (page, view))
     }
   }
 
@@ -326,7 +330,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
           }
           catch {
             case ex: Exception =>
-              showStatusError("Unable to convert value - %s - to required type %s" format(svalue, reader.typeName))
+              showStatusError("Unable to convert value - %s - to required type %s" format (svalue, reader.typeName))
               throw ex
           }
         }
@@ -336,8 +340,8 @@ class StoryTeller extends JPanel with music.Mp3Player {
         }
       }
       else {
-        showStatusError("Field with label - %s is not defined" format(label))
-        throw new IllegalArgumentException("Field with label - %s is not defined" format(label))
+        showStatusError("Field with label - %s is not defined" format (label))
+        throw new IllegalArgumentException("Field with label - %s is not defined" format (label))
       }
     }
   }
@@ -345,14 +349,14 @@ class StoryTeller extends JPanel with music.Mp3Player {
   def addButton(label: String)(fn: => Unit) {
     val but = new JButton(label)
     but.addActionListener(new ActionListener {
-        def actionPerformed(e: ActionEvent) {
-          clearStatusBar()
-          Utils.stopMonitoredThreads()
-          Utils.runAsyncMonitored {
-            fn
-          }
+      def actionPerformed(e: ActionEvent) {
+        clearStatusBar()
+        Utils.stopMonitoredThreads()
+        Utils.runAsyncMonitored {
+          fn
         }
-      })
+      }
+    })
 
     addUiComponent(but)
   }
@@ -366,7 +370,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
         // hack to allow second row of components
         val spacing = 5
         val rowHeight = 20
-        uc.setPreferredSize(new Dimension(20, rowHeight * (numC/4 + 1) + spacing))
+        uc.setPreferredSize(new Dimension(20, rowHeight * (numC / 4 + 1) + spacing))
       }
       uc.revalidate()
       uc.repaint()
@@ -375,10 +379,10 @@ class StoryTeller extends JPanel with music.Mp3Player {
   }
 
   addComponentListener(new ComponentAdapter {
-      override def componentResized(e: ComponentEvent) {
-        statusBar.setPreferredSize(new Dimension(getSize().width-6, 16))
-      }
-    })
+    override def componentResized(e: ComponentEvent) {
+      statusBar.setPreferredSize(new Dimension(getSize().width - 6, 16))
+    }
+  })
 
   def clearStatusBar() {
     Utils.runInSwingThread {
@@ -391,11 +395,11 @@ class StoryTeller extends JPanel with music.Mp3Player {
   def storyLocation = {
     if (currStory.isDefined) {
       if (savedStory.isDefined) {
-        "St 2, Pg %d#%d" format(story.location._1, story.location._2)
+        "St 2, Pg %d#%d" format (story.location._1, story.location._2)
 
       }
       else {
-        "Pg %d#%d" format(story.location._1, story.location._2)
+        "Pg %d#%d" format (story.location._1, story.location._2)
       }
     }
     else {
@@ -409,7 +413,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
       statusBar.setText(msg)
     }
     if (output) {
-      outputFn("[Storyteller] %s\n" format(msg))
+      outputFn("[Storyteller] %s\n" format (msg))
     }
   }
 
@@ -418,7 +422,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
       statusBar.setForeground(Color.red)
       statusBar.setText(msg)
     }
-    outputFn("[Storyteller] %s\n" format(msg))
+    outputFn("[Storyteller] %s\n" format (msg))
   }
 
   def playStory(story: Story) {
@@ -442,15 +446,15 @@ class StoryTeller extends JPanel with music.Mp3Player {
   def storyAborted() {
     ep.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
   }
-  
+
   def addLinkHandler[T](name: String, story0: Story)(hm: HandlerHolder[T]) = {
     story0.addLinkHandler(name)(hm)
   }
-  
+
   def handleLink(name: String, data: String) {
     story.handleLink(name, data)
   }
-  
+
   // mp3 player stuff
   val pumpEvents = false
   override def playMp3(mp3File: String) {
