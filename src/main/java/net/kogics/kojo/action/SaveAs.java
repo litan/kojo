@@ -51,7 +51,7 @@ public final class SaveAs implements ActionListener {
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			ctx.setLastLoadStoreDir(chooser.getSelectedFile().getParent());
 			File selectedFile = chooser.getSelectedFile();
-			if (!selectedFile.getName().endsWith("." + ext)) {
+			if (!selectedFile.getName().contains(".")) {
 				selectedFile = new File(selectedFile.getAbsolutePath() + "."
 						+ ext);
 			}
@@ -78,7 +78,9 @@ public final class SaveAs implements ActionListener {
 				actionPerformed(e);
 			} catch (RuntimeException ex) {
 				// user cancelled save
-			}
+			} catch (Throwable t) {
+                System.out.println(String.format("Unable to save file: %s", t.getMessage()));
+            }			
 		}
 	}
 }
