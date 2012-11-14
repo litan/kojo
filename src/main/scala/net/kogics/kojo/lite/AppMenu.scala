@@ -165,14 +165,14 @@ trait AppMenu { self: Main.type =>
         aboutText.setEditable(false)
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
-              <strong>Kojo</strong>\u2248Ray (Early Access)<br/>
-              Version: 281012-1 <br/>
+              <strong>Kojo</strong> 2.0 (Early Access)<br/>
+              Version: 111112-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
-              <strong>Kojo</strong>\u2248Ray is the online version of Kojo (Ray - partly because it comes in through the cloud!).<br/>Please visit <em>http://www.kogics.net/webkojo</em> and <em>http://www.kogics.net/kojo</em> for more information.<br/><br/>
-              <strong>Kojo</strong>\u2248Ray Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>Jerzy Redlarski</li><li>Bj\u00f6rn Regnell</li><li>Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Mushtaq Ahmed</li></ul>
-              <strong>Kojo</strong>\u2248Ray is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
-              The list of third-party software used by <strong>Kojo</strong> \u2248Ray includes:
+              Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
+              <strong>Kojo</strong> 2.0 Contributors:<ul><li>Lalit Pant</li><li>Peter Lewerin</li><li>Jerzy Redlarski</li><li>Bj\u00f6rn Regnell</li><li>Tanu Nayal</li><li>Phil Bagwell</li><li>Vibha Pant</li><li>Anusha Pant</li><li>Nikhil Pant</li><li>Saurabh Kapoor</li><li>Mushtaq Ahmed</li></ul>
+              <strong>Kojo</strong> 2.0 is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
+              The list of third-party software used by <strong>Kojo</strong> 2.0 includes:
               <ul>
               <li>The Scala Programming Language (http://www.scala-lang.org)</li>
               <li>Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows</li>
