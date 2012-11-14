@@ -49,20 +49,17 @@ public final class LoadFrom implements ActionListener {
 
         CodeExecutionSupport ces = (CodeExecutionSupport) CodeExecutionSupport.instance();
         try {
-            ces.closeFileAndClrEditor();
             int returnVal = chooser.showOpenDialog(ctx.frame());
-
             if (returnVal == JFileChooser.APPROVE_OPTION) {
     			File selectedFile = chooser.getSelectedFile();
-    			if (!selectedFile.getName().endsWith("." + ext)) {
-    				selectedFile = new File(selectedFile.getAbsolutePath() + "."
-    						+ ext);
-    			}
                 ctx.setLastLoadStoreDir(selectedFile.getParent());
+                ces.closeFileAndClrEditor();
                 ces.openFileWithoutClose(selectedFile);
             }
         } catch (RuntimeException ex) {
             // ignore user cancel
+        } catch (Throwable t) {
+            System.out.println(String.format("Unable to open file: %s", t.getMessage()));
         }
     }
 }
