@@ -29,16 +29,16 @@ trait StubMain {
   def main(args: Array[String]): Unit = {
     Utils.safeProcess {
       if (firstInstance) {
-        println("First Kojo~Ray Instance Requested...")
+        println("First Kojo Instance Requested...")
         firstMain(args)
         realMain(args)
       }
       else {
-        println("Nth Kojo~Ray instance Requested: " + args)
+        println("Nth Kojo instance Requested: " + args)
         nthMain(args)
       }
     }
-    println("Kojo~Ray Launcher Done.")
+    println("Kojo Launcher Done.")
     System.exit(0)
   }
 
@@ -59,13 +59,13 @@ trait StubMain {
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
       "-XX:+CMSPermGenSweepingEnabled net.kogics.kojo.lite.Main %s" format (javaExec, classpath, args.mkString(" "))
 
-    println("Starting Real Kojo~Ray...")
+    println("Starting Real Kojo...")
     command!
   }
 
   def createCp(xs: List[String]): String = {
     val ourCp = new StringBuilder
-//    Bad stuff on the classpath can clobber the launch of the Real Kojo~Ray     
+//    Bad stuff on the classpath can clobber the launch of the Real Kojo     
 //    val oldCp = System.getenv("CLASSPATH")
 //    if (oldCp != null) {
 //      ourCp.append(oldCp)
