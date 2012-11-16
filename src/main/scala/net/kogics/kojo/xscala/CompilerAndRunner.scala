@@ -266,11 +266,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
   import core.CompletionInfo
   def completions(code0: String, offset: Int): List[CompletionInfo] = {
     def addParensAfterOffset(c: String) = {
-      "%s  () // %s" format (c.substring(0, offset), c.substring(offset, c.length))
-    }
-    def addResultColon(str: String) = {
-      val li = str.lastIndexOf(')')
-      "%s: %s" format (str.substring(0, li + 1), str.substring(li + 1, str.length))
+      "%s  ; %s" format (c.substring(0, offset), c.substring(offset, c.length))
     }
 
     import interactive._

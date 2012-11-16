@@ -46,17 +46,17 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   def proposal2(offset: Int, completion: CompletionInfo) = {
     //    new BasicCompletion(this, completion.name, completion.name)
     def kind = {
-      if (completion.isValue) {
-        VARIABLE
-      }
-      else if (completion.isClass || completion.isType) {
+      if (completion.isClass || completion.isType) {
         CLASS
       }
-      else if (completion.isPackage) {
+      else if (completion.isPackage || completion.isObject) {
         PACKAGE
       }
-      else {
+      else if (completion.isMethod) {
         METHOD
+      }
+      else {
+        VARIABLE
       }
     }
 
@@ -65,7 +65,8 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
         completion.member.tpe.resultType.toString != "Unit") ||
         completion.isPackage ||
         completion.isClass ||
-        completion.isType
+        completion.isType ||
+        completion.isObject
 
     def lhs: String = {
       val fm = new StringBuilder
@@ -96,7 +97,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     else
       completion.member.tpe.finalResultType.toString
 
-    def defn = "%s : %s" format (lhs, rhs)
+    val defn = "%s : %s" format (lhs, rhs)
     def template = {
       val c0 = methodTemplate(completion.name)
       if (c0 != null) {
@@ -141,10 +142,10 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   def kindIcon(kind: Int) = {
     val fname = kind match {
       case VARIABLE => "/images/kindvar.png"
-      case CLASS => "/images/kindclass.png"
-      case PACKAGE => "/images/kindpackage.gif"
-      case METHOD => "/images/kindmethod.png"
-      case KEYWORD => "/images/scala16x16.png"
+      case CLASS    => "/images/kindclass.png"
+      case PACKAGE  => "/images/kindpackage.gif"
+      case METHOD   => "/images/kindmethod.png"
+      case KEYWORD  => "/images/scala16x16.png"
       case TEMPLATE => "/images/kindtemplate.png"
     }
     Utils.loadIcon(fname, "Blah blah")

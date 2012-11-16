@@ -22,9 +22,11 @@ case class CompletionInfo(
   member: CompilerControl#Member,
   prio: Int) {
   def isValue: Boolean = member.sym.isValue
+  def isMethod: Boolean = member.sym.isMethod
   def isClass: Boolean = member.sym.isClass
   def isPackage: Boolean = member.sym.isPackage
   def isType: Boolean = member.sym.isType
+  def isObject: Boolean = member.sym.isModule
 }
 
 trait CodeCompletionSupport {
