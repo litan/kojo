@@ -265,15 +265,15 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
 
   import core.CompletionInfo
   def completions(code0: String, offset: Int): List[CompletionInfo] = {
-    def addParensAfterOffset(c: String) = {
-      "%s  ; %s" format (c.substring(0, offset), c.substring(offset, c.length))
+    def addMarkerAfterOffset(c: String) = {
+      "%s  ; // %s" format (c.substring(0, offset), c.substring(offset, c.length))
     }
 
     import interactive._
 
     val pfx = pfxWithCounter
     val offsetDelta = pfx.length
-    val code = Utils.stripCR(codeTemplate format (pfx, addParensAfterOffset(code0)))
+    val code = Utils.stripCR(codeTemplate format (pfx, addMarkerAfterOffset(code0)))
 
     val source = new BatchSourceFile("scripteditor", code)
     val pos = new OffsetPosition(source, offset + offsetDelta + 1)
