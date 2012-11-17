@@ -846,7 +846,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def openFileWithoutClose(file: java.io.File) {
     import util.RichFile._
     val script = file.readAsString
-    codePane.setText(script)
+    codePane.setText(Utils.stripCR(script))
     codePane.setCaretPosition(0)
     openedFile = Some(file)
     kojoCtx.fileOpened(file)
