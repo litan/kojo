@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE bindings PUBLIC "-//NetBeans//DTD Editor KeyBindings settings 1.1//EN" "http://www.netbeans.org/dtds/EditorKeyBindings-1_1.dtd">
-
-<bindings>
-    <bind actionName="format" key="SD-F"/>
-    <bind actionName="match-brace" key="D-CLOSE_BRACKET"/>
-    <bind actionName="remove-line" key="D-D"/>
-</bindings>
