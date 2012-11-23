@@ -10,19 +10,22 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+
 import org.fife.rsta.ui.search.AbstractFindReplaceDialog
 import org.fife.rsta.ui.search.ReplaceDialog
 import org.fife.ui.autocomplete.AutoCompletion
+import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.DecreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.Style
-import org.fife.ui.rsyntaxtextarea.SyntaxConstants
+import org.fife.ui.rsyntaxtextarea.TokenMakerFactory
 import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
 import org.fife.ui.rtextarea.RTextScrollPane
 import org.fife.ui.rtextarea.SearchEngine
+
 import net.kogics.kojo.action.ChooseColor
 import net.kogics.kojo.codingmode.SwitchMode
 import net.kogics.kojo.lite.CodeExecutionSupport
@@ -30,6 +33,7 @@ import net.kogics.kojo.lite.KojoCompletionProvider
 import net.kogics.kojo.livecoding.IpmProvider
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
+
 import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
@@ -47,14 +51,17 @@ import scalariform.formatter.preferences.FormatXml
 import scalariform.formatter.preferences.FormattingPreferences
 import scalariform.formatter.preferences.IndentSpaces
 import scalariform.formatter.preferences.PreserveDanglingCloseParenthesis
-import javax.swing.text.Utilities
 
 class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport, frame: JFrame) extends BaseHolder("SE", "Script Editor", se) {
 
   codeSupport.toolbar.setOpaque(true)
   codeSupport.toolbar.setBackground(new Color(230, 230, 230))
 
-  codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+  val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
+  tFactory.putMapping("text/scala2", "net.kogics.kojo.lexer.ScalariformTokenMaker")
+  TokenMakerFactory.setDefaultInstance(tFactory)
+  codePane.setSyntaxEditingStyle("text/scala2")
+//  codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
   codePane.setAntiAliasingEnabled(true)
   codePane.setBracketMatchingEnabled(true)
   codePane.setMatchedBracketBGColor(new Color(247, 247, 247))
