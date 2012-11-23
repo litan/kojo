@@ -20,7 +20,6 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.Token
 import org.fife.ui.rsyntaxtextarea.TokenMap
 import org.fife.ui.rsyntaxtextarea.TokenTypes
-
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Segment
@@ -28,6 +27,7 @@ import scalariform.lexer.ScalaLexer
 import scalariform.lexer.{ Token => SfToken }
 import scalariform.lexer.TokenType
 import scalariform.lexer.Tokens
+import scala.collection.mutable.ListBuffer
 
 class ScalariformTokenMaker extends AbstractTokenMaker {
 
@@ -43,36 +43,23 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
   def showTiming(t0: Long) {
     if (timingOn) {
-      println("Doc lexing took: %2.4f secs" format((System.currentTimeMillis - t0)/1000.0))
+      println("Doc lexing took: %2.4f secs" format ((System.currentTimeMillis - t0) / 1000.0))
     }
   }
 
   val docListener = new DocumentListener {
-    def doLexing(doc: String) {
-      debugOn = if (System.getProperty("kojo.lexing.debug") == "true") true else false 
-      timingOn = if (System.getProperty("kojo.lexing.timing") == "true") true else false 
-      val t0 = System.currentTimeMillis()
-      // The current implementation seems to work fast enough for all practical purposes
-      // But here are some additional ideas for optimization:
-      // (1) Make ScalaLexer work with a Reader, and provide a reader for Documents that does not copy string/array
-      // data around.
-      // (2) Retokensize only 'damaged' portions of the document
-      docTokens = ScalaLexer.rawTokenise(doc, true)
-      docTokens = docTokens.slice(0, docTokens.size - 1)
-      showTiming(t0)
-    }
-    
+
     def insertUpdate(e: DocumentEvent) {
       val doc = e.getDocument().getText(0, e.getDocument().getLength())
-      doLexing(doc)
+      lexDoc(doc)
     }
     def removeUpdate(e: DocumentEvent) {
       val doc = e.getDocument().getText(0, e.getDocument().getLength())
-      doLexing(doc)
+      lexDoc(doc)
     }
     def changedUpdate(e: DocumentEvent) {
       val doc = e.getDocument().getText(0, e.getDocument().getLength())
-      doLexing(doc)
+      lexDoc(doc)
     }
   }
 
@@ -99,12 +86,21 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     TokenTypes.NULL
   }
 
-  def addTokenHook(array: Array[Char], start: Int, end: Int, tokenType: Int, startOffset: Int) {
-    addToken(array, start, end, tokenType, startOffset)
+  def lexDoc(doc: String) {
+    debugOn = if (System.getProperty("kojo.lexing.debug") == "true") true else false
+    timingOn = if (System.getProperty("kojo.lexing.timing") == "true") true else false
+    val t0 = System.currentTimeMillis()
+    // The current implementation seems to work fast enough for all practical purposes
+    // But here are some additional ideas for optimization:
+    // (1) Make ScalaLexer work with a Reader, and provide a reader for Documents that does not copy string/array
+    // data around.
+    // (2) Retokensize only 'damaged' portions of the document
+    docTokens = ScalaLexer.rawTokenise(doc, true)
+    docTokens = docTokens.slice(0, docTokens.size - 1)
+    showTiming(t0)
   }
 
-  override def getTokenList(segment: Segment, initialTokenType: Int, segmentOffset: Int): Token = {
-
+  def tokensForLine(segment: Segment, segmentOffset: Int) = {
     def isLastMultiline(ts: List[SfToken]) = ts match {
       case Nil => false
       case ts2 =>
@@ -112,51 +108,65 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         if (t.rawText.contains("\n")) true else false
     }
 
-    def splitLastInactive(t: SfToken) = {
+    def splitLastInactive(t: SfToken): Option[SfToken] = {
       val delta = segmentOffset - t.offset
       val upper = if (t.length > delta + segment.count) delta + segment.count else t.length
       val text = t.rawText.slice(delta, upper)
-      SfToken(t.tokenType, text, t.offset + delta, text)
+      if (text.size > 0)
+        Some(SfToken(t.tokenType, text, t.offset + delta, text))
+      else
+        None
     }
 
-    def splitLastActive(t: SfToken) = {
+    def splitLastActive(t: SfToken): Option[SfToken] = {
       val trim = segmentOffset + segment.count - t.offset
-      SfToken(t.tokenType, t.rawText.slice(0, trim), t.offset, t.rawText.slice(0, trim))
+      val text = t.rawText.slice(0, trim)
+      if (text.size > 0)
+        Some(SfToken(t.tokenType, text, t.offset, text))
+      else
+        None
     }
-
-    def addRstaToken(t: SfToken) {
-      debug(" %s |" format(t))
-      val tRSTATokenStart = t.offset + segment.offset - segmentOffset
-      val tRSTATokenEnd = tRSTATokenStart + t.length - 1
-      val tRSTATokenOffset = t.offset
-      addTokenHook(segment.array, tRSTATokenStart, tRSTATokenEnd, convertTokenType(t.tokenType), tRSTATokenOffset)
-    }
-
-    debug("\n--- Getting tokens. Segment Offset: %d, Segment lenght: %d" format (segmentOffset, segment.length))
-    debug("Input Text:" + segment.toString())
 
     val (rest, preInactive) = docTokens.partition { t => t.offset >= segmentOffset }
     val (active, postInactive) = rest.partition { t => t.offset <= segmentOffset + segment.length }
 
-    resetTokenList()
+    val lineTokens = new ListBuffer[SfToken]
 
     if (isLastMultiline(preInactive)) {
-      val t2 = splitLastInactive(preInactive.last)
-      addRstaToken(t2)
+      splitLastInactive(preInactive.last).foreach {lineTokens += _}
     }
 
     if (isLastMultiline(active)) {
       val (active3, active4) = active.splitAt(active.size - 1)
-      active3.foreach { addRstaToken }
-      addRstaToken(splitLastActive(active4(0)))
+      active3.foreach { lineTokens += _ }
+      splitLastActive(active4(0)).foreach {lineTokens += _}
     }
     else {
-      active.foreach { addRstaToken }
+      active.foreach { lineTokens += _ }
     }
 
-    if (firstToken == null) {
-      addRstaToken(SfToken(Tokens.EOF, "", segmentOffset, ""))
+    if (lineTokens.size == 0) {
+      lineTokens += SfToken(Tokens.EOF, "", segmentOffset, "")
     }
+
+    lineTokens.toList
+  }
+
+  override def getTokenList(segment: Segment, initialTokenType: Int, segmentOffset: Int): Token = {
+    def addRstaToken(t: SfToken) {
+      debug(" %s |" format (t))
+      val tRSTATokenStart = t.offset + segment.offset - segmentOffset
+      val tRSTATokenEnd = tRSTATokenStart + t.length - 1
+      val tRSTATokenOffset = t.offset
+      addToken(segment.array, tRSTATokenStart, tRSTATokenEnd, convertTokenType(t.tokenType), tRSTATokenOffset)
+    }
+
+    debug("\n--- Getting tokens. Segment Offset: %d, Segment length: %d" format (segmentOffset, segment.length))
+    debug("Input Text:" + segment.toString())
+
+    resetTokenList()
+    tokensForLine(segment, segmentOffset).foreach { addRstaToken }
+
     firstToken
   }
 
