@@ -82,6 +82,8 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     }
   }
 
+  override def getLineCommentStartAndEnd() = Array("//", null)
+
   override def getLastTokenTypeOnLine(text: Segment, initialTokenType: Int) = {
     TokenTypes.NULL
   }
@@ -133,13 +135,13 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     val lineTokens = new ListBuffer[SfToken]
 
     if (isLastMultiline(preInactive)) {
-      splitLastInactive(preInactive.last).foreach {lineTokens += _}
+      splitLastInactive(preInactive.last).foreach { lineTokens += _ }
     }
 
     if (isLastMultiline(active)) {
       val (active3, active4) = active.splitAt(active.size - 1)
       active3.foreach { lineTokens += _ }
-      splitLastActive(active4(0)).foreach {lineTokens += _}
+      splitLastActive(active4(0)).foreach { lineTokens += _ }
     }
     else {
       active.foreach { lineTokens += _ }
