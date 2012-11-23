@@ -64,7 +64,6 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   }
 
   override def onInsert(e: DocumentEvent) = docListener.insertUpdate(e)
-  override def onChange(e: DocumentEvent) = docListener.changedUpdate(e)
   override def onRemove(e: DocumentEvent) = docListener.removeUpdate(e)
 
   override def getCurlyBracesDenoteCodeBlocks = true
