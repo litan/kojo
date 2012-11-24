@@ -11,6 +11,9 @@ import scalariform.lexer.Tokens.STRING_LITERAL
 import scalariform.lexer.Tokens.VAL
 import scalariform.lexer.Tokens.VARID
 import scalariform.lexer.Tokens.WS
+import scalariform.lexer.Tokens.XML_NAME
+import scalariform.lexer.Tokens.XML_START_OPEN
+import scalariform.lexer.Tokens.XML_TAG_CLOSE
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
@@ -52,18 +55,16 @@ val y = 20
     val segment = new Segment(codeChars, line1.length + 1, line2.length)
 
     val expectedTokens = List(
-      Token(VAL, "val", 0, "val"),
-      Token(WS, " ", 3, " "),
-      Token(VARID, "x", 4, "x"),
-      Token(WS, " ", 5, " "),
-      Token(EQUALS, "=", 6, "="),
-      Token(WS, " ", 7, " "),
-      Token(INTEGER_LITERAL, "10", 8, "10")
+      Token(VAL, "val", 11, "val"),
+      Token(WS, " ", 14, " "),
+      Token(VARID, "y", 15, "y"),
+      Token(WS, " ", 16, " "),
+      Token(EQUALS, "=", 17, "="),
+      Token(WS, " ", 18, " "),
+      Token(INTEGER_LITERAL, "20", 19, "20")
     )
 
-//    println(lexer.tokensForLine(segment, line1.length + 1))
-
-    //    lexer.tokensForLine(segment, 0) should be(expectedTokens)
+    lexer.tokensForLine(segment, line1.length + 1) should be(expectedTokens)
   }
 
   test("test multi line string - line 1") {
@@ -128,12 +129,12 @@ def</a>.text
     val segment = new Segment(codeChars, line1.length + 1, line2.length)
 
     val expectedTokens = List(
-      Token(STRING_LITERAL, "abc", 12, "abc")
+      Token(WS, " ", 9, " "),
+      Token(XML_START_OPEN, "<", 10, "<"),
+      Token(XML_NAME, "level1", 11, "level1"),
+      Token(XML_TAG_CLOSE, ">", 17, ">")
     )
 
-    println(lexer.tokensForLine(segment, line1.length + 1))
-
-    //    lexer.tokensForLine(segment, line1.length + 1) should be(expectedTokens)
+    lexer.tokensForLine(segment, line1.length + 1) should be(expectedTokens)
   }
-
 }
