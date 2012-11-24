@@ -128,8 +128,8 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         None
     }
 
-    val (rest, preInactive) = docTokens.partition { t => t.offset >= segmentOffset }
-    val (active, postInactive) = rest.partition { t => t.offset <= segmentOffset + segment.length }
+    val (preInactive, rest) = docTokens.span { t => t.offset < segmentOffset }
+    val (active, postInactive) = rest.span { t => t.offset <= segmentOffset + segment.length }
 
     val lineTokens = new ListBuffer[SfToken]
 
