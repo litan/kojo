@@ -110,7 +110,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         docTokens = 
           preInactive.slice(0, preInactive.size - dropped) ++
           newActive.slice(0, newActive.size - 1) ++
-          newPostInactive.slice(0, newPostInactive.size - udropped)
+          newPostInactive.slice(udropped, newPostInactive.size)
         showTiming(t0, "Incr")
       }
     }
