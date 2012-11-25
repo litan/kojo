@@ -15,20 +15,20 @@
 
 package net.kogics.kojo.lexer
 
+import scala.collection.mutable.ArrayBuffer
+
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMaker
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.Token
 import org.fife.ui.rsyntaxtextarea.TokenMap
 import org.fife.ui.rsyntaxtextarea.TokenTypes
+
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Segment
 import scalariform.lexer.ScalaLexer
-import scalariform.lexer.{ Token => SfToken }
+import scalariform.lexer.{Token => SfToken}
 import scalariform.lexer.TokenType
 import scalariform.lexer.Tokens
-import scala.collection.mutable.ListBuffer
-import net.kogics.kojo.util.Utils
 
 class ScalariformTokenMaker extends AbstractTokenMaker {
 
@@ -61,19 +61,11 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         lexDoc(doc.getText(0, doc.getLength))
       }
       else {
-        try {
           updateDiagnosticFlags()
           val t0 = System.currentTimeMillis()
-
-          //          println("\n***\nDoc Insert: Offset: %d, Length: %d" format (offset, len))
           val preInactive = docTokens.takeWhile(!changeInToken(offset, len, _))
           val active = docTokens.slice(preInactive.length, docTokens.length).takeWhile(changeInToken(offset, len, _))
           val postInactive = docTokens.slice(preInactive.length + active.length, docTokens.length)
-
-          //          println("Pre Inactive: " + preInactive)
-          //          println("Active: " + active)
-          //          println("Post Inactive: " + postInactive)
-
           val newPostInactive = postInactive.map { t => t.copy(offset = t.offset + len) }
 
           def needMore(t: SfToken) = t.tokenType match {
@@ -111,17 +103,10 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
           val (lower, dropped) = fragStart(preInactive.reverse, 1)
           val flen = fragEnd - lower
-          //          println("Doc fragment - lower: %d, len: %d" format (lower, flen))
           val docFragment = doc.getText(lower, flen)
-          //          println("Doc fragment: " + docFragment)
           val newActive = ScalaLexer.rawTokeniseV(docFragment, true).map { t => t.copy(offset = t.offset + lower) }
-          //          println("New Active: " + newActive)
           docTokens = preInactive.slice(0, preInactive.size - dropped) ++ newActive.slice(0, newActive.size - 1) ++ newPostInactive
           showTiming(t0, "Incr")
-        }
-        catch {
-          case t: Throwable => println(Utils.stackTraceAsString(t))
-        }
       }
     }
 
@@ -168,11 +153,6 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   def lexDoc(doc: String) {
     updateDiagnosticFlags()
     val t0 = System.currentTimeMillis()
-    // The current implementation seems to work fast enough for all practical purposes
-    // But here are some additional ideas for optimization:
-    // (1) Make ScalaLexer work with a Reader, and provide a reader for Documents that does not copy string/array
-    // data around.
-    // (2) Retokensize only 'damaged' portions of the document
     docTokens = ScalaLexer.rawTokeniseV(doc, true)
     docTokens = docTokens.slice(0, docTokens.size - 1)
     showTiming(t0, "Full")
@@ -208,7 +188,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     val (preInactive, rest) = docTokens.span { t => t.offset < segmentOffset }
     val (active, postInactive) = rest.span { t => t.offset <= segmentOffset + segment.length }
 
-    val lineTokens = new ListBuffer[SfToken]
+    val lineTokens = new ArrayBuffer[SfToken]
 
     if (isLastMultiline(preInactive)) {
       splitLastInactive(preInactive.last).foreach { lineTokens += _ }
@@ -227,7 +207,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
       lineTokens += SfToken(Tokens.EOF, "", segmentOffset, "")
     }
 
-    lineTokens.toList
+    lineTokens.toVector
   }
 
   override def getTokenList(segment: Segment, initialTokenType: Int, segmentOffset: Int): Token = {
