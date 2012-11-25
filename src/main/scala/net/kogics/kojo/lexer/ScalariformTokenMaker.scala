@@ -26,7 +26,7 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Segment
 import scalariform.lexer.ScalaLexer
-import scalariform.lexer.{Token => SfToken}
+import scalariform.lexer.{ Token => SfToken }
 import scalariform.lexer.TokenType
 import scalariform.lexer.Tokens
 
@@ -61,52 +61,57 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         lexDoc(doc.getText(0, doc.getLength))
       }
       else {
-          updateDiagnosticFlags()
-          val t0 = System.currentTimeMillis()
-          val preInactive = docTokens.takeWhile(!changeInToken(offset, len, _))
-          val active = docTokens.slice(preInactive.length, docTokens.length).takeWhile(changeInToken(offset, len, _))
-          val postInactive = docTokens.slice(preInactive.length + active.length, docTokens.length)
-          val newPostInactive = postInactive.map { t => t.copy(offset = t.offset + len) }
+        updateDiagnosticFlags()
+        val t0 = System.currentTimeMillis()
+        val preInactive = docTokens.takeWhile(!changeInToken(offset, len, _))
+        val active = docTokens.slice(preInactive.length, docTokens.length).takeWhile(changeInToken(offset, len, _))
+        val postInactive = docTokens.slice(preInactive.length + active.length, docTokens.length)
+        val newPostInactive = postInactive.map { t => t.copy(offset = t.offset + len) }
 
-          def needMore(t: SfToken) = t.tokenType match {
-            case Tokens.XML_START_OPEN             => true
-            case Tokens.XML_EMPTY_CLOSE            => true
-            case Tokens.XML_TAG_CLOSE              => true
-            case Tokens.XML_END_OPEN               => true
-            case Tokens.XML_WHITESPACE             => true
-            case Tokens.XML_ATTR_EQ                => true
-            case Tokens.XML_ATTR_VALUE             => true
-            case Tokens.XML_NAME                   => true
-            case Tokens.XML_PCDATA                 => true
-            case Tokens.XML_COMMENT                => true
-            case Tokens.XML_CDATA                  => true
-            case Tokens.XML_UNPARSED               => true
-            case Tokens.XML_PROCESSING_INSTRUCTION => true
-            case _                                 => false
-          }
+        def needMore(t: SfToken) = t.tokenType match {
+          case Tokens.XML_START_OPEN             => true
+          case Tokens.XML_EMPTY_CLOSE            => true
+          case Tokens.XML_TAG_CLOSE              => true
+          case Tokens.XML_END_OPEN               => true
+          case Tokens.XML_WHITESPACE             => true
+          case Tokens.XML_ATTR_EQ                => true
+          case Tokens.XML_ATTR_VALUE             => true
+          case Tokens.XML_NAME                   => true
+          case Tokens.XML_PCDATA                 => true
+          case Tokens.XML_COMMENT                => true
+          case Tokens.XML_CDATA                  => true
+          case Tokens.XML_UNPARSED               => true
+          case Tokens.XML_PROCESSING_INSTRUCTION => true
+          case _                                 => false
+        }
 
-          def fragStart(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
-            case Seq() => (0, dropped)
-            case Seq(x, xs @ _*) =>
-              if (dropped == 1) {
-                fragStart(xs, dropped + 1)
-              }
-              else {
-                if (needMore(x)) fragStart(xs, dropped + 1) else (x.offset, dropped)
-              }
-          }
+        def fragStart(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
+          case Seq() => (0, dropped)
+          case Seq(x, xs @ _*) =>
+            if (dropped == 1) {
+              fragStart(xs, dropped + 1)
+            }
+            else {
+              if (needMore(x)) fragStart(xs, dropped + 1) else (x.offset, dropped)
+            }
+        }
 
-          def fragEnd = newPostInactive match {
-            case Seq()           => doc.getLength
-            case Seq(x, xs @ _*) => x.offset
-          }
+        def fragEnd(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
+          case Seq() => (doc.getLength, dropped)
+          case Seq(x, xs @ _*) =>
+            if (needMore(x)) fragEnd(xs, dropped + 1) else (x.offset, dropped)
+        }
 
-          val (lower, dropped) = fragStart(preInactive.reverse, 1)
-          val flen = fragEnd - lower
-          val docFragment = doc.getText(lower, flen)
-          val newActive = ScalaLexer.rawTokeniseV(docFragment, true).map { t => t.copy(offset = t.offset + lower) }
-          docTokens = preInactive.slice(0, preInactive.size - dropped) ++ newActive.slice(0, newActive.size - 1) ++ newPostInactive
-          showTiming(t0, "Incr")
+        val (lower, dropped) = fragStart(preInactive.reverse, 1)
+        val (upper, udropped) = fragEnd(newPostInactive, 0)
+        val flen = upper - lower
+        val docFragment = doc.getText(lower, flen)
+        val newActive = ScalaLexer.rawTokeniseV(docFragment, true).map { t => t.copy(offset = t.offset + lower) }
+        docTokens = 
+          preInactive.slice(0, preInactive.size - dropped) ++
+          newActive.slice(0, newActive.size - 1) ++
+          newPostInactive.slice(0, newPostInactive.size - udropped)
+        showTiming(t0, "Incr")
       }
     }
 
