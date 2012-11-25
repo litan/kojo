@@ -89,4 +89,69 @@ class ScalariformTokenMakerTest2 extends FunSuite with ShouldMatchersForJUnit {
     lexer.tokensForLine(segment, line1.length) should be(expectedTokens)
   }
 
+  test("test multi line string - line 1") {
+    val (lexer, pane) = fixture
+    val line1 = <a>val x = """</a>.text
+    val line2 = <a>
+abc
+def</a>.text
+
+//    lexer.lexDoc(line2)
+
+    val doc = pane.getDocument
+    doc.insertString(0, line1+line2, null)
+
+    lexer.docListener.insertUpdate(new DocumentEvent {
+      def getOffset = 0
+      def getLength = line1.length
+      def getDocument = pane.getDocument
+      def getChange(x$1: javax.swing.text.Element): javax.swing.event.DocumentEvent.ElementChange = ???
+      def getType() = DocumentEvent.EventType.INSERT
+    })
+    
+    val segment = new Segment()
+    doc.getText(0, line1.length, segment)
+    
+    val expectedTokens = List(
+      Token(VAL, "val", 0, "val"),
+      Token(WS, " ", 3, " "),
+      Token(VARID, "x", 4, "x"),
+      Token(WS, " ", 5, " "),
+      Token(EQUALS, "=", 6, "="),
+      Token(WS, " ", 7, " "),
+      Token(STRING_LITERAL, "\"\"\"", 8, "\"\"\"")
+    )
+
+    lexer.tokensForLine(segment, 0) should be(expectedTokens)
+  }
+
+  test("test multi line string - line 2") {
+    val (lexer, pane) = fixture
+    val line1 = <a>val x = """</a>.text
+    val line23 = <a>
+abc
+def</a>.text
+
+    lexer.lexDoc(line1)
+
+    val doc = pane.getDocument
+    doc.insertString(0, line1+line23, null)
+
+    lexer.docListener.insertUpdate(new DocumentEvent {
+      def getOffset = line1.length
+      def getLength = line23.length
+      def getDocument = pane.getDocument
+      def getChange(x$1: javax.swing.text.Element): javax.swing.event.DocumentEvent.ElementChange = ???
+      def getType() = DocumentEvent.EventType.INSERT
+    })
+    
+    val segment = new Segment()
+    doc.getText(line1.length+1, 3, segment)
+    
+    val expectedTokens = List(
+      Token(STRING_LITERAL, "abc", 12, "abc")
+    )
+
+    lexer.tokensForLine(segment, line1.length+1) should be(expectedTokens)
+  }
 }
