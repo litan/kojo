@@ -28,10 +28,11 @@ import scalariform.lexer.{ Token => SfToken }
 import scalariform.lexer.TokenType
 import scalariform.lexer.Tokens
 import scala.collection.mutable.ListBuffer
+import net.kogics.kojo.util.Utils
 
 class ScalariformTokenMaker extends AbstractTokenMaker {
 
-  var docTokens = ScalaLexer.rawTokenise("", true)
+  var docTokens = ScalaLexer.rawTokeniseV("", true)
   var debugOn = false
   var timingOn = false
 
@@ -41,22 +42,94 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     }
   }
 
-  def showTiming(t0: Long) {
+  def showTiming(t0: Long, mod: String) {
     if (timingOn) {
-      println("Doc lexing took: %2.4f secs" format ((System.currentTimeMillis - t0) / 1000.0))
+      println("Doc lexing [%s] took: %2.4f secs" format (mod, (System.currentTimeMillis - t0) / 1000.0))
     }
   }
 
   val docListener = new DocumentListener {
 
     def insertUpdate(e: DocumentEvent) {
-      val doc = e.getDocument().getText(0, e.getDocument().getLength())
-      lexDoc(doc)
+      def changeInToken(offset: Int, len: Int, t: SfToken) = scalariform.utils.Range(offset, len).intersects(t.range)
+
+      val (offset, len) = (e.getOffset, e.getLength)
+      val doc = e.getDocument
+
+      val insertPrefix = doc.getText(offset, 2)
+      if (insertPrefix == "//" || insertPrefix == "/*") {
+        lexDoc(doc.getText(0, doc.getLength))
+      }
+      else {
+        try {
+          updateDiagnosticFlags()
+          val t0 = System.currentTimeMillis()
+
+          //          println("\n***\nDoc Insert: Offset: %d, Length: %d" format (offset, len))
+          val preInactive = docTokens.takeWhile(!changeInToken(offset, len, _))
+          val active = docTokens.slice(preInactive.length, docTokens.length).takeWhile(changeInToken(offset, len, _))
+          val postInactive = docTokens.slice(preInactive.length + active.length, docTokens.length)
+
+          //          println("Pre Inactive: " + preInactive)
+          //          println("Active: " + active)
+          //          println("Post Inactive: " + postInactive)
+
+          val newPostInactive = postInactive.map { t => t.copy(offset = t.offset + len) }
+
+          def needMore(t: SfToken) = t.tokenType match {
+            case Tokens.XML_START_OPEN             => true
+            case Tokens.XML_EMPTY_CLOSE            => true
+            case Tokens.XML_TAG_CLOSE              => true
+            case Tokens.XML_END_OPEN               => true
+            case Tokens.XML_WHITESPACE             => true
+            case Tokens.XML_ATTR_EQ                => true
+            case Tokens.XML_ATTR_VALUE             => true
+            case Tokens.XML_NAME                   => true
+            case Tokens.XML_PCDATA                 => true
+            case Tokens.XML_COMMENT                => true
+            case Tokens.XML_CDATA                  => true
+            case Tokens.XML_UNPARSED               => true
+            case Tokens.XML_PROCESSING_INSTRUCTION => true
+            case _                                 => false
+          }
+
+          def fragStart(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
+            case Seq() => (0, dropped)
+            case Seq(x, xs @ _*) =>
+              if (dropped == 1) {
+                fragStart(xs, dropped + 1)
+              }
+              else {
+                if (needMore(x)) fragStart(xs, dropped + 1) else (x.offset, dropped)
+              }
+          }
+
+          def fragEnd = newPostInactive match {
+            case Seq()           => doc.getLength
+            case Seq(x, xs @ _*) => x.offset
+          }
+
+          val (lower, dropped) = fragStart(preInactive.reverse, 1)
+          val flen = fragEnd - lower
+          //          println("Doc fragment - lower: %d, len: %d" format (lower, flen))
+          val docFragment = doc.getText(lower, flen)
+          //          println("Doc fragment: " + docFragment)
+          val newActive = ScalaLexer.rawTokeniseV(docFragment, true).map { t => t.copy(offset = t.offset + lower) }
+          //          println("New Active: " + newActive)
+          docTokens = preInactive.slice(0, preInactive.size - dropped) ++ newActive.slice(0, newActive.size - 1) ++ newPostInactive
+          showTiming(t0, "Incr")
+        }
+        catch {
+          case t: Throwable => println(Utils.stackTraceAsString(t))
+        }
+      }
     }
+
     def removeUpdate(e: DocumentEvent) {
       val doc = e.getDocument().getText(0, e.getDocument().getLength())
       lexDoc(doc)
     }
+
     def changedUpdate(e: DocumentEvent) {
       val doc = e.getDocument().getText(0, e.getDocument().getLength())
       lexDoc(doc)
@@ -87,23 +160,27 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     TokenTypes.NULL
   }
 
+  def updateDiagnosticFlags() {
+    debugOn = if (System.getProperty("kojo.lexer.debug") == "true") true else false
+    timingOn = if (System.getProperty("kojo.lexer.timing") == "true") true else false
+  }
+
   def lexDoc(doc: String) {
-    debugOn = if (System.getProperty("kojo.lexing.debug") == "true") true else false
-    timingOn = if (System.getProperty("kojo.lexing.timing") == "true") true else false
+    updateDiagnosticFlags()
     val t0 = System.currentTimeMillis()
     // The current implementation seems to work fast enough for all practical purposes
     // But here are some additional ideas for optimization:
     // (1) Make ScalaLexer work with a Reader, and provide a reader for Documents that does not copy string/array
     // data around.
     // (2) Retokensize only 'damaged' portions of the document
-    docTokens = ScalaLexer.rawTokenise(doc, true)
+    docTokens = ScalaLexer.rawTokeniseV(doc, true)
     docTokens = docTokens.slice(0, docTokens.size - 1)
-    showTiming(t0)
+    showTiming(t0, "Full")
   }
 
   def tokensForLine(segment: Segment, segmentOffset: Int) = {
-    def isLastMultiline(ts: List[SfToken]) = ts match {
-      case Nil => false
+    def isLastMultiline(ts: Seq[SfToken]) = ts match {
+      case Seq() => false
       case ts2 =>
         val t = ts2.last
         if (t.rawText.contains("\n")) true else false
