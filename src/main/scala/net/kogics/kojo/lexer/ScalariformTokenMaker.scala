@@ -35,6 +35,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   var docTokens = ScalaLexer.rawTokeniseV("", true)
   var debugOn = false
   var timingOn = false
+  var prevRemove = false
 
   def debug(msg: => String) {
     if (debugOn) {
@@ -55,9 +56,25 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
       val (offset, len) = (e.getOffset, e.getLength)
       val doc = e.getDocument
-
       val insertPrefix = doc.getText(offset, 2)
-      if (insertPrefix == "//" || insertPrefix == "/*") {
+
+      val fullScanNeeded = {
+        if (prevRemove) {
+          prevRemove = false
+          true
+        }
+        else if (insertPrefix == "//" || insertPrefix == "/*") {
+          true
+        }
+//        else if (len > 1) {
+//          true
+//        }
+        else {
+          false
+        }
+      }
+
+      if (fullScanNeeded) {
         lexDoc(doc.getText(0, doc.getLength))
       }
       else {
@@ -107,10 +124,10 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         val flen = upper - lower
         val docFragment = doc.getText(lower, flen)
         val newActive = ScalaLexer.rawTokeniseV(docFragment, true).map { t => t.copy(offset = t.offset + lower) }
-        docTokens = 
+        docTokens =
           preInactive.slice(0, preInactive.size - dropped) ++
-          newActive.slice(0, newActive.size - 1) ++
-          newPostInactive.slice(udropped, newPostInactive.size)
+            newActive.slice(0, newActive.size - 1) ++
+            newPostInactive.slice(udropped, newPostInactive.size)
         showTiming(t0, "Incr")
       }
     }
@@ -118,6 +135,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     def removeUpdate(e: DocumentEvent) {
       val doc = e.getDocument().getText(0, e.getDocument().getLength())
       lexDoc(doc)
+      prevRemove = true
     }
 
     def changedUpdate(e: DocumentEvent) {
