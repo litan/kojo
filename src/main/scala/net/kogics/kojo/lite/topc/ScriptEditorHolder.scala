@@ -22,6 +22,8 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeActi
 import org.fife.ui.rsyntaxtextarea.Style
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory
 import org.fife.ui.rsyntaxtextarea.TokenTypes
+import org.fife.ui.rsyntaxtextarea.folding.CurlyFoldParser
+import org.fife.ui.rsyntaxtextarea.folding.FoldParserManager
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
 import org.fife.ui.rtextarea.RTextScrollPane
 import org.fife.ui.rtextarea.SearchEngine
@@ -57,10 +59,12 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codeSupport.toolbar.setOpaque(true)
   codeSupport.toolbar.setBackground(new Color(230, 230, 230))
 
+  val SYNTAX_STYLE_SCALA2 = "text/scala2" 
   val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
-  tFactory.putMapping("text/scala2", "net.kogics.kojo.lexer.ScalariformTokenMaker")
+  tFactory.putMapping(SYNTAX_STYLE_SCALA2, "net.kogics.kojo.lexer.ScalariformTokenMaker")
+  FoldParserManager.get.addFoldParserMapping(SYNTAX_STYLE_SCALA2, new CurlyFoldParser)
   TokenMakerFactory.setDefaultInstance(tFactory)
-  codePane.setSyntaxEditingStyle("text/scala2")
+  codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
 //  codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
   codePane.setAntiAliasingEnabled(true)
   codePane.setBracketMatchingEnabled(true)
