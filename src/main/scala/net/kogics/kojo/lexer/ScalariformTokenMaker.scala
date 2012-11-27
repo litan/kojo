@@ -66,9 +66,9 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         else if (insertPrefix == "//" || insertPrefix == "/*") {
           true
         }
-//        else if (len > 1) {
-//          true
-//        }
+        //        else if (len > 1) {
+        //          true
+        //        }
         else {
           false
         }
@@ -153,9 +153,17 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     tpe == TokenTypes.IDENTIFIER || tpe == TokenTypes.FUNCTION
 
   override def getShouldIndentNextLineAfter(t: Token) = {
-    if (t != null && t.textCount == 1) {
-      val ch = t.text(t.textOffset)
-      ch == '{' || ch == '('
+    if (t != null) {
+      if (t.textCount == 1) {
+        val ch = t.text(t.textOffset)
+        ch == '{' || ch == '('
+      }
+      else if (t.textCount == 2) {
+        t.text(t.textOffset) == '=' && t.text(t.textOffset + 1) == '>'
+      }
+      else {
+        false
+      }
     }
     else {
       false
