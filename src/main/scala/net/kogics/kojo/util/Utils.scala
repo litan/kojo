@@ -77,6 +77,10 @@ object Utils {
     new ImageIcon(loadImage(fname), desc)
   }
 
+  def loadResource(res: String): String = {
+    readStream(getClass.getResourceAsStream(res))
+  }
+
   def inSwingThread = EventQueue.isDispatchThread
 
   def runAsync(fn: => Unit) {
@@ -268,6 +272,7 @@ object Utils {
   )
 
   def readStream(is: InputStream): String = {
+    require (is != null, "trying to read from a non-existent resource") 
     val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
     val buf = new Array[Char](1024)
     var nbytes = reader.read(buf)
