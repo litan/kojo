@@ -86,6 +86,21 @@ object Main extends AppMenu {
     }
   }
 
+  def loadAndRunResource(res: String) = {
+    try {
+      codePane.setText("")
+      val code = Utils.loadResource(res)
+      codePane.setText(Utils.stripCR(code))
+      codePane.setCaretPosition(0)
+      codePane.setCaretPosition(0)
+      Builtins.instance.stClickRunButton
+    }
+    catch {
+      case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
+    }
+    scriptEditorH.activate()
+  }
+
   def realMain(args: Array[String]): Unit = {
     System.setSecurityManager(null)
     runMultiInstancehandler()

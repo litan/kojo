@@ -105,7 +105,7 @@ trait AppMenu { self: Main.type =>
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
         def actionPerformed(ev: ActionEvent) {
-          loadAndRunUrl("http://www.kogics.net/public/kojolite/samples/" + file)
+          loadAndRunResource("/samples/" + file)
         }
       })
       item
@@ -126,6 +126,7 @@ trait AppMenu { self: Main.type =>
     samplesMenu.add(simpleMenu)
 
     val mgeomMenu = new JMenu("Math and Geometry")
+    mgeomMenu.add(menuItemFor("Solving Linear Equations", "solving-linear-equations.kojo"))
     mgeomMenu.add(menuItemFor("Spiral Square Tiles", "spiral-square-tiles.kojo"))
     mgeomMenu.add(menuItemFor("Spiral Hexangonal Tiles", "spiral-hexagon-tiles.kojo"))
     samplesMenu.add(mgeomMenu)
@@ -145,7 +146,7 @@ trait AppMenu { self: Main.type =>
 
     helpMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
     helpMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
-    helpMenu.add(menuItemForUrl("Introduction to 3D", "http://5xinef-kojolite-raytracer.googlecode.com/hg/stories/Story_D3.kojo"))
+    helpMenu.add(menuItemFor("Introduction to 3D", "d3-intro.kojo"))
     helpMenu.addSeparator()
 
     val about = new JMenuItem("About")
@@ -166,7 +167,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 (Early Access)<br/>
-              Version: 111112-1 <br/>
+              Version: 281112-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
