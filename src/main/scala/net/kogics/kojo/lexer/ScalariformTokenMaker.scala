@@ -36,21 +36,114 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   var debugOn = false
   var timingOn = false
   var prevRemove = false
+  val docListener = makeDocListener
 
-  def debug(msg: => String) {
-    if (debugOn) {
-      println(msg)
+  override def getWordsToHighlight: TokenMap = wordsToHighlight
+  override def getCurlyBracesDenoteCodeBlocks = true
+
+  override def getMarkOccurrencesOfTokenType(tpe: Int) =
+    tpe == TokenTypes.IDENTIFIER || tpe == TokenTypes.FUNCTION
+
+  override def getShouldIndentNextLineAfter(t: Token) = {
+    if (t != null) {
+      if (t.textCount == 1) {
+        val ch = t.text(t.textOffset)
+        ch == '{' || ch == '('
+      }
+      else if (t.textCount == 2) {
+        t.text(t.textOffset) == '=' && t.text(t.textOffset + 1) == '>'
+      }
+      else {
+        false
+      }
+    }
+    else {
+      false
     }
   }
 
-  def showTiming(t0: Long, mod: String) {
-    if (timingOn) {
-      println("Doc lexing [%s] took: %2.4f secs" format (mod, (System.currentTimeMillis - t0) / 1000.0))
-    }
+  override def getLineCommentStartAndEnd() = Array("//", null)
+
+  override def getLastTokenTypeOnLine(text: Segment, initialTokenType: Int) = {
+    TokenTypes.NULL
   }
 
-  val docListener = new DocumentListener {
+  override def getTokenList(segment: Segment, initialTokenType: Int, docOffset: Int): Token = {
+    def addRstaToken(t: SfToken) {
+      debug(" %s |" format (t))
+      // offset of token within its segment = offset in doc - offset of segment within doc
+      val tRSTATokenStart = t.offset - (docOffset - segment.offset)
+      val tRSTATokenEnd = tRSTATokenStart + t.length - 1
+      val tRSTATokenOffset = t.offset
+      addToken(segment.array, tRSTATokenStart, tRSTATokenEnd, convertTokenType(t.tokenType), tRSTATokenOffset)
+    }
 
+    debug("\n--- Getting tokens. Segment Offset: %d, Segment length: %d" format (docOffset, segment.length))
+    debug("Input Text:" + segment.toString())
+
+    resetTokenList()
+    tokensForLine(segment, docOffset).foreach { addRstaToken }
+
+    firstToken
+  }
+
+  def tokensForLine(segment: Segment, segmentOffset: Int) = {
+    def isLastMultiline(ts: Seq[SfToken]) = ts match {
+      case Seq() => false
+      case ts2 =>
+        val t = ts2.last
+        if (t.rawText.contains("\n")) true else false
+    }
+
+    def splitLastInactive(t: SfToken): Option[SfToken] = {
+      val delta = segmentOffset - t.offset
+      val upper = if (t.length > delta + segment.count) delta + segment.count else t.length
+      val text = t.rawText.slice(delta, upper)
+      if (text.size > 0)
+        Some(SfToken(t.tokenType, text, t.offset + delta, text))
+      else
+        None
+    }
+
+    def splitLastActive(t: SfToken): Option[SfToken] = {
+      val trim = segmentOffset + segment.count - t.offset
+      val text = t.rawText.slice(0, trim)
+      if (text.size > 0)
+        Some(SfToken(t.tokenType, text, t.offset, text))
+      else
+        None
+    }
+
+    val (preInactive, rest) = docTokens.span { t => t.offset < segmentOffset }
+    val (active, postInactive) = rest.span { t => t.offset <= segmentOffset + segment.length }
+
+    val lineTokens = new ArrayBuffer[SfToken]
+
+    if (isLastMultiline(preInactive)) {
+      splitLastInactive(preInactive.last).foreach { lineTokens += _ }
+    }
+
+    if (isLastMultiline(active)) {
+      val (active3, active4) = active.splitAt(active.size - 1)
+      active3.foreach { lineTokens += _ }
+      splitLastActive(active4(0)).foreach { lineTokens += _ }
+    }
+    else {
+      active.foreach { lineTokens += _ }
+    }
+
+    if (lineTokens.size == 0) {
+      lineTokens += SfToken(Tokens.EOF, "", segmentOffset, "")
+    }
+
+    lineTokens.toVector
+  }
+  
+  // Hooks called by RSTA on doc change
+  override def onInsert(e: DocumentEvent) = docListener.insertUpdate(e)
+  override def onRemove(e: DocumentEvent) = docListener.removeUpdate(e)
+
+  def makeDocListener = new DocumentListener {
     def insertUpdate(e: DocumentEvent) {
       def changeInToken(offset: Int, len: Int, t: SfToken) = scalariform.utils.Range(offset, len).intersects(t.range)
 
@@ -144,43 +237,6 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     }
   }
 
-  override def onInsert(e: DocumentEvent) = docListener.insertUpdate(e)
-  override def onRemove(e: DocumentEvent) = docListener.removeUpdate(e)
-
-  override def getCurlyBracesDenoteCodeBlocks = true
-
-  override def getMarkOccurrencesOfTokenType(tpe: Int) =
-    tpe == TokenTypes.IDENTIFIER || tpe == TokenTypes.FUNCTION
-
-  override def getShouldIndentNextLineAfter(t: Token) = {
-    if (t != null) {
-      if (t.textCount == 1) {
-        val ch = t.text(t.textOffset)
-        ch == '{' || ch == '('
-      }
-      else if (t.textCount == 2) {
-        t.text(t.textOffset) == '=' && t.text(t.textOffset + 1) == '>'
-      }
-      else {
-        false
-      }
-    }
-    else {
-      false
-    }
-  }
-
-  override def getLineCommentStartAndEnd() = Array("//", null)
-
-  override def getLastTokenTypeOnLine(text: Segment, initialTokenType: Int) = {
-    TokenTypes.NULL
-  }
-
-  def updateDiagnosticFlags() {
-    debugOn = if (System.getProperty("kojo.lexer.debug") == "true") true else false
-    timingOn = if (System.getProperty("kojo.lexer.timing") == "true") true else false
-  }
-
   def lexDoc(doc: String) {
     updateDiagnosticFlags()
     val t0 = System.currentTimeMillis()
@@ -188,78 +244,6 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     docTokens = docTokens.slice(0, docTokens.size - 1)
     showTiming(t0, "Full")
   }
-
-  def tokensForLine(segment: Segment, segmentOffset: Int) = {
-    def isLastMultiline(ts: Seq[SfToken]) = ts match {
-      case Seq() => false
-      case ts2 =>
-        val t = ts2.last
-        if (t.rawText.contains("\n")) true else false
-    }
-
-    def splitLastInactive(t: SfToken): Option[SfToken] = {
-      val delta = segmentOffset - t.offset
-      val upper = if (t.length > delta + segment.count) delta + segment.count else t.length
-      val text = t.rawText.slice(delta, upper)
-      if (text.size > 0)
-        Some(SfToken(t.tokenType, text, t.offset + delta, text))
-      else
-        None
-    }
-
-    def splitLastActive(t: SfToken): Option[SfToken] = {
-      val trim = segmentOffset + segment.count - t.offset
-      val text = t.rawText.slice(0, trim)
-      if (text.size > 0)
-        Some(SfToken(t.tokenType, text, t.offset, text))
-      else
-        None
-    }
-
-    val (preInactive, rest) = docTokens.span { t => t.offset < segmentOffset }
-    val (active, postInactive) = rest.span { t => t.offset <= segmentOffset + segment.length }
-
-    val lineTokens = new ArrayBuffer[SfToken]
-
-    if (isLastMultiline(preInactive)) {
-      splitLastInactive(preInactive.last).foreach { lineTokens += _ }
-    }
-
-    if (isLastMultiline(active)) {
-      val (active3, active4) = active.splitAt(active.size - 1)
-      active3.foreach { lineTokens += _ }
-      splitLastActive(active4(0)).foreach { lineTokens += _ }
-    }
-    else {
-      active.foreach { lineTokens += _ }
-    }
-
-    if (lineTokens.size == 0) {
-      lineTokens += SfToken(Tokens.EOF, "", segmentOffset, "")
-    }
-
-    lineTokens.toVector
-  }
-
-  override def getTokenList(segment: Segment, initialTokenType: Int, segmentOffset: Int): Token = {
-    def addRstaToken(t: SfToken) {
-      debug(" %s |" format (t))
-      val tRSTATokenStart = t.offset + segment.offset - segmentOffset
-      val tRSTATokenEnd = tRSTATokenStart + t.length - 1
-      val tRSTATokenOffset = t.offset
-      addToken(segment.array, tRSTATokenStart, tRSTATokenEnd, convertTokenType(t.tokenType), tRSTATokenOffset)
-    }
-
-    debug("\n--- Getting tokens. Segment Offset: %d, Segment length: %d" format (segmentOffset, segment.length))
-    debug("Input Text:" + segment.toString())
-
-    resetTokenList()
-    tokensForLine(segment, segmentOffset).foreach { addRstaToken }
-
-    firstToken
-  }
-
-  override def getWordsToHighlight: TokenMap = wordsToHighlight
 
   def convertTokenType(sfType: TokenType): Int = {
     if (Tokens.KEYWORDS.contains(sfType)) {
@@ -305,5 +289,22 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         case _                                 => TokenTypes.IDENTIFIER
       }
     }
+  }
+
+  def debug(msg: => String) {
+    if (debugOn) {
+      println(msg)
+    }
+  }
+
+  def showTiming(t0: Long, mod: String) {
+    if (timingOn) {
+      println("Doc lexing [%s] took: %2.4f secs" format (mod, (System.currentTimeMillis - t0) / 1000.0))
+    }
+  }
+
+  def updateDiagnosticFlags() {
+    debugOn = if (System.getProperty("kojo.lexer.debug") == "true") true else false
+    timingOn = if (System.getProperty("kojo.lexer.timing") == "true") true else false
   }
 }
