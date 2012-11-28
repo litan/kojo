@@ -37,6 +37,24 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   var timingOn = false
   var prevRemove = false
   val docListener = makeDocListener
+  val incrLexingTokens = Set(
+    Tokens.XML_START_OPEN,
+    Tokens.XML_EMPTY_CLOSE,
+    Tokens.XML_TAG_CLOSE,
+    Tokens.XML_END_OPEN,
+    Tokens.XML_WHITESPACE,
+    Tokens.XML_ATTR_EQ,
+    Tokens.XML_ATTR_VALUE,
+    Tokens.XML_NAME,
+    Tokens.XML_PCDATA,
+    Tokens.XML_COMMENT,
+    Tokens.XML_CDATA,
+    Tokens.XML_UNPARSED,
+    Tokens.XML_PROCESSING_INSTRUCTION,
+    Tokens.STRING_PART,
+    Tokens.STRING_LITERAL,
+    Tokens.VARID
+  )
 
   override def getWordsToHighlight: TokenMap = wordsToHighlight
   override def getCurlyBracesDenoteCodeBlocks = true
@@ -70,16 +88,17 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
   override def getTokenList(segment: Segment, initialTokenType: Int, docOffset: Int): Token = {
     def addRstaToken(t: SfToken) {
-      debug(" %s |" format (t))
+      debug("  %s" format (t))
       // offset of token within its segment = offset in doc - offset of segment within doc
-      val tRSTATokenStart = t.offset - (docOffset - segment.offset)
-      val tRSTATokenEnd = tRSTATokenStart + t.length - 1
-      val tRSTATokenOffset = t.offset
-      addToken(segment.array, tRSTATokenStart, tRSTATokenEnd, convertTokenType(t.tokenType), tRSTATokenOffset)
+      val segStartOffset = t.offset - (docOffset - segment.offset)
+      val segEndOffset = segStartOffset + t.length - 1
+      val docStartOffset = t.offset
+      addToken(segment.array, segStartOffset, segEndOffset, convertTokenType(t.tokenType), docStartOffset)
     }
 
-    debug("\n--- Getting tokens. Segment Offset: %d, Segment length: %d" format (docOffset, segment.length))
-    debug("Input Text:" + segment.toString())
+    debug("\n---\nGetting tokens for Line. Doc Offset: %d, Seg Offset: %d, Length: %d"
+      format (docOffset, segment.offset, segment.length))
+    debug("Line Text:" + segment.toString())
 
     resetTokenList()
     tokensForLine(segment, docOffset).foreach { addRstaToken }
@@ -138,7 +157,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
     lineTokens.toVector
   }
-  
+
   // Hooks called by RSTA on doc change
   override def onInsert(e: DocumentEvent) = docListener.insertUpdate(e)
   override def onRemove(e: DocumentEvent) = docListener.removeUpdate(e)
@@ -178,22 +197,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         val postInactive = docTokens.slice(preInactive.length + active.length, docTokens.length)
         val newPostInactive = postInactive.map { t => t.copy(offset = t.offset + len) }
 
-        def needMore(t: SfToken) = t.tokenType match {
-          case Tokens.XML_START_OPEN             => true
-          case Tokens.XML_EMPTY_CLOSE            => true
-          case Tokens.XML_TAG_CLOSE              => true
-          case Tokens.XML_END_OPEN               => true
-          case Tokens.XML_WHITESPACE             => true
-          case Tokens.XML_ATTR_EQ                => true
-          case Tokens.XML_ATTR_VALUE             => true
-          case Tokens.XML_NAME                   => true
-          case Tokens.XML_PCDATA                 => true
-          case Tokens.XML_COMMENT                => true
-          case Tokens.XML_CDATA                  => true
-          case Tokens.XML_UNPARSED               => true
-          case Tokens.XML_PROCESSING_INSTRUCTION => true
-          case _                                 => false
-        }
+        def needMore(t: SfToken) = if (incrLexingTokens.contains(t.tokenType)) true else false
 
         def fragStart(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
           case Seq() => (0, dropped)
