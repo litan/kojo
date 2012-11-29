@@ -27,6 +27,7 @@ import bibliothek.gui.dock.common.CGrid
 import bibliothek.gui.dock.common.mode.ExtendedMode
 import bibliothek.gui.dock.common.theme.ThemeMap
 import net.kogics.kojo.util.JUtils
+import net.kogics.kojo.history.HistoryPanel
 
 object Main extends AppMenu {
 
@@ -139,7 +140,7 @@ object Main extends AppMenu {
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, kojoCtx)
       val d3Holder = new D3CanvasHolder(Canvas3D.instance, kojoCtx)
-      val historyHolder = new HistoryHolder(new JPanel(), kojoCtx, codeSupport)
+      val historyHolder = new HistoryHolder(new HistoryPanel(codeSupport))
 
       kojoCtx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder)
       kojoCtx.frame = frame

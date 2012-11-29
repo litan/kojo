@@ -40,6 +40,7 @@ trait HistoryListener {
 trait HistorySaver {
   def save(code: String, file: Option[String]): HistoryItem
   def readAll(): Seq[HistoryItem]
+  def readSome(filter: String): Seq[HistoryItem]
   def updateStar(hi: HistoryItem)
   def updateTags(hi: HistoryItem)
 }
@@ -47,6 +48,7 @@ trait HistorySaver {
 class NoopHistorySaver extends HistorySaver {
   def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
   def readAll(): Seq[HistoryItem] = Seq()
+  def readSome(filter: String): Seq[HistoryItem] = Seq()
   def updateStar(hi: HistoryItem) {}
   def updateTags(hi: HistoryItem) {}
 }
@@ -56,7 +58,8 @@ object CommandHistory extends Singleton[CommandHistory] {
   protected def newInstance = {
     try {
       new CommandHistory(new DBHistorySaver)
-    } catch {
+    }
+    catch {
       case t: Throwable =>
         println("\nProblem initializing savable history: " + t.getMessage)
         println("\nUnable to save history during this session")
@@ -93,7 +96,8 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
       val hi = historySaver.save(code, file)
       internalAdd(hi)
       if (listener.isDefined) listener.get.itemAdded
-    } catch {
+    }
+    catch {
       case t: Throwable => println("\nProblem adding code to history: " + t.getMessage)
     }
   }
@@ -150,7 +154,8 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
     try {
       hi.starred = on
       historySaver.updateStar(hi)
-    } catch {
+    }
+    catch {
       case t: Throwable =>
         println("\nProblem saving star to history: " + t.getMessage)
         hi.starred = !on
@@ -170,10 +175,18 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
     try {
       hi.tags = tags
       historySaver.updateTags(hi)
-    } catch {
+    }
+    catch {
       case t: Throwable =>
         println("\nProblem saving tags to history: " + t.getMessage)
         hi.tags = oldTags
+    }
+  }
+
+  def filter(text: String) {
+    history.clear()
+    historySaver.readSome(text).reverse.foreach { hi =>
+      internalAdd(hi)
     }
   }
 }
