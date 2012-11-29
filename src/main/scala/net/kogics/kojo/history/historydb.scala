@@ -101,6 +101,12 @@ class DBHistorySaver extends HistorySaver {
     }
   }
 
+  def readSome(filter: String) = {
+    queryEach(conn, s"SELECT * FROM HISTORY WHERE SCRIPT LIKE '%$filter%' ORDER BY AT DESC LIMIT 1000") { rs =>
+      HistoryItem(rs.getString("SCRIPT"), rs.getString("FILE"), rs.getLong("ID"), rs.getBoolean("STARRED"), rs.getString("TAGS"), rs.getTimestamp("AT"))
+    }
+  }
+
   def save(code: String, file: Option[String]): HistoryItem = {
     val h = HistoryItem(code, file.getOrElse(""))
     saveStatement.setString(1, h.script)
