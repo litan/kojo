@@ -450,7 +450,7 @@ trait Shape  extends InputAware {
   def myCanvas = Impl.canvas
   def myNode = node
   def node: PNode
-  var sizeFactor = 1.
+  var sizeFactor = 1.0
 
   def hide() {
     Utils.runInSwingThread {
@@ -681,8 +681,8 @@ trait PolyShape extends BaseShape {
 }
 
 trait CrossShape {
-  val xdims = Array.fill(8){0.}
-  val ydims = Array.fill(8){0.}
+  val xdims = Array.fill(8){0.0}
+  val ydims = Array.fill(8){0.0}
   def crossDims(len: Double, wid: Double, cw: Double, r: Double = 1, greek: Boolean = false) = {
     require(wid / 2 > cw)
     require(len / 2 > cw)

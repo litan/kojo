@@ -89,7 +89,7 @@ object SvgShape {
     val p2 = matchRXY(ns)
     setStyle(ns)
     val res =
-      if (p2.x != 0. || p2.y != 0.) {
+      if (p2.x != 0.0 || p2.y != 0.0) {
         RoundRectangle(p0, p1, p2)
       } else {
         Rectangle(p0, p1)
