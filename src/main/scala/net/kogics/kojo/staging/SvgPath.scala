@@ -367,7 +367,7 @@ object SvgPath {
     catch {
       // TODO if exceptions crop up, handle them here.  If not, eventually
       // take out exception handling entirely.
-      case e => throw e
+      case e: Throwable => throw e
     }
 
     Utils.runInSwingThreadAndWait {

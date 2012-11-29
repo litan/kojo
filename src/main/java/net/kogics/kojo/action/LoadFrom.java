@@ -26,7 +26,6 @@ import net.kogics.kojo.lite.CodeExecutionSupport;
 
 public final class LoadFrom implements ActionListener {
 	private KojoCtx ctx;
-	private String ext = "kojo";
 
 	public LoadFrom(KojoCtx ctx) {
 		this.ctx = ctx;

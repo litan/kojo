@@ -24,7 +24,7 @@ object DevelMain extends StubMain with RmiMultiInstance {
  val classpath = {
     val urls = Thread.currentThread.getContextClassLoader match {
       case cl: java.net.URLClassLoader => cl.getURLs.toList
-      case _                           => error("classloader is not a URLClassLoader")
+      case _                           => sys.error("classloader is not a URLClassLoader")
     }
     val classp = urls map { _.getPath() }
     // simulate stuff that happens with webstart
