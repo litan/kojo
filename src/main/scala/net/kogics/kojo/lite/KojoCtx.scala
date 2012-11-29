@@ -90,7 +90,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.mwh.otherPaneActivated()
   }
 
-  def baseDir: String = System.getProperty("user.dir")
+  def baseDir: String = getLastLoadStoreDir + "/"
 
   def stopAnimation() = Utils.runInSwingThread {
     CodeExecutionSupport.instance.stopAnimation()

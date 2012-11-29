@@ -16,12 +16,24 @@
 package net.kogics.kojo
 package story
 
-import java.awt._
-import javax.swing._
-import java.awt.image._
-import javax.swing.text._
-import javax.swing.text.html._
-import org.scilab.forge.jlatexmath._
+import java.awt.Color
+import java.awt.Graphics
+import java.awt.Insets
+import java.awt.Rectangle
+import java.awt.Shape
+
+import org.scilab.forge.jlatexmath.ParseException
+import org.scilab.forge.jlatexmath.TeXConstants
+import org.scilab.forge.jlatexmath.TeXFormula
+
+import javax.swing.JLabel
+import javax.swing.text.Element
+import javax.swing.text.Position
+import javax.swing.text.StyleConstants
+import javax.swing.text.View
+import javax.swing.text.html.CSS
+import javax.swing.text.html.HTML
+import javax.swing.text.html.HTMLEditorKit
 
 object CustomHtmlEditorKit {
   val latexPrefix = "latex://"
@@ -36,14 +48,6 @@ object CustomHtmlEditorKit {
 
 class CustomHtmlEditorKit private extends HTMLEditorKit {
   override def getViewFactory() = new CustomHtmlFactory()
-  
-//  override def createDefaultDocument() = {
-//    val doc = super.createDefaultDocument().asInstanceOf[HTMLDocument]
-//    val baseDir = CodeEditorTopComponent.findInstance().getLastLoadStoreDir() + "/"
-//    doc.setBase(new java.net.URL("file:///" + baseDir))
-//    println("Doc base is %s: " format(new java.net.URL("file:///" + baseDir).toString))
-//    doc
-//  }
 }
 
 class CustomHtmlFactory extends HTMLEditorKit.HTMLFactory {

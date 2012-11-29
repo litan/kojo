@@ -26,7 +26,6 @@ import Utils.withLock
 import Utils.giveupLock
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 
-
 trait Mp3Player {
   val pumpEvents: Boolean
   def showError(msg: String)
@@ -41,7 +40,7 @@ trait Mp3Player {
   // Todo - bad dependency
   private val KojoCtx = net.kogics.kojo.lite.KojoCtx.instance
   private var timer: Timer = _
-  
+
   private def startPumpingEvents() {
     if (pumpEvents && timer == null) {
       listener.hasPendingCommands()
@@ -63,18 +62,24 @@ trait Mp3Player {
       }
     }
   }
-  
-  private def playHelper(mp3File: String)(fn: (FileInputStream) => Unit) {
+
+  private def playHelper(mp3File: String)(fn: (InputStream) => Unit) {
     val f = new File(mp3File)
     val f2 = if (f.exists) f else new File(KojoCtx.baseDir + mp3File)
 
     if (f2.exists) {
       val is = new FileInputStream(f2)
       fn(is)
-//      is.close() - player closes the stream
+      //      is.close() - player closes the stream
     }
     else {
-      showError("MP3 file does not exist - %s or %s" format(f.getAbsolutePath, f2.getAbsolutePath))
+      val is = getClass.getResourceAsStream(mp3File)
+      if (is != null) {
+        fn(is)
+      }
+      else {
+        showError("MP3 file does not exist - %s or %s" format (f.getAbsolutePath, f2.getAbsolutePath))
+      }
     }
   }
 
@@ -83,7 +88,7 @@ trait Mp3Player {
       mp3Player.isDefined
     }
   }
-  
+
   def playMp3(mp3File: String) {
     def done() {
       stopFg = false
@@ -115,7 +120,7 @@ trait Mp3Player {
       }
     }
   }
-  
+
   def playMp3Loop(mp3File: String) {
 
     def playLoop0() {
@@ -152,7 +157,7 @@ trait Mp3Player {
         playLoop0()
         startPumpingEvents()
       }
-    }       
+    }
   }
 
   def stopMp3() {
@@ -162,7 +167,7 @@ trait Mp3Player {
         if (!mp3Player.get.isComplete) {
           mp3Player.get.close()
         }
-        while(stopFg) {
+        while (stopFg) {
           val signalled = stopped.await(20, TimeUnit.MILLISECONDS)
           if (!signalled) {
             try {
@@ -186,7 +191,7 @@ trait Mp3Player {
         if (!bgmp3Player.get.isComplete) {
           bgmp3Player.get.close()
         }
-        while(stopBg) {
+        while (stopBg) {
           val signalled = stopped.await(20, TimeUnit.MILLISECONDS)
           if (!signalled) {
             try {
