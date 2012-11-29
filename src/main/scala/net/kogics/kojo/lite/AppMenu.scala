@@ -125,8 +125,13 @@ trait AppMenu { self: Main.type =>
     simpleMenu.add(menuItemFor("Colors and Shapes", "square.kojo"))
     samplesMenu.add(simpleMenu)
 
+    val drawingsMenu = new JMenu("Drawings")
+    drawingsMenu.add(menuItemFor("Ferris Wheel", "ferris-wheel.kojo"))
+    drawingsMenu.add(menuItemFor("Rangoli", "rangoli.kojo"))
+    samplesMenu.add(drawingsMenu)
+
     val mgeomMenu = new JMenu("Math and Geometry")
-    mgeomMenu.add(menuItemFor("Solving Linear Equations", "solving-linear-equations.kojo"))
+    mgeomMenu.add(menuItemForUrl("Solving Linear Equations", "http://www.kogics.net/public/kojolite/samples/solving-linear-equations.kojo"))
     mgeomMenu.add(menuItemFor("Spiral Square Tiles", "spiral-square-tiles.kojo"))
     mgeomMenu.add(menuItemFor("Spiral Hexangonal Tiles", "spiral-hexagon-tiles.kojo"))
     samplesMenu.add(mgeomMenu)
@@ -137,8 +142,14 @@ trait AppMenu { self: Main.type =>
     fractalsMenu.add(menuItemFor("Fibonacci Tree", "fib-tree.kojo"))
     fractalsMenu.add(menuItemFor("Snowflake", "snowflake.kojo"))
     fractalsMenu.add(menuItemFor("Sierpinski Triangle", "sierpinski-tri.kojo"))
-
     samplesMenu.add(fractalsMenu)
+    
+    val animGameMenu = new JMenu("Animations and Games")
+    animGameMenu.add(menuItemFor("Tangram Skier", "tangram-skier.kojo"))
+    animGameMenu.add(menuItemFor("Hunted", "hunted.kojo"))
+    samplesMenu.add(animGameMenu)
+
+    
     menuBar.add(samplesMenu)
 
     val helpMenu = new JMenu("Help")
@@ -167,7 +178,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 (Early Access)<br/>
-              Version: 281112-1 <br/>
+              Version: 291112-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
