@@ -122,10 +122,14 @@ trait AppMenu { self: Main.type =>
     }
     val samplesMenu = new JMenu("Samples")
     val simpleMenu = new JMenu("Getting Started")
-    simpleMenu.add(menuItemFor("Colors and Shapes", "square.kojo"))
+    simpleMenu.add(menuItemFor("Square", "square.kojo"))
+    simpleMenu.add(menuItemFor("Colors and Shapes", "shapes-cols.kojo"))
+    simpleMenu.add(menuItemFor("Circles", "circles.kojo"))
     samplesMenu.add(simpleMenu)
 
     val drawingsMenu = new JMenu("Drawings")
+    drawingsMenu.add(menuItemFor("Square Pattern", "square-pattern.kojo"))
+    drawingsMenu.add(menuItemFor("Pentagon Pattern", "penta-pattern.kojo"))
     drawingsMenu.add(menuItemFor("Ferris Wheel", "ferris-wheel.kojo"))
     drawingsMenu.add(menuItemFor("Rangoli", "rangoli.kojo"))
     samplesMenu.add(drawingsMenu)
