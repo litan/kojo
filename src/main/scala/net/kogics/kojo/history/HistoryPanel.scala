@@ -138,6 +138,7 @@ class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel {
       val searchText = searchField.getText
       cmdh.filter(searchText)
       tableModel.fireTableDataChanged()
+      table.setRowSelectionInterval(cmdh.size, cmdh.size)
     }
   }
   searchBut.addActionListener(searcher)
