@@ -147,18 +147,50 @@ trait AppMenu { self: Main.type =>
     fractalsMenu.add(menuItemFor("Snowflake", "snowflake.kojo"))
     fractalsMenu.add(menuItemFor("Sierpinski Triangle", "sierpinski-tri.kojo"))
     samplesMenu.add(fractalsMenu)
-    
+
     val animGameMenu = new JMenu("Animations and Games")
     animGameMenu.add(menuItemFor("Tangram Skier", "tangram-skier.kojo"))
     animGameMenu.add(menuItemFor("Hunted", "hunted.kojo"))
     samplesMenu.add(animGameMenu)
 
-    
     menuBar.add(samplesMenu)
 
-    val helpMenu = new JMenu("Help")
-    menuBar.add(helpMenu)
+    val windowMenu = new JMenu("Window")
+    val resetWindows = new JMenuItem("Default Perspective")
+    resetWindows.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        kojoCtx.activateDefaultPerspective()
+      }
+    })
+    windowMenu.add(resetWindows)
 
+    val storyItem = new JMenuItem("Story-Viewing Perspective")
+    storyItem.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        kojoCtx.activateStoryViewingPerspective()
+      }
+    })
+    windowMenu.add(storyItem)
+    
+    val historyItem = new JMenuItem("History-Browsing Perspective")
+    historyItem.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        kojoCtx.activateHistoryBrowsingPerspective()
+      }
+    })
+    windowMenu.add(historyItem)
+    
+    val drawingCanvasItem = new JMenuItem("No-Graphics Perspective")
+    drawingCanvasItem.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        kojoCtx.activateNoGraphicsPerspective()
+      }
+    })
+    windowMenu.add(drawingCanvasItem)
+    
+    menuBar.add(windowMenu)
+
+    val helpMenu = new JMenu("Help")
     helpMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
     helpMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
     helpMenu.add(menuItemFor("Introduction to 3D", "d3-intro.kojo"))
@@ -182,7 +214,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 (Early Access)<br/>
-              Version: 291112-1 <br/>
+              Version: 301112-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
@@ -232,6 +264,8 @@ trait AppMenu { self: Main.type =>
       }
     })
     helpMenu.add(about)
+
+    menuBar.add(helpMenu)
     menuBar
   }
 }

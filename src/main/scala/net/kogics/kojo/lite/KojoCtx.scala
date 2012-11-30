@@ -26,6 +26,9 @@ import java.awt.event.ActionEvent
 import java.awt.Color
 import net.kogics.kojo.xscala.Builtins
 import java.util.prefs.Preferences
+import bibliothek.gui.dock.common.CGrid
+import bibliothek.gui.dock.common.CControl
+import bibliothek.gui.dock.common.mode.ExtendedMode
 
 object KojoCtx extends core.Singleton[KojoCtx] {
   protected def newInstance = new KojoCtx
@@ -37,6 +40,70 @@ class KojoCtx extends core.KojoCtx {
   var frame: JFrame = _
   var saveAsActionListener: ActionListener = _
   var codeSupport: CodeExecutionSupport = _
+  var control: CControl = _
+
+  def activateDefaultPerspective() {
+    val grid = new CGrid(control)
+    grid.add(0, 0, 1, 3, topcs.hih)
+    grid.add(1, 0, 2, 3, topcs.sth)
+    grid.add(3, 0, 3, 2, topcs.d3h)
+    grid.add(3, 0, 3, 2, topcs.mwh)
+    grid.add(3, 0, 3, 2, topcs.dch)
+    grid.add(3, 2, 1.75, 1, topcs.seh)
+    grid.add(4.75, 2, 1.25, 1, topcs.owh)
+    control.getContentArea.deploy(grid)
+
+    topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
+  }
+
+  def activateNoGraphicsPerspective() {
+    val grid = new CGrid(control)
+    grid.add(0, 0, 1, 3, topcs.hih)
+    grid.add(1, 0, 2, 3, topcs.sth)
+    grid.add(3, 0, 3, 2, topcs.d3h)
+    grid.add(3, 0, 3, 2, topcs.mwh)
+    grid.add(3, 0, 3, 2, topcs.dch)
+    grid.add(3, 2, 1.75, 1, topcs.seh)
+    grid.add(4.75, 2, 1.25, 1, topcs.owh)
+    control.getContentArea.deploy(grid)
+
+    topcs.dch.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
+  }
+
+  def activateStoryViewingPerspective() {
+    val grid = new CGrid(control)
+    grid.add(0, 0, 1, 3, topcs.hih)
+    grid.add(1, 0, 2, 3, topcs.sth)
+    grid.add(3, 0, 3, 2, topcs.d3h)
+    grid.add(3, 0, 3, 2, topcs.mwh)
+    grid.add(3, 0, 3, 2, topcs.dch)
+    grid.add(3, 2, 1.75, 1, topcs.seh)
+    grid.add(4.75, 2, 1.25, 1, topcs.owh)
+    control.getContentArea.deploy(grid)
+
+    topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.seh.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
+  }
+  
+  def activateHistoryBrowsingPerspective() {  
+    val grid = new CGrid(control)
+    grid.add(0, 0, 1, 3, topcs.hih)
+    grid.add(1, 0, 2, 3, topcs.sth)
+    grid.add(3, 0, 3, 2, topcs.d3h)
+    grid.add(3, 0, 3, 2, topcs.mwh)
+    grid.add(3, 0, 3, 2, topcs.dch)
+    grid.add(3, 2, 1.75, 1, topcs.seh)
+    grid.add(4.75, 2, 1.25, 1, topcs.owh)
+    control.getContentArea.deploy(grid)
+
+    topcs.dch.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
+  }
 
   def activateDrawingCanvas() {
     topcs.dch.toFront()
@@ -49,7 +116,7 @@ class KojoCtx extends core.KojoCtx {
 
   def activateOutputPane() {
     topcs.owh.toFront()
-//    topcs.owh.ow.requestFocusInWindow()
+    //    topcs.owh.ow.requestFocusInWindow()
   }
 
   def makeTurtleWorldVisible() {
@@ -67,8 +134,11 @@ class KojoCtx extends core.KojoCtx {
   }
 
   def makeStoryTellerVisible() {
-    topcs.sth.setLocation(CLocation.base.normalWest(0.5))
-    //    topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
+    if (!topcs.sth.isShowing) {
+      topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
+      topcs.sth.toFront()
+//      topcs.sth.setLocation(CLocation.base.normalWest(0.5))
+    }
   }
 
   def make3DCanvasVisible() {
@@ -138,15 +208,15 @@ class KojoCtx extends core.KojoCtx {
   def isVerboseOutput = {
     codeSupport.verboseOutput == true
   }
-  
+
   def showVerboseOutput() {
     codeSupport.verboseOutput = true
   }
-  
+
   def hideVerboseOutput() = {
     codeSupport.verboseOutput = false
   }
-  
+
   def isSriptShownInOutput = {
     codeSupport.showCode == true
   }
@@ -154,7 +224,7 @@ class KojoCtx extends core.KojoCtx {
   def showScriptInOutput() {
     codeSupport.showCode = true
   }
-  
+
   def hideScriptInOutput() {
     codeSupport.showCode = false
   }
