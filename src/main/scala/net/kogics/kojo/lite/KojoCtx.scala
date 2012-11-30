@@ -55,6 +55,7 @@ class KojoCtx extends core.KojoCtx {
 
     topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
+    activateScriptEditor()
   }
 
   def activateNoGraphicsPerspective() {
@@ -71,6 +72,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.dch.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
+    activateScriptEditor()
   }
 
   def activateStoryViewingPerspective() {
@@ -87,6 +89,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.seh.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.sth.toFront()
   }
   
   def activateHistoryBrowsingPerspective() {  
@@ -103,6 +106,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.dch.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.hih.toFront()
   }
 
   def activateDrawingCanvas() {
