@@ -6,6 +6,7 @@ import net.kogics.kojo.lite.topc.ScriptEditorHolder
 import net.kogics.kojo.lite.topc.StoryTellerHolder
 import net.kogics.kojo.lite.topc.MathworldHolder
 import net.kogics.kojo.lite.topc.D3CanvasHolder
+import net.kogics.kojo.lite.topc.HistoryHolder
 
 case class TopCs(
   dch: DrawingCanvasHolder,
@@ -13,4 +14,5 @@ case class TopCs(
   seh: ScriptEditorHolder,
   sth: StoryTellerHolder,
   mwh: MathworldHolder,
-  d3h: D3CanvasHolder)
+  d3h: D3CanvasHolder,
+  hih: HistoryHolder)

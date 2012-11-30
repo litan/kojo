@@ -4,12 +4,11 @@ import java.awt.Frame
 import java.awt.GridLayout
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
-import javax.swing.JFrame
-import javax.swing.JPanel
-import javax.swing.UIManager
-import javax.swing.WindowConstants
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+
 import net.kogics.kojo.d3.Canvas3D
+import net.kogics.kojo.history.HistoryPanel
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.lite.topc.D3CanvasHolder
 import net.kogics.kojo.lite.topc.DrawingCanvasHolder
@@ -22,12 +21,13 @@ import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.Builtins
+
 import bibliothek.gui.dock.common.CControl
-import bibliothek.gui.dock.common.CGrid
-import bibliothek.gui.dock.common.mode.ExtendedMode
 import bibliothek.gui.dock.common.theme.ThemeMap
-import net.kogics.kojo.util.JUtils
-import net.kogics.kojo.history.HistoryPanel
+import javax.swing.JFrame
+import javax.swing.JPanel
+import javax.swing.UIManager
+import javax.swing.WindowConstants
 
 object Main extends AppMenu {
 
@@ -142,22 +142,12 @@ object Main extends AppMenu {
       val d3Holder = new D3CanvasHolder(Canvas3D.instance, kojoCtx)
       val historyHolder = new HistoryHolder(new HistoryPanel(codeSupport))
 
-      kojoCtx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder)
+      kojoCtx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder)
       kojoCtx.frame = frame
       kojoCtx.codeSupport = codeSupport
+      kojoCtx.control = control
 
-      val grid = new CGrid(control)
-      grid.add(1, 0, 4, 2, d3Holder)
-      grid.add(1, 0, 4, 2, mwHolder)
-      grid.add(1, 0, 4, 2, drawingCanvasH)
-      grid.add(1, 2, 2.5, 1, scriptEditorH)
-      grid.add(3.5, 2, 1.5, 1, outputHolder)
-      grid.add(0, 0, 2, 4, historyHolder)
-      grid.add(0, 0, 1, 4, storyHolder)
-      control.getContentArea.deploy(grid)
-
-      historyHolder.setExtendedMode(ExtendedMode.MINIMIZED)
-      storyHolder.setExtendedMode(ExtendedMode.MINIMIZED)
+      kojoCtx.activateDefaultPerspective()
 
       frame.setJMenuBar(menuBar)
 
