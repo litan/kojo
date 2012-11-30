@@ -124,21 +124,17 @@ trait AppMenu { self: Main.type =>
     val simpleMenu = new JMenu("Getting Started")
     simpleMenu.add(menuItemFor("Square", "square.kojo"))
     simpleMenu.add(menuItemFor("Colors and Shapes", "shapes-cols.kojo"))
-    simpleMenu.add(menuItemFor("Circles", "circles.kojo"))
+    simpleMenu.add(menuItemFor("Square Pattern", "square-pattern.kojo"))
     samplesMenu.add(simpleMenu)
 
-    val drawingsMenu = new JMenu("Drawings")
-    drawingsMenu.add(menuItemFor("Square Pattern", "square-pattern.kojo"))
+    val drawingsMenu = new JMenu("Intermediate")
     drawingsMenu.add(menuItemFor("Pentagon Pattern", "penta-pattern.kojo"))
+    drawingsMenu.add(menuItemFor("Circles", "circles.kojo"))
+    drawingsMenu.add(menuItemFor("Spiral Square Tiles", "spiral-square-tiles.kojo"))
+    drawingsMenu.add(menuItemFor("Spiral Hexangonal Tiles", "spiral-hexagon-tiles.kojo"))
     drawingsMenu.add(menuItemFor("Ferris Wheel", "ferris-wheel.kojo"))
     drawingsMenu.add(menuItemFor("Rangoli", "rangoli.kojo"))
     samplesMenu.add(drawingsMenu)
-
-    val mgeomMenu = new JMenu("Math and Geometry")
-    mgeomMenu.add(menuItemForUrl("Solving Linear Equations", "http://www.kogics.net/public/kojolite/samples/solving-linear-equations.kojo"))
-    mgeomMenu.add(menuItemFor("Spiral Square Tiles", "spiral-square-tiles.kojo"))
-    mgeomMenu.add(menuItemFor("Spiral Hexangonal Tiles", "spiral-hexagon-tiles.kojo"))
-    samplesMenu.add(mgeomMenu)
 
     val fractalsMenu = new JMenu("Fractals")
     fractalsMenu.add(menuItemFor("Tree", "tree0.kojo"))
@@ -153,10 +149,14 @@ trait AppMenu { self: Main.type =>
     animGameMenu.add(menuItemFor("Hunted", "hunted.kojo"))
     samplesMenu.add(animGameMenu)
 
+    val mgeomMenu = new JMenu("Math Activities")
+    mgeomMenu.add(menuItemForUrl("Solving Linear Equations", "http://www.kogics.net/public/kojolite/samples/solving-linear-equations.kojo"))
+    samplesMenu.add(mgeomMenu)
+
     menuBar.add(samplesMenu)
 
     val windowMenu = new JMenu("Window")
-    val resetWindows = new JMenuItem("Default Perspective")
+    val resetWindows = new JMenuItem("<html>Default <em>Perspective</em></html>")
     resetWindows.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.activateDefaultPerspective()
@@ -164,7 +164,7 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(resetWindows)
 
-    val storyItem = new JMenuItem("Story-Viewing Perspective")
+    val storyItem = new JMenuItem("<html>Story Viewing <em>Perspective</em></html>")
     storyItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.activateStoryViewingPerspective()
@@ -172,7 +172,7 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(storyItem)
     
-    val historyItem = new JMenuItem("History-Browsing Perspective")
+    val historyItem = new JMenuItem("<html>History Browsing <em>Perspective</em></html>")
     historyItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.activateHistoryBrowsingPerspective()
@@ -180,7 +180,7 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(historyItem)
     
-    val drawingCanvasItem = new JMenuItem("No-Graphics Perspective")
+    val drawingCanvasItem = new JMenuItem("<html>No Graphics <em>Perspective</em></html>")
     drawingCanvasItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.activateNoGraphicsPerspective()
@@ -214,7 +214,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 (Early Access)<br/>
-              Version: 301112-1 <br/>
+              Version: 301112-2 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
