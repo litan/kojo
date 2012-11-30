@@ -25,8 +25,9 @@ import javax.swing.JButton
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.border.BevelBorder
+import java.awt.Cursor
 
-class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel {
+class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   val cmdh = codeSupport.commandHistory
   val colNames = List("\u263c", "Code", "Tags", "File", "At")
   val colWidths = List(1, 200, 40, 30, 40)
@@ -127,18 +128,36 @@ class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel {
   val searchPane = new JPanel()
   searchPane.setBackground(Color.white)
   searchPane.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED))
-  
+
   val searchField = new JTextField(20)
   searchPane.add(searchField)
   val searchBut = new JButton("Search")
   searchPane.add(searchBut)
-  
+
   val searcher = new ActionListener {
+    var filtered = false
     def actionPerformed(e: ActionEvent) {
-      val searchText = searchField.getText
-      cmdh.filter(searchText)
-      tableModel.fireTableDataChanged()
-      table.setRowSelectionInterval(cmdh.size, cmdh.size)
+      val waitCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
+      val normalCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+      if (!filtered) {
+        val searchText = searchField.getText
+        hpanel.setCursor(waitCursor); searchField.setCursor(waitCursor)
+        cmdh.filter(searchText)
+        hpanel.setCursor(normalCursor); searchField.setCursor(normalCursor)
+        tableModel.fireTableDataChanged()
+        table.setRowSelectionInterval(cmdh.size, cmdh.size)
+        filtered = true
+        searchBut.setText("Clear Search")
+      }
+      else {
+        hpanel.setCursor(waitCursor)
+        cmdh.loadAll
+        hpanel.setCursor(normalCursor)
+        tableModel.fireTableDataChanged()
+        table.setRowSelectionInterval(cmdh.size, cmdh.size)
+        filtered = false
+        searchBut.setText("Search")
+      }
     }
   }
   searchBut.addActionListener(searcher)
