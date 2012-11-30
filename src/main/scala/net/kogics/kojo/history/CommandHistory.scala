@@ -72,10 +72,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
   val history = new mutable.ArrayBuffer[HistoryItem]
   @volatile var hIndex = 0
   @volatile var listener: Option[HistoryListener] = None
-
-  historySaver.readAll.reverse.foreach { hi =>
-    internalAdd(hi)
-  }
+  loadAll()
 
   def setListener(l: HistoryListener) {
     //    if (listener.isDefined) throw new IllegalArgumentException("Listener already defined")
@@ -180,6 +177,12 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) {
       case t: Throwable =>
         println("\nProblem saving tags to history: " + t.getMessage)
         hi.tags = oldTags
+    }
+  }
+
+  def loadAll() {
+    historySaver.readAll.reverse.foreach { hi =>
+      internalAdd(hi)
     }
   }
 
