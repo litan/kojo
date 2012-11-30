@@ -110,28 +110,24 @@ class MathWorld {
   def showAlgebraView() {
     Utils.runInSwingThread {
       _guim.setShowView(true, App.VIEW_ALGEBRA)
-      _kojoCtx.activateScriptEditor()
     }
   }
 
   def hideAlgebraView() {
     Utils.runInSwingThread {
       _guim.setShowView(false, App.VIEW_ALGEBRA)
-      _kojoCtx.activateScriptEditor()
     }
   }
 
   def showCASView() {
     Utils.runInSwingThread {
       _guim.setShowView(true, App.VIEW_CAS)
-      _kojoCtx.activateScriptEditor()
     }
   }
 
   def hideCASView() {
     Utils.runInSwingThread {
       _guim.setShowView(false, App.VIEW_CAS)
-      _kojoCtx.activateScriptEditor()
     }
   }
 
