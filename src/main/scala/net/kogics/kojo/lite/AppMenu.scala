@@ -142,6 +142,7 @@ trait AppMenu { self: Main.type =>
     fractalsMenu.add(menuItemFor("Fibonacci Tree", "fib-tree.kojo"))
     fractalsMenu.add(menuItemFor("Snowflake", "snowflake.kojo"))
     fractalsMenu.add(menuItemFor("Sierpinski Triangle", "sierpinski-tri.kojo"))
+    fractalsMenu.add(menuItemFor("L-Systems", "l-systems.kojo"))
     samplesMenu.add(fractalsMenu)
 
     val animGameMenu = new JMenu("Animations and Games")
@@ -214,7 +215,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 (Early Access)<br/>
-              Version: 301112-1 <br/>
+              Version: 011212-2 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
