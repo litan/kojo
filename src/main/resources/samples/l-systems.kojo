@@ -6,6 +6,8 @@
 // You can also play with the zoom command at the bottom of the script to 
 // scale or translate the drawing.
 
+// See http://lalitpant.blogspot.in/2012/05/playing-with-l-systems-in-kojo.html for more information.
+
 
 case class LSystem(axiom: String, angle: Double, len: Int = 100, sf: Double = 0.6)(rules: PartialFunction[Char, String]) {
     var currVal = axiom
