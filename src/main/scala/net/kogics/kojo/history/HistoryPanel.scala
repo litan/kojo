@@ -26,6 +26,8 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import javax.swing.border.BevelBorder
 import java.awt.Cursor
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 
 class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   val cmdh = codeSupport.commandHistory
@@ -134,20 +136,21 @@ class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   val searchBut = new JButton("Search")
   searchPane.add(searchBut)
 
+  var allowSearch = true
   val searcher = new ActionListener {
-    var filtered = false
     def actionPerformed(e: ActionEvent) {
       val waitCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
       val normalCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
-      if (!filtered) {
+      if (allowSearch) {
         val searchText = searchField.getText
         hpanel.setCursor(waitCursor); searchField.setCursor(waitCursor)
         cmdh.filter(searchText)
         hpanel.setCursor(normalCursor); searchField.setCursor(normalCursor)
         tableModel.fireTableDataChanged()
         table.setRowSelectionInterval(cmdh.size, cmdh.size)
-        filtered = true
+        allowSearch = false
         searchBut.setText("Clear Search")
+        // searchBut.requestFocusInWindow()
       }
       else {
         hpanel.setCursor(waitCursor)
@@ -155,13 +158,23 @@ class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel { hpanel =>
         hpanel.setCursor(normalCursor)
         tableModel.fireTableDataChanged()
         table.setRowSelectionInterval(cmdh.size, cmdh.size)
-        filtered = false
+        allowSearch = true
         searchBut.setText("Search")
+        searchField.setText("")
+        searchField.requestFocusInWindow()
       }
     }
   }
   searchBut.addActionListener(searcher)
   searchField.addActionListener(searcher)
+  searchField.addKeyListener(new KeyAdapter {
+    override def keyTyped(e: KeyEvent) {
+      if (! (e.getKeyChar() == KeyEvent.VK_ENTER)) {
+        allowSearch = true
+        searchBut.setText("Search")
+      }
+    }
+  })
 
   add(searchPane, BorderLayout.SOUTH)
 
