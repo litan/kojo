@@ -29,8 +29,11 @@ trait MultiInstanceHandler extends Remote {
 object MultiInstanceHandler {
   val Name = "MultiInstanceHandler"
   val Port = 27468
+  // make mih static so that it does not get garbage collected
+  // we're trying to prevent the sporadic lack of activation of the first instance of Kojo from an nth instance 
+  // and the accompanying 'Problem - no such object in table' message that shows up in the Java Console  
+  val mih = new MultiInstanceHandlerImpl()
   def run() {
-    val mih = new MultiInstanceHandlerImpl()
     try {
       val stub = UnicastRemoteObject.exportObject(mih, 0)
       val registry = LocateRegistry.getRegistry(Port)
@@ -38,7 +41,7 @@ object MultiInstanceHandler {
     }
     catch {
       case t: Throwable =>
-//        println("Problem starting MultiInstanceHandler: " + t)
+      //        println("Problem starting MultiInstanceHandler: " + t)
     }
   }
 }
