@@ -37,24 +37,6 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   var timingOn = false
   var prevRemove = false
   val docListener = makeDocListener
-  val incrLexingTokens = Set(
-    Tokens.XML_START_OPEN,
-    Tokens.XML_EMPTY_CLOSE,
-    Tokens.XML_TAG_CLOSE,
-    Tokens.XML_END_OPEN,
-    Tokens.XML_WHITESPACE,
-    Tokens.XML_ATTR_EQ,
-    Tokens.XML_ATTR_VALUE,
-    Tokens.XML_NAME,
-    Tokens.XML_PCDATA,
-    Tokens.XML_COMMENT,
-    Tokens.XML_CDATA,
-    Tokens.XML_UNPARSED,
-    Tokens.XML_PROCESSING_INSTRUCTION,
-    Tokens.STRING_PART,
-    Tokens.STRING_LITERAL,
-    Tokens.VARID
-  )
 
   override def getWordsToHighlight: TokenMap = wordsToHighlight
   override def getCurlyBracesDenoteCodeBlocks = true
@@ -175,12 +157,6 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
           prevRemove = false
           true
         }
-        else if (insertPrefix == "//" || insertPrefix == "/*") {
-          true
-        }
-        //        else if (len > 1) {
-        //          true
-        //        }
         else {
           false
         }
@@ -197,27 +173,22 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         val postInactive = docTokens.slice(preInactive.length + active.length, docTokens.length)
         val newPostInactive = postInactive.map { t => t.copy(offset = t.offset + len) }
 
-        def needMore(t: SfToken) = if (incrLexingTokens.contains(t.tokenType)) true else false
+        def wsWithNl(x: SfToken) = x.tokenType == Tokens.WS && x.rawText.contains("\n")
 
-        def fragStart(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
+        def seekPrevLineBreak(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
           case Seq() => (0, dropped)
           case Seq(x, xs @ _*) =>
-            if (dropped == 1) {
-              fragStart(xs, dropped + 1)
-            }
-            else {
-              if (needMore(x)) fragStart(xs, dropped + 1) else (x.offset, dropped)
-            }
+            if (wsWithNl(x)) (x.offset, dropped) else seekPrevLineBreak(xs, dropped + 1)
         }
 
-        def fragEnd(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
+        def seekNextLineBreak(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
           case Seq() => (doc.getLength, dropped)
           case Seq(x, xs @ _*) =>
-            if (needMore(x)) fragEnd(xs, dropped + 1) else (x.offset, dropped)
+            if (wsWithNl(x)) (x.offset, dropped) else seekNextLineBreak(xs, dropped + 1)
         }
 
-        val (lower, dropped) = fragStart(preInactive.reverse, 1)
-        val (upper, udropped) = fragEnd(newPostInactive, 0)
+        val (lower, dropped) = seekPrevLineBreak(preInactive.reverse, 1)
+        val (upper, udropped) = seekNextLineBreak(newPostInactive, 0)
         val flen = upper - lower
         val docFragment = doc.getText(lower, flen)
         val newActive = ScalaLexer.rawTokeniseV(docFragment, true).map { t => t.copy(offset = t.offset + lower) }
