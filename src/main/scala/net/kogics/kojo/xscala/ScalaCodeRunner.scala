@@ -609,10 +609,11 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
     def memberCompletions(code: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
       val pfx = prefix.getOrElse("")
-      compilerAndRunner.completions(code, caretOffset - pfx.length) match {
+      compilerAndRunner.completions(code, caretOffset - pfx.length, objid != null) match {
         case Nil =>
-          val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
-          (ics.map { CompletionInfo(_, null, 100) }, pfx.length)
+          (Nil, pfx.length)
+//          val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
+//          (ics.map { CompletionInfo(_, null, 100) }, pfx.length)
         case _@ ccs =>
           (ccs.filter { ci => ignoreCaseStartsWith(ci.name, pfx) }, pfx.length)
       }

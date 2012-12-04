@@ -19,6 +19,8 @@ package xscala
 import java.lang.ClassLoader
 import java.lang.reflect
 import java.net.URL
+
+import scala.collection.mutable.ListBuffer
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.OffsetPosition
 import scala.reflect.internal.util.Position
@@ -32,6 +34,7 @@ import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.util.ScalaClassLoader
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 import scala.tools.util.PathResolver
+
 import KojoInterpreter.IR
 import core.CompletionInfo
 import util.Utils
@@ -252,9 +255,9 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
       case Left(x) =>
         x match {
           case t: pcompiler.ValOrDefDef => t.tpt.toString
-          case t: pcompiler.TypeDef => t.name.toString
-          case t: pcompiler.ClassDef => t.name.toString
-          case _ => x.tpe.toString
+          case t: pcompiler.TypeDef     => t.name.toString
+          case t: pcompiler.ClassDef    => t.name.toString
+          case _                        => x.tpe.toString
         }
 
       case Right(y) =>
@@ -264,7 +267,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
   }
 
   import core.CompletionInfo
-  def completions(code0: String, offset: Int): List[CompletionInfo] = {
+  def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     def addMarkerAfterOffset(c: String) = {
       "%s  ; // %s" format (c.substring(0, offset), c.substring(offset, c.length))
     }
@@ -282,32 +285,56 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     pcompiler.askReload(List(source), r1)
 
     var resp = new Response[List[pcompiler.Member]]
-    pcompiler.askTypeCompletion(pos, resp)
+    if (selection) {
+      pcompiler.askTypeCompletion(pos, resp)
+    }
+    else {
+      pcompiler.askScopeCompletion(pos, resp)
+    }
     resp.get match {
       case Left(x) =>
-        x filter { e =>
-          (
-            (e.sym.isMethod && !e.sym.isConstructor && e.sym.isPublic) ||
-            (e.sym.isValue && !e.sym.isMethod && e.sym.nameString != "this") ||
-            ((e.sym.isPackage || e.sym.isClass || e.sym.isType) && e.sym.isPublic)
-          ) &&
-            (
-              e.tpe != pcompiler.NoType &&
-              e.tpe != pcompiler.ErrorType
-            )
-        } map { e =>
-          var prio = 100
-          val tm = e.asInstanceOf[pcompiler.TypeMember]
-          if (tm.implicitlyAdded) prio += 20
-          if (tm.inherited) prio += 10
-          // give vals and vars lower priority because we can't seem to distinguish 
-          // between private and public vals/vars.
-          // This way they go below the methods
-          if (e.sym.isValue && !e.sym.isMethod) prio += 5
-          if (e.sym.isClass || e.sym.isType) prio += 100
-          if (e.sym.isPackage) prio += 200
-          CompletionInfo(e.sym.nameString, e, prio)
+        // do this in imperitive style as opposed to using a filter and a map - to better deal 
+        // with expections
+        val elb = new ListBuffer[CompletionInfo]
+        x.foreach { e =>
+          try {
+            if ((
+              (e.sym.isMethod && !e.sym.isConstructor && e.sym.isPublic) ||
+              (e.sym.isValue && !e.sym.isMethod && e.sym.nameString != "this") ||
+              ((e.sym.isPackage || e.sym.isClass || e.sym.isType) && e.sym.isPublic)
+            ) &&
+              (
+                e.tpe != pcompiler.NoType &&
+                e.tpe != pcompiler.ErrorType
+              )) {
+              var prio = 100
+              e match {
+                case tm: pcompiler.TypeMember =>
+                  if (tm.implicitlyAdded) prio += 20
+                  if (tm.inherited) prio += 10
+                case _ =>
+                case sm: pcompiler.ScopeMember =>
+                  if (sm.implicitlyAdded) prio += 20
+              }
+
+              // give vals and vars lower priority because we can't seem to distinguish 
+              // between private and public vals/vars.
+              // This way they go below the methods
+              if (e.sym.isValue && !e.sym.isMethod) prio += 5
+              if (e.sym.isClass || e.sym.isType) prio += 100
+              if (e.sym.isPackage) prio += 200
+              val cinfo = CompletionInfo(e.sym.nameString, e, prio)
+              elb += cinfo
+            }
+          }
+          catch {
+            case t: Throwable =>
+              println("Completion Problem 0: " + t.getMessage())
+            // ignore, and move on to the next one
+          }
         }
+        elb.toList
+
       case Right(y) => /* println("Completion warning: %s" format(y)); */ Nil
     }
   }
