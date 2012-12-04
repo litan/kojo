@@ -44,7 +44,6 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   }
 
   def proposal2(offset: Int, completion: CompletionInfo) = {
-    //    new BasicCompletion(this, completion.name, completion.name)
     def kind = {
       if (completion.isClass || completion.isType) {
         CLASS
@@ -173,28 +172,45 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     val proposals = new java.util.ArrayList[Completion]
     val caretOffset = comp.getCaretPosition
 
-    if (objid.isEmpty) {
-      val (varCompletions, voffset) = codeSupport.varCompletions(prefix)
-      varCompletions.foreach { completion =>
-        proposals.add(proposal(caretOffset - voffset, completion,
-          VARIABLE,
-          methodTemplate(completion)))
-      }
+    try {
+      if (objid.isEmpty) {
+        val (varCompletions, voffset) = codeSupport.varCompletions(prefix)
+        varCompletions.foreach { completion =>
+          proposals.add(proposal(caretOffset - voffset, completion,
+            VARIABLE,
+            methodTemplate(completion)))
+        }
 
-      val (keywordCompletions, koffset) = codeSupport.keywordCompletions(prefix)
-      keywordCompletions.foreach { completion =>
-        proposals.add(proposal(caretOffset - koffset, completion,
-          KEYWORD,
-          CodeCompletionUtils.keywordTemplate(completion)))
-      }
+        val (memberCompletions, coffset) = codeSupport.memberCompletions(caretOffset, null, prefix)
+        memberCompletions.foreach { completion =>
+          try {
+            proposals.add(proposal2(caretOffset - coffset, completion))
+          }
+          catch {
+            case t: Throwable =>
+              println("Completion Problem 1: " + t.getMessage())
+          }
+        }
 
-      addTemplateProposals(proposals, prefix.getOrElse(""), caretOffset)
+        val (keywordCompletions, koffset) = codeSupport.keywordCompletions(prefix)
+        keywordCompletions.foreach { completion =>
+          proposals.add(proposal(caretOffset - koffset, completion,
+            KEYWORD,
+            CodeCompletionUtils.keywordTemplate(completion)))
+        }
+
+        addTemplateProposals(proposals, prefix.getOrElse(""), caretOffset)
+      }
+      else {
+        val (memberCompletions, coffset) = codeSupport.memberCompletions(caretOffset, objid.get, prefix)
+        memberCompletions.foreach { completion =>
+          proposals.add(proposal2(caretOffset - coffset, completion))
+        }
+      }
     }
-    else {
-      val (memberCompletions, coffset) = codeSupport.memberCompletions(caretOffset, objid.get, prefix)
-      memberCompletions.foreach { completion =>
-        proposals.add(proposal2(caretOffset - coffset, completion))
-      }
+    catch {
+      case t: Throwable =>
+        println("Completion Problem 2: " + t.getMessage())
     }
 
     proposals
