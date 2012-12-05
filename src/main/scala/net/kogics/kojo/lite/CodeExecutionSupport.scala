@@ -124,7 +124,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   @volatile var showCode = false
   @volatile var verboseOutput = false
-  @volatile var retainCode = false
   val OutputDelimiter = "---\n"
   @volatile var lastOutput = ""
 
@@ -466,8 +465,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       def hideScriptInOutput() { showCode = false }
       def showVerboseOutput() { verboseOutput = true }
       def hideVerboseOutput() { verboseOutput = false }
-      def retainSingleLineCode() { retainCode = true }
-      def clearSingleLineCode() { retainCode = false }
       def readInput(prompt: String): String = CodeExecutionSupport.this.readInput(prompt)
 
       def clearOutput() = clrOutput()

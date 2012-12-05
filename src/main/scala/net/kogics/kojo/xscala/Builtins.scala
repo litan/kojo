@@ -36,7 +36,6 @@ import story.HandlerHolder
 import story.IntHandlerHolder
 import story.StringHandlerHolder
 import story.VoidHandlerHolder
-import util.PuzzleLoader
 import util.Read
 import util.Throttler
 import util.Utils
@@ -181,7 +180,7 @@ class Builtins extends RepeatCommands {
     UserCommand("restorePosHe", Nil, "Restores the turtle's current position and heading")
 
     override def beamsOn() = turtle0.beamsOn()
-    UserCommand("beamsOn", Nil, "Shows crossbeams centered on the turtle - to help with solving puzzles.")
+    UserCommand("beamsOn", Nil, "Shows crossbeams centered on the turtle - to help with more precise navigation.")
 
     override def beamsOff() = turtle0.beamsOff()
     UserCommand("beamsOff", Nil, "Hides the turtle crossbeams.")
@@ -227,38 +226,6 @@ class Builtins extends RepeatCommands {
     UserCommand("zoom", List("factor"), "Zooms in by the given factor, leaving the center point unchanged.")
     UserCommand.addSynopsisSeparator()
 
-    def listPuzzles() = println(PuzzleLoader.listPuzzles)
-    UserCommand("listPuzzles", Nil, "Shows the names of the puzzles available in the system.")
-
-    def loadPuzzle(name: String) {
-      val oPuzzleFn = PuzzleLoader.readPuzzle(name)
-      if (oPuzzleFn.isDefined) {
-        val code = oPuzzleFn.get + """
-
-          def go() {
-            val pTurtle = newPuzzler(0,0)
-            puzzle(pTurtle)
-          }
-          go()
-      """
-        scalaCodeRunner.runCode(code)
-
-        val code2 = """
-          clearOutput()
-          println("Puzzle Description")
-        """
-        scalaCodeRunner.runCode(code2)
-      }
-      else {
-        println("Puzzle not available: " + name)
-      }
-    }
-    UserCommand("loadPuzzle", List("name"), "Loads the named puzzle.")
-
-    override def clearPuzzlers() = tCanvas.clearPuzzlers()
-    UserCommand("clearPuzzlers", Nil, "Clears out the puzzler turtles and the puzzles from the screen.")
-    UserCommand.addSynopsisSeparator()
-
     override def gridOn() = tCanvas.gridOn()
     UserCommand("gridOn", Nil, "Shows a grid on the canvas.")
 
@@ -280,7 +247,6 @@ class Builtins extends RepeatCommands {
 
     override def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
     override def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
-    override def newPuzzler(x: Int, y: Int) = tCanvas.newPuzzler(x, y)
     override def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) =
       tCanvas.zoomXY(xfactor, yfactor, cx, cy)
     
@@ -318,11 +284,8 @@ class Builtins extends RepeatCommands {
   UserCommand("hideVerboseOutput", Nil, "Stops the display of output from the Scala interpreter.")
   UserCommand.addSynopsisSeparator()
 
-  def retainSingleLineCode() = ctx.retainSingleLineCode()
-  UserCommand("retainSingleLineCode", Nil, "Makes Kojo retain a single line of code after running it. By default, single lines of code are cleared after running.")
-
-  def clearSingleLineCode() = ctx.clearSingleLineCode()
-  UserCommand("clearSingleLineCode", Nil, "Makes Kojo clear a single line of code after running it. This is the default behavior.")
+  def retainSingleLineCode() = {}
+  def clearSingleLineCode() = {}
 
   def version = println("Scala " + scala.tools.nsc.Properties.versionString)
   UserCommand.addSynopsis("version - Displays the version of Scala being used.")

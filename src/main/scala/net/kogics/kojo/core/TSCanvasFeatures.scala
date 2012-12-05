@@ -20,9 +20,7 @@ import java.awt.Paint
 import java.awt.Color
 
 trait TSCanvasFeatures {
-  def clearPuzzlers(): Unit
   def newTurtle(x: Int, y: Int): Turtle
-  def newPuzzler(x: Int, y: Int): Turtle
   def axesOn(): Unit
   def axesOff(): Unit
   def gridOn(): Unit
