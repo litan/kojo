@@ -98,38 +98,29 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
 
     val defn = "%s : %s" format (lhs, rhs)
     def template = {
-      val c0 = methodTemplate(completion.name)
-      if (c0 != null) {
-        c0
+      val fm = new StringBuilder
+      fm.append(completion.name)
+      val tpe = completion.member.tpe
+      if (tpe.typeParams.size > 0) {
+        val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
+        fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
+      }
+      if (tpe.params.size > 0) {
+        val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
+        fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
       }
       else {
-        val fm = new StringBuilder
-        fm.append(completion.name)
-        val tpe = completion.member.tpe
-        if (tpe.typeParams.size > 0) {
-          val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
-          fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
+        if (!valOrNoargItem) {
+          // it's a no-arg command
+          fm.append("()")
         }
-        if (tpe.params.size > 0) {
-          val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
-          fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
-        }
-        else {
-          if (!valOrNoargItem) {
-            // it's a no-arg command
-            fm.append("()")
-          }
-        }
-        fm.toString
       }
+      fm.toString
     }
 
     def signature = "<strong>%s</strong> : <em>%s</em>" format (lhs, rhs)
 
-    def help = {
-      val hlp = Help(completion.name)
-      if (hlp != null) hlp else signature
-    }
+    def help = signature
 
     //    println(template)
     new TemplateCompletion(this, defn, defn, rtsaTemplate(template), null, help) {
