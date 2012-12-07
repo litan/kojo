@@ -251,6 +251,7 @@ class Builtins extends RepeatCommands {
       tCanvas.zoomXY(xfactor, yfactor, cx, cy)
     
     def onKeyPress(fn: Int => Unit) = tCanvas.onKeyPress(fn)
+    def onKeyRelease(fn: Int => Unit) = tCanvas.onKeyRelease(fn)
     def onMouseClick(fn: (Double, Double) => Unit) =  tCanvas.onMouseClick(fn)
 
     val Pixel = core.Pixel
