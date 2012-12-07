@@ -561,7 +561,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
       
       eventListeners.foreach {el => removeInputEventListener(el)}
       eventListeners = Nil
-      staging.Inputs.removeKeyHandler()
+      staging.Inputs.removeKeyHandlers()
       getRoot.getDefaultInputManager.setKeyboardFocus(null)
       
       pictures.removeAllChildren()
@@ -638,10 +638,14 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   }
   
   def onKeyPress(fn: Int => Unit) = Utils.runInSwingThread {
-    staging.Inputs.setKeyHandler {e =>
-      Utils.runAsyncQueued {
-        fn(e.getKeyCode)
-      }
+    staging.Inputs.setKeyPressedHandler { e =>
+      fn(e.getKeyCode)
+    }
+  }
+
+  def onKeyRelease(fn: Int => Unit) = Utils.runInSwingThread {
+    staging.Inputs.setKeyReleasedHandler { e =>
+      fn(e.getKeyCode)
     }
   }
   

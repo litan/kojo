@@ -16,18 +16,10 @@
 package net.kogics.kojo
 package staging
 
+import core.Point
+import edu.umd.cs.piccolo.event.PBasicInputEventHandler
+import edu.umd.cs.piccolo.event.PInputEvent
 import util.Utils
-
-import edu.umd.cs.piccolo._
-import edu.umd.cs.piccolo.nodes._
-import edu.umd.cs.piccolo.util._
-import edu.umd.cs.piccolo.event._
-
-//import net.kogics.kojo.util.Utils
-
-import javax.swing._
-
-import core._
 
 object Inputs {
   import edu.umd.cs.piccolo.event._
@@ -43,15 +35,22 @@ object Inputs {
   var mouseBtn = 0
   @volatile
   var mousePressedFlag = false
-  
+
   val pressedKeys = new collection.mutable.HashSet[Int]
   def isKeyPressed(key: Int) = pressedKeys.contains(key)
-  var keyHandler: Option[PInputEvent => Unit] = None
-  def removeKeyHandler() {
-    keyHandler = None
+  var keyPressedHandler: Option[PInputEvent => Unit] = None
+  var keyReleasedHandler: Option[PInputEvent => Unit] = None
+  var heldKREvent: PInputEvent = _
+
+  def removeKeyHandlers() {
+    keyPressedHandler = None
+    keyReleasedHandler = None
   }
-  def setKeyHandler(handler: PInputEvent => Unit) {
-    keyHandler = Some(handler)
+  def setKeyPressedHandler(handler: PInputEvent => Unit) {
+    keyPressedHandler = Some(handler)
+  }
+  def setKeyReleasedHandler(handler: PInputEvent => Unit) {
+    keyReleasedHandler = Some(handler)
   }
 
   def activityStep() = {
@@ -70,12 +69,28 @@ object Inputs {
         }
         // Will get called whenever a key has been pressed down.
         override def keyPressed(e: PInputEvent) {
-          pressedKeys.add(e.getKeyCode)
-          keyHandler.foreach {_ apply e}
+          if (heldKREvent != null) {
+            // system generated release
+            // eat it, up
+            heldKREvent = null
+            keyPressedHandler.foreach { _ apply e }
+          }
+          else {
+            pressedKeys.add(e.getKeyCode)
+            keyPressedHandler.foreach { _ apply e }
+          }
         }
         // Will get called whenever a key has been released.
         override def keyReleased(e: PInputEvent) {
-          pressedKeys.remove(e.getKeyCode)
+          heldKREvent = e
+          Utils.schedule(0.002) {
+            if (heldKREvent != null) {
+              // actual key release
+              pressedKeys.remove(heldKREvent.getKeyCode)
+              keyReleasedHandler.foreach { _ apply heldKREvent }
+              heldKREvent = null
+            }
+          }
         }
         // Will be called at the end of a full keystroke (down then up).
         override def keyTyped(e: PInputEvent) {

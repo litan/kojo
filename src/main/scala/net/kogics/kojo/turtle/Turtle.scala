@@ -198,9 +198,9 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
     endForwardMove(pointAfterForward(n))
   }
   
-  // to be called outside swing thread
   def forward(n: Double): Unit = {
-    if (Utils.doublesEqual(n, 0, 0.001)) {
+    if (Utils.inSwingThread) {
+      forwardNoAnim(n)
       return
     }
     

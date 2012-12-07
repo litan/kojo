@@ -31,6 +31,7 @@ trait TSCanvasFeatures {
   def exportImage(filePrefix: String): java.io.File
   def exportThumbnail(filePrefix: String, height: Int): java.io.File
   def onKeyPress(fn: Int => Unit)  
+  def onKeyRelease(fn: Int => Unit)  
   def onMouseClick(fn: (Double, Double) => Unit)
   def setUnitLength(ul: UnitLen): Unit
   def clearWithUL(ul: UnitLen): Unit
