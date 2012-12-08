@@ -20,7 +20,7 @@ object DesktopMain extends StubMain with RmiMultiInstance {
    val classpath = {
     val urls = Thread.currentThread.getContextClassLoader match {
       case cl: java.net.URLClassLoader => cl.getURLs.toList
-      case _                           => error("classloader is not a URLClassLoader")
+      case _                           => sys.error("classloader is not a URLClassLoader")
     }
     
     createCp(urls map { _.getPath() })
