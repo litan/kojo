@@ -37,10 +37,10 @@ object Inputs {
   var mousePressedFlag = false
 
   val pressedKeys = new collection.mutable.HashSet[Int]
+  val heldReleasedKeys = new collection.mutable.HashSet[Int]
   def isKeyPressed(key: Int) = pressedKeys.contains(key)
   var keyPressedHandler: Option[PInputEvent => Unit] = None
   var keyReleasedHandler: Option[PInputEvent => Unit] = None
-  var heldKREvent: PInputEvent = _
 
   def removeKeyHandlers() {
     keyPressedHandler = None
@@ -69,26 +69,28 @@ object Inputs {
         }
         // Will get called whenever a key has been pressed down.
         override def keyPressed(e: PInputEvent) {
-          if (heldKREvent != null) {
-            // system generated release
-            // eat it, up
-            heldKREvent = null
+          val evtCode = e.getKeyCode
+          if (heldReleasedKeys contains evtCode) {
+            // system generated release - eat it up
+            heldReleasedKeys remove evtCode
+            // but call key press handlers anyway
             keyPressedHandler.foreach { _ apply e }
           }
           else {
-            pressedKeys.add(e.getKeyCode)
+            pressedKeys.add(evtCode)
             keyPressedHandler.foreach { _ apply e }
           }
         }
         // Will get called whenever a key has been released.
         override def keyReleased(e: PInputEvent) {
-          heldKREvent = e
+          val evtCode = e.getKeyCode
+          heldReleasedKeys add evtCode
           Utils.schedule(0.002) {
-            if (heldKREvent != null) {
+            if (heldReleasedKeys contains evtCode) {
               // actual key release
-              pressedKeys.remove(heldKREvent.getKeyCode)
-              keyReleasedHandler.foreach { _ apply heldKREvent }
-              heldKREvent = null
+              pressedKeys remove evtCode
+              heldReleasedKeys remove evtCode
+              keyReleasedHandler.foreach { _ apply e }
             }
           }
         }
