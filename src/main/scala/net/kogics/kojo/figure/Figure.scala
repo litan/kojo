@@ -173,7 +173,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
     })
 
     Utils.runInSwingThread {
-      figAnimation = new PActivity(-1) {
+      figAnimation = new PActivity(-1, 33) {
         override def activityStep(elapsedTime: Long) {
           currLayer = fgLayer
           try {
