@@ -312,9 +312,9 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
                 case tm: pcompiler.TypeMember =>
                   if (tm.implicitlyAdded) prio += 20
                   if (tm.inherited) prio += 10
-                case _ =>
                 case sm: pcompiler.ScopeMember =>
                   if (sm.implicitlyAdded) prio += 20
+                case _ =>
               }
 
               // give vals and vars lower priority because we can't seem to distinguish 
