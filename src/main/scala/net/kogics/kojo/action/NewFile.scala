@@ -20,8 +20,9 @@ import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import lite.CodeExecutionSupport
 import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.util.Utils
 
-class NewFile(ctx: KojoCtx) extends AbstractAction("New...") {
+class NewFile(ctx: KojoCtx) extends AbstractAction(Utils.loadString("S_New")) {
   val saveAs = new SaveAs(ctx)
   
   def actionPerformed(e: ActionEvent) {
