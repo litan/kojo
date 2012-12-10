@@ -118,7 +118,7 @@ object Main extends AppMenu {
         UIManager.setLookAndFeel(nim.getClassName)
       }
 
-      frame = new JFrame("The Kojo Learning Environment v2.0")
+      frame = new JFrame(Utils.loadString("S_Kojo"))
       frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
       val control = new CControl(frame)
       val themes = control.getThemes()

@@ -54,18 +54,19 @@ import scalariform.formatter.preferences.FormattingPreferences
 import scalariform.formatter.preferences.IndentSpaces
 import scalariform.formatter.preferences.PreserveDanglingCloseParenthesis
 
-class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport, frame: JFrame) extends BaseHolder("SE", "Script Editor", se) {
+class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport: CodeExecutionSupport, frame: JFrame)
+  extends BaseHolder("SE", Utils.loadString("CTL_CodeEditorTopComponent"), se) {
 
   codeSupport.toolbar.setOpaque(true)
   codeSupport.toolbar.setBackground(new Color(230, 230, 230))
 
-  val SYNTAX_STYLE_SCALA2 = "text/scala2" 
+  val SYNTAX_STYLE_SCALA2 = "text/scala2"
   val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
   tFactory.putMapping(SYNTAX_STYLE_SCALA2, "net.kogics.kojo.lexer.ScalariformTokenMaker")
   FoldParserManager.get.addFoldParserMapping(SYNTAX_STYLE_SCALA2, new CurlyFoldParser)
   TokenMakerFactory.setDefaultInstance(tFactory)
   codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
-//  codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+  //  codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
   codePane.setAntiAliasingEnabled(true)
   codePane.setBracketMatchingEnabled(true)
   codePane.setMatchedBracketBGColor(new Color(247, 247, 247))
@@ -143,7 +144,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(new JPopupMenu.Separator, idx)
   idx += 1
 
-  val formatAction = new AbstractAction("Format Source") {
+  val formatAction = new AbstractAction(Utils.loadString("S_FormatSource")) {
     import scalariform.formatter.preferences._
 
     def actionPerformed(ev: ActionEvent) {
@@ -186,7 +187,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(formatItem, idx)
   idx += 1
 
-  val findReplaceAction = new AbstractAction("Find/Replace") {
+  val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace")) {
     lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener)
     lazy val listener = new ActionListener {
       def actionPerformed(ev: ActionEvent) {
@@ -202,7 +203,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
       }
     }
     def actionPerformed(ev: ActionEvent) {
-      dialog.setTitle("Find / Replace")
+      dialog.setTitle(Utils.loadString("S_FindReplace"))
       dialog.setVisible(true)
     }
   }
@@ -221,7 +222,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(new JPopupMenu.Separator, idx)
   idx += 1
 
-  val typeAtAction = new AbstractAction("Show type under curser") {
+  val typeAtAction = new AbstractAction(Utils.loadString("S_ShowType")) {
     def actionPerformed(ev: ActionEvent) {
       println(codeSupport.typeAt(codePane.getCaretPosition()))
     }
@@ -230,7 +231,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(typeAtItem, idx)
   idx += 1
 
-  val markOccurancesAction = new AbstractAction("Mark Occurances") {
+  val markOccurancesAction = new AbstractAction(Utils.loadString("S_MarkOccurances")) {
     def actionPerformed(ev: ActionEvent) {
       if (markOccurancesItem.isSelected()) {
         codePane.setMarkOccurrences(true)
@@ -249,7 +250,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
   val increaseFontSizeAction = new IncreaseFontSizeAction()
   val increaseFontItem = new JMenuItem(increaseFontSizeAction)
-  increaseFontItem.setText("Increase Font Size")
+  increaseFontItem.setText(Utils.loadString("S_IncreaseFontSize"))
   val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
   inputMap.put(controlPlus, "increase-font-size")
   am.put("increase-font-size", increaseFontSizeAction)
@@ -259,7 +260,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
   val decreaseFontSizeAction = new DecreaseFontSizeAction()
   val decreaseFontItem = new JMenuItem(decreaseFontSizeAction)
-  decreaseFontItem.setText("Decrease Font Size")
+  decreaseFontItem.setText(Utils.loadString("S_DecreaseFontSize"))
   val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
   inputMap.put(controlMinus, "decrease-font-size")
   am.put("decrease-font-size", decreaseFontSizeAction)

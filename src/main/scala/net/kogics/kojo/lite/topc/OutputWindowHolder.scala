@@ -18,7 +18,7 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.JMenuItem
 
 class OutputWindowHolder(val ow: JTextArea, val ew: JEditorPane, val oPanel: JPanel, ctx: core.KojoCtx)
-  extends BaseHolder("OW", "Output Pane", oPanel) {
+  extends BaseHolder("OW", Utils.loadString("CTL_OutputTopComponent"), oPanel) {
 
   ow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13))
   ow.setForeground(new Color(32, 32, 32))

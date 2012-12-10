@@ -1,13 +1,14 @@
 package net.kogics.kojo.lite.topc
 
-import javax.swing.JComponent
-import bibliothek.gui.dock.common.DefaultSingleCDockable
-import java.awt.Color
+import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.util.Utils
+
 import bibliothek.gui.dock.common.event.CFocusListener
 import bibliothek.gui.dock.common.intern.CDockable
-import net.kogics.kojo.core.KojoCtx
+import javax.swing.JComponent
 
-class MathworldHolder(val mw: JComponent, ctx: KojoCtx) extends BaseHolder("MW", "Mathworld", null.asInstanceOf[JComponent]) {
+class MathworldHolder(val mw: JComponent, ctx: KojoCtx)
+  extends BaseHolder("MW", Utils.loadString("CTL_GeoGebraTopComponent"), null.asInstanceOf[JComponent]) {
 
   var added = false
 

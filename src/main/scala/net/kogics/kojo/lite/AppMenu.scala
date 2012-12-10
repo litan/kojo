@@ -29,12 +29,12 @@ trait AppMenu { self: Main.type =>
   def menuBar = {
     val menuBar = new JMenuBar
 
-    val fileMenu = new JMenu("File")
-    val openWeb = new JMenuItem("Open From Web")
+    val fileMenu = new JMenu(Utils.loadString("S_File"))
+    val openWeb = new JMenuItem(Utils.loadString("S_OpenFromWeb"))
     openWeb.addActionListener(new ActionListener {
       def actionPerformed(ev: ActionEvent) {
         val urlGetter = new JDialog(frame)
-        urlGetter.setTitle("Open From Web")
+        urlGetter.setTitle(Utils.loadString("S_OpenFromWeb"))
 
         val urlPanel = new JPanel
         urlPanel.setLayout(new BoxLayout(urlPanel, BoxLayout.Y_AXIS))
@@ -46,14 +46,14 @@ trait AppMenu { self: Main.type =>
         urlPanel.add(url)
 
         val okCancel = new JPanel
-        val ok = new JButton("Ok")
+        val ok = new JButton(Utils.loadString("S_OK"))
         ok.addActionListener(new ActionListener {
           def actionPerformed(ev: ActionEvent) {
             urlGetter.setVisible(false)
             loadUrl(urlBox.getText)
           }
         })
-        val cancel = new JButton("Cancel")
+        val cancel = new JButton(Utils.loadString("S_Cancel"))
         cancel.addActionListener(new ActionListener {
           def actionPerformed(ev: ActionEvent) {
             urlGetter.setVisible(false)
@@ -73,16 +73,16 @@ trait AppMenu { self: Main.type =>
 
     fileMenu.add(new JMenuItem(new NewFile(kojoCtx)))
 
-    val openFile = new JMenuItem("Open...")
+    val openFile = new JMenuItem(Utils.loadString("S_Open"))
     openFile.addActionListener(new LoadFrom(kojoCtx))
     fileMenu.add(openFile)
 
-    val saveFile = new JMenuItem("Save...")
+    val saveFile = new JMenuItem(Utils.loadString("S_Save"))
     saveFile.addActionListener(new Save(kojoCtx))
     fileMenu.add(saveFile)
 
     val saveAsActionListener = new SaveAs(kojoCtx)
-    val saveAsFile = new JMenuItem("Save As...")
+    val saveAsFile = new JMenuItem(Utils.loadString("S_SaveAs"))
     saveAsFile.addActionListener(saveAsActionListener)
     fileMenu.add(saveAsFile)
 
@@ -92,7 +92,7 @@ trait AppMenu { self: Main.type =>
 
     fileMenu.addSeparator()
 
-    fileMenu.add(new JMenuItem(new AbstractAction("Exit") {
+    fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_Exit")) {
       def actionPerformed(e: ActionEvent) {
         appExit()
       }
@@ -120,44 +120,44 @@ trait AppMenu { self: Main.type =>
       })
       item
     }
-    val samplesMenu = new JMenu("Samples")
-    val simpleMenu = new JMenu("Getting Started")
-    simpleMenu.add(menuItemFor("Square", "square.kojo"))
-    simpleMenu.add(menuItemFor("Colors and Shapes", "shapes-cols.kojo"))
-    simpleMenu.add(menuItemFor("Square Pattern", "square-pattern.kojo"))
+    val samplesMenu = new JMenu(Utils.loadString("S_Samples"))
+    val simpleMenu = new JMenu(Utils.loadString("S_GetStart"))
+    simpleMenu.add(menuItemFor(Utils.loadString("S_Square"), "square.kojo"))
+    simpleMenu.add(menuItemFor(Utils.loadString("S_ColorsShapes"), "shapes-cols.kojo"))
+    simpleMenu.add(menuItemFor(Utils.loadString("S_SquarePattern"), "square-pattern.kojo"))
     samplesMenu.add(simpleMenu)
 
-    val drawingsMenu = new JMenu("Intermediate")
-    drawingsMenu.add(menuItemFor("Pentagon Pattern", "penta-pattern.kojo"))
-    drawingsMenu.add(menuItemFor("Circles", "circles.kojo"))
-    drawingsMenu.add(menuItemFor("Spiral Square Tiles", "spiral-square-tiles.kojo"))
-    drawingsMenu.add(menuItemFor("Spiral Hexangonal Tiles", "spiral-hexagon-tiles.kojo"))
-    drawingsMenu.add(menuItemFor("Ferris Wheel", "ferris-wheel.kojo"))
-    drawingsMenu.add(menuItemFor("Rangoli", "rangoli.kojo"))
+    val drawingsMenu = new JMenu(Utils.loadString("S_Intermediate"))
+    drawingsMenu.add(menuItemFor(Utils.loadString("S_PentagonPattern"), "penta-pattern.kojo"))
+    drawingsMenu.add(menuItemFor(Utils.loadString("S_Circles"), "circles.kojo"))
+    drawingsMenu.add(menuItemFor(Utils.loadString("S_SpiralSquareTiles"), "spiral-square-tiles.kojo"))
+    drawingsMenu.add(menuItemFor(Utils.loadString("S_SpiralHexagonalTiles"), "spiral-hexagon-tiles.kojo"))
+    drawingsMenu.add(menuItemFor(Utils.loadString("S_FerrisWheel"), "ferris-wheel.kojo"))
+    drawingsMenu.add(menuItemFor(Utils.loadString("S_Rangoli"), "rangoli.kojo"))
     samplesMenu.add(drawingsMenu)
 
-    val fractalsMenu = new JMenu("Fractals")
-    fractalsMenu.add(menuItemFor("Tree", "tree0.kojo"))
-    fractalsMenu.add(menuItemFor("Another Tree", "tree1.kojo"))
-    fractalsMenu.add(menuItemFor("Fibonacci Tree", "fib-tree.kojo"))
-    fractalsMenu.add(menuItemFor("Snowflake", "snowflake.kojo"))
-    fractalsMenu.add(menuItemFor("Sierpinski Triangle", "sierpinski-tri.kojo"))
-    fractalsMenu.add(menuItemFor("L-Systems", "l-systems.kojo"))
+    val fractalsMenu = new JMenu(Utils.loadString("S_Fractals"))
+    fractalsMenu.add(menuItemFor(Utils.loadString("S_Tree"), "tree0.kojo"))
+    fractalsMenu.add(menuItemFor(Utils.loadString("S_AnotherTree"), "tree1.kojo"))
+    fractalsMenu.add(menuItemFor(Utils.loadString("S_FibonacciTree"), "fib-tree.kojo"))
+    fractalsMenu.add(menuItemFor(Utils.loadString("S_Snowflake"), "snowflake.kojo"))
+    fractalsMenu.add(menuItemFor(Utils.loadString("S_SierpinskiTriangle"), "sierpinski-tri.kojo"))
+    fractalsMenu.add(menuItemFor(Utils.loadString("S_LSystems"), "l-systems.kojo"))
     samplesMenu.add(fractalsMenu)
 
-    val animGameMenu = new JMenu("Animations and Games")
-    animGameMenu.add(menuItemFor("Tangram Skier", "tangram-skier.kojo"))
-    animGameMenu.add(menuItemFor("Hunted", "hunted.kojo"))
+    val animGameMenu = new JMenu(Utils.loadString("S_AnimationsGames"))
+    animGameMenu.add(menuItemFor(Utils.loadString("S_TangramSkier"), "tangram-skier.kojo"))
+    animGameMenu.add(menuItemFor(Utils.loadString("S_Hunted"), "hunted.kojo"))
     samplesMenu.add(animGameMenu)
 
-    val mgeomMenu = new JMenu("Math Activities")
-    mgeomMenu.add(menuItemForUrl("Solving Linear Equations", "http://www.kogics.net/public/kojolite/samples/solving-linear-equations.kojo"))
+    val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
+    mgeomMenu.add(menuItemForUrl(Utils.loadString("S_SolvingLinearEquations"), "http://www.kogics.net/public/kojolite/samples/solving-linear-equations.kojo"))
     samplesMenu.add(mgeomMenu)
 
     menuBar.add(samplesMenu)
 
-    val windowMenu = new JMenu("Window")
-    val resetWindows = new JMenuItem("<html>Default <em>Perspective</em></html>")
+    val windowMenu = new JMenu(Utils.loadString("S_Window"))
+    val resetWindows = new JMenuItem(Utils.loadString("S_DefaultPerspective"))
     resetWindows.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.activateDefaultPerspective()
@@ -165,7 +165,7 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(resetWindows)
 
-    val storyItem = new JMenuItem("<html>Story Viewing <em>Perspective</em></html>")
+    val storyItem = new JMenuItem(Utils.loadString("S_StoryViewingPerspective"))
     storyItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.activateStoryViewingPerspective()
@@ -173,7 +173,7 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(storyItem)
     
-    val historyItem = new JMenuItem("<html>History Browsing <em>Perspective</em></html>")
+    val historyItem = new JMenuItem(Utils.loadString("S_HistoryBrowsingPerspective"))
     historyItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.activateHistoryBrowsingPerspective()
@@ -181,7 +181,7 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(historyItem)
     
-    val drawingCanvasItem = new JMenuItem("<html>No Graphics <em>Perspective</em></html>")
+    val drawingCanvasItem = new JMenuItem(Utils.loadString("S_NoGraphicsPerspective"))
     drawingCanvasItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.activateNoGraphicsPerspective()
@@ -191,13 +191,13 @@ trait AppMenu { self: Main.type =>
     
     menuBar.add(windowMenu)
 
-    val helpMenu = new JMenu("Help")
-    helpMenu.add(menuItemFor("Kojo Overview", "kojo-overview.kojo"))
-    helpMenu.add(menuItemFor("Scala Tutorial", "scala-tutorial.kojo"))
-    helpMenu.add(menuItemFor("Introduction to 3D", "d3-intro.kojo"))
+    val helpMenu = new JMenu(Utils.loadString("S_Help"))
+    helpMenu.add(menuItemFor(Utils.loadString("S_KojoOverview"), "kojo-overview.kojo"))
+    helpMenu.add(menuItemFor(Utils.loadString("S_ScalaTutorial"), "scala-tutorial.kojo"))
+    helpMenu.add(menuItemFor(Utils.loadString("S_Intro3D"), "d3-intro.kojo"))
     helpMenu.addSeparator()
 
-    val about = new JMenuItem("About")
+    val about = new JMenuItem(Utils.loadString("S_About"))
     about.addActionListener(new ActionListener {
       def actionPerformed(ev: ActionEvent) {
         val aboutBox = new JDialog
@@ -215,7 +215,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 (Early Access)<br/>
-              Version: 011212-2 <br/>
+              Version: 091212-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
@@ -245,7 +245,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setMaximumSize(new Dimension(430, 300))
         aboutText.setCaretPosition(0)
         aboutPanel.add(new JScrollPane(aboutText))
-        val ok = new JButton("Ok")
+        val ok = new JButton(Utils.loadString("S_OK"))
         ok.addActionListener(new ActionListener {
           def actionPerformed(ev: ActionEvent) {
             aboutBox.setVisible(false)

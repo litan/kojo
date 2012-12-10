@@ -19,6 +19,7 @@ import javax.swing.Action
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 import net.kogics.kojo.lite.CodeExecutionSupport
+import net.kogics.kojo.util.Utils
 
 object CloseFile {
   var action: Action = _
@@ -30,7 +31,7 @@ object CloseFile {
   }
 }
 
-class CloseFile extends AbstractAction("Close") {
+class CloseFile extends AbstractAction(Utils.loadString("S_Close")) {
   setEnabled(false)
   CloseFile.action = this
 
