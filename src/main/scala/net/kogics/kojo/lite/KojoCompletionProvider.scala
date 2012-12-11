@@ -67,7 +67,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
         completion.isType ||
         completion.isObject
 
-    def lhs: String = {
+    val lhs: String = {
       val fm = new StringBuilder
       fm.append(completion.name)
       val tpe = completion.member.tpe
@@ -91,31 +91,49 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
       fm.toString
     }
 
-    def rhs: String = if (completion.member.tpe.paramss.size > 1)
+    val rhs: String = if (completion.member.tpe.paramss.size > 1)
       completion.member.tpe.resultType.toString
     else
       completion.member.tpe.finalResultType.toString
 
     val defn = "%s : %s" format (lhs, rhs)
-    def template = {
-      val fm = new StringBuilder
-      fm.append(completion.name)
-      val tpe = completion.member.tpe
-      if (tpe.typeParams.size > 0) {
-        val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
-        fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
-      }
-      if (tpe.params.size > 0) {
-        val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
-        fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
+
+    val specialNames = Set("act(fn: net.kogics.kojo.core.Picture => Unit)", "animate(fn: => Unit)")
+    def specialMethodTemplate: Option[String] = {
+      //      println("%s lhs - %s " format(completion.name, lhs))
+      if (specialNames contains lhs) {
+        Some(methodTemplate(completion.name))
       }
       else {
-        if (!valOrNoargItem) {
-          // it's a no-arg command
-          fm.append("()")
-        }
+        None
       }
-      fm.toString
+    }
+
+    def template = {
+      val c0 = specialMethodTemplate
+      if (c0.isDefined) {
+        c0.get
+      }
+      else {
+        val fm = new StringBuilder
+        fm.append(completion.name)
+        val tpe = completion.member.tpe
+        if (tpe.typeParams.size > 0) {
+          val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
+          fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
+        }
+        if (tpe.params.size > 0) {
+          val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
+          fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
+        }
+        else {
+          if (!valOrNoargItem) {
+            // it's a no-arg command
+            fm.append("()")
+          }
+        }
+        fm.toString
+      }
     }
 
     def signature = "<strong>%s</strong> : <em>%s</em>" format (lhs, rhs)
