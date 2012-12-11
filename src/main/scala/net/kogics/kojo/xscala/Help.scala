@@ -478,6 +478,7 @@ object Help {
     ,
     "animationDelay" -> "animationDelay - Queries the turtle's delay setting.",
     "clear" -> "clear() - Clears the turtle canvas, and brings the turtle to the center of the canvas.",
+    "cleari" -> "cleari() - Clears the turtle canvas and makes the turtle invisible.",
     "wipe" -> "wipe() - Wipes the turtle canvas by earsing all pictures. Meant to be used during an animation.",
     "clearOutput" -> "clearOutput() - Clears the output window.",
     "clearWithUL" -> "clearWithUL(unit) - Clears the turtle canvas, sets the given unit length (Pixel, Cm, or Inch), and brings the turtle to the center of the canvas.",

@@ -104,7 +104,7 @@ object CodeCompletionUtils {
     "drawAndHide" -> "drawAndHide(${pic})",
     "animate" -> "animate {\n    ${cursor}\n}",
     "onAnimationStop" -> "onAnimationStop {\n    ${cursor}\n}",
-    "act" -> "act { me => \n    ${cursor}\n}",
+    "act" -> "act { self => \n    ${cursor}\n}",
     "row" -> "row(${picture}, ${n})",
     "col" -> "col(${picture}, ${n})",
     "setUnitLength" -> "setUnitLength(${unit})",
@@ -138,6 +138,7 @@ object CodeCompletionUtils {
   )
   
   val TwMethodTemplates = Map(
+    "cleari" -> "cleari()",
     "pict" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "PictureT" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "Picture" -> "Picture {\n    ${cursor}\n}",
