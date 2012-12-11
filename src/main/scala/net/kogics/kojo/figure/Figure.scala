@@ -218,10 +218,10 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
       figAnimations.foreach { figAnimation =>
         figAnimation.terminate(PActivity.TERMINATE_AND_FINISH)
       }
-      figAnimations = Nil
-      if (stopFn.isDefined) {
+      if (!figAnimations.isEmpty && stopFn.isDefined) {
         stopFn.get.apply()
       }
+      figAnimations = Nil
     }
   }
 
