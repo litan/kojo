@@ -209,6 +209,7 @@ class Builtins extends RepeatCommands {
     override def clear() = tCanvas.clear()
     UserCommand("clear", Nil, "Clears the screen, and brings the turtle to the center of the window.")
 
+    def cleari() = { clear(); invisible() }
     override def style: Style = turtle0.style
 
     override def arc(r: Double, a: Int) = turtle0.arc(r, a)
