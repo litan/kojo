@@ -104,6 +104,7 @@ object Main extends AppMenu {
 
   def realMain(args: Array[String]): Unit = {
     System.setSecurityManager(null)
+    kojoCtx = new KojoCtx
     runMultiInstancehandler()
 
     Utils.runInSwingThreadAndWait {
@@ -126,7 +127,6 @@ object Main extends AppMenu {
       frame.setLayout(new GridLayout(1, 1))
       frame.add(control.getContentArea)
 
-      kojoCtx = new KojoCtx
       SpriteCanvas.initedInstance(kojoCtx)
       StoryTeller.initedInstance(kojoCtx)
       GeoGebraCanvas.initedInstance(kojoCtx)

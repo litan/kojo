@@ -7,12 +7,14 @@ import java.awt.event.ActionListener
 import javax.swing.AbstractAction
 import javax.swing.BoxLayout
 import javax.swing.JButton
+import javax.swing.JCheckBoxMenuItem
 import javax.swing.JDialog
 import javax.swing.JEditorPane
 import javax.swing.JLabel
 import javax.swing.JMenu
 import javax.swing.JMenuBar
 import javax.swing.JMenuItem
+import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextField
@@ -24,6 +26,8 @@ import net.kogics.kojo.action.NewFile
 import net.kogics.kojo.action.Save
 import net.kogics.kojo.action.SaveAs
 import net.kogics.kojo.util.Utils
+
+import net.kogics.kojo.lite.Main
 
 trait AppMenu { self: Main.type =>
   def menuBar = {
@@ -172,7 +176,7 @@ trait AppMenu { self: Main.type =>
       }
     })
     windowMenu.add(storyItem)
-    
+
     val historyItem = new JMenuItem(Utils.loadString("S_HistoryBrowsingPerspective"))
     historyItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
@@ -180,7 +184,7 @@ trait AppMenu { self: Main.type =>
       }
     })
     windowMenu.add(historyItem)
-    
+
     val drawingCanvasItem = new JMenuItem(Utils.loadString("S_NoGraphicsPerspective"))
     drawingCanvasItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
@@ -188,8 +192,50 @@ trait AppMenu { self: Main.type =>
       }
     })
     windowMenu.add(drawingCanvasItem)
-    
+
     menuBar.add(windowMenu)
+
+    val langMenu = new JMenu(Utils.loadString("S_Language"))
+    val langMap = Map(
+      "English" -> "en",
+      "Swedish" -> "sv",
+      "French" -> "fr",
+      "Italian" -> "it"
+    )
+    var langMenus: Seq[JCheckBoxMenuItem] = Vector()
+    val langHandler = new ActionListener {
+      override def actionPerformed(e: ActionEvent) {
+        val lang = e.getActionCommand
+        kojoCtx.userLanguage = lang
+        langMenus foreach { mi =>
+          if (mi.getActionCommand() != lang) {
+            mi.setSelected(false)
+          }
+        }
+        JOptionPane.showMessageDialog(kojoCtx.frame,
+          Utils.loadString("S_LangChanged") format (e.getSource.asInstanceOf[JCheckBoxMenuItem].getText()),
+          Utils.loadString("S_LangChange"),
+          JOptionPane.INFORMATION_MESSAGE)
+      }
+    }
+
+    def langMenuItem(lang: String) = {
+      val langCode = langMap(lang)
+      val mitem = new JCheckBoxMenuItem(lang)
+      mitem.addActionListener(langHandler)
+      mitem.setActionCommand(langCode)
+      if (kojoCtx.userLanguage == langCode) {
+        mitem.setSelected(true)
+      }
+      langMenus :+= mitem
+      mitem
+    }
+
+    langMenu.add(langMenuItem("English"))
+    langMenu.add(langMenuItem("French"))
+    langMenu.add(langMenuItem("Italian"))
+    langMenu.add(langMenuItem("Swedish"))
+    menuBar.add(langMenu)
 
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
     helpMenu.add(menuItemFor(Utils.loadString("S_KojoOverview"), "kojo-overview.kojo"))
@@ -214,8 +260,8 @@ trait AppMenu { self: Main.type =>
         aboutText.setEditable(false)
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
-              <strong>Kojo</strong> 2.0 (Early Access)<br/>
-              Version: 091212-1 <br/>
+              <strong>Kojo</strong> 2.0 Beta<br/>
+              Version: 131212-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>

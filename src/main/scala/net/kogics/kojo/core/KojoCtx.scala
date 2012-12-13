@@ -50,5 +50,7 @@ trait KojoCtx {
   def showScriptInOutput(): Unit
   def hideScriptInOutput(): Unit
   def clearOutput(): Unit
+  def userLanguage: String
+  def userLanguage_=(lang: String)
   var fps: Int
 }
