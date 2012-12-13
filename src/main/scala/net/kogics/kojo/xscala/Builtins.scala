@@ -56,6 +56,7 @@ class Builtins extends RepeatCommands {
   @volatile var scalaCodeRunner: ScalaCodeRunner = _
   lazy val tCanvas = scalaCodeRunner.tCanvas
   lazy val ctx = scalaCodeRunner.ctx
+  lazy val kojoCtx = tCanvas.kojoCtx
   lazy val storyTeller = story.StoryTeller.instance
   def turtle0 = tCanvas.turtle0
 
@@ -577,6 +578,10 @@ Here's a partial list of the available commands:
     throw new UnsupportedOperationException("Use draw(pic/s) instead of show(pic/s)")
   }
   
+  def setRefreshRate(fps: Int) {
+    require(fps >= 20 && fps <=100, "FPS needs to be in the range: 20 to 100")
+    kojoCtx.fps = fps
+  }
   def animate(fn: => Unit) = staging.API.loop(fn)
   def stopAnimation() = ctx.stopAnimation()
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)

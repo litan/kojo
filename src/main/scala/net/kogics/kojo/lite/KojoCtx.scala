@@ -41,6 +41,7 @@ class KojoCtx extends core.KojoCtx {
   var saveAsActionListener: ActionListener = _
   var codeSupport: CodeExecutionSupport = _
   var control: CControl = _
+  @volatile var fps = 50
 
   def activateDefaultPerspective() {
     val grid = new CGrid(control)

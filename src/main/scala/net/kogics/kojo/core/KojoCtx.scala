@@ -50,4 +50,5 @@ trait KojoCtx {
   def showScriptInOutput(): Unit
   def hideScriptInOutput(): Unit
   def clearOutput(): Unit
+  var fps: Int
 }

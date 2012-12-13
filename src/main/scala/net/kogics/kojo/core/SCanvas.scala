@@ -27,4 +27,5 @@ trait SCanvas extends TSCanvasFeatures {
   def activate(): Unit
   def cbounds: PBounds
   def setCanvasBackground(c: Paint)
+  def kojoCtx: KojoCtx
 }
