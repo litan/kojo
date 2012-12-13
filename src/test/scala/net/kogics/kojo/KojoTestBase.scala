@@ -53,6 +53,7 @@ class KojoTestContext extends core.KojoCtx {
   def showScriptInOutput() {}
   def hideScriptInOutput() {}
   def clearOutput() {}
+  var fps = 50
 }
 
 class KojoTestBase {

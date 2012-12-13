@@ -102,6 +102,7 @@ object CodeCompletionUtils {
     "reflect" -> "reflect(${gap})",
     "draw" -> "draw(${pic})",
     "drawAndHide" -> "drawAndHide(${pic})",
+    "setRefreshRate" -> "setRefreshRate(${framesPerSec})",
     "animate" -> "animate {\n    ${cursor}\n}",
     "onAnimationStop" -> "onAnimationStop {\n    ${cursor}\n}",
     "act" -> "act { self => \n    ${cursor}\n}",

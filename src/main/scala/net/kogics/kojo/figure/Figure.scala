@@ -30,6 +30,7 @@ import core._
 import java.util.concurrent.Future
 import java.util.concurrent.FutureTask
 import java.util.concurrent.Callable
+import net.kogics.kojo.util.FutureResult
 
 object Figure {
   def apply(canvas: SpriteCanvas, initX: Double = 0d, initY: Double = 0): Figure = {
@@ -97,6 +98,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
       init()
       repaint()
       stopFn = None
+      canvas.kojoCtx.fps = 50
     }
   }
 
@@ -166,14 +168,10 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
 
   def refresh(fn: => Unit): Future[PActivity] = {
     @volatile var figAnimation: PActivity = null
-    val promise = new FutureTask(new Callable[PActivity] {
-      def call: PActivity = {
-        figAnimation
-      }
-    })
+    val promise = new FutureResult[PActivity]
 
     Utils.runInSwingThread {
-      figAnimation = new PActivity(-1, 33) {
+      figAnimation = new PActivity(-1, 1000/canvas.kojoCtx.fps) {
         override def activityStep(elapsedTime: Long) {
           currLayer = fgLayer
           try {
@@ -206,7 +204,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
 
       figAnimations = figAnimation :: figAnimations
       canvas.getRoot.addActivity(figAnimation)
-      promise.run()
+      promise.set(figAnimation)
     }
     promise
   }
