@@ -53,6 +53,8 @@ class KojoTestContext extends core.KojoCtx {
   def showScriptInOutput() {}
   def hideScriptInOutput() {}
   def clearOutput() {}
+  def userLanguage: String = "en"
+  def userLanguage_=(lang: String) {}
   var fps = 50
 }
 

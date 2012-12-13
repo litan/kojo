@@ -36,6 +36,14 @@ object KojoCtx extends core.Singleton[KojoCtx] {
 
 class KojoCtx extends core.KojoCtx {
 
+  val prefs = Preferences.userRoot().node("Kojolite-Prefs")
+
+  @volatile var _userLanguage = prefs.get("user.language", System.getProperty("user.language"))
+  if (_userLanguage != null && _userLanguage.trim != "") {
+    java.util.Locale.setDefault(new java.util.Locale(_userLanguage))
+    System.setProperty("user.language", _userLanguage)
+  }
+
   var topcs: TopCs = _
   var frame: JFrame = _
   var saveAsActionListener: ActionListener = _
@@ -92,8 +100,8 @@ class KojoCtx extends core.KojoCtx {
     topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.sth.toFront()
   }
-  
-  def activateHistoryBrowsingPerspective() {  
+
+  def activateHistoryBrowsingPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -142,7 +150,7 @@ class KojoCtx extends core.KojoCtx {
     if (!topcs.sth.isShowing) {
       topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
       topcs.sth.toFront()
-//      topcs.sth.setLocation(CLocation.base.normalWest(0.5))
+      //      topcs.sth.setLocation(CLocation.base.normalWest(0.5))
     }
   }
 
@@ -189,7 +197,6 @@ class KojoCtx extends core.KojoCtx {
     CloseFile.onFileClose()
   }
 
-  val prefs = Preferences.userRoot().node("Kojolite-Prefs")
   @volatile var lastLoadStoreDir = prefs.get("lastLoadStoreDir", "")
   def getLastLoadStoreDir() = lastLoadStoreDir
   def setLastLoadStoreDir(dir: String) {
@@ -206,6 +213,12 @@ class KojoCtx extends core.KojoCtx {
   def lastColor_=(c: Color) {
     _lastColor = c
     prefs.put("lastColor", Integer.toString(_lastColor.getRGB()))
+  }
+
+  def userLanguage: String = _userLanguage
+  def userLanguage_=(lang: String) {
+    _userLanguage = lang
+    prefs.put("user.language", _userLanguage)
   }
 
   def knownColors = staging.KColor.knownColors
@@ -237,5 +250,4 @@ class KojoCtx extends core.KojoCtx {
   def clearOutput() {
     codeSupport.clrOutput()
   }
-
 }
