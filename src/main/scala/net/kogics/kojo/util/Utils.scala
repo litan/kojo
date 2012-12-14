@@ -81,6 +81,11 @@ object Utils {
     readStream(getClass.getResourceAsStream(res))
   }
 
+  def loadResource2(res: String): Option[String] = {
+    val stream = getClass.getResourceAsStream(res)
+    if (stream == null) None else Some(readStream(stream))
+  }
+
   def inSwingThread = EventQueue.isDispatchThread
 
   def runAsync(fn: => Unit) {
@@ -128,7 +133,7 @@ object Utils {
         }
         catch {
           case e: InterruptedException => // println("Background Thread Interrupted.")
-          case t: Throwable => reportException(t)
+          case t: Throwable            => reportException(t)
         }
         finally {
           threads.remove(t)
@@ -272,7 +277,7 @@ object Utils {
   )
 
   def readStream(is: InputStream): String = {
-    require (is != null, "trying to read from a non-existent resource") 
+    require(is != null, "trying to read from a non-existent resource")
     val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
     val buf = new Array[Char](1024)
     var nbytes = reader.read(buf)
@@ -376,8 +381,13 @@ object Utils {
   }
 
   import Typeclasses._
+
+  def langInit(mode: CodingMode): Option[String] = {
+    loadResource2(s"/i18n/initk/${System.getProperty("user.language")}.${mode.code}.kojo")
+  }
+
   def kojoInitCode(mode: CodingMode): Option[String] = {
-    codeFromScripts(modeFilter(initScripts, mode), initScriptDir)
+    codeFromScripts(modeFilter(initScripts, mode), initScriptDir) |+| langInit(mode)
     // |+| codeFromUrl(...)
     // |+| codeFromScripts(modeFilter(installInitScripts, mode), installInitScriptDir)
   }
