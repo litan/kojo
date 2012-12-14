@@ -199,8 +199,8 @@ trait AppMenu { self: Main.type =>
     val langMap = Map(
       "English" -> "en",
       "Swedish (in-progress)" -> "sv",
-      "French (todo)" -> "fr",
-      "Italian (todo)" -> "it"
+      "French (coming-up)" -> "fr",
+      "Italian (coming-up)" -> "it"
     )
     var langMenus: Seq[JCheckBoxMenuItem] = Vector()
     val langHandler = new ActionListener {
@@ -232,8 +232,8 @@ trait AppMenu { self: Main.type =>
     }
 
     langMenu.add(langMenuItem("English"))
-    langMenu.add(langMenuItem("French (todo)"))
-    langMenu.add(langMenuItem("Italian (todo)"))
+    langMenu.add(langMenuItem("French (coming-up)"))
+    langMenu.add(langMenuItem("Italian (coming-up)"))
     langMenu.add(langMenuItem("Swedish (in-progress)"))
     menuBar.add(langMenu)
 
@@ -261,7 +261,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 131212-1 <br/>
+              Version: 141212-2 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
