@@ -147,7 +147,7 @@ object Main extends AppMenu {
       kojoCtx.codeSupport = codeSupport
       kojoCtx.control = control
 
-      kojoCtx.activateDefaultPerspective()
+      kojoCtx.switchToDefaultPerspective()
 
       frame.setJMenuBar(menuBar)
 

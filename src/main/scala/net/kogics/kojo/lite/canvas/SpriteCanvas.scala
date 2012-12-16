@@ -684,7 +684,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     }
   }
   
-  def cbounds = getCamera.getViewBounds()
+  def cbounds = Utils.runInSwingThreadAndWait { getCamera.getViewBounds() }
 
   def setCanvasBackground(c: Paint) = Utils.runInSwingThread {
     val bounds = cbounds

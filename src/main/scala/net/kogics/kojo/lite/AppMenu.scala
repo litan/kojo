@@ -164,7 +164,7 @@ trait AppMenu { self: Main.type =>
     val resetWindows = new JMenuItem(Utils.loadString("S_DefaultPerspective"))
     resetWindows.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.activateDefaultPerspective()
+        kojoCtx.switchToDefaultPerspective()
       }
     })
     windowMenu.add(resetWindows)
@@ -172,7 +172,7 @@ trait AppMenu { self: Main.type =>
     val storyItem = new JMenuItem(Utils.loadString("S_StoryViewingPerspective"))
     storyItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.activateStoryViewingPerspective()
+        kojoCtx.switchToStoryViewingPerspective()
       }
     })
     windowMenu.add(storyItem)
@@ -180,7 +180,7 @@ trait AppMenu { self: Main.type =>
     val historyItem = new JMenuItem(Utils.loadString("S_HistoryBrowsingPerspective"))
     historyItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.activateHistoryBrowsingPerspective()
+        kojoCtx.switchToHistoryBrowsingPerspective()
       }
     })
     windowMenu.add(historyItem)
@@ -188,10 +188,18 @@ trait AppMenu { self: Main.type =>
     val drawingCanvasItem = new JMenuItem(Utils.loadString("S_NoGraphicsPerspective"))
     drawingCanvasItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.activateNoGraphicsPerspective()
+        kojoCtx.switchToNoGraphicsPerspective()
       }
     })
     windowMenu.add(drawingCanvasItem)
+
+    val gamingItem = new JMenuItem(Utils.loadString("S_GamingPerspective"))
+    gamingItem.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        kojoCtx.switchToGamingPerspective()
+      }
+    })
+    windowMenu.add(gamingItem)
 
     menuBar.add(windowMenu)
 

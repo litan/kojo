@@ -51,7 +51,7 @@ class KojoCtx extends core.KojoCtx {
   var control: CControl = _
   @volatile var fps = 50
 
-  def activateDefaultPerspective() {
+  def switchToDefaultPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -67,7 +67,7 @@ class KojoCtx extends core.KojoCtx {
     activateScriptEditor()
   }
 
-  def activateNoGraphicsPerspective() {
+  def switchToNoGraphicsPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -84,7 +84,7 @@ class KojoCtx extends core.KojoCtx {
     activateScriptEditor()
   }
 
-  def activateStoryViewingPerspective() {
+  def switchToStoryViewingPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -101,7 +101,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.sth.toFront()
   }
 
-  def activateHistoryBrowsingPerspective() {
+  def switchToHistoryBrowsingPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -116,6 +116,26 @@ class KojoCtx extends core.KojoCtx {
     topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.hih.toFront()
+  }
+
+  def switchToGamingPerspective() {
+    val grid = new CGrid(control)
+    // total width = 4, total height = 3
+    grid.add(0, 0, 1, 1.75, topcs.sth)
+    grid.add(0, 1.75, 1, 1.25, topcs.owh)
+    grid.add(1, 0, 3, 1.75, topcs.d3h)
+    grid.add(1, 0, 3, 1.75, topcs.mwh)
+    grid.add(1, 0, 3, 1.75, topcs.dch)
+    
+    grid.add(0, 3, 0, 0, topcs.hih)
+    grid.add(1, 1.75, 3, 1.25, topcs.seh)
+    control.getContentArea.deploy(grid)
+
+    topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.seh.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
+    activateDrawingCanvas()
   }
 
   def activateDrawingCanvas() {
