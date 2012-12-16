@@ -52,5 +52,10 @@ trait KojoCtx {
   def clearOutput(): Unit
   def userLanguage: String
   def userLanguage_=(lang: String)
+  def switchToDefaultPerspective()
+  def switchToNoGraphicsPerspective()
+  def switchToStoryViewingPerspective()
+  def switchToHistoryBrowsingPerspective()
+  def switchToGamingPerspective()
   var fps: Int
 }
