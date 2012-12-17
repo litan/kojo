@@ -656,16 +656,9 @@ Here's a partial list of the available commands:
     kojoCtx.switchToGamingPerspective()
   }
 
-  def gamePanel(
-    onStart: => Unit,
-    onPause: => Unit,
-    onStop: => Unit,
-    onLevelUp: => Unit,
-    onLevelDown: => Unit) = {
-    import Tw._
-    val FontSize = 20
-
-    def rect(h: Int, w: Int) {
+  object PShapes {
+    def trect(h: Int, w: Int) {
+      import Tw._
       repeat(2) {
         forward(h)
         right()
@@ -674,66 +667,102 @@ Here's a partial list of the available commands:
       }
     }
 
-    def pText(s: String) = Picture {
-      setPenFontSize(FontSize)
-      val te = textExtent(s, FontSize)
+    def text(s0: Any, fontSize: Int = 15) = Picture {
+      import Tw._
+      val s = s0.toString
+      setPenFontSize(fontSize)
+      val te = textExtent(s, fontSize)
       penUp()
       forward(te.height + 5)
       penDown()
       write(s)
     }
 
-    def pRect(h: Int, w: Int, c: Color) = penColor(black) * fillColor(c) -> Picture {
-      rect(h, w)
+    def rect(h: Int, w: Int) = Picture {
+      trect(h, w)
     }
 
-    val buttonBg = Color(0, 0, 255, 100)
-    val buttonPressedBg = Color(0, 255, 0, 127)
+    def vline(l: Double) = Picture {
+      import Tw._
+      forward(l)
+    }
 
-    def button(label: String)(fn: => Unit) = {
-      val btn = Picture {
-        setPenFontSize(FontSize)
-        val te = textExtent(label, FontSize)
-        setFillColor(buttonBg)
-        setPenColor(Color(255, 255, 255, 200))
-        rect(te.height.toInt + 10, te.width.toInt + 10)
-        penUp()
-        forward(te.height + 5)
-        right()
-        forward(5)
-        penDown()
-        write(label)
-      }
-      btn.onMouseClick { (x, y) =>
-        btn.setFillColor(buttonPressedBg)
-        scheduleInGuiThread(0.25) {
-          btn.setFillColor(buttonBg)
+    def hline(l: Double) = Picture {
+      import Tw._
+      right()
+      forward(l)
+    }
+
+    def ball(r: Double) = Picture {
+      import Tw._
+      penUp()
+      right()
+      forward(r)
+      left()
+      penDown()
+      circle(r)
+    }
+  }
+
+  object Gaming {
+    import PShapes._
+    def gamePanel(
+      onStart: => Unit,
+      onPause: => Unit,
+      onStop: => Unit,
+      onLevelUp: => Unit,
+      onLevelDown: => Unit) = {
+      import Tw._
+      val FontSize = 20
+
+      val buttonBg = Color(0, 0, 255, 100)
+      val buttonPressedBg = Color(0, 255, 0, 127)
+
+      def button(label: String)(fn: => Unit) = {
+        val btn = Picture {
+          setPenFontSize(FontSize)
+          val te = textExtent(label, FontSize)
+          setFillColor(buttonBg)
+          setPenColor(Color(255, 255, 255, 200))
+          trect(te.height.toInt + 10, te.width.toInt + 10)
+          penUp()
+          forward(te.height + 5)
+          right()
+          forward(5)
+          penDown()
+          write(label)
         }
-        fn
+        btn.onMouseClick { (x, y) =>
+          btn.setFillColor(buttonPressedBg)
+          scheduleInGuiThread(0.25) {
+            btn.setFillColor(buttonBg)
+          }
+          fn
+        }
+        btn
       }
-      btn
-    }
 
-    val startButton = button("Start")(onStart)
-    val stopButton = button("Stop")(onStop)
-    val pauseButton = button("Pause")(onPause)
-    val levelUpButton = button(" \u25b2 ")(onLevelUp)
-    val levelDownButton = button(" \u25bc ")(onLevelDown)
-    val gPanel = GPics(
-      pRect(200, 400, Color(255, 0, 0, 127)),
-      trans(0, 30) -> VPics(
-        trans(90, 0) -> HPics(
-          startButton,
-          pauseButton,
-          stopButton
-        ).withGap(10),
-        trans(120, 0) -> HPics(
-          levelDownButton,
-          penColor(black) -> pText("Level"),
-          levelUpButton
-        ).withGap(10)
-      ).withGap(30)
-    )
-    trans(-200, -100) -> gPanel
+      val startButton = button("Start")(onStart)
+      val stopButton = button("Stop")(onStop)
+      val pauseButton = button("Pause")(onPause)
+      val levelUpButton = button(" \u25b2 ")(onLevelUp)
+      val levelDownButton = button(" \u25bc ")(onLevelDown)
+      val gPanel = GPics(
+        fillColor(Color(255, 0, 0, 127)) -> rect(200, 400),
+        trans(0, 30) -> VPics(
+          trans(90, 0) -> HPics(
+            startButton,
+            pauseButton,
+            stopButton
+          ).withGap(10),
+          trans(120, 0) -> HPics(
+            levelDownButton,
+            penColor(black) -> text("Level"),
+            levelUpButton
+          ).withGap(10)
+        ).withGap(30)
+      )
+      trans(-200, -100) -> gPanel
+    }
   }
 }
