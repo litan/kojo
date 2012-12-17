@@ -45,6 +45,8 @@ object Inputs {
   def removeKeyHandlers() {
     keyPressedHandler = None
     keyReleasedHandler = None
+    pressedKeys.clear()
+    heldReleasedKeys.clear()
   }
   def setKeyPressedHandler(handler: PInputEvent => Unit) {
     keyPressedHandler = Some(handler)
