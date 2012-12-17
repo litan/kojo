@@ -17,26 +17,21 @@ package net.kogics.kojo.util
 
 import com.vividsolutions.jts.math.{Vector2D => Vec2D}
 
-case class Vector2D(x0: Double, y0: Double) {
+case class Vector2D(x: Double, y: Double) {
+  import language.implicitConversions
   implicit def wrap(v: Vec2D): Vector2D = Vector2D(v.getX, v.getY)
   implicit def unwrap(v: Vector2D): Vec2D = new Vec2D(v.x, v.y)
 
-  @volatile var vec = new Vec2D(x0, y0)
-  def x = vec.getX
-  def y = vec.getY
+  val vec = new Vec2D(x, y)
   
-  def update(xn: Double, yn: Double) {
-    vec = new Vec2D(xn, yn)
+  def rotate(angle: Double): Vector2D = {
+    vec.rotate(angle.toRadians)
   }
-
-  def rotate(angle: Double) {
-    vec = vec.rotate(angle.toRadians)
+  def scale(factor: Double): Vector2D = {
+    vec.multiply(factor)
   }
-  def scale(factor: Double){
-    vec = vec.multiply(factor)
-  }
-  def add(other: Vector2D) {
-    vec = vec.add(other)
+  def add(other: Vector2D): Vector2D = {
+    vec.add(other)
   }
   
   def + (other: Vector2D): Vector2D = vec.add(other)
