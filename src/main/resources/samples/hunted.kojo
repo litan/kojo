@@ -1,9 +1,9 @@
 // sample game - with characters made out of tangram pieces.
-
+switchToGamingPerspective()
 val len = 4
-val d = math.sqrt(2*len*len)
-val d2 = d/2
-val d4 = d/4
+val d = math.sqrt(2 * len * len)
+val d2 = d / 2
+val d4 = d / 4
 
 def p1 = Picture {
     forward(len)
@@ -17,7 +17,7 @@ def p2 = p1
 
 def p3 = Picture {
     right()
-    forward(len/2)
+    forward(len / 2)
     left(135)
     forward(d4)
     left()
@@ -27,29 +27,28 @@ def p3 = Picture {
 def p4 = p3
 
 def p6 = Picture {
-    repeat (4) {
+    repeat(4) {
         forward(d4)
         right()
     }
 }
 
-
 def p5 = Picture {
     right()
-    forward(len/2)
+    forward(len / 2)
     left()
-    forward(len/2)
+    forward(len / 2)
     left(135)
     forward(d2)
 }
 
 def p7 = Picture {
     right()
-    forward(len/2)
+    forward(len / 2)
     left(45)
     forward(d4)
     left(135)
-    forward(len/2)
+    forward(len / 2)
     left(45)
     forward(d4)
 }
@@ -77,90 +76,96 @@ val lostMsg = trans(-20, 0) -> Picture {
 val wonMsg = trans(-20, 0) -> Picture {
     write("You Won!")
 }
-    
+
 clearWithUL(Cm)
 val cb = canvasBounds
 val xmax = cb.x.abs
 val ymax = cb.y.abs
-val goodguy = fillColor(yellow) * trans(xmax/3, 2) * scale(0.3) -> guy
+val goodguy = fillColor(yellow) * trans(xmax / 3, 2) * scale(0.3) -> guy
 val badguy = fillColor(black) * scale(0.3) -> guy
-val badguy2 = fillColor(black) * trans(-xmax/2, 0) * scale(0.3) -> guy
-val badguy3 = fillColor(black) * trans(2*xmax/3, 0) * scale(0.3) -> guy
+val badguy2 = fillColor(black) * trans(-xmax / 2, 0) * scale(0.3) -> guy
+val badguy3 = fillColor(black) * trans(2 * xmax / 3, 0) * scale(0.3) -> guy
+val badguy4 = fillColor(black) * trans(-xmax / 2, ymax / 2) * scale(0.3) -> guy
+val badguy5 = fillColor(black) * trans(2 * xmax / 3, ymax / 2) * scale(0.3) -> guy
 
 playMp3Loop("/music-loops/Cave.mp3")
 invisible()
-draw(goodguy, badguy, badguy2, badguy3)
+draw(goodguy, badguy, badguy2, badguy3, badguy4, badguy5)
 drawAndHide(lostMsg, wonMsg)
 drawStage(Color(150, 150, 255))
 
 val bf = 2
 val sf = 1.5
 val speed = 0.4
-val VEdge = Vector2D(0, 1)
-val HEdge = Vector2D(1, 0)
-    
-def badBehavior(me: Picture, bvec: Vector2D) {
-    bvec.rotate(randomDouble(10)-5)
-    me.transv(bvec)
-    if (me.collidesWith(stage)) {
-        bounceVecOffStage(bvec, me) 
-        me.transv(bvec)
-    }
-}
 
 val vec = Vector2D(0, speed)
-badguy.act { me => 
-    badBehavior(me, vec)
-}
-
 val vec2 = Vector2D(speed, 0)
-badguy2.act { me => 
-    badBehavior(me, vec2)
-}
-
 val vec3 = Vector2D(-speed, 0)
-badguy3.act { me => 
-    badBehavior(me, vec3)
+val vec4 = vec2
+val vec5 = vec3
+
+var velocities = Map(
+    badguy -> vec,
+    badguy2 -> vec2,
+    badguy3 -> vec3,
+    badguy4 -> vec4,
+    badguy5 -> vec5
+)
+
+def badBehavior(self: Picture) {
+    var newv = velocities(self).rotate(randomDouble(10) - 5)
+    self.transv(newv)
+    if (self.collidesWith(stage)) {
+        newv = bounceVecOffStage(newv, self)
+        self.transv(newv)
+    }
+    velocities += self -> newv
 }
 
-goodguy.act { me => 
+badguy.act(badBehavior)
+badguy2.act(badBehavior)
+badguy3.act(badBehavior)
+badguy4.act(badBehavior)
+badguy5.act(badBehavior)
+
+goodguy.act { self =>
     if (isKeyPressed(Kc.VK_RIGHT)) {
-        me.translate(speed * sf, 0)
+        self.translate(speed * sf, 0)
     }
     if (isKeyPressed(Kc.VK_LEFT)) {
-        me.translate(-speed * sf, 0)
+        self.translate(-speed * sf, 0)
     }
     if (isKeyPressed(Kc.VK_UP)) {
-        me.translate(0, speed * sf)
+        self.translate(0, speed * sf)
     }
     if (isKeyPressed(Kc.VK_DOWN)) {
-        me.translate(0, -speed * sf)
+        self.translate(0, -speed * sf)
     }
 }
 
 def time = System.currentTimeMillis
 val startTime = time
 
-val others = List(badguy, badguy2, badguy3)
+val others = List(badguy, badguy2, badguy3, badguy4, badguy5)
 
-goodguy.act { me => 
-    if (me.collision(others).isDefined) {
+goodguy.act { self =>
+    if (self.collision(others).isDefined) {
         stopAnimation()
-        me.setFillColor(brown)
+        self.setFillColor(brown)
         lostMsg.setPosition(0, 0)
         lostMsg.visible()
     }
 
     // an example of playing some game event music
     if (goodguy.collidesWith(stage)) {
-        if(!isMp3Playing) {
+        if (!isMp3Playing) {
             playMp3("/music-loops/DrumBeats.mp3")
         }
     }
     else {
         stopMp3()
     }
-    
+
     if (time - startTime > 60 * 1000) {
         stopAnimation()
         wonMsg.setPosition(0, 0)
@@ -169,3 +174,14 @@ goodguy.act { me =>
 }
 
 activateCanvas()
+
+onAnimationStop {
+    switchToDefaultPerspective()
+}
+
+onKeyPress { k =>
+    k match {
+        case Kc.VK_ESCAPE => stopAnimation()
+        case _            =>
+    }
+}
