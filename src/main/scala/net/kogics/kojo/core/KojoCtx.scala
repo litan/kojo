@@ -53,9 +53,9 @@ trait KojoCtx {
   def userLanguage: String
   def userLanguage_=(lang: String)
   def switchToDefaultPerspective()
-  def switchToNoGraphicsPerspective()
+  def switchToScriptEditingPerspective()
   def switchToStoryViewingPerspective()
   def switchToHistoryBrowsingPerspective()
-  def switchToGamingPerspective()
+  def switchToCanvasPerspective()
   var fps: Int
 }

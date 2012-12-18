@@ -67,7 +67,7 @@ class KojoCtx extends core.KojoCtx {
     activateScriptEditor()
   }
 
-  def switchToNoGraphicsPerspective() {
+  def switchToScriptEditingPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -118,7 +118,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.hih.toFront()
   }
 
-  def switchToGamingPerspective() {
+  def switchToCanvasPerspective() {
     val grid = new CGrid(control)
     // total width = 4, total height = 3
     grid.add(0, 0, 1, 1.75, topcs.sth)

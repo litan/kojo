@@ -69,7 +69,11 @@ object CodeCompletionUtils {
 
   // UserCommand adds to this
   val BuiltinsMethodTemplates = collection.mutable.Map(
-    "switchTo" -> "switchTo()",
+    "switchToDefaultPerspective" -> "switchToDefaultPerspective()",
+    "switchToScriptEditingPerspective" -> "switchToScriptEditingPerspective()",
+    "switchToStoryViewingPerspective" -> "switchToStoryViewingPerspective()",
+    "switchToHistoryBrowsingPerspective" -> "switchToHistoryBrowsingPerspective()",
+    "switchToCanvasPerspective" -> "switchToCanvasPerspective()",
     "onKeyPress" -> "onKeyPress { k =>\n    k match {\n      case Kc.VK_RIGHT => ${cursor}\n         case _ => \n    }\n}",
     "onKeyRelease" -> "onKeyRelease { k =>\n    k match {\n      case Kc.VK_RIGHT => ${cursor}\n         case _ => \n    }\n}",
     "onMouseClick" -> "onMouseClick { (x, y) =>\n    ${cursor}\n}",

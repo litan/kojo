@@ -1,4 +1,4 @@
-switchToGamingPerspective()
+switchToCanvasPerspective()
 cleari()
 setRefreshRate(40)
 val PaddleH = 100
@@ -58,7 +58,6 @@ def onPause {
 }
 def onStop {
     stopAnimation()
-    switchToDefaultPerspective()
 }
 def onLevelUp {
     ballVel *= 1.1
@@ -155,6 +154,11 @@ onKeyPress { k =>
     k match {
         case Kc.VK_P => gPanel.visible()
         case Kc.VK_O => gPanel.invisible()
+        case Kc.VK_ESCAPE => stopAnimation()
         case _       =>
     }
+}
+
+onAnimationStop {
+    switchToDefaultPerspective()
 }
