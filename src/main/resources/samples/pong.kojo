@@ -1,3 +1,8 @@
+// A Game of Pong
+// Player on right uses Up/Down Arrow keys to control paddle
+// Player on left uses A/Z keys to control paddle
+// 'Space' to start; 'P' to bring up Game Panel; 'Esc' to quit
+
 switchToCanvasPerspective()
 cleari()
 setRefreshRate(40)
@@ -23,10 +28,6 @@ val gameBall = ball
 drawStage(Color(0, 0, 250, 20))
 draw(paddle1, paddle2, centerLine, leftGutter, rightGutter, gameBall)
 
-var running = false
-var ballVel = Vector2D(BallSpeed, 3)
-var levelVel = ballVel
-
 case class PaddleS(speed: Double, lastUp: Boolean) { outer =>
     def incrSpeed(i: Double) = copy(speed = outer.speed + i)
     def scaleSpeed(f: Double) = copy(speed = outer.speed * f)
@@ -38,6 +39,14 @@ case class Score(score: Int, left: Boolean) { outer =>
     def incrScore = copy(score = outer.score + 1)
 }
 
+case class Level(num: Int, vel: Vector2D) {
+    val pLevel = trans(-60, -Height / 2 + 50) * penColor(black) -> PShapes.text(s"Level: $num", 20)
+}
+
+var running = false
+var ballVel = Vector2D(BallSpeed, 3)
+var level = Level(1, ballVel)
+
 var paddleInfo = Map(
     paddle1 -> PaddleS(PaddleSpeed, true),
     paddle2 -> PaddleS(PaddleSpeed, true)
@@ -48,26 +57,30 @@ var scores = Map(
     paddle2 -> Score(0, false)
 )
 
-def onStart {
-    activateCanvas()
+def onStart() {
     running = true
     gPanel.invisible()
 }
-def onPause {
+def onPause() {
     running = false
 }
-def onStop {
+def onStop() {
     stopAnimation()
+    gPanel.invisible()
 }
-def onLevelUp {
+def onLevelUp() {
     ballVel *= 1.1
-    levelVel = ballVel
+    level.pLevel.erase()
+    level = Level(level.num + 1, ballVel)
+    draw(level.pLevel)
     paddleInfo += paddle1 -> paddleInfo(paddle1).scaleSpeed(1.1)
     paddleInfo += paddle2 -> paddleInfo(paddle2).scaleSpeed(1.1)
 }
-def onLevelDown {
+def onLevelDown() {
     ballVel *= 0.9
-    levelVel = ballVel
+    level.pLevel.erase()
+    level = Level(level.num - 1, ballVel)
+    draw(level.pLevel)
     paddleInfo += paddle1 -> paddleInfo(paddle1).scaleSpeed(0.9)
     paddleInfo += paddle2 -> paddleInfo(paddle2).scaleSpeed(0.9)
 }
@@ -82,6 +95,7 @@ val gPanel = Gaming.gamePanel(
 
 draw(scores(paddle1).pScore)
 draw(scores(paddle2).pScore)
+draw(level.pLevel)
 draw(gPanel)
 
 val gutters = Seq(leftGutter, rightGutter)
@@ -100,14 +114,14 @@ gameBall.animate {
         }
         else if (gameBall.collidesWith(leftGutter)) {
             gameBall.setPosition(0, 0)
-            ballVel = levelVel
+            ballVel = level.vel
             scores(paddle1).pScore.erase()
             scores += paddle1 -> scores(paddle1).incrScore
             draw(scores(paddle1).pScore)
         }
         else if (gameBall.collidesWith(rightGutter)) {
             gameBall.setPosition(0, 0)
-            ballVel = levelVel
+            ballVel = level.vel
             scores(paddle2).pScore.erase()
             scores += paddle2 -> scores(paddle2).incrScore
             draw(scores(paddle2).pScore)
@@ -152,13 +166,17 @@ paddle2.act { self =>
 
 onKeyPress { k =>
     k match {
-        case Kc.VK_P => gPanel.visible()
-        case Kc.VK_O => gPanel.invisible()
-        case Kc.VK_ESCAPE => stopAnimation()
-        case _       =>
+        case Kc.VK_P      =>
+            gPanel.visible(); onPause()
+        case Kc.VK_O      => gPanel.invisible()
+        case Kc.VK_SPACE => onStart()
+        case Kc.VK_ESCAPE => onStop()
+        case _            =>
     }
 }
 
 onAnimationStop {
     switchToDefaultPerspective()
 }
+
+activateCanvas()
