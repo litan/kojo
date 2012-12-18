@@ -640,8 +640,8 @@ Here's a partial list of the available commands:
     kojoCtx.switchToDefaultPerspective()
   }
 
-  def switchToNoGraphicsPerspective() = Utils.runInSwingThreadAndWait {
-    kojoCtx.switchToNoGraphicsPerspective()
+  def switchToScriptEditingPerspective() = Utils.runInSwingThreadAndWait {
+    kojoCtx.switchToScriptEditingPerspective()
   }
 
   def switchToStoryViewingPerspective() = Utils.runInSwingThreadAndWait {
@@ -652,8 +652,8 @@ Here's a partial list of the available commands:
     kojoCtx.switchToHistoryBrowsingPerspective()
   }
 
-  def switchToGamingPerspective() = Utils.runInSwingThreadAndWait {
-    kojoCtx.switchToGamingPerspective()
+  def switchToCanvasPerspective() = Utils.runInSwingThreadAndWait {
+    kojoCtx.switchToCanvasPerspective()
   }
 
   object PShapes {

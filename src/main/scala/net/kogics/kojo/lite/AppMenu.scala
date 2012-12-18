@@ -186,18 +186,18 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(historyItem)
 
-    val drawingCanvasItem = new JMenuItem(Utils.loadString("S_NoGraphicsPerspective"))
+    val drawingCanvasItem = new JMenuItem(Utils.loadString("S_ScriptEditingPerspective"))
     drawingCanvasItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.switchToNoGraphicsPerspective()
+        kojoCtx.switchToScriptEditingPerspective()
       }
     })
     windowMenu.add(drawingCanvasItem)
 
-    val gamingItem = new JMenuItem(Utils.loadString("S_GamingPerspective"))
+    val gamingItem = new JMenuItem(Utils.loadString("S_CanvasPerspective"))
     gamingItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.switchToGamingPerspective()
+        kojoCtx.switchToCanvasPerspective()
       }
     })
     windowMenu.add(gamingItem)
@@ -270,7 +270,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 171212-1 <br/>
+              Version: 181212-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>

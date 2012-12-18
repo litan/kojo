@@ -56,10 +56,10 @@ class KojoTestContext extends core.KojoCtx {
   def userLanguage: String = "en"
   def userLanguage_=(lang: String) {}
   def switchToDefaultPerspective() {}
-  def switchToNoGraphicsPerspective() {}
+  def switchToScriptEditingPerspective() {}
   def switchToStoryViewingPerspective() {}
   def switchToHistoryBrowsingPerspective() {}
-  def switchToGamingPerspective() {}
+  def switchToCanvasPerspective() {}
   var fps = 50
 }
 
