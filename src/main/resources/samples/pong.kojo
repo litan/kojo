@@ -114,14 +114,14 @@ gameBall.animate {
         }
         else if (gameBall.collidesWith(leftGutter)) {
             gameBall.setPosition(0, 0)
-            ballVel = level.vel
+            ballVel = Vector2D(-level.vel.x.abs, level.vel.y)
             scores(paddle1).pScore.erase()
             scores += paddle1 -> scores(paddle1).incrScore
             draw(scores(paddle1).pScore)
         }
         else if (gameBall.collidesWith(rightGutter)) {
             gameBall.setPosition(0, 0)
-            ballVel = level.vel
+            ballVel = Vector2D(level.vel.x.abs, level.vel.y)
             scores(paddle2).pScore.erase()
             scores += paddle2 -> scores(paddle2).incrScore
             draw(scores(paddle2).pScore)
