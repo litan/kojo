@@ -282,7 +282,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
   def activate() {
     toFront()
-    codePane.requestFocusInWindow()
+    Utils.schedule(0.3) { codePane.requestFocusInWindow() }
   }
 
   val ipmProvider = new IpmProvider(codeSupport)
