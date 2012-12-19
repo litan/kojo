@@ -94,7 +94,7 @@ class Builtins extends RepeatCommands {
 
   // Turtle World
   class TwC extends TurtleMover {
-    def forward() = println("Please provide the distance to move forward - e.g. forward(100)")
+    def forward(): Unit = forward(10)
     override def forward(n: Double) = turtle0.forward(n)
     UserCommand("forward", List("numSteps"), "Moves the turtle forward a given number of steps.")
 
