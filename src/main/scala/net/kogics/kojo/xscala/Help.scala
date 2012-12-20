@@ -1054,6 +1054,20 @@ object Help {
         draw(pic)
       </pre>
     </div>,
+    "animate" -> 
+    <div>
+       <strong>animate</strong> {{ code }} <br/><br/>
+       Calls the given code block repeatedly within an animation loop. The refresh rate,
+       specified with the <tt>setRefreshRate()</tt> command, specifies the number of times per 
+       second that the code is run. This value can be anywhere between 20 and 100 (times 
+       per second).
+    </div>,
+    "schedule" -> 
+    <div>
+       <strong>schedule</strong>(seconds) {{ code }} <br/><br/>
+       Schedules the given code block to be called (in the animation/GUI thread) after the specified 
+       number of seconds.
+    </div>,
     "stClear" -> "stClear() - Clears the Story Teller Window.",
     "stPlayStory" -> "stPlayStory(story) - Plays the given story.",
     "stFormula" -> "stFormula(latex) - Converts the supplied latex string into html that can be displayed in the Story Teller Window.",
