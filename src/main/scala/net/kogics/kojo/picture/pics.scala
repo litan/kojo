@@ -215,6 +215,8 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     }
     tnode.repaint()
   }
+  
+  def isVisible() = Utils.runInSwingThreadAndWait { tnode.getVisible() }
 
   def initGeom(): Geometry
   def picGeom: Geometry = {

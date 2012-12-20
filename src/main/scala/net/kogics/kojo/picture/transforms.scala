@@ -78,6 +78,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def visible() = tpic.visible()
   def invisible() = tpic.invisible()
   def isDrawn() = tpic.isDrawn()
+  def isVisible() = tpic.isVisible()
   def myCanvas = tpic.myCanvas
   def erase() = tpic.erase()
 }
