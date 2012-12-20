@@ -108,6 +108,7 @@ object CodeCompletionUtils {
     "drawAndHide" -> "drawAndHide(${pic})",
     "setRefreshRate" -> "setRefreshRate(${framesPerSec})",
     "animate" -> "animate {\n    ${cursor}\n}",
+    "schedule" -> "schedule (${inSecs}) {\n    ${cursor}\n}",
     "onAnimationStop" -> "onAnimationStop {\n    ${cursor}\n}",
     "act" -> "act { self => \n    ${cursor}\n}",
     "row" -> "row(${picture}, ${n})",

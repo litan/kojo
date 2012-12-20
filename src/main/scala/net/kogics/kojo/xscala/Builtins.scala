@@ -459,7 +459,7 @@ Here's a partial list of the available commands:
   def runInGuiThread(code: => Unit) = Utils.runInSwingThread(code)
   UserCommand("runInGuiThread", List("code"), "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command.")
 
-  def scheduleInGuiThread(s: Double)(code: => Unit) = Utils.schedule(s)(code)
+  def schedule(s: Double)(code: => Unit) = Utils.schedule(s)(code)
 
   // undocumented
   def color(rgbHex: Int) = new Color(rgbHex)
@@ -734,7 +734,7 @@ Here's a partial list of the available commands:
         }
         btn.onMouseClick { (x, y) =>
           btn.setFillColor(buttonPressedBg)
-          scheduleInGuiThread(0.25) {
+          schedule(0.25) {
             btn.setFillColor(buttonBg)
           }
           fn
