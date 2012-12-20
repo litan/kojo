@@ -151,8 +151,9 @@ trait AppMenu { self: Main.type =>
 
     val animGameMenu = new JMenu(Utils.loadString("S_AnimationsGames"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_TangramSkier"), "tangram-skier.kojo"))
-    animGameMenu.add(menuItemFor(Utils.loadString("S_Hunted"), "hunted.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_Pong"), "pong.kojo"))
+    animGameMenu.add(menuItemFor(Utils.loadString("S_MemoryCards"), "memory-cards.kojo"))
+    animGameMenu.add(menuItemFor(Utils.loadString("S_Hunted"), "hunted.kojo"))
     samplesMenu.add(animGameMenu)
 
     val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
@@ -270,7 +271,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 181212-1 <br/>
+              Version: 201212-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
