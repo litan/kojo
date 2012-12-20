@@ -39,6 +39,7 @@ trait Picture extends InputAware {
   def visible(): Unit
   def invisible(): Unit
   def toggleV(): Unit
+  def isVisible(): Boolean
   def intersects(other: Picture): Boolean
   def collidesWith(other: Picture) = intersects(other)
   def collisions(others: Set[Picture]): Set[Picture] = {
