@@ -98,7 +98,12 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
 
     val defn = "%s : %s" format (lhs, rhs)
 
-    val specialNames = Set("act(fn: net.kogics.kojo.core.Picture => Unit)", "animate(fn: => Unit)")
+    val specialNames = Set(
+      "act(fn: net.kogics.kojo.core.Picture => Unit)",
+      "onMouseClick(fn: (Double, Double) => Unit)",
+      "onMouseDrag(fn: (Double, Double) => Unit)",
+      "animate(fn: => Unit)"
+    )
     def specialMethodTemplate: Option[String] = {
       //      println("%s lhs - %s " format(completion.name, lhs))
       if (specialNames contains lhs) {
