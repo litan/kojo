@@ -77,11 +77,14 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codePane.setTabSize(4)
   codePane.setCodeFoldingEnabled(true)
   codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
+  codePane.setSelectionColor(new Color(100, 125, 255))
+  codePane.setMarkOccurrencesColor(new Color(150, 175, 200))
 
   val inputMap = codePane.getInputMap()
   inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
 
-  new IncreaseFontSizeAction().actionPerformedImpl(null, codePane)
+  val increaseFontSizeAction = new IncreaseFontSizeAction()
+  for (i <- 1 to 2) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
 
   RSyntaxTextArea.setTemplatesEnabled(true)
   val ctm = RSyntaxTextArea.getCodeTemplateManager()
@@ -248,7 +251,6 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(new JPopupMenu.Separator, idx)
   idx += 1
 
-  val increaseFontSizeAction = new IncreaseFontSizeAction()
   val increaseFontItem = new JMenuItem(increaseFontSizeAction)
   increaseFontItem.setText(Utils.loadString("S_IncreaseFontSize"))
   val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
