@@ -22,8 +22,9 @@ import javax.swing.JColorChooser
 import java.awt.Color
 import net.kogics.kojo.lite.CodeExecutionSupport
 import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.util.Utils
 
-class ChooseColor(ctx: KojoCtx) extends AbstractAction("Choose Color...") {
+class ChooseColor(ctx: KojoCtx) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
   def actionPerformed(e: ActionEvent) {
     val sColor = JColorChooser.showDialog(null, util.Utils.stripDots(e.getActionCommand), ctx.lastColor)
     if (sColor != null) {
