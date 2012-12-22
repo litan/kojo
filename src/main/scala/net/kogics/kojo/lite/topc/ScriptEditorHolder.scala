@@ -77,7 +77,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codePane.setTabSize(4)
   codePane.setCodeFoldingEnabled(true)
   codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
-  codePane.setSelectionColor(new Color(100, 125, 255))
+  codePane.setSelectionColor(new Color(125, 150, 255))
   codePane.setMarkOccurrencesColor(new Color(150, 175, 200))
 
   val inputMap = codePane.getInputMap()
