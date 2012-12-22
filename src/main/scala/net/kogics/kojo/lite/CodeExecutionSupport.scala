@@ -15,8 +15,10 @@
 package net.kogics.kojo
 package lite
 
+import java.awt.BorderLayout
 import java.awt.CardLayout
 import java.awt.Color
+import java.awt.Component
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Event
@@ -30,16 +32,22 @@ import java.io.PrintStream
 import java.io.Writer
 import java.util.concurrent.CountDownLatch
 import java.util.logging.Logger
+
+import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JEditorPane
+import javax.swing.JLabel
 import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
+import javax.swing.JTextField
 import javax.swing.JToolBar
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
+import javax.swing.event.HyperlinkEvent
 import javax.swing.event.HyperlinkListener
+
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
 import net.kogics.kojo.core.InitedSingleton
@@ -51,17 +59,10 @@ import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.livecoding.InteractiveManipulator
 import net.kogics.kojo.livecoding.ManipulationContext
-import net.kogics.kojo.util.RichFile.enrichFile
-import util.Utils
-import javax.swing.event.HyperlinkEvent
-import java.awt.BorderLayout
-import javax.swing.JTextField
-import javax.swing.JLabel
 import net.kogics.kojo.util.FutureResult
-import java.awt.FlowLayout
-import javax.swing.BoxLayout
-import javax.swing.SwingConstants
-import java.awt.Component
+import net.kogics.kojo.util.RichFile.enrichFile
+
+import util.Utils
 
 object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
   def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
@@ -83,7 +84,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val errorWindow = new JEditorPane
   errorWindow.setContentType("text/html")
 
-  val outPanel = new JPanel(new CardLayout)
+  val outLayout = new CardLayout
+  val outPanel = new JPanel(outLayout)
   val outoutPanel = new JPanel(new BorderLayout)
   outoutPanel.add(new JScrollPane(outputWindow), BorderLayout.CENTER)
   var readInputPanel: JPanel = new JPanel
@@ -254,7 +256,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     }
 
     def makeNavigationButton(imageFile: String, actionCommand: String,
-      toolTipText: String, altText: String): JButton = {
+                             toolTipText: String, altText: String): JButton = {
       val button = new JButton()
       button.setActionCommand(actionCommand)
       button.setToolTipText(toolTipText)
@@ -557,7 +559,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     Utils.runInSwingThread {
       readInputPanel = new JPanel()
       readInputPanel.setLayout(new BoxLayout(readInputPanel, BoxLayout.Y_AXIS))
-      val label = new JLabel(" %s" format(prompt))
+      val label = new JLabel(" %s" format (prompt))
       label.setAlignmentX(Component.LEFT_ALIGNMENT)
       val inputField = new JTextField
       inputField.setAlignmentX(Component.LEFT_ALIGNMENT)
@@ -566,11 +568,11 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       outoutPanel.add(readInputPanel, BorderLayout.SOUTH)
       outoutPanel.revalidate()
       kojoCtx.activateOutputPane()
-      Utils.schedule(0.25) {inputField.requestFocusInWindow()}
-      Utils.schedule(1) {inputField.requestFocusInWindow()}
+      Utils.schedule(0.25) { inputField.requestFocusInWindow() }
+      Utils.schedule(1) { inputField.requestFocusInWindow() }
       inputField.addActionListener(new ActionListener {
         def actionPerformed(e: ActionEvent) {
-          println("%s: %s" format(prompt, inputField.getText))
+          println("%s: %s" format (prompt, inputField.getText))
           input.set(inputField.getText)
           outoutPanel.remove(readInputPanel)
           outoutPanel.revalidate()
@@ -584,6 +586,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def appendOutput(s: String) {
     outputWindow.append(s)
     outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
+    outLayout.show(outPanel, "Output")
   }
 
   @volatile var errText = ""
@@ -610,8 +613,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     errCount = 0
     Utils.runInSwingThread {
       errorWindow.setText("")
-      val cl = outPanel.getLayout().asInstanceOf[CardLayout]
-      cl.show(outPanel, "Output")
+      outLayout.show(outPanel, "Output")
     }
   }
 
@@ -653,8 +655,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
     errorWindow.setText(errMsg.toString)
     errorWindow.setCaretPosition(errorWindow.getDocument.getLength)
-    val cl = outPanel.getLayout().asInstanceOf[CardLayout]
-    cl.show(outPanel, "Error")
+    outLayout.show(outPanel, "Error")
   }
 
   def showOutput(outText: String): Unit = showOutput(outText, outputColor)
