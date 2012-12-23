@@ -185,6 +185,8 @@ object Utils {
       t
     }
   }
+  
+  def runInSwingThreadAndPause[T](fn: => T): T = runInSwingThreadAndWait(1500, "Potential Deadlock. Bailing out!")(fn)
 
   def runInSwingThreadAndWait[T](timeout: Long, msg: String)(fn: => T): T = {
     if (inSwingThread) {
