@@ -38,6 +38,7 @@ import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.UnitLen
 import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.util.FileChooser
+import net.kogics.kojo.action.SaveAs
 
 object SpriteCanvas extends core.InitedSingleton[SpriteCanvas] {
   def initedInstance(kojoCtx: core.KojoCtx) = synchronized {
@@ -802,9 +803,9 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     
     val saveAsImage = new JMenuItem(Utils.loadString("S_SaveAsImage"))
     saveAsImage.addActionListener(new ActionListener {
-        val fchooser = new FileChooser()
+        lazy val fchooser = new SaveAs(kojoCtx)
         override def actionPerformed(e: ActionEvent) {
-          val file = fchooser.chooseFile("PNG Image File", "png", Utils.loadString("S_SaveAs"))
+          val file = fchooser.chooseFile("PNG Image File", "png", Utils.stripDots(Utils.loadString("S_SaveAs")))
           if (file != null) {
             exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)
           }
