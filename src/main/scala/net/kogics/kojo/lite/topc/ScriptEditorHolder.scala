@@ -11,6 +11,16 @@ import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 
+import javax.swing.AbstractAction
+import javax.swing.JCheckBoxMenuItem
+import javax.swing.JFrame
+import javax.swing.JMenuItem
+import javax.swing.JPanel
+import javax.swing.JPopupMenu
+import javax.swing.KeyStroke
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
+
 import org.fife.rsta.ui.search.AbstractFindReplaceDialog
 import org.fife.rsta.ui.search.ReplaceDialog
 import org.fife.ui.autocomplete.AutoCompletion
@@ -36,15 +46,6 @@ import net.kogics.kojo.livecoding.IpmProvider
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
 
-import javax.swing.AbstractAction
-import javax.swing.JCheckBoxMenuItem
-import javax.swing.JFrame
-import javax.swing.JMenuItem
-import javax.swing.JPanel
-import javax.swing.JPopupMenu
-import javax.swing.KeyStroke
-import javax.swing.event.PopupMenuEvent
-import javax.swing.event.PopupMenuListener
 import scalariform.formatter.ScalaFormatter
 import scalariform.formatter.preferences.AlignParameters
 import scalariform.formatter.preferences.AlignSingleLineCaseStatements
@@ -191,21 +192,57 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   idx += 1
 
   val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace")) {
-    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener)
+    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
+      override def setVisible(visible: Boolean) {
+        if (!visible) {
+          codePane.clearMarkAllHighlights()
+        }
+        super.setVisible(visible)
+      }
+    }
     lazy val listener = new ActionListener {
       def actionPerformed(ev: ActionEvent) {
+        val searchContext = dialog.getSearchContext
+        def markAllIf() {
+          if (searchContext.getMarkAll) {
+            codePane.markAll(searchContext.getSearchFor, searchContext.getMatchCase(),
+              searchContext.getWholeWord, searchContext.isRegularExpression())
+          }
+        }
+        def find() {
+          var found = SearchEngine.find(codePane, searchContext)
+          if (!found) {
+            val oldDot = codePane.getCaret().getDot
+            codePane.getCaret().setDot(0)
+            found = SearchEngine.find(codePane, searchContext)
+            if (!found) {
+              codePane.getCaret().setDot(oldDot)
+            }
+          }
+        }
+
         ev.getActionCommand match {
           case AbstractFindReplaceDialog.ACTION_FIND =>
-            val found = SearchEngine.find(codePane, dialog.getSearchContext());
+            markAllIf()
+            find()
+
           case AbstractFindReplaceDialog.ACTION_REPLACE =>
-            val found = SearchEngine.replace(codePane, dialog.getSearchContext());
+            markAllIf()
+            val replaced = SearchEngine.replace(codePane, searchContext);
+            if (replaced) {
+              find()
+            }
           case AbstractFindReplaceDialog.ACTION_REPLACE_ALL =>
-            val found = SearchEngine.replaceAll(codePane, dialog.getSearchContext());
+            SearchEngine.replaceAll(codePane, searchContext);
           case _ =>
         }
       }
     }
     def actionPerformed(ev: ActionEvent) {
+      Option(codePane.getSelectedText) foreach { st =>
+        dialog.setSearchString(st)
+        codePane.setSelectionEnd(codePane.getSelectionStart)
+      }
       dialog.setTitle(Utils.loadString("S_FindReplace"))
       dialog.setVisible(true)
     }
