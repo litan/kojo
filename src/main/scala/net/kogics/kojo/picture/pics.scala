@@ -118,7 +118,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     tnode.repaint()
   }
 
-  def position = Utils.runInSwingThreadAndWait {
+  def position = Utils.runInSwingThreadAndPause {
     val o = tnode.getOffset
     new core.Point(o.getX, o.getY)
   }
@@ -129,7 +129,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     tnode.repaint()
   }
 
-  def heading = Utils.runInSwingThreadAndWait {
+  def heading = Utils.runInSwingThreadAndPause {
     tnode.getRotation.toDegrees
   }
 
@@ -216,7 +216,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     tnode.repaint()
   }
   
-  def isVisible() = Utils.runInSwingThreadAndWait { tnode.getVisible() }
+  def isVisible() = Utils.runInSwingThreadAndPause { tnode.getVisible() }
 
   def initGeom(): Geometry
   def picGeom: Geometry = {
@@ -238,7 +238,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     pgTransform.transform(_picGeom)
   }
 
-  def intersects(other: Picture) = Utils.runInSwingThreadAndWait {
+  def intersects(other: Picture) = Utils.runInSwingThreadAndPause {
     if (this == other) {
       false
     }
@@ -250,7 +250,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     }
   }
 
-  def intersection(other: Picture) = Utils.runInSwingThreadAndWait {
+  def intersection(other: Picture) = Utils.runInSwingThreadAndPause {
     if (this == other) {
       Impl.Gf.createGeometryCollection(null)
     }
@@ -269,7 +269,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     }
   }
 
-  def distanceTo(other: Picture) = Utils.runInSwingThreadAndWait {
+  def distanceTo(other: Picture) = Utils.runInSwingThreadAndPause {
     picGeom.distance(other.picGeom)
   }
 
@@ -281,11 +281,11 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     Impl.Gf.createPolygon(Impl.Gf.createLinearRing(ab.toArray), null)
   }
 
-  def area = Utils.runInSwingThreadAndWait {
+  def area = Utils.runInSwingThreadAndPause {
     toPolygon(picGeom).getArea
   }
 
-  def perimeter = Utils.runInSwingThreadAndWait {
+  def perimeter = Utils.runInSwingThreadAndPause {
     picGeom.getLength
   }
 
@@ -370,7 +370,7 @@ class Pic(painter: Painter) extends Picture with CorePicOps with CorePicOps2 wit
     }
   }
 
-  def bounds = Utils.runInSwingThreadAndWait {
+  def bounds = Utils.runInSwingThreadAndPause {
     tnode.getFullBounds
   }
 
@@ -445,7 +445,7 @@ class Pic(painter: Painter) extends Picture with CorePicOps with CorePicOps2 wit
 
   def copy: Picture = Pic(painter)
 
-  def dumpInfo() = Utils.runInSwingThreadAndWait {
+  def dumpInfo() = Utils.runInSwingThreadAndPause {
     println(">>> Pic Start - " + System.identityHashCode(this))
     println("Bounds: " + bounds)
     println("Tnode: " + System.identityHashCode(tnode))
@@ -471,7 +471,7 @@ class Pic(painter: Painter) extends Picture with CorePicOps with CorePicOps2 wit
   }
 
   def foreachPolyLine(fn: PolyLine => Unit) {
-    val plines = Utils.runInSwingThreadAndWait { t.penPaths.toArray }
+    val plines = Utils.runInSwingThreadAndPause { t.penPaths.toArray }
     plines.foreach { fn }
   }
 }
@@ -499,7 +499,7 @@ abstract class BasePicList(val pics: List[Picture])
     throw new IllegalArgumentException("A Picture List needs to have at least one Picture.")
   }
   @volatile var padding = 0.0
-  def makeTnode = Utils.runInSwingThreadAndWait {
+  def makeTnode = Utils.runInSwingThreadAndPause {
     val tn = new PNode()
     pics.foreach { pic =>
       Impl.picLayer.removeChild(pic.tnode)
@@ -509,7 +509,7 @@ abstract class BasePicList(val pics: List[Picture])
     tn
   }
 
-  def bounds = Utils.runInSwingThreadAndWait {
+  def bounds = Utils.runInSwingThreadAndPause {
     tnode.getFullBounds
   }
 
