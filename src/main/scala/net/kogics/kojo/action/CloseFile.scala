@@ -31,7 +31,8 @@ object CloseFile {
   }
 }
 
-class CloseFile extends AbstractAction(Utils.loadString("S_Close")) {
+class CloseFile
+  extends AbstractAction(Utils.loadString("S_Close"), Utils.loadIcon("/images/extra/close.gif")) {
   setEnabled(false)
   CloseFile.action = this
 
