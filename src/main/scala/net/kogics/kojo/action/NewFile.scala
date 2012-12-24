@@ -22,9 +22,11 @@ import lite.CodeExecutionSupport
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.util.Utils
 
-class NewFile(ctx: KojoCtx) extends AbstractAction(Utils.loadString("S_New")) {
+class NewFile(ctx: KojoCtx)
+  extends AbstractAction(Utils.loadString("S_New"), Utils.loadIcon("/images/extra/new.gif")) {
+
   val saveAs = new SaveAs(ctx)
-  
+
   def actionPerformed(e: ActionEvent) {
     try {
       CodeExecutionSupport.instance.closeFileAndClrEditor()

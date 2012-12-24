@@ -79,15 +79,18 @@ trait AppMenu { self: Main.type =>
 
     val openFile = new JMenuItem(Utils.loadString("S_Open"))
     openFile.addActionListener(new LoadFrom(kojoCtx))
+    openFile.setIcon(Utils.loadIcon("/images/extra/open.gif"))
     fileMenu.add(openFile)
 
     val saveFile = new JMenuItem(Utils.loadString("S_Save"))
     saveFile.addActionListener(new Save(kojoCtx))
+    saveFile.setIcon(Utils.loadIcon("/images/extra/save.gif"))
     fileMenu.add(saveFile)
 
     val saveAsActionListener = new SaveAs(kojoCtx)
     val saveAsFile = new JMenuItem(Utils.loadString("S_SaveAs"))
     saveAsFile.addActionListener(saveAsActionListener)
+    saveAsFile.setIcon(Utils.loadIcon("/images/extra/saveas.gif"))
     fileMenu.add(saveAsFile)
 
     fileMenu.add(new JMenuItem(new CloseFile))
@@ -271,7 +274,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 201212-1 <br/>
+              Version: 241212-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
@@ -320,6 +323,7 @@ trait AppMenu { self: Main.type =>
         aboutBox.setVisible(true)
       }
     })
+    about.setIcon(Utils.loadIcon("/images/extra/about.gif"))
     helpMenu.add(about)
 
     menuBar.add(helpMenu)

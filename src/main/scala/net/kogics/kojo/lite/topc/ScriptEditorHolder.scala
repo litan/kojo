@@ -35,6 +35,8 @@ import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.folding.CurlyFoldParser
 import org.fife.ui.rsyntaxtextarea.folding.FoldParserManager
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
+import org.fife.ui.rtextarea.IconGroup
+import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rtextarea.RTextScrollPane
 import org.fife.ui.rtextarea.SearchEngine
 
@@ -110,6 +112,8 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   se.add(codeSupport.toolbar, BorderLayout.NORTH)
   se.add(sp, BorderLayout.CENTER)
   se.add(codeSupport.statusStrip, BorderLayout.EAST)
+
+  RTextArea.setIconGroup(new IconGroup("KojoIcons", "images/extra/"))
 
   var idx = 2
   val popup = codePane.getPopupMenu
@@ -191,7 +195,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(formatItem, idx)
   idx += 1
 
-  val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace")) {
+  val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace"), Utils.loadIcon("/images/extra/find.gif")) {
     lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
       override def setVisible(visible: Boolean) {
         if (!visible) {
