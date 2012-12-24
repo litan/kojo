@@ -177,7 +177,7 @@ pages += Page(
                  """The result of an expression may be stored in a variable for later use. Variable and other identifiers are made up of letters, numbers and symbols like * / + - : = ! < > & ^ | .  "Golf1", "helpLine" "*+" and "Res4" are all examples of identifiers or variable names.""".p, 
 """This association is signalled by a "var" or "val" keyword at the begining of the line. "val" is used when the association is to be made once and not changed. Why are there "val" and "var"? "val" defines an immutable value and as you will learn later, is essential for functional style programming. It is also good practice to use "val" to store intermediate values in a calculation to avoid accidentally corrupting a the value elsewhere in the program.""".p,
                  "val pixel=34+5".c,
-				 """You can print the result of an expression or several expressions to the Ouput Pane by using 'println(exp1,exp2,expn)'. Each expression must be seperated from the others by a comma.""".p,
+				 """You can print the result of an expression or several expressions to the Ouput Pane by using 'println(exp1,exp2,expn)'. Each expression must be separated from the others by a comma.""".p,
 				 """
 println(pixel,3+2,pixel/2,3.9/2.3)
 var height=pixel+4
@@ -1013,7 +1013,7 @@ pages += Page(
     name = "UT",
     body = tPage("Using the Turtle",
                  "The Turtle can be moved with a set of commands, many of which are listed below. Just try them out to see what they make the Turtle do. You can clear the Turtle Canvas at any time by right-clicking on it and then clicking Clear".p,
-                 "The following example defines a procedure (or command) that draws a triangle. This will be used in other examples further on, so try it first. Notice that multiple commands can be used on one line if they are seperated by a semi-colon. Also 'repeat' is a useful command for carrying out the same set of commands a number of times.".p,
+                 "The following example defines a procedure (or command) that draws a triangle. This will be used in other examples further on, so try it first. Notice that multiple commands can be used on one line if they are separated by a semi-colon. Also 'repeat' is a useful command for carrying out the same set of commands a number of times.".p,
   """def triangle()= repeat(3){ forward(100);right(120)}
   clear()
   triangle()""".c,
