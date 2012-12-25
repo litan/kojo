@@ -66,10 +66,20 @@ object CodeTemplates {
     <li>${cursor}</li>
     <li></li>
 </ul>
-""")
+""",
+    "def (function)" -> """def ${funcName}(${in1}: ${Type1}, ${in2}: ${Type2}) = {
+    ${cursor}
+}
+""",
+    "def (command)" -> """def ${cmdName}(${in1}: ${Type1}, ${in2}: ${Type2}) {
+    ${cursor}
+}
+"""
+  )
 
   def apply(name: String) = templates(name)
-  def asString(name: String) = xml.Utility.escape(templates(name).replace("${cursor}", "|"))
+  def asString(name: String) = 
+    xml.Utility.escape(templates(name).replace("${cursor}", "|").replace("$", "")).replace("\n", "<br/>")
   def beforeCursor(name: String) = templates(name).split("""\$\{cursor\}""")(0)
   def afterCursor(name: String) = templates(name).split("""\$\{cursor\}""")(1)
 }
