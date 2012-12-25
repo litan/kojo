@@ -966,6 +966,103 @@ object Help {
         draw(pic)
       </pre>
     </div>,
+    "hueMod" -> 
+    <div>
+      <strong>hueMod</strong>(color, factor)<br/>
+      A function that computes and returns a new color made by changing the hue of the 
+      given color by the given factor.<br/>
+      The factor needs to be between -1 and 1. <br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+def square(n: Int) {{
+    repeat(4) {{
+        forward(n)
+        right()
+    }}
+}}
+
+clear()
+setAnimationDelay(10)
+var fillC = cyan
+repeat(5) {{
+    setFillColor(fillC)
+    square(50)
+    penUp()
+    right()
+    forward(60)
+    left()
+    penDown()
+    fillC = hueMod(fillC, 0.25)
+    // also try -0.25 as change factor
+}}
+      </pre>
+    </div>,
+    "satMod" -> 
+    <div>
+      <strong>satMod</strong>(color, factor)<br/>
+      A function that computes and returns a new color made by changing the saturation of the 
+      given color by the given factor.<br/>
+      The factor needs to be between -1 and 1. <br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+def square(n: Int) {{
+    repeat(4) {{
+        forward(n)
+        right()
+    }}
+}}
+
+clear()
+setAnimationDelay(10)
+var fillC = cyan
+repeat(5) {{
+    setFillColor(fillC)
+    square(50)
+    penUp()
+    right()
+    forward(60)
+    left()
+    penDown()
+    fillC = satMod(fillC, -0.25)
+}}
+      </pre>
+    </div>,
+    "britMod" -> 
+    <div>
+      <strong>britMod</strong>(color, factor)<br/>
+      A function that computes and returns a new color made by changing the brightness of the 
+      given color by the given factor.<br/>
+      The factor needs to be between -1 and 1. <br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+def square(n: Int) {{
+    repeat(4) {{
+        forward(n)
+        right()
+    }}
+}}
+
+clear()
+setAnimationDelay(10)
+var fillC = cyan
+repeat(5) {{
+    setFillColor(fillC)
+    square(50)
+    penUp()
+    right()
+    forward(60)
+    left()
+    penDown()
+    fillC = britMod(fillC, -0.25)
+}}
+      </pre>
+    </div>,
     "axes" -> 
     <div>
       <strong>axes</strong> -> picture <br/>
