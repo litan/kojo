@@ -12,6 +12,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 
 import javax.swing.AbstractAction
+import javax.swing.Action
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
 import javax.swing.JMenuItem
@@ -115,38 +116,36 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
 
   RTextArea.setIconGroup(new IconGroup("KojoIcons", "images/extra/"))
 
-  var idx = 2
+  var idx = 0
   val popup = codePane.getPopupMenu
-  popup.add(new JPopupMenu.Separator, 2)
-  idx += 1
 
   val switcher = new SwitchMode()
   val twCb = new JCheckBoxMenuItem(switcher)
   twCb.setText(Utils.loadString("S_TurtleMode"))
   twCb.setToolTipText(Utils.loadString("S_TurtleModeTT"))
   twCb.setActionCommand("Tw")
-  popup.add(twCb, 3)
+  popup.add(twCb, idx)
   idx += 1
 
   val stagingCb = new JCheckBoxMenuItem(switcher)
   stagingCb.setText(Utils.loadString("S_StagingMode"))
   stagingCb.setToolTipText(Utils.loadString("S_StagingModeTT"))
   stagingCb.setActionCommand("Staging")
-  popup.add(stagingCb, 4)
+  popup.add(stagingCb, idx)
   idx += 1
 
   val mwCb = new JCheckBoxMenuItem(switcher)
   mwCb.setText(Utils.loadString("S_MwMode"))
   mwCb.setToolTipText(Utils.loadString("S_MwModeTT"))
   mwCb.setActionCommand("Mw")
-  popup.add(mwCb, 5)
+  popup.add(mwCb, idx)
   idx += 1
 
   val d3Cb = new JCheckBoxMenuItem(switcher)
   d3Cb.setText(Utils.loadString("S_D3Mode"))
   d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
   d3Cb.setActionCommand("D3")
-  popup.add(d3Cb, 6)
+  popup.add(d3Cb, idx)
   idx += 1
 
   popup.add(new JPopupMenu.Separator, idx)
@@ -309,6 +308,25 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   am.put("decrease-font-size", decreaseFontSizeAction)
   decreaseFontSizeAction.setAccelerator(controlMinus)
   popup.add(decreaseFontItem, idx)
+  idx += 1
+
+  popup.add(new JPopupMenu.Separator, idx)
+  idx += 1
+
+  val ctrlL = KeyStroke.getKeyStroke("control L")
+  val clearAction = new AbstractAction(Utils.loadString("S_ClearEditor"), Utils.loadIcon("/images/clears.png")) {
+    putValue(Action.ACCELERATOR_KEY, ctrlL)
+    def actionPerformed(ev: ActionEvent) {
+      codeSupport.closeFileAndClrEditorIgnoringCancel()
+    }
+  }
+  val clearItem = new JMenuItem(clearAction)
+  inputMap.put(ctrlL, "clear-editor")
+  am.put("clear-editor", clearAction)
+  popup.add(clearItem, idx)
+  idx += 1
+
+  popup.add(new JPopupMenu.Separator, idx)
   idx += 1
 
   popup.addPopupMenuListener(new PopupMenuListener {
