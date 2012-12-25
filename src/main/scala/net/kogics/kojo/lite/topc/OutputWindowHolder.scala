@@ -16,11 +16,19 @@ import net.kogics.kojo.util.Utils
 import javax.swing.event.PopupMenuListener
 import javax.swing.event.PopupMenuEvent
 import javax.swing.JMenuItem
+import javax.swing.KeyStroke
+import java.awt.event.KeyEvent
+import java.awt.event.InputEvent
+import javax.swing.AbstractAction
 
 class OutputWindowHolder(val ow: JTextArea, val ew: JEditorPane, val oPanel: JPanel, ctx: core.KojoCtx)
   extends BaseHolder("OW", Utils.loadString("CTL_OutputTopComponent"), oPanel) {
 
-  ow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 13))
+  var fontSize = 13
+  def updateFont() {
+    ow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize))
+  }
+  updateFont()
   ow.setForeground(new Color(32, 32, 32))
   ow.setLineWrap(true)
   ow.setWrapStyleWord(true)
@@ -51,6 +59,37 @@ class OutputWindowHolder(val ow: JTextArea, val ew: JEditorPane, val oPanel: JPa
       }
     })
     add(showCode)
+
+    addSeparator()
+
+    
+    val increaseFontSizeAction = new AbstractAction(Utils.loadString("S_IncreaseFontSize")) {
+      override def actionPerformed(e: ActionEvent) {
+        fontSize += 1
+        updateFont()
+      }
+    }
+    val incrFontSizeItem = new JMenuItem(increaseFontSizeAction)
+    val inputMap = ow.getInputMap
+    val am = ow.getActionMap
+    val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
+    inputMap.put(controlPlus, "increase-font-size")
+    am.put("increase-font-size", increaseFontSizeAction)
+    incrFontSizeItem.setAccelerator(controlPlus)
+    add(incrFontSizeItem)
+
+    val decreaseFontSizeAction = new AbstractAction(Utils.loadString("S_DecreaseFontSize")) {
+      override def actionPerformed(e: ActionEvent) {
+        fontSize -= 1
+        updateFont()
+      }
+    }
+    val decrFontSizeItem = new JMenuItem(decreaseFontSizeAction)
+    val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
+    inputMap.put(controlMinus, "decrease-font-size")
+    am.put("decrease-font-size", decreaseFontSizeAction)
+    decrFontSizeItem.setAccelerator(controlMinus)
+    add(decrFontSizeItem)
 
     addSeparator()
 
