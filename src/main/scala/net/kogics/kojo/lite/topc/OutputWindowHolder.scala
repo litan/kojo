@@ -6,20 +6,23 @@ import java.awt.Color
 import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
+import java.awt.event.InputEvent
+import java.awt.event.KeyEvent
+
+import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JEditorPane
+import javax.swing.JMenuItem
 import javax.swing.JPanel
 import javax.swing.JPopupMenu
 import javax.swing.JTextArea
-import net.kogics.kojo.lite.KojoCtx
-import net.kogics.kojo.util.Utils
-import javax.swing.event.PopupMenuListener
-import javax.swing.event.PopupMenuEvent
-import javax.swing.JMenuItem
 import javax.swing.KeyStroke
-import java.awt.event.KeyEvent
-import java.awt.event.InputEvent
-import javax.swing.AbstractAction
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
+
+import net.kogics.kojo.util.Utils
 
 class OutputWindowHolder(val ow: JTextArea, val ew: JEditorPane, val oPanel: JPanel, ctx: core.KojoCtx)
   extends BaseHolder("OW", Utils.loadString("CTL_OutputTopComponent"), oPanel) {
@@ -62,7 +65,6 @@ class OutputWindowHolder(val ow: JTextArea, val ew: JEditorPane, val oPanel: JPa
 
     addSeparator()
 
-    
     val increaseFontSizeAction = new AbstractAction(Utils.loadString("S_IncreaseFontSize")) {
       override def actionPerformed(e: ActionEvent) {
         fontSize += 1
@@ -90,6 +92,22 @@ class OutputWindowHolder(val ow: JTextArea, val ew: JEditorPane, val oPanel: JPa
     am.put("decrease-font-size", decreaseFontSizeAction)
     decrFontSizeItem.setAccelerator(controlMinus)
     add(decrFontSizeItem)
+
+    ew.addFocusListener(new FocusAdapter {
+      override def focusGained(e: FocusEvent) {
+        incrFontSizeItem.setEnabled(false)
+        decrFontSizeItem.setEnabled(false)
+
+      }
+    })
+
+    ow.addFocusListener(new FocusAdapter {
+      override def focusGained(e: FocusEvent) {
+        incrFontSizeItem.setEnabled(true)
+        decrFontSizeItem.setEnabled(true)
+
+      }
+    })
 
     addSeparator()
 
