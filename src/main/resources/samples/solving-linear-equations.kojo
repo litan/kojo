@@ -226,7 +226,7 @@ object EqnQuestion {
 
 class EqnQuestion extends Question {
     import EqnQuestion._
-    // eqn in the form of ax + b = cx + d
+    // eqn in the form of ax + b = cx + d or a/ad x + b = cx + d/dd
     def gencoeff: Int = {
         val coeff = numstart + random(numLimit)
         if (coeff >= -1 && coeff <= 1) gencoeff else coeff
@@ -244,10 +244,10 @@ class EqnQuestion extends Question {
         if (den.abs == num.abs) genden(num) else den
     }
     val a = gencoeff
+    val ad = genden(a)
     val b = gencoeff
     val c = genc
     val d = gencoeff
-    val ad = genden(a)
     val dd = genden(d)
 
     def text = {
@@ -407,7 +407,7 @@ lazy val ui = new GroupPanel {
 
     def qhtml(s: String) = {
         <body>
-            <div style="text-align:center;font-size:120%;margin:10px">
+            <div style="text-align:center;font-size:120%;font-family:serif;margin:10px">
                 { s }
             </div>
         </body>.toString
