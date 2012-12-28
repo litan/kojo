@@ -230,6 +230,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
           else {
             runCode()
           }
+          codePane.requestFocusInWindow()
         case CompileScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             parseCode(false)
@@ -242,10 +243,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
           }
         case StopScript =>
           stopScript()
+          codePane.requestFocusInWindow()
         case HistoryNext =>
           loadCodeFromHistoryNext()
+          codePane.requestFocusInWindow()
         case HistoryPrev =>
           loadCodeFromHistoryPrev()
+          codePane.requestFocusInWindow()
         case ClearEditor =>
           closeFileAndClrEditorIgnoringCancel()
         case ClearOutput =>
@@ -1026,11 +1030,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     ret
   }
 
-  def activateEditor() {
-    Utils.schedule(0.3) {
-      codePane.requestFocusInWindow();
-    }
-  }
+  def activateEditor() = kojoCtx.activateScriptEditor()
 
   @volatile var codingMode: CodingMode = TwMode // default mode for interp
 
