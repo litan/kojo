@@ -48,7 +48,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     if (t != null) {
       if (t.textCount == 1) {
         val ch = t.text(t.textOffset)
-        ch == '{' || ch == '('
+        ch == '{' || ch == '(' || ch == '='
       }
       else if (t.textCount == 2) {
         t.text(t.textOffset) == '=' && t.text(t.textOffset + 1) == '>'
