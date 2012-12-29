@@ -34,6 +34,8 @@ class KojoTestContext extends core.KojoCtx {
   def scrollOutputToEnd() {}
   def frame: JFrame = null
   def fileOpened(file: java.io.File) {}
+  def fileModified() {}
+  def fileSaved() {}
   def fileClosed() {}
   var llsdir = ""
   def getLastLoadStoreDir() = llsdir

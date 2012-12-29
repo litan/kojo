@@ -126,7 +126,7 @@ class KojoCtx extends core.KojoCtx {
     grid.add(1, 0, 3, 1.75, topcs.d3h)
     grid.add(1, 0, 3, 1.75, topcs.mwh)
     grid.add(1, 0, 3, 1.75, topcs.dch)
-    
+
     grid.add(0, 3, 0, 0, topcs.hih)
     grid.add(1, 1.75, 3, 1.25, topcs.seh)
     control.getContentArea.deploy(grid)
@@ -207,12 +207,23 @@ class KojoCtx extends core.KojoCtx {
     topcs.owh.scrollToEnd()
   }
 
+  var fileName = ""
   def fileOpened(file: File) {
-    topcs.seh.setTitleText("%s - %s" format ("Script Editor", file.getName()))
+    fileName = file.getName
+    topcs.seh.setTitleText("%s - %s" format ("Script Editor", fileName))
     CloseFile.onFileOpen()
   }
 
+  def fileModified() {
+    topcs.seh.setTitleText("%s - %s*" format ("Script Editor", fileName))
+  }
+
+  def fileSaved() {
+    topcs.seh.setTitleText("%s - %s" format ("Script Editor", fileName))
+  }
+
   def fileClosed() {
+    fileName = ""
     topcs.seh.setTitleText("Script Editor")
     CloseFile.onFileClose()
   }
