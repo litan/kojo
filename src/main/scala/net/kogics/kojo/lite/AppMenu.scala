@@ -18,6 +18,7 @@ import javax.swing.JOptionPane
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextField
+import javax.swing.KeyStroke
 import javax.swing.text.html.HTMLEditorKit
 
 import net.kogics.kojo.action.CloseFile
@@ -85,6 +86,7 @@ trait AppMenu { self: Main.type =>
     val saveFile = new JMenuItem(Utils.loadString("S_Save"))
     saveFile.addActionListener(new Save(kojoCtx))
     saveFile.setIcon(Utils.loadIcon("/images/extra/save.gif"))
+    saveFile.setAccelerator(KeyStroke.getKeyStroke("control S"))
     fileMenu.add(saveFile)
 
     val saveAsActionListener = new SaveAs(kojoCtx)
@@ -274,7 +276,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 241212-1 <br/>
+              Version: 291212-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
