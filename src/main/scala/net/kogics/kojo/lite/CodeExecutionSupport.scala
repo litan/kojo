@@ -178,16 +178,17 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     statusStrip.linkToPane()
     codePane.getDocument.addDocumentListener(new DocumentListener {
       def insertUpdate(e: DocumentEvent) {
-        // runButton.setEnabled(true)
         clearSButton.setEnabled(true)
-        // cexButton.setEnabled(true)
-
+        if (hasOpenFile) {
+          kojoCtx.fileModified()
+        }
       }
       def removeUpdate(e: DocumentEvent) {
         if (codePane.getDocument.getLength == 0) {
-          // runButton.setEnabled(false) // interferes with enabling/disabling of run button with interpreter start/stop
           clearSButton.setEnabled(false)
-          // cexButton.setEnabled(false) // makes the icon look horrible
+        }
+        if (hasOpenFile) {
+          kojoCtx.fileModified()
         }
       }
       def changedUpdate(e: DocumentEvent) {}
@@ -638,23 +639,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         <div style="color:red;margin:5px;font-size:large;">
           <pre>{ errText }</pre>
         </div>
-        {
-          if (errCount > 1) {
-            <div style="margin:5px;font-size:large;">
+        { if (errCount > 1) { <div style="margin:5px;font-size:large;">
               <a href={ errorLink }>Locate first error in script</a>
-            </div>
-          }
-          else if (errCount == 1) {
-            <div style="margin:5px;font-size:large;">
+            </div> } else if (errCount == 1) { <div style="margin:5px;font-size:large;">
               <a href={ errorLink }>Locate error in script</a>
-            </div>
-          }
-          else {
-            <div style="margin:5px;font-size:large;">
+            </div> } else { <div style="margin:5px;font-size:large;">
               Use the 'Check Script' button for better error recovery.
-            </div>
-          }
-        }
+            </div> } }
       </body>
 
     errorWindow.setText(errMsg.toString)
@@ -901,6 +892,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def saveFile() {
     saveTo(openedFile.get)
+    kojoCtx.fileSaved()
   }
 
   import java.io.File

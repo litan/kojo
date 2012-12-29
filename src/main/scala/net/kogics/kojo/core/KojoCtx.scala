@@ -33,6 +33,8 @@ trait KojoCtx {
   def scrollOutputToEnd(): Unit
   def frame: JFrame
   def fileOpened(file: java.io.File): Unit
+  def fileModified(): Unit
+  def fileSaved(): Unit
   def fileClosed(): Unit
   def getLastLoadStoreDir(): String
   def setLastLoadStoreDir(dir: String): Unit
