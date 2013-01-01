@@ -1,8 +1,11 @@
 package net.kogics.kojo.lite
 
 import java.awt.Dimension
+import java.awt.GraphicsEnvironment
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 
 import javax.swing.AbstractAction
 import javax.swing.BoxLayout
@@ -10,6 +13,7 @@ import javax.swing.JButton
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JDialog
 import javax.swing.JEditorPane
+import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JMenu
 import javax.swing.JMenuBar
@@ -207,13 +211,43 @@ trait AppMenu { self: Main.type =>
       }
     })
     windowMenu.add(gamingItem)
+    
+    windowMenu.addSeparator()
+
+    val fullScreen = new JMenuItem("Full-Screen Canvas")
+    fullScreen.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        val dch = kojoCtx.topcs.dch
+        val sdev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
+        if (sdev.isFullScreenSupported()) {
+          val frame = new JFrame
+          frame.setUndecorated(true)
+          frame.getContentPane.add(dch.dc)
+          sdev.setFullScreenWindow(frame)
+          frame.validate()
+
+          dch.dc.addKeyListener(new KeyAdapter {
+            override def keyPressed(event: KeyEvent) {
+              if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                dch.dc.removeKeyListener(this)
+                sdev.setFullScreenWindow(null)
+                frame.setVisible(false)
+                dch.add(dch.dc)
+              }
+            }
+          })
+          dch.dc.requestFocusInWindow()
+        }
+      }
+    })
+    windowMenu.add(fullScreen)
 
     menuBar.add(windowMenu)
 
     val langMenu = new JMenu(Utils.loadString("S_Language"))
     val langMap = Map(
       "English" -> "en",
-      "Swedish (in-progress)" -> "sv",
+      "Swedish" -> "sv",
       "French (coming-up)" -> "fr",
       "Italian (coming-up)" -> "it"
     )
@@ -247,9 +281,9 @@ trait AppMenu { self: Main.type =>
     }
 
     langMenu.add(langMenuItem("English"))
-    langMenu.add(langMenuItem("French (coming-up)"))
-    langMenu.add(langMenuItem("Italian (coming-up)"))
-    langMenu.add(langMenuItem("Swedish (in-progress)"))
+    //    langMenu.add(langMenuItem("French (coming-up)"))
+    //    langMenu.add(langMenuItem("Italian (coming-up)"))
+    langMenu.add(langMenuItem("Swedish"))
     menuBar.add(langMenu)
 
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
@@ -276,7 +310,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 291212-1 <br/>
+              Version: 010113-2 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
