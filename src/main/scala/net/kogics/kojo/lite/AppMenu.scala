@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-
 import javax.swing.AbstractAction
 import javax.swing.BoxLayout
 import javax.swing.JButton
@@ -24,15 +23,16 @@ import javax.swing.JScrollPane
 import javax.swing.JTextField
 import javax.swing.KeyStroke
 import javax.swing.text.html.HTMLEditorKit
-
 import net.kogics.kojo.action.CloseFile
 import net.kogics.kojo.action.LoadFrom
 import net.kogics.kojo.action.NewFile
 import net.kogics.kojo.action.Save
 import net.kogics.kojo.action.SaveAs
 import net.kogics.kojo.util.Utils
-
 import net.kogics.kojo.lite.Main
+import net.kogics.kojo.action.FullScreenAction
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 
 trait AppMenu { self: Main.type =>
   def menuBar = {
@@ -166,8 +166,14 @@ trait AppMenu { self: Main.type =>
     samplesMenu.add(animGameMenu)
 
     val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
-    mgeomMenu.add(menuItemForUrl(Utils.loadString("S_SolvingLinearEquations"), "http://www.kogics.net/public/kojolite/samples/solving-linear-equations.kojo"))
+    mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
     samplesMenu.add(mgeomMenu)
+
+    val musicMenu = new JMenu(Utils.loadString("S_Music"))
+    musicMenu.add(menuItemFor(Utils.loadString("S_SomeNotes"), "some-notes.kojo"))
+    musicMenu.add(menuItemFor(Utils.loadString("S_Tune1"), "tune1.kojo"))
+    musicMenu.add(menuItemFor(Utils.loadString("S_Tune2"), "tune2.kojo"))
+    samplesMenu.add(musicMenu)
 
     menuBar.add(samplesMenu)
 
@@ -211,36 +217,12 @@ trait AppMenu { self: Main.type =>
       }
     })
     windowMenu.add(gamingItem)
-    
+
     windowMenu.addSeparator()
 
-    val fullScreen = new JMenuItem("Full-Screen Canvas")
-    fullScreen.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
-        val dch = kojoCtx.topcs.dch
-        val sdev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-        if (sdev.isFullScreenSupported()) {
-          val frame = new JFrame
-          frame.setUndecorated(true)
-          frame.getContentPane.add(dch.dc)
-          sdev.setFullScreenWindow(frame)
-          frame.validate()
-
-          dch.dc.addKeyListener(new KeyAdapter {
-            override def keyPressed(event: KeyEvent) {
-              if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                dch.dc.removeKeyListener(this)
-                sdev.setFullScreenWindow(null)
-                frame.setVisible(false)
-                dch.add(dch.dc)
-              }
-            }
-          })
-          dch.dc.requestFocusInWindow()
-        }
-      }
-    })
-    windowMenu.add(fullScreen)
+    val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(FullScreenAction(kojoCtx))
+    FullScreenAction.linkMenu(fullScreenItem)
+    windowMenu.add(fullScreenItem)
 
     menuBar.add(windowMenu)
 
@@ -289,6 +271,7 @@ trait AppMenu { self: Main.type =>
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
     helpMenu.add(menuItemFor(Utils.loadString("S_KojoOverview"), "kojo-overview.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_ScalaTutorial"), "scala-tutorial.kojo"))
+    helpMenu.add(menuItemFor(Utils.loadString("S_ComposingMusic"), "composing-music.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_Intro3D"), "d3-intro.kojo"))
     helpMenu.addSeparator()
 
@@ -310,7 +293,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 010113-2 <br/>
+              Version: 030113-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>

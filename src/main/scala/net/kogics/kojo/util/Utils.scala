@@ -279,7 +279,7 @@ object Utils {
   )
 
   def readStream(is: InputStream): String = {
-    require(is != null, "trying to read from a non-existent resource")
+    require(is != null, "resource should exist")
     val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
     val buf = new Array[Char](1024)
     var nbytes = reader.read(buf)

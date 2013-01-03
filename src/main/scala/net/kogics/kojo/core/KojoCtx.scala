@@ -17,8 +17,10 @@ package net.kogics.kojo.core
 
 import javax.swing.JFrame
 import java.awt.Color
+import net.kogics.kojo.lite.TopCs
 
 trait KojoCtx {
+  def topcs: TopCs
   def activateDrawingCanvas()
   def activateScriptEditor()
   def activateOutputPane()
