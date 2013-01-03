@@ -101,6 +101,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     val specialNames = Set(
       "act(fn: net.kogics.kojo.core.Picture => Unit)",
       "onMouseClick(fn: (Double, Double) => Unit)",
+      "onMousePress(fn: (Double, Double) => Unit)",
       "onMouseDrag(fn: (Double, Double) => Unit)",
       "animate(fn: => Unit)"
     )
