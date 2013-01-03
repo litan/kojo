@@ -18,8 +18,10 @@ package net.kogics.kojo
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import javax.swing.JFrame
 import java.awt.Color
+import net.kogics.kojo.lite.TopCs
 
 class KojoTestContext extends core.KojoCtx {
+  def topcs: TopCs = null
   def activateDrawingCanvas() {}
   def activateScriptEditor() {}
   def activateOutputPane() {}

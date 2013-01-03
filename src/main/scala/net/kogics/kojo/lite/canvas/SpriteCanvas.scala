@@ -39,6 +39,7 @@ import net.kogics.kojo.core.UnitLen
 import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.util.FileChooser
 import net.kogics.kojo.action.SaveAs
+import net.kogics.kojo.action.FullScreenAction
 
 object SpriteCanvas extends core.InitedSingleton[SpriteCanvas] {
   def initedInstance(kojoCtx: core.KojoCtx) = synchronized {
@@ -830,6 +831,12 @@ class SpriteCanvas private extends PCanvas with SCanvas {
       })
     add(clearItem)
 
+    addSeparator()
+
+    val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(new FullScreenAction(kojoCtx))
+    FullScreenAction.linkMenu(fullScreenItem)
+    add(fullScreenItem)
+    
     addSeparator()
 
     add("<html><em>%s</em></html>" format(Utils.loadString("S_MouseActions")))
