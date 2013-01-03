@@ -26,9 +26,22 @@ trait InputAware {
   def myCanvas: PCanvas
   def myNode: PNode
   
-  def onMouseClick(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
+  def onMousePress(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
       override def mousePressed(event: PInputEvent) {
+        val pos = event.getPosition
+        Utils.safeProcess {
+          fn(pos.getX, pos.getY)
+        }
+      }
+    }
+    h.setEventFilter(new PInputEventFilter(java.awt.event.InputEvent.BUTTON1_MASK))
+    myNode.addInputEventListener(h)
+  }
+  
+  def onMouseClick(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
+    val h = new PBasicInputEventHandler {
+      override def mouseClicked(event: PInputEvent) {
         val pos = event.getPosition
         Utils.safeProcess {
           fn(pos.getX, pos.getY)

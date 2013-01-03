@@ -118,14 +118,14 @@ class FullScreenAction(kojoCtx: => KojoCtx)
     sdev.setFullScreenWindow(frame)
     frame.validate()
 
-    dch.dc.addKeyListener(new KeyAdapter {
-      override def keyPressed(event: KeyEvent) {
-        if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
-          dch.dc.removeKeyListener(this)
-          leaveFullScreen()
-        }
-      }
-    })
+//    dch.dc.addKeyListener(new KeyAdapter {
+//      override def keyPressed(event: KeyEvent) {
+//        if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+//          dch.dc.removeKeyListener(this)
+//          leaveFullScreen()
+//        }
+//      }
+//    })
     dch.dc.requestFocusInWindow()
     menuItems foreach { _ setSelected true }
   }
@@ -139,8 +139,7 @@ class FullScreenAction(kojoCtx: => KojoCtx)
   }
 
   def actionPerformed(e: ActionEvent) {
-    val source = e.getSource().asInstanceOf[JCheckBoxMenuItem]
-    if (source.isSelected()) {
+    if (!isFullScreen) {
       enterFullScreen()
     }
     else {

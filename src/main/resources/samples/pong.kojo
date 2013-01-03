@@ -3,7 +3,7 @@
 // Player on left uses A/Z keys to control paddle
 // 'Space' to start; 'P' to bring up Game Panel; 'Esc' to quit
 
-switchToCanvasPerspective()
+toggleFullScreenCanvas()
 cleari()
 setRefreshRate(40)
 val PaddleH = 100
@@ -176,7 +176,7 @@ onKeyPress { k =>
 }
 
 onAnimationStop {
-    switchToDefaultPerspective()
+    toggleFullScreenCanvas()
 }
 
 activateCanvas()

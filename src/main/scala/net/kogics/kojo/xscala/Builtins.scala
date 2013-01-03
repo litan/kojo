@@ -22,6 +22,7 @@ import java.awt.Paint
 
 import javax.swing.JComponent
 
+import net.kogics.kojo.action.FullScreenAction
 import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.lite.CodeExecutionSupport
 import net.kogics.kojo.story.HandlerHolder
@@ -654,6 +655,11 @@ Here's a partial list of the available commands:
 
   def switchToCanvasPerspective() = Utils.runInSwingThreadAndWait {
     kojoCtx.switchToCanvasPerspective()
+  }
+
+  val fullScreenAction = new FullScreenAction(kojoCtx)
+  def toggleFullScreenCanvas() = Utils.runInSwingThreadAndWait {
+    fullScreenAction.actionPerformed(null)
   }
 
   object PShapes {
