@@ -15,31 +15,53 @@
 package net.kogics.kojo
 package lite.canvas
 
-import core.SCanvas
-import util.Utils
-import javax.swing._
-import javax.swing.event._
+import java.awt.Color
+import java.awt.Dimension
+import java.awt.GradientPaint
+import java.awt.Paint
+import java.awt.Toolkit
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
+import java.awt.event.InputEvent
 import java.awt.geom.Point2D
-import java.awt.{List => _, _}
-import java.awt.event._
-import java.util.logging._
-import edu.umd.cs.piccolo._
-import edu.umd.cs.piccolo.nodes._
+import java.io.File
+import java.util.logging.Logger
+
+import javax.swing.JCheckBoxMenuItem
+import javax.swing.JMenuItem
+import javax.swing.JPopupMenu
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
+
+import net.kogics.kojo.action.FullScreenAction
+import net.kogics.kojo.action.SaveAs
+import net.kogics.kojo.core
+import net.kogics.kojo.core.Cm
+import net.kogics.kojo.core.DelegatingSpriteListener
+import net.kogics.kojo.core.Inch
+import net.kogics.kojo.core.Picture
+import net.kogics.kojo.core.Pixel
+import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.core.SpriteListener
+import net.kogics.kojo.core.UnitLen
+
+import edu.umd.cs.piccolo.PCanvas
+import edu.umd.cs.piccolo.PLayer
+import edu.umd.cs.piccolo.PNode
+import edu.umd.cs.piccolo.event.PBasicInputEventHandler
+import edu.umd.cs.piccolo.event.PInputEvent
+import edu.umd.cs.piccolo.event.PInputEventFilter
+import edu.umd.cs.piccolo.event.PInputEventListener
+import edu.umd.cs.piccolo.event.PPanEventHandler
+import edu.umd.cs.piccolo.event.PZoomEventHandler
+import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolo.nodes.PText
 import edu.umd.cs.piccolo.util.PPaintContext
-import edu.umd.cs.piccolo.event._
-import scala.collection._
-import scala.{math => Math}
 import figure.Figure
 import turtle.Turtle
-import core.SpriteListener
-import core.DelegatingSpriteListener
-import net.kogics.kojo.core.Inch
-import net.kogics.kojo.core.Cm
-import net.kogics.kojo.core.UnitLen
-import net.kogics.kojo.core.Pixel
-import net.kogics.kojo.util.FileChooser
-import net.kogics.kojo.action.SaveAs
-import net.kogics.kojo.action.FullScreenAction
+import util.Utils
 
 object SpriteCanvas extends core.InitedSingleton[SpriteCanvas] {
   def initedInstance(kojoCtx: core.KojoCtx) = synchronized {
@@ -69,11 +91,11 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   def setUnitLength(ul: UnitLen) {
     throw new UnsupportedOperationException("Use clearWithUL(unit) instead of setUnitLength(unit) and clear().")
   }
-  
+
   private def realSetUnitLength(ul: UnitLen) {
     unitLen = ul
   }
-  
+
   var outputFn: String => Unit = { msg =>
     Log.info(msg)
   }
@@ -84,9 +106,9 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   setAnimatingRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
   setInteractingRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
 
-//  edu.umd.cs.piccolo.util.PDebug.debugBounds = true
-//  edu.umd.cs.piccolo.util.PDebug.debugFullBounds = true
-//  edu.umd.cs.piccolo.util.PDebug.debugPaintCalls = true
+  //  edu.umd.cs.piccolo.util.PDebug.debugBounds = true
+  //  edu.umd.cs.piccolo.util.PDebug.debugFullBounds = true
+  //  edu.umd.cs.piccolo.util.PDebug.debugPaintCalls = true
 
   @volatile var turtles: List[Turtle] = Nil
   var puzzlers: List[Turtle] = Nil
@@ -105,19 +127,19 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   initCamera()
 
   addComponentListener(new ComponentAdapter {
-      override def componentResized(e: ComponentEvent) = initCamera()
-    })
+    override def componentResized(e: ComponentEvent) = initCamera()
+  })
 
   val megaListener = new DelegatingSpriteListener
   val figure = newFigure()
   @volatile var turtle = newTurtle()
   val pictures = new PLayer
   getCamera.addLayer(pictures)
-  
+
   def turtle0 = turtle
   val figure0 = figure
   val origTurtle = turtle
-  
+
   def setDefTurtle(t: Turtle) = {
     turtle = t
   }
@@ -127,14 +149,14 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   }
 
   val panHandler = new PPanEventHandler() {
-//    setAutopan(false)
+    //    setAutopan(false)
     override def pan(event: PInputEvent) {
       super.pan(event)
       Utils.schedule(0.05) {
         updateAxesAndGrid()
       }
     }
-    
+
     override def dragActivityStep(event: PInputEvent) {
       super.dragActivityStep(event)
       Utils.schedule(0.05) {
@@ -148,7 +170,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
       if (event.isHandled) {
         return
       }
-      
+
       super.dragActivityStep(event)
       event.setHandled(true)
       Utils.schedule(0.05) {
@@ -164,47 +186,47 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   setZoomEventHandler(zoomHandler)
 
   addInputEventListener(new PBasicInputEventHandler {
-      val popup = new Popup()
-      
-      def showPopup(e: PInputEvent) {
-        if(e.isPopupTrigger) {
-          val pos = e.getCanvasPosition
-          popup.show(SpriteCanvas.this, pos.getX.toInt, pos.getY.toInt);
-        }
-      }
-      
-      override def mousePressed(e: PInputEvent) = showPopup(e)
-      override def mouseReleased(e: PInputEvent) = showPopup(e)
-      
-      override def mouseMoved(e: PInputEvent) {
-        val pos = e.getPosition
-        val prec0 = Math.round(getCamera.getViewTransformReference.getScale/camScale) - 1
-        val prec = {
-          if (prec0 < 0) 0
-          else if (prec0 > 18) 18
-          else prec0
-        }
-        val statusStr = "Mouse Position: (%%.%df, %%.%df)" format(prec, prec)
-        // TODO Kojo Lite
-//        StatusDisplayer.getDefault().setStatusText(statusStr format(pos.getX, pos.getY));
-      }
+    val popup = new Popup()
 
-      override def mouseWheelRotated(e: PInputEvent) {
-        zoomBy(1 - e.getWheelRotation * 0.1, e.getPosition)
-      }      
-    })
+    def showPopup(e: PInputEvent) {
+      if (e.isPopupTrigger) {
+        val pos = e.getCanvasPosition
+        popup.show(SpriteCanvas.this, pos.getX.toInt, pos.getY.toInt);
+      }
+    }
+
+    override def mousePressed(e: PInputEvent) = showPopup(e)
+    override def mouseReleased(e: PInputEvent) = showPopup(e)
+
+    override def mouseMoved(e: PInputEvent) {
+      val pos = e.getPosition
+      val prec0 = Math.round(getCamera.getViewTransformReference.getScale / camScale) - 1
+      val prec = {
+        if (prec0 < 0) 0
+        else if (prec0 > 18) 18
+        else prec0
+      }
+      val statusStr = "Mouse Position: (%%.%df, %%.%df)" format (prec, prec)
+      // TODO Kojo Lite
+      //        StatusDisplayer.getDefault().setStatusText(statusStr format(pos.getX, pos.getY));
+    }
+
+    override def mouseWheelRotated(e: PInputEvent) {
+      zoomBy(1 - e.getWheelRotation * 0.1, e.getPosition)
+    }
+  })
 
   def camScale = unitLen match {
     case Pixel => 1
-    case Inch => Dpi
-    case Cm => Dpi / 2.54
+    case Inch  => Dpi
+    case Cm    => Dpi / 2.54
   }
-  
+
   private def initCamera() {
     val size = getSize(null)
     val scale = camScale
     getCamera.getViewTransformReference.setToScale(scale, -scale)
-    getCamera.setViewOffset(size.getWidth/2f, size.getHeight/2f)
+    getCamera.setViewOffset(size.getWidth / 2f, size.getHeight / 2f)
     updateAxesAndGrid()
   }
 
@@ -250,43 +272,43 @@ class SpriteCanvas private extends PCanvas with SCanvas {
 
   def updateAxesAndGrid() {
 
-//    def isInteger(d: Double) = Utils.doublesEqual(d.floor, d, 0.0000000001)
+    //    def isInteger(d: Double) = Utils.doublesEqual(d.floor, d, 0.0000000001)
     def isInteger(label: String) = {
       val d = Utils.sanitizeDoubleString(label).toDouble
       Utils.doublesEqual(d.floor, d, 0.0000000001)
     }
-    
+
     val seedDelta = unitLen match {
       case Pixel => 50
-      case Inch => Dpi
-      case Cm => Dpi/2.54
+      case Inch  => Dpi
+      case Cm    => Dpi / 2.54
     }
 
     if (!(showGrid || showAxes))
       return
-    
-    val scale = getCamera.getViewScale 
+
+    val scale = getCamera.getViewScale
     val MaxPrec = 10
     val prec0 = Math.round(scale)
     val prec = prec0 match {
-      case p if p < 10 => 0
-      case p if p < 50 => 2
+      case p if p < 10  => 0
+      case p if p < 50  => 2
       case p if p < 100 => 4
       case p if p < 150 => 6
       case p if p < 200 => 8
-      case _ => MaxPrec
+      case _            => MaxPrec
     }
 
     val labelPrec = if (scale % seedDelta == 0) math.log10(scale).round else prec
 
-    val labelText = "%%.%df" format(labelPrec)
-    val deltaFinder = "%%.%df" format(if (prec == 0) prec else prec-1)
-    
+    val labelText = "%%.%df" format (labelPrec)
+    val deltaFinder = "%%.%df" format (if (prec == 0) prec else prec - 1)
+
     val delta = {
       val d = seedDelta
-      val d0 = d/scale
+      val d0 = d / scale
       if (d0 > 10) {
-        math.round(d0/10) * 10
+        math.round(d0 / 10) * 10
       }
       else {
         val d2 = Utils.sanitizeDoubleString(deltaFinder.format(d0)).toDouble
@@ -301,33 +323,33 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     val vby = viewBounds.y.toFloat
 
     import java.awt.geom._
-    val screenCenter = new Point2D.Double(vbx + width/2, vby + height/2)
+    val screenCenter = new Point2D.Double(vbx + width / 2, vby + height / 2)
 
     val deltap = new Point2D.Double(delta, delta)
     val numxTicks = Math.ceil(width / deltap.getY).toInt + 4
     val numyTicks = Math.ceil(height / deltap.getX).toInt + 4
     val tickSize = 3
-    
+
     val xStart = {
       val x = viewBounds.x
-      if (x < 0) Math.floor(x/deltap.getX) * deltap.getX
-      else Math.ceil(x/deltap.getX) * deltap.getX
-    } - 2*deltap.getX
+      if (x < 0) Math.floor(x / deltap.getX) * deltap.getX
+      else Math.ceil(x / deltap.getX) * deltap.getX
+    } - 2 * deltap.getX
 
     val yStart = {
       val y = viewBounds.y
-      if (y < 0) Math.floor(y/deltap.getY) * deltap.getY
-      else Math.ceil(y/deltap.getY) * deltap.getY
-    } - 2*deltap.getY
+      if (y < 0) Math.floor(y / deltap.getY) * deltap.getY
+      else Math.ceil(y / deltap.getY) * deltap.getY
+    } - 2 * deltap.getY
 
     grid.removeAllChildren()
     axes.removeAllChildren()
 
     val xmin = xStart - deltap.getX
-    val xmax = xStart + (numxTicks+1) * deltap.getX
-    
+    val xmax = xStart + (numxTicks + 1) * deltap.getX
+
     val ymin = yStart - deltap.getY
-    val ymax = yStart + (numyTicks+1) * deltap.getY
+    val ymax = yStart + (numyTicks + 1) * deltap.getY
 
     if (showAxes) {
       val xa1 = getCamera.viewToLocal(new Point2D.Double(xmin, 0))
@@ -342,7 +364,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
       yAxis.setStrokePaint(AxesColor)
       axes.addChild(yAxis)
     }
-    
+
     // gridlines and ticks on y axis
     for (i <- 0 until numyTicks) {
       val ycoord = yStart + i * deltap.getY
@@ -355,17 +377,17 @@ class SpriteCanvas private extends PCanvas with SCanvas {
         grid.addChild(gridline)
       }
       if (showAxes) {
-        val pt1 = getCamera.viewToLocal(new Point2D.Double(-tickSize/scale, ycoord))
-        val pt2 = getCamera.viewToLocal(new Point2D.Double(tickSize/scale, ycoord))
+        val pt1 = getCamera.viewToLocal(new Point2D.Double(-tickSize / scale, ycoord))
+        val pt2 = getCamera.viewToLocal(new Point2D.Double(tickSize / scale, ycoord))
         val tick = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
         tick.setStrokePaint(TickColor)
         axes.addChild(tick)
-        
-        if (!Utils.doublesEqual(ycoord, 0, 1/math.pow(10, prec+1))) {
-          val label = new PText(labelText format(ycoord))
+
+        if (!Utils.doublesEqual(ycoord, 0, 1 / math.pow(10, prec + 1))) {
+          val label = new PText(labelText format (ycoord))
           label.setOffset(pt2.getX.toFloat, pt2.getY.toFloat)
           if (isInteger(label.getText)) {
-            label.setText("%.0f" format(ycoord))
+            label.setText("%.0f" format (ycoord))
             label.setTextPaint(TickIntegerLabelColor)
           }
           else {
@@ -387,23 +409,23 @@ class SpriteCanvas private extends PCanvas with SCanvas {
         grid.addChild(gridline)
       }
       if (showAxes) {
-        val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, tickSize/scale))
-        val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, -tickSize/scale))
+        val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, tickSize / scale))
+        val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, -tickSize / scale))
         val tick = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
         tick.setStrokePaint(TickColor)
         axes.addChild(tick)
 
-        if (Utils.doublesEqual(xcoord, 0, 1/math.pow(10, prec+1))) {
+        if (Utils.doublesEqual(xcoord, 0, 1 / math.pow(10, prec + 1))) {
           val label = new PText("0")
-          label.setOffset(pt2.getX.toFloat+2, pt2.getY.toFloat)
+          label.setOffset(pt2.getX.toFloat + 2, pt2.getY.toFloat)
           label.setTextPaint(TickIntegerLabelColor)
           axes.addChild(label)
         }
         else {
-          val label = new PText(labelText format(xcoord))
+          val label = new PText(labelText format (xcoord))
           label.setOffset(pt2.getX.toFloat, pt2.getY.toFloat)
           if (isInteger(label.getText)) {
-            label.setText("%.0f" format(xcoord))
+            label.setText("%.0f" format (xcoord))
             label.setTextPaint(TickIntegerLabelColor)
           }
           else {
@@ -417,8 +439,8 @@ class SpriteCanvas private extends PCanvas with SCanvas {
       }
     }
 
-//    outputFn("\nScale: %f\n" format(scale))
-//    outputFn("Deltap: %s\n" format(deltap.toString))
+    //    outputFn("\nScale: %f\n" format(scale))
+    //    outputFn("Deltap: %s\n" format(deltap.toString))
   }
 
   // meant to be called from swing thread
@@ -429,7 +451,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     require(factor0 != 0, "Zoom factor can't be 0.")
     Utils.runInSwingThreadAndWait {
       val size = getSize(null)
-      val cx = new Point2D.Double(size.width/2d, size.height/2d)
+      val cx = new Point2D.Double(size.width / 2d, size.height / 2d)
       val cp = getCamera.localToView(cx)
       zoom(factor0, cp.getX, cp.getY)
     }
@@ -439,15 +461,15 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   def zoomBy(factor: Double, mousePos: Point2D): Unit = {
     require(factor != 0, "Zoom factor can't be 0.")
     Utils.runInSwingThreadAndWait {
-//      val tx = getCamera.getViewTransformReference.getTranslateX
-//      val ty = getCamera.getViewTransformReference.getTranslateY
-//      val oldZoom = currZoom
-//      getCamera.getViewTransformReference.setToIdentity()
-//      getCamera.getViewTransformReference.scale(oldZoom, -oldZoom)
-//      getCamera.getViewTransformReference.setOffset(tx, ty)
-//      getCamera.getViewTransformReference.translate(mousePos.getX, mousePos.getY)
-//      getCamera.getViewTransformReference.scale(factor, factor)
-//      getCamera.getViewTransformReference.translate(-mousePos.getX, -mousePos.getY)
+      //      val tx = getCamera.getViewTransformReference.getTranslateX
+      //      val ty = getCamera.getViewTransformReference.getTranslateY
+      //      val oldZoom = currZoom
+      //      getCamera.getViewTransformReference.setToIdentity()
+      //      getCamera.getViewTransformReference.scale(oldZoom, -oldZoom)
+      //      getCamera.getViewTransformReference.setOffset(tx, ty)
+      //      getCamera.getViewTransformReference.translate(mousePos.getX, mousePos.getY)
+      //      getCamera.getViewTransformReference.scale(factor, factor)
+      //      getCamera.getViewTransformReference.translate(-mousePos.getX, -mousePos.getY)
 
       getCamera.getViewTransformReference.scaleAboutPoint(factor, mousePos.getX, mousePos.getY)
       updateAxesAndGrid()
@@ -461,7 +483,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
       val size = getSize(null)
       val factor = factor0 * camScale
       getCamera.getViewTransformReference.setToScale(factor, -factor)
-      getCamera.getViewTransformReference.setOffset(size.getWidth/2d, size.getHeight/2d)
+      getCamera.getViewTransformReference.setOffset(size.getWidth / 2d, size.getHeight / 2d)
       getCamera.getViewTransformReference.translate(-cx, -cy)
       updateAxesAndGrid()
       repaint()
@@ -496,13 +518,13 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     val image = getCamera.toImage(width, height, java.awt.Color.white)
     javax.imageio.ImageIO.write(image.asInstanceOf[java.awt.image.BufferedImage], "png", outfile)
   }
-  
+
   def exportImage(filePrefix: String): File = {
     exportImageHelper(filePrefix, getWidth, getHeight)
   }
 
   def exportThumbnail(filePrefix: String, height: Int): File = {
-    exportImageHelper(filePrefix, (getWidth.toFloat/getHeight * height).toInt, height)
+    exportImageHelper(filePrefix, (getWidth.toFloat / getHeight * height).toInt, height)
   }
 
   def afterClear() = {
@@ -512,31 +534,31 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   def forceClear() {
     clear()
   }
-  
+
   def makeStagingVisible() {
     kojoCtx.makeStagingVisible()
   }
-  
+
   def clearStaging() {
     realSetUnitLength(Pixel)
     realClearStaging()
   }
-  
+
   def clearStagingWul(ul: UnitLen) {
     realSetUnitLength(ul)
     realClearStaging()
   }
-  
+
   def clear() {
     realSetUnitLength(Pixel)
     realClear()
   }
-  
+
   def clearWithUL(ul: UnitLen) {
     realSetUnitLength(ul)
     realClear()
   }
-  
+
   def realClearStaging() {
     makeStagingVisible()
     clearHelper()
@@ -546,7 +568,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     kojoCtx.makeTurtleWorldVisible()
     clearHelper()
   }
-  
+
   private def clearHelper() {
     // can't stop animation because it kills animations that run from within 
     // code blocks inside stories
@@ -555,17 +577,17 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     axesOff()
     Utils.runInSwingThreadAndWait {
       showProt = false
-      turtles.foreach {t => if (t == origTurtle) t.clear() else t.remove()}
+      turtles.foreach { t => if (t == origTurtle) t.clear() else t.remove() }
       turtles = List(turtles.last)
 
-      figures.foreach {f => if (f == figure) f.clear() else f.remove()}
+      figures.foreach { f => if (f == figure) f.clear() else f.remove() }
       figures = List(figures.last)
-      
-      eventListeners.foreach {el => removeInputEventListener(el)}
+
+      eventListeners.foreach { el => removeInputEventListener(el) }
       eventListeners = Nil
       staging.Inputs.removeKeyHandlers()
       getRoot.getDefaultInputManager.setKeyboardFocus(null)
-      
+
       pictures.removeAllChildren()
       zoom(1, 0, 0)
     }
@@ -575,23 +597,23 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   def clearPuzzlers() {
     stop()
     Utils.runInSwingThreadAndWait {
-      puzzlers.foreach {t => t.remove()}
+      puzzlers.foreach { t => t.remove() }
       puzzlers = Nil
     }
   }
 
   def stop() = {
     Utils.runInSwingThreadAndWait {
-      puzzlers.foreach {t => t.stop}
-      turtles.foreach {t => t.stop}
-      figures.foreach {f => f.stop}
+      puzzlers.foreach { t => t.stop }
+      turtles.foreach { t => t.stop }
+      figures.foreach { f => f.stop }
       megaListener.pendingCommandsDone()
       Utils.schedule(0.5) {
         megaListener.pendingCommandsDone()
       }
     }
   }
-  
+
   def wipe = Utils.runInSwingThread {
     pictures.removeAllChildren()
   }
@@ -638,7 +660,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   def setTurtleListener(l: SpriteListener) {
     megaListener.setRealListener(l)
   }
-  
+
   def onKeyPress(fn: Int => Unit) = Utils.runInSwingThread {
     staging.Inputs.setKeyPressedHandler { e =>
       fn(e.getKeyCode)
@@ -650,7 +672,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
       fn(e.getKeyCode)
     }
   }
-  
+
   def onMouseClick(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val eh = new PBasicInputEventHandler {
       override def mousePressed(event: PInputEvent) {
@@ -663,13 +685,13 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     eventListeners = eh :: eventListeners
     addInputEventListener(eh)
   }
-  
+
   var globalEl: PInputEventListener = _
   def addGlobalEventListener(l: PInputEventListener) {
     globalEl = l
     addInputEventListener(l)
   }
-  
+
   def activate() {
     def grabFocus() {
       requestFocusInWindow()
@@ -682,7 +704,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     Utils.schedule(0.3) { grabFocus() }
     Utils.schedule(0.9) { grabFocus() }
   }
-  
+
   def cbounds = Utils.runInSwingThreadAndWait { getCamera.getViewBounds() }
 
   def setCanvasBackground(c: Paint) = Utils.runInSwingThread {
@@ -701,9 +723,9 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     val paint = new GradientPaint(0, bounds.y.toFloat, c1, 0, (bounds.y + bounds.height).toFloat, c2)
     setCanvasBackground(paint)
   }
-  
+
   import core.Picture
-  val noPic = picture.Pic { t => 
+  val noPic = picture.Pic { t =>
   }
   @volatile var stage: Picture = _
   @volatile var stageLeft: Picture = _
@@ -718,7 +740,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     stageRight = noPic
     stageBot = noPic
   }
-  
+
   def drawStage(fillc: Paint) {
     def border(size: Double) = picture.stroke(Color.darkGray) -> picture.Pic { t =>
       t.forward(size)
@@ -741,91 +763,90 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     stage.draw()
     setCanvasBackground(fillc)
   }
-  
 
   class Popup() extends JPopupMenu {
 
     val axesItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowAxes"))
     axesItem.addActionListener(new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          if (axesItem.isSelected) {
-            axesOn()
-          }
-          else {
-            axesOff()
-          }
+      override def actionPerformed(e: ActionEvent) {
+        if (axesItem.isSelected) {
+          axesOn()
         }
-      })
+        else {
+          axesOff()
+        }
+      }
+    })
     add(axesItem)
 
     val gridItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowGrid"))
     gridItem.addActionListener(new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          if (gridItem.isSelected) {
-            gridOn()
-          }
-          else {
-            gridOff()
-          }
+      override def actionPerformed(e: ActionEvent) {
+        if (gridItem.isSelected) {
+          gridOn()
         }
-      })
+        else {
+          gridOff()
+        }
+      }
+    })
     add(gridItem)
-    
+
     addSeparator()
 
     val protItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowProtractor"))
     protItem.addActionListener(new ActionListener {
-        @volatile var prot: core.Picture = _
-        def protOn() {
-          showProt = true
-          prot = picture.protractor(camScale)
-          // can draw from GUI thread because anim delay is zero, and latch will not be used
-          prot.draw()
+      @volatile var prot: core.Picture = _
+      def protOn() {
+        showProt = true
+        prot = picture.protractor(camScale)
+        // can draw from GUI thread because anim delay is zero, and latch will not be used
+        prot.draw()
+      }
+
+      def protOff() {
+        showProt = false
+        prot.invisible()
+      }
+
+      override def actionPerformed(e: ActionEvent) {
+        if (protItem.isSelected) {
+          protOn()
         }
-        
-        def protOff() {
-          showProt = false
-          prot.invisible()
+        else {
+          protOff()
         }
-        
-        override def actionPerformed(e: ActionEvent) {
-          if (protItem.isSelected) {
-            protOn()
-          }
-          else {
-            protOff()
-          }
-        }
-      })
+      }
+    })
     add(protItem)
-    
+
     val saveAsImage = new JMenuItem(Utils.loadString("S_SaveAsImage"))
     saveAsImage.addActionListener(new ActionListener {
-        lazy val fchooser = new SaveAs(kojoCtx)
-        override def actionPerformed(e: ActionEvent) {
-          val file = fchooser.chooseFile("PNG Image File", "png", Utils.stripDots(Utils.loadString("S_SaveAs")))
-          if (file != null) {
-            exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)
-          }
+      lazy val fchooser = new SaveAs(kojoCtx)
+      override def actionPerformed(e: ActionEvent) {
+        val file = fchooser.chooseFile("PNG Image File", "png", Utils.stripDots(Utils.loadString("S_SaveAs")))
+        if (file != null) {
+          exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)
         }
-      })
+      }
+    })
     add(saveAsImage)
 
     addSeparator()
 
     val resetPanZoomItem = new JMenuItem(Utils.loadString("S_ResetPanZoom"))
     resetPanZoomItem.addActionListener(new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          initCamera()
-        }
-      })
+      override def actionPerformed(e: ActionEvent) {
+        initCamera()
+      }
+    })
     add(resetPanZoomItem)
     val clearItem = new JMenuItem(Utils.loadString("S_Clear"))
     clearItem.addActionListener(new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          forceClear()
-        }
-      })
+      override def actionPerformed(e: ActionEvent) {
+        forceClear()
+      }
+    })
     add(clearItem)
 
     addSeparator()
@@ -833,19 +854,19 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(new FullScreenAction(kojoCtx))
     FullScreenAction.linkMenu(fullScreenItem)
     add(fullScreenItem)
-    
+
     addSeparator()
 
-    add("<html><em>%s</em></html>" format(Utils.loadString("S_MouseActions")))
+    add("<html><em>%s</em></html>" format (Utils.loadString("S_MouseActions")))
     addPopupMenuListener(new PopupMenuListener {
-        def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-          axesItem.setState(showAxes)
-          gridItem.setState(showGrid)
-          protItem.setState(showProt)
-        }
-        def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
-        def popupMenuCanceled(e: PopupMenuEvent) {}
-      })
+      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+        axesItem.setState(showAxes)
+        gridItem.setState(showGrid)
+        protItem.setState(showProt)
+      }
+      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
+      def popupMenuCanceled(e: PopupMenuEvent) {}
+    })
   }
 }
 
