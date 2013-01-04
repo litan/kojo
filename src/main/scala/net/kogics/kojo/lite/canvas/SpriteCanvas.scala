@@ -576,6 +576,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     gridOff()
     axesOff()
     Utils.runInSwingThreadAndWait {
+      setBackground(Color.white)
       showProt = false
       turtles.foreach { t => if (t == origTurtle) t.clear() else t.remove() }
       turtles = List(turtles.last)
@@ -708,10 +709,16 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   def cbounds = Utils.runInSwingThreadAndWait { getCamera.getViewBounds() }
 
   def setCanvasBackground(c: Paint) = Utils.runInSwingThread {
-    val bounds = cbounds
-    val rect = staging.API.rectangle(bounds.x, bounds.y, bounds.width, bounds.height)
-    rect.setFillColor(c)
-    rect.setPenColor(Color.white)
+    c match {
+      case color: Color =>
+        setBackground(color)
+      case paint: Paint =>
+        val bounds = cbounds
+        val rect = staging.API.rectangle(bounds.x, bounds.y, bounds.width, bounds.height)
+        rect.setFillColor(c)
+        rect.setPenThickness(0)
+        rect.setPenColor(c)
+    }
   }
   def setBackgroundH(c1: Color, c2: Color) = Utils.runInSwingThread {
     val bounds = cbounds
