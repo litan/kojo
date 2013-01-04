@@ -155,7 +155,7 @@ class Builtins extends RepeatCommands {
     UserCommand("penUp", Nil, "Makes the turtle not draw lines as it moves.")
 
     def setPenColor() = println("Please provide the color of the pen that the turtle should draw with - e.g setPenColor(blue)")
-    override def setPenColor(color: Color) = turtle0.setPenColor(color)
+    override def setPenColor(color: Paint) = turtle0.setPenColor(color)
     UserCommand("setPenColor", List("color"), "Specifies the color of the pen that the turtle draws with.")
 
     def setFillColor() = println("Please provide the fill color for the areas drawn by the turtle - e.g setFillColor(yellow)")
