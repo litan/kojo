@@ -135,12 +135,15 @@ class KojoCtx extends core.KojoCtx {
     topcs.seh.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
     topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
-    activateDrawingCanvas()
+    activateDrawingCanvasHolder()
+  }
+
+  def activateDrawingCanvasHolder() {
+    topcs.dch.activate()
   }
 
   def activateDrawingCanvas() {
-    topcs.dch.toFront()
-    topcs.dch.dc.requestFocusInWindow()
+    topcs.dch.activateCanvas()
   }
 
   def activateScriptEditor() {

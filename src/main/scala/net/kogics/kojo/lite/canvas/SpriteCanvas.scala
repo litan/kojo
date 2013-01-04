@@ -672,18 +672,15 @@ class SpriteCanvas private extends PCanvas with SCanvas {
   
   def activate() {
     def grabFocus() {
-      kojoCtx.activateDrawingCanvas()
+      requestFocusInWindow()
       getRoot.getDefaultInputManager.setKeyboardFocus(globalEl)
     }
-    Utils.schedule(0) {
-      // do it right away
-      grabFocus()
-    }
-    Utils.schedule(0.3) {
-      // and also a little later, in case the history mechanism gives 
-      // the focus to the script editor
-      grabFocus()
-    }
+    // try to make this play well with 
+    // (a) a slow system or a fast system
+    // (b) a toggle call at the beginning of a script or an activate call at the end
+    Utils.schedule(0) { grabFocus() }
+    Utils.schedule(0.3) { grabFocus() }
+    Utils.schedule(0.9) { grabFocus() }
   }
   
   def cbounds = Utils.runInSwingThreadAndWait { getCamera.getViewBounds() }

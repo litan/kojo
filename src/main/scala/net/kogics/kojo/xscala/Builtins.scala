@@ -582,7 +582,7 @@ Here's a partial list of the available commands:
   def animate(fn: => Unit) = staging.API.loop(fn)
   def stopAnimation() = ctx.stopAnimation()
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
-  def activateCanvas() = tCanvas.activate()
+  def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def Color(r: Int, g: Int, b: Int, a: Int = 255) = new Color(r, g, b, a)
   def ColorG(x1: Double, y1: Double, c1: Color, x2: Double, y2: Double, c2: Color, cyclic: Boolean = false) = {
     new GradientPaint(x1.toFloat, y1.toFloat, c1, x2.toFloat, y2.toFloat, c2, cyclic)
