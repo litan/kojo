@@ -17,18 +17,20 @@ package net.kogics.kojo
 package action
 
 import java.awt.Color
+import java.awt.GraphicsEnvironment
 import java.awt.event.ActionEvent
+
 import javax.swing.AbstractAction
 import javax.swing.Action
+import javax.swing.JCheckBoxMenuItem
 import javax.swing.JColorChooser
+import javax.swing.JFrame
+
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.util.Utils
+
+import FullScreenAction.sdev
 import lite.CodeExecutionSupport
-import java.awt.GraphicsEnvironment
-import javax.swing.JFrame
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
-import javax.swing.JCheckBoxMenuItem
 
 class ChooseColor(ctx: KojoCtx) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
   def actionPerformed(e: ActionEvent) {
@@ -120,13 +122,14 @@ class FullScreenAction(kojoCtx: => KojoCtx)
 
 //    dch.dc.addKeyListener(new KeyAdapter {
 //      override def keyPressed(event: KeyEvent) {
-//        if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+//        if (event.getKeyCode == KeyEvent.VK_ENTER && event.isControlDown && event.isShiftDown) {
 //          dch.dc.removeKeyListener(this)
 //          leaveFullScreen()
 //        }
 //      }
 //    })
-    dch.dc.requestFocusInWindow()
+    
+    kojoCtx.activateDrawingCanvas()
     menuItems foreach { _ setSelected true }
   }
 

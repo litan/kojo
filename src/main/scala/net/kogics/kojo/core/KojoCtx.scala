@@ -21,6 +21,7 @@ import net.kogics.kojo.lite.TopCs
 
 trait KojoCtx {
   def topcs: TopCs
+  def activateDrawingCanvasHolder()
   def activateDrawingCanvas()
   def activateScriptEditor()
   def activateOutputPane()

@@ -1,5 +1,5 @@
 // sample game - with characters made out of tangram pieces.
-switchToCanvasPerspective()
+toggleFullScreenCanvas()
 val len = 4
 val d = math.sqrt(2 * len * len)
 val d2 = d / 2
@@ -173,15 +173,11 @@ goodguy.act { self =>
     }
 }
 
-activateCanvas()
-
 onKeyPress { k =>
     k match {
-        case Kc.VK_ESCAPE => stopAnimation()
+        case Kc.VK_ESCAPE =>
+            stopAnimation()
+            toggleFullScreenCanvas()
         case _            =>
     }
-}
-
-onAnimationStop {
-    switchToDefaultPerspective()
 }

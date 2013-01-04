@@ -22,6 +22,7 @@ import net.kogics.kojo.lite.TopCs
 
 class KojoTestContext extends core.KojoCtx {
   def topcs: TopCs = null
+  def activateDrawingCanvasHolder() {}
   def activateDrawingCanvas() {}
   def activateScriptEditor() {}
   def activateOutputPane() {}
