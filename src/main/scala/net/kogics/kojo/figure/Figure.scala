@@ -57,7 +57,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
   @volatile private var listener: SpriteListener = NoopSpriteListener
 
   private var figAnimations: List[PActivity] = Nil
-  private var _lineColor: Color = _
+  private var _lineColor: Paint = _
   private var _fillColor: Paint = _
   private var _lineStroke: Stroke = _
 
@@ -116,7 +116,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
     }
   }
 
-  def setPenColor(color: java.awt.Color) {
+  def setPenColor(color: Paint) {
     Utils.runInSwingThread {
       _lineColor = color
     }

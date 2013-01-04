@@ -63,7 +63,7 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
   yBeam.setStrokePaint(Color.gray)
 
   private [kojo] val penPaths = new mutable.ArrayBuffer[PolyLine]
-  private var lineColor: Color = _
+  private var lineColor: Paint = _
   private var fillColor: Paint = _
   private [kojo] var lineStroke: Stroke = _
   private var font: Font = _
@@ -337,7 +337,7 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
     _animationDelay = d
   }
 
-  def setPenColor(color: Color) = Utils.runInSwingThread {
+  def setPenColor(color: Paint) = Utils.runInSwingThread {
     pen.setColor(color)
   }
 
@@ -549,7 +549,7 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
     def getThickness = lineStroke.asInstanceOf[BasicStroke].getLineWidth
     def getFontSize = font.getSize
     
-    private def rawSetAttrs(color: Color, thickness: Double, fColor: Paint, fontSize: Int) {
+    private def rawSetAttrs(color: Paint, thickness: Double, fColor: Paint, fontSize: Int) {
       lineColor = color
       val (cap, join) = capJoin(thickness)
       lineStroke = new BasicStroke(thickness.toFloat, cap, join)
@@ -557,7 +557,7 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
       font = new Font(new PText().getFont.getName, Font.PLAIN, fontSize)
     }
 
-    def setColor(color: Color) {
+    def setColor(color: Paint) {
       lineColor = color
       addNewPath()
     }

@@ -36,7 +36,7 @@ class PolyLine extends PNode {
 
   val points = new mutable.ArrayBuffer[Point2D.Double]
   var stroke = new BasicStroke(2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
-  var strokePaint = Color.red
+  var strokePaint: Paint = Color.red
 
   var closed = false
 
@@ -58,7 +58,7 @@ class PolyLine extends PNode {
     stroke = strk.asInstanceOf[BasicStroke]
   }
 
-  def setStrokePaint(c: Color) {
+  def setStrokePaint(c: Paint) {
     strokePaint = c
   }
 

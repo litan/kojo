@@ -118,7 +118,7 @@ object API {
   def screenExt = Screen.rect.getExt
 
   /** Fills the user screen with the specified color. */
-  def background(bc: Color) = {
+  def background(bc: Paint) = {
     withStyle(bc, null, 1) { rectangle(O, screenExt) }
   }
   //T ScreenMethodsTest ends
@@ -288,15 +288,15 @@ object API {
   def namedColor(s: String) = ColorMaker.color(s)
   def fill(c: Paint) = Impl.figure0.setFillColor(c)
   def noFill() = Impl.figure0.setFillColor(null)
-  def stroke(c: Color) = Impl.figure0.setPenColor(c)
+  def stroke(c: Paint) = Impl.figure0.setPenColor(c)
   def noStroke() = Impl.figure0.setPenColor(null)
   def strokeWidth(w: Double) = Impl.figure0.setPenThickness(w)
 
-  def setPenColor(color: Color) = stroke(color)
+  def setPenColor(color: Paint) = stroke(color)
   def setFillColor(color: Paint) = fill(color)
   def setPenThickness(w: Double) = strokeWidth(w)
   
-  def withStyle(fc: Color, sc: Color, sw: Double)(body: => Unit) =
+  def withStyle(fc: Paint, sc: Paint, sw: Double)(body: => Unit) =
     Style(fc, sc, sw)(body)
   implicit def ColorToRichColor (c: java.awt.Color) = RichColor(c)
   def lerpColor(from: RichColor, to: RichColor, amt: Double) =
@@ -596,7 +596,7 @@ trait StrokedShape extends BaseShape {
   val path: PPath
   def node = path
 
-  def stroke_=(color: Color) {
+  def stroke_=(color: Paint) {
     Utils.runInSwingThread {
       node.setStrokePaint(color)
       node.repaint()
@@ -605,7 +605,7 @@ trait StrokedShape extends BaseShape {
   def stroke = Utils.runInSwingThreadAndWait {
     node.getStrokePaint
   }
-  def stroke(color: Color) {
+  def stroke(color: Paint) {
     stroke = color
   }
 
@@ -619,7 +619,7 @@ trait StrokedShape extends BaseShape {
     node.getStroke.asInstanceOf[BasicStroke].getLineWidth
   }
 
-  def setPenColor(color: Color) = stroke(color)
+  def setPenColor(color: Paint) = stroke(color)
   def setPenThickness(w: Double) = strokeWidth(w)
 }
 
@@ -640,7 +640,7 @@ class Text(val text: String, val origin: Point) extends BaseShape {
   val tnode = Utils.textNode(text, origin.x, origin.y, Impl.canvas.camScale, 14)
   def node = tnode
 
-  def setPenColor(color: Color) {
+  def setPenColor(color: Paint) {
     Utils.runInSwingThread {
       tnode.setTextPaint(color)
       tnode.repaint()
@@ -745,7 +745,7 @@ object Composite {
 
 object Style {
   val savedStyles =
-    new scala.collection.mutable.Stack[(Paint, Color, java.awt.Stroke)]()
+    new scala.collection.mutable.Stack[(Paint, Paint, java.awt.Stroke)]()
   val f = Impl.figure0
 
   def save {
@@ -765,7 +765,7 @@ object Style {
     }
   }
 
-  def apply(fc: Color, sc: Color, sw: Double)(body: => Unit) = {
+  def apply(fc: Paint, sc: Paint, sw: Double)(body: => Unit) = {
     save
     Utils.runInSwingThread {
       f.setFillColor(fc)

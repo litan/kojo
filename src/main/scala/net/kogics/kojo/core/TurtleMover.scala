@@ -13,17 +13,17 @@
  *
  */
 package net.kogics.kojo.core
-import java.awt.Color
+
 import java.awt.Paint
 
-case class Style(val penColor: Color, val penThickness: Double, val fillColor: Paint, val fontSize: Int)
+case class Style(val penColor: Paint, val penThickness: Double, val fillColor: Paint, val fontSize: Int)
 
 trait TurtleMover extends RichTurtleCommands {
   def forward(n: Double): Unit
   def turn(angle: Double): Unit
   def penUp(): Unit
   def penDown(): Unit
-  def setPenColor(color: Color): Unit
+  def setPenColor(color: Paint): Unit
   def setPenThickness(t: Double): Unit
   def setFillColor(color: Paint): Unit
   def saveStyle(): Unit
