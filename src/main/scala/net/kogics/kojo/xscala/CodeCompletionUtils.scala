@@ -126,6 +126,7 @@ object CodeCompletionUtils {
     "stopAnimation" -> "stopAnimation()",
     "isKeyPressed" -> "isKeyPressed(Kc.VK_${cursor})",
     "activateCanvas" -> "activateCanvas()",
+    "activateEditor" -> "activateEditor()",
     "setBackground" -> "setBackground(${paint})",
     "setBackgroundH" -> "setBackgroundH(${color1}, ${color2})",
     "setBackgroundV" -> "setBackgroundV(${color1}, ${color2})",
