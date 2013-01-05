@@ -573,15 +573,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       outoutPanel.add(readInputPanel, BorderLayout.SOUTH)
       outoutPanel.revalidate()
       kojoCtx.activateOutputPane()
-      Utils.schedule(0.25) { inputField.requestFocusInWindow() }
-      Utils.schedule(1) { inputField.requestFocusInWindow() }
+      Utils.schedule(0.1) { inputField.requestFocusInWindow() }
+      Utils.schedule(0.9) { inputField.requestFocusInWindow() }
       inputField.addActionListener(new ActionListener {
         def actionPerformed(e: ActionEvent) {
           println("%s: %s" format (prompt, inputField.getText))
           input.set(inputField.getText)
           outoutPanel.remove(readInputPanel)
           outoutPanel.revalidate()
-          kojoCtx.activateScriptEditor()
+//          kojoCtx.activateScriptEditor()
         }
       })
     }
