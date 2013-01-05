@@ -1,18 +1,15 @@
 package net.kogics.kojo.lite
 
 import java.awt.Dimension
-import java.awt.GraphicsEnvironment
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
+
 import javax.swing.AbstractAction
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JDialog
 import javax.swing.JEditorPane
-import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JMenu
 import javax.swing.JMenuBar
@@ -23,16 +20,16 @@ import javax.swing.JScrollPane
 import javax.swing.JTextField
 import javax.swing.KeyStroke
 import javax.swing.text.html.HTMLEditorKit
+
 import net.kogics.kojo.action.CloseFile
+import net.kogics.kojo.action.FullScreenAction
 import net.kogics.kojo.action.LoadFrom
 import net.kogics.kojo.action.NewFile
 import net.kogics.kojo.action.Save
 import net.kogics.kojo.action.SaveAs
 import net.kogics.kojo.util.Utils
+
 import net.kogics.kojo.lite.Main
-import net.kogics.kojo.action.FullScreenAction
-import java.awt.event.ComponentAdapter
-import java.awt.event.ComponentEvent
 
 trait AppMenu { self: Main.type =>
   def menuBar = {
@@ -224,6 +221,17 @@ trait AppMenu { self: Main.type =>
     FullScreenAction.linkMenu(fullScreenItem)
     windowMenu.add(fullScreenItem)
 
+    // Here's how one can intercept a top level menu before it becomes visible
+    // With this, we could have done without the linkMenu stuff above
+    //    windowMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener {
+    //      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+    //        println("Menu showing up...")
+    //      }
+    //      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
+    //
+    //      def popupMenuCanceled(e: PopupMenuEvent) {}
+    //    })
+
     menuBar.add(windowMenu)
 
     val langMenu = new JMenu(Utils.loadString("S_Language"))
@@ -293,7 +301,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 040113-1 <br/>
+              Version: 040113-2 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
