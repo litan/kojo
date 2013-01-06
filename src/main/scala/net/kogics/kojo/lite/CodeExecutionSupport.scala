@@ -42,11 +42,14 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
 import javax.swing.JTextField
+import javax.swing.JTextPane
 import javax.swing.JToolBar
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.event.HyperlinkEvent
 import javax.swing.event.HyperlinkListener
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyleContext
 
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
@@ -61,6 +64,7 @@ import net.kogics.kojo.livecoding.InteractiveManipulator
 import net.kogics.kojo.livecoding.ManipulationContext
 import net.kogics.kojo.util.FutureResult
 import net.kogics.kojo.util.RichFile.enrichFile
+import net.kogics.kojo.util.TerminalAnsiCodes
 
 import util.Utils
 
@@ -78,9 +82,13 @@ object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
 
 class CodeExecutionSupport private extends core.CodeCompletionSupport with ManipulationContext {
   val Log = Logger.getLogger(getClass.getName);
+  val promptColor = new Color(178, 66, 0)
+  val codeColor = new Color(0x009b00)
+  val outputColor = new Color(32, 32, 32)
+
   val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
-  val outputWindow = new JTextArea
+  val outputWindow = new JTextPane
   val errorWindow = new JEditorPane
   errorWindow.setContentType("text/html")
 
@@ -118,11 +126,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val codeRunner = makeCodeRunner()
 
   val statusStrip = new StatusStrip()
-
-  val promptMarkColor = new Color(0x2fa600)
-  val promptColor = new Color(0x883300)
-  val codeColor = new Color(0x009b00)
-  val outputColor = new Color(32, 32, 32)
 
   @volatile var showCode = false
   @volatile var verboseOutput = false
@@ -581,17 +584,32 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
           input.set(inputField.getText)
           outoutPanel.remove(readInputPanel)
           outoutPanel.revalidate()
-//          kojoCtx.activateScriptEditor()
+          //          kojoCtx.activateScriptEditor()
         }
       })
     }
     input.get
   }
 
-  def appendOutput(s: String) {
-    outputWindow.append(s)
-    outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
-    outLayout.show(outPanel, "Output")
+  val baseStyle = StyleContext.getDefaultStyleContext.getStyle(StyleContext.DEFAULT_STYLE)
+  def appendOutput(s: String, color: Color) {
+    if (TerminalAnsiCodes.containsColorCode(s)) {
+      TerminalAnsiCodes.parse(s) foreach { cstr =>
+        appendOutput(cstr._1, cstr._2)
+      }
+    }
+    else {
+      val doc = outputWindow.getStyledDocument()
+      var colorStyle = doc.getStyle(color.getRGB().toString)
+      if (colorStyle == null) {
+        colorStyle = doc.addStyle(color.getRGB().toString, baseStyle)
+        StyleConstants.setForeground(colorStyle, color)
+      }
+
+      doc.insertString(doc.getLength, s, colorStyle)
+      outputWindow.setCaretPosition(doc.getLength)
+      outLayout.show(outPanel, "Output")
+    }
   }
 
   @volatile var errText = ""
@@ -657,7 +675,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def showOutput(outText: String, color: Color): Unit = {
     Utils.runInSwingThread {
-      appendOutput(outText)
+      appendOutput(outText, color)
       enableClearButton()
     }
     lastOutput = outText
