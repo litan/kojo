@@ -17,14 +17,14 @@ import javax.swing.JEditorPane
 import javax.swing.JMenuItem
 import javax.swing.JPanel
 import javax.swing.JPopupMenu
-import javax.swing.JTextArea
+import javax.swing.JTextPane
 import javax.swing.KeyStroke
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
 import net.kogics.kojo.util.Utils
 
-class OutputWindowHolder(val ow: JTextArea, val ew: JEditorPane, val oPanel: JPanel, ctx: core.KojoCtx)
+class OutputWindowHolder(val ow: JTextPane, val ew: JEditorPane, val oPanel: JPanel, ctx: core.KojoCtx)
   extends BaseHolder("OW", Utils.loadString("CTL_OutputTopComponent"), oPanel) {
 
   var fontSize = 13
@@ -33,8 +33,8 @@ class OutputWindowHolder(val ow: JTextArea, val ew: JEditorPane, val oPanel: JPa
   }
   updateFont()
   ow.setForeground(new Color(32, 32, 32))
-  ow.setLineWrap(true)
-  ow.setWrapStyleWord(true)
+  //  ow.setLineWrap(true)
+  //  ow.setWrapStyleWord(true)
 
   val popup = new JPopupMenu {
     val verboseOutput = new JCheckBoxMenuItem(Utils.loadString("S_ShowVerboseOutput"))
