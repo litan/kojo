@@ -710,9 +710,11 @@ class SpriteCanvas private extends PCanvas with SCanvas {
 
   def setCanvasBackground(c: Paint) = Utils.runInSwingThread {
     c match {
-      case color: Color =>
+      case color: Color if color.getAlpha == 255 =>
+        // full screen windows get messed up with transparent color backgrounds
+        // so set window background only if color is fully opaque 
         setBackground(color)
-      case paint: Paint =>
+      case _ =>
         val bounds = cbounds
         val rect = staging.API.rectangle(bounds.x, bounds.y, bounds.width, bounds.height)
         rect.setFillColor(c)
