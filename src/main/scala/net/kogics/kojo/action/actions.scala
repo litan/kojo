@@ -38,8 +38,8 @@ class ChooseColor(ctx: KojoCtx) extends AbstractAction(Utils.loadString("S_Choos
     if (sColor != null) {
       val cprint = CodeExecutionSupport.instance.showOutput(_: String, _: Color)
       cprint("\u2500" * 3 + "\n", sColor)
-      println("Selected Color:   ")
-      // cprint("\u2588" * 6 + "\n", sColor)
+      print("Selected Color:   ")
+      cprint("\u2588" * 6 + "\n", sColor)
       val color = if (sColor.getAlpha < 255) {
         "Color(%d, %d, %d, %d)" format (sColor.getRed, sColor.getGreen, sColor.getBlue, sColor.getAlpha)
       }
