@@ -597,6 +597,7 @@ abstract class BasePicList(val pics: List[Picture])
 object HPics {
   def apply(pics: Picture*): HPics = new HPics(pics.toList)
   def apply(pics: List[Picture]): HPics = new HPics(pics)
+  def apply(pics: Vector[Picture]): HPics = new HPics(pics.toList)
 }
 
 class HPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -622,6 +623,7 @@ class HPics(pics: List[Picture]) extends BasePicList(pics) {
 object VPics {
   def apply(pics: Picture*): VPics = new VPics(pics.toList)
   def apply(pics: List[Picture]): VPics = new VPics(pics)
+  def apply(pics: Vector[Picture]): VPics = new VPics(pics.toList)
 }
 
 class VPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -647,6 +649,7 @@ class VPics(pics: List[Picture]) extends BasePicList(pics) {
 object GPics {
   def apply(pics: Picture*): GPics = new GPics(pics.toList)
   def apply(pics: List[Picture]): GPics = new GPics(pics)
+  def apply(pics: Vector[Picture]): GPics = new GPics(pics.toList)
 }
 
 class GPics(pics: List[Picture]) extends BasePicList(pics) {
