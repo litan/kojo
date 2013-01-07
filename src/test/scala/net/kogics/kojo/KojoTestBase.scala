@@ -65,6 +65,8 @@ class KojoTestContext extends core.KojoCtx {
   def switchToStoryViewingPerspective() {}
   def switchToHistoryBrowsingPerspective() {}
   def switchToCanvasPerspective() {}
+  def setOutputBackground(color: Color) {}
+  def setOutputForeground(color: Color) {}
   var fps = 50
 }
 

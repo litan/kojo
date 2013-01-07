@@ -22,7 +22,7 @@ object TerminalAnsiCodes {
   val NormalColor = new Color(32, 32, 32)
   val ESC = "\u001b"
 
-  def containsColorCode(s: String) = s.contains(s"$ESC[")
+  def isColoredString(s: String) = s.startsWith(s"$ESC[")
 
   def parse(s: String): Seq[(String, Color)] = {
     val strs = s.split(s"$ESC\\[")
