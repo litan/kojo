@@ -22,14 +22,15 @@ import java.awt.event.ActionEvent
 
 import javax.swing.AbstractAction
 import javax.swing.Action
-import javax.swing.JCheckBoxMenuItem
 import javax.swing.JColorChooser
+import javax.swing.JComponent
 import javax.swing.JFrame
 
 import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.lite.topc.BaseHolder
 import net.kogics.kojo.util.Utils
 
-import FullScreenAction.sdev
+import FullScreenSupport.sdev
 import lite.CodeExecutionSupport
 
 class ChooseColor(ctx: KojoCtx) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
@@ -95,55 +96,41 @@ class NewFile(ctx: KojoCtx)
   }
 }
 
-object FullScreenAction {
-  var menuItems: Seq[JCheckBoxMenuItem] = Vector()
+object FullScreenSupport {
   lazy val sdev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
-  var frame: JFrame = _
-
-  def apply(kojoCtx: => KojoCtx) = new FullScreenAction(kojoCtx)
-  def linkMenu(menuItem: JCheckBoxMenuItem) {
-    menuItems :+= menuItem
-  }
+  def isFullScreenOn = sdev.getFullScreenWindow != null
 }
 
-class FullScreenAction(kojoCtx: => KojoCtx)
-  extends AbstractAction(Utils.loadString("S_FullScreenCanvas")) {
-  import FullScreenAction._
-  lazy val dch = kojoCtx.topcs.dch
+class FullScreenBaseAction(kojoCtx: => KojoCtx, key: String, fsComp: => JComponent, fsCompHolder: => BaseHolder)
+  extends AbstractAction(key) {
+  import FullScreenSupport._
+  var frame: JFrame = _
+  var fullScreen = false
 
-  def isFullScreen = sdev.getFullScreenWindow != null
+  def isFullScreen = fullScreen
 
   def enterFullScreen() {
+    fullScreen = true
     frame = new JFrame
     frame.setUndecorated(true)
-    frame.getContentPane.add(dch.dc)
+    frame.getContentPane.add(fsComp)
     sdev.setFullScreenWindow(frame)
     frame.validate()
-
-//    dch.dc.addKeyListener(new KeyAdapter {
-//      override def keyPressed(event: KeyEvent) {
-//        if (event.getKeyCode == KeyEvent.VK_ENTER && event.isControlDown && event.isShiftDown) {
-//          dch.dc.removeKeyListener(this)
-//          leaveFullScreen()
-//        }
-//      }
-//    })
-    
-    kojoCtx.activateDrawingCanvas()
-    menuItems foreach { _ setSelected true }
   }
 
   def leaveFullScreen() {
+    fullScreen = false
     sdev.setFullScreenWindow(null)
     frame.setVisible(false)
-    dch.add(dch.dc)
-    dch.dc.revalidate()
-    menuItems foreach { _ setSelected false }
+    fsCompHolder.add(fsComp)
+    fsComp.revalidate()
   }
 
   def actionPerformed(e: ActionEvent) {
     if (!isFullScreen) {
-      enterFullScreen()
+      if (!FullScreenSupport.isFullScreenOn) {
+        enterFullScreen()
+      }
     }
     else {
       leaveFullScreen()
@@ -151,4 +138,48 @@ class FullScreenAction(kojoCtx: => KojoCtx)
   }
 }
 
+object FullScreenCanvasAction {
+  var instance: FullScreenCanvasAction = _
+  def apply(kojoCtx: => KojoCtx) = {
+    if (instance == null) {
+      instance = new FullScreenCanvasAction(kojoCtx)
+    }
+    instance
+  }
+}
 
+class FullScreenCanvasAction(kojoCtx: => KojoCtx)
+  extends FullScreenBaseAction(
+    kojoCtx,
+    Utils.loadString("S_FullScreenCanvas"),
+    kojoCtx.topcs.dch.dc,
+    kojoCtx.topcs.dch
+  ) {
+  override def enterFullScreen() {
+    super.enterFullScreen()
+    kojoCtx.activateDrawingCanvas()
+  }
+}
+
+object FullScreenOutputAction {
+  var instance: FullScreenOutputAction = _
+  def apply(kojoCtx: => KojoCtx) = {
+    if (instance == null) {
+      instance = new FullScreenOutputAction(kojoCtx)
+    }
+    instance
+  }
+}
+
+class FullScreenOutputAction(kojoCtx: => KojoCtx)
+  extends FullScreenBaseAction(
+    kojoCtx,
+    Utils.loadString("S_FullScreenOutput"),
+    kojoCtx.topcs.owh.oPanel,
+    kojoCtx.topcs.owh
+  ) {
+  override def enterFullScreen() {
+    super.enterFullScreen()
+    kojoCtx.activateOutputPane()
+  }
+}

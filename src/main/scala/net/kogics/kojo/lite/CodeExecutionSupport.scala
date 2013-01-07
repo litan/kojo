@@ -33,6 +33,7 @@ import java.io.Writer
 import java.util.concurrent.CountDownLatch
 import java.util.logging.Logger
 
+import javax.swing.BorderFactory
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JEditorPane
@@ -96,7 +97,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val outLayout = new CardLayout
   val outPanel = new JPanel(outLayout)
   val outoutPanel = new JPanel(new BorderLayout)
-  outoutPanel.add(new JScrollPane(outputWindow), BorderLayout.CENTER)
+  val outoutSp = new JScrollPane(outputWindow)
+  outoutSp.setBorder(BorderFactory.createEmptyBorder())
+  outoutPanel.add(outoutSp, BorderLayout.CENTER)
   var readInputPanel: JPanel = new JPanel
   outPanel.add(outoutPanel, "Output")
   outPanel.add(new JScrollPane(errorWindow), "Error")

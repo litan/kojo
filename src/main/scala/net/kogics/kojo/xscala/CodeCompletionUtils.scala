@@ -75,6 +75,7 @@ object CodeCompletionUtils {
     "switchToHistoryBrowsingPerspective" -> "switchToHistoryBrowsingPerspective()",
     "switchToCanvasPerspective" -> "switchToCanvasPerspective()",
     "toggleFullScreenCanvas" -> "toggleFullScreenCanvas()",
+    "toggleFullScreenOutput" -> "toggleFullScreenOutput()",
     "setOutputBackground" -> "setOutputBackground(${color})",
     "setOutputTextColor" -> "setOutputTextColor(${color})",
     "onKeyPress" -> "onKeyPress { k =>\n    k match {\n      case Kc.VK_RIGHT => ${cursor}\n         case _ => \n    }\n}",

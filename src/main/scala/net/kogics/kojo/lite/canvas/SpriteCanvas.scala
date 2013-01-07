@@ -35,7 +35,7 @@ import javax.swing.JPopupMenu
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
-import net.kogics.kojo.action.FullScreenAction
+import net.kogics.kojo.action.FullScreenCanvasAction
 import net.kogics.kojo.action.SaveAs
 import net.kogics.kojo.core
 import net.kogics.kojo.core.Cm
@@ -860,8 +860,8 @@ class SpriteCanvas private extends PCanvas with SCanvas {
 
     addSeparator()
 
-    val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(new FullScreenAction(kojoCtx))
-    FullScreenAction.linkMenu(fullScreenItem)
+    val fsCanvasAction = FullScreenCanvasAction(kojoCtx)
+    val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsCanvasAction)
     add(fullScreenItem)
 
     addSeparator()
@@ -872,6 +872,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
         axesItem.setState(showAxes)
         gridItem.setState(showGrid)
         protItem.setState(showProt)
+        fullScreenItem.setState(fsCanvasAction.isFullScreen)
       }
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
       def popupMenuCanceled(e: PopupMenuEvent) {}
