@@ -162,15 +162,20 @@ trait AppMenu { self: Main.type =>
     animGameMenu.add(menuItemFor(Utils.loadString("S_Hunted"), "hunted.kojo"))
     samplesMenu.add(animGameMenu)
 
-    val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
-    mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
-    samplesMenu.add(mgeomMenu)
-
     val musicMenu = new JMenu(Utils.loadString("S_Music"))
     musicMenu.add(menuItemFor(Utils.loadString("S_SomeNotes"), "some-notes.kojo"))
     musicMenu.add(menuItemFor(Utils.loadString("S_Tune1"), "tune1.kojo"))
     musicMenu.add(menuItemFor(Utils.loadString("S_Tune2"), "tune2.kojo"))
     samplesMenu.add(musicMenu)
+
+    val genProgMenu = new JMenu(Utils.loadString("S_GeneralProgramming"))
+    genProgMenu.add(menuItemFor(Utils.loadString("S_InputOutput"), "read-vector-mean.kojo"))
+    genProgMenu.add(menuItemFor(Utils.loadString("S_InputGraphics"), "read-vector-bargraph.kojo"))
+    samplesMenu.add(genProgMenu)
+    
+    val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
+    mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
+    samplesMenu.add(mgeomMenu)
 
     menuBar.add(samplesMenu)
 
@@ -301,7 +306,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 040113-2 <br/>
+              Version: 070113-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
