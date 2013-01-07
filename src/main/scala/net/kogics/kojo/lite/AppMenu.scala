@@ -19,10 +19,13 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextField
 import javax.swing.KeyStroke
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
 import javax.swing.text.html.HTMLEditorKit
 
 import net.kogics.kojo.action.CloseFile
-import net.kogics.kojo.action.FullScreenAction
+import net.kogics.kojo.action.FullScreenCanvasAction
+import net.kogics.kojo.action.FullScreenOutputAction
 import net.kogics.kojo.action.LoadFrom
 import net.kogics.kojo.action.NewFile
 import net.kogics.kojo.action.Save
@@ -172,7 +175,7 @@ trait AppMenu { self: Main.type =>
     genProgMenu.add(menuItemFor(Utils.loadString("S_InputOutput"), "read-vector-mean.kojo"))
     genProgMenu.add(menuItemFor(Utils.loadString("S_InputGraphics"), "read-vector-bargraph.kojo"))
     samplesMenu.add(genProgMenu)
-    
+
     val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
     mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
     samplesMenu.add(mgeomMenu)
@@ -222,20 +225,23 @@ trait AppMenu { self: Main.type =>
 
     windowMenu.addSeparator()
 
-    val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(FullScreenAction(kojoCtx))
-    FullScreenAction.linkMenu(fullScreenItem)
-    windowMenu.add(fullScreenItem)
+    val fsCanvasAction = FullScreenCanvasAction(kojoCtx)
+    val fullScreenCanvasItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsCanvasAction)
+    windowMenu.add(fullScreenCanvasItem)
 
-    // Here's how one can intercept a top level menu before it becomes visible
-    // With this, we could have done without the linkMenu stuff above
-    //    windowMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener {
-    //      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-    //        println("Menu showing up...")
-    //      }
-    //      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
-    //
-    //      def popupMenuCanceled(e: PopupMenuEvent) {}
-    //    })
+    val fsOutputAction = FullScreenOutputAction(kojoCtx)
+    val fullScreenOutputItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsOutputAction)
+    windowMenu.add(fullScreenOutputItem)
+
+    windowMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener {
+      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+        fullScreenCanvasItem.setState(fsCanvasAction.isFullScreen)
+        fullScreenOutputItem.setState(fsOutputAction.isFullScreen)
+      }
+      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
+
+      def popupMenuCanceled(e: PopupMenuEvent) {}
+    })
 
     menuBar.add(windowMenu)
 
@@ -306,7 +312,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 070113-1 <br/>
+              Version: 070113-2 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
