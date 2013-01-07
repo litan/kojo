@@ -284,4 +284,12 @@ class KojoCtx extends core.KojoCtx {
   def clearOutput() {
     codeSupport.clrOutput()
   }
+
+  def setOutputBackground(color: Color) {
+    codeSupport.setOutputBackground(color)
+  }
+
+  def setOutputForeground(color: Color) {
+    codeSupport.setOutputForeground(color)
+  }
 }

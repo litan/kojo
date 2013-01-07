@@ -19,13 +19,19 @@ import javax.swing.JPanel
 import javax.swing.JPopupMenu
 import javax.swing.JTextPane
 import javax.swing.KeyStroke
+import javax.swing.UIDefaults
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
+import net.kogics.kojo.util.NoOpPainter
 import net.kogics.kojo.util.Utils
 
 class OutputWindowHolder(val ow: JTextPane, val ew: JEditorPane, val oPanel: JPanel, ctx: core.KojoCtx)
   extends BaseHolder("OW", Utils.loadString("CTL_OutputTopComponent"), oPanel) {
+
+  val tdef = new UIDefaults();
+  tdef.put("TextPane[Enabled].backgroundPainter", new NoOpPainter);
+  ow.putClientProperty("Nimbus.Overrides", tdef);
 
   var fontSize = 13
   def updateFont() {
@@ -33,8 +39,7 @@ class OutputWindowHolder(val ow: JTextPane, val ew: JEditorPane, val oPanel: JPa
   }
   updateFont()
   ow.setForeground(new Color(32, 32, 32))
-  //  ow.setLineWrap(true)
-  //  ow.setWrapStyleWord(true)
+  ow.setBackground(Color.white)
 
   val popup = new JPopupMenu {
     val verboseOutput = new JCheckBoxMenuItem(Utils.loadString("S_ShowVerboseOutput"))

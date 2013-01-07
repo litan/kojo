@@ -84,7 +84,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val Log = Logger.getLogger(getClass.getName);
   val promptColor = new Color(178, 66, 0)
   val codeColor = new Color(0x009b00)
-  val outputColor = new Color(32, 32, 32)
+  val DefaultOutputColor = new Color(32, 32, 32)
+  var outputColor = DefaultOutputColor
 
   val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
@@ -550,6 +551,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def clrOutput() {
     Utils.runInSwingThread {
+      outputColor = DefaultOutputColor
+      outputWindow.setBackground(Color.white)
       outputWindow.setText("")
       errorWindow.setText("")
       outoutPanel.remove(readInputPanel)
@@ -593,7 +596,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   val baseStyle = StyleContext.getDefaultStyleContext.getStyle(StyleContext.DEFAULT_STYLE)
   def appendOutput(s: String, color: Color) {
-    if (TerminalAnsiCodes.containsColorCode(s)) {
+    if (TerminalAnsiCodes.isColoredString(s)) {
       TerminalAnsiCodes.parse(s) foreach { cstr =>
         appendOutput(cstr._1, cstr._2)
       }
@@ -610,6 +613,23 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       outputWindow.setCaretPosition(doc.getLength)
       outLayout.show(outPanel, "Output")
     }
+  }
+
+  def setOutputBackground(color: Color) = Utils.runInSwingThread {
+    // works after nimbus painter hack
+    outputWindow.setBackground(color)
+
+    // problem with code below: 
+    // works only for previous text
+    // does not fill out the whole background
+    //    val background = new SimpleAttributeSet()
+    //    StyleConstants.setBackground(background, color)
+    //    val doc = outputWindow.getStyledDocument
+    //    doc.setCharacterAttributes(0, doc.getLength, background, false)
+  }
+
+  def setOutputForeground(color: Color) = Utils.runInSwingThread {
+    outputColor = color
   }
 
   @volatile var errText = ""
@@ -671,14 +691,23 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     outLayout.show(outPanel, "Error")
   }
 
-  def showOutput(outText: String): Unit = showOutput(outText, outputColor)
-
-  def showOutput(outText: String, color: Color): Unit = {
+  def showOutput(outText: String) {
     Utils.runInSwingThread {
-      appendOutput(outText, color)
-      enableClearButton()
+      showOutputHelper(outText, outputColor)
     }
     lastOutput = outText
+  }
+
+  def showOutput(outText: String, color: Color) {
+    Utils.runInSwingThread {
+      showOutputHelper(outText, color)
+    }
+    lastOutput = outText
+  }
+
+  def showOutputHelper(outText: String, color: Color): Unit = {
+    appendOutput(outText, color)
+    enableClearButton()
   }
 
   def showErrorMsg(errMsg: String) {
