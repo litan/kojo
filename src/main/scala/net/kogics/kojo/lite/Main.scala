@@ -2,8 +2,14 @@ package net.kogics.kojo.lite
 
 import java.awt.Frame
 import java.awt.GridLayout
+import java.awt.Toolkit
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+
+import javax.swing.JFrame
+import javax.swing.JPanel
+import javax.swing.UIManager
+import javax.swing.WindowConstants
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
@@ -24,10 +30,6 @@ import net.kogics.kojo.xscala.Builtins
 
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.theme.ThemeMap
-import javax.swing.JFrame
-import javax.swing.JPanel
-import javax.swing.UIManager
-import javax.swing.WindowConstants
 
 object Main extends AppMenu {
 
@@ -153,7 +155,6 @@ object Main extends AppMenu {
 
       splash.close()
 
-      //      frame.setBounds(100, 100, 600, 500)
       frame.addWindowListener(new WindowAdapter {
         override def windowClosing(e: WindowEvent) {
           appExit()
@@ -162,6 +163,10 @@ object Main extends AppMenu {
       frame.setIconImage(Utils.loadImage("/images/kojo48.png"))
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
       frame.pack()
+
+      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+      frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
+
       frame.setVisible(true)
 
       if (args.length == 1) {
