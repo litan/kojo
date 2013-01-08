@@ -2,8 +2,6 @@ package net.kogics.kojo
 package lite
 package topc
 
-import java.awt.Color
-import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusAdapter
@@ -13,11 +11,8 @@ import java.awt.event.KeyEvent
 
 import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
-import javax.swing.JEditorPane
 import javax.swing.JMenuItem
-import javax.swing.JPanel
 import javax.swing.JPopupMenu
-import javax.swing.JTextPane
 import javax.swing.KeyStroke
 import javax.swing.UIDefaults
 import javax.swing.event.PopupMenuEvent
@@ -25,23 +20,20 @@ import javax.swing.event.PopupMenuListener
 
 import net.kogics.kojo.action.FullScreenOutputAction
 import net.kogics.kojo.action.FullScreenSupport
+import net.kogics.kojo.lite.CodeExecutionSupport
 import net.kogics.kojo.util.NoOpPainter
 import net.kogics.kojo.util.Utils
 
-class OutputWindowHolder(val ow: JTextPane, val ew: JEditorPane, val oPanel: JPanel, ctx: core.KojoCtx)
-  extends BaseHolder("OW", Utils.loadString("CTL_OutputTopComponent"), oPanel) {
+class OutputWindowHolder(codeSupport: CodeExecutionSupport, ctx: core.KojoCtx)
+  extends BaseHolder("OW", Utils.loadString("CTL_OutputTopComponent"), codeSupport.outPanel) {
+  
+  val ow = codeSupport.outputWindow
+  val ew = codeSupport.errorWindow
+  val oPanel = codeSupport.outPanel
 
   val tdef = new UIDefaults();
   tdef.put("TextPane[Enabled].backgroundPainter", new NoOpPainter);
   ow.putClientProperty("Nimbus.Overrides", tdef);
-
-  var fontSize = 13
-  def updateFont() {
-    ow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, fontSize))
-  }
-  updateFont()
-  ow.setForeground(new Color(32, 32, 32))
-  ow.setBackground(Color.white)
 
   val popup = new JPopupMenu {
     val verboseOutput = new JCheckBoxMenuItem(Utils.loadString("S_ShowVerboseOutput"))
@@ -74,8 +66,7 @@ class OutputWindowHolder(val ow: JTextPane, val ew: JEditorPane, val oPanel: JPa
 
     val increaseFontSizeAction = new AbstractAction(Utils.loadString("S_IncreaseFontSize")) {
       override def actionPerformed(e: ActionEvent) {
-        fontSize += 1
-        updateFont()
+        codeSupport.increaseOutputFontSize()
       }
     }
     val incrFontSizeItem = new JMenuItem(increaseFontSizeAction)
@@ -89,8 +80,7 @@ class OutputWindowHolder(val ow: JTextPane, val ew: JEditorPane, val oPanel: JPa
 
     val decreaseFontSizeAction = new AbstractAction(Utils.loadString("S_DecreaseFontSize")) {
       override def actionPerformed(e: ActionEvent) {
-        fontSize -= 1
-        updateFont()
+        codeSupport.decreaseOutputFontSize()
       }
     }
     val decrFontSizeItem = new JMenuItem(decreaseFontSizeAction)

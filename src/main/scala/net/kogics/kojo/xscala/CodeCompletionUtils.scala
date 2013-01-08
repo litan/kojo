@@ -78,6 +78,7 @@ object CodeCompletionUtils {
     "toggleFullScreenOutput" -> "toggleFullScreenOutput()",
     "setOutputBackground" -> "setOutputBackground(${color})",
     "setOutputTextColor" -> "setOutputTextColor(${color})",
+    "setOutputTextFontSize" -> "setOutputTextFontSize(${size})",
     "onKeyPress" -> "onKeyPress { k =>\n    k match {\n      case Kc.VK_RIGHT => ${cursor}\n         case _ => \n    }\n}",
     "onKeyRelease" -> "onKeyRelease { k =>\n    k match {\n      case Kc.VK_RIGHT => ${cursor}\n         case _ => \n    }\n}",
     "onMousePress" -> "onMousePress { (x, y) =>\n    ${cursor}\n}",

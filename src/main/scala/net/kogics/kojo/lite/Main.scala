@@ -136,19 +136,20 @@ object Main extends AppMenu {
 
       codePane = new RSyntaxTextArea(5, 80)
       codeSupport = CodeExecutionSupport.initedInstance(codePane, kojoCtx)
+      
+      kojoCtx.frame = frame
+      kojoCtx.codeSupport = codeSupport
+      kojoCtx.control = control
+      
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, kojoCtx)
       scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport, frame)
-      val outputHolder = new OutputWindowHolder(codeSupport.outputWindow, codeSupport.errorWindow, codeSupport.outPanel, kojoCtx)
+      val outputHolder = new OutputWindowHolder(codeSupport, kojoCtx)
       val storyHolder = new StoryTellerHolder(StoryTeller.instance)
       val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, kojoCtx)
       val d3Holder = new D3CanvasHolder(Canvas3D.instance, kojoCtx)
       val historyHolder = new HistoryHolder(new HistoryPanel(codeSupport))
 
       kojoCtx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder)
-      kojoCtx.frame = frame
-      kojoCtx.codeSupport = codeSupport
-      kojoCtx.control = control
-
       kojoCtx.switchToDefaultPerspective()
 
       frame.setJMenuBar(menuBar)

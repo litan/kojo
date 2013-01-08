@@ -292,4 +292,8 @@ class KojoCtx extends core.KojoCtx {
   def setOutputForeground(color: Color) {
     codeSupport.setOutputForeground(color)
   }
+  
+  def setOutputFontSize(size: Int) {
+    codeSupport.setOutputFontSize(size)
+  }
 }

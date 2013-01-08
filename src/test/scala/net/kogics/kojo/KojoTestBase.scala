@@ -67,6 +67,7 @@ class KojoTestContext extends core.KojoCtx {
   def switchToCanvasPerspective() {}
   def setOutputBackground(color: Color) {}
   def setOutputForeground(color: Color) {}
+  def setOutputFontSize(n: Int) {}
   var fps = 50
 }
 
