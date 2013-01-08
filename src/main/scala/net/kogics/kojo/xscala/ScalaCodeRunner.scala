@@ -458,6 +458,9 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     def makeSettings() = {
       val iSettings = new Settings()
       iSettings.usejavacp.value = true
+//      iSettings.deprecation.value = true
+//      iSettings.feature.value = true
+//      iSettings.unchecked.value = true
       iSettings
     }
 
