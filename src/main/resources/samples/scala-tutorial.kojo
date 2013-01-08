@@ -24,13 +24,16 @@
 // some of the Kojo examples provided by Lalit Pant
 
 // Set Up Styles for tutorial pages
-
 val pageStyle = "background-color:#99CCFF; margin:15px;font-size:small;"
 val centerStyle = "text-align:center;"
 val headerStyle = "text-align:center;font-size:110%;color:maroon;"
 val codeStyle = "font-size:90%;"
 val smallNoteStyle = "color:gray;font-size:95%;"
 val sublistStyle = "margin-left:60px;"
+
+import language.implicitConversions
+import language.postfixOps
+
 showVerboseOutput()
 retainSingleLineCode()
 def pgHeader(hdr: String) =
@@ -1359,7 +1362,7 @@ pages += Page(
 )
 
 val story = Story(pages: _*)
-clearOutput
+clearOutput()
 stClear()
 stAddLinkHandler("example", story) {idx: Int =>
     stSetScript(codeExamples(idx))
