@@ -22,6 +22,7 @@ import java.awt.Component
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Event
+import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
@@ -86,11 +87,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val promptColor = new Color(178, 66, 0)
   val codeColor = new Color(0x009b00)
   val DefaultOutputColor = new Color(32, 32, 32)
+  val DefaultOutputFontSize = 13
   var outputColor = DefaultOutputColor
 
   val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
   val outputWindow = new JTextPane
+  outputWindow.setForeground(new Color(32, 32, 32))
+  outputWindow.setBackground(Color.white)
+
   val errorWindow = new JEditorPane
   errorWindow.setContentType("text/html")
 
@@ -556,6 +561,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     Utils.runInSwingThread {
       outputColor = DefaultOutputColor
       outputWindow.setBackground(Color.white)
+      setOutputFontSize(DefaultOutputFontSize)
       outputWindow.setText("")
       errorWindow.setText("")
       outoutPanel.remove(readInputPanel)
@@ -634,6 +640,22 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def setOutputForeground(color: Color) = Utils.runInSwingThread {
     outputColor = color
   }
+
+  var fontSize = DefaultOutputFontSize
+  def setOutputFontSize(size: Int) = Utils.runInSwingThread {
+    fontSize = size
+    outputWindow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size))
+  }
+  
+  def increaseOutputFontSize() {
+    setOutputFontSize(fontSize+1)
+  }
+
+  def decreaseOutputFontSize() {
+    setOutputFontSize(fontSize-1)
+  }
+
+  setOutputFontSize(fontSize)
 
   @volatile var errText = ""
   @volatile var errOffset = 0

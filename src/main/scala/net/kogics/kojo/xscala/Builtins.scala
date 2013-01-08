@@ -671,6 +671,7 @@ Here's a partial list of the available commands:
 
   def setOutputBackground(color: Color) = kojoCtx.setOutputBackground(color)
   def setOutputTextColor(color: Color) = kojoCtx.setOutputForeground(color)
+  def setOutputTextFontSize(size: Int) = kojoCtx.setOutputFontSize(size)
 
   object PShapes {
     def trect(h: Int, w: Int) {

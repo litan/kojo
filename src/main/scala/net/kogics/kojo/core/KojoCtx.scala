@@ -64,5 +64,6 @@ trait KojoCtx {
   def switchToCanvasPerspective()
   def setOutputBackground(color: Color)
   def setOutputForeground(color: Color)
+  def setOutputFontSize(size: Int)
   var fps: Int
 }
