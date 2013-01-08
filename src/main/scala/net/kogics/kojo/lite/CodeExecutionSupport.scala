@@ -705,7 +705,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     Utils.runInSwingThread {
       showOutputHelper(outText, color)
     }
-//    lastOutput = outText
+    lastOutput = outText
   }
 
   def showOutputHelper(outText: String, color: Color): Unit = {
