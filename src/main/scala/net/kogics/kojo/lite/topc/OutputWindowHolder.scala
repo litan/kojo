@@ -24,6 +24,7 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
 import net.kogics.kojo.action.FullScreenOutputAction
+import net.kogics.kojo.action.FullScreenSupport
 import net.kogics.kojo.util.NoOpPainter
 import net.kogics.kojo.util.Utils
 
@@ -135,7 +136,7 @@ class OutputWindowHolder(val ow: JTextPane, val ew: JEditorPane, val oPanel: JPa
       def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
         verboseOutput.setState(ctx.isVerboseOutput)
         showCode.setState(ctx.isSriptShownInOutput)
-        fullScreenItem.setState(fsOutputAction.isFullScreen)
+        FullScreenSupport.updateMenuItem(fullScreenItem, fsOutputAction)
       }
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
       def popupMenuCanceled(e: PopupMenuEvent) {}

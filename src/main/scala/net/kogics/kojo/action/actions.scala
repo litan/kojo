@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent
 
 import javax.swing.AbstractAction
 import javax.swing.Action
+import javax.swing.JCheckBoxMenuItem
 import javax.swing.JColorChooser
 import javax.swing.JComponent
 import javax.swing.JFrame
@@ -99,6 +100,23 @@ class NewFile(ctx: KojoCtx)
 object FullScreenSupport {
   lazy val sdev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
   def isFullScreenOn = sdev.getFullScreenWindow != null
+
+  def updateMenuItem(mi: JCheckBoxMenuItem, action: FullScreenBaseAction) {
+    if (isFullScreenOn) {
+      if (action.isFullScreen) {
+        mi.setState(true)
+        mi.setEnabled(true)
+      }
+      else {
+        mi.setState(false)
+        mi.setEnabled(false)
+      }
+    }
+    else {
+      mi.setState(false)
+      mi.setEnabled(true)
+    }
+  }
 }
 
 class FullScreenBaseAction(kojoCtx: => KojoCtx, key: String, fsComp: => JComponent, fsCompHolder: => BaseHolder)
@@ -180,6 +198,6 @@ class FullScreenOutputAction(kojoCtx: => KojoCtx)
   ) {
   override def enterFullScreen() {
     super.enterFullScreen()
-    kojoCtx.activateOutputPane()
+    //    kojoCtx.activateOutputPane()
   }
 }

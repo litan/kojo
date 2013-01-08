@@ -36,6 +36,7 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
 import net.kogics.kojo.action.FullScreenCanvasAction
+import net.kogics.kojo.action.FullScreenSupport
 import net.kogics.kojo.action.SaveAs
 import net.kogics.kojo.core
 import net.kogics.kojo.core.Cm
@@ -872,7 +873,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
         axesItem.setState(showAxes)
         gridItem.setState(showGrid)
         protItem.setState(showProt)
-        fullScreenItem.setState(fsCanvasAction.isFullScreen)
+        FullScreenSupport.updateMenuItem(fullScreenItem, fsCanvasAction)
       }
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
       def popupMenuCanceled(e: PopupMenuEvent) {}
