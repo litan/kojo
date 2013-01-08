@@ -81,6 +81,8 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   codePane.setTabSize(4)
   codePane.setCodeFoldingEnabled(true)
   codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
+  codePane.getSyntaxScheme.setStyle(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, new Style(new Color(200, 50, 0)))
+  codePane.getSyntaxScheme.setStyle(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, new Style(new Color(200, 50, 0)))
   codePane.setSelectionColor(new Color(125, 150, 255))
   codePane.setMarkOccurrencesColor(new Color(150, 175, 200))
 
