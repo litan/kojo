@@ -40,6 +40,8 @@ trait AppMenu { self: Main.type =>
     val menuBar = new JMenuBar
 
     val fileMenu = new JMenu(Utils.loadString("S_File"))
+    fileMenu.setMnemonic('F')
+    
     val openWeb = new JMenuItem(Utils.loadString("S_OpenFromWeb"))
     openWeb.addActionListener(new ActionListener {
       def actionPerformed(ev: ActionEvent) {
@@ -135,6 +137,8 @@ trait AppMenu { self: Main.type =>
       item
     }
     val samplesMenu = new JMenu(Utils.loadString("S_Samples"))
+    samplesMenu.setMnemonic('S')
+
     val simpleMenu = new JMenu(Utils.loadString("S_GetStart"))
     simpleMenu.add(menuItemFor(Utils.loadString("S_Square"), "square.kojo"))
     simpleMenu.add(menuItemFor(Utils.loadString("S_ColorsShapes"), "shapes-cols.kojo"))
@@ -184,6 +188,8 @@ trait AppMenu { self: Main.type =>
     menuBar.add(samplesMenu)
 
     val windowMenu = new JMenu(Utils.loadString("S_Window"))
+    windowMenu.setMnemonic('W')
+    
     val resetWindows = new JMenuItem(Utils.loadString("S_DefaultPerspective"))
     resetWindows.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
@@ -247,6 +253,8 @@ trait AppMenu { self: Main.type =>
     menuBar.add(windowMenu)
 
     val langMenu = new JMenu(Utils.loadString("S_Language"))
+    langMenu.setMnemonic('L')
+
     val langMap = Map(
       "English" -> "en",
       "Swedish" -> "sv",
@@ -289,6 +297,8 @@ trait AppMenu { self: Main.type =>
     menuBar.add(langMenu)
 
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
+    helpMenu.setMnemonic('H')
+    
     helpMenu.add(menuItemFor(Utils.loadString("S_KojoOverview"), "kojo-overview.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_ScalaTutorial"), "scala-tutorial.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_ComposingMusic"), "composing-music.kojo"))
@@ -313,7 +323,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 080113-1 <br/>
+              Version: 080113-3 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
