@@ -86,6 +86,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     stng.outputDirs.setSingleOutput(virtualDirectory)
     stng.deprecation.value = true
     stng.feature.value = true
+    stng.unchecked.value = true
     stng
   }
 
