@@ -26,6 +26,7 @@ import javax.swing.text.html.HTMLEditorKit
 import net.kogics.kojo.action.CloseFile
 import net.kogics.kojo.action.FullScreenCanvasAction
 import net.kogics.kojo.action.FullScreenOutputAction
+import net.kogics.kojo.action.FullScreenSupport
 import net.kogics.kojo.action.LoadFrom
 import net.kogics.kojo.action.NewFile
 import net.kogics.kojo.action.Save
@@ -235,8 +236,8 @@ trait AppMenu { self: Main.type =>
 
     windowMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener {
       def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-        fullScreenCanvasItem.setState(fsCanvasAction.isFullScreen)
-        fullScreenOutputItem.setState(fsOutputAction.isFullScreen)
+        FullScreenSupport.updateMenuItem(fullScreenCanvasItem, fsCanvasAction)
+        FullScreenSupport.updateMenuItem(fullScreenOutputItem, fsOutputAction)
       }
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
 
@@ -312,7 +313,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 070113-2 <br/>
+              Version: 070113-3 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
               Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
