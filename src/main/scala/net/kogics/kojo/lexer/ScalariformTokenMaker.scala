@@ -234,7 +234,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         case Tokens.INTEGER_LITERAL            => TokenTypes.LITERAL_NUMBER_DECIMAL_INT
         case Tokens.FLOATING_POINT_LITERAL     => TokenTypes.LITERAL_NUMBER_FLOAT
         case Tokens.STRING_LITERAL             => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
-        case Tokens.STRING_PART                => TokenTypes.LITERAL_CHAR
+        case Tokens.STRING_PART                => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
         case Tokens.SYMBOL_LITERAL             => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
         case Tokens.TRUE                       => TokenTypes.LITERAL_BOOLEAN
         case Tokens.FALSE                      => TokenTypes.LITERAL_BOOLEAN
