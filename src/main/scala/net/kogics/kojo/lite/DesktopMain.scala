@@ -14,7 +14,7 @@
  */
 package net.kogics.kojo.lite
 
-import java.io.File
+import java.net.URLDecoder
 
 object DesktopMain extends StubMain with RmiMultiInstance {
    val classpath = {
@@ -23,6 +23,6 @@ object DesktopMain extends StubMain with RmiMultiInstance {
       case _                           => sys.error("classloader is not a URLClassLoader")
     }
     
-    createCp(urls map { _.getPath() })
+    createCp(urls map { URLDecoder decode _.getPath })
   }
 }

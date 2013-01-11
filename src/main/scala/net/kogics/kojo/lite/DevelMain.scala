@@ -15,6 +15,7 @@
 package net.kogics.kojo.lite
 
 import java.io.File
+import java.net.URLDecoder
 
 import scala.collection.mutable.ListBuffer
 
@@ -26,7 +27,7 @@ object DevelMain extends StubMain with RmiMultiInstance {
       case cl: java.net.URLClassLoader => cl.getURLs.toList
       case _                           => sys.error("classloader is not a URLClassLoader")
     }
-    val classp = urls map { _.getPath() }
+    val classp = urls map { URLDecoder decode _.getPath }
     // simulate stuff that happens with webstart
     val lb = new ListBuffer[String]
     classp.foreach { fp =>

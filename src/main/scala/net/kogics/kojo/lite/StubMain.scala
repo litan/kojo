@@ -16,7 +16,7 @@ package net.kogics.kojo.lite
 
 import java.io.File
 
-import scala.sys.process.stringToProcess
+import scala.sys.process.stringSeqToProcess
 
 import net.kogics.kojo.util.Utils
 
@@ -54,13 +54,14 @@ trait StubMain {
         javaHome + "/bin/java"
       }
     }
-    val command = "%s -cp %s -client -Xms32m -Xmx512m " +
+    val cmdPart = "-client -Xms32m -Xmx512m " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
-      "-XX:+CMSPermGenSweepingEnabled net.kogics.kojo.lite.Main %s" format (javaExec, classpath, args.mkString(" "))
+      "-XX:+CMSPermGenSweepingEnabled net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
+    val commandSeq = Seq(javaExec, "-cp", classpath) ++ cmdPart.split(' ')
 
     println("Starting Real Kojo...")
-    command!
+    commandSeq!
   }
 
   def createCp(xs: List[String]): String = {
