@@ -1,0 +1,6 @@
+<shortcuts>
+    <skipIfNotSupported/>
+    <programGroup defaultName="Kojo" 
+	    location="applications"/>
+</shortcuts>
+
