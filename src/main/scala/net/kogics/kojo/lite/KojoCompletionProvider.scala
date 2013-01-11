@@ -124,10 +124,10 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
         val fm = new StringBuilder
         fm.append(completion.name)
         val tpe = completion.member.tpe
-        if (tpe.typeParams.size > 0) {
-          val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
-          fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
-        }
+//        if (tpe.typeParams.size > 0) {
+//          val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
+//          fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
+//        }
         if (tpe.params.size > 0) {
           val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
           fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
