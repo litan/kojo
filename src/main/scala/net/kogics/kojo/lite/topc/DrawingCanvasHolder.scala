@@ -24,7 +24,9 @@ class DrawingCanvasHolder(val dc: SpriteCanvas, ctx: KojoCtx)
     dc.activate()
   }
   
+  // called when only the canvas and not the holder needs to be activate (e.g when Fullscreen-ing)
   def activateCanvas() {
     dc.activate()
+    ctx.drawingCanvasActivated()
   }
 }
