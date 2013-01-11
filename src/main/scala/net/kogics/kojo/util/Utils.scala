@@ -295,19 +295,6 @@ object Utils {
     }
   }
 
-  def readFile(is: InputStream): String = {
-    val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
-    val buf = new Array[Char](1024)
-    var nbytes = reader.read(buf)
-    val sb = new StringBuffer
-    while (nbytes != -1) {
-      sb.append(buf, 0, nbytes)
-      nbytes = reader.read(buf)
-    }
-    reader.close()
-    sb.toString
-  }
-
   def stackTraceAsString(t: Throwable): String = {
     val result = new StringWriter()
     val printWriter = new PrintWriter(result)
@@ -408,7 +395,7 @@ object Utils {
     case Nil => None
     case files => Some(
       files.map { file =>
-        "// File: %s\n%s\n" format (file, readFile(new FileInputStream(scriptDir + File.separatorChar + file)))
+        "// File: %s\n%s\n" format (file, readStream(new FileInputStream(scriptDir + File.separatorChar + file)))
       }.mkString("\n")
     )
   }
