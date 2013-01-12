@@ -414,15 +414,18 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       private def compileDone() {
         codePane.requestFocusInWindow
         enableRunButton(true)
-        Utils.schedule(0.2) {
-          kojoCtx.scrollOutputToEnd()
-        }
+        //        Utils.schedule(0.2) {
+        //          kojoCtx.scrollOutputToEnd()
+        //        }
       }
 
       def onRunSuccess() = {
         interpreterDone()
         Utils.runInSwingThread {
           statusStrip.onSuccess()
+        }
+        Utils.schedule(0.2) {
+          kojoCtx.scrollOutputToEnd()
         }
       }
 
@@ -471,10 +474,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
           enableRunButton(true)
           if (!pendingCommands) {
             stopButton.setEnabled(false)
-          }
-
-          Utils.schedule(0.2) {
-            kojoCtx.scrollOutputToEnd()
           }
         }
         runMonitor.onRunEnd()
@@ -551,10 +550,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     dlg.setCanvas(tCanvas)
     dlg.setCode(Utils.stripCR(codePane.getText()))
     dlg.centerScreen()
-  }
-
-  def locateError(errorText0: String) {
-    // TODO Kojo Lite
   }
 
   def clrOutput() {
@@ -646,13 +641,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     fontSize = size
     outputWindow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size))
   }
-  
+
   def increaseOutputFontSize() {
-    setOutputFontSize(fontSize+1)
+    setOutputFontSize(fontSize + 1)
   }
 
   def decreaseOutputFontSize() {
-    setOutputFontSize(fontSize-1)
+    setOutputFontSize(fontSize - 1)
   }
 
   setOutputFontSize(fontSize)
@@ -688,7 +683,8 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def appendError(s: String, offset: Option[Int] = None) {
     errText += xml.Unparsed(s)
     if (offset.isDefined) {
-      errCount += 1
+      // errCount is used only for 'Check Script' case
+      errCount += 1 
       if (errCount == 1) {
         errOffset = offset.get
       }
@@ -696,24 +692,26 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
     def errorLink = "http://error/" + errOffset
 
+    def errorLocation =
+      <div style="margin:5px;font-size:large;">
+      { if (errCount > 1) { <a href={ errorLink }>Locate first error in script</a> } else if (errCount == 1) { <a href={ errorLink }>Locate error in script</a> } else { <span style="color:blue;">Use the 'Check Script' button for better error recovery.</span> } }
+      </div>
+
     val errMsg =
       <body style="">
-        <h2>There's a problem in your script!</h2>
+        <h2>There's a problem in your script!</h2> 
+        { errorLocation }
         <div style="color:red;margin:5px;font-size:large;">
           <pre>{ errText }</pre>
         </div>
-        { if (errCount > 1) { <div style="margin:5px;font-size:large;">
-              <a href={ errorLink }>Locate first error in script</a>
-            </div> } else if (errCount == 1) { <div style="margin:5px;font-size:large;">
-              <a href={ errorLink }>Locate error in script</a>
-            </div> } else { <div style="margin:5px;font-size:large;">
-              Use the 'Check Script' button for better error recovery.
-            </div> } }
+        { if (errCount > 2) errorLocation }
       </body>
 
     errorWindow.setText(errMsg.toString)
-    errorWindow.setCaretPosition(errorWindow.getDocument.getLength)
+    errorWindow.setCaretPosition(0)
     outLayout.show(outPanel, "Error")
+    // For the case where a warning is sent to the regular Output window
+    Utils.schedule(0.9) { outLayout.show(outPanel, "Error") }
   }
 
   def showOutput(outText: String) {
