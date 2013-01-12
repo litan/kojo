@@ -91,11 +91,16 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
       fm.toString
     }
 
-    val rhs: String = if (completion.member.tpe.paramss.size > 1)
-      completion.member.tpe.resultType.toString
-    else
-      completion.member.tpe.finalResultType.toString
-
+    val rhs: String = {
+      val tpe = completion.member.tpe
+      if (tpe.paramss.size > 1)
+        if (tpe.typeParams.size > 0)
+          tpe.resultType.resultType.toString
+        else
+          tpe.resultType.toString
+      else
+        tpe.finalResultType.toString
+    }
     val defn = "%s : %s" format (lhs, rhs)
 
     val specialNames = Set(
@@ -124,10 +129,10 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
         val fm = new StringBuilder
         fm.append(completion.name)
         val tpe = completion.member.tpe
-//        if (tpe.typeParams.size > 0) {
-//          val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
-//          fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
-//        }
+        //        if (tpe.typeParams.size > 0) {
+        //          val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
+        //          fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
+        //        }
         if (tpe.params.size > 0) {
           val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
           fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
