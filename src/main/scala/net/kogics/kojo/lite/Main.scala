@@ -165,8 +165,9 @@ object Main extends AppMenu {
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
       frame.pack()
 
-      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
-      frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
+//      The following (basically setBounds) triggers the menu offset bug on Gnome 3 
+//      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+//      frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
 
       frame.setVisible(true)
 
