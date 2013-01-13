@@ -1,1 +1,2 @@
-call javaws http://www.kogics.net/runwebkojo
+@ECHO OFF
+javaws http://www.kogics.net/runwebkojo
