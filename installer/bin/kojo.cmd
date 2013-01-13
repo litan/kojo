@@ -1,22 +1,16 @@
 @ECHO OFF
 
-ECHO Starting...
-
-SET BASICINSTALLER_HOME=..
-
-SET MAINCLASS=net.kogics.kojo.lite.DesktopMain
+SET BIN_DIR=%~dp0
 
 set APPLICATION_CLASSPATH=
 if "%APPLICATION_CLASSPATH%"=="" (
-  for %%f in ("%BASICINSTALLER_HOME%\lib\*") do call :add_app_cpath "%%f"
+  for %%f in ("%BIN_DIR%..\lib\*") do call :add_app_cpath "%%f"
   if "%OS%"=="Windows_NT" (
-    for /d %%f in ("%BASICINSTALLER_HOME%\lib\*") do call :add_app_cpath "%%f"
+    for /d %%f in ("%BIN_DIR%..\lib\*") do call :add_app_cpath "%%f"
   )
 )
 
-@ECHO ON
-
-javaw -Xmx512m -cp %APPLICATION_CLASSPATH% net.kogics.kojo.lite.DesktopMain 
+start /B javaw -cp "%APPLICATION_CLASSPATH%" net.kogics.kojo.lite.DesktopMain 
 
 
 rem ##########################################################################

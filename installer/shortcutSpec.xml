@@ -1,9 +1,9 @@
 <shortcuts>
     <skipIfNotSupported/>
-    <programGroup defaultName="Kojo v2.0" 
+    <programGroup defaultName="Kojo v2" 
 	    location="startMenu"/>
       <shortcut
-         name="Kojo"
+         name="Kojo (Desktop)"
          target="$INSTALL_PATH\bin\kojo.cmd"
          iconFile="$INSTALL_PATH\icons\kojo48.ico"
          programGroup="yes"
