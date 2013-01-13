@@ -26,11 +26,16 @@
         <javaversion>1.6</javaversion>
     </info>
 
+    <variables>
+        <variable name="DesktopShortcutCheckboxEnabled" value="true"/>
+        <variable name="ApplicationShortcutPath" value="ApplicationShortcuts"/>
+    </variables>
+
     <!-- 
         The gui preferences indication.
         Sets the installer window to 640x480. It will not be able to change the size.
     -->
-    <guiprefs width="640" height="480" resizable="yes"/>
+    <guiprefs width="870" height="700" resizable="yes"/>
 
     <!-- 
         The locale section.
@@ -84,7 +89,19 @@
             <executable targetfile="$INSTALL_PATH/bin/kojo" stage="never" keep="true">
                  <os family="mac"/>
             </executable>
+            <executable targetfile="$INSTALL_PATH/bin/webkojo" stage="never" keep="true">
+                 <os family="mac"/>
+            </executable>
+            <executable targetfile="$INSTALL_PATH/bin/unkojo" stage="never" keep="true">
+                 <os family="mac"/>
+            </executable>
             <executable targetfile="$INSTALL_PATH/bin/kojo" stage="never" keep="true">
+                 <os family="unix"/>
+            </executable>
+            <executable targetfile="$INSTALL_PATH/bin/webkojo" stage="never" keep="true">
+                 <os family="unix"/>
+            </executable>
+            <executable targetfile="$INSTALL_PATH/bin/unkojo" stage="never" keep="true">
                  <os family="unix"/>
             </executable>
         </pack>
