@@ -33,9 +33,9 @@
 
     <!-- 
         The gui preferences indication.
-        Sets the installer window to 640x480. It will not be able to change the size.
+        Sets the installer window size.
     -->
-    <guiprefs width="870" height="700" resizable="yes"/>
+    <guiprefs width="720" height="540" resizable="yes"/>
 
     <!-- 
         The locale section.
