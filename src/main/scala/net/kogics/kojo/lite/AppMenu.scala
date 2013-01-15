@@ -323,9 +323,9 @@ trait AppMenu { self: Main.type =>
         aboutText.setText("""<html><body>
 <div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 080113-3 <br/>
+              Version: 150113-1 <br/>
               <em>Java version: %s. Scala version: %s</em> <br/><br/>
-              Copyright &copy; 2009-2012 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
+              Copyright &copy; 2009-2013 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
               <strong>Kojo</strong> 2.0 Contributors:<ul>
                <li>Lalit Pant</li>
@@ -339,6 +339,7 @@ trait AppMenu { self: Main.type =>
                <li>Nikhil Pant</li>
                <li>Saurabh Kapoor</li>
                <li>Mushtaq Ahmed</li>
+               <li>Ilango</li>
               </ul>
               <strong>Kojo</strong> 2.0 is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
               The list of third-party software used by <strong>Kojo</strong> 2.0 includes:
