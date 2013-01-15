@@ -1,33 +1,40 @@
 
-Copyright (C) 2009-2013 Lalit Pant <pant.lalit@gmail.com>
-Kojo is licensed under The GNU General Public License, Version 3. The full text
-of the license is available at: http://www.gnu.org/licenses/gpl.html, and is
+Copyright (C) 2009-2013 Lalit Pant <pant.lalit@gmail.com> and the Kojo Dev Team.
+Kojo is licensed under The GNU General Public License, Version 3. The full text 
+of the license is available at: http://www.gnu.org/licenses/gpl.html, and is 
 also reproduced below for quick reference.
 
 Kojo makes use of the following third-party software:
 
 - The Scala Programming Language (http://www.scala-lang.org)
-- Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows
-- RSyntaxTextArea (http://fifesoft.com/rsyntaxtextarea/) for Syntax Highlighting and Code Completion within the Script Editor
-- Scalariform (https://github.com/mdr/scalariform/) for Code Formatting within the Script Editor
+- Docking Frames (http://dock.javaforge.com/) for providing multiple, 
+  dockable windows
+- RSyntaxTextArea (http://fifesoft.com/rsyntaxtextarea/) for Syntax 
+  Highlighting and Code Completion within the Script Editor
+- Scalariform (https://github.com/mdr/scalariform/) for Code Formatting 
+  within the Script Editor
 - Piccolo2D (http://www.piccolo2d.org) for 2D Graphics
-- JTS Topology Suite (http://tsusiatsoftware.net/jts/main.html) for Collision Detection
+- JTS Topology Suite (http://tsusiatsoftware.net/jts/main.html) for geometry 
+  and Collision Detection
 - JFugue (http://www.jfugue.org) for computer generated music
 - The H2 Database Engine (http://www.h2database.com) for storing history
 - GeoGebra (http://www.geogebra.org) for Interactive Geometry and Algebra
 - HttpUnit (http://httpunit.sourceforge.net/) for HTTP communication
-- JLaTeXMath (http://forge.scilab.org/index.php/p/jlatexmath/) to display LaTeX commands
+- JLaTeXMath (http://forge.scilab.org/index.php/p/jlatexmath/) to display 
+  LaTeX commands
 - JLayer (http://www.javazoom.net/javalayer/javalayer.html) to play MP3 files
 - GroupPanel (https://bitbucket.org/asflierl/grouppanel/wiki/Home) for UI Layout
 - The Netbeans Platform (http://www.netbeans.org) for some Script Editor Icons
 
 Kojo also makes use of the following third-party software for unit testing:
+- JUnit (http://junit.sourceforge.net/)
 - JMock (this includes the CGLib, Hamcrest, and Objenesis libraries)
   (http://www.jmock.org/)
 - Scalacheck (http://code.google.com/p/scalacheck)
+- ScalaTest (http://www.scalatest.org/)
 
-The license files for all the third-party software used by Kojo are located in
-the licenses folder within the Kojo distribution. The source code for the
+The license files for all the third-party software bundled with Kojo are located 
+in the licenses folder within the Kojo distribution. The source code for the
 third-party software may be obtained at the corresponding project urls
 specified above.
 

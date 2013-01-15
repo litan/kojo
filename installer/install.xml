@@ -35,7 +35,7 @@
         The gui preferences indication.
         Sets the installer window size.
     -->
-    <guiprefs width="720" height="540" resizable="yes"/>
+    <guiprefs width="750" height="540" resizable="yes"/>
 
     <!-- 
         The locale section.

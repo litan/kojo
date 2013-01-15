@@ -11,7 +11,7 @@
   <supportUrl></supportUrl>
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
-  <manifest></manifest>
+  <manifest>/home/lalit/work/KojoDev/KojoLite/installer/winuninst.manifest</manifest>
   <icon></icon>
   <classPath>
     <mainClass>com.izforge.izpack.uninstaller.Uninstaller</mainClass>
