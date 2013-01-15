@@ -3,7 +3,7 @@
     <programGroup defaultName="Kojo v2" 
 	    location="applications"/>
       <shortcut
-         name="Kojo--Desktop"
+         name="Kojo-Desktop"
          target="$INSTALL_PATH/bin/kojo"
          iconFile="$INSTALL_PATH/icons/kojo64.png"
          programGroup="yes"
@@ -20,7 +20,7 @@
          description="The Kojo Learning Environment">
      </shortcut>
       <shortcut
-         name="Kojo--Web"
+         name="Kojo-Web"
          target="$INSTALL_PATH/bin/webkojo"
          iconFile="$INSTALL_PATH/icons/kojo64.png"
          programGroup="yes"

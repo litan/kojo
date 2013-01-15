@@ -3,7 +3,7 @@
     <programGroup defaultName="Kojo v2" 
 	    location="startMenu"/>
       <shortcut
-         name="Kojo--Desktop"
+         name="Kojo-Desktop"
          target="$INSTALL_PATH\bin\kojo.exe"
          iconFile="$INSTALL_PATH\icons\kojo48.ico"
          programGroup="yes"
@@ -16,7 +16,7 @@
          initialState="normal">
       </shortcut>
       <shortcut
-         name="Kojo--Web"
+         name="Kojo-Web"
          target="$INSTALL_PATH\bin\webkojo.cmd"
          iconFile="$INSTALL_PATH\icons\kojo48.ico"
          programGroup="yes"
