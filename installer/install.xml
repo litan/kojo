@@ -50,7 +50,7 @@
         The ids must be these ones if you want to use the LicencePanel and/or the InfoPanel.
     -->
     <resources>
-        <res src="licenses/Kojo-license.txt" id="LicencePanel.licence"/>
+        <res src="licenses/Kojoi-license.txt" id="LicencePanel.licence"/>
         <res src="Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml"/>
         <res src="shortcutSpec.xml" id="shortcutSpec.xml"/>
         <res src="kojo-border.png" id="Installer.image"/>
