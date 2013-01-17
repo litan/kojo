@@ -17,8 +17,11 @@ import org.fife.ui.autocomplete.CompletionCellRenderer
 import com.sun.xml.internal.ws.server.UnsupportedMediaException
 import net.kogics.kojo.xscala.Help
 import net.kogics.kojo.xscala.CodeTemplates
+import java.util.logging.Logger
 
 class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends CompletionProviderBase {
+  val Log = Logger.getLogger(getClass.getName)
+
   val METHOD = 10
   val VARIABLE = 9
   val CLASS = 8
@@ -208,7 +211,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
           }
           catch {
             case t: Throwable =>
-              println("Completion Problem 1: " + t.getMessage())
+              Log.warning(s"Completion Problem for: ${completion.name} -- ${t.getMessage()}")
           }
         }
 
@@ -230,7 +233,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
     }
     catch {
       case t: Throwable =>
-        println("Completion Problem 2: " + t.getMessage())
+        Log.warning("Completion Problem 2: " + t.getMessage())
     }
 
     proposals
