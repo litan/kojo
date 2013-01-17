@@ -45,7 +45,7 @@ class GeoGebraCanvas extends GeoGebraPanel {
   buildGUI()
 
   val ggbApi = getGeoGebraAPI
-  App.logger.setLogLevel("WARN")
+//  App.logger.setLogLevel("WARN")
 
 //   def selectAllAction = app.getGuiManager().getMenuBar().asInstanceOf[GeoGebraMenuBar].getSelectAllAction
 

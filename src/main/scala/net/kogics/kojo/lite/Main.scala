@@ -2,9 +2,13 @@ package net.kogics.kojo.lite
 
 import java.awt.Frame
 import java.awt.GridLayout
-import java.awt.Toolkit
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
+import java.io.File
+import java.util.logging.FileHandler
+import java.util.logging.Level
+import java.util.logging.Logger
+import java.util.logging.SimpleFormatter
 
 import javax.swing.JFrame
 import javax.swing.JPanel
@@ -42,6 +46,22 @@ object Main extends AppMenu {
 
   def main(args: Array[String]): Unit = {
     realMain(args)
+  }
+
+  def setupLogging() {
+    val userHome = System.getProperty("user.home")
+    val logDir = new File(s"$userHome/.kojo/lite/log/")
+    if (!logDir.exists()) {
+      logDir.mkdirs()
+    }
+    System.err.println(s"Logging has been redirected to: $userHome/.kojo/lite/log/kojo0.log")
+    val rootLogger = Logger.getLogger("")
+    val logHandler = new FileHandler("%h/.kojo/lite/log/kojo%g.log", 1 * 1024 * 1024, 6, false)
+    logHandler.setFormatter(new SimpleFormatter())
+    logHandler.setLevel(Level.INFO)
+    rootLogger.removeHandler(rootLogger.getHandlers()(0))
+    rootLogger.setLevel(Level.INFO)
+    rootLogger.addHandler(logHandler)
   }
 
   def appExit() {
@@ -106,6 +126,7 @@ object Main extends AppMenu {
 
   def realMain(args: Array[String]): Unit = {
     System.setSecurityManager(null)
+    setupLogging()
     kojoCtx = new KojoCtx
     runMultiInstancehandler()
 
@@ -165,9 +186,9 @@ object Main extends AppMenu {
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
       frame.pack()
 
-//      The following (basically setBounds) triggers the menu offset bug on Gnome 3 
-//      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
-//      frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
+      //      The following (basically setBounds) triggers the menu offset bug on Gnome 3 
+      //      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+      //      frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
 
       frame.setVisible(true)
 
