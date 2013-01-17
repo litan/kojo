@@ -83,6 +83,7 @@
             <description>The Kojo files</description>
             <file src="licenses/Kojo-license.txt" targetdir="$INSTALL_PATH"/>
             <file src="bin" targetdir="$INSTALL_PATH"/>
+            <file src="Uninstaller" targetdir="$INSTALL_PATH"/>
             <file src="lib" targetdir="$INSTALL_PATH"/>
             <file src="licenses" targetdir="$INSTALL_PATH"/>
             <file src="icons" targetdir="$INSTALL_PATH"/>
@@ -92,7 +93,7 @@
             <executable targetfile="$INSTALL_PATH/bin/webkojo" stage="never" keep="true">
                  <os family="mac"/>
             </executable>
-            <executable targetfile="$INSTALL_PATH/bin/unkojo" stage="never" keep="true">
+            <executable targetfile="$INSTALL_PATH/Uninstaller/uninstall-kojo" stage="never" keep="true">
                  <os family="mac"/>
             </executable>
             <executable targetfile="$INSTALL_PATH/bin/kojo" stage="never" keep="true">
@@ -101,7 +102,7 @@
             <executable targetfile="$INSTALL_PATH/bin/webkojo" stage="never" keep="true">
                  <os family="unix"/>
             </executable>
-            <executable targetfile="$INSTALL_PATH/bin/unkojo" stage="never" keep="true">
+            <executable targetfile="$INSTALL_PATH/Uninstaller/uninstall-kojo" stage="never" keep="true">
                  <os family="unix"/>
             </executable>
         </pack>

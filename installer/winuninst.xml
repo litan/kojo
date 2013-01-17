@@ -2,7 +2,7 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
   <jar></jar>
-  <outfile>/home/lalit/work/KojoDev/KojoLite/installer/bin/unkojo.exe</outfile>
+  <outfile>/home/lalit/work/KojoDev/KojoLite/installer/Uninstaller/uninstall-kojo.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -15,7 +15,7 @@
   <icon></icon>
   <classPath>
     <mainClass>com.izforge.izpack.uninstaller.Uninstaller</mainClass>
-    <cp>../Uninstaller/uninstaller.jar</cp>
+    <cp>uninstaller.jar</cp>
   </classPath>
   <jre>
     <path></path>
