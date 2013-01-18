@@ -185,6 +185,37 @@ error: Invalid literal number
   }
 
   @Test
+  def testScalaExceptionOutput1 = {
+    val output =
+      """scala.StringContext$RuntimeException"""
+
+    val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
+    context.checking (new Expectations {
+        one(runCtx).kprintln(output)
+      })
+
+    val outputHandler = new InterpOutputHandler(runCtx)
+    outputHandler.reportInterpOutput(output)
+  }
+
+  @Test
+  def testScalaExceptionOutput2 = {
+    val output =
+      """scala.StringContext$InvalidEscapeException: invalid escape character at index 23 in "<html><body>
+<div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
+              <strong>Kojo</strong> 2.0 Beta<br/>
+              Version: """
+
+    val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
+    context.checking (new Expectations {
+        one(runCtx).kprintln(output)
+      })
+
+    val outputHandler = new InterpOutputHandler(runCtx)
+    outputHandler.reportInterpOutput(output)
+  }
+
+  @Test
   def testErrorExceptionOutput1 = {
     val output =
       """java.lang.NoClassDefFoundError: org/apache/log4j/Logger

@@ -32,7 +32,7 @@ class InterpOutputHandler(ctx: RunContext) {
   @volatile var currMode = OutputMode
 
   val errorPattern = java.util.regex.Pattern.compile("""(^<console>:\d+: )error:""")
-  val exceptionPattern = java.util.regex.Pattern.compile("""^\w+(\.\w+)+(Exception|Error)""")
+  val exceptionPattern = java.util.regex.Pattern.compile("""^\w+(\.[\w\$]+)+(Exception|Error)""")
   @volatile var interpOutputSuppressed = false
 
   def showInterpOutput(lineFragment: String) {
