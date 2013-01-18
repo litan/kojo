@@ -15,6 +15,8 @@ import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.WindowConstants
 
+import scala.collection.convert.WrapAsScala.propertiesAsScalaMap
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
 import net.kogics.kojo.d3.Canvas3D
@@ -133,7 +135,9 @@ object Main extends AppMenu {
 
     Log.info(s"Kojo version: ${Versions.KojoVersion}")
     Log.info(s"Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}")
-    Log.info(s"System Properties:\n${System.getProperties}\n\n")
+    val sysProps =
+      System.getProperties.toList.sorted.foldLeft(new StringBuilder) { case (sb, kv) => sb append s"\n${kv._1} = ${kv._2}" }
+    Log.info(s"System Properties:${sysProps}\n\n")
 
     kojoCtx = new KojoCtx
     runMultiInstancehandler()
