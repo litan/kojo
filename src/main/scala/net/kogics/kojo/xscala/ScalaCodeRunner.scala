@@ -44,7 +44,7 @@ import util.Utils
 import net.kogics.kojo.util.Typeclasses
 
 class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRunner {
-  val Log = Logger.getLogger(getClass.getName)
+  val Log = Logger.getLogger("ScalaCodeRunner")
   val builtins = Builtins.initedInstance(this)
   val outputHandler = new InterpOutputHandler(ctx)
 
