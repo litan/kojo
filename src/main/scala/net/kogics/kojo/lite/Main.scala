@@ -36,6 +36,7 @@ import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.theme.ThemeMap
 
 object Main extends AppMenu {
+  System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
 
   @volatile var codePane: RSyntaxTextArea = _
   @volatile var scriptEditorH: ScriptEditorHolder = _
@@ -128,6 +129,12 @@ object Main extends AppMenu {
   def realMain(args: Array[String]): Unit = {
     System.setSecurityManager(null)
     setupLogging()
+    val Log = Logger.getLogger("Main")
+
+    Log.info(s"Kojo version: ${Versions.KojoVersion}")
+    Log.info(s"Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}")
+    Log.info(s"System Properties:\n${System.getProperties}\n\n")
+
     kojoCtx = new KojoCtx
     runMultiInstancehandler()
 

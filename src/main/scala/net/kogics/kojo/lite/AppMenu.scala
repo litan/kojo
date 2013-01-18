@@ -320,11 +320,11 @@ trait AppMenu { self: Main.type =>
         val aboutText = new JEditorPane
         aboutText.setEditorKit(new HTMLEditorKit)
         aboutText.setEditable(false)
-        aboutText.setText("""<html><body>
-<div style\="font-size\: 12pt; font-family\: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
+        aboutText.setText(s"""<html><body>
+<div style="font-size: 12pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> 2.0 Beta<br/>
-              Version: 150113-1 <br/>
-              <em>Java version: %s. Scala version: %s</em> <br/><br/>
+              Version: ${Versions.KojoVersion} <br/>
+              <em>Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}</em> <br/><br/>
               Copyright &copy; 2009-2013 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
               <strong>Kojo</strong> 2.0 Contributors:<ul>
@@ -360,7 +360,7 @@ trait AppMenu { self: Main.type =>
               </ul>
               </div>
               </body></html>
-              """ format (geogebra.main.AppD.getJavaVersion, scala.tools.nsc.Properties.versionString.substring("version ".length))
+              """
         )
         aboutText.setPreferredSize(new Dimension(430, 300))
         aboutText.setMaximumSize(new Dimension(430, 300))
