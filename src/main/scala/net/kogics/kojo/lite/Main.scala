@@ -130,21 +130,15 @@ object Main extends AppMenu {
 
   def realMain(args: Array[String]): Unit = {
     System.setSecurityManager(null)
-    setupLogging()
-    val Log = Logger.getLogger("Main")
-
-    Log.info(s"Kojo version: ${Versions.KojoVersion}")
-    Log.info(s"Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}")
-    val sysProps =
-      System.getProperties.toList.sorted.foldLeft(new StringBuilder) { case (sb, kv) => sb append s"\n${kv._1} = ${kv._2}" }
-    Log.info(s"System Properties:${sysProps}\n\n")
-
-    kojoCtx = new KojoCtx
-    runMultiInstancehandler()
-
     Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }
+
+    setupLogging()
+    val Log = Logger.getLogger("Main")
+
+    kojoCtx = new KojoCtx
+    runMultiInstancehandler()
 
     Utils.schedule(0.3) {
       import javax.swing.UIManager
@@ -213,6 +207,13 @@ object Main extends AppMenu {
         }
       }
     }
+
+    // Do startup logging after scheduling the GUI stuff
+    Log.info(s"Kojo version: ${Versions.KojoVersion}")
+    Log.info(s"Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}")
+    val sysProps =
+      System.getProperties.toList.sorted.foldLeft(new StringBuilder) { case (sb, kv) => sb append s"\n${kv._1} = ${kv._2}" }
+    Log.info(s"System Properties:${sysProps}\n\n")
   }
 
   def runMultiInstancehandler() {
