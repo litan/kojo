@@ -54,7 +54,8 @@ object Main extends AppMenu {
     if (!logDir.exists()) {
       logDir.mkdirs()
     }
-    System.err.println(s"Logging has been redirected to: $userHome/.kojo/lite/log/kojo0.log")
+    val logPath = List(userHome, ".kojo", "lite", "log", "kojo0.log").mkString(File.separator)
+    System.err.println(s"Logging has been redirected to: $logPath")
     val rootLogger = Logger.getLogger("")
     val logHandler = new FileHandler("%h/.kojo/lite/log/kojo%g.log", 1 * 1024 * 1024, 6, false)
     logHandler.setFormatter(new SimpleFormatter())
@@ -157,11 +158,11 @@ object Main extends AppMenu {
 
       codePane = new RSyntaxTextArea(5, 80)
       codeSupport = CodeExecutionSupport.initedInstance(codePane, kojoCtx)
-      
+
       kojoCtx.frame = frame
       kojoCtx.codeSupport = codeSupport
       kojoCtx.control = control
-      
+
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, kojoCtx)
       scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport, frame)
       val outputHolder = new OutputWindowHolder(codeSupport, kojoCtx)
