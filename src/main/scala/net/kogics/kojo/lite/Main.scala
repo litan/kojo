@@ -202,9 +202,8 @@ object Main extends AppMenu {
         loadAndRunUrl(args(0), true)
       }
       else {
-        Utils.schedule(1) {
-          scriptEditorH.activate()
-        }
+        Utils.schedule(1) { scriptEditorH.activate() }
+        Utils.schedule(2) { scriptEditorH.activate() }
       }
     }
 
