@@ -45,7 +45,6 @@ object CodeCompletionUtils {
     "package",
     "private",
     "protected",
-    "requires",
     "return",
     "sealed",
     "super",
