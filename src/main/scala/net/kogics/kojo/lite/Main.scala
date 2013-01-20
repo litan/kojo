@@ -130,6 +130,7 @@ object Main extends AppMenu {
 
   def realMain(args: Array[String]): Unit = {
     System.setSecurityManager(null)
+    kojoCtx = new KojoCtx // context needs to be created right up front to set user language
     Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }
@@ -137,7 +138,6 @@ object Main extends AppMenu {
     setupLogging()
     val Log = Logger.getLogger("Main")
 
-    kojoCtx = new KojoCtx
     runMultiInstancehandler()
 
     Utils.schedule(0.3) {
