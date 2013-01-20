@@ -28,7 +28,7 @@ class SplashScreen extends JWindow {
   kojoIcon.setIcon(Utils.loadIcon("/images/splash.png"))
   kojoIcon.setBounds(0, 0, 430, 280);
 
-  val msg = new JLabel("Loading...")
+  val msg = new JLabel(Utils.loadString("S_Loading"))
   msg.setBounds(55, 180, 250, 15);
   panel.add(msg);
   panel.add(kojoIcon);
