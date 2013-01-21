@@ -252,6 +252,10 @@ trait AppMenu { self: Main.type =>
 
     menuBar.add(windowMenu)
 
+//    val toolsMenu = new JMenu("Tools")
+//    toolsMenu.setMnemonic('T')
+//    menuBar.add(toolsMenu)
+    
     val langMenu = new JMenu(Utils.loadString("S_Language"))
     langMenu.setMnemonic('L')
 
@@ -303,6 +307,7 @@ trait AppMenu { self: Main.type =>
     helpMenu.add(menuItemFor(Utils.loadString("S_ScalaTutorial"), "scala-tutorial.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_ComposingMusic"), "composing-music.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_Intro3D"), "d3-intro.kojo"))
+    helpMenu.add(menuItemForUrl("Instruction Palette (Experimental)", "http://www.kogics.net/public/kojolite/samples/instruction-palette.kojo"))
     helpMenu.addSeparator()
 
     val about = new JMenuItem(Utils.loadString("S_About"))

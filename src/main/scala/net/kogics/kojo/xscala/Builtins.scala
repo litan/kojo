@@ -17,6 +17,7 @@ package net.kogics.kojo
 package xscala
 
 import java.awt.{ Color => JColor }
+import java.awt.Dimension
 import java.awt.GradientPaint
 import java.awt.Paint
 
@@ -416,6 +417,10 @@ class Builtins extends RepeatCommands {
     storyTeller.nextPage()
   }
   UserCommand("stNext", Nil, "Moves the story to the next page/view.")
+
+  def stInsertCode(code: String) = ctx.insertCode(code)
+  def stSetStorytellerWidth(width: Int) = kojoCtx.topcs.sth.setResizeRequest(new Dimension(width, 0), true)
+
   UserCommand.addSynopsisSeparator()
 
   def help() = {

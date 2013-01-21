@@ -296,4 +296,9 @@ class KojoCtx extends core.KojoCtx {
   def setOutputFontSize(size: Int) {
     codeSupport.setOutputFontSize(size)
   }
+  
+  def formatSource() {
+    topcs.seh.formatAction.actionPerformed(null)
+  }
+  
 }

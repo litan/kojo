@@ -495,6 +495,14 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         }
       }
 
+      def insertCode(code: String) {
+        Utils.runInSwingThreadAndWait {
+          codePane.insert(code + "\n", codePane.getCaretPosition())
+          kojoCtx.formatSource()
+          codePane.requestFocusInWindow()
+        }
+      }
+
       def stopAnimation() {
         CodeExecutionSupport.this.stopAnimation()
       }
@@ -684,7 +692,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     errText += xml.Unparsed(s)
     if (offset.isDefined) {
       // errCount is used only for 'Check Script' case
-      errCount += 1 
+      errCount += 1
       if (errCount == 1) {
         errOffset = offset.get
       }
