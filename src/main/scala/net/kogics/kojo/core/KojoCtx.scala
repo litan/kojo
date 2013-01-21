@@ -65,5 +65,6 @@ trait KojoCtx {
   def setOutputBackground(color: Color)
   def setOutputForeground(color: Color)
   def setOutputFontSize(size: Int)
+  def formatSource(): Unit
   var fps: Int
 }
