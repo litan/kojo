@@ -494,6 +494,14 @@ Here's a partial list of the available commands:
     storyTeller.addLinkHandler(name, story)(hm)
   }
 
+  def stAddLinkEnterHandler[T](name: String, story: Story)(implicit hm: HandlerHolder[T]) {
+    storyTeller.addLinkEnterHandler(name, story)(hm)
+  }
+
+  def stAddLinkExitHandler[T](name: String, story: Story)(implicit hm: HandlerHolder[T]) {
+    storyTeller.addLinkExitHandler(name, story)(hm)
+  }
+
   def stAddUiComponent(c: JComponent) {
     storyTeller.addUiComponent(c)
   }
@@ -502,6 +510,12 @@ Here's a partial list of the available commands:
   def stGotoUrl(url: String) = Utils.runInSwingThread {
     urlHandler.gotoUrl(new java.net.URL(url))
   }
+  
+  def stOnStoryStop(story: Story)(fn: => Unit) {
+    storyTeller.onStop(story, fn)
+  }
+  
+  def stHelpFor(instr: String) = Help(instr)
 
   type Picture = core.Picture
   type Painter = picture.Painter

@@ -245,7 +245,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
     listener = l
   }
 
-  var stopFn: Option[() => Unit] = None
+  @volatile var stopFn: Option[() => Unit] = None
   def onStop(fn: => Unit) = Utils.runInSwingThread {
     stopFn = Some(fn _)
   }

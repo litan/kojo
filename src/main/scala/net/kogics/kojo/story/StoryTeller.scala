@@ -280,8 +280,13 @@ class StoryTeller extends JPanel with music.Mp3Player {
 
   def pageNumber(name: String): Option[Int] = story.pageNumber(name)
 
+  def onStop(story: Story, fn: => Unit) {
+      story.onStop(fn)
+  }
+  
   def done() {
     kojoCtx.stopInterpreter()
+    currStory foreach {_.stop}
     Utils.runInSwingThread {
       if (savedStory.isDefined) {
         currStory = savedStory
@@ -476,8 +481,23 @@ class StoryTeller extends JPanel with music.Mp3Player {
     story0.addLinkHandler(name)(hm)
   }
 
+  def addLinkEnterHandler[T](name: String, story0: Story)(hm: HandlerHolder[T]) = {
+    story0.addLinkEnterHandler(name)(hm)
+  }
+
+  def addLinkExitHandler[T](name: String, story0: Story)(hm: HandlerHolder[T]) = {
+    story0.addLinkExitHandler(name)(hm)
+  }
+
   def handleLink(name: String, data: String) {
     story.handleLink(name, data)
+  }
+  
+  def handleLinkEnter(name: String, data: String) {
+    story.handleLinkEnter(name, data)
+  }
+  def handleLinkExit(name: String, data: String) {
+    story.handleLinkExit(name, data)
   }
 
   // mp3 player stuff
