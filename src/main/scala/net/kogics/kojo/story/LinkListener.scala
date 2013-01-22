@@ -86,14 +86,36 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
     }
   }
 
+  def handleLinkEnterExit(url: URL, enter: Boolean) {
+    if (url.getHost.toLowerCase == "runhandler") {
+      try {
+        val d = handlerData(url.toString)
+        if (enter) {
+          st.handleLinkEnter(d._1, d._2)
+        }
+        else {
+          st.handleLinkExit(d._1, d._2)
+        }
+      }
+      catch {
+        case ex: IllegalArgumentException =>
+          st.showStatusError("Invalid RunHandler Url - " + url.toString)
+        case t: Throwable =>
+          st.showStatusError("Problem handling Url - %s: %s" format (url.toString, t.getMessage))
+      }
+    }
+  }
+
   def hyperlinkUpdate(e: HyperlinkEvent) {
     if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
       gotoUrl(e.getURL)
     }
     else if (e.getEventType == HyperlinkEvent.EventType.ENTERED) {
+      handleLinkEnterExit(e.getURL, true)
       st.showStatusMsg(e.getURL.toString, false)
     }
     else if (e.getEventType == HyperlinkEvent.EventType.EXITED) {
+      handleLinkEnterExit(e.getURL, false)
       st.clearStatusBar()
     }
   }

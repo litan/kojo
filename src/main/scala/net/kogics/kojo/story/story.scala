@@ -200,7 +200,10 @@ case class Story(pages: Viewable*) extends Viewable {
   val name = ""
   def scrollToEnd = pages(currPage).scrollToEnd
 
-  val handlers = collection.mutable.Map[String, HandlerHolder[Any]]() 
+  val noOpHandler = new StringHandlerHolder({ e => })
+  val handlers = collection.mutable.Map[String, HandlerHolder[Any]]() withDefaultValue(noOpHandler)
+  val linkEnterHandlers = collection.mutable.Map[String, HandlerHolder[Any]]() withDefaultValue(noOpHandler) 
+  val linkExitHandlers = collection.mutable.Map[String, HandlerHolder[Any]]() withDefaultValue(noOpHandler)
 
   def addLinkHandler[T](name: String)(hm: HandlerHolder[T]) = Utils.runInSwingThread {
     handlers(name) = hm
@@ -209,4 +212,30 @@ case class Story(pages: Viewable*) extends Viewable {
   def handleLink(name: String, data: String) {
     handlers(name).handle(data)
   }
+
+  def addLinkEnterHandler[T](name: String)(hm: HandlerHolder[T]) = Utils.runInSwingThread {
+    linkEnterHandlers(name) = hm
+  }
+  
+  def handleLinkEnter(name: String, data: String) {
+    linkEnterHandlers(name).handle(data)
+  }
+
+  def addLinkExitHandler[T](name: String)(hm: HandlerHolder[T]) = Utils.runInSwingThread {
+    linkExitHandlers(name) = hm
+  }
+  
+  def handleLinkExit(name: String, data: String) {
+    linkExitHandlers(name).handle(data)
+  }
+  
+  @volatile var stopFn: Option[() => Unit] = None
+  def onStop(fn: => Unit) {
+    stopFn = Some(fn _)
+  }
+  
+  def stop() {
+    stopFn.foreach(_.apply)
+  }
+  
 }

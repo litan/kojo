@@ -649,6 +649,72 @@ object Help {
       </pre>
     </div>
     ,
+    "hline" -> 
+    <div>
+      <strong>PShapes.hline</strong>(length) - Creates a picture of a horizontal line with the given length.<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PShapes.hline(50))
+      </pre>
+    </div>,
+    "vline" -> 
+    <div>
+      <strong>PShapes.vline</strong>(length) - Creates a picture of a vertical line with the given length.<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PShapes.vline(50))
+      </pre>
+    </div>,
+    "rect" -> 
+    <div>
+      <strong>PShapes.rect</strong>(height, width) - Creates a picture of a rectangle with the given height and width.<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PShapes.rect(50, 100))
+      </pre>
+    </div>,
+    "ball" -> 
+    <div>
+      <strong>PShapes.ball</strong>(radius) - Creates a picture of a circle with the given radius.<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PShapes.ball(50))
+      </pre>
+    </div>,
+    "text" -> 
+    <div>
+      <strong>PShapes.text</strong>(content, size) - Creates a picture of the given text with the given font-size.<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PShapes.text("Hi There", 18))
+      </pre>
+    </div>,
+    "draw" -> 
+    <div>
+      <strong>draw</strong>(picture[s]) - Draws the given (one or more) picture(s).<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PShapes.hline(50), PShapes.vline(50)) 
+      </pre>
+    </div>,
     "HPics" -> 
     <div>
       <strong>HPics</strong>(pictures) <br/>
@@ -1288,7 +1354,7 @@ repeat(5) {{
       topic, 
       modeSpecificContent.getOrElse(
         topic, 
-        langHelp(topic, System.getProperty("user.language")).getOrElse(null)
+        langHelp(topic, System.getProperty("user.language")).getOrElse("Coming Soon...")
       )
     )
   }
