@@ -56,7 +56,7 @@ class HelpTest extends FunSuite with ShouldMatchers with BeforeAndAfter {
         "fram" -> "Help for fram"
       )
     )
-    Help("fram") should be (null)
+    Help("fram") should be ("Coming Soon...")
     val oldLang = System.getProperty("user.language")
     System.setProperty("user.language", "sv")
     Help("fram") should be ("Help for fram")

@@ -621,7 +621,7 @@ object Help {
     ,
     ">=" -> 
      <div>
-        <strong>a > b</strong> - Evaluates to true if a is greater than or equal to b, false otherwise.<br/>
+        <strong>a >= b</strong> - Evaluates to true if a is greater than or equal to b, false otherwise.<br/>
         <br/>
         <em>Example:</em> <br/>
         <br/>
