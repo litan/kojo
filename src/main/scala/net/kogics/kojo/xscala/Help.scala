@@ -519,6 +519,172 @@ object Help {
         </pre>
     </div>
     ,
+    "==" -> 
+    <div>
+        <strong>a == b</strong> - Evaluates to true if a and b are equal, false otherwise.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+            // Change a and b to play with this
+            val a = 10 
+            val b = 20
+            if (a == b) {{
+              println("a is equal to be")
+            }}
+            else {{
+              println("a and b are different")  
+            }}
+        </pre>
+        <em>Example2:</em> <br/>
+        <br/>
+        <pre>
+            def isZero(n: Int) = 
+              n == 0
+        </pre>
+    </div>
+    ,
+    "!=" -> 
+        <div>
+        <strong>a != b</strong> - Evaluates to true if a and b are not equal, false otherwise.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+            // Change a and b to play with this
+            val a = 10 
+            val b = 20
+            if (a != b) {{
+              println("a and b are different")  
+            }}
+            else {{
+              println("a is equal to be")
+            }}
+        </pre>
+        <em>Example2:</em> <br/>
+        <br/>
+        <pre>
+            def isNotZero(n: Int) = 
+              n != 0
+        </pre>
+    </div>
+    ,
+    ">" ->     
+    <div>
+        <strong>a > b</strong> - Evaluates to true if a is greater than b, false otherwise.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+            // Change a and b to play with this
+            val a = 10
+            val b = 20
+            if (a > b) {{
+              println("a is bigger")
+            }}
+            else {{
+              println("b is bigger")  
+            }}
+        </pre>
+        <em>Example2:</em> <br/>
+        <br/>
+        <pre>
+            def max(a: Int, b: Int) = if (a > b) a else b
+            max(5, 10) // 10
+        </pre>
+    </div>
+    ,
+    "<" -> 
+    <div>
+        <strong>a &lt; b</strong> - Evaluates to true if a is less than b, false otherwise.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+            // Change a and b to play with this
+            val a = 10
+            val b = 20
+            if (a &lt; b) {{
+              println("a is smaller")
+            }}
+            else {{
+              println("b is smaller")  
+            }}
+        </pre>
+        <em>Example2:</em> <br/>
+        <br/>
+        <pre>
+            def min(a: Int, b: Int) = if (a &lt; b) a else b
+            min(5, 10) // 5
+        </pre>
+    </div>
+    ,
+    ">=" -> 
+     <div>
+        <strong>a > b</strong> - Evaluates to true if a is greater than or equal to b, false otherwise.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+            // Change a and b to play with this
+            val a = 10
+            val b = 20
+            if (a >= b) {{
+              println("a is bigger than or equal to b")
+            }}
+            else {{
+              println("a is smaller than b")  
+            }}
+        </pre>
+        <em>Example2:</em> <br/>
+        <br/>
+        <pre>
+            def max(a: Int, b: Int) = if (a >= b) a else b
+            max(5, 10) // 10
+        </pre>
+    </div>
+    ,
+    "<=" -> 
+    <div>
+        <strong>a &lt;= b</strong> - Evaluates to true if a is less than or equal b, false otherwise.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+            // Change a and b to play with this
+            val a = 10
+            val b = 20
+            if (a &lt;= b) {{
+              println("a is smaller than or equal to b")
+            }}
+            else {{
+              println("a is bigger")  
+            }}
+        </pre>
+        <em>Example2:</em> <br/>
+        <br/>
+        <pre>
+            def min(a: Int, b: Int) = if (a &lt;= b) a else b
+            min(5, 10) // 5
+        </pre>
+    </div>
+    ,
+    "for" ->
+    <div>
+      <strong>for</strong>(i &lt;- 1 to n) {{ }} - Repeats the commands within braces n number of times,
+       making the repeat counter available within the block defined by the braces.<br/>
+      <br/>
+      <em>Example:</em> <br/><br/>
+      <pre>
+          clear()
+          setAnimationDelay(100)
+          for (i &lt;- 1 to 4) {{
+            val radius = 30 + i*10
+            circle(radius)
+          }}
+      </pre>
+    </div>
+    ,
     "def" ->
     <div>
         <strong>def</strong> - Let's you define a new command or function.<br/>
