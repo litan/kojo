@@ -86,6 +86,8 @@ object CodeCompletionUtils {
     "stAddLinkHandler" -> "stAddLinkHandler(${handlerName}, ${story}) {d: ${argType} =>\n    ${cursor}\n}",
     "stAddLinkEnterHandler" -> "stAddLinkHandler(${handlerName}, ${story}) {d: ${argType} =>\n    ${cursor}\n}",
     "stAddLinkExitHandler" -> "stAddLinkHandler(${handlerName}, ${story}) {d: ${argType} =>\n    ${cursor}\n}",
+    "stInsertCode" -> "stInsertCode(${code})",
+    "stSmartInsertCode" -> "stSmartInsertCode(${code})",
     "stOnStoryStop" -> "stOnStoryStop {\n    ${cursor}\n}",
     "VPics" -> "VPics(\n      p,\n      p\n)",
     "HPics" -> "HPics(\n      p,\n      p\n)",

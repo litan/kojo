@@ -497,9 +497,17 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
       def insertCode(code: String) {
         Utils.runInSwingThreadAndWait {
+          codePane.insert(code, codePane.getCaretPosition())
+          kojoCtx.formatSource()
+          activateEditor()
+        }
+      }
+
+      def smartInsertCode(code: String) {
+        Utils.runInSwingThreadAndWait {
           codePane.insert(code + "\n", codePane.getCaretPosition())
           kojoCtx.formatSource()
-          codePane.requestFocusInWindow()
+          activateEditor()
         }
       }
 
