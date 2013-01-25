@@ -26,14 +26,20 @@ import net.kogics.kojo.util.Utils
 
 class OutputWindowHolder(codeSupport: CodeExecutionSupport, ctx: core.KojoCtx)
   extends BaseHolder("OW", Utils.loadString("CTL_OutputTopComponent"), codeSupport.outPanel) {
-  
+
   val ow = codeSupport.outputWindow
   val ew = codeSupport.errorWindow
   val oPanel = codeSupport.outPanel
 
   val tdef = new UIDefaults();
-  tdef.put("TextPane[Enabled].backgroundPainter", new NoOpPainter);
-  ow.putClientProperty("Nimbus.Overrides", tdef);
+  try {
+    tdef.put("TextPane[Enabled].backgroundPainter", new NoOpPainter);
+    ow.putClientProperty("Nimbus.Overrides", tdef);
+  }
+  catch {
+    case t: Throwable =>
+      println("Not running on an Oracle JVM. Output Pane background colors will not work.")
+  }
 
   val popup = new JPopupMenu {
     val verboseOutput = new JCheckBoxMenuItem(Utils.loadString("S_ShowVerboseOutput"))

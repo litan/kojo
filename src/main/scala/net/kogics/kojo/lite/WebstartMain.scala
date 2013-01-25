@@ -15,30 +15,55 @@
 package net.kogics.kojo.lite
 
 import java.io.File
-import scala.collection.mutable.ListBuffer
-import com.sun.jnlp.JNLPClassLoader
-import net.kogics.kojo.util.Utils
-import javax.jnlp.SingleInstanceService
-import javax.jnlp.SingleInstanceListener
+import java.lang.reflect.InvocationTargetException
+import java.net.JarURLConnection
+import java.util.jar.JarFile
+
 import javax.jnlp.ServiceManager
-import java.rmi.registry.Registry
-import java.rmi.registry.LocateRegistry
-import java.rmi.server.UnicastRemoteObject
-import java.rmi.RemoteException
+import javax.jnlp.SingleInstanceListener
+import javax.jnlp.SingleInstanceService
+
+import scala.collection.mutable.ListBuffer
+
+import com.sun.jnlp.JNLPClassLoader
+
+import net.kogics.kojo.util.Utils
 
 object WebstartMain extends StubMain with RmiMultiInstance {
-  val classpath = {
+  val classpath: String = {
+    try {
+      val jnlpLoader = JNLPClassLoader.getInstance
+      val jds = jnlpLoader.getLaunchDesc.getResources.getEagerOrAllJarDescs(true)
+      val lb = new ListBuffer[String]
+      jds.foreach { jd =>
+        val jarFile = jnlpLoader.getJarFile(jd.getLocation)
+        processJar(jarFile, lb)
+      }
+      createCp(lb.toList)
+    }
+    catch {
+      case ex: ClassNotFoundException    => alternativeClasspath
+      case ex: NoClassDefFoundError      => alternativeClasspath
+      case ex: InvocationTargetException => alternativeClasspath
+      case t: Throwable                  => throw t
+    }
+  }
 
-    val jnlpLoader = JNLPClassLoader.getInstance
-    val jds = jnlpLoader.getLaunchDesc.getResources.getEagerOrAllJarDescs(true)
+  def processJar(jarFile: JarFile, lb: ListBuffer[String]) {
+    val tempFile = File.createTempFile("kojolite-", ".jar");
+    // need to use symlinks on jdk1.7 
+    Utils.copyFile(new File(jarFile.getName()), tempFile);
+    tempFile.deleteOnExit()
+    lb += tempFile.getAbsolutePath()
+  }
+
+  def alternativeClasspath: String = {
+    println("Not running on an Oracle JVM. I'm gonna try to do my best to make this work...")
+    val jarUrls = Thread.currentThread().getContextClassLoader().getResources("META-INF/MANIFEST.MF")
     val lb = new ListBuffer[String]
-    jds.foreach { jd =>
-      val jarFile = jnlpLoader.getJarFile(jd.getLocation)
-      val tempFile = File.createTempFile("kojolite-", ".jar");
-      // need to use symlinks on jdk1.7 
-      Utils.copyFile(new File(jarFile.getName()), tempFile);
-      tempFile.deleteOnExit()
-      lb += tempFile.getAbsolutePath()
+    while (jarUrls.hasMoreElements) {
+      val jarFile = jarUrls.nextElement.openConnection.asInstanceOf[JarURLConnection].getJarFile
+      processJar(jarFile, lb)
     }
     createCp(lb.toList)
   }
