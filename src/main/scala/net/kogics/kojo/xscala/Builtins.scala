@@ -97,7 +97,7 @@ class Builtins extends RepeatCommands {
 
   // Turtle World
   class TwC extends TurtleMover {
-    def forward(): Unit = forward(10)
+    def forward(): Unit = forward(25)
     override def forward(n: Double) = turtle0.forward(n)
     UserCommand("forward", List("numSteps"), "Moves the turtle forward a given number of steps.")
 
@@ -526,10 +526,13 @@ Here's a partial list of the available commands:
   //  val Pic0 = picture.Pic0
   type HPics = picture.HPics
   val HPics = picture.HPics
+  val picRow = HPics
   type VPics = picture.VPics
   val VPics = picture.VPics
+  val picCol = VPics
   type GPics = picture.GPics
   val GPics = picture.GPics
+  val picStack = GPics
 
   //  type Rot = picture.Rot
   //  val Rot = picture.Rot
@@ -693,9 +696,10 @@ Here's a partial list of the available commands:
   def setOutputTextColor(color: Color) = kojoCtx.setOutputForeground(color)
   def setOutputTextFontSize(size: Int) = kojoCtx.setOutputFontSize(size)
 
-  object PShapes {
-    def trect(h: Int, w: Int) {
-      import Tw._
+  val PShapes = PicShape
+  object PicShape {
+    private [xscala] def trect(h: Int, w: Int, t: Turtle) {
+      import t._
       repeat(2) {
         forward(h)
         right()
@@ -704,8 +708,8 @@ Here's a partial list of the available commands:
       }
     }
 
-    def text(s0: Any, fontSize: Int = 15) = Picture {
-      import Tw._
+    def text(s0: Any, fontSize: Int = 15) = PictureT { t =>
+      import t._
       val s = s0.toString
       setPenFontSize(fontSize)
       val te = textExtent(s, fontSize)
@@ -715,34 +719,34 @@ Here's a partial list of the available commands:
       write(s)
     }
 
-    def rect(h: Int, w: Int) = Picture {
-      trect(h, w)
+    def rect(h: Int, w: Int) = PictureT { t =>
+      trect(h, w, t)
     }
 
-    def vline(l: Double) = Picture {
-      import Tw._
+    def vline(l: Double) = PictureT { t =>
+      import t._
       forward(l)
     }
 
-    def hline(l: Double) = Picture {
-      import Tw._
+    def hline(l: Double) = PictureT { t =>
+      import t._
       right()
       forward(l)
     }
 
-    def ball(r: Double) = Picture {
-      import Tw._
+    def circle(r: Double) = PictureT { t =>
+      import t._
       penUp()
       right()
       forward(r)
       left()
       penDown()
-      circle(r)
+      t.circle(r)
     }
   }
 
   object Gaming {
-    import PShapes._
+    import PicShape._
     def gamePanel(
       onStart: => Unit,
       onPause: => Unit,
@@ -761,7 +765,7 @@ Here's a partial list of the available commands:
           val te = textExtent(label, FontSize)
           setFillColor(buttonBg)
           setPenColor(Color(255, 255, 255, 200))
-          trect(te.height.toInt + 10, te.width.toInt + 10)
+          trect(te.height.toInt + 10, te.width.toInt + 10, turtle0)
           penUp()
           forward(te.height + 5)
           right()

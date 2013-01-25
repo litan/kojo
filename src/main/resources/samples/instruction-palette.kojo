@@ -1,4 +1,4 @@
-val pageStyle = "background-color:#99CCFF; margin:10px;font-size:small;"
+val pageStyle = "background-color:#99CCFF; margin:5px;font-size:small;"
 val centerStyle = "text-align:center;"
 val headerStyle = "text-align:center;font-size:95%;color:maroon;"
 val codeStyle = "font-size:90%;"
@@ -32,7 +32,7 @@ val tTemplates = LinkedHashMap(
     "clear()" -> "clear()",
     "invisible()" -> "invisible()",
     "cleari()" -> "cleari()",
-    "setAnimationDelay()" -> "setAnimationDelay(100)",
+    "setAnimationDelay(d)" -> "setAnimationDelay(100)",
     "forward(n)" -> "forward(50)",
     "right(a)" -> "right(90)",
     "left(a)" -> "left(90)",
@@ -83,18 +83,18 @@ val aTemplates = LinkedHashMap(
 
 val pTemplates = LinkedHashMap(
     "Picture" -> """Picture {
-    
+    forward(50)    
 }""",
-    "HPics(pics)" -> "HPics(PShapes.hline(50), PShapes.vline(50))",
-    "VPics(pics)" -> "VPics(PShapes.vline(50), PShapes.hline(50))",
-    "GPics(pics)" -> "GPics(PShapes.hline(50), PShapes.vline(50))",
-    "draw(pics)" -> "draw(PShapes.hline(50), PShapes.vline(50))",
+    "picRow(pics)" -> "picRow(PicShape.hline(50), PicShape.vline(50))",
+    "picCol(pics)" -> "picCol(PicShape.vline(50), PicShape.hline(50))",
+    "picStack(pics)" -> "picStack(PicShape.hline(50), PicShape.vline(50))",
+    "draw(pics)" -> "draw(PicShape.hline(50), PicShape.vline(50))",
     "" -> "",
-    "PShapes.hline(len)" -> "PShapes.hline(50)",
-    "PShapes.vline(len)" -> "PShapes.vline(50)",
-    "PShapes.rect(w, h)" -> "PShapes.rect(50, 100)",
-    "PShapes.ball(r)" -> "PShapes.ball(50)",
-    "PShapes.text(s, n)" -> """PShapes.text("Hello", 18)"""
+    "PicShape.hline(len)" -> "PicShape.hline(50)",
+    "PicShape.vline(len)" -> "PicShape.vline(50)",
+    "PicShape.rect(h, w)" -> "PicShape.rect(50, 100)",
+    "PicShape.circle(r)" -> "PicShape.circle(50)",
+    "PicShape.text(s, n)" -> """PicShape.text("Hello", 18)"""
 )
 
 val ptTemplates = LinkedHashMap(
@@ -168,6 +168,7 @@ stClear()
 stSetStorytellerWidth(50)
 
 import javax.swing._
+import java.awt.event._
 val helpFrame = new JFrame
 helpFrame.setUndecorated(true)
 helpFrame.setBounds(300, 100, 500, 300)
@@ -193,11 +194,7 @@ stAddLinkHandler(Abstraction, story) { idx: Int => smartInsertCode(Abstraction, 
 stAddLinkHandler(Conditions, story) { idx: Int => insertCode(Conditions, idx) }
 
 def keyFor(cat: String, n: Int) = {
-    val instr = instructions(cat)(n)
-    if (instr.contains("."))
-        instr.dropWhile(_ != '.').drop(1).takeWhile(c => c != '(' && c != '-').trim
-    else
-        instr.takeWhile(c => c != '(' && c != '-').trim
+    instructions(cat)(n).takeWhile(c => c != '(' && c != '-').trim
 }
 
 @volatile var helpOn = true
@@ -228,6 +225,12 @@ stAddLinkEnterHandler(Pictures, story) { idx: Int => showHelp(Pictures, idx) }
 stAddLinkEnterHandler(PictureXforms, story) { idx: Int => showHelp(PictureXforms, idx) }
 stAddLinkEnterHandler(Abstraction, story) { idx: Int => showHelp(Abstraction, idx) }
 stAddLinkEnterHandler(Conditions, story) { idx: Int => showHelp(Conditions, idx) }
+
+helpPane.addFocusListener(new FocusAdapter {
+    override def focusLost(e: FocusEvent) {
+        helpFrame.setVisible(false)
+    }
+})
 
 stOnStoryStop(story) {
     helpFrame.setVisible(false)
