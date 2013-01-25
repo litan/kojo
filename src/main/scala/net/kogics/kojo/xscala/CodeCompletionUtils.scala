@@ -89,9 +89,12 @@ object CodeCompletionUtils {
     "stInsertCode" -> "stInsertCode(${code})",
     "stSmartInsertCode" -> "stSmartInsertCode(${code})",
     "stOnStoryStop" -> "stOnStoryStop {\n    ${cursor}\n}",
-    "VPics" -> "VPics(\n      p,\n      p\n)",
     "HPics" -> "HPics(\n      p,\n      p\n)",
+    "picRow" -> "picRow(\n      p,\n      p\n)",
+    "VPics" -> "VPics(\n      p,\n      p\n)",
+    "picCol" -> "picCol(\n      p,\n      p\n)",
     "GPics" -> "GPics(\n      p,\n      p\n)",
+    "picStack" -> "picStack(\n      p,\n      p\n)",
     // Todo - is there any commonality here with the staging templates
     "trans" -> "trans(${x}, ${y})",
     "rot" -> "rot(${angle})",

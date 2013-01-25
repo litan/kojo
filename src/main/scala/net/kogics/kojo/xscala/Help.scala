@@ -770,13 +770,7 @@ object Help {
     "Picture" -> 
     <div>
       <strong>Picture</strong>{{ drawingCode }} - Makes a picture out of the given turtle drawing code. <br/>
-      The picture needs to be drawn for it to become visible in the turtle canvas. <br/><br/>
-      <em>Note - every picture has its own turtle. For pictures created with the <tt>Picture</tt> function, 
-        Kojo's defalt turtle is set to the picture's turtle while the picture is being drawn. 
-        Your drawing code can then continue to use the default turtle for drawing. Contrast this with 
-        picture's created using the <tt>PictureT</tt> function. For those, a turtle is explicitly supplied to 
-        your drawing code, and your code needs to draw using that turtle. Kojo's default turtle is left 
-        alone in that case.</em><br/>
+      The picture needs to be drawn for it to become visible in the turtle canvas. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -815,59 +809,59 @@ object Help {
       </pre>
     </div>
     ,
-    "hline" -> 
+    "PicShape.hline" -> 
     <div>
-      <strong>PShapes.hline</strong>(length) - Creates a picture of a horizontal line with the given length.<br/>
+      <strong>PicShape.hline</strong>(length) - Creates a picture of a horizontal line with the given length.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PShapes.hline(50))
+        draw(PicShape.hline(50))
       </pre>
     </div>,
-    "vline" -> 
+    "PicShape.vline" -> 
     <div>
-      <strong>PShapes.vline</strong>(length) - Creates a picture of a vertical line with the given length.<br/>
+      <strong>PicShape.vline</strong>(length) - Creates a picture of a vertical line with the given length.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PShapes.vline(50))
+        draw(PicShape.vline(50))
       </pre>
     </div>,
-    "rect" -> 
+    "PicShape.rect" -> 
     <div>
-      <strong>PShapes.rect</strong>(height, width) - Creates a picture of a rectangle with the given height and width.<br/>
+      <strong>PicShape.rect</strong>(height, width) - Creates a picture of a rectangle with the given height and width.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PShapes.rect(50, 100))
+        draw(PicShape.rect(50, 100))
       </pre>
     </div>,
-    "ball" -> 
+    "PicShape.circle" -> 
     <div>
-      <strong>PShapes.ball</strong>(radius) - Creates a picture of a circle with the given radius.<br/>
+      <strong>PicShape.circle</strong>(radius) - Creates a picture of a circle with the given radius.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PShapes.ball(50))
+        draw(PicShape.circle(50))
       </pre>
     </div>,
-    "text" -> 
+    "PicShape.text" -> 
     <div>
-      <strong>PShapes.text</strong>(content, size) - Creates a picture of the given text with the given font-size.<br/>
+      <strong>PicShape.text</strong>(content, size) - Creates a picture of the given text with the given font-size.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PShapes.text("Hi There", 18))
+        draw(PicShape.text("Hi There", 18))
       </pre>
     </div>,
     "draw" -> 
@@ -878,13 +872,14 @@ object Help {
       <br/>
       <pre>
         cleari()
-        draw(PShapes.hline(50), PShapes.vline(50)) 
+        draw(PicShape.hline(50), PicShape.vline(50)) 
       </pre>
     </div>,
     "HPics" -> 
     <div>
       <strong>HPics</strong>(pictures) <br/>
-      A container for pictures that lays out the given pictures horizontally. <br/>
+      Creates a horizontal row of the supplied pictures. Is equivalent to <strong>picRow</strong>(pictures)<br/>
+      HPics is a container for pictures that lays out its child pictures horizontally. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -907,10 +902,37 @@ object Help {
       </pre>
     </div>
     ,
+    "picRow" -> 
+    <div>
+      <strong>picRow</strong>(pictures) <br/>
+      Creates a horizontal row of the supplied pictures. Is equivalent to <strong>HPics</strong>(pictures)<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        def p = Picture {{
+          repeat (4) {{
+            forward(50)
+            right()
+          }}
+        }}
+
+        clear()
+        invisible()
+        val pic = picRow(
+            p,
+            p,
+            p
+        )
+        draw(pic)
+      </pre>
+    </div>
+    ,
     "VPics" -> 
     <div>
       <strong>VPics</strong>(pictures) <br/>
-      A container for pictures that lays out the given pictures vertically. <br/>
+      Creates a vertical column of the supplied pictures. Is equivalent to <strong>picCol</strong>(pictures)<br/>
+      VPics is a container for pictures that lays out its child pictures vertically. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -933,10 +955,63 @@ object Help {
       </pre>
     </div>
     ,
+    "picCol" -> 
+    <div>
+      <strong>picCol</strong>(pictures) <br/>
+      Creates a vertical column of the supplied pictures. Is equivalent to <strong>VPics</strong>(pictures)<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        def p = Picture {{
+          repeat (4) {{
+            forward(50)
+            right()
+          }}
+        }}
+
+        clear()
+        invisible()
+        val pic = picCol(
+            p,
+            p,
+            p
+        )
+        draw(pic)
+      </pre>
+    </div>
+    ,
     "GPics" -> 
     <div>
       <strong>GPics</strong>(pictures) <br/>
-      A container for pictures that lays out the given pictures one on top of the other. <br/>
+      Creates a stack of the supplied pictures. Is equivalent to <strong>picStack</strong>(pictures)<br/>
+      GPics is a container for pictures that lays out its child pictures one on top of the other. <br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        def p = Picture {{
+          repeat (4) {{
+            forward(50)
+            right()
+          }}
+        }}
+
+        clear()
+        invisible()
+        val pic = GPics(
+            p,
+            rot(30) -> p,
+            rot(60) -> p
+        )
+        draw(pic)
+      </pre>
+    </div>
+    ,
+    "picStack" -> 
+    <div>
+      <strong>picStack</strong>(pictures) <br/>
+      Creates a stack of the supplied pictures. Is equivalent to <strong>GPics</strong>(pictures)<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
