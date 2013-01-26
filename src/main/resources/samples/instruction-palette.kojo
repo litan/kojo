@@ -199,11 +199,12 @@ runInGuiThread {
     })
 
     footerPanel = new JPanel
-    footerPanel.setBackground(white)
-    footerPanel.add(new JLabel("Online Help"))
-    val onButton = new JRadioButton("On")
+    footerPanel.setBackground(color(0x93989c))
+    val helpLabel = new JLabel("Live Help"); helpLabel.setForeground(color(0xfafafa))
+    footerPanel.add(helpLabel)
+    val onButton = new JRadioButton("On"); onButton.setForeground(color(0xfafafa))
     onButton.setSelected(true)
-    val offButton = new JRadioButton("Off")
+    val offButton = new JRadioButton("Off"); offButton.setForeground(color(0xfafafa))
     offButton.setSelected(false)
     val onOff = new ButtonGroup; onOff.add(onButton); onOff.add(offButton)
     footerPanel.add(onButton)
