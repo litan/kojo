@@ -6,6 +6,7 @@ val linkStyle = "color:#fafafa"
 val codeLinkStyle = "text-decoration:none;font-size:x-small;color:#fafafa;"
 val footerStyle = "font-size:90%;margin-top:15px;color:1a1a1a;"
 val helpStyle = "background-color:#ffffcc;margin:10px;"
+val footerPanelColor = color(0x93989c)
 
 val Turtle = "t"
 val Pictures = "p"
@@ -158,6 +159,7 @@ def pageFor(cat: String) = Page(
         { footer }
         </body>,
     code = {
+        stSetUserControlsBg(footerPanelColor)
         stAddUiComponent(footerPanel)
     }
 )
@@ -170,6 +172,8 @@ val story = Story(
     pageFor(PictureXforms),
     pageFor(Conditions)
 )
+
+switchToDefaultPerspective()
 stClear()
 stSetStorytellerWidth(50)
 
@@ -199,7 +203,7 @@ runInGuiThread {
     })
 
     footerPanel = new JPanel
-    footerPanel.setBackground(color(0x93989c))
+    footerPanel.setBackground(footerPanelColor)
     val helpLabel = new JLabel("Live Help"); helpLabel.setForeground(color(0xfafafa))
     footerPanel.add(helpLabel)
     val onButton = new JRadioButton("On"); onButton.setForeground(color(0xfafafa))

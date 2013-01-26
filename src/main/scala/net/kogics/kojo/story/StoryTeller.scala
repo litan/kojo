@@ -403,11 +403,14 @@ class StoryTeller extends JPanel with music.Mp3Player {
     Utils.runInSwingThread {
       uc.add(c)
       uc.setBorder(BorderFactory.createEtchedBorder())
-      uc.setBackground(c.getBackground)
       uc.revalidate()
       uc.repaint()
       scrollEp()
     }
+  }
+
+  def setUserControlsBg(color: Color) = Utils.runInSwingThread {
+    uc.setBackground(color)
   }
 
   addComponentListener(new ComponentAdapter {
