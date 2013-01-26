@@ -420,8 +420,11 @@ class Builtins extends RepeatCommands {
 
   def stInsertCode(code: String) = ctx.insertCode(code)
   def stSmartInsertCode(code: String) = ctx.smartInsertCode(code)
-  def stSetStorytellerWidth(width: Int) = kojoCtx.topcs.sth.setResizeRequest(new Dimension(width, 0), true)
+  def stSetStorytellerWidth(width: Int) = Utils.runInSwingThread {
+    kojoCtx.topcs.sth.setResizeRequest(new Dimension(width, 0), true)
+  }
   def stFrame = kojoCtx.frame
+  def stSetUserControlsBg(color: Color) = storyTeller.setUserControlsBg(color)
 
   UserCommand.addSynopsisSeparator()
 
