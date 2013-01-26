@@ -21,7 +21,6 @@ def navLinks =
         <a style={ linkStyle } href={ "http://localpage/" + ControlFlow }>Flow</a> | <a style={ linkStyle } href={ "http://localpage/" + Conditions }>Condition</a> <br/>
         <a style={ linkStyle } href={ "http://localpage/" + Abstraction }>Abstraction</a> <br/>
         <hr/>
-        Help <a style={ linkStyle } href="http://runhandler/h/0">Off</a> | <a style={ linkStyle } href="http://runhandler/h/1">On</a> <br/>
         <br/>
     </div>
 
@@ -157,7 +156,10 @@ def pageFor(cat: String) = Page(
         { navLinks }
         { for (i <- 0 until instructions(cat).length) yield (if (instructions(cat)(i) == "") <br/> else code(cat, i)) }
         { footer }
-        </body>
+        </body>,
+    code = {
+        stAddUiComponent(footerPanel)
+    }
 )
 
 val story = Story(
@@ -175,6 +177,9 @@ import javax.swing._
 import java.awt.event._
 @volatile var helpFrame: JWindow = _
 @volatile var helpPane: JEditorPane = _
+@volatile var footerPanel: JPanel = _
+@volatile var helpOn = true
+
 runInGuiThread {
     helpFrame = new JWindow(stFrame)
     helpFrame.setBounds(300, 100, 500, 300)
@@ -190,6 +195,27 @@ runInGuiThread {
             if (!helpPane.isFocusOwner) { // make Linux work
                 helpFrame.setVisible(false)
             }
+        }
+    })
+
+    footerPanel = new JPanel
+    footerPanel.setBackground(white)
+    footerPanel.add(new JLabel("Online Help"))
+    val onButton = new JRadioButton("On")
+    onButton.setSelected(true)
+    val offButton = new JRadioButton("Off")
+    offButton.setSelected(false)
+    val onOff = new ButtonGroup; onOff.add(onButton); onOff.add(offButton)
+    footerPanel.add(onButton)
+    footerPanel.add(offButton)
+    onButton.addActionListener(new ActionListener {
+        override def actionPerformed(e: ActionEvent) {
+            helpOn = true
+        }
+    })
+    offButton.addActionListener(new ActionListener {
+        override def actionPerformed(e: ActionEvent) {
+            helpOn = false
         }
     })
 }
@@ -212,16 +238,6 @@ stAddLinkHandler(Conditions, story) { idx: Int => insertCode(Conditions, idx) }
 
 def keyFor(cat: String, n: Int) = {
     instructions(cat)(n).takeWhile(c => c != '(' && c != '-').trim
-}
-
-@volatile var helpOn = true
-stAddLinkHandler("h", story) { idx: Int =>
-    if (idx == 1) {
-        helpOn = true
-    }
-    else {
-        helpOn = false
-    }
 }
 
 def showHelp(cat: String, idx: Int) {
