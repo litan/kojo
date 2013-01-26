@@ -1,7 +1,11 @@
-val pageStyle = "background-color:#99CCFF; margin:5px;font-size:small;"
+val pageStyle = "background-color:#93989c; margin:5px;font-size:small;"
 val centerStyle = "text-align:center;"
-val headerStyle = "text-align:center;font-size:95%;color:maroon;"
-val codeStyle = "font-size:90%;"
+val headerStyle = "text-align:center;font-size:95%;color:#fafafa;font-weight:bold;"
+val codeStyle = "background-color:#4a6cd4;margin-top:3px"
+val linkStyle = "color:#fafafa"
+val codeLinkStyle = "text-decoration:none;font-size:x-small;color:#fafafa;"
+val footerStyle = "font-size:90%;margin-top:15px;color:1a1a1a;"
+val helpStyle = "background-color:#ffffcc;margin:10px;"
 
 val Turtle = "t"
 val Pictures = "p"
@@ -12,17 +16,17 @@ val Conditions = "c"
 
 def navLinks =
     <div style={ headerStyle }>
-        <a href={ "http://localpage/" + Turtle }>Turtle</a> | <a href={ "http://localpage/" + Pictures }>Picture</a> | <a href={ "http://localpage/" + ControlFlow }>Flow</a><br/>
-        <a href={ "http://localpage/" + PictureXforms }>Picture Transforms</a> <br/>
-        <a href={ "http://localpage/" + Abstraction }>Abstraction</a> <br/>
-        <a href={ "http://localpage/" + Conditions }>Condition</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + Turtle }>Turtle</a> | <a style={ linkStyle } href={ "http://localpage/" + Pictures }>Picture</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + PictureXforms }>Picture Transforms</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + ControlFlow }>Flow</a> | <a style={ linkStyle } href={ "http://localpage/" + Conditions }>Condition</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + Abstraction }>Abstraction</a> <br/>
         <hr/>
-        Help <a href="http://runhandler/h/0">Off</a> | <a href="http://runhandler/h/1">On</a> <br/>
+        Help <a style={ linkStyle } href="http://runhandler/h/0">Off</a> | <a style={ linkStyle } href="http://runhandler/h/1">On</a> <br/>
         <br/>
     </div>
 
 def footer =
-    <div style="font-size:90%;margin-top:15px">
+    <div style={ footerStyle }>
         Click on any instruction to insert it into the Script Editor at the current Caret location.
     </div>
 
@@ -142,8 +146,8 @@ val templates = Map(
 
 def runLink(category: String, n: Int) = s"http://runhandler/$category/$n"
 def code(category: String, n: Int) =
-    <div style="background-color:CCFFFF;margin-top:3px"> 
-        <pre><code><a href={ runLink(category, n) } style="text-decoration: none;font-size:x-small;"> { instructions(category)(n) }</a></code></pre>
+    <div style={ codeStyle }> 
+        <pre><code><a href={ runLink(category, n) } style={ codeLinkStyle }> { instructions(category)(n) }</a></code></pre>
     </div>
 
 def pageFor(cat: String) = Page(
@@ -222,13 +226,16 @@ stAddLinkHandler("h", story) { idx: Int =>
 
 def showHelp(cat: String, idx: Int) {
     if (helpOn) {
-        helpPane.setText(s"""<body style="background-color:#ffff99;margin:10px;">
+        helpPane.setText(s"""<body style="$helpStyle">
         ${stHelpFor(keyFor(cat, idx))}
         </body>
         """
         )
         helpPane.setCaretPosition(0)
         helpFrame.setVisible(true)
+        // try to make sure that the help pane gains focus
+        helpPane.requestFocus()
+        helpPane.requestFocusInWindow()
     }
 }
 
