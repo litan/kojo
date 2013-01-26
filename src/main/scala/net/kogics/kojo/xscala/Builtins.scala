@@ -421,6 +421,7 @@ class Builtins extends RepeatCommands {
   def stInsertCode(code: String) = ctx.insertCode(code)
   def stSmartInsertCode(code: String) = ctx.smartInsertCode(code)
   def stSetStorytellerWidth(width: Int) = kojoCtx.topcs.sth.setResizeRequest(new Dimension(width, 0), true)
+  def stFrame = kojoCtx.frame
 
   UserCommand.addSynopsisSeparator()
 
@@ -511,11 +512,11 @@ Here's a partial list of the available commands:
   def stGotoUrl(url: String) = Utils.runInSwingThread {
     urlHandler.gotoUrl(new java.net.URL(url))
   }
-  
+
   def stOnStoryStop(story: Story)(fn: => Unit) {
     storyTeller.onStop(story, fn)
   }
-  
+
   def stHelpFor(instr: String) = Help(instr)
 
   type Picture = core.Picture
@@ -698,7 +699,7 @@ Here's a partial list of the available commands:
 
   val PShapes = PicShape
   object PicShape {
-    private [xscala] def trect(h: Int, w: Int, t: Turtle) {
+    private[xscala] def trect(h: Int, w: Int, t: Turtle) {
       import t._
       repeat(2) {
         forward(h)

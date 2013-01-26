@@ -169,21 +169,34 @@ stSetStorytellerWidth(50)
 
 import javax.swing._
 import java.awt.event._
-val helpFrame = new JFrame
-helpFrame.setUndecorated(true)
-helpFrame.setBounds(300, 100, 500, 300)
-val helpPane = new JEditorPane
-helpPane.setBackground(Color(255, 255, 51))
-helpPane.setContentType("text/html")
-val helpScroller = new JScrollPane(helpPane)
-helpScroller.setBorder(BorderFactory.createEmptyBorder())
-helpFrame.getContentPane.add(helpScroller)
+@volatile var helpFrame: JWindow = _
+@volatile var helpPane: JEditorPane = _
+runInGuiThread {
+    helpFrame = new JWindow(stFrame)
+    helpFrame.setBounds(300, 100, 500, 300)
+    helpPane = new JEditorPane
+    helpPane.setBackground(Color(255, 255, 51))
+    helpPane.setContentType("text/html")
+    helpPane.setEditable(false)
+    val helpScroller = new JScrollPane(helpPane)
+    helpScroller.setBorder(BorderFactory.createLineBorder(gray, 1))
+    helpFrame.getContentPane.add(helpScroller)
+    helpPane.addFocusListener(new FocusAdapter {
+        override def focusLost(e: FocusEvent) = schedule(0.3) {
+            if (!helpPane.isFocusOwner) { // make Linux work
+                helpFrame.setVisible(false)
+            }
+        }
+    })
+}
 
 def insertCode(cat: String, idx: Int) {
     stInsertCode(templates(cat)(instructions(cat)(idx)))
+    helpFrame.setVisible(false)
 }
 def smartInsertCode(cat: String, idx: Int) {
     stSmartInsertCode(templates(cat)(instructions(cat)(idx)))
+    helpFrame.setVisible(false)
 }
 
 stAddLinkHandler(Turtle, story) { idx: Int => smartInsertCode(Turtle, idx) }
@@ -225,12 +238,6 @@ stAddLinkEnterHandler(Pictures, story) { idx: Int => showHelp(Pictures, idx) }
 stAddLinkEnterHandler(PictureXforms, story) { idx: Int => showHelp(PictureXforms, idx) }
 stAddLinkEnterHandler(Abstraction, story) { idx: Int => showHelp(Abstraction, idx) }
 stAddLinkEnterHandler(Conditions, story) { idx: Int => showHelp(Conditions, idx) }
-
-helpPane.addFocusListener(new FocusAdapter {
-    override def focusLost(e: FocusEvent) {
-        helpFrame.setVisible(false)
-    }
-})
 
 stOnStoryStop(story) {
     helpFrame.setVisible(false)
