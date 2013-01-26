@@ -99,6 +99,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
   ep.setEditable(false)
   ep.addHyperlinkListener(new LinkListener(this))
   ep.setBackground(Color.white)
+  ep.setBorder(BorderFactory.createEmptyBorder())
   val sp = new JScrollPane(ep)
   sp.setBorder(BorderFactory.createEmptyBorder())
   add(sp, BorderLayout.CENTER)
@@ -402,6 +403,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
     Utils.runInSwingThread {
       uc.add(c)
       uc.setBorder(BorderFactory.createEtchedBorder())
+      uc.setBackground(c.getBackground)
       uc.revalidate()
       uc.repaint()
       scrollEp()
