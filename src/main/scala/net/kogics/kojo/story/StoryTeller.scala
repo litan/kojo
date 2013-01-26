@@ -157,7 +157,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
     stopBut.setToolTipText("Stop Story")
     stopBut.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        done()
+        stop()
       }
     })
     cp.add(stopBut)
@@ -220,7 +220,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
       updateCp()
     }
     else {
-      done()
+      stop()
     }
   }
 
@@ -235,7 +235,7 @@ class StoryTeller extends JPanel with music.Mp3Player {
       updateCp()
     }
     else {
-      done()
+      stop()
     }
   }
 
@@ -268,15 +268,16 @@ class StoryTeller extends JPanel with music.Mp3Player {
     stopMp3()
   }
 
-  def clear() {
-    Utils.runInSwingThread {
-      clearHelper()
-      ensureVisible()
-      cp.setVisible(true)
-      val doc = ep.getDocument.asInstanceOf[HTMLDocument]
-      doc.setBase(new java.net.URL("file:///" + kojoCtx.baseDir))
-      ep.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+  def clear() = Utils.runInSwingThread {
+    if (currStory.isDefined) {
+      done()
     }
+    clearHelper()
+    ensureVisible()
+    cp.setVisible(true)
+    val doc = ep.getDocument.asInstanceOf[HTMLDocument]
+    doc.setBase(new java.net.URL("file:///" + kojoCtx.baseDir))
+    ep.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
   }
 
   def pageNumber(name: String): Option[Int] = story.pageNumber(name)
@@ -285,22 +286,26 @@ class StoryTeller extends JPanel with music.Mp3Player {
       story.onStop(fn)
   }
   
-  def done() {
+  def stop() {
+    // call in gui thread
     kojoCtx.stopInterpreter()
-    currStory foreach {_.stop}
-    Utils.runInSwingThread {
-      if (savedStory.isDefined) {
-        currStory = savedStory
-        savedStory = None
-        showCurrStory()
-      }
-      else {
-        currStory = None
-        clearHelper()
-        stopMp3Loop()
-        cp.setVisible(false)
-        displayContent(defaultMsg)
-      }
+    done()
+  }
+
+  private def done() = {
+    // call in gui thread
+    currStory foreach { _.stop }
+    if (savedStory.isDefined) {
+      currStory = savedStory
+      savedStory = None
+      showCurrStory()
+    }
+    else {
+      currStory = None
+      clearHelper()
+      stopMp3Loop()
+      cp.setVisible(false)
+      displayContent(defaultMsg)
     }
   }
 
@@ -460,17 +465,14 @@ class StoryTeller extends JPanel with music.Mp3Player {
     outputFn("[Storyteller] %s\n" format (msg))
   }
 
-  def playStory(story: Story) {
-    if (savedStory.isDefined) {
-      showCurrStory()
-      throw new IllegalArgumentException("Can't run more than two stories. Stop the currently active story and try again.")
-    }
-
+  def playStory(story: Story) = Utils.runInSwingThread {
     if (currStory.isDefined) {
-      savedStory = currStory
+        println("Can't run more than one story.")
     }
-    currStory = Some(story)
-    showCurrStory()
+    else {
+      currStory = Some(story)
+      showCurrStory()
+    }
   }
 
   def storyComing() {

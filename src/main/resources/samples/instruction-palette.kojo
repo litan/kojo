@@ -270,6 +270,7 @@ stAddLinkEnterHandler(Conditions, story) { idx: Int => showHelp(Conditions, idx)
 stOnStoryStop(story) {
     helpFrame.setVisible(false)
     helpFrame.dispose()
+    switchToDefaultPerspective()
 }
 stPlayStory(story)
 runInBackground { stSetScript("") }

@@ -41,7 +41,7 @@ trait AppMenu { self: Main.type =>
 
     val fileMenu = new JMenu(Utils.loadString("S_File"))
     fileMenu.setMnemonic('F')
-    
+
     val openWeb = new JMenuItem(Utils.loadString("S_OpenFromWeb"))
     openWeb.addActionListener(new ActionListener {
       def actionPerformed(ev: ActionEvent) {
@@ -189,7 +189,7 @@ trait AppMenu { self: Main.type =>
 
     val windowMenu = new JMenu(Utils.loadString("S_Window"))
     windowMenu.setMnemonic('W')
-    
+
     val resetWindows = new JMenuItem(Utils.loadString("S_DefaultPerspective"))
     resetWindows.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
@@ -252,10 +252,6 @@ trait AppMenu { self: Main.type =>
 
     menuBar.add(windowMenu)
 
-//    val toolsMenu = new JMenu("Tools")
-//    toolsMenu.setMnemonic('T')
-//    menuBar.add(toolsMenu)
-    
     val langMenu = new JMenu(Utils.loadString("S_Language"))
     langMenu.setMnemonic('L')
 
@@ -300,14 +296,18 @@ trait AppMenu { self: Main.type =>
     langMenu.add(langMenuItem("Swedish"))
     menuBar.add(langMenu)
 
+    val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
+    toolsMenu.setMnemonic('T')
+    toolsMenu.add(menuItemForUrl(Utils.loadString("S_InstructionPalette"), "http://www.kogics.net/public/kojolite/samples/instruction-palette.kojo"))
+    menuBar.add(toolsMenu)
+
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
     helpMenu.setMnemonic('H')
-    
+
     helpMenu.add(menuItemFor(Utils.loadString("S_KojoOverview"), "kojo-overview.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_ScalaTutorial"), "scala-tutorial.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_ComposingMusic"), "composing-music.kojo"))
     helpMenu.add(menuItemFor(Utils.loadString("S_Intro3D"), "d3-intro.kojo"))
-    helpMenu.add(menuItemForUrl("Instruction Palette (Experimental)", "http://www.kogics.net/public/kojolite/samples/instruction-palette.kojo"))
     helpMenu.addSeparator()
 
     val about = new JMenuItem(Utils.loadString("S_About"))

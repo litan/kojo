@@ -33,6 +33,7 @@ trait KojoCtx {
   def baseDir: String
   def stopInterpreter(): Unit
   def stopAnimation(): Unit
+  def stopStory(): Unit
   def scrollOutputToEnd(): Unit
   def frame: JFrame
   def fileOpened(file: java.io.File): Unit
