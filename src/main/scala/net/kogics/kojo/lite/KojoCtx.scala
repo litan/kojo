@@ -24,11 +24,11 @@ import net.kogics.kojo.action.CloseFile
 import java.awt.event.ActionListener
 import java.awt.event.ActionEvent
 import java.awt.Color
-import net.kogics.kojo.xscala.Builtins
 import java.util.prefs.Preferences
 import bibliothek.gui.dock.common.CGrid
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.mode.ExtendedMode
+import net.kogics.kojo.story.StoryTeller
 
 object KojoCtx extends core.Singleton[KojoCtx] {
   protected def newInstance = new KojoCtx
@@ -48,6 +48,7 @@ class KojoCtx extends core.KojoCtx {
   var frame: JFrame = _
   var saveAsActionListener: ActionListener = _
   var codeSupport: CodeExecutionSupport = _
+  var storyTeller: StoryTeller = _
   var control: CControl = _
   @volatile var fps = 50
 
@@ -205,6 +206,8 @@ class KojoCtx extends core.KojoCtx {
   def stopInterpreter() = Utils.runInSwingThread {
     CodeExecutionSupport.instance.stopInterpreter()
   }
+  
+  def stopStory() = Utils.runInSwingThread { storyTeller.stop() }
 
   def scrollOutputToEnd() {
     topcs.owh.scrollToEnd()

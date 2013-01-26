@@ -34,6 +34,7 @@ class KojoTestContext extends core.KojoCtx {
   def baseDir: String = System.getProperty("user.dir")
   def stopInterpreter() {}
   def stopAnimation() {}
+  def stopStory() {}
   def scrollOutputToEnd() {}
   def frame: JFrame = null
   def fileOpened(file: java.io.File) {}

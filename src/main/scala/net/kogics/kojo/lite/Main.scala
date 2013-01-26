@@ -167,6 +167,7 @@ object Main extends AppMenu {
       kojoCtx.frame = frame
       kojoCtx.codeSupport = codeSupport
       kojoCtx.control = control
+      kojoCtx.storyTeller = StoryTeller.instance
 
       val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, kojoCtx)
       scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport, frame)
