@@ -308,7 +308,7 @@ object Help {
         setPenFontSize(15)
         // write with a font size of 15
         write("Hi There")
-                    
+        forward(50)            
         setPenFontSize(20)
         // write with a font size of 20
         write("Hi There")
@@ -1025,7 +1025,7 @@ object Help {
 
         clear()
         invisible()
-        val pic = GPics(
+        val pic = picStack(
             p,
             rot(30) -> p,
             rot(60) -> p
