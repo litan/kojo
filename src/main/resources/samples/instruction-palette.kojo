@@ -1,5 +1,5 @@
 val pageStyle = "background-color:#93989c; margin:5px;font-size:small;"
-val centerStyle = "text-align:center;"
+val titleStyle = "font-size:95%;text-align:center;color:1a1a1a;margin-top:5px;margin-bottom:3px;"
 val headerStyle = "text-align:center;font-size:95%;color:#fafafa;font-weight:bold;"
 val codeStyle = "background-color:#4a6cd4;margin-top:3px"
 val linkStyle = "color:#fafafa"
@@ -14,15 +14,21 @@ val PictureXforms = "pt"
 val ControlFlow = "cf"
 val Abstraction = "a"
 val Conditions = "c"
-
+val catName = Map(
+    Turtle -> "Turtle",
+    Pictures -> "Picture",
+    PictureXforms -> "Picture Transforms",
+    ControlFlow -> "Flow",
+    Abstraction -> "Abstraction",
+    Conditions -> "Condition"
+)
 def navLinks =
     <div style={ headerStyle }>
-        <a style={ linkStyle } href={ "http://localpage/" + Turtle }>Turtle</a> | <a style={ linkStyle } href={ "http://localpage/" + Pictures }>Picture</a> <br/>
-        <a style={ linkStyle } href={ "http://localpage/" + PictureXforms }>Picture Transforms</a> <br/>
-        <a style={ linkStyle } href={ "http://localpage/" + ControlFlow }>Flow</a> | <a style={ linkStyle } href={ "http://localpage/" + Conditions }>Condition</a> <br/>
-        <a style={ linkStyle } href={ "http://localpage/" + Abstraction }>Abstraction</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + Turtle }>{catName(Turtle)}</a> | <a style={ linkStyle } href={ "http://localpage/" + Pictures }>{catName(Pictures)}</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + PictureXforms }>{catName(PictureXforms)}</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + ControlFlow }>{catName(ControlFlow)}</a> | <a style={ linkStyle } href={ "http://localpage/" + Conditions }>{catName(Conditions)}</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + Abstraction }>{catName(Abstraction)}</a> <br/>
         <hr/>
-        <br/>
     </div>
 
 def footer =
@@ -162,6 +168,7 @@ def pageFor(cat: String) = Page(
     body =
         <body style={ pageStyle }>
         { navLinks }
+        <div style={titleStyle}>{catName(cat)}</div>        
         { for (i <- 0 until instructions(cat).length) yield (if (instructions(cat)(i) == "") <br/> else code(cat, i)) }
         { footer }
         </body>,

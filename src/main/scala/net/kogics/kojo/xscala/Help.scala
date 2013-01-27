@@ -24,7 +24,7 @@ object Help {
   val CommonContent = Map[String, String](
     "repeat" -> 
     <div>
-      <strong>repeat</strong>(n){{ }} - Repeats the commands within braces n number of times.<br/>
+      <strong>repeat</strong>(n){{ }} - Repeats a block of commands (within braces) n number of times.<br/>
       <br/>
       <em>Example:</em> <br/><br/>
       <pre>
@@ -671,8 +671,13 @@ object Help {
     ,
     "for" ->
     <div>
-      <strong>for</strong>(i &lt;- 1 to n) {{ }} - Repeats the commands within braces n number of times,
+      Usage #1 [with commands]:<br/>
+      <strong>for</strong>(i &lt;- 1 to n) {{ commands }} - Repeats a block of commands (within braces) n number of times,
        making the repeat counter available within the block defined by the braces.<br/>
+      <br/>
+      Usage #2 [with an expression]:<br/>
+      <strong>for</strong>(i &lt;- 1 to n) yield {{ expression }} - Processes the elements in a generator/collection, 
+      yielding a new generator/collection.<br/>
       <br/>
       <em>Example:</em> <br/><br/>
       <pre>
@@ -683,16 +688,21 @@ object Help {
             circle(radius)
           }}
       </pre>
+      <em>Example 2:</em> <br/><br/>
+      <pre>
+          for (i &lt;- 1 to 4) yield (2 * i)
+      </pre>
     </div>
     ,
     "def" ->
     <div>
-        <strong>def</strong> - Let's you define a new command or function.<br/>
+        <strong>def</strong> - Gives a name to a block of commands (within braces) or an expression. This lets you define a 
+        new command or function.<br/>
         <br/>
         <em>Examples:</em> <br/>
         <br/>
         <pre>
-            // A User defined command named square
+            // A new command named square
             // Takes one input
             def square(side: Int) {{
                 repeat(4) {{
@@ -706,13 +716,12 @@ object Help {
             square(200)
 
 
-            // A User defined function named sum
+            // A new function named sum
             // Takes two inputs, and returns a result
-            def sum(n1: Int, n2: Int) = {{
+            def sum(n1: Int, n2: Int) = 
                 n1 + n2
-            }}
             clearOutput()
-            // call to the sum function within print command
+            // a call to the sum function within a print command
             print(sum(3, 5))
             // another call to the sum function
             print(sum(20, 7))
@@ -721,7 +730,9 @@ object Help {
     ,
     "if" ->
     <div>
-        <strong>if</strong> or <strong>if-else</strong> - Let you do conditional execution.<br/>
+        <strong>if</strong> or <strong>if-else</strong> - Let's you choose the instruction to execute 
+        based on a condition. The instruction can be a command, in which case if-else works as a command.
+        Or the instruction can be an expression, in which case if-else works as an expression.<br/>
         <br/>
         <em>Examples:</em> <br/>
         <br/>
@@ -749,9 +760,8 @@ object Help {
     ,
     "val" ->
     <div>
-        <strong>val</strong> - Let's you create a named value (thus letting you 
-        associate a name with a value). This makes your programs easier to modify 
-        and easier to understand.<br/>
+        <strong>val</strong> - Gives a name to an expression, letting you create a named value. 
+        This makes your programs easier to modify and easier to understand.<br/>
         <br/>
         <em>Example:</em> <br/>
         <br/>
