@@ -418,8 +418,8 @@ class Builtins extends RepeatCommands {
   }
   UserCommand("stNext", Nil, "Moves the story to the next page/view.")
 
-  def stInsertCode(code: String) = ctx.insertCode(code)
-  def stSmartInsertCode(code: String) = ctx.smartInsertCode(code)
+  def stInsertCodeInline(code: String) = ctx.insertCodeInline(code)
+  def stInsertCodeBlock(code: String) = ctx.insertCodeBlock(code)
   def stSetStorytellerWidth(width: Int) = Utils.runInSwingThread {
     kojoCtx.topcs.sth.setResizeRequest(new Dimension(width, 0), true)
   }

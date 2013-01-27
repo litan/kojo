@@ -495,20 +495,35 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         }
       }
 
-      def insertCode(code: String) {
-        Utils.runInSwingThreadAndWait {
-          codePane.insert(code, codePane.getCaretPosition())
-          kojoCtx.formatSource()
-          activateEditor()
-        }
-      }
+      def insertCodeInline(code: String) = smartInsertCode(code, false)
+      def insertCodeBlock(code: String) = smartInsertCode(code, true)
 
-      def smartInsertCode(code: String) {
-        Utils.runInSwingThreadAndWait {
-          codePane.insert(code + "\n", codePane.getCaretPosition())
-          kojoCtx.formatSource()
-          activateEditor()
+      private def smartInsertCode(code: String, block: Boolean) = Utils.runInSwingThread {
+        val dot = codePane.getCaretPosition
+        val cOffset = code.indexOf("${c}")
+        if (cOffset == -1) {
+          import javax.swing.text.Utilities
+          if (block) {
+            codePane.insert(code + "\n", dot)
+            // move to the next line
+            codePane.setCaretPosition(Utilities.getRowEnd(codePane, dot) + 1)
+          }
+          else {
+            codePane.insert(code + " ", dot)
+          }
         }
+        else {
+          if (block) {
+            codePane.insert(code.replaceAllLiterally("${c}", "") + "\n", dot)
+            codePane.setCaretPosition(dot + cOffset)
+          }
+          else {
+            codePane.insert(code.replaceAllLiterally("${c}", "") + " ", dot)
+            codePane.setCaretPosition(dot + cOffset)
+          }
+        }
+        kojoCtx.formatSource()
+        activateEditor()
       }
 
       def stopAnimation() {

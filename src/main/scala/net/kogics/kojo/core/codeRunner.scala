@@ -58,8 +58,8 @@ trait RunContext {
   def hideVerboseOutput(): Unit
   def clearOutput(): Unit
   def setScript(code: String): Unit
-  def insertCode(code: String): Unit
-  def smartInsertCode(code: String): Unit
+  def insertCodeInline(code: String): Unit
+  def insertCodeBlock(code: String): Unit
 
   def stopAnimation(): Unit
 }
