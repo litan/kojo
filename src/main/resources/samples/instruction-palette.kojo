@@ -42,101 +42,96 @@ val tTemplates = LinkedHashMap(
     "clear()" -> "clear()",
     "invisible()" -> "invisible()",
     "cleari()" -> "cleari()",
-    "setAnimationDelay(d)" -> "setAnimationDelay(100)",
-    "forward(n)" -> "forward(50)",
-    "right(a)" -> "right(90)",
-    "left(a)" -> "left(90)",
-    "setPenColor(c)" -> "setPenColor(blue)",
-    "setFillColor(c)" -> "setFillColor(blue)",
-    "setBackground(c)" -> "setBackground(yellow)",
-    "setPenThickness(t)" -> "setPenThickness(4)",
+    "setAnimationDelay(d)" -> "setAnimationDelay(${c}100)",
+    "forward(n)" -> "forward(${c}50)",
+    "right(a)" -> "right(${c}90)",
+    "left(a)" -> "left(${c}90)",
+    "setPenColor(c)" -> "setPenColor(${c}blue)",
+    "setFillColor(c)" -> "setFillColor(${c}blue)",
+    "setBackground(c)" -> "setBackground(${c}yellow)",
+    "setPenThickness(t)" -> "setPenThickness(${c}4)",
     "penUp()" -> "penUp()",
     "penDown()" -> "penDown()",
-    "write(t)" -> """write("Hi There")""",
-    "setPenFontSize(n)" -> "setPenFontSize(18)",
+    "write(t)" -> """write(${c}"Hi There")""",
+    "setPenFontSize(n)" -> "setPenFontSize(${c}18)",
     "" -> "",
-    "setPosition(x,y)" -> "setPosition(10, 10)",
+    "setPosition(x,y)" -> "setPosition(${c}10, 10)",
     "position" -> "position",
-    "moveTo(x,y)" -> "moveTo(50, 50)"
+    "moveTo(x,y)" -> "moveTo(${c}50, 50)"
 )
 
 val cfTemplates = LinkedHashMap(
-    "repeat    [command]" -> """repeat (4) {
+    "repeat    [command]" -> """repeat(${c}4) {
     forward(50)
     right()
 }""",
-    "if        [command]" -> """if (true) {
+    "if        [command]" -> """if (${c}true) {
     setPenColor(blue)
 }""",
-    "if-else   [command]" -> """if (true) {
+    "if-else   [command]" -> """if (${c}true) {
     setPenColor(blue)
 }
 else {
     setPenColor(green)
 }""",
-    "if-else   [expr]" -> """if (true) {
-    5
-}
-else {
-    9
-}""",
-    "for       [command]" -> """for (i <- 1 to 4) {
+    "if-else   [expr]" -> """if (${c}true) 5 else 9""",
+    "for       [command]" -> """for (i <- ${c}1 to 4) {
     println(i)
 }""",
-    "for       [expr]" -> """for (i <- 1 to 4) yield (2 * i)"""
+    "for       [expr]" -> """for (${c}i <- 1 to 4) yield (2 * i)"""
 )
 
 val aTemplates = LinkedHashMap(
-    "val       [expr]" -> "val x = 10",
-    "def       [command]" -> """def square(n: Int) {
+    "val       [expr]" -> "val x = ${c}10",
+    "def       [command]" -> """def ${c}square(n: Int) {
     repeat (4) {
         forward(50)
         right()
     }
 } """,
-    "def       [function]" -> """def max(n1: Int, n2: Int) = 
+    "def       [function]" -> """def ${c}max(n1: Int, n2: Int) = 
         if (n1 > n2) n1 else n2"""
 )
 
 val pTemplates = LinkedHashMap(
     "Picture" -> """Picture {
-    forward(50)    
+    ${c}forward(50)    
 }""",
-    "picRow(pics)" -> "picRow(PicShape.hline(50), PicShape.vline(50))",
-    "picCol(pics)" -> "picCol(PicShape.vline(50), PicShape.hline(50))",
-    "picStack(pics)" -> "picStack(PicShape.hline(50), PicShape.vline(50))",
-    "draw(pics)" -> "draw(PicShape.hline(50), PicShape.vline(50))",
+    "picRow(pics)" -> "picRow(${c}PicShape.hline(50), PicShape.vline(50))",
+    "picCol(pics)" -> "picCol(${c}PicShape.vline(50), PicShape.hline(50))",
+    "picStack(pics)" -> "picStack(${c}PicShape.hline(50), PicShape.vline(50))",
+    "draw(pics)" -> "draw(${c}PicShape.hline(50), PicShape.vline(50))",
     "" -> "",
-    "PicShape.hline(len)" -> "PicShape.hline(50)",
-    "PicShape.vline(len)" -> "PicShape.vline(50)",
-    "PicShape.rect(h, w)" -> "PicShape.rect(50, 100)",
-    "PicShape.circle(r)" -> "PicShape.circle(50)",
-    "PicShape.text(s, n)" -> """PicShape.text("Hello", 18)"""
+    "PicShape.hline(len)" -> "PicShape.hline(${c}50)",
+    "PicShape.vline(len)" -> "PicShape.vline(${c}50)",
+    "PicShape.rect(h, w)" -> "PicShape.rect(${c}50, 100)",
+    "PicShape.circle(r)" -> "PicShape.circle(${c}50)",
+    "PicShape.text(s, n)" -> """PicShape.text(${c}"Hello", 18)"""
 )
 
 val ptTemplates = LinkedHashMap(
-    "rot(a)" -> "rot(45)",
-    "scale(f)" -> "scale(2)",
-    "trans(x,y)" -> "trans(10, 10)",
-    "penColor(c)" -> "penColor(blue)",
-    "fillColor(c)" -> "fillColor(blue)",
-    "penWidth(w)" -> "penWidth(4)",
-    "hue(f)" -> "hue(0.1)",
-    "sat(f)" -> "sat(0.1)",
-    "brit(f)" -> "brit(0.1)",
-    "opac(f)" -> "opac(0.1)",
+    "rot(a)" -> "rot(${c}45)",
+    "scale(f)" -> "scale(${c}2)",
+    "trans(x,y)" -> "trans(${c}10, 10)",
+    "penColor(c)" -> "penColor(${c}blue)",
+    "fillColor(c)" -> "fillColor(${c}blue)",
+    "penWidth(w)" -> "penWidth(${c}4)",
+    "hue(f)" -> "hue(${c}0.1)",
+    "sat(f)" -> "sat(${c}0.1)",
+    "brit(f)" -> "brit(${c}0.1)",
+    "opac(f)" -> "opac(${c}0.1)",
     "flipX" -> "flipX",
     "flipY" -> "flipY",
     "axes" -> "axes"
 )
 
 val cTemplates = LinkedHashMap(
-    "==   [equal to]" -> "2 == 2",
-    "!=   [not equal to]" -> "1 != 2",
-    ">    [greater than]" -> "2 > 1",
-    "<    [less than]" -> "1 < 2",
-    ">=   [greater/equal]" -> "2 >= 1",
-    "<=   [less/equal than]" -> "1 <= 2"
+    "==   [equal to]" -> "${c}2 == 2",
+    "!=   [not equal to]" -> "${c}1 != 2",
+    ">    [greater than]" -> "${c}2 > 1",
+    "<    [less than]" -> "${c}1 < 2",
+    ">=   [greater/equal]" -> "${c}2 >= 1",
+    "<=   [less/equal than]" -> "${c}1 <= 2"
 )
 
 val instructions = Map(
@@ -239,21 +234,21 @@ runInGuiThread {
     })
 }
 
-def insertCode(cat: String, idx: Int) {
-    stInsertCode(templates(cat)(instructions(cat)(idx)))
+def insertCodeInline(cat: String, idx: Int) {
+    stInsertCodeInline(templates(cat)(instructions(cat)(idx)))
     helpFrame.setVisible(false)
 }
-def smartInsertCode(cat: String, idx: Int) {
-    stSmartInsertCode(templates(cat)(instructions(cat)(idx)))
+def insertCodeBlock(cat: String, idx: Int) {
+    stInsertCodeBlock(templates(cat)(instructions(cat)(idx)))
     helpFrame.setVisible(false)
 }
 
-stAddLinkHandler(Turtle, story) { idx: Int => smartInsertCode(Turtle, idx) }
-stAddLinkHandler(ControlFlow, story) { idx: Int => smartInsertCode(ControlFlow, idx) }
-stAddLinkHandler(Pictures, story) { idx: Int => smartInsertCode(Pictures, idx) }
-stAddLinkHandler(PictureXforms, story) { idx: Int => insertCode(PictureXforms, idx) }
-stAddLinkHandler(Abstraction, story) { idx: Int => smartInsertCode(Abstraction, idx) }
-stAddLinkHandler(Conditions, story) { idx: Int => insertCode(Conditions, idx) }
+stAddLinkHandler(Turtle, story) { idx: Int => insertCodeBlock(Turtle, idx) }
+stAddLinkHandler(ControlFlow, story) { idx: Int => insertCodeBlock(ControlFlow, idx) }
+stAddLinkHandler(Pictures, story) { idx: Int => insertCodeBlock(Pictures, idx) }
+stAddLinkHandler(PictureXforms, story) { idx: Int => insertCodeInline(PictureXforms, idx) }
+stAddLinkHandler(Abstraction, story) { idx: Int => insertCodeBlock(Abstraction, idx) }
+stAddLinkHandler(Conditions, story) { idx: Int => insertCodeInline(Conditions, idx) }
 
 def keyFor(cat: String, n: Int) = {
     instructions(cat)(n).takeWhile(c => c != '(' && c != '-' && c != '[').trim
