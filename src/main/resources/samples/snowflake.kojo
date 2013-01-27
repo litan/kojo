@@ -1,35 +1,30 @@
-def lines(count: Int, length: Int) {
-    if (count == 1) forward(length)
+def triLine(n: Double, iter: Int) {
+    if (iter == 1) {
+        forward(n)
+    }
     else {
-        lines(count-1, length)
+        triLine(n / 3, iter-1)
         left(60)
-        lines(count-1, length)
+        triLine(n / 3, iter-1)
         right(120)
-        lines(count-1, length)
+        triLine(n / 3, iter-1)
         left(60)
-        lines(count-1, length)
+        triLine(n / 3, iter-1)
     }
 }
 
-def koch(count: Int, length: Int) {
+def kochFlake(n: Int, iter: Int) {
     right(30)
-    lines(count, length)
-    right(120)
-    lines(count, length)
-    right(120)
-    lines(count, length)
+    repeat(3) {
+        triLine(n, iter)
+        right(120)
+    }
 }
 
-clear()
-invisible()
+cleari()
 setPenThickness(1)
-setPenColor(color(128, 128, 128))
-setFillColor(color(0xC9C0BB))
+setPenColor(gray)
+setFillColor(lightGray)
 setAnimationDelay(50)
-penUp()
-back(100)
-left()
-forward(150)
-right()
-penDown()
-koch(5, 5)
+setPosition(-150, -50)
+kochFlake(300, 5)
