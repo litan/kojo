@@ -52,6 +52,7 @@ import javax.swing.event.HyperlinkEvent
 import javax.swing.event.HyperlinkListener
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
+import javax.swing.text.Utilities
 
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
@@ -502,27 +503,29 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         val dot = codePane.getCaretPosition
         val cOffset = code.indexOf("${c}")
         if (cOffset == -1) {
-          import javax.swing.text.Utilities
           if (block) {
-            codePane.insert(code + "\n", dot)
-            // move to the next line
-            codePane.setCaretPosition(Utilities.getRowEnd(codePane, dot) + 1)
+            val leadingSpaces = dot - Utilities.getRowStart(codePane, dot)
+            codePane.insert("%s\n".format(code).
+              replaceAllLiterally("\n", "\n%s".format(" " * leadingSpaces)), dot)
+            // move to next line. Assumes that a block insert without a ${c} is on a single line - like clear() etc  
+            codePane.setCaretPosition(Utilities.getRowEnd(codePane, dot) + 1 + leadingSpaces)
           }
           else {
-            codePane.insert(code + " ", dot)
+            codePane.insert("%s ".format(code), dot)
           }
         }
         else {
           if (block) {
-            codePane.insert(code.replaceAllLiterally("${c}", "") + "\n", dot)
+            val leadingSpaces = dot - Utilities.getRowStart(codePane, dot)
+            codePane.insert("%s\n".format(code.replaceAllLiterally("${c}", "")).
+              replaceAllLiterally("\n", "\n%s".format(" " * leadingSpaces)), dot)
             codePane.setCaretPosition(dot + cOffset)
           }
           else {
-            codePane.insert(code.replaceAllLiterally("${c}", "") + " ", dot)
+            codePane.insert("%s ".format(code.replaceAllLiterally("${c}", "")), dot)
             codePane.setCaretPosition(dot + cOffset)
           }
         }
-        kojoCtx.formatSource()
         activateEditor()
       }
 
