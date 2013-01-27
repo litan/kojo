@@ -55,33 +55,40 @@ val tTemplates = LinkedHashMap(
 )
 
 val cfTemplates = LinkedHashMap(
-    "repeat(n) {cmds}" -> """repeat (4) {
+    "repeat    [command]" -> """repeat (4) {
     forward(50)
     right()
 }""",
-    "if" -> """if (true) {
+    "if        [command]" -> """if (true) {
     setPenColor(blue)
 }""",
-    "if-else" -> """if (true) {
+    "if-else   [command]" -> """if (true) {
     setPenColor(blue)
 }
 else {
     setPenColor(green)
 }""",
-    "for (cmd)" -> """for (i <- 1 to 4) {
+    "if-else   [expr]" -> """if (true) {
+    5
+}
+else {
+    9
+}""",
+    "for       [command]" -> """for (i <- 1 to 4) {
     println(i)
-}"""
+}""",
+    "for       [expr]" -> """for (i <- 1 to 4) yield (2 * i)"""
 )
 
 val aTemplates = LinkedHashMap(
-    "val" -> "val x = 10",
-    "def (cmd)" -> """def square(n: Int) {
+    "val       [expr]" -> "val x = 10",
+    "def       [command]" -> """def square(n: Int) {
     repeat (4) {
         forward(50)
         right()
     }
 } """,
-    "def (fn)" -> """def max(n1: Int, n2: Int) = 
+    "def       [function]" -> """def max(n1: Int, n2: Int) = 
         if (n1 > n2) n1 else n2"""
 )
 
@@ -118,12 +125,12 @@ val ptTemplates = LinkedHashMap(
 )
 
 val cTemplates = LinkedHashMap(
-    "==" -> "2 == 2",
-    "!=" -> "1 != 2",
-    ">" -> "2 > 1",
-    "<" -> "1 < 2",
-    ">=" -> "2 >= 1",
-    "<=" -> "1 <= 2"
+    "==   [equal to]" -> "2 == 2",
+    "!=   [not equal to]" -> "1 != 2",
+    ">    [greater than]" -> "2 > 1",
+    "<    [less than]" -> "1 < 2",
+    ">=   [greater/equal]" -> "2 >= 1",
+    "<=   [less/equal than]" -> "1 <= 2"
 )
 
 val instructions = Map(
@@ -242,7 +249,7 @@ stAddLinkHandler(Abstraction, story) { idx: Int => smartInsertCode(Abstraction, 
 stAddLinkHandler(Conditions, story) { idx: Int => insertCode(Conditions, idx) }
 
 def keyFor(cat: String, n: Int) = {
-    instructions(cat)(n).takeWhile(c => c != '(' && c != '-').trim
+    instructions(cat)(n).takeWhile(c => c != '(' && c != '-' && c != '[').trim
 }
 
 def showHelp(cat: String, idx: Int) {
