@@ -14,6 +14,8 @@ val PictureXforms = "pt"
 val ControlFlow = "cf"
 val Abstraction = "a"
 val Conditions = "c"
+val Summary = "s"
+
 val catName = Map(
     Turtle -> "Turtle",
     Pictures -> "Picture",
@@ -24,10 +26,10 @@ val catName = Map(
 )
 def navLinks =
     <div style={ headerStyle }>
-        <a style={ linkStyle } href={ "http://localpage/" + Turtle }>{catName(Turtle)}</a> | <a style={ linkStyle } href={ "http://localpage/" + Pictures }>{catName(Pictures)}</a> <br/>
-        <a style={ linkStyle } href={ "http://localpage/" + PictureXforms }>{catName(PictureXforms)}</a> <br/>
-        <a style={ linkStyle } href={ "http://localpage/" + ControlFlow }>{catName(ControlFlow)}</a> | <a style={ linkStyle } href={ "http://localpage/" + Conditions }>{catName(Conditions)}</a> <br/>
-        <a style={ linkStyle } href={ "http://localpage/" + Abstraction }>{catName(Abstraction)}</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + Turtle }>{ catName(Turtle) }</a> | <a style={ linkStyle } href={ "http://localpage/" + Pictures }>{ catName(Pictures) }</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + PictureXforms }>{ catName(PictureXforms) }</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + ControlFlow }>{ catName(ControlFlow) }</a> | <a style={ linkStyle } href={ "http://localpage/" + Conditions }>{ catName(Conditions) }</a> <br/>
+        <a style={ linkStyle } href={ "http://localpage/" + Abstraction }>{ catName(Abstraction) }</a> <br/>
         <hr/>
     </div>
 
@@ -171,7 +173,7 @@ def pageFor(cat: String) = Page(
     body =
         <body style={ pageStyle }>
         { navLinks }
-        <div style={titleStyle}>{catName(cat)}</div>        
+        <div style={ titleStyle }><a href={ "http://runhandler/%s/%s" format(Summary, cat) }>{ catName(cat) }</a></div>        
         { for (i <- 0 until instructions(cat).length) yield (if (instructions(cat)(i) == "") <br/> else code(cat, i)) }
         { footer }
         </body>,
@@ -262,10 +264,18 @@ def keyFor(cat: String, n: Int) = {
     instructions(cat)(n).takeWhile(c => c != '(' && c != '-' && c != '[').trim
 }
 
-def showHelp(cat: String, idx: Int) {
+def showCatHelp(cat: String, idx: Int) {
+    showHelp(keyFor(cat, idx))
+}
+
+def showCatSummary(cat: String) {
+    showHelp(catName(cat)+"Palette")
+}
+
+def showHelp(key: String) {
     if (helpOn) {
         helpPane.setText(s"""<body style="$helpStyle">
-        ${stHelpFor(keyFor(cat, idx))}
+        ${stHelpFor(key)}
         </body>
         """
         )
@@ -277,12 +287,14 @@ def showHelp(cat: String, idx: Int) {
     }
 }
 
-stAddLinkEnterHandler(Turtle, story) { idx: Int => showHelp(Turtle, idx) }
-stAddLinkEnterHandler(ControlFlow, story) { idx: Int => showHelp(ControlFlow, idx) }
-stAddLinkEnterHandler(Pictures, story) { idx: Int => showHelp(Pictures, idx) }
-stAddLinkEnterHandler(PictureXforms, story) { idx: Int => showHelp(PictureXforms, idx) }
-stAddLinkEnterHandler(Abstraction, story) { idx: Int => showHelp(Abstraction, idx) }
-stAddLinkEnterHandler(Conditions, story) { idx: Int => showHelp(Conditions, idx) }
+stAddLinkEnterHandler(Turtle, story) { idx: Int => showCatHelp(Turtle, idx) }
+stAddLinkEnterHandler(ControlFlow, story) { idx: Int => showCatHelp(ControlFlow, idx) }
+stAddLinkEnterHandler(Pictures, story) { idx: Int => showCatHelp(Pictures, idx) }
+stAddLinkEnterHandler(PictureXforms, story) { idx: Int => showCatHelp(PictureXforms, idx) }
+stAddLinkEnterHandler(Abstraction, story) { idx: Int => showCatHelp(Abstraction, idx) }
+stAddLinkEnterHandler(Conditions, story) { idx: Int => showCatHelp(Conditions, idx) }
+
+stAddLinkEnterHandler(Summary, story) { cat: String => showCatSummary(cat) }
 
 stOnStoryStop(story) {
     helpFrame.setVisible(false)
