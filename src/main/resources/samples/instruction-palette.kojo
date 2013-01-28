@@ -1,10 +1,11 @@
 val pageStyle = "background-color:#93989c; margin:5px;font-size:small;"
-val titleStyle = "font-size:95%;text-align:center;color:1a1a1a;margin-top:5px;margin-bottom:3px;"
+val titleStyle = "font-size:95%;text-align:center;color:#1a1a1a;margin-top:5px;margin-bottom:3px;"
 val headerStyle = "text-align:center;font-size:95%;color:#fafafa;font-weight:bold;"
 val codeStyle = "background-color:#4a6cd4;margin-top:3px"
 val linkStyle = "color:#fafafa"
+val summaryLinkStyle = "color:#1a1a1a"
 val codeLinkStyle = "text-decoration:none;font-size:x-small;color:#fafafa;"
-val footerStyle = "font-size:90%;margin-top:15px;color:1a1a1a;"
+val footerStyle = "font-size:90%;margin-top:15px;color:#1a1a1a;"
 val helpStyle = "background-color:#ffffcc;margin:10px;"
 val footerPanelColor = color(0x93989c)
 
@@ -35,7 +36,9 @@ def navLinks =
 
 def footer =
     <div style={ footerStyle }>
-        Click on any instruction to insert it into the Script Editor at the current Caret location.
+        Click on any instruction to insert it into the Script Editor at the current Caret location.<br/>
+        <br/>
+        If you don't like an insertion, press Ctrl+Z in the Script Editor to undo it.<br/>
     </div>
 
 import scala.collection.mutable.LinkedHashMap
@@ -46,6 +49,7 @@ val tTemplates = LinkedHashMap(
     "cleari()" -> "cleari()",
     "setAnimationDelay(d)" -> "setAnimationDelay(${c}100)",
     "forward(n)" -> "forward(${c}50)",
+    "back(n)" -> "back(${c}50)",
     "right(a)" -> "right(${c}90)",
     "left(a)" -> "left(${c}90)",
     "setPenColor(c)" -> "setPenColor(${c}blue)",
@@ -55,11 +59,7 @@ val tTemplates = LinkedHashMap(
     "penUp()" -> "penUp()",
     "penDown()" -> "penDown()",
     "write(t)" -> """write(${c}"Hi There")""",
-    "setPenFontSize(n)" -> "setPenFontSize(${c}18)",
-    "" -> "",
-    "setPosition(x,y)" -> "setPosition(${c}10, 10)",
-    "position" -> "position",
-    "moveTo(x,y)" -> "moveTo(${c}50, 50)"
+    "setPenFontSize(n)" -> "setPenFontSize(${c}18)"
 )
 
 val cfTemplates = LinkedHashMap(
@@ -173,7 +173,7 @@ def pageFor(cat: String) = Page(
     body =
         <body style={ pageStyle }>
         { navLinks }
-        <div style={ titleStyle }><a href={ "http://runhandler/%s/%s" format(Summary, cat) }>{ catName(cat) }</a></div>        
+        <div style={ titleStyle }><a style={ summaryLinkStyle } href={ "http://runhandler/%s/%s" format(Summary, cat) }>{ catName(cat) }</a></div>        
         { for (i <- 0 until instructions(cat).length) yield (if (instructions(cat)(i) == "") <br/> else code(cat, i)) }
         { footer }
         </body>,
@@ -269,7 +269,7 @@ def showCatHelp(cat: String, idx: Int) {
 }
 
 def showCatSummary(cat: String) {
-    showHelp(catName(cat)+"Palette")
+    showHelp(catName(cat) + "Palette")
 }
 
 def showHelp(key: String) {
