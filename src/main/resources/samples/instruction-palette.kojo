@@ -63,7 +63,6 @@ val tTemplates = LinkedHashMap(
 val cfTemplates = LinkedHashMap(
     "repeat    [command]" -> """repeat(${c}4) {
     forward(50)
-    right()
 }""",
     "if        [command]" -> """if (${c}true) {
     setPenColor(blue)
@@ -78,16 +77,25 @@ else {
     "for       [command]" -> """for (i <- ${c}1 to 4) {
     println(i)
 }""",
-    "for       [expr]" -> """for (${c}i <- 1 to 4) yield (2 * i)"""
+    "for       [expr]" -> """for (${c}i <- 1 to 4) yield (2 * i)""",
+    "recursion [command]" -> """def ${c}pattern(n: Int) {
+    if (n <= 10) {
+        forward(n)
+    }
+    else {
+        forward(n)
+        right(90)
+        pattern(n-5)
+    }
+}""",
+    "recursion [function]" -> """def ${c}factorial(n: Int): Int = 
+    if (n == 0) 1 else n * factorial(n-1)"""
 )
 
 val aTemplates = LinkedHashMap(
     "val       [expr]" -> "val x = ${c}10",
-    "def       [command]" -> """def ${c}square(n: Int) {
-    repeat (4) {
-        forward(50)
-        right()
-    }
+    "def       [command]" -> """def ${c}newcmd(n: Int) {
+    forward(50)
 } """,
     "def       [function]" -> """def ${c}max(n1: Int, n2: Int) = 
         if (n1 > n2) n1 else n2"""
@@ -97,10 +105,10 @@ val pTemplates = LinkedHashMap(
     "Picture" -> """Picture {
     ${c}forward(50)    
 }""",
-    "picRow(pics)" -> "picRow(${c}PicShape.hline(50), PicShape.vline(50))",
-    "picCol(pics)" -> "picCol(${c}PicShape.vline(50), PicShape.hline(50))",
-    "picStack(pics)" -> "picStack(${c}PicShape.hline(50), PicShape.vline(50))",
-    "draw(pics)" -> "draw(${c}PicShape.hline(50), PicShape.vline(50))",
+    "picRow(pics)" -> "picRow(${c}p, p)",
+    "picCol(pics)" -> "picCol(${c}p, p)",
+    "picStack(pics)" -> "picStack(${c}p, p)",
+    "draw(pics)" -> "draw(${c}pic)",
     "" -> "",
     "PicShape.hline(len)" -> "PicShape.hline(${c}50)",
     "PicShape.vline(len)" -> "PicShape.vline(${c}50)",

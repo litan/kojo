@@ -728,6 +728,31 @@ object Help {
         </pre>
     </div>
     ,
+    "recursion" -> 
+    <div>
+        Recursion allows you to define a command or function in terms of itself. <br/>
+        <br/>
+        Usage #1 [to define a command]:<br/>
+        <pre>
+        def pattern(n: Int) {{
+            if (n &lt;= 10) {{
+                forward(n)
+            }}
+            else {{
+                forward(n)
+                right(90)
+                pattern(n-5)
+            }}
+        }}
+      </pre>
+        Usage #2 [to define a function]:<br/>
+        <em>Note that you need to provide a return type for the function</em><br/>
+        <pre>
+        def factorial(n: Int): Int = 
+            if (n == 0) 1 else n * factorial(n-1)
+      </pre>
+    </div>
+    ,
     "if" ->
     <div>
         <strong>if</strong> or <strong>if-else</strong> - Let's you choose the instruction to execute 
