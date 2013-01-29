@@ -298,7 +298,7 @@ trait AppMenu { self: Main.type =>
 
     val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
     toolsMenu.setMnemonic('T')
-    toolsMenu.add(menuItemForUrl(Utils.loadString("S_InstructionPalette"), "http://www.kogics.net/public/kojolite/samples/instruction-palette.kojo"))
+    toolsMenu.add(menuItemFor(Utils.loadString("S_InstructionPalette"), "instruction-palette.kojo"))
     menuBar.add(toolsMenu)
 
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
