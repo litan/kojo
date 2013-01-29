@@ -1,7 +1,7 @@
 val Level = 1
 require(Level >= 1 && Level <= 3, "Level needs to be between 1 and 3")
 
-switchToCanvasPerspective()
+toggleFullScreenCanvas()
 cleari()
 setRefreshRate(40)
 
@@ -37,7 +37,7 @@ case class GameState(card1: Option[Card], card2: Option[Card], card3: Option[Car
 }
 
 case class Moves(n: Int) {
-    val pLabel = penColor(black) -> PShapes.text(s"Moves: $n", 20)
+    val pLabel = penColor(black) -> PicShape.text(s"Moves: $n", 20)
     def incr() = Moves(n + 1)
 }
 
@@ -58,8 +58,8 @@ val CardGlowBg = Color(0, 0, 255, 127)
 case class Card(num: Int) {
     def decorate(p: Picture) = fillColor(CardBg) * penColor(darkGray) -> p
     val te = textExtent(num.toString, 60)
-    val pFront = decorate(GPics(PShapes.rect(120, 80), trans((80 - te.width) / 2, (120 - te.height) / 2) -> PShapes.text(num, 60)))
-    val pBack = decorate(PShapes.rect(120, 80))
+    val pFront = decorate(GPics(PicShape.rect(120, 80), trans((80 - te.width) / 2, (120 - te.height) / 2) -> PicShape.text(num, 60)))
+    val pBack = decorate(PicShape.rect(120, 80))
     def drawAt(i: Int, j: Int) {
         drawAndHide(pFront)
         draw(trans(-200 + j * 100, -120 * Level + i * 140) -> pBack)
@@ -100,9 +100,7 @@ draw(trans(-canvasBounds.width / 2 + 50, 0) -> moves.pLabel)
 
 onKeyPress { k =>
     k match {
-        case Kc.VK_ESCAPE => switchToScriptEditingPerspective()
+        case Kc.VK_ESCAPE => toggleFullScreenCanvas()
         case _            =>
     }
 }
-
-activateCanvas()
