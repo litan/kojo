@@ -14,7 +14,7 @@ setOutputTextColor(green)
 println(s"Input Vector: $vec")
 println("See Drawing Canvas for Bar Graph of elements (scaled by 10)")
 
-def bar(n: Int) = PShapes.rect(n*10, 30)
+def bar(n: Int) = PicShape.rect(n*10, 30)
 val bars = vec.map { n => bar(n) }
 axesOn()
 gridOn()

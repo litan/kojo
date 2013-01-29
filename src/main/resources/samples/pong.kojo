@@ -14,9 +14,9 @@ val Width = canvasBounds.width
 val PaddleSpeed = 9
 val BallSpeed = 9
 
-def paddle = penColor(darkGray) * fillColor(red) -> PShapes.rect(PaddleH, PaddleW)
-def vline = penColor(darkGray) -> PShapes.vline(Height)
-def ball = penColor(lightGray) * penWidth(1) * fillColor(Color(0, 230, 0)) -> PShapes.ball(BallR)
+def paddle = penColor(darkGray) * fillColor(red) -> PicShape.rect(PaddleH, PaddleW)
+def vline = penColor(darkGray) -> PicShape.vline(Height)
+def ball = penColor(lightGray) * penWidth(1) * fillColor(Color(0, 230, 0)) -> PicShape.circle(BallR)
 
 val paddle1 = trans(-Width / 2, 0) -> paddle
 val paddle2 = trans(Width / 2 - PaddleW, 0) -> paddle
@@ -35,12 +35,12 @@ case class PaddleS(speed: Double, lastUp: Boolean) { outer =>
 
 case class Score(score: Int, left: Boolean) { outer =>
     val xt = if (left) -50 else 50
-    val pScore = trans(xt, Height / 2 - 50) * penColor(black) -> PShapes.text(score, 20)
+    val pScore = trans(xt, Height / 2 - 50) * penColor(black) -> PicShape.text(score, 20)
     def incrScore = copy(score = outer.score + 1)
 }
 
 case class Level(num: Int, vel: Vector2D) {
-    val pLevel = trans(-60, -Height / 2 + 50) * penColor(black) -> PShapes.text(s"Level: $num", 20)
+    val pLevel = trans(-60, -Height / 2 + 50) * penColor(black) -> PicShape.text(s"Level: $num", 20)
 }
 
 var running = false
