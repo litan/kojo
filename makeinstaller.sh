@@ -1,6 +1,6 @@
 set -x 
 # Build Kojo
-./sbt.sh clean package
+# ./sbt.sh clean package
 
 # Create installer
 rm -rf installerbuild
