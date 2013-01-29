@@ -101,7 +101,7 @@ class Builtins extends RepeatCommands {
     override def forward(n: Double) = turtle0.forward(n)
     UserCommand("forward", List("numSteps"), "Moves the turtle forward a given number of steps.")
 
-    def back() = println("Please provide the distance to move back - e.g. back(100)")
+    def back(): Unit = back(25)
     override def back(n: Double) = turtle0.back(n)
     UserCommand("back", List("numSteps"), "Moves the turtle back a given number of steps.")
 
