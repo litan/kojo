@@ -67,7 +67,6 @@ def onPause() {
 def onStop() {
     stopAnimation()
     gPanel.invisible()
-    toggleFullScreenCanvas()
 }
 def onLevelUp() {
     ballVel *= 1.1

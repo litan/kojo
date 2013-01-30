@@ -97,10 +97,3 @@ for (i <- 0 to Num / 5 - 1) {
 }
 
 draw(trans(-canvasBounds.width / 2 + 50, 0) -> moves.pLabel)
-
-onKeyPress { k =>
-    k match {
-        case Kc.VK_ESCAPE => toggleFullScreenCanvas()
-        case _            =>
-    }
-}

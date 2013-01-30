@@ -177,7 +177,6 @@ onKeyPress { k =>
     k match {
         case Kc.VK_ESCAPE =>
             stopAnimation()
-            toggleFullScreenCanvas()
         case _            =>
     }
 }
