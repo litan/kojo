@@ -1,3 +1,4 @@
+toggleFullScreenOutput()
 clearOutput()
 setOutputBackground(black)
 setOutputTextColor(gray)
@@ -12,4 +13,3 @@ for (i <- 1 to n) {
 setOutputTextColor(green)
 println(s"Input Vector: $vec")
 println(f"The mean of the elements of the Vector is: ${vec.sum.toDouble / vec.size}%.2f")
-activateEditor()

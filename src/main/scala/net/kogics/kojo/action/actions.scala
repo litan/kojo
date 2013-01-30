@@ -19,6 +19,8 @@ package action
 import java.awt.Color
 import java.awt.GraphicsEnvironment
 import java.awt.event.ActionEvent
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 
 import javax.swing.AbstractAction
 import javax.swing.Action
@@ -134,6 +136,18 @@ class FullScreenBaseAction(kojoCtx: => KojoCtx, key: String, fsComp: => JCompone
     frame.getContentPane.add(fsComp)
     sdev.setFullScreenWindow(frame)
     frame.validate()
+
+    val escComp = frame.getMostRecentFocusOwner()
+    if (escComp != null) {
+      escComp.addKeyListener(new KeyAdapter {
+        override def keyPressed(event: KeyEvent) {
+          if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            escComp.removeKeyListener(this)
+            leaveFullScreen()
+          }
+        }
+      })
+    }
   }
 
   def leaveFullScreen() {
@@ -174,6 +188,7 @@ class FullScreenCanvasAction(kojoCtx: => KojoCtx)
     kojoCtx.topcs.dch
   ) {
   override def enterFullScreen() {
+    kojoCtx.topcs.dch.dc.setFocusable(true) // make canvas work with frame.getMostRecentFocusOwner()
     super.enterFullScreen()
     kojoCtx.activateDrawingCanvas()
   }
