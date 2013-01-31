@@ -425,6 +425,7 @@ class Builtins extends RepeatCommands {
   }
   def stFrame = kojoCtx.frame
   def stSetUserControlsBg(color: Color) = storyTeller.setUserControlsBg(color)
+  def stCanvasLocation = kojoCtx.topcs.dch.getContentPane.getLocationOnScreen
 
   UserCommand.addSynopsisSeparator()
 
