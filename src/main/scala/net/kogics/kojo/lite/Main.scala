@@ -130,7 +130,7 @@ object Main extends AppMenu {
 
   def realMain(args: Array[String]): Unit = {
     System.setSecurityManager(null)
-    kojoCtx = new KojoCtx // context needs to be created right up front to set user language
+    kojoCtx = KojoCtx.instance // context needs to be created right up front to set user language
     Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }

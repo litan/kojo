@@ -280,6 +280,8 @@ def showHelp(key: String) {
         """
         )
         helpPane.setCaretPosition(0)
+        val cloc = stCanvasLocation
+        helpFrame.setLocation(cloc.x + 5, cloc.y + 5)
         helpFrame.setVisible(true)
         // try to make sure that the help pane gains focus
         helpPane.requestFocus()
