@@ -20,6 +20,7 @@ import java.util.concurrent.CountDownLatch
 trait CodeRunner {
   def interruptInterpreter(): Unit
   def runCode(code: String): Unit
+  def runWorksheet(code: String): Unit
   def parseCode(code: String, browseAst: Boolean): Unit
   def compileCode(code: String): Unit
   def compileRunCode(code: String): Unit
@@ -60,6 +61,7 @@ trait RunContext {
   def hideVerboseOutput(): Unit
   def clearOutput(): Unit
   def setScript(code: String): Unit
+  def setWorksheetScript(code: String): Unit
   def insertCodeInline(code: String): Unit
   def insertCodeBlock(code: String): Unit
 
@@ -85,6 +87,11 @@ class ProxyCodeRunner(codeRunnerMaker: () => CodeRunner) extends CodeRunner {
   def runCode(code: String) {
     latch.await()
     codeRunner.runCode(code)
+  }
+
+  def runWorksheet(code: String) {
+    latch.await()
+    codeRunner.runWorksheet(code)
   }
 
   def compileRunCode(code: String) {

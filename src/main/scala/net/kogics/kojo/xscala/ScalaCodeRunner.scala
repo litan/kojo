@@ -65,6 +65,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     codeRunner ! RunCode(code)
   }
 
+  def runWorksheet(code: String) {
+    codeRunner ! RunWorksheet(code)
+  }
+
   def compileRunCode(code: String) {
     codeRunner ! CompileRunCode(code)
   }
@@ -81,6 +85,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
   case object Init
   case class RunCode(code: String)
+  case class RunWorksheet(code: String)
   case class CompileRunCode(code: String)
   case class CompileCode(code: String)
   case class ParseCode(code: String, browseAst: Boolean)
@@ -365,7 +370,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
             }
 
           case RunCode(code) =>
-            runCode(code)
+            runCode(code, false)
+
+          case RunWorksheet(code) =>
+            runCode(code, true)
 
           case ParseCode(code, browseAst) =>
             try {
@@ -416,13 +424,13 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       }
     }
 
-    def runCode(code: String) {
+    def runCode(code: String, asWorksheet: Boolean) {
       try {
         Log.info("CodeRunner actor running code:\n---\n%s\n---\n" format (code))
         InterruptionManager.onInterpreterStart(interp)
         ctx.onInterpreterStart(code)
 
-        val ret = interpret(code)
+        val ret = interpret(code, asWorksheet)
         Log.info("CodeRunner actor done running code. Return value %s" format (ret.toString))
 
         if (ret == IR.Incomplete) showIncompleteCodeMsg(code)
@@ -504,7 +512,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     def loadInitScripts(mode: CodingMode) {
       initCode(mode).foreach { code =>
         println("\nRunning initk code...")
-        runCode(code)
+        runCode(code, false)
       }
     }
 
@@ -549,7 +557,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
     def interpretAsWorksheet(code0: String): IR.Result = {
       val code = code0.replaceAll(s"${ctx.WorksheetMarker}.*", "")
-      ctx.setScript(code)
+      ctx.setWorksheetScript(code)
       val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => line.trim() != "" && !line.trim().startsWith("//") }
       try {
         interpretWorksheetLine(lines)
@@ -561,8 +569,8 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
     def interpretAllLines(code: String): IR.Result = interp.interpret(code)
 
-    def interpret(code: String): IR.Result = {
-      if (needsWorksheetInterpretation(code)) interpretAsWorksheet(code)
+    def interpret(code: String, asWorksheet: Boolean): IR.Result = {
+      if (asWorksheet || needsWorksheetInterpretation(code)) interpretAsWorksheet(code)
       else interpretAllLines(code)
     }
 

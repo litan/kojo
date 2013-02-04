@@ -91,7 +91,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val DefaultOutputFontSize = 13
   var outputColor = DefaultOutputColor
 
-  val (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton,
+  val (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
   val outputWindow = new JTextPane
   outputWindow.setForeground(new Color(32, 32, 32))
@@ -210,6 +210,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def enableRunButton(enable: Boolean) {
     runButton.setEnabled(enable)
+    runWorksheetButton.setEnabled(enable)
     compileButton.setEnabled(enable)
   }
 
@@ -227,6 +228,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def makeToolbar() = {
     val RunScript = "RunScript"
+    val RunWorksheet = "RunWorksheet"
     val CompileScript = "CompileScript"
     val StopScript = "StopScript"
     val HistoryNext = "HistoryNext"
@@ -244,6 +246,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
           else {
             runCode()
           }
+          codePane.requestFocusInWindow()
+        case RunWorksheet =>
+          runWorksheet()
           codePane.requestFocusInWindow()
         case CompileScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
@@ -288,6 +293,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     toolbar.setPreferredSize(new Dimension(100, 24))
 
     val runButton = makeNavigationButton("/images/run24.png", RunScript, Utils.loadString("S_RunScript"), "Run the Code")
+    val runWorksheetButton = makeNavigationButton("/images/runw24.png", RunWorksheet, Utils.loadString("S_RunWorksheet"), "Run the Code as a Worksheet")
     val compileButton = makeNavigationButton("/images/check.png", CompileScript, Utils.loadString("S_CheckScript"), "Check the Code")
     val stopButton = makeNavigationButton("/images/stop24.png", StopScript, Utils.loadString("S_StopScript"), "Stop the Code")
     val hNextButton = makeNavigationButton("/images/history-next.png", HistoryNext, Utils.loadString("S_HistNext"), "Next in History")
@@ -297,6 +303,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     val cexButton = makeNavigationButton("/images/upload.png", UploadCommand, Utils.loadString("S_Upload"), "Upload")
 
     toolbar.add(runButton)
+    toolbar.add(runWorksheetButton)
 
     stopButton.setEnabled(false)
     toolbar.add(stopButton)
@@ -318,7 +325,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     clearButton.setEnabled(false)
     toolbar.add(clearButton)
 
-    (toolbar, runButton, compileButton, stopButton, hNextButton, hPrevButton, clearSButton, clearButton, cexButton)
+    (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton, clearSButton, clearButton, cexButton)
   }
 
   def makeCodeRunner(): core.CodeRunner = {
@@ -454,16 +461,16 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
         kprintln(outText)
       }
-      
+
       def reportWorksheetOutput(result: String, lineNum: Int) {
         appendToCodePaneLine(lineNum, result.replaceAll("\n(.+)", " | $1"))
       }
-      
+
       private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
         val currLineEnd = codePane.getLineEndOffset(lineNum)
-        val insertPos = if (codePane.getText(currLineEnd-1, 1)  == "\n") currLineEnd - 1 else currLineEnd
-//        println(s"Line: $lineNum, End Offset: $currLineEnd, insertPos: $insertPos")
-//        println(s"Text at currLineEnd: -${codePane.getText(currLineEnd-1, 1)}-")
+        val insertPos = if (codePane.getText(currLineEnd - 1, 1) == "\n") currLineEnd - 1 else currLineEnd
+        //        println(s"Line: $lineNum, End Offset: $currLineEnd, insertPos: $insertPos")
+        //        println(s"Text at currLineEnd: -${codePane.getText(currLineEnd-1, 1)}-")
         codePane.insert(WorksheetMarker + result.trim, insertPos)
       }
 
@@ -506,6 +513,17 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
           codePane.setText(code)
           codePane.setCaretPosition(0)
         }
+      }
+
+      def setWorksheetScript(code: String) = Utils.runInSwingThread {
+        val dot = codePane.getCaretPosition
+        val line = codePane.getLineOfOffset(dot)
+        val offsetInLine = dot - codePane.getLineStartOffset(line)
+        codePane.setText(code)
+        val lineStart = codePane.getLineStartOffset(line)
+        val newLineSize = codePane.getLineEndOffset(line) - lineStart - 1
+        val offset = if (offsetInLine < newLineSize) offsetInLine else 0
+        codePane.setCaretPosition(lineStart + offset)
       }
 
       def insertCodeInline(code: String) = smartInsertCode(code, false)
@@ -558,6 +576,10 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (isRunningEnabled || evt.isShiftDown)) {
               runCode()
+              evt.consume
+            }
+            else if (evt.isShiftDown && isRunningEnabled) {
+              runWorksheet()
               evt.consume
             }
           case KeyEvent.VK_UP =>
@@ -887,6 +909,14 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       else {
         codeRunner.runCode(codeToRun)
       }
+    }
+  }
+
+  def runWorksheet() {
+    // Runs on swing thread
+    preProcessCode() map { codeToRun =>
+      historyManager.codeRun(codeToRun)
+      codeRunner.runWorksheet(codeToRun)
     }
   }
 
