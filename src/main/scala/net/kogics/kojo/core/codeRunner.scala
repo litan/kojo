@@ -46,6 +46,8 @@ trait RunContext {
 
   def kprintln(outText: String)
   def reportOutput(outText: String)
+  val WorksheetMarker = " //> "
+  def reportWorksheetOutput(result: String, lineNum: Int)
   def reportErrorMsg(errMsg: String)
   def reportErrorText(errText: String)
   def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int)

@@ -201,9 +201,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     var interp: KojoInterpreter = _
     var compilerAndRunner: CompilerAndRunner = _
 
-    //    val varPattern = java.util.regex.Pattern.compile("\\bvar\\b")
-    //    val storyPattern = java.util.regex.Pattern.compile("\\bstClear()\\b")
-    val lblPattern = java.util.regex.Pattern.compile("""^\s*//\s*#line-by-line""")
+    val worksheetPattern = java.util.regex.Pattern.compile("""^\s*//\s*#worksheet""")
 
     def safeProcessResponse[T](default: T)(fn: => T) {
       try {
@@ -533,31 +531,38 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       xs.mkString(File.pathSeparatorChar.toString)
     }
 
-    def interpretLine(lines: List[String]): IR.Result = lines match {
+    def interpretWorksheetLine(lines: List[(String, Int)]): IR.Result = lines match {
       case Nil => IR.Success
-      case code :: tail =>
-        //        Log.info("Interpreting code: %s\n" format(code))
+      case (code, lnum) :: tail =>
+        outputHandler.worksheetLineNum = Some(lnum)
+//        println("Interpreting:\n--%s--" format code)
         interp.interpret(code) match {
           case IR.Error => IR.Error
-          case IR.Success => interpretLine(lines.tail)
+          case IR.Success => interpretWorksheetLine(lines.tail)
           case IR.Incomplete =>
             tail match {
               case Nil => IR.Incomplete
-              case code2 :: tail2 => interpretLine(code + "\n" + code2 :: tail2)
+              case (code2, lnum2) :: tail2 => interpretWorksheetLine( (code + "\n" + code2, lnum) :: tail2)
             }
         }
     }
 
-    def interpretLineByLine(code: String): IR.Result = {
-      val lines = code.split("\r?\n").toList.filter(line => line.trim() != "" && !line.trim().startsWith("//"))
-      //            Log.info("Code Lines: " + lines)
-      interpretLine(lines)
+    def interpretAsWorksheet(code0: String): IR.Result = {
+      val code = code0.replaceAll(s"${ctx.WorksheetMarker}.*", "")
+      ctx.setScript(code)
+      val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => line.trim() != "" && !line.trim().startsWith("//") }
+      try {
+        interpretWorksheetLine(lines)
+      }
+      finally {
+        outputHandler.worksheetLineNum = None
+      }
     }
 
     def interpretAllLines(code: String): IR.Result = interp.interpret(code)
 
     def interpret(code: String): IR.Result = {
-      if (needsLineByLineInterpretation(code)) interpretLineByLine(code)
+      if (needsWorksheetInterpretation(code)) interpretAsWorksheet(code)
       else interpretAllLines(code)
     }
 
@@ -569,9 +574,8 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       compilerAndRunner.compile(code)
     }
 
-    def needsLineByLineInterpretation(code: String): Boolean = {
-      lblPattern.matcher(code).find()
-      //      false
+    def needsWorksheetInterpretation(code: String): Boolean = {
+      worksheetPattern.matcher(code).find()
     }
 
     def showIncompleteCodeMsg(code: String) {
