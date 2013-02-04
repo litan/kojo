@@ -119,7 +119,6 @@ object Main extends AppMenu {
       val code = Utils.loadResource(res)
       codePane.setText(Utils.stripCR(code))
       codePane.setCaretPosition(0)
-      codePane.setCaretPosition(0)
       Builtins.instance.stClickRunButton
     }
     catch {

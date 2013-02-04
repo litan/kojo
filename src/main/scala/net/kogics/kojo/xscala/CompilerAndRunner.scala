@@ -141,12 +141,20 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
 
   val compiler = new Global(settings, reporter)
 
-  def pfxWithCounter = Utils.stripCR("%s%d%s" format (prefixHeader, counter, prefix))
+  def pfxWithCounter = "%s%d%s" format (prefixHeader, counter, prefix)
 
   def compile(code0: String, stopPhase: List[String] = List("selectiveanf")) = {
     val pfx = pfxWithCounter
     offsetDelta = pfx.length
-    val code = Utils.stripCR(codeTemplate format (pfx, code0))
+    val code = codeTemplate format (pfx, code0)
+
+    if (code.contains("\r")) {
+      println("-- [compiler] Code contains carriage return.")
+    }
+    else {
+      println("-- [compiler] Code does not contain carriage return.")
+    }
+    
     compiler.settings.stopAfter.value = stopPhase
     val run = new compiler.Run
     reporter.reset
@@ -198,7 +206,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     compiler.currentSettings = makeSettings2()
     val pfx = pfxWithCounter
     offsetDelta = pfx.length
-    val code = Utils.stripCR(codeTemplate format (pfx, code0))
+    val code = codeTemplate format (pfx, code0)
 
     compiler.settings.stopAfter.value = stopPhase()
     if (browseAst) {
@@ -242,7 +250,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
 
     val pfx = pfxWithCounter
     val offsetDelta = pfx.length
-    val code = Utils.stripCR(codeTemplate format (pfx, code0))
+    val code = codeTemplate format (pfx, code0)
 
     val source = new BatchSourceFile("scripteditor", code)
     val pos = new OffsetPosition(source, offset + offsetDelta + 1)
@@ -277,7 +285,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
 
     val pfx = pfxWithCounter
     val offsetDelta = pfx.length
-    val code = Utils.stripCR(codeTemplate format (pfx, addMarkerAfterOffset(code0)))
+    val code = codeTemplate format (pfx, addMarkerAfterOffset(code0))
 
     val source = new BatchSourceFile("scripteditor", code)
     val pos = new OffsetPosition(source, offset + offsetDelta + 1)
