@@ -582,7 +582,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def upload() {
     val dlg = new codex.CodeExchangeForm(kojoCtx, true)
     dlg.setCanvas(tCanvas)
-    dlg.setCode(Utils.stripCR(codePane.getText()))
+    dlg.setCode(codePane.getText())
     dlg.centerScreen()
   }
 
@@ -885,6 +885,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       return None
     }
 
+    if (code.contains("\r")) {
+      println("-- Code contains carriage return.")
+    }
+    else {
+      println("-- Code does not contain carriage return.")
+    }
+
     // now that we use the proxy code runner, disable the run button right away and change
     // the cursor so that the user gets some feedback the first time he runs something
     // - relevant if the proxy is still loading the real runner
@@ -923,20 +930,20 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def codeFragment(caretOffset: Int) = {
     val cpt = codePane.getText
     if (caretOffset > cpt.length) ""
-    else Utils.stripCR(cpt).substring(0, caretOffset)
+    else cpt.substring(0, caretOffset)
   }
   def varCompletions(prefix: Option[String]) = codeRunner.varCompletions(prefix)
   def keywordCompletions(prefix: Option[String]) = codeRunner.keywordCompletions(prefix)
-  def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = codeRunner.memberCompletions(Utils.stripCR(codePane.getText), caretOffset, objid, prefix)
+  def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = codeRunner.memberCompletions(codePane.getText, caretOffset, objid, prefix)
   def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) = xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
-  def typeAt(caretOffset: Int) = codeRunner.typeAt(Utils.stripCR(codePane.getText), caretOffset)
+  def typeAt(caretOffset: Int) = codeRunner.typeAt(codePane.getText, caretOffset)
 
   var openedFile: Option[File] = None
   var fileData: String = _
   def saveFileData(d: String) {
-    fileData = Utils.stripCR(d)
+    fileData = d
   }
-  def fileChanged = fileData != Utils.stripCR(codePane.getText)
+  def fileChanged = fileData != codePane.getText
 
   def hasOpenFile = openedFile.isDefined
 

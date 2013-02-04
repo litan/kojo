@@ -37,20 +37,25 @@ import java.util.ResourceBundle
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
+
+import javax.swing.ImageIcon
+import javax.swing.Timer
+
 import scala.actors.Actor.actor
 import scala.actors.Actor.loop
 import scala.actors.Actor.react
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.SynchronizedSet
+
 import net.kogics.kojo.core.CodingMode
+import net.kogics.kojo.core.D3Mode
 import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
+
+import Typeclasses.mkIdentity
 import edu.umd.cs.piccolo.nodes.PText
-import javax.swing.ImageIcon
-import javax.swing.Timer
 import lite.canvas.SpriteCanvas
-import net.kogics.kojo.core.D3Mode
 
 object Utils {
 
@@ -185,7 +190,7 @@ object Utils {
       t
     }
   }
-  
+
   def runInSwingThreadAndPause[T](fn: => T): T = runInSwingThreadAndWait(1500, "Potential Deadlock. Bailing out!")(fn)
 
   def runInSwingThreadAndWait[T](timeout: Long, msg: String)(fn: => T): T = {
@@ -358,11 +363,13 @@ object Utils {
     loadResource2(s"/i18n/initk/${System.getProperty("user.language")}.${mode.code}.kojo")
   }
 
-  def kojoInitCode(mode: CodingMode): Option[String] = {
-    codeFromScripts(modeFilter(initScripts, mode), initScriptDir) |+| langInit(mode)
-    // |+| codeFromUrl(...)
-    // |+| codeFromScripts(modeFilter(installInitScripts, mode), installInitScriptDir)
-  }
+  lazy val initCode = collection.mutable.Map[CodingMode, Option[String]]()
+
+  def kojoInitCode(mode: CodingMode): Option[String] =
+    initCode.getOrElseUpdate(
+      mode,
+      (codeFromScripts(modeFilter(initScripts, mode), initScriptDir) |+| langInit(mode)) map stripCR
+    )
 
   def isScalaTestAvailable = (libJars ++ installLibJars).exists { fname => fname.toLowerCase contains "scalatest" }
 
