@@ -454,6 +454,18 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
         kprintln(outText)
       }
+      
+      def reportWorksheetOutput(result: String, lineNum: Int) {
+        appendToCodePaneLine(lineNum, result.replaceAll("\n(.+)", " | $1"))
+      }
+      
+      private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
+        val currLineEnd = codePane.getLineEndOffset(lineNum)
+        val insertPos = if (codePane.getText(currLineEnd-1, 1)  == "\n") currLineEnd - 1 else currLineEnd
+//        println(s"Line: $lineNum, End Offset: $currLineEnd, insertPos: $insertPos")
+//        println(s"Text at currLineEnd: -${codePane.getText(currLineEnd-1, 1)}-")
+        codePane.insert(WorksheetMarker + result.trim, insertPos)
+      }
 
       def reportErrorMsg(errMsg: String) {
         showErrorMsg(errMsg)

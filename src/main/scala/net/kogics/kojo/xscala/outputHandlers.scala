@@ -34,6 +34,7 @@ class InterpOutputHandler(ctx: RunContext) {
   val errorPattern = java.util.regex.Pattern.compile("""(^<console>:\d+: )error:""")
   val exceptionPattern = java.util.regex.Pattern.compile("""^\w+(\.[\w\$]+)+(Exception|Error)""")
   @volatile var interpOutputSuppressed = false
+  @volatile var worksheetLineNum: Option[Int] = None
 
   def showInterpOutput(lineFragment: String) {
     if (!interpOutputSuppressed) reportInterpOutput(lineFragment)
@@ -64,6 +65,8 @@ class InterpOutputHandler(ctx: RunContext) {
 
   def reportInterpOutput(output: String) {
     if (output == "") return
+
+    worksheetLineNum foreach { ctx.reportWorksheetOutput(output, _) }
 
     if (exceptionPattern.matcher(output).find) {
       reportExceptionOutput(output)
