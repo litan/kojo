@@ -148,12 +148,12 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     offsetDelta = pfx.length
     val code = codeTemplate format (pfx, code0)
 
-    if (code.contains("\r")) {
-      println("-- [compiler] Code contains carriage return.")
-    }
-    else {
-      println("-- [compiler] Code does not contain carriage return.")
-    }
+//    if (code.contains("\r")) {
+//      println("-- [compiler] Code contains carriage return.")
+//    }
+//    else {
+//      println("-- [compiler] Code does not contain carriage return.")
+//    }
     
     compiler.settings.stopAfter.value = stopPhase
     val run = new compiler.Run
