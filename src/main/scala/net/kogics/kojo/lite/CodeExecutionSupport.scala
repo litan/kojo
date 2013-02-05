@@ -927,12 +927,12 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       return None
     }
 
-    if (code.contains("\r")) {
-      println("-- Code contains carriage return.")
-    }
-    else {
-      println("-- Code does not contain carriage return.")
-    }
+//    if (code.contains("\r")) {
+//      println("-- Code contains carriage return.")
+//    }
+//    else {
+//      println("-- Code does not contain carriage return.")
+//    }
 
     // now that we use the proxy code runner, disable the run button right away and change
     // the cursor so that the user gets some feedback the first time he runs something
