@@ -511,17 +511,17 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
         val currLineEnd = codePane.getLineEndOffset(lineNum + selectionOffset)
         val insertPos = if (newLineAt(currLineEnd)) currLineEnd - 1 else currLineEnd
-        val dot = codePane.getCaretPosition
-        val selStart = codePane.getSelectionStart()
-        val selEnd = codePane.getSelectionEnd()
+//        val dot = codePane.getCaretPosition
+//        val selStart = codePane.getSelectionStart()
+//        val selEnd = codePane.getSelectionEnd()
         codePane.insert(WorksheetMarker + result.trim, insertPos)
-        if (dot == insertPos) {
-          codePane.setCaretPosition(dot)
-          if (selStart != selEnd) {
-            codePane.setSelectionStart(selStart)
-            codePane.setSelectionEnd(selEnd)
-          }
-        }
+//        if (dot == insertPos) {
+//          if (selStart == selEnd) {
+//            codePane.setCaretPosition(dot)
+//            //            codePane.setSelectionStart(selStart)
+//            //            codePane.setSelectionEnd(selEnd)
+//          }
+//        }
       }
 
       def insertCodeInline(code: String) = smartInsertCode(code, false)
