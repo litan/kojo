@@ -509,12 +509,18 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       }
 
       private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
-        val currLineEnd = codePane.getLineEndOffset(lineNum)
+        val currLineEnd = codePane.getLineEndOffset(lineNum + selectionOffset)
         val insertPos = if (newLineAt(currLineEnd)) currLineEnd - 1 else currLineEnd
         val dot = codePane.getCaretPosition
+        val selStart = codePane.getSelectionStart()
+        val selEnd = codePane.getSelectionEnd()
         codePane.insert(WorksheetMarker + result.trim, insertPos)
         if (dot == insertPos) {
           codePane.setCaretPosition(dot)
+          if (selStart != selEnd) {
+            codePane.setSelectionStart(selStart)
+            codePane.setSelectionEnd(selEnd)
+          }
         }
       }
 
@@ -866,7 +872,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     enableRunButton(false)
     showWaitCursor()
 
-    val cleanCode = cleanWsOutput(code)
+    val cleanCode = cleanWsOutput(CodeToRun(code, None))
     if (check) {
       codeRunner.compileCode(cleanCode)
     }
@@ -884,28 +890,35 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   }
 
   def compileRunCode() {
-    val code = code2run
-    preProcessCode(code)
-    codeRunner.compileRunCode(code)
+    val code2run = codeToRun
+    preProcessCode(code2run.code)
+    codeRunner.compileRunCode(code2run.code)
   }
 
   // For IPM
   def runCode(code: String) = codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
 
-  def code2run = {
+  case class CodeToRun(code: String, selection: Option[(Int, Int)])
+
+  def codeToRun: CodeToRun = {
     val code = codePane.getText
     val selectedCode = codePane.getSelectedText
-    if (selectedCode == null) code else selectedCode
+    if (selectedCode == null) {
+      CodeToRun(code, None)
+    }
+    else {
+      CodeToRun(selectedCode, Some(codePane.getSelectionStart, codePane.getSelectionEnd))
+    }
   }
 
   def runCode() {
     // Runs on swing thread
-    val code0 = code2run
-    if (isWorksheet(code0)) {
-      runWorksheet(code0)
+    val code2run = codeToRun
+    if (isWorksheet(code2run.code)) {
+      runWorksheet(code2run)
     }
     else {
-      val code = cleanWsOutput(code0)
+      val code = cleanWsOutput(code2run)
       preProcessCode(code)
       if (isStory(code)) {
         codeRunner.compileRunCode(code)
@@ -917,21 +930,22 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   }
 
   def runWorksheet() {
-    runWorksheet(codePane.getText)
+    runWorksheet(codeToRun)
   }
 
-  def runWorksheet(code: String) {
-    val cleanCode = removeWorksheetOutput(code)
-    setWorksheetScript(cleanCode)
+  def runWorksheet(code2run: CodeToRun) {
+    val cleanCode = removeWorksheetOutput(code2run.code)
+    setWorksheetScript(cleanCode, code2run.selection)
     preProcessCode(cleanCode)
     codeRunner.runWorksheet(cleanCode)
   }
 
   // Impure function!
-  def cleanWsOutput(code: String) = {
+  def cleanWsOutput(code2run: CodeToRun) = {
+    val code = code2run.code
     if (code.contains(WorksheetMarker)) {
       val cleanCode = removeWorksheetOutput(code)
-      setWorksheetScript(cleanCode)
+      setWorksheetScript(cleanCode, code2run.selection)
       cleanCode
     }
     else {
@@ -943,27 +957,46 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   private def newLineAt(pos: Int) = codePane.getText(pos - 1, 1) == "\n"
 
-  def setWorksheetScript(code: String) = Utils.runInSwingThread {
+  var selectionOffset = 0
+
+  def setWorksheetScript(code: String, selection: Option[(Int, Int)]) = Utils.runInSwingThread {
     val dot = codePane.getCaretPosition
     val line = codePane.getLineOfOffset(dot)
     val offsetInLine = dot - codePane.getLineStartOffset(line)
-    codePane.setText(code)
-    val lineStart = codePane.getLineStartOffset(line)
-    val lineEnd = codePane.getLineEndOffset(line)
-    val delta = if (newLineAt(lineEnd) && lineStart != lineEnd) 1 else 0
-    val newLineSize = lineEnd - lineStart - delta
-    val offset = if (offsetInLine < newLineSize) offsetInLine else newLineSize
-    codePane.setCaretPosition(lineStart + offset)
+    if (selection.isDefined) {
+      val selStart = selection.get._1
+      selectionOffset = codePane.getLineOfOffset(selStart)
+      codePane.replaceRange(code, selStart, selection.get._2)
+      codePane.setSelectionStart(selStart)
+      codePane.setSelectionEnd(selStart + code.length)
+    }
+    else {
+      selectionOffset = 0
+      codePane.setText(code)
+      try {
+        val lineStart = codePane.getLineStartOffset(line)
+        val lineEnd = codePane.getLineEndOffset(line)
+        val delta = if (newLineAt(lineEnd) && lineStart != lineEnd) 1 else 0
+        val newLineSize = lineEnd - lineStart - delta
+        val offset = if (offsetInLine < newLineSize) offsetInLine else newLineSize
+        codePane.setCaretPosition(lineStart + offset)
+      }
+      catch {
+        case t: Throwable =>
+          println(s"Problem placing Carent: $t.getMessage")
+          codePane.setCaretPosition(0)
+      }
+    }
   }
 
-  def preProcessCode(codeToRun: String) {
+  def preProcessCode(code: String) {
     // now that we use the proxy code runner, disable the run button right away and change
     // the cursor so that the user gets some feedback the first time he runs something
     // - relevant if the proxy is still loading the real runner
     enableRunButton(false)
     showWaitCursor()
 
-    if (isStory(codeToRun)) {
+    if (isStory(code)) {
       // a story
       activateTw()
       storyTeller.storyComing()
@@ -971,13 +1004,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
     if (showCode) {
       showOutput("\n>>>\n", promptColor)
-      showOutput(codeToRun, codeColor)
+      showOutput(code, codeColor)
       showOutput("\n<<<\n", promptColor)
     }
     else {
       maybeOutputDelimiter()
     }
-    historyManager.codeRun(codeToRun)
+    historyManager.codeRun(code)
   }
 
   def maybeOutputDelimiter() {
