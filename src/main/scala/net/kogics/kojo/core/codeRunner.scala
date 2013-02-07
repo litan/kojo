@@ -47,7 +47,6 @@ trait RunContext {
 
   def kprintln(outText: String)
   def reportOutput(outText: String)
-  val WorksheetMarker = " //> "
   def reportWorksheetOutput(result: String, lineNum: Int)
   def reportErrorMsg(errMsg: String)
   def reportErrorText(errText: String)
@@ -61,7 +60,6 @@ trait RunContext {
   def hideVerboseOutput(): Unit
   def clearOutput(): Unit
   def setScript(code: String): Unit
-  def setWorksheetScript(code: String): Unit
   def insertCodeInline(code: String): Unit
   def insertCodeBlock(code: String): Unit
 
