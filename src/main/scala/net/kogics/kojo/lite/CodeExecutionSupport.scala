@@ -89,6 +89,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   val codeColor = new Color(0x009b00)
   val DefaultOutputColor = new Color(32, 32, 32)
   val DefaultOutputFontSize = 13
+  val WorksheetMarker = " //> "
   var outputColor = DefaultOutputColor
 
   val (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton,
@@ -462,18 +463,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         kprintln(outText)
       }
 
-      def reportWorksheetOutput(result: String, lineNum: Int) {
-        appendToCodePaneLine(lineNum, result.replaceAll("\n(.+)", " | $1"))
-      }
-
-      private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
-        val currLineEnd = codePane.getLineEndOffset(lineNum)
-        val insertPos = if (codePane.getText(currLineEnd - 1, 1) == "\n") currLineEnd - 1 else currLineEnd
-        //        println(s"Line: $lineNum, End Offset: $currLineEnd, insertPos: $insertPos")
-        //        println(s"Text at currLineEnd: -${codePane.getText(currLineEnd-1, 1)}-")
-        codePane.insert(WorksheetMarker + result.trim, insertPos)
-      }
-
       def reportErrorMsg(errMsg: String) {
         showErrorMsg(errMsg)
         runMonitor.reportOutput(errMsg)
@@ -515,15 +504,18 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         }
       }
 
-      def setWorksheetScript(code: String) = Utils.runInSwingThread {
+      def reportWorksheetOutput(result: String, lineNum: Int) {
+        appendToCodePaneLine(lineNum, result.replaceAll("\n(.+)", " | $1"))
+      }
+
+      private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
+        val currLineEnd = codePane.getLineEndOffset(lineNum)
+        val insertPos = if (newLineAt(currLineEnd)) currLineEnd - 1 else currLineEnd
         val dot = codePane.getCaretPosition
-        val line = codePane.getLineOfOffset(dot)
-        val offsetInLine = dot - codePane.getLineStartOffset(line)
-        codePane.setText(code)
-        val lineStart = codePane.getLineStartOffset(line)
-        val newLineSize = codePane.getLineEndOffset(line) - lineStart - 1
-        val offset = if (offsetInLine < newLineSize) offsetInLine else 0
-        codePane.setCaretPosition(lineStart + offset)
+        codePane.insert(WorksheetMarker + result.trim, insertPos)
+        if (dot == insertPos) {
+          codePane.setCaretPosition(dot)
+        }
       }
 
       def insertCodeInline(code: String) = smartInsertCode(code, false)
@@ -860,7 +852,10 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     else false
   }
 
-  def parseCode(browseAst: Boolean) {
+  def parseCode(browseAst: Boolean) = compileParseCode(false, browseAst)
+  def compileCode() = compileParseCode(true, false)
+
+  private def compileParseCode(check: Boolean, browseAst: Boolean) {
     val code = codePane.getText()
 
     if (invalidCode(code)) {
@@ -871,81 +866,102 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     enableRunButton(false)
     showWaitCursor()
 
-    codeRunner.parseCode(code, browseAst)
-  }
-
-  def compileCode() {
-    val code = codePane.getText()
-
-    if (invalidCode(code)) {
-      return
+    val cleanCode = cleanWsOutput(code)
+    if (check) {
+      codeRunner.compileCode(cleanCode)
     }
-
-    statusStrip.onDocChange()
-    enableRunButton(false)
-    showWaitCursor()
-
-    codeRunner.compileCode(code)
+    else {
+      codeRunner.parseCode(cleanCode, browseAst)
+    }
   }
 
   def isStory(code: String) = {
     code.indexOf("stPlayStory") != -1
   }
 
+  def isWorksheet(code: String) = {
+    code.indexOf("#worksheet") != -1
+  }
+
   def compileRunCode() {
-    preProcessCode() map { codeToRun => codeRunner.compileRunCode(codeToRun) }
+    val code = code2run
+    preProcessCode(code)
+    codeRunner.compileRunCode(code)
   }
 
   // For IPM
-  def runCode(code: String) = codeRunner.runCode(code)
+  def runCode(code: String) = codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
+
+  def code2run = {
+    val code = codePane.getText
+    val selectedCode = codePane.getSelectedText
+    if (selectedCode == null) code else selectedCode
+  }
 
   def runCode() {
     // Runs on swing thread
-    preProcessCode() map { codeToRun =>
-      historyManager.codeRun(codeToRun)
-      if (isStory(codeToRun)) {
-        codeRunner.compileRunCode(codeToRun)
+    val code0 = code2run
+    if (isWorksheet(code0)) {
+      runWorksheet(code0)
+    }
+    else {
+      val code = cleanWsOutput(code0)
+      preProcessCode(code)
+      if (isStory(code)) {
+        codeRunner.compileRunCode(code)
       }
       else {
-        codeRunner.runCode(codeToRun)
+        codeRunner.runCode(code)
       }
     }
   }
 
   def runWorksheet() {
-    // Runs on swing thread
-    preProcessCode() map { codeToRun =>
-      historyManager.codeRun(codeToRun)
-      codeRunner.runWorksheet(codeToRun)
+    runWorksheet(codePane.getText)
+  }
+
+  def runWorksheet(code: String) {
+    val cleanCode = removeWorksheetOutput(code)
+    setWorksheetScript(cleanCode)
+    preProcessCode(cleanCode)
+    codeRunner.runWorksheet(cleanCode)
+  }
+
+  // Impure function!
+  def cleanWsOutput(code: String) = {
+    if (code.contains(WorksheetMarker)) {
+      val cleanCode = removeWorksheetOutput(code)
+      setWorksheetScript(cleanCode)
+      cleanCode
+    }
+    else {
+      code
     }
   }
 
-  def preProcessCode(): Option[String] = {
-    val code = codePane.getText()
+  def removeWorksheetOutput(code: String) = code.replaceAll(s"${WorksheetMarker}.*", "")
 
-    if (invalidCode(code)) {
-      return None
-    }
+  private def newLineAt(pos: Int) = codePane.getText(pos - 1, 1) == "\n"
 
-//    if (code.contains("\r")) {
-//      println("-- Code contains carriage return.")
-//    }
-//    else {
-//      println("-- Code does not contain carriage return.")
-//    }
+  def setWorksheetScript(code: String) = Utils.runInSwingThread {
+    val dot = codePane.getCaretPosition
+    val line = codePane.getLineOfOffset(dot)
+    val offsetInLine = dot - codePane.getLineStartOffset(line)
+    codePane.setText(code)
+    val lineStart = codePane.getLineStartOffset(line)
+    val lineEnd = codePane.getLineEndOffset(line)
+    val delta = if (newLineAt(lineEnd) && lineStart != lineEnd) 1 else 0
+    val newLineSize = lineEnd - lineStart - delta
+    val offset = if (offsetInLine < newLineSize) offsetInLine else newLineSize
+    codePane.setCaretPosition(lineStart + offset)
+  }
 
+  def preProcessCode(codeToRun: String) {
     // now that we use the proxy code runner, disable the run button right away and change
     // the cursor so that the user gets some feedback the first time he runs something
     // - relevant if the proxy is still loading the real runner
     enableRunButton(false)
     showWaitCursor()
-
-    val selStart = codePane.getSelectionStart
-    val selEnd = codePane.getSelectionEnd
-    val caretPos = codePane.getCaretPosition
-
-    val selectedCode = codePane.getSelectedText
-    val codeToRun = if (selectedCode == null) code else selectedCode
 
     if (isStory(codeToRun)) {
       // a story
@@ -961,7 +977,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     else {
       maybeOutputDelimiter()
     }
-    Some(codeToRun)
+    historyManager.codeRun(codeToRun)
   }
 
   def maybeOutputDelimiter() {
@@ -1157,14 +1173,6 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     def codeRun(code: String) {
       val tcode = code.trim()
       commandHistory.add(code, openedFile.map(f => "%s (%s)" format (f.getName, f.getParent)))
-      //      updateButtons(commandHistory.hIndex)
-
-      //      if (commandHistory.hIndex == prevIndex + 1) {
-      //        // the last entry within history was selected
-      //        commandHistory.ensureLastEntryVisible()
-      //      } else {
-      //        commandHistory.ensureVisible(prevIndex)
-      //      }
     }
   }
 

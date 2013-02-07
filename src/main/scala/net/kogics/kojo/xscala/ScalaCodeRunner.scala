@@ -206,8 +206,6 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     var interp: KojoInterpreter = _
     var compilerAndRunner: CompilerAndRunner = _
 
-    val worksheetPattern = java.util.regex.Pattern.compile("""^\s*//\s*#worksheet""")
-
     def safeProcessResponse[T](default: T)(fn: => T) {
       try {
         reply(fn)
@@ -218,7 +216,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
           reply(default)
       }
     }
-    
+
     def safeProcessCompletionReq(fn: => (List[String], Int)) {
       try {
         reply(CompletionResponse(fn))
@@ -464,9 +462,9 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     def makeSettings() = {
       val iSettings = new Settings()
       iSettings.usejavacp.value = true
-//      iSettings.deprecation.value = true
-//      iSettings.feature.value = true
-//      iSettings.unchecked.value = true
+      //      iSettings.deprecation.value = true
+      //      iSettings.feature.value = true
+      //      iSettings.unchecked.value = true
       iSettings
     }
 
@@ -543,21 +541,19 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       case Nil => IR.Success
       case (code, lnum) :: tail =>
         outputHandler.worksheetLineNum = Some(lnum)
-//        println("Interpreting:\n--%s--" format code)
+        //        println("Interpreting:\n--%s--" format code)
         interp.interpret(code) match {
-          case IR.Error => IR.Error
+          case IR.Error   => IR.Error
           case IR.Success => interpretWorksheetLine(lines.tail)
           case IR.Incomplete =>
             tail match {
-              case Nil => IR.Incomplete
-              case (code2, lnum2) :: tail2 => interpretWorksheetLine( (code + "\n" + code2, lnum) :: tail2)
+              case Nil                     => IR.Incomplete
+              case (code2, lnum2) :: tail2 => interpretWorksheetLine((code + "\n" + code2, lnum) :: tail2)
             }
         }
     }
 
-    def interpretAsWorksheet(code0: String): IR.Result = {
-      val code = code0.replaceAll(s"${ctx.WorksheetMarker}.*", "")
-      ctx.setWorksheetScript(code)
+    def interpretAsWorksheet(code: String): IR.Result = {
       val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => line.trim() != "" && !line.trim().startsWith("//") }
       try {
         interpretWorksheetLine(lines)
@@ -570,8 +566,10 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     def interpretAllLines(code: String): IR.Result = interp.interpret(code)
 
     def interpret(code: String, asWorksheet: Boolean): IR.Result = {
-      if (asWorksheet || needsWorksheetInterpretation(code)) interpretAsWorksheet(code)
-      else interpretAllLines(code)
+      if (asWorksheet)
+        interpretAsWorksheet(code)
+      else
+        interpretAllLines(code)
     }
 
     def compileAndRun(code: String): IR.Result = {
@@ -580,10 +578,6 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
 
     def compile(code: String): IR.Result = {
       compilerAndRunner.compile(code)
-    }
-
-    def needsWorksheetInterpretation(code: String): Boolean = {
-      worksheetPattern.matcher(code).find()
     }
 
     def showIncompleteCodeMsg(code: String) {
@@ -627,13 +621,13 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       compilerAndRunner.completions(code, caretOffset - pfx.length, objid != null) match {
         case Nil =>
           (Nil, pfx.length)
-//          val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
-//          (ics.map { CompletionInfo(_, null, 100) }, pfx.length)
+        //          val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
+        //          (ics.map { CompletionInfo(_, null, 100) }, pfx.length)
         case _@ ccs =>
           (ccs.filter { ci => ignoreCaseStartsWith(ci.name, pfx) }, pfx.length)
       }
     }
-    
+
     def typeAt(code: String, caretOffset: Int): String = {
       compilerAndRunner.typeAt(code, caretOffset)
     }
