@@ -996,12 +996,12 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) = xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
   def typeAt(caretOffset: Int) = codeRunner.typeAt(codePane.getText, caretOffset)
 
-  var openedFile: Option[File] = None
-  var fileData: String = _
-  def saveFileData(d: String) {
-    fileData = d
+  private var openedFile: Option[File] = None
+  private var fileData: String = _
+  private def saveFileData(d: String) {
+    fileData = removeWorksheetOutput(d)
   }
-  def fileChanged = fileData != codePane.getText
+  private def fileChanged = fileData != removeWorksheetOutput(codePane.getText)
 
   def hasOpenFile = openedFile.isDefined
 
