@@ -509,7 +509,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       }
 
       private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
-        val insertPos = getLineEndOffset(lineNum + selectionOffset)
+        val insertPos = getVisibleLineEndOffset(lineNum + selectionOffset)
         val dot = codePane.getCaretPosition
         val selStart = codePane.getSelectionStart()
         val selEnd = codePane.getSelectionEnd()
@@ -941,9 +941,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
         val selStartLine = codePane.getLineOfOffset(selStart)
         val selEndLine = codePane.getLineOfOffset(selEnd)
         val selStartLineStart = codePane.getLineStartOffset(selStartLine)
-        val selStartLineEnd = getLineEndOffset(selStartLine)
+        val selStartLineEnd = getVisibleLineEndOffset(selStartLine)
         val selEndLineStart = codePane.getLineStartOffset(selEndLine)
-        val selEndLineEnd = getLineEndOffset(selEndLine)
+        val selEndLineEnd = getVisibleLineEndOffset(selEndLine)
         val newSelStart = if (selStartLineEnd == selStart) selStart else selStartLineStart
         val newSelEnd = if (selEndLineStart == selEnd) selEnd else selEndLineEnd
         codePane.setSelectionStart(newSelStart)
@@ -975,10 +975,11 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def removeWorksheetOutput(code: String) = code.replaceAll(s"${WorksheetMarker}.*", "")
 
-  private def getLineEndOffset(line: Int) = {
-    def newLineAt(pos: Int) = codePane.getText(pos - 1, 1) == "\n"
+  private def getVisibleLineEndOffset(line: Int) = {
+    def newLineBefore(pos: Int) = codePane.getText(pos - 1, 1) == "\n"
+    val lineStart = codePane.getLineStartOffset(line)
     val lineEnd = codePane.getLineEndOffset(line)
-    if (newLineAt(lineEnd)) lineEnd - 1 else lineEnd
+    if (newLineBefore(lineEnd) && lineStart != lineEnd) lineEnd - 1 else lineEnd
   }
 
   var selectionOffset = 0
@@ -999,7 +1000,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       codePane.setText(code)
       try {
         val lineStart = codePane.getLineStartOffset(line)
-        val lineEnd = getLineEndOffset(line)
+        val lineEnd = getVisibleLineEndOffset(line)
         val newLineSize = lineEnd - lineStart
         codePane.setCaretPosition(lineStart + math.min(offsetInLine, newLineSize))
       }
