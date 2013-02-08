@@ -85,6 +85,23 @@ class KojoCtx extends core.KojoCtx {
     activateScriptEditor()
   }
 
+  def switchToWorksheetPerspective() {
+    val grid = new CGrid(control)
+    grid.add(0, 0, 1, 5, topcs.hih)
+    grid.add(1, 0, 2, 5, topcs.sth)
+    grid.add(3, 0, 3, 2, topcs.d3h)
+    grid.add(3, 0, 3, 2, topcs.mwh)
+    grid.add(3, 0, 3, 2, topcs.dch)
+    grid.add(3, 2, 3, 1.65, topcs.seh)
+    grid.add(3, 4, 3, 1.35, topcs.owh)
+    control.getContentArea.deploy(grid)
+
+    topcs.dch.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
+    activateScriptEditor()
+  }
+
   def switchToStoryViewingPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)

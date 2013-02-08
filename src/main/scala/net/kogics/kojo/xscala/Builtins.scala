@@ -675,6 +675,10 @@ Here's a partial list of the available commands:
     kojoCtx.switchToScriptEditingPerspective()
   }
 
+  def switchToWorksheetPerspective() = Utils.runInSwingThreadAndWait {
+    kojoCtx.switchToWorksheetPerspective()
+  }
+
   def switchToStoryViewingPerspective() = Utils.runInSwingThreadAndWait {
     kojoCtx.switchToStoryViewingPerspective()
   }
