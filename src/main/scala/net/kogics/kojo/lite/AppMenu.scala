@@ -198,13 +198,21 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(resetWindows)
 
-    val storyItem = new JMenuItem(Utils.loadString("S_StoryViewingPerspective"))
-    storyItem.addActionListener(new ActionListener {
+    val worksheetItem = new JMenuItem(Utils.loadString("S_WorksheetPerspective"))
+    worksheetItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.switchToStoryViewingPerspective()
+        kojoCtx.switchToWorksheetPerspective()
       }
     })
-    windowMenu.add(storyItem)
+    windowMenu.add(worksheetItem)
+
+    val scriptEditingItem = new JMenuItem(Utils.loadString("S_ScriptEditingPerspective"))
+    scriptEditingItem.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        kojoCtx.switchToScriptEditingPerspective()
+      }
+    })
+    windowMenu.add(scriptEditingItem)
 
     val historyItem = new JMenuItem(Utils.loadString("S_HistoryBrowsingPerspective"))
     historyItem.addActionListener(new ActionListener {
@@ -214,21 +222,21 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(historyItem)
 
-    val drawingCanvasItem = new JMenuItem(Utils.loadString("S_ScriptEditingPerspective"))
-    drawingCanvasItem.addActionListener(new ActionListener {
+    val storyItem = new JMenuItem(Utils.loadString("S_StoryViewingPerspective"))
+    storyItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.switchToScriptEditingPerspective()
+        kojoCtx.switchToStoryViewingPerspective()
       }
     })
-    windowMenu.add(drawingCanvasItem)
+    windowMenu.add(storyItem)
 
-    val gamingItem = new JMenuItem(Utils.loadString("S_CanvasPerspective"))
-    gamingItem.addActionListener(new ActionListener {
+    val canvasItem = new JMenuItem(Utils.loadString("S_CanvasPerspective"))
+    canvasItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         kojoCtx.switchToCanvasPerspective()
       }
     })
-    windowMenu.add(gamingItem)
+    windowMenu.add(canvasItem)
 
     windowMenu.addSeparator()
 
