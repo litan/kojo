@@ -511,17 +511,19 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
         val currLineEnd = codePane.getLineEndOffset(lineNum + selectionOffset)
         val insertPos = if (newLineAt(currLineEnd)) currLineEnd - 1 else currLineEnd
-//        val dot = codePane.getCaretPosition
-//        val selStart = codePane.getSelectionStart()
-//        val selEnd = codePane.getSelectionEnd()
+        val dot = codePane.getCaretPosition
+        val selStart = codePane.getSelectionStart()
+        val selEnd = codePane.getSelectionEnd()
         codePane.insert(WorksheetMarker + result.trim, insertPos)
-//        if (dot == insertPos) {
-//          if (selStart == selEnd) {
-//            codePane.setCaretPosition(dot)
-//            //            codePane.setSelectionStart(selStart)
-//            //            codePane.setSelectionEnd(selEnd)
-//          }
-//        }
+        if (dot == insertPos) {
+          if (selStart == selEnd) {
+            codePane.setCaretPosition(dot)
+          }
+          else {
+            codePane.setSelectionStart(selStart)
+            codePane.setSelectionEnd(selEnd)
+          }
+        }
       }
 
       def insertCodeInline(code: String) = smartInsertCode(code, false)
@@ -933,7 +935,30 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     runWorksheet(codeToRun)
   }
 
-  def runWorksheet(code2run: CodeToRun) {
+  // impure function!
+  def extendSelection(code2run: CodeToRun) = {
+    code2run.selection.map {
+      case (start, end) =>
+        val selStartLineStart = codePane.getLineStartOffset(codePane.getLineOfOffset(start))
+        val selStartLineEnd = codePane.getLineEndOffset(codePane.getLineOfOffset(start))
+        val selEndLineEnd = codePane.getLineEndOffset(codePane.getLineOfOffset(end))
+        val selEndLineStart = codePane.getLineStartOffset(codePane.getLineOfOffset(end))
+        val newSelStart = if (selStartLineEnd-1 == start) start else selStartLineStart
+        val newSelEnd =
+          if (selEndLineStart == end) {
+            end
+          }
+          else {
+            if (newLineAt(selEndLineEnd)) selEndLineEnd - 1 else selEndLineEnd
+          }
+        codePane.setSelectionStart(newSelStart)
+        codePane.setSelectionEnd(newSelEnd)
+        CodeToRun(codePane.getSelectedText, Some(newSelStart, newSelEnd))
+    } getOrElse code2run
+  }
+
+  def runWorksheet(code2run0: CodeToRun) {
+    val code2run = extendSelection(code2run0)
     val cleanCode = removeWorksheetOutput(code2run.code)
     setWorksheetScript(cleanCode, code2run.selection)
     preProcessCode(cleanCode)
