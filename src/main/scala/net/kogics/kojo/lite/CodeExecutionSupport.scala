@@ -509,8 +509,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       }
 
       private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
-        val currLineEnd = codePane.getLineEndOffset(lineNum + selectionOffset)
-        val insertPos = if (newLineAt(currLineEnd)) currLineEnd - 1 else currLineEnd
+        val insertPos = getLineEndOffset(lineNum + selectionOffset)
         val dot = codePane.getCaretPosition
         val selStart = codePane.getSelectionStart()
         val selEnd = codePane.getSelectionEnd()
@@ -938,19 +937,15 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   // impure function!
   def extendSelection(code2run: CodeToRun) = {
     code2run.selection.map {
-      case (start, end) =>
-        val selStartLineStart = codePane.getLineStartOffset(codePane.getLineOfOffset(start))
-        val selStartLineEnd = codePane.getLineEndOffset(codePane.getLineOfOffset(start))
-        val selEndLineEnd = codePane.getLineEndOffset(codePane.getLineOfOffset(end))
-        val selEndLineStart = codePane.getLineStartOffset(codePane.getLineOfOffset(end))
-        val newSelStart = if (selStartLineEnd-1 == start) start else selStartLineStart
-        val newSelEnd =
-          if (selEndLineStart == end) {
-            end
-          }
-          else {
-            if (newLineAt(selEndLineEnd)) selEndLineEnd - 1 else selEndLineEnd
-          }
+      case (selStart, selEnd) =>
+        val selStartLine = codePane.getLineOfOffset(selStart)
+        val selEndLine = codePane.getLineOfOffset(selEnd)
+        val selStartLineStart = codePane.getLineStartOffset(selStartLine)
+        val selStartLineEnd = getLineEndOffset(selStartLine)
+        val selEndLineStart = codePane.getLineStartOffset(selEndLine)
+        val selEndLineEnd = getLineEndOffset(selEndLine)
+        val newSelStart = if (selStartLineEnd == selStart) selStart else selStartLineStart
+        val newSelEnd = if (selEndLineStart == selEnd) selEnd else selEndLineEnd
         codePane.setSelectionStart(newSelStart)
         codePane.setSelectionEnd(newSelEnd)
         CodeToRun(codePane.getSelectedText, Some(newSelStart, newSelEnd))
@@ -980,7 +975,11 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
 
   def removeWorksheetOutput(code: String) = code.replaceAll(s"${WorksheetMarker}.*", "")
 
-  private def newLineAt(pos: Int) = codePane.getText(pos - 1, 1) == "\n"
+  private def getLineEndOffset(line: Int) = {
+    def newLineAt(pos: Int) = codePane.getText(pos - 1, 1) == "\n"
+    val lineEnd = codePane.getLineEndOffset(line)
+    if (newLineAt(lineEnd)) lineEnd - 1 else lineEnd
+  }
 
   var selectionOffset = 0
 
@@ -1000,11 +999,9 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       codePane.setText(code)
       try {
         val lineStart = codePane.getLineStartOffset(line)
-        val lineEnd = codePane.getLineEndOffset(line)
-        val delta = if (newLineAt(lineEnd) && lineStart != lineEnd) 1 else 0
-        val newLineSize = lineEnd - lineStart - delta
-        val offset = if (offsetInLine < newLineSize) offsetInLine else newLineSize
-        codePane.setCaretPosition(lineStart + offset)
+        val lineEnd = getLineEndOffset(line)
+        val newLineSize = lineEnd - lineStart
+        codePane.setCaretPosition(lineStart + math.min(offsetInLine, newLineSize))
       }
       catch {
         case t: Throwable =>
