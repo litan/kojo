@@ -20,11 +20,14 @@ import java.io.PrintWriter
 import java.io.Writer
 import java.util.logging.Level
 import java.util.logging.Logger
+
 import scala.actors.Actor
 import scala.collection.mutable.ListBuffer
+
 import net.kogics.kojo.core.D3Mode
 import net.kogics.kojo.util.Typeclasses.mkIdentity
 import net.kogics.kojo.util.Typeclasses.some
+
 import CodeCompletionUtils.InternalMethodsRe
 import CodeCompletionUtils.InternalVarsRe
 import CodeCompletionUtils.Keywords
@@ -41,7 +44,6 @@ import core.SCanvas
 import core.StagingMode
 import core.TwMode
 import util.Utils
-import net.kogics.kojo.util.Typeclasses
 
 class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRunner {
   val Log = Logger.getLogger("ScalaCodeRunner")
@@ -53,6 +55,8 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
   @volatile var pcompiler: scala.tools.nsc.interactive.Global = _
 
   val codeRunner = startCodeRunner()
+
+  def resetInterp() = codeRunner.resetInterp()
 
   if (Utils.libJars.size > 0) {
     kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
@@ -119,7 +123,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     (codeRunner !? TypeAtRequest(code, caretOffset)).asInstanceOf[String]
   }
 
-  def startCodeRunner(): Actor = {
+  def startCodeRunner() = {
     val actor = new InterpActor
     actor.start()
     actor ! Init
@@ -248,6 +252,45 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       mode = TwMode
       CodeCompletionUtils.activateTw()
       loadInitScripts(TwMode)
+    }
+
+    // meant to be called from scripts - so that it runs on the interp thread
+    def resetInterp() = Utils.safeProcess {
+      if (Thread.currentThread != InterruptionManager.interpreterThread.getOrElse(null)) {
+        throw new RuntimeException("Resetting Interp from outside Interp running thread!")
+      }
+
+      interp.reset()
+      initInterp()
+      mode match {
+        case TwMode =>
+          outputHandler.withOutputSuppressed {
+            interp.interpret("import TSCanvas._")
+            interp.interpret("import Tw._")
+            loadInitScripts(TwMode)
+          }
+
+        case StagingMode =>
+          val imports = "import TSCanvas._; import Staging._"
+          outputHandler.withOutputSuppressed {
+            interp.interpret(imports)
+            loadInitScripts(StagingMode)
+          }
+
+        case MwMode =>
+          val imports = "import Mw._"
+          outputHandler.withOutputSuppressed {
+            interp.interpret(imports)
+            loadInitScripts(MwMode)
+          }
+
+        case D3Mode =>
+          val imports = "import D3._"
+          outputHandler.withOutputSuppressed {
+            interp.interpret(imports)
+            loadInitScripts(D3Mode)
+          }
+      }
     }
 
     def act() {
@@ -469,7 +512,6 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     }
 
     def compilerInitCode: Option[String] = {
-      import Typeclasses._
       some(cmodeInit) |+| initCode(mode)
     }
 
@@ -515,7 +557,6 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     }
 
     def initCode(mode: CodingMode): Option[String] = {
-      import Typeclasses._
       if (Utils.isScalaTestAvailable) {
         some(Utils.scalaTestHelperCode) |+| Utils.kojoInitCode(mode)
       }
@@ -543,8 +584,14 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
         outputHandler.worksheetLineNum = Some(lnum)
         //        println("Interpreting:\n--%s--" format code)
         interp.interpret(code) match {
-          case IR.Error   => IR.Error
-          case IR.Success => interpretWorksheetLine(lines.tail)
+          case IR.Success =>
+            outputHandler.clearWorksheetError(); interpretWorksheetLine(lines.tail)
+          case IR.Error =>
+            tail match {
+              case Nil =>
+                outputHandler.flushWorksheetError(); IR.Error
+              case (code2, lnum2) :: tail2 => interpretWorksheetLine((code + "\n" + code2, lnum) :: tail2)
+            }
           case IR.Incomplete =>
             tail match {
               case Nil                     => IR.Incomplete
