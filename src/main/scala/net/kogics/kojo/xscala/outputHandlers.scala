@@ -16,8 +16,9 @@
 package net.kogics.kojo
 package xscala
 
-import core._
-import java.util.logging._
+import java.util.logging.Logger
+
+import core.RunContext
 
 class InterpOutputHandler(ctx: RunContext) {
   val Log = Logger.getLogger(getClass.getName);
@@ -35,6 +36,7 @@ class InterpOutputHandler(ctx: RunContext) {
   val exceptionPattern = java.util.regex.Pattern.compile("""^\w+(\.[\w\$]+)+(Exception|Error)""")
   @volatile var interpOutputSuppressed = false
   @volatile var worksheetLineNum: Option[Int] = None
+  @volatile var firstWorksheetError: Option[String] = None
 
   def showInterpOutput(lineFragment: String) {
     if (!interpOutputSuppressed) reportInterpOutput(lineFragment)
@@ -50,23 +52,43 @@ class InterpOutputHandler(ctx: RunContext) {
     else {
       output0
     }
+    worksheetLineNum foreach { ctx.reportWorksheetOutput(output, _) }
     ctx.kprintln(output)
   }
 
   private def reportNonExceptionOutput(output: String) {
     val m = errorPattern.matcher(output)
     if (m.find) {
-      ctx.reportErrorMsg(output.substring(m.group(1).length, output.length))
+      val errMsg = output.substring(m.group(1).length, output.length)
+      if (worksheetLineNum.isEmpty) {
+        ctx.reportErrorMsg(errMsg)
+      }
+      else {
+        if (firstWorksheetError.isEmpty) {
+          firstWorksheetError = Some(errMsg)
+        }
+      }
     }
     else {
+      worksheetLineNum foreach { ctx.reportWorksheetOutput(output, _) }
       ctx.reportOutput(output)
     }
   }
 
+  def flushWorksheetError() {
+    firstWorksheetError foreach { msg =>
+      worksheetLineNum foreach { ctx.reportWorksheetOutput(msg, _) }
+      ctx.reportErrorMsg(msg)
+    }
+    firstWorksheetError = None
+  }
+
+  def clearWorksheetError() {
+    firstWorksheetError = None
+  }
+
   def reportInterpOutput(output: String) {
     if (output == "") return
-
-    worksheetLineNum foreach { ctx.reportWorksheetOutput(output, _) }
 
     if (exceptionPattern.matcher(output).find) {
       reportExceptionOutput(output)

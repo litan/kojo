@@ -481,6 +481,10 @@ Here's a partial list of the available commands:
   def interpret(code: String) {
     scalaCodeRunner.runCode(code)
   }
+  
+  def resetInterpreter() {
+    scalaCodeRunner.resetInterp()
+  }
 
   // for debugging only
   def kojoInterp = scalaCodeRunner.kojointerp
