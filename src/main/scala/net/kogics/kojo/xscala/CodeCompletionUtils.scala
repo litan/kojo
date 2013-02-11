@@ -68,6 +68,7 @@ object CodeCompletionUtils {
 
   // UserCommand adds to this
   val BuiltinsMethodTemplates = collection.mutable.Map(
+    "resetInterpreter" -> "resetInterpreter()",
     "switchToDefaultPerspective" -> "switchToDefaultPerspective()",
     "switchToScriptEditingPerspective" -> "switchToScriptEditingPerspective()",
     "switchToWorksheetPerspective" -> "switchToWorksheetPerspective()",

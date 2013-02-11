@@ -181,6 +181,11 @@ trait AppMenu { self: Main.type =>
     genProgMenu.add(menuItemFor(Utils.loadString("S_InputGraphics"), "read-vector-bargraph.kojo"))
     samplesMenu.add(genProgMenu)
 
+    val numProgMenu = new JMenu(Utils.loadString("S_Numbers"))
+    numProgMenu.add(menuItemFor(Utils.loadString("S_Primes"), "primes.kojo"))
+    numProgMenu.add(menuItemFor(Utils.loadString("S_PrimeFactors"), "prime-factors.kojo"))
+    samplesMenu.add(numProgMenu)
+
     val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
     mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
     samplesMenu.add(mgeomMenu)
