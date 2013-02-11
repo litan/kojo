@@ -64,9 +64,7 @@ class InterpOutputHandler(ctx: RunContext) {
         ctx.reportErrorMsg(errMsg)
       }
       else {
-        if (firstWorksheetError.isEmpty) {
-          firstWorksheetError = Some(errMsg)
-        }
+        firstWorksheetError = Some(errMsg)
       }
     }
     else {
@@ -77,7 +75,7 @@ class InterpOutputHandler(ctx: RunContext) {
 
   def flushWorksheetError() {
     firstWorksheetError foreach { msg =>
-      worksheetLineNum foreach { ctx.reportWorksheetOutput(msg, _) }
+      worksheetLineNum foreach { ctx.reportWorksheetOutput(msg.lines.next, _) }
       ctx.reportErrorMsg(msg)
     }
     firstWorksheetError = None
