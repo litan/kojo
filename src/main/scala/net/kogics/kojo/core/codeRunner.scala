@@ -16,6 +16,8 @@
 package net.kogics.kojo.core
 
 import java.util.concurrent.CountDownLatch
+import net.kogics.kojo.xscala.Builtins
+import net.kogics.kojo.xscala.KojoInterpreter
 
 trait CodeRunner {
   def interruptInterpreter(): Unit
@@ -32,9 +34,13 @@ trait CodeRunner {
   def activateStaging(): Unit
   def activateMw(): Unit
   def activateD3(): Unit
+  def resetInterp(): Unit
+  def runContext: RunContext
 }
 
 trait RunContext {
+  def tCanvas: SCanvas
+  def initInterp(interp: KojoInterpreter)
   def onInterpreterInit(): Unit
   def onInterpreterStart(code: String): Unit
   def onRunError(): Unit
@@ -64,6 +70,9 @@ trait RunContext {
   def insertCodeBlock(code: String): Unit
 
   def stopAnimation(): Unit
+  // TODO: Cleanup - need to test
+  def setAstStopPhase(phase: String): Unit
+  def astStopPhase: String
 }
 
 class ProxyCodeRunner(codeRunnerMaker: () => CodeRunner) extends CodeRunner {
@@ -145,5 +154,15 @@ class ProxyCodeRunner(codeRunnerMaker: () => CodeRunner) extends CodeRunner {
   def activateD3() {
     latch.await()
     codeRunner.activateD3()
+  }
+
+  def resetInterp() {
+    latch.await()
+    codeRunner.resetInterp()
+  }
+  
+  def runContext: RunContext = {
+    latch.await()
+    codeRunner.runContext
   }
 }

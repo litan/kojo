@@ -45,11 +45,12 @@ import core.StagingMode
 import core.TwMode
 import util.Utils
 
-class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRunner {
+class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   val Log = Logger.getLogger("ScalaCodeRunner")
-  val builtins = Builtins.initedInstance(this)
-  val outputHandler = new InterpOutputHandler(ctx)
+  lazy val tCanvas = runContext.tCanvas
+  val outputHandler = new InterpOutputHandler(runContext)
 
+  // TODO: Cleaning
   // for debugging only!
   @volatile var kojointerp: scala.tools.nsc.interpreter.IMain = _
   @volatile var pcompiler: scala.tools.nsc.interactive.Global = _
@@ -62,7 +63,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
   }
 
-  def kprintln(s: String) = ctx.kprintln(s)
+  def kprintln(s: String) = runContext.kprintln(s)
 
   def runCode(code: String) {
     // Runs on swing thread
@@ -304,7 +305,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
               loadInterp()
               printInitScriptsLoadMsg()
               activateTurtleMode()
-              ctx.onInterpreterInit()
+              runContext.onInterpreterInit()
               loadCompiler()
             }
 
@@ -361,22 +362,22 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
             try {
               Log.info("CodeRunner actor compiling code:\n---\n%s\n---\n" format (code))
               InterruptionManager.onInterpreterStart(compilerAndRunner)
-              ctx.onCompileStart()
+              runContext.onCompileStart()
 
               val ret = compile(code)
               Log.info("CodeRunner actor done compiling code. Return value %s" format (ret.toString))
 
               if (ret == IR.Success) {
-                ctx.onCompileSuccess()
+                runContext.onCompileSuccess()
               }
               else {
-                ctx.onCompileError()
+                runContext.onCompileError()
               }
             }
             catch {
               case t: Throwable =>
                 Log.log(Level.SEVERE, "Compiler Problem", t)
-                ctx.onInternalCompilerError()
+                runContext.onInternalCompilerError()
             }
             finally {
               Log.info("CodeRunner actor doing final handling for code.")
@@ -387,23 +388,23 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
             try {
               Log.info("CodeRunner actor compiling/running code:\n---\n%s\n---\n" format (code))
               InterruptionManager.onInterpreterStart(compilerAndRunner)
-              ctx.onInterpreterStart(code)
+              runContext.onInterpreterStart(code)
 
               val ret = compileAndRun(code)
               Log.info("CodeRunner actor done compiling/running code. Return value %s" format (ret.toString))
 
               if (ret == IR.Success) {
-                ctx.onRunSuccess()
+                runContext.onRunSuccess()
               }
               else {
-                if (InterruptionManager.interruptionInProgress) ctx.onRunSuccess() // user cancelled running code; no errors
-                else ctx.onRunError()
+                if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
+                else runContext.onRunError()
               }
             }
             catch {
               case t: Throwable =>
                 Log.log(Level.SEVERE, "CompilerAndRunner Problem", t)
-                ctx.onRunInterpError
+                runContext.onRunInterpError
             }
             finally {
               Log.info("CodeRunner actor doing final handling for code.")
@@ -420,22 +421,22 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
             try {
               Log.info("CodeRunner actor parsing code:\n---\n%s\n---\n" format (code))
               InterruptionManager.onInterpreterStart(compilerAndRunner)
-              ctx.onCompileStart()
+              runContext.onCompileStart()
 
               val ret = compilerAndRunner.parse(code, browseAst)
               Log.info("CodeRunner actor done parsing code. Return value %s" format (ret.toString))
 
               if (ret == IR.Success) {
-                ctx.onCompileSuccess()
+                runContext.onCompileSuccess()
               }
               else {
-                ctx.onCompileError()
+                runContext.onCompileError()
               }
             }
             catch {
               case t: Throwable =>
                 Log.log(Level.SEVERE, "Compiler Problem", t)
-                ctx.onInternalCompilerError()
+                runContext.onInternalCompilerError()
             }
             finally {
               Log.info("CodeRunner actor doing final handling for code.")
@@ -469,7 +470,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       try {
         Log.info("CodeRunner actor running code:\n---\n%s\n---\n" format (code))
         InterruptionManager.onInterpreterStart(interp)
-        ctx.onInterpreterStart(code)
+        runContext.onInterpreterStart(code)
 
         val ret = interpret(code, asWorksheet)
         Log.info("CodeRunner actor done running code. Return value %s" format (ret.toString))
@@ -477,17 +478,17 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
         if (ret == IR.Incomplete) showIncompleteCodeMsg(code)
 
         if (ret == IR.Success) {
-          ctx.onRunSuccess()
+          runContext.onRunSuccess()
         }
         else {
-          if (InterruptionManager.interruptionInProgress) ctx.onRunSuccess() // user cancelled running code; no errors
-          else ctx.onRunError()
+          if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
+          else runContext.onRunError()
         }
       }
       catch {
         case t: Throwable =>
           Log.log(Level.SEVERE, "Interpreter Problem", t)
-          ctx.onRunInterpError
+          runContext.onRunInterpError
       }
       finally {
         Log.info("CodeRunner actor doing final handling for code.")
@@ -516,7 +517,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     }
 
     def loadCompiler() {
-      compilerAndRunner = new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(ctx)) {
+      compilerAndRunner = new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext) {
         override protected def parentClassLoader = classOf[ScalaCodeRunner].getClassLoader
       }
       compilerAndRunner.setContextClassLoader()
@@ -524,19 +525,17 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
     }
 
     def initInterp() {
-      outputHandler.withOutputSuppressed {
-        interp.bind("predef", "net.kogics.kojo.xscala.ScalaCodeRunner", ScalaCodeRunner.this)
-        interp.interpret("val builtins = predef.builtins")
-        interp.interpret("import builtins._")
+//      outputHandler.withOutputSuppressed {
+      runContext.initInterp(interp)
         // Interesting fact:
         // If you make an object available via bind, the interface is not type-safe
         // If you make it available via interpret("val ="), its type safe
         // Observed via Staging.linesShape
         // TODO: reevaluate other binds
-        interp.interpret("val Staging = net.kogics.kojo.staging.API")
-        interp.interpret("val Mw = net.kogics.kojo.mathworld.MathWorld.instance")
-        interp.interpret("val D3 = net.kogics.kojo.d3.API.instance")
-      }
+//        interp.interpret("val Staging = net.kogics.kojo.staging.API")
+//        interp.interpret("val Mw = net.kogics.kojo.mathworld.MathWorld.instance")
+//        interp.interpret("val D3 = net.kogics.kojo.d3.API.instance")
+//      }
     }
 
     def printInitScriptsLoadMsg() {
@@ -632,7 +631,7 @@ class ScalaCodeRunner(val ctx: RunContext, val tCanvas: SCanvas) extends CodeRun
       |error: Incomplete code fragment
       |You probably have a missing brace/bracket somewhere in your script
       """.stripMargin
-      ctx.reportErrorMsg(msg)
+      runContext.reportErrorMsg(msg)
     }
 
     import CodeCompletionUtils._

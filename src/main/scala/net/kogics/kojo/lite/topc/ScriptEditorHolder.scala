@@ -123,7 +123,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   var idx = 0
   val popup = codePane.getPopupMenu
 
-  val switcher = new SwitchMode()
+  val switcher = new SwitchMode(codeSupport)
   val twCb = new JCheckBoxMenuItem(switcher)
   twCb.setText(Utils.loadString("S_TurtleMode"))
   twCb.setToolTipText(Utils.loadString("S_TurtleModeTT"))
@@ -262,7 +262,7 @@ class ScriptEditorHolder(val se: JPanel, codePane: RSyntaxTextArea, codeSupport:
   popup.add(findReplaceItem, idx)
   idx += 1
 
-  val chooseColorItem = new JMenuItem(new ChooseColor(codeSupport.kojoCtx))
+  val chooseColorItem = new JMenuItem(new ChooseColor(codeSupport))
   popup.add(chooseColorItem, idx)
   idx += 1
 

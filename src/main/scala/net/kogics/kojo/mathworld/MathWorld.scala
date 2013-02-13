@@ -16,7 +16,6 @@
 package net.kogics.kojo
 package mathworld
 
-import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.core.VisualElement
 import net.kogics.kojo.util.Throttler
@@ -33,30 +32,11 @@ import geogebra.gui.GuiManagerD
 import geogebra.main.AppD
 import geogebra.plugin.GgbAPID
 
-object MathWorld extends InitedSingleton[MathWorld] {
-  def initedInstance(kojoCtx: KojoCtx, ggbApi: GgbAPID, ggbPanel: GeoGebraPanel) = synchronized {
-    instanceInit()
-    val ret = instance()
-    ret._kojoCtx = kojoCtx
-    ret._ggbApi = ggbApi
-    ret._ggbPanel = ggbPanel
-    ret._Algo = new Algo(ggbApi)
-    ret
-  }
-
-  protected def newInstance = new MathWorld
-}
-
-class MathWorld {
-  @volatile var _kojoCtx: KojoCtx = _
-  @volatile var _ggbApi: GgbAPID = _
-  @volatile var _ggbPanel: GeoGebraPanel = _
-  @volatile var _Algo: Algo = _
-
+class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPanel, _Algo: Algo) {
   lazy val _app = _ggbApi.getApplication.asInstanceOf[AppD]
   lazy val _guim = _app.getGuiManager.asInstanceOf[GuiManagerD]
   lazy val _kernel = _app.getKernel
-  lazy val casView = new CasView()
+  lazy val casView = new CasView(this)
 
   private def ensureVisible() {
     _kojoCtx.makeMathWorldVisible()
@@ -220,7 +200,7 @@ class MathWorld {
 
   def turtle(x: Double, y: Double) = {
     Utils.runInSwingThreadAndWait {
-      new MwTurtle(x, y)
+      new MwTurtle(x, y, this)
     }
   }
 

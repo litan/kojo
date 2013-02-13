@@ -102,7 +102,7 @@ trait AppMenu { self: Main.type =>
     saveAsFile.setIcon(Utils.loadIcon("/images/extra/saveas.gif"))
     fileMenu.add(saveAsFile)
 
-    fileMenu.add(new JMenuItem(new CloseFile))
+    fileMenu.add(new JMenuItem(new CloseFile(codeSupport)))
 
     fileMenu.add(openWeb)
 

@@ -1,4 +1,5 @@
-package net.kogics.kojo.lite
+package net.kogics.kojo
+package lite
 
 import java.awt.Frame
 import java.awt.GridLayout
@@ -30,14 +31,15 @@ import net.kogics.kojo.lite.topc.OutputWindowHolder
 import net.kogics.kojo.lite.topc.ScriptEditorHolder
 import net.kogics.kojo.lite.topc.StoryTellerHolder
 import net.kogics.kojo.mathworld.GeoGebraCanvas
+import net.kogics.kojo.music.FuguePlayer
+import net.kogics.kojo.music.KMp3
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.util.Utils
-import net.kogics.kojo.xscala.Builtins
 
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.theme.ThemeMap
 
-object Main extends AppMenu {
+object Main extends AppMenu { main =>
   System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
 
   @volatile var codePane: RSyntaxTextArea = _
@@ -46,10 +48,6 @@ object Main extends AppMenu {
   @volatile var splash: SplashScreen = _
   @volatile var codeSupport: CodeExecutionSupport = _
   @volatile var kojoCtx: KojoCtx = _
-
-  def main(args: Array[String]): Unit = {
-    realMain(args)
-  }
 
   def setupLogging() {
     val userHome = System.getProperty("user.home")
@@ -109,7 +107,7 @@ object Main extends AppMenu {
       val msg2 = if (onStartup) "\n// Please wait, this might take a few seconds as Kojo starts up..." else ""
       codePane.insert("// Running code loaded from URL: %s%s\n\n" format (url, msg2), 0)
       codePane.setCaretPosition(0)
-      Builtins.instance.stClickRunButton
+      codeSupport.runCode()
     }
   }
 
@@ -119,7 +117,7 @@ object Main extends AppMenu {
       val code = Utils.loadResource(res)
       codePane.setText(Utils.stripCR(code))
       codePane.setCaretPosition(0)
-      Builtins.instance.stClickRunButton
+      codeSupport.runCode()
     }
     catch {
       case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
@@ -127,9 +125,10 @@ object Main extends AppMenu {
     scriptEditorH.activate()
   }
 
-  def realMain(args: Array[String]): Unit = {
+  def main(args: Array[String]): Unit = {
     System.setSecurityManager(null)
-    kojoCtx = KojoCtx.instance // context needs to be created right up front to set user language
+    kojoCtx = new KojoCtx // context needs to be created right up front to set user language
+    Utils.kojoCtx = kojoCtx
     Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }
@@ -155,25 +154,34 @@ object Main extends AppMenu {
       frame.setLayout(new GridLayout(1, 1))
       frame.add(control.getContentArea)
 
-      SpriteCanvas.initedInstance(kojoCtx)
-      StoryTeller.initedInstance(kojoCtx)
-      GeoGebraCanvas.initedInstance(kojoCtx)
-      Canvas3D.initedInstance(kojoCtx)
+      val spriteCanvas = new SpriteCanvas(kojoCtx)
+      kojoCtx.canvasListener = spriteCanvas.megaListener
+      staging.Impl.canvas = spriteCanvas
+      picture.Impl.canvas = spriteCanvas
+      val storyTeller = new StoryTeller(kojoCtx)
+      val ggbCanvas = new GeoGebraCanvas(kojoCtx)
+      val canvas3d = new Canvas3D()
 
       codePane = new RSyntaxTextArea(5, 80)
-      codeSupport = CodeExecutionSupport.initedInstance(codePane, kojoCtx)
+      val mp3player = new KMp3 {
+        val kojoCtx = main.kojoCtx
+      }
+      val fuguePlayer = new FuguePlayer {
+        val kojoCtx = main.kojoCtx
+      }
+      codeSupport = new CodeExecutionSupport(codePane, kojoCtx, spriteCanvas, storyTeller, fuguePlayer, mp3player, ggbCanvas.Mw)
 
       kojoCtx.frame = frame
       kojoCtx.codeSupport = codeSupport
       kojoCtx.control = control
-      kojoCtx.storyTeller = StoryTeller.instance
+      kojoCtx.storyTeller = storyTeller
 
-      val drawingCanvasH = new DrawingCanvasHolder(SpriteCanvas.instance, kojoCtx)
+      val drawingCanvasH = new DrawingCanvasHolder(spriteCanvas, kojoCtx)
       scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport, frame)
       val outputHolder = new OutputWindowHolder(codeSupport, kojoCtx)
-      val storyHolder = new StoryTellerHolder(StoryTeller.instance)
-      val mwHolder = new MathworldHolder(GeoGebraCanvas.instance, kojoCtx)
-      val d3Holder = new D3CanvasHolder(Canvas3D.instance, kojoCtx)
+      val storyHolder = new StoryTellerHolder(storyTeller)
+      val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
+      val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
       val historyHolder = new HistoryHolder(new HistoryPanel(codeSupport))
 
       kojoCtx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder)

@@ -37,25 +37,22 @@ import java.util.ResourceBundle
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
-
 import javax.swing.ImageIcon
 import javax.swing.Timer
-
 import scala.actors.Actor.actor
 import scala.actors.Actor.loop
 import scala.actors.Actor.react
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.SynchronizedSet
-
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
 import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
-
 import Typeclasses.mkIdentity
 import edu.umd.cs.piccolo.nodes.PText
 import lite.canvas.SpriteCanvas
+import net.kogics.kojo.core.KojoCtx
 
 object Utils {
 
@@ -103,7 +100,8 @@ object Utils {
 
   import collection.mutable.{ HashSet, SynchronizedSet }
   val threads = new HashSet[Thread] with SynchronizedSet[Thread]
-  lazy val listener = SpriteCanvas.instance().megaListener // hack!
+  var kojoCtx: KojoCtx = _
+  lazy val listener = kojoCtx.canvasListener
   var timer: Timer = _
   var startCount = 0
 

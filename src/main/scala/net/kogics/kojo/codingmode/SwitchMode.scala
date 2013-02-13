@@ -21,22 +21,22 @@ import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
 import net.kogics.kojo.lite.CodeExecutionSupport
 
-class SwitchMode extends AbstractAction {
+class SwitchMode(codeSupport: CodeExecutionSupport) extends AbstractAction {
   def actionPerformed(e: ActionEvent) {
     e.getActionCommand match {
-      case "Tw" => CodeExecutionSupport.instance.activateTw()
-      case "Staging" => CodeExecutionSupport.instance.activateStaging()
-      case "Mw" => CodeExecutionSupport.instance.activateMw()
-      case "D3" => CodeExecutionSupport.instance.activateD3()
+      case "Tw" => codeSupport.activateTw()
+      case "Staging" => codeSupport.activateStaging()
+      case "Mw" => codeSupport.activateMw()
+      case "D3" => codeSupport.activateD3()
     }
   }
   
   def updateCb(cb: JCheckBoxMenuItem) {
     cb.getActionCommand match {
-      case "Tw" => cb.setSelected(CodeExecutionSupport.instance.isTwActive)
-      case "Staging" => cb.setSelected(CodeExecutionSupport.instance.isStagingActive)
-      case "Mw" => cb.setSelected(CodeExecutionSupport.instance.isMwActive)
-      case "D3" => cb.setSelected(CodeExecutionSupport.instance.isD3Active)
+      case "Tw" => cb.setSelected(codeSupport.isTwActive)
+      case "Staging" => cb.setSelected(codeSupport.isStagingActive)
+      case "Mw" => cb.setSelected(codeSupport.isMwActive)
+      case "D3" => cb.setSelected(codeSupport.isD3Active)
     }
   }
 }

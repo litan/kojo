@@ -269,7 +269,7 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
     turtle.repaint()
   }
 
-  def clear() = Utils.runInSwingThread {
+  def cleart() = Utils.runInSwingThread {
     pen.clear()
     layer.removeAllChildren() // get rid of stuff not written by pen, like text nodes
     init()

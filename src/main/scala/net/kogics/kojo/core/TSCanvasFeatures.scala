@@ -20,6 +20,7 @@ import java.awt.Paint
 import java.awt.Color
 
 trait TSCanvasFeatures {
+  def clear(): Unit
   def newTurtle(x: Int, y: Int): Turtle
   def axesOn(): Unit
   def axesOff(): Unit

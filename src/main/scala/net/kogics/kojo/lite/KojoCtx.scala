@@ -29,10 +29,7 @@ import bibliothek.gui.dock.common.CGrid
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.mode.ExtendedMode
 import net.kogics.kojo.story.StoryTeller
-
-object KojoCtx extends core.Singleton[KojoCtx] {
-  protected def newInstance = new KojoCtx
-}
+import net.kogics.kojo.core.SpriteListener
 
 class KojoCtx extends core.KojoCtx {
 
@@ -51,6 +48,8 @@ class KojoCtx extends core.KojoCtx {
   var storyTeller: StoryTeller = _
   var control: CControl = _
   @volatile var fps = 50
+  
+  var canvasListener: SpriteListener = _
 
   def switchToDefaultPerspective() {
     val grid = new CGrid(control)
@@ -217,11 +216,11 @@ class KojoCtx extends core.KojoCtx {
   def baseDir: String = getLastLoadStoreDir + "/"
 
   def stopAnimation() = Utils.runInSwingThread {
-    CodeExecutionSupport.instance.stopAnimation()
+    codeSupport.stopAnimation()
   }
 
   def stopInterpreter() = Utils.runInSwingThread {
-    CodeExecutionSupport.instance.stopInterpreter()
+    codeSupport.stopInterpreter()
   }
   
   def stopStory() = Utils.runInSwingThread { storyTeller.stop() }

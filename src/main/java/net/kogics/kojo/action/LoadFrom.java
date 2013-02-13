@@ -26,9 +26,11 @@ import net.kogics.kojo.lite.CodeExecutionSupport;
 
 public final class LoadFrom implements ActionListener {
 	private KojoCtx ctx;
+    private CodeExecutionSupport ces;
 
 	public LoadFrom(KojoCtx ctx) {
 		this.ctx = ctx;
+        this.ces = ctx.codeSupport();
 	}
 	
     public void actionPerformed(ActionEvent e) {
@@ -46,7 +48,6 @@ public final class LoadFrom implements ActionListener {
             }
         }
 
-        CodeExecutionSupport ces = (CodeExecutionSupport) CodeExecutionSupport.instance();
         try {
             int returnVal = chooser.showOpenDialog(ctx.frame());
             if (returnVal == JFileChooser.APPROVE_OPTION) {

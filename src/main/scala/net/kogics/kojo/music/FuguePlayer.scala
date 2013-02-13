@@ -25,13 +25,12 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import javax.swing.Timer
 import net.kogics.kojo.lite.canvas.SpriteCanvas
+import net.kogics.kojo.core.KojoCtx
 
-object FuguePlayer extends core.Singleton[FuguePlayer] {
-  protected def newInstance = new FuguePlayer
-}
-
-class FuguePlayer {
+trait FuguePlayer {
   val Log = Logger.getLogger(getClass.getName)
+  val kojoCtx: KojoCtx
+  lazy private val listener = kojoCtx.canvasListener
   private var currMusic: Option[Music] = None
   private var currBgMusic: Option[Music] = None
   val playLock = new ReentrantLock
@@ -39,7 +38,6 @@ class FuguePlayer {
   val stopped = playLock.newCondition
   var stopBg = false
   var stopFg = false
-  val listener = SpriteCanvas.instance().megaListener // hack!
   var timer: Timer = _
   val pumpEvents: Boolean = true
 

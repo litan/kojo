@@ -33,7 +33,6 @@ import java.io.PrintStream
 import java.io.Writer
 import java.util.concurrent.CountDownLatch
 import java.util.logging.Logger
-
 import javax.swing.BorderFactory
 import javax.swing.BoxLayout
 import javax.swing.JButton
@@ -53,10 +52,8 @@ import javax.swing.event.HyperlinkListener
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 import javax.swing.text.Utilities
-
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
-import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.StagingMode
@@ -68,22 +65,20 @@ import net.kogics.kojo.livecoding.ManipulationContext
 import net.kogics.kojo.util.FutureResult
 import net.kogics.kojo.util.RichFile.enrichFile
 import net.kogics.kojo.util.TerminalAnsiCodes
-
 import util.Utils
+import net.kogics.kojo.xscala.Builtins
+import net.kogics.kojo.xscala.KojoInterpreter
+import net.kogics.kojo.mathworld.MathWorld
 
-object CodeExecutionSupport extends InitedSingleton[CodeExecutionSupport] {
-  def initedInstance(codePane: JTextArea, ctx: KojoCtx) = synchronized {
-    instanceInit()
-    val ret = instance()
-    ret.kojoCtx = ctx
-    ret.setCodePane(codePane)
-    ret
-  }
+class CodeExecutionSupport(
+  codePane0: JTextArea,
+  val kojoCtx: KojoCtx,
+  tCanvas: SpriteCanvas,
+  storyTeller: story.StoryTeller,
+  fuguePlayer: music.FuguePlayer,
+  mp3player: music.KMp3,
+  Mw: MathWorld) extends core.CodeCompletionSupport with ManipulationContext {
 
-  protected def newInstance = new CodeExecutionSupport()
-}
-
-class CodeExecutionSupport private extends core.CodeCompletionSupport with ManipulationContext {
   val Log = Logger.getLogger(getClass.getName);
   val promptColor = new Color(178, 66, 0)
   val codeColor = new Color(0x009b00)
@@ -116,25 +111,28 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
   doWelcome()
 
-  val commandHistory = CommandHistory.instance
+  val commandHistory = CommandHistory()
   val historyManager = new HistoryManager
   hPrevButton.setEnabled(commandHistory.hasPrevious)
 
-  val tCanvas = SpriteCanvas.instance
   tCanvas.outputFn = showOutput _
-  val storyTeller = story.StoryTeller.instance
   storyTeller.outputFn = showOutput _
-
-  val fuguePlayer = music.FuguePlayer.instance
-  val mp3player = music.KMp3.instance
 
   @volatile var pendingCommands = false
   @volatile var runMonitor: RunMonitor = new NoOpRunMonitor()
   @volatile var codePane: JTextArea = _
-  @volatile var kojoCtx: KojoCtx = _
   @volatile var startingUp = true
 
   val codeRunner = makeCodeRunner()
+  val builtins = new Builtins(
+      codeRunner, 
+      storyTeller, 
+      mp3player, 
+      this, 
+      fuguePlayer, 
+      tCanvas, 
+      codeRunner.runContext,
+      Mw)
 
   val statusStrip = new StatusStrip()
 
@@ -144,6 +142,7 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
   @volatile var lastOutput = ""
 
   setSpriteListener()
+  setCodePane(codePane0)
 
   class OutputWindowWriter extends Writer {
     override def write(s: String) {
@@ -366,6 +365,13 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
     val codeRunner = new xscala.ScalaCodeRunner(new RunContext {
 
       @volatile var suppressInterpOutput = false
+      @volatile var astStopPhase = "typer"
+
+      def initInterp(interp: KojoInterpreter) {
+        interp.bind("predef", "net.kogics.kojo.lite.CodeExecutionSupport", CodeExecutionSupport.this)
+        interp.interpret("val builtins = predef.builtins")
+        interp.interpret("import builtins._")
+      }
 
       def onInterpreterInit() = {
         showOutput(" " * 38 + "_____\n\n")
@@ -561,7 +567,10 @@ class CodeExecutionSupport private extends core.CodeCompletionSupport with Manip
       def stopAnimation() {
         CodeExecutionSupport.this.stopAnimation()
       }
-    }, tCanvas)
+
+      def tCanvas = CodeExecutionSupport.this.tCanvas
+      def setAstStopPhase(phase: String): Unit = astStopPhase = phase
+    })
     codeRunner
   }
 

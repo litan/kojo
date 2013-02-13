@@ -103,7 +103,7 @@ class LatexView(elem: Element) extends View(elem) {
   jl.setForeground(color);
 
   def output(msg: String) {
-    StoryTeller.instance.outputFn(msg)
+    println(msg)
   }
 
   override def getPreferredSpan(axis: Int) = {

@@ -20,9 +20,6 @@ import java.util.Date
 import scala.collection.Seq
 import scala.collection.mutable
 
-import core.Singleton
-import net.kogics.kojo.core.Singleton
-
 case class HistoryItem(
   script: String,
   file: String = "",
@@ -53,9 +50,8 @@ class NoopHistorySaver extends HistorySaver {
   def updateTags(hi: HistoryItem) {}
 }
 
-object CommandHistory extends Singleton[CommandHistory] {
-
-  protected def newInstance = {
+object CommandHistory {
+  def apply() = {
     try {
       new CommandHistory(new DBHistorySaver)
     }

@@ -19,7 +19,6 @@ package xscala
 import java.lang.ClassLoader
 import java.lang.reflect
 import java.net.URL
-
 import scala.collection.mutable.ListBuffer
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.OffsetPosition
@@ -34,10 +33,10 @@ import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.util.ScalaClassLoader
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 import scala.tools.util.PathResolver
-
 import KojoInterpreter.IR
 import core.CompletionInfo
 import util.Utils
+import net.kogics.kojo.core.RunContext
 
 trait CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String)
@@ -47,7 +46,10 @@ trait CompilerListener {
 }
 
 // This class borrows code and ideas from scala.tools.nsc.Interpreter
-class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String], listener: CompilerListener) extends StoppableCodeRunner {
+class CompilerAndRunner(makeSettings: () => Settings,
+                        initCode: => Option[String],
+                        listener: CompilerListener,
+                        runContext: RunContext) extends StoppableCodeRunner {
 
   var counter = 0
   // The Counter above is used to define/create a new wrapper object for every run. The calling of the entry() 
@@ -60,9 +62,6 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
   val prefix0 = """ {
   val builtins = net.kogics.kojo.xscala.Builtins.instance
   import builtins._
-  val Staging = net.kogics.kojo.staging.API
-  val Mw = net.kogics.kojo.mathworld.MathWorld.instance
-  val D3 = net.kogics.kojo.d3.API.instance
   def entry() {
     // noop
   }
@@ -148,13 +147,13 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
     offsetDelta = pfx.length
     val code = codeTemplate format (pfx, code0)
 
-//    if (code.contains("\r")) {
-//      println("-- [compiler] Code contains carriage return.")
-//    }
-//    else {
-//      println("-- [compiler] Code does not contain carriage return.")
-//    }
-    
+    //    if (code.contains("\r")) {
+    //      println("-- [compiler] Code contains carriage return.")
+    //    }
+    //    else {
+    //      println("-- [compiler] Code does not contain carriage return.")
+    //    }
+
     compiler.settings.stopAfter.value = stopPhase
     val run = new compiler.Run
     reporter.reset
@@ -234,7 +233,7 @@ class CompilerAndRunner(makeSettings: () => Settings, initCode: => Option[String
 
   // phase after which you want to stop
   private def stopPhase() = {
-    val ret = Builtins.instance.astStopPhase
+    val ret = runContext.astStopPhase
     if (ret != null && ret != "") List(ret) else Nil
   }
 
