@@ -9,8 +9,7 @@ import geogebra.common.kernel.StringTemplate
 import geogebra.common.kernel.arithmetic.ValidExpression
 import geogebra.common.kernel.ModeSetter
 
-class CasView {
-  val _Mw = MathWorld.instance()
+class CasView(_Mw: MathWorld) {
   import _Mw._
 
   val cview = _guim.getCasView()

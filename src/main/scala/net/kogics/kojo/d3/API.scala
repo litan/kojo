@@ -19,26 +19,11 @@ package d3
 import util.Utils
 import util.Throttler
 import java.awt.Color
-import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.core.KojoCtx
 
-object API extends InitedSingleton[API] {
-  def initedInstance(kojoCtx: KojoCtx, canvas: Canvas3D) = synchronized {
-    instanceInit()
-    val ret = instance()
-    ret._kojoCtx = kojoCtx
-    ret._canvas = canvas
-    ret
-  }
-
-  protected def newInstance = new API
-}
-
-class API {
-  @volatile var _kojoCtx: KojoCtx = _
-  @volatile var _canvas: Canvas3D = _
+class API(_kojoCtx: KojoCtx, _canvas: Canvas3D) {
   val _throttler = new Throttler(1, 1)
-  
+
   private def ensureVisible() {
     _kojoCtx.make3DCanvasVisible()
   }
@@ -392,7 +377,7 @@ class API {
   }
   
   def enableOrthographicMode() {
-    _canvas.camera = new OrthographicCamera().pitch(90)
+    _canvas.camera = new OrthographicCamera()(_canvas).pitch(90)
     render
   }
   

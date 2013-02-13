@@ -25,11 +25,13 @@ import util.Utils
 import Utils.withLock
 import Utils.giveupLock
 import net.kogics.kojo.lite.canvas.SpriteCanvas
+import net.kogics.kojo.core.KojoCtx
 
 trait Mp3Player {
   val pumpEvents: Boolean
+  val kojoCtx: KojoCtx
   def showError(msg: String)
-  private val listener = SpriteCanvas.instance().megaListener // hack!
+  lazy private val listener = kojoCtx.canvasListener
 
   @volatile private var mp3Player: Option[Player] = None
   @volatile private var bgmp3Player: Option[Player] = None
@@ -37,8 +39,6 @@ trait Mp3Player {
   private val stopped = playLock.newCondition
   private var stopBg = false
   private var stopFg = false
-  // Todo - bad dependency
-  private val KojoCtx = net.kogics.kojo.lite.KojoCtx.instance
   private var timer: Timer = _
 
   private def startPumpingEvents() {
@@ -65,7 +65,7 @@ trait Mp3Player {
 
   private def playHelper(mp3File: String)(fn: (InputStream) => Unit) {
     val f = new File(mp3File)
-    val f2 = if (f.exists) f else new File(KojoCtx.baseDir + mp3File)
+    val f2 = if (f.exists) f else new File(kojoCtx.baseDir + mp3File)
 
     if (f2.exists) {
       val is = new FileInputStream(f2)
@@ -209,11 +209,7 @@ trait Mp3Player {
   }
 }
 
-object KMp3 extends core.Singleton[KMp3] {
-  protected def newInstance = new KMp3
-}
-
-class KMp3 extends Mp3Player {
+abstract class KMp3 extends Mp3Player {
   val pumpEvents = true
   def showError(msg: String) = println(msg)
 }

@@ -15,25 +15,13 @@
 
 package net.kogics.kojo.mathworld
 
-import net.kogics.kojo.core.InitedSingleton
 import geogebra.GeoGebraPanel
 import geogebra.gui.menubar.GeoGebraMenuBar
 import net.kogics.kojo.core.KojoCtx
 import java.io.File
 import geogebra.common.main.App
 
-object GeoGebraCanvas extends InitedSingleton[GeoGebraCanvas] {
-  def initedInstance(kojoCtx: KojoCtx) = synchronized {
-    instanceInit()
-    val ret = instance()
-    MathWorld.initedInstance(kojoCtx, ret.ggbApi, ret)
-    ret
-  }
-
-  protected def newInstance = new GeoGebraCanvas
-}
-
-class GeoGebraCanvas extends GeoGebraPanel {
+class GeoGebraCanvas(kojoCtx: KojoCtx) extends GeoGebraPanel {
   setMaxIconSize(24)
 
   setShowAlgebraInput(true)
@@ -45,8 +33,5 @@ class GeoGebraCanvas extends GeoGebraPanel {
   buildGUI()
 
   val ggbApi = getGeoGebraAPI
-//  App.logger.setLogLevel("WARN")
-
-//   def selectAllAction = app.getGuiManager().getMenuBar().asInstanceOf[GeoGebraMenuBar].getSelectAllAction
-
+  val Mw = new MathWorld(kojoCtx, ggbApi, this, new Algo(ggbApi))
 }

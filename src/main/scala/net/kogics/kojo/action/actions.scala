@@ -36,11 +36,12 @@ import net.kogics.kojo.util.Utils
 import FullScreenSupport.sdev
 import lite.CodeExecutionSupport
 
-class ChooseColor(ctx: KojoCtx) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
+class ChooseColor(codeSupport: CodeExecutionSupport) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
+  val ctx = codeSupport.kojoCtx 
   def actionPerformed(e: ActionEvent) {
     val sColor = JColorChooser.showDialog(null, util.Utils.stripDots(e.getActionCommand), ctx.lastColor)
     if (sColor != null) {
-      val cprint = CodeExecutionSupport.instance.showOutput(_: String, _: Color)
+      val cprint = codeSupport.showOutput(_: String, _: Color)
       cprint("\u2500" * 3 + "\n", sColor)
       print("Selected Color:   ")
       cprint("\u2588" * 6 + "\n", sColor)
@@ -68,14 +69,14 @@ object CloseFile {
   }
 }
 
-class CloseFile
+class CloseFile(codeSupport: CodeExecutionSupport)
   extends AbstractAction(Utils.loadString("S_Close"), Utils.loadIcon("/images/extra/close.gif")) {
   setEnabled(false)
   CloseFile.action = this
 
   def actionPerformed(e: ActionEvent) {
     try {
-      CodeExecutionSupport.instance.closeFileAndClrEditor()
+      codeSupport.closeFileAndClrEditor()
     }
     catch {
       case e: RuntimeException => // user cancelled
@@ -90,7 +91,7 @@ class NewFile(ctx: KojoCtx)
 
   def actionPerformed(e: ActionEvent) {
     try {
-      CodeExecutionSupport.instance.closeFileAndClrEditor()
+      ctx.codeSupport.closeFileAndClrEditor()
       saveAs.actionPerformed(e);
     }
     catch {

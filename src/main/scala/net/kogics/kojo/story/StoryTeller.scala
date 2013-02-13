@@ -27,7 +27,6 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.util.logging.Logger
 
-import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.util.Read
 
@@ -44,21 +43,9 @@ import javax.swing.text.html.HTMLDocument
 import util.Read
 import util.Utils
 
-object StoryTeller extends InitedSingleton[StoryTeller] {
-  def initedInstance(kojoCtx: KojoCtx) = synchronized {
-    instanceInit()
-    val ret = instance()
-    ret.kojoCtx = kojoCtx
-    ret
-  }
-
-  protected def newInstance = new StoryTeller
-}
-
-class StoryTeller extends JPanel with music.Mp3Player {
+class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player {
   val Log = Logger.getLogger(getClass.getName);
   val NoText = <span/>
-  @volatile var kojoCtx: core.KojoCtx = _
   @volatile var currStory: Option[Story] = None
   @volatile var savedStory: Option[Story] = None
 

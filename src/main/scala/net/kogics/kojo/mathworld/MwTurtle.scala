@@ -18,12 +18,11 @@ package mathworld
 
 import util.Utils
 
-class MwTurtle(x: Double, y: Double) extends core.RichTurtleCommands {
+class MwTurtle(x: Double, y: Double, _Mw: MathWorld) extends core.RichTurtleCommands {
   import turtle.TurtleHelper._
   import java.awt.Color
 
   // underscore vars/methods do not show up in code completion
-  val _Mw = MathWorld.instance()
   import _Mw._
 
   val _MarkerSize = 0.2

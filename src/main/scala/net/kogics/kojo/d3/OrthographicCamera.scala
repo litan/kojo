@@ -25,7 +25,7 @@ class OrthographicCamera(position : Vector3d = Vector3d(0d, 0d, 10d),
              height : Int = Defaults.cameraHeight,
              axesVisible : Boolean = Defaults.axesVisible,
              defaultLightsOn : Boolean = Defaults.defaultLightsOn,
-             frequency : Int = Defaults.frequency) extends Camera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency) {
+             frequency : Int = Defaults.frequency)(implicit canvas3d: Canvas3D) extends Camera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency) {
   
   def setPosition(position : Vector3d) =
     new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
@@ -46,8 +46,8 @@ class OrthographicCamera(position : Vector3d = Vector3d(0d, 0d, 10d),
     
     val buffer = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB)
     val g2d = buffer.getGraphics()
-    val xRange = Canvas3D.instance().image.getWidth()
-    val yRange = Canvas3D.instance().image.getHeight()
+    val xRange = canvas3d.image.getWidth()
+    val yRange = canvas3d.image.getHeight()
     
     for (row <- 0 to height) {
       for (column <- 0 to width) {

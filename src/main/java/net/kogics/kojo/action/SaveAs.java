@@ -26,9 +26,11 @@ import net.kogics.kojo.lite.CodeExecutionSupport;
 
 public final class SaveAs implements ActionListener {
 	private KojoCtx ctx;
+	private CodeExecutionSupport ces;
 
 	public SaveAs(KojoCtx ctx) {
 		this.ctx = ctx;
+		this.ces = ctx.codeSupport();
 	}
 
 	public File chooseFile(String desc, String ext, String title) {
@@ -68,8 +70,6 @@ public final class SaveAs implements ActionListener {
 
 		if (selectedFile != null) {
 			try {
-				CodeExecutionSupport ces = (CodeExecutionSupport) CodeExecutionSupport
-						.instance();
 				ces.saveAs(selectedFile);
 				ces.openFileWithoutClose(selectedFile);
 			} catch (IllegalArgumentException ex) {

@@ -28,13 +28,11 @@ import java.awt.event.InputEvent
 import java.awt.geom.Point2D
 import java.io.File
 import java.util.logging.Logger
-
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
-
 import net.kogics.kojo.action.FullScreenCanvasAction
 import net.kogics.kojo.action.FullScreenSupport
 import net.kogics.kojo.action.SaveAs
@@ -47,7 +45,6 @@ import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.SpriteListener
 import net.kogics.kojo.core.UnitLen
-
 import edu.umd.cs.piccolo.PCanvas
 import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.PNode
@@ -63,22 +60,10 @@ import edu.umd.cs.piccolo.util.PPaintContext
 import figure.Figure
 import turtle.Turtle
 import util.Utils
+import net.kogics.kojo.xscala.Builtins
 
-object SpriteCanvas extends core.InitedSingleton[SpriteCanvas] {
-  def initedInstance(kojoCtx: core.KojoCtx) = synchronized {
-    instanceInit()
-    val ret = instance()
-    ret.kojoCtx = kojoCtx
-    ret
-  }
-
-  protected def newInstance = new SpriteCanvas
-}
-
-class SpriteCanvas private extends PCanvas with SCanvas {
+class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   val Log = Logger.getLogger(getClass.getName);
-  @volatile var kojoCtx: core.KojoCtx = _
-
   val defLayer = getLayer
   val AxesColor = new Color(100, 100, 100)
   val GridColor = new Color(200, 200, 200)
@@ -579,7 +564,7 @@ class SpriteCanvas private extends PCanvas with SCanvas {
     Utils.runInSwingThreadAndWait {
       setBackground(Color.white)
       showProt = false
-      turtles.foreach { t => if (t == origTurtle) t.clear() else t.remove() }
+      turtles.foreach { t => if (t == origTurtle) t.cleart() else t.remove() }
       turtles = List(turtles.last)
 
       figures.foreach { f => if (f == figure) f.clear() else f.remove() }

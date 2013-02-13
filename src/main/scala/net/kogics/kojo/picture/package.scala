@@ -2,12 +2,16 @@ package net.kogics.kojo
 
 import java.awt.Color
 import java.awt.Paint
-
 import net.kogics.kojo.picture.AxesOnc
 import net.kogics.kojo.picture.FlipXc
 import net.kogics.kojo.picture.FlipYc
-
 import core.Picture
+import net.kogics.kojo.xscala.Builtins
+import net.kogics.kojo.picture.Spinc
+import net.kogics.kojo.picture.Reflectc
+import net.kogics.kojo.core.SCanvas
+import java.awt.event.KeyEvent
+import net.kogics.kojo.util.Vector2D
 
 package object picture {
   type Painter = core.Painter
@@ -113,11 +117,10 @@ package object picture {
     val p = opac(-0.5) * stroke(Color.black) -> prot(180)
     var (oldx, oldy) = (0.0, 0.0)
     p.onMouseDrag { (x, y) =>
-      val B = xscala.Builtins.instance
-      if (B.isKeyPressed(B.Kc.VK_SHIFT)) {
+      if (staging.Inputs.isKeyPressed(KeyEvent.VK_SHIFT)) {
         val pos = p.position
-        val v1 = B.Vector2D(oldx - pos.x, oldy - pos.y)
-        val v2 = B.Vector2D(x - pos.x, y - pos.y)
+        val v1 = Vector2D(oldx - pos.x, oldy - pos.y)
+        val v2 = Vector2D(x - pos.x, y - pos.y)
         val angle2 = v1.angleTo(v2)
         p.rotate(angle2)
       }

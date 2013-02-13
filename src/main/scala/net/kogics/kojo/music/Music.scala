@@ -33,7 +33,6 @@ object Music {
 class Music(pattern: Pattern) {
   val player = new Player()
   val sequence = player.getSequence(pattern)
-  val listener = SpriteCanvas.instance().megaListener // hack!
 
   def play() {
     try {

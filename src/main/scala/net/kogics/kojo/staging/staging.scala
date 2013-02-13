@@ -35,9 +35,9 @@ import java.util.concurrent.Future
 import edu.umd.cs.piccolo.activities.PActivity
 
 object Impl {
-  val canvas = SpriteCanvas.instance
-  val turtle0 = canvas.turtle0
-  val figure0 = canvas.figure0
+  @volatile var canvas: SpriteCanvas = _
+  lazy val turtle0 = canvas.turtle0
+  lazy val figure0 = canvas.figure0
 }
 
 /** Staging API

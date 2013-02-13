@@ -18,9 +18,12 @@ package net.kogics.kojo.core
 import javax.swing.JFrame
 import java.awt.Color
 import net.kogics.kojo.lite.TopCs
+import net.kogics.kojo.lite.CodeExecutionSupport
 
 trait KojoCtx {
   def topcs: TopCs
+  def canvasListener: SpriteListener
+  def codeSupport: CodeExecutionSupport
   def activateDrawingCanvasHolder()
   def activateDrawingCanvas()
   def activateScriptEditor()

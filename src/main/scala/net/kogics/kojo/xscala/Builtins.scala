@@ -20,16 +20,12 @@ import java.awt.{ Color => JColor }
 import java.awt.Dimension
 import java.awt.GradientPaint
 import java.awt.Paint
-
 import javax.swing.JComponent
-
 import net.kogics.kojo.action.FullScreenCanvasAction
 import net.kogics.kojo.action.FullScreenOutputAction
-import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.lite.CodeExecutionSupport
 import net.kogics.kojo.story.HandlerHolder
 import net.kogics.kojo.util.Read
-
 import core.Rectangle
 import core.Style
 import core.TSCanvasFeatures
@@ -43,25 +39,28 @@ import story.VoidHandlerHolder
 import util.Read
 import util.Throttler
 import util.Utils
+import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.core.RunContext
+import net.kogics.kojo.turtle.TurtleWorldAPI
+import net.kogics.kojo.lite.DrawingCanvasAPI
+import net.kogics.kojo.mathworld.MathWorld
 
-object Builtins extends InitedSingleton[Builtins] {
-  def initedInstance(scalaCodeRunner: ScalaCodeRunner) = synchronized {
-    instanceInit()
-    val ret = instance()
-    ret.scalaCodeRunner = scalaCodeRunner
-    ret
-  }
-
-  protected def newInstance = new Builtins
+// a static instance is needed for the compiler prefix code 
+object Builtins {
+  @volatile var instance: Builtins = _
 }
 
-class Builtins extends RepeatCommands {
-  @volatile var astStopPhase = "typer"
-  @volatile var scalaCodeRunner: ScalaCodeRunner = _
-  lazy val tCanvas = scalaCodeRunner.tCanvas
-  lazy val ctx = scalaCodeRunner.ctx
+class Builtins(
+  scalaCodeRunner: core.CodeRunner,
+  storyTeller: story.StoryTeller,
+  mp3player: music.KMp3,
+  codeSupport: CodeExecutionSupport,
+  fuguePlayer: music.FuguePlayer,
+  tCanvas: SCanvas,
+  ctx: RunContext,
+  val Mw: MathWorld) extends RepeatCommands { builtins =>
+  Builtins.instance = this
   lazy val kojoCtx = tCanvas.kojoCtx
-  lazy val storyTeller = story.StoryTeller.instance
   def turtle0 = tCanvas.turtle0
 
   type Turtle = core.Turtle
@@ -96,187 +95,11 @@ class Builtins extends RepeatCommands {
   val Kc = new staging.KeyCodes
 
   // Turtle World
-  class TwC extends TurtleMover {
-    def forward(): Unit = forward(25)
-    override def forward(n: Double) = turtle0.forward(n)
-    UserCommand("forward", List("numSteps"), "Moves the turtle forward a given number of steps.")
-
-    def back(): Unit = back(25)
-    override def back(n: Double) = turtle0.back(n)
-    UserCommand("back", List("numSteps"), "Moves the turtle back a given number of steps.")
-
-    override def home(): Unit = turtle0.home()
-    UserCommand("home", Nil, "Moves the turtle to its original location, and makes it point north.")
-
-    override def jumpTo(p: Point): Unit = turtle0.jumpTo(p.x, p.y)
-    override def jumpTo(x: Double, y: Double) = turtle0.jumpTo(x, y)
-    UserCommand.addCompletion("jumpTo", List("x", "y"))
-
-    override def setPosition(p: Point): Unit = turtle0.jumpTo(p)
-    override def setPosition(x: Double, y: Double) = turtle0.jumpTo(x, y)
-    UserCommand("setPosition", List("x", "y"), "Sends the turtle to the point (x, y) without drawing a line. The turtle's heading is not changed.")
-
-    override def position: Point = turtle0.position
-    UserCommand.addSynopsis("position - Queries the turtle's position.")
-
-    def moveTo() = println("Please provide the coordinates of the point that the turtle should move to - e.g. moveTo(100, 100)")
-    override def moveTo(x: Double, y: Double) = turtle0.moveTo(x, y)
-    override def moveTo(p: Point): Unit = turtle0.moveTo(p.x, p.y)
-    UserCommand("moveTo", List("x", "y"), "Turns the turtle towards (x, y) and moves the turtle to that point. ")
-
-    def turn() = println("Please provide the angle to turn in degrees - e.g. turn(45)")
-    override def turn(angle: Double) = turtle0.turn(angle)
-    UserCommand("turn", List("angle"), "Turns the turtle through a specified angle. Angles are positive for counter-clockwise turns.")
-
-    override def right(): Unit = turtle0.right()
-    UserCommand("right", Nil, "Turns the turtle 90 degrees right (clockwise).")
-    override def right(angle: Double): Unit = turtle0.right(angle)
-    UserCommand("right", List("angle"), "Turns the turtle angle degrees right (clockwise).")
-
-    override def left(): Unit = turtle0.left()
-    UserCommand("left", Nil, "Turns the turtle 90 degrees left (counter-clockwise).")
-    override def left(angle: Double): Unit = turtle0.left(angle)
-    UserCommand("left", List("angle"), "Turns the turtle angle degrees left (counter-clockwise). ")
-
-    def towards() = println("Please provide the coordinates of the point that the turtle should turn towards - e.g. towards(100, 100)")
-    override def towards(p: Point): Unit = turtle0.towards(p.x, p.y)
-    override def towards(x: Double, y: Double) = turtle0.towards(x, y)
-    UserCommand("towards", List("x", "y"), "Turns the turtle towards the point (x, y).")
-
-    override def setHeading(angle: Double) = turtle0.setHeading(angle)
-    UserCommand("setHeading", List("angle"), "Sets the turtle's heading to angle (0 is towards the right side of the screen ('east'), 90 is up ('north')).")
-
-    override def heading: Double = turtle0.heading
-    UserCommand.addSynopsis("heading - Queries the turtle's heading (0 is towards the right side of the screen ('east'), 90 is up ('north')).")
-    UserCommand.addSynopsisSeparator()
-
-    override def penDown() = turtle0.penDown()
-    UserCommand("penDown", Nil, "Makes the turtle draw lines as it moves (the default setting). ")
-
-    override def penUp() = turtle0.penUp()
-    UserCommand("penUp", Nil, "Makes the turtle not draw lines as it moves.")
-
-    def setPenColor() = println("Please provide the color of the pen that the turtle should draw with - e.g setPenColor(blue)")
-    override def setPenColor(color: Paint) = turtle0.setPenColor(color)
-    UserCommand("setPenColor", List("color"), "Specifies the color of the pen that the turtle draws with.")
-
-    def setFillColor() = println("Please provide the fill color for the areas drawn by the turtle - e.g setFillColor(yellow)")
-    override def setFillColor(color: Paint) = turtle0.setFillColor(color)
-    UserCommand("setFillColor", List("color"), "Specifies the fill color of the figures drawn by the turtle.")
-    UserCommand.addSynopsisSeparator()
-
-    def setPenThickness() = println("Please provide the thickness of the pen that the turtle should draw with - e.g setPenThickness(1)")
-    override def setPenThickness(t: Double) = turtle0.setPenThickness(t)
-    UserCommand("setPenThickness", List("thickness"), "Specifies the width of the pen that the turtle draws with.")
-
-    override def setPenFontSize(n: Int) = turtle0.setPenFontSize(n)
-    UserCommand("setPenFontSize", List("n"), "Specifies the font size of the pen that the turtle writes with.")
-
-    override def saveStyle() = turtle0.saveStyle()
-    UserCommand.addCompletion("saveStyle", Nil)
-
-    override def restoreStyle() = turtle0.restoreStyle()
-    UserCommand.addCompletion("restoreStyle", Nil)
-
-    override def savePosHe() = turtle0.savePosHe()
-    UserCommand("savePosHe", Nil, "Saves the turtle's current position and heading")
-
-    override def restorePosHe() = turtle0.restorePosHe()
-    UserCommand("restorePosHe", Nil, "Restores the turtle's current position and heading")
-
-    override def beamsOn() = turtle0.beamsOn()
-    UserCommand("beamsOn", Nil, "Shows crossbeams centered on the turtle - to help with more precise navigation.")
-
-    override def beamsOff() = turtle0.beamsOff()
-    UserCommand("beamsOff", Nil, "Hides the turtle crossbeams.")
-
-    override def invisible() = turtle0.invisible()
-    UserCommand("invisible", Nil, "Hides the turtle.")
-
-    override def visible() = turtle0.visible()
-    UserCommand("visible", Nil, "Makes the hidden turtle visible again.")
-    UserCommand.addSynopsisSeparator()
-
-    override def write(obj: Any): Unit = turtle0.write(obj)
-    override def write(text: String) = turtle0.write(text)
-    UserCommand("write", List("obj"), "Makes the turtle write the specified object as a string at its current location.")
-
-    override def setAnimationDelay(d: Long) = turtle0.setAnimationDelay(d)
-    UserCommand("setAnimationDelay", List("delay"), "Sets the turtle's speed. The specified delay is the amount of time (in milliseconds) taken by the turtle to move through a distance of one hundred steps.")
-
-    override def animationDelay = turtle0.animationDelay
-    UserCommand.addSynopsis("animationDelay - Queries the turtle's delay setting.")
-    UserCommand.addSynopsisSeparator()
-
-    override def playSound(voice: Voice) = turtle0.playSound(voice)
-    UserCommand("playSound", List("voice"), "Makes the turtle play the specified melody, rhythm, or score.")
-
-    override def clear() = tCanvas.clear()
-    UserCommand("clear", Nil, "Clears the screen, and brings the turtle to the center of the window.")
-
-    def cleari() = { clear(); invisible() }
-    override def style: Style = turtle0.style
-
-    override def arc(r: Double, a: Int) = turtle0.arc(r, a)
-    override def circle(r: Double) = turtle0.circle(r)
-  }
-  // Define class and then define value - to get around:
-  // Problem finding completions: assertion failed: fatal: <refinement> has non-class owner value Tw after flatten.
-  val Tw = new TwC()
+  val Tw = new TurtleWorldAPI(turtle0)
 
   // Turtle and Staging Canvas
-  class TSCanvasC extends TSCanvasFeatures {
-
-    override def zoom(factor: Double) = tCanvas.zoom(factor)
-    override def zoom(factor: Double, cx: Double, cy: Double) = tCanvas.zoom(factor, cx, cy)
-    UserCommand("zoom", List("factor"), "Zooms in by the given factor, leaving the center point unchanged.")
-    UserCommand.addSynopsisSeparator()
-
-    override def gridOn() = tCanvas.gridOn()
-    UserCommand("gridOn", Nil, "Shows a grid on the canvas.")
-
-    override def gridOff() = tCanvas.gridOff()
-    UserCommand("gridOff", Nil, "Hides the grid.")
-
-    override def axesOn() = tCanvas.axesOn()
-    UserCommand("axesOn", Nil, "Shows the X and Y axes on the canvas.")
-
-    override def axesOff() = tCanvas.axesOff()
-    UserCommand("axesOff", Nil, "Hides the X and Y axes.")
-
-    def newTurtle(): Turtle = newTurtle(0, 0)
-    override def newTurtle(x: Int, y: Int) = tCanvas.newTurtle(x, y)
-    UserCommand("newTurtle", List("x", "y"), "Makes a new turtle located at the point (x, y).")
-
-    UserCommand.addSynopsis("turtle0 - Gives you a handle to the default turtle.")
-    UserCommand.addSynopsisSeparator()
-
-    override def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
-    override def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
-    override def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) =
-      tCanvas.zoomXY(xfactor, yfactor, cx, cy)
-
-    def onKeyPress(fn: Int => Unit) = tCanvas.onKeyPress(fn)
-    def onKeyRelease(fn: Int => Unit) = tCanvas.onKeyRelease(fn)
-    def onMouseClick(fn: (Double, Double) => Unit) = tCanvas.onMouseClick(fn)
-
-    val Pixel = core.Pixel
-    val Inch = core.Inch
-    val Cm = core.Cm
-    def setUnitLength(ul: UnitLen) = tCanvas.setUnitLength(ul)
-    def clearWithUL(ul: UnitLen) = tCanvas.clearWithUL(ul)
-    def camScale = tCanvas.camScale
-    def setBackgroundH(c1: Color, c2: Color) = tCanvas.setBackgroundH(c1, c2)
-    def setBackgroundV(c1: Color, c2: Color) = tCanvas.setBackgroundV(c1, c2)
-    def wipe() = tCanvas.wipe()
-    def drawStage(fillc: Paint) = tCanvas.drawStage(fillc)
-    def stage = tCanvas.stage
-    def stageLeft = tCanvas.stageLeft
-    def stageTop = tCanvas.stageTop
-    def stageRight = tCanvas.stageRight
-    def stageBot = tCanvas.stageBot
-  }
-  val TSCanvas = new TSCanvasC()
+  val TSCanvas = new DrawingCanvasAPI(tCanvas)
+  val Staging = net.kogics.kojo.staging.API
 
   def showScriptInOutput() = ctx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
@@ -299,7 +122,7 @@ class Builtins extends RepeatCommands {
 
   def print(obj: Any) {
     // Runs on Actor pool (interpreter) thread
-    scalaCodeRunner.kprintln("%s" format (obj))
+    ctx.kprintln("%s" format (obj))
     Throttler.throttle()
   }
   UserCommand.addCompletion("print", List("obj"))
@@ -326,7 +149,7 @@ class Builtins extends RepeatCommands {
   def color(r: Int, g: Int, b: Int) = new Color(r, g, b)
   UserCommand("color", List("red", "green", "blue"), "Creates a new color based on the specified red, green, and blue levels.")
 
-  def setAstStopPhase(phase: String): Unit = astStopPhase = phase
+  def setAstStopPhase(phase: String): Unit = ctx.setAstStopPhase(phase)
   UserCommand.addSynopsis("astStopPhase - Gets the compiler phase value for AST printing.")
   UserCommand("setAstStopPhase", List("stopBeforePhase"), "Sets the compiler phase value for AST printing.")
 
@@ -404,7 +227,7 @@ class Builtins extends RepeatCommands {
   UserCommand("stRunCode", List("code"), "Runs the supplied code (without copying it to the script editor).")
 
   def stClickRunButton() = Utils.runInSwingThread {
-    CodeExecutionSupport.instance.runCode()
+    codeSupport.runCode()
   }
   UserCommand("stClickRunButton", Nil, "Simulates a click of the run button")
 
@@ -445,17 +268,17 @@ Here's a partial list of the available commands:
   val MusicScore = core.Score
 
   def playMusic(voice: Voice, n: Int = 1) {
-    music.FuguePlayer.instance().playMusic(voice, n)
+    fuguePlayer.playMusic(voice, n)
   }
   UserCommand("playMusic", List("score"), "Plays the specified melody, rhythm, or score.")
 
   def playMusicUntilDone(voice: Voice, n: Int = 1) {
-    music.FuguePlayer.instance().playMusicUntilDone(voice, n)
+    fuguePlayer.playMusicUntilDone(voice, n)
   }
   UserCommand("playMusicUntilDone", List("score"), "Plays the specified melody, rhythm, or score, and waits till the music finishes.")
 
   def playMusicLoop(voice: Voice) {
-    music.FuguePlayer.instance().playMusicLoop(voice)
+    fuguePlayer.playMusicLoop(voice)
   }
   UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
 
@@ -481,14 +304,14 @@ Here's a partial list of the available commands:
   def interpret(code: String) {
     scalaCodeRunner.runCode(code)
   }
-  
+
   def resetInterpreter() {
     scalaCodeRunner.resetInterp()
   }
 
   // for debugging only
-  def kojoInterp = scalaCodeRunner.kojointerp
-  def pcompiler = scalaCodeRunner.pcompiler
+//  def kojoInterp = scalaCodeRunner.kojointerp
+//  def pcompiler = scalaCodeRunner.pcompiler
 
   def reimportBuiltins() {
     interpret("import TSCanvas._; import Tw._")
@@ -543,32 +366,6 @@ Here's a partial list of the available commands:
   val GPics = picture.GPics
   val picStack = GPics
 
-  //  type Rot = picture.Rot
-  //  val Rot = picture.Rot
-  //  type Rotp = picture.Rotp
-  //  val Rotp = picture.Rotp
-  //  type Scale = picture.Scale
-  //  val Scale = picture.Scale
-  //  type Opac = picture.Opac
-  //  val Opac = picture.Opac
-  //  type Hue = picture.Hue
-  //  val Hue = picture.Hue
-  //  type Sat = picture.Sat
-  //  val Sat = picture.Sat
-  //  type Brit = picture.Brit
-  //  val Brit = picture.Brit
-  //  type Trans = picture.Trans
-  //  val Trans = picture.Trans
-  //  type FlipX = picture.FlipX
-  //  val FlipX = picture.FlipX
-  //  type FlipY = picture.FlipY
-  //  val FlipY = picture.FlipY
-  //  type Fill = picture.Fill
-  //  val FillColor = picture.Fill
-  //  type Stroke = picture.Stroke
-  //  val PenColor = picture.Stroke
-  //  type StrokeWidth = picture.StrokeWidth
-  //  val PenWidth = picture.StrokeWidth
   val rot = picture.rot _
   val rotp = picture.rotp _
   def scale(f: Double) = picture.scale(f)
@@ -588,11 +385,7 @@ Here's a partial list of the available commands:
   val penWidth = picture.strokeWidth _
   val deco = picture.deco _
 
-  //  type Spin = picture.Spin
-  //  val Spin = picture.Spin
   val spin = picture.spin _
-  //  type Reflect = picture.Reflect
-  //  val Reflect = picture.Reflect
   val reflect = picture.reflect _
   val row = picture.row _
   val col = picture.col _
@@ -629,7 +422,6 @@ Here's a partial list of the available commands:
   type Vector2D = util.Vector2D
   val Vector2D = util.Vector2D
 
-  val mp3player = music.KMp3.instance
   def playMp3(mp3File: String) {
     mp3player.playMp3(mp3File)
   }
@@ -644,11 +436,13 @@ Here's a partial list of the available commands:
   def canvasBounds = tCanvas.cbounds
   def setBackground(c: Paint) = tCanvas.setCanvasBackground(c)
 
-  def isMp3Playing = music.KMp3.instance.isMusicPlaying
-  def isMusicPlaying = music.FuguePlayer.instance.isMusicPlaying
-  def stopMp3() = music.KMp3.instance.stopMp3()
-  def stopMusic() = music.FuguePlayer.instance.stopMusic()
-  def newMp3Player = new music.KMp3()
+  def isMp3Playing = mp3player.isMusicPlaying
+  def isMusicPlaying = fuguePlayer.isMusicPlaying
+  def stopMp3() = mp3player.stopMp3()
+  def stopMusic() = fuguePlayer.stopMusic()
+  def newMp3Player = new music.KMp3() {
+    val kojoCtx = builtins.kojoCtx
+  }
   def onAnimationStop(fn: => Unit) = staging.API.onAnimationStop(fn)
   def addCodeTemplates(lang: String, templates: Map[String, String]) {
     CodeCompletionUtils.addTemplates(lang, templates)

@@ -39,10 +39,10 @@ import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Cm
 
 object Impl {
-  val canvas = SpriteCanvas.instance
-  val camera = canvas.getCamera
-  val picLayer = canvas.pictures
-  val Gf = new GeometryFactory
+  @volatile var canvas: SpriteCanvas = _
+  lazy val camera = canvas.getCamera
+  lazy val picLayer = canvas.pictures
+  lazy val Gf = new GeometryFactory
 }
 
 trait CorePicOps { self: Picture with RedrawStopper =>

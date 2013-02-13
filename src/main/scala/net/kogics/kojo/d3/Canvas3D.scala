@@ -30,19 +30,7 @@ import java.awt.event.ComponentListener
 import java.awt.event.ComponentEvent
 import net.kogics.kojo.util.Utils
 import scala.concurrent.Lock
-import net.kogics.kojo.core.InitedSingleton
 import net.kogics.kojo.core.KojoCtx
-
-object Canvas3D extends InitedSingleton[Canvas3D] {
-  def initedInstance(kojoCtx: KojoCtx) = synchronized {
-    instanceInit()
-    val ret = instance()
-    API.initedInstance(kojoCtx, ret)
-    ret
-  }
-
-  protected def newInstance = new Canvas3D
-}
 
 class Canvas3D extends JPanel with ComponentListener {
   setLayout(new BorderLayout())
