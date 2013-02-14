@@ -318,7 +318,7 @@ class KojoCtx extends core.KojoCtx {
   }
   
   def formatSource() {
-    topcs.seh.formatAction.actionPerformed(null)
+    topcs.seh.se.formatAction.actionPerformed(null)
   }
   
 }
