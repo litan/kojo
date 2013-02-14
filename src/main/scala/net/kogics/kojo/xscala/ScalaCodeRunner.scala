@@ -525,17 +525,9 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     }
 
     def initInterp() {
-//      outputHandler.withOutputSuppressed {
-      runContext.initInterp(interp)
-        // Interesting fact:
-        // If you make an object available via bind, the interface is not type-safe
-        // If you make it available via interpret("val ="), its type safe
-        // Observed via Staging.linesShape
-        // TODO: reevaluate other binds
-//        interp.interpret("val Staging = net.kogics.kojo.staging.API")
-//        interp.interpret("val Mw = net.kogics.kojo.mathworld.MathWorld.instance")
-//        interp.interpret("val D3 = net.kogics.kojo.d3.API.instance")
-//      }
+      outputHandler.withOutputSuppressed {
+        runContext.initInterp(interp)
+      }
     }
 
     def printInitScriptsLoadMsg() {
