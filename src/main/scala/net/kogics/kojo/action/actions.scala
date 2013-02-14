@@ -209,7 +209,7 @@ class FullScreenOutputAction(kojoCtx: => KojoCtx)
   extends FullScreenBaseAction(
     kojoCtx,
     Utils.loadString("S_FullScreenOutput"),
-    kojoCtx.topcs.owh.oPanel,
+    kojoCtx.topcs.owh.outputPane,
     kojoCtx.topcs.owh
   ) {
   override def enterFullScreen() {

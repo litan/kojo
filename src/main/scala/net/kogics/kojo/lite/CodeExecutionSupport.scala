@@ -15,14 +15,10 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.BorderLayout
-import java.awt.CardLayout
 import java.awt.Color
-import java.awt.Component
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Event
-import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
@@ -33,25 +29,16 @@ import java.io.PrintStream
 import java.io.Writer
 import java.util.concurrent.CountDownLatch
 import java.util.logging.Logger
-import javax.swing.BorderFactory
-import javax.swing.BoxLayout
+
 import javax.swing.JButton
-import javax.swing.JEditorPane
-import javax.swing.JLabel
 import javax.swing.JOptionPane
 import javax.swing.JPanel
-import javax.swing.JScrollPane
 import javax.swing.JTextArea
-import javax.swing.JTextField
-import javax.swing.JTextPane
 import javax.swing.JToolBar
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
-import javax.swing.event.HyperlinkEvent
-import javax.swing.event.HyperlinkListener
-import javax.swing.text.StyleConstants
-import javax.swing.text.StyleContext
 import javax.swing.text.Utilities
+
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
 import net.kogics.kojo.core.MwMode
@@ -62,15 +49,14 @@ import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.livecoding.InteractiveManipulator
 import net.kogics.kojo.livecoding.ManipulationContext
+import net.kogics.kojo.mathworld.MathWorld
+import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.FutureResult
 import net.kogics.kojo.util.RichFile.enrichFile
-import net.kogics.kojo.util.TerminalAnsiCodes
-import util.Utils
 import net.kogics.kojo.xscala.Builtins
 import net.kogics.kojo.xscala.KojoInterpreter
-import net.kogics.kojo.mathworld.MathWorld
-import net.kogics.kojo.core.SCanvas
-import net.kogics.kojo.turtle.TurtleWorldAPI
+
+import util.Utils
 
 class CodeExecutionSupport(
   TSCanvas: DrawingCanvasAPI,
@@ -87,32 +73,12 @@ class CodeExecutionSupport(
   val Log = Logger.getLogger(getClass.getName);
   val promptColor = new Color(178, 66, 0)
   val codeColor = new Color(0x009b00)
-  val DefaultOutputColor = new Color(32, 32, 32)
-  val DefaultOutputFontSize = 13
   val WorksheetMarker = " //> "
-  var outputColor = DefaultOutputColor
 
   val (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
-  val outputWindow = new JTextPane
-  outputWindow.setForeground(new Color(32, 32, 32))
-  outputWindow.setBackground(Color.white)
+  val outputPane = new OutputPane(this)
 
-  val errorWindow = new JEditorPane
-  errorWindow.setContentType("text/html")
-
-  val outLayout = new CardLayout
-  val outPanel = new JPanel(outLayout)
-  val outoutPanel = new JPanel(new BorderLayout)
-  val outoutSp = new JScrollPane(outputWindow)
-  outoutSp.setBorder(BorderFactory.createEmptyBorder())
-  outoutPanel.add(outoutSp, BorderLayout.CENTER)
-  var readInputPanel: JPanel = new JPanel
-  outPanel.add(outoutPanel, "Output")
-  outPanel.add(new JScrollPane(errorWindow), "Error")
-
-  outputWindow.setEditable(false)
-  errorWindow.setEditable(false)
   System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
   doWelcome()
 
@@ -145,9 +111,6 @@ class CodeExecutionSupport(
 
   @volatile var showCode = false
   @volatile var verboseOutput = false
-  val OutputDelimiter = "---\n"
-  @volatile var lastOutput = ""
-
   setSpriteListener()
   setCodePane(codePane0)
 
@@ -382,7 +345,7 @@ class CodeExecutionSupport(
 
       def onInterpreterInit() = {
         showOutput(" " * 38 + "_____\n\n")
-        lastOutput = ""
+        outputPane.clearLastOutput()
         startingUp = false
       }
 
@@ -641,17 +604,11 @@ class CodeExecutionSupport(
 
   def clrOutput() {
     Utils.runInSwingThread {
-      outputColor = DefaultOutputColor
-      outputWindow.setBackground(Color.white)
-      setOutputFontSize(DefaultOutputFontSize)
-      outputWindow.setText("")
-      errorWindow.setText("")
-      outoutPanel.remove(readInputPanel)
-      outoutPanel.revalidate()
+      outputPane.clear()
       clearButton.setEnabled(false)
       codePane.requestFocusInWindow
     }
-    lastOutput = ""
+    outputPane.clearLastOutput()
   }
 
   def enableClearButton() = if (!clearButton.isEnabled) clearButton.setEnabled(true)
@@ -659,16 +616,7 @@ class CodeExecutionSupport(
   def readInput(prompt: String): String = {
     val input = new FutureResult[String]
     Utils.runInSwingThread {
-      readInputPanel = new JPanel()
-      readInputPanel.setLayout(new BoxLayout(readInputPanel, BoxLayout.Y_AXIS))
-      val label = new JLabel(" %s" format (prompt))
-      label.setAlignmentX(Component.LEFT_ALIGNMENT)
-      val inputField = new JTextField
-      inputField.setAlignmentX(Component.LEFT_ALIGNMENT)
-      readInputPanel.add(label)
-      readInputPanel.add(inputField)
-      outoutPanel.add(readInputPanel, BorderLayout.SOUTH)
-      outoutPanel.revalidate()
+      val inputField = outputPane.createReadInputPanel(prompt)
       kojoCtx.activateOutputPane()
       Utils.schedule(0.1) { inputField.requestFocusInWindow() }
       Utils.schedule(0.9) { inputField.requestFocusInWindow() }
@@ -676,173 +624,27 @@ class CodeExecutionSupport(
         def actionPerformed(e: ActionEvent) {
           println("%s: %s" format (prompt, inputField.getText))
           input.set(inputField.getText)
-          outoutPanel.remove(readInputPanel)
-          outoutPanel.revalidate()
-          //          kojoCtx.activateScriptEditor()
+          outputPane.removeInputPanel()
         }
       })
     }
     input.get
   }
 
-  val baseStyle = StyleContext.getDefaultStyleContext.getStyle(StyleContext.DEFAULT_STYLE)
-  def appendOutput(s: String, color: Color) {
-    if (TerminalAnsiCodes.isColoredString(s)) {
-      TerminalAnsiCodes.parse(s) foreach { cstr =>
-        appendOutput(cstr._1, cstr._2)
-      }
-    }
-    else {
-      val doc = outputWindow.getStyledDocument()
-      var colorStyle = doc.getStyle(color.getRGB().toString)
-      if (colorStyle == null) {
-        colorStyle = doc.addStyle(color.getRGB().toString, baseStyle)
-        StyleConstants.setForeground(colorStyle, color)
-      }
+  def appendOutput(s: String, color: Color) = outputPane.appendOutput(s, color)
+  def setOutputBackground(color: Color) = outputPane.setOutputBackground(color)
+  def setOutputForeground(color: Color) = outputPane.setOutputForeground(color)
+  def setOutputFontSize(size: Int) = outputPane.setOutputFontSize(size)
+  def increaseOutputFontSize() = outputPane.increaseOutputFontSize()
+  def decreaseOutputFontSize() = outputPane.decreaseOutputFontSize()
 
-      doc.insertString(doc.getLength, s, colorStyle)
-      outputWindow.setCaretPosition(doc.getLength)
-      outLayout.show(outPanel, "Output")
-    }
-  }
-
-  def setOutputBackground(color: Color) = Utils.runInSwingThread {
-    // works after nimbus painter hack
-    outputWindow.setBackground(color)
-
-    // problem with code below: 
-    // works only for previous text
-    // does not fill out the whole background
-    //    val background = new SimpleAttributeSet()
-    //    StyleConstants.setBackground(background, color)
-    //    val doc = outputWindow.getStyledDocument
-    //    doc.setCharacterAttributes(0, doc.getLength, background, false)
-  }
-
-  def setOutputForeground(color: Color) = Utils.runInSwingThread {
-    outputColor = color
-  }
-
-  var fontSize = DefaultOutputFontSize
-  def setOutputFontSize(size: Int) = Utils.runInSwingThread {
-    fontSize = size
-    outputWindow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size))
-  }
-
-  def increaseOutputFontSize() {
-    setOutputFontSize(fontSize + 1)
-  }
-
-  def decreaseOutputFontSize() {
-    setOutputFontSize(fontSize - 1)
-  }
-
-  setOutputFontSize(fontSize)
-
-  @volatile var errText = ""
-  @volatile var errOffset = 0
-  @volatile var errCount = 0
-
-  errorWindow.addHyperlinkListener(new HyperlinkListener {
-    val linkRegex = """(?i)http://error/(\d+)""".r
-    def hyperlinkUpdate(e: HyperlinkEvent) {
-      if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
-        e.getURL.toString match {
-          case linkRegex(offset) =>
-            codePane.select(offset.toInt, offset.toInt + 1)
-            kojoCtx.activateScriptEditor()
-          case _ =>
-        }
-      }
-    }
-  })
-
-  def resetErrInfo() {
-    errText = ""
-    errOffset = 0
-    errCount = 0
-    Utils.runInSwingThread {
-      errorWindow.setText("")
-      outLayout.show(outPanel, "Output")
-    }
-  }
-
-  def appendError(s: String, offset: Option[Int] = None) {
-    errText += xml.Unparsed(s)
-    if (offset.isDefined) {
-      // errCount is used only for 'Check Script' case
-      errCount += 1
-      if (errCount == 1) {
-        errOffset = offset.get
-      }
-    }
-
-    def errorLink = "http://error/" + errOffset
-
-    def errorLocation =
-      <div style="margin:5px;font-size:large;">
-      { if (errCount > 1) { <a href={ errorLink }>Locate first error in script</a> } else if (errCount == 1) { <a href={ errorLink }>Locate error in script</a> } else { <span style="color:blue;">Use the 'Check Script' button for better error recovery.</span> } }
-      </div>
-
-    val errMsg =
-      <body style="">
-        <h2>There's a problem in your script!</h2> 
-        { errorLocation }
-        <div style="color:red;margin:5px;font-size:large;">
-          <pre>{ errText }</pre>
-        </div>
-        { if (errCount > 2) errorLocation }
-      </body>
-
-    errorWindow.setText(errMsg.toString)
-    errorWindow.setCaretPosition(0)
-    outLayout.show(outPanel, "Error")
-    // For the case where a warning is sent to the regular Output window
-    Utils.schedule(0.9) { outLayout.show(outPanel, "Error") }
-  }
-
-  def showOutput(outText: String) {
-    Utils.runInSwingThread {
-      showOutputHelper(outText, outputColor)
-    }
-    lastOutput = outText
-  }
-
-  def showOutput(outText: String, color: Color) {
-    Utils.runInSwingThread {
-      showOutputHelper(outText, color)
-    }
-    lastOutput = outText
-  }
-
-  def showOutputHelper(outText: String, color: Color): Unit = {
-    appendOutput(outText, color)
-    enableClearButton()
-  }
-
-  def showErrorMsg(errMsg: String) {
-    Utils.runInSwingThread {
-      appendError(errMsg)
-      enableClearButton()
-    }
-    //    lastOutput = errMsg
-  }
-
-  def showErrorText(errText: String) {
-    Utils.runInSwingThread {
-      appendError(errText)
-      enableClearButton()
-    }
-    //    lastOutput = errText
-  }
-
-  def showSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
-    Utils.runInSwingThread {
-      appendError(errText, Some(offset))
-      enableClearButton()
-    }
-    //    lastOutput = errText
-  }
+  def showOutput(outText: String) = outputPane.showOutput(outText)
+  def showOutput(outText: String, color: Color) = outputPane.showOutput(outText, color)
+  def resetErrInfo() = outputPane.resetErrInfo()
+  def showErrorMsg(errMsg: String) = outputPane.showErrorMsg(errMsg)
+  def showErrorText(errText: String) = outputPane.showErrorText(errText)
+  def showSmartErrorText(errText: String, line: Int, column: Int, offset: Int) =
+    outputPane.showSmartErrorText(errText, line, column, offset)
 
   def showWaitCursor() {
     val wc = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
@@ -1051,14 +853,9 @@ class CodeExecutionSupport(
       showOutput("\n<<<\n", promptColor)
     }
     else {
-      maybeOutputDelimiter()
+      outputPane.maybeOutputDelimiter()
     }
     historyManager.codeRun(code)
-  }
-
-  def maybeOutputDelimiter() {
-    if (lastOutput.length > 0 && !lastOutput.endsWith(OutputDelimiter))
-      showOutput(OutputDelimiter, promptColor)
   }
 
   def codeFragment(caretOffset: Int) = {
