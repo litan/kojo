@@ -188,7 +188,7 @@ object Main extends AppMenu { main =>
 
       val drawingCanvasH = new DrawingCanvasHolder(spriteCanvas, kojoCtx)
       scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport, frame)
-      val outputHolder = new OutputWindowHolder(codeSupport, kojoCtx)
+      val outputHolder = new OutputWindowHolder(codeSupport.outputPane)
       val storyHolder = new StoryTellerHolder(storyTeller)
       val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
       val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
