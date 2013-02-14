@@ -68,24 +68,23 @@ class CodeExecutionSupport(
   mp3player: music.KMp3,
   fuguePlayer: music.FuguePlayer,
   tCanvas: SpriteCanvas,
-  codePane0: JTextArea,
+  scriptEditor0: => ScriptEditor,
   val kojoCtx: KojoCtx) extends core.CodeCompletionSupport with ManipulationContext {
+  lazy val scriptEditor = scriptEditor0
+  import scriptEditor._
+  var clearButton = new JButton
 
   val Log = Logger.getLogger(getClass.getName);
   val promptColor = new Color(178, 66, 0)
   val codeColor = new Color(0x009b00)
   val WorksheetMarker = " //> "
 
-  val (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton,
-    clearSButton, clearButton, cexButton) = makeToolbar()
-  val outputPane = new OutputPane(this)
-
   System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
+  val outputPane = new OutputPane(this)
   doWelcome()
-
+  
   val commandHistory = CommandHistory()
   val historyManager = new HistoryManager
-  hPrevButton.setEnabled(commandHistory.hasPrevious)
 
   tCanvas.outputFn = showOutput _
   storyTeller.outputFn = showOutput _
@@ -109,12 +108,9 @@ class CodeExecutionSupport(
     codeRunner
   )
 
-  val statusStrip = new StatusStrip()
-
   @volatile var showCode = false
   @volatile var verboseOutput = false
   setSpriteListener()
-  setCodePane(codePane0)
 
   class OutputWindowWriter extends Writer {
     override def write(s: String) {
@@ -159,8 +155,6 @@ class CodeExecutionSupport(
 
   def setCodePane(cp: JTextArea) {
     codePane = cp;
-    addCodePaneHandlers()
-    statusStrip.linkToPane()
     codePane.getDocument.addDocumentListener(new DocumentListener {
       def insertUpdate(e: DocumentEvent) {
         clearSButton.setEnabled(true)
@@ -186,6 +180,12 @@ class CodeExecutionSupport(
     compileButton.setEnabled(enable)
   }
 
+  def initPhase2(se: ScriptEditor) {
+    clearButton = se.clearButton
+    setCodePane(se.codePane)
+    hPrevButton.setEnabled(commandHistory.hasPrevious)
+  }
+
   def doWelcome() = {
     val msg = """Welcome to Kojo 2.0!
     |* To use code completion and see online help ->  Press Ctrl+Space or Ctrl+Alt+Space within the Script Editor
@@ -196,108 +196,6 @@ class CodeExecutionSupport(
     |""".stripMargin
 
     showOutput(msg)
-  }
-
-  def makeToolbar() = {
-    val RunScript = "RunScript"
-    val RunWorksheet = "RunWorksheet"
-    val CompileScript = "CompileScript"
-    val StopScript = "StopScript"
-    val HistoryNext = "HistoryNext"
-    val HistoryPrev = "HistoryPrev"
-    val ClearEditor = "ClearEditor"
-    val ClearOutput = "ClearOutput"
-    val UploadCommand = "UploadCommand"
-
-    val actionListener = new ActionListener {
-      def actionPerformed(e: ActionEvent) = e.getActionCommand match {
-        case RunScript =>
-          if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
-            compileRunCode()
-          }
-          else {
-            runCode()
-          }
-          codePane.requestFocusInWindow()
-        case RunWorksheet =>
-          runWorksheet()
-          codePane.requestFocusInWindow()
-        case CompileScript =>
-          if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
-            parseCode(false)
-          }
-          else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
-            parseCode(true)
-          }
-          else {
-            compileCode()
-          }
-        case StopScript =>
-          stopScript()
-          codePane.requestFocusInWindow()
-        case HistoryNext =>
-          loadCodeFromHistoryNext()
-          codePane.requestFocusInWindow()
-        case HistoryPrev =>
-          loadCodeFromHistoryPrev()
-          codePane.requestFocusInWindow()
-        case ClearEditor =>
-          closeFileAndClrEditorIgnoringCancel()
-        case ClearOutput =>
-          clrOutput()
-        case UploadCommand =>
-          upload()
-      }
-    }
-
-    def makeNavigationButton(imageFile: String, actionCommand: String,
-                             toolTipText: String, altText: String): JButton = {
-      val button = new JButton()
-      button.setActionCommand(actionCommand)
-      button.setToolTipText(toolTipText)
-      button.addActionListener(actionListener)
-      button.setIcon(Utils.loadIcon(imageFile, altText))
-      // button.setMnemonic(KeyEvent.VK_ENTER)
-      button;
-    }
-
-    val toolbar = new JToolBar
-    toolbar.setPreferredSize(new Dimension(100, 24))
-
-    val runButton = makeNavigationButton("/images/run24.png", RunScript, Utils.loadString("S_RunScript"), "Run the Code")
-    val runWorksheetButton = makeNavigationButton("/images/runw24.png", RunWorksheet, Utils.loadString("S_RunWorksheet"), "Run the Code as a Worksheet")
-    val compileButton = makeNavigationButton("/images/check.png", CompileScript, Utils.loadString("S_CheckScript"), "Check the Code")
-    val stopButton = makeNavigationButton("/images/stop24.png", StopScript, Utils.loadString("S_StopScript"), "Stop the Code")
-    val hNextButton = makeNavigationButton("/images/history-next.png", HistoryNext, Utils.loadString("S_HistNext"), "Next in History")
-    val hPrevButton = makeNavigationButton("/images/history-prev.png", HistoryPrev, Utils.loadString("S_HistPrev"), "Prev in History")
-    val clearSButton = makeNavigationButton("/images/clears.png", ClearEditor, Utils.loadString("S_ClearEditorT"), "Clear the Editor and Close Open File")
-    val clearButton = makeNavigationButton("/images/clear24.png", ClearOutput, Utils.loadString("S_ClearOutput"), "Clear the Output")
-    val cexButton = makeNavigationButton("/images/upload.png", UploadCommand, Utils.loadString("S_Upload"), "Upload")
-
-    toolbar.add(runButton)
-    toolbar.add(runWorksheetButton)
-
-    stopButton.setEnabled(false)
-    toolbar.add(stopButton)
-
-    toolbar.add(compileButton)
-
-    toolbar.add(hPrevButton)
-
-    hNextButton.setEnabled(false)
-    toolbar.add(hNextButton)
-
-    clearSButton.setEnabled(false)
-    toolbar.add(clearSButton)
-
-    toolbar.addSeparator()
-
-    toolbar.add(cexButton)
-
-    clearButton.setEnabled(false)
-    toolbar.add(clearButton)
-
-    (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton, clearSButton, clearButton, cexButton)
   }
 
   def makeCodeRunner(): core.CodeRunner = {
@@ -551,37 +449,6 @@ class CodeExecutionSupport(
   }
 
   def isRunningEnabled = runButton.isEnabled
-
-  def addCodePaneHandlers() {
-    codePane.addKeyListener(new KeyAdapter {
-      override def keyPressed(evt: KeyEvent) {
-        imanip.foreach { _ close () }
-        evt.getKeyCode match {
-          case KeyEvent.VK_ENTER =>
-            if (evt.isControlDown && (isRunningEnabled || evt.isShiftDown)) {
-              runCode()
-              evt.consume
-            }
-            else if (evt.isShiftDown && isRunningEnabled) {
-              runWorksheet()
-              evt.consume
-            }
-          case KeyEvent.VK_UP =>
-            if (evt.isControlDown && hPrevButton.isEnabled) {
-              loadCodeFromHistoryPrev()
-              evt.consume
-            }
-          case KeyEvent.VK_DOWN =>
-            if (evt.isControlDown && hNextButton.isEnabled) {
-              loadCodeFromHistoryNext()
-              evt.consume
-            }
-          case _ => // do nothing special
-        }
-      }
-
-    })
-  }
 
   def setSpriteListener() {
     tCanvas.setTurtleListener(new core.AbstractSpriteListener {
@@ -1113,43 +980,6 @@ class CodeExecutionSupport(
 
     def captureOutput(output: String) {
       outputx.append(output)
-    }
-  }
-
-  class StatusStrip extends JPanel {
-    val ErrorColor = new Color(0xff1a1a) // reddish
-    val SuccessColor = new Color(0x33ff33) // greenish
-    val NeutralColor = new Color(0xf0f0f0) // very light gray
-    val StripWidth = 6
-
-    setBackground(NeutralColor)
-    setPreferredSize(new Dimension(StripWidth, 10))
-
-    def linkToPane() {
-      codePane.getDocument.addDocumentListener(new DocumentListener {
-        def insertUpdate(e: DocumentEvent) = onDocChange()
-        def removeUpdate(e: DocumentEvent) = onDocChange()
-        def changedUpdate(e: DocumentEvent) {}
-      })
-    }
-
-    def onSuccess() {
-      setBackground(SuccessColor)
-    }
-
-    def onError() {
-      setBackground(ErrorColor)
-    }
-
-    def onDocChange() {
-      if (imanip.isEmpty) {
-        if (getBackground != NeutralColor) setBackground(NeutralColor)
-      }
-      else {
-        if (!imanip.get.inSliderChange) {
-          imanip.get.close()
-        }
-      }
     }
   }
 }

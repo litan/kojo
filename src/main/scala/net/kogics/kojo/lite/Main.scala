@@ -162,13 +162,14 @@ object Main extends AppMenu { main =>
       val canvas3d = new Canvas3D()
       val d3API = new d3.API(kojoCtx, canvas3d)
 
-      codePane = new RSyntaxTextArea(5, 80)
       val mp3player = new KMp3 {
         val kojoCtx = main.kojoCtx
       }
       val fuguePlayer = new FuguePlayer {
         val kojoCtx = main.kojoCtx
       }
+      
+      var scriptEditor: ScriptEditor = null
       codeSupport = new CodeExecutionSupport(
         TSCanvas,
         Tw,
@@ -179,9 +180,13 @@ object Main extends AppMenu { main =>
         mp3player,
         fuguePlayer,
         spriteCanvas,
-        codePane,
+        scriptEditor, // lazy
         kojoCtx
       )
+
+      scriptEditor = new ScriptEditor(codeSupport, frame)
+      codePane = scriptEditor.codePane
+      codeSupport.initPhase2(scriptEditor)
 
       kojoCtx.frame = frame
       kojoCtx.codeSupport = codeSupport
@@ -189,7 +194,7 @@ object Main extends AppMenu { main =>
       kojoCtx.storyTeller = storyTeller
 
       val drawingCanvasH = new DrawingCanvasHolder(spriteCanvas, kojoCtx)
-      scriptEditorH = new ScriptEditorHolder(new JPanel(), codePane, codeSupport, frame)
+      scriptEditorH = new ScriptEditorHolder(scriptEditor)
       val outputHolder = new OutputWindowHolder(codeSupport.outputPane)
       val storyHolder = new StoryTellerHolder(storyTeller)
       val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
