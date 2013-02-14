@@ -13,7 +13,9 @@
  *
  */
 
-package net.kogics.kojo.xscala
+package net.kogics.kojo.util
+
+import net.kogics.kojo.xscala.CodeCompletionUtils
 
 object UserCommand {
   val synopses = new scala.collection.mutable.StringBuilder

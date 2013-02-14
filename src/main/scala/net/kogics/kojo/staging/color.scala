@@ -21,6 +21,7 @@ import util.Math
 import javax.swing._
 
 import core._
+import Impl.API
 
 object ColorMaker {
   def apply(mode: GRAY)  = new GrayColorMaker(mode)

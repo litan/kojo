@@ -28,6 +28,9 @@ import javax.swing._
 
 import core._
 import math._
+import Impl.API
+
+import language.postfixOps
 
 class Dot(val origin: Point) extends StrokedShape {
   val path = PPath.createLine(

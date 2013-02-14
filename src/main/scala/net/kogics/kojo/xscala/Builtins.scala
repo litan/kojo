@@ -16,21 +16,21 @@
 package net.kogics.kojo
 package xscala
 
-import java.awt.{ Color => JColor }
+import java.awt.{Color => JColor}
 import java.awt.Dimension
 import java.awt.GradientPaint
 import java.awt.Paint
 import javax.swing.JComponent
 import net.kogics.kojo.action.FullScreenCanvasAction
 import net.kogics.kojo.action.FullScreenOutputAction
-import net.kogics.kojo.lite.CodeExecutionSupport
+import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.lite.DrawingCanvasAPI
+import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.story.HandlerHolder
+import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.Read
+import net.kogics.kojo.util.UserCommand
 import core.Rectangle
-import core.Style
-import core.TSCanvasFeatures
-import core.TurtleMover
-import core.UnitLen
 import core.Voice
 import story.HandlerHolder
 import story.IntHandlerHolder
@@ -39,11 +39,9 @@ import story.VoidHandlerHolder
 import util.Read
 import util.Throttler
 import util.Utils
-import net.kogics.kojo.core.SCanvas
-import net.kogics.kojo.core.RunContext
-import net.kogics.kojo.turtle.TurtleWorldAPI
-import net.kogics.kojo.lite.DrawingCanvasAPI
-import net.kogics.kojo.mathworld.MathWorld
+import net.kogics.kojo.lite.canvas.SpriteCanvas
+
+import language.implicitConversions
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {
@@ -51,17 +49,19 @@ object Builtins {
 }
 
 class Builtins(
-  scalaCodeRunner: core.CodeRunner,
+  val TSCanvas: DrawingCanvasAPI,
+  val Tw: TurtleWorldAPI,
+  val Staging: staging.API,
+  val Mw: MathWorld,
   storyTeller: story.StoryTeller,
   mp3player: music.KMp3,
-  codeSupport: CodeExecutionSupport,
   fuguePlayer: music.FuguePlayer,
   tCanvas: SCanvas,
-  ctx: RunContext,
-  val Mw: MathWorld) extends RepeatCommands { builtins =>
+  scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
   Builtins.instance = this
-  lazy val kojoCtx = tCanvas.kojoCtx
-  def turtle0 = tCanvas.turtle0
+  val ctx = scalaCodeRunner.runContext
+  val kojoCtx = tCanvas.kojoCtx
+  val turtle0 = tCanvas.turtle0
 
   type Turtle = core.Turtle
   type Color = java.awt.Color
@@ -93,13 +93,6 @@ class Builtins(
   val noColor = C.noColor
 
   val Kc = new staging.KeyCodes
-
-  // Turtle World
-  val Tw = new TurtleWorldAPI(turtle0)
-
-  // Turtle and Staging Canvas
-  val TSCanvas = new DrawingCanvasAPI(tCanvas)
-  val Staging = net.kogics.kojo.staging.API
 
   def showScriptInOutput() = ctx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
@@ -227,7 +220,7 @@ class Builtins(
   UserCommand("stRunCode", List("code"), "Runs the supplied code (without copying it to the script editor).")
 
   def stClickRunButton() = Utils.runInSwingThread {
-    codeSupport.runCode()
+    ctx.clickRun()
   }
   UserCommand("stClickRunButton", Nil, "Simulates a click of the run button")
 
@@ -310,8 +303,9 @@ Here's a partial list of the available commands:
   }
 
   // for debugging only
-//  def kojoInterp = scalaCodeRunner.kojointerp
-//  def pcompiler = scalaCodeRunner.pcompiler
+  // TODO: Cleanup
+  //  def kojoInterp = scalaCodeRunner.kojointerp
+  //  def pcompiler = scalaCodeRunner.pcompiler
 
   def reimportBuiltins() {
     interpret("import TSCanvas._; import Tw._")
@@ -390,6 +384,7 @@ Here's a partial list of the available commands:
   val row = picture.row _
   val col = picture.col _
 
+  implicit val picCanvas = tCanvas.asInstanceOf[SpriteCanvas]
   def pict(painter: Painter) = picture.Pic(painter)
   def PictureT(painter: Painter) = picture.Pic(painter)
   def Picture(fn: => Unit) = picture.Pic0 { t =>
@@ -405,7 +400,7 @@ Here's a partial list of the available commands:
     require(fps >= 20 && fps <= 100, "FPS needs to be in the range: 20 to 100")
     kojoCtx.fps = fps
   }
-  def animate(fn: => Unit) = staging.API.loop(fn)
+  def animate(fn: => Unit) = Staging.loop(fn)
   def stopAnimation() = ctx.stopAnimation()
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
@@ -443,7 +438,7 @@ Here's a partial list of the available commands:
   def newMp3Player = new music.KMp3() {
     val kojoCtx = builtins.kojoCtx
   }
-  def onAnimationStop(fn: => Unit) = staging.API.onAnimationStop(fn)
+  def onAnimationStop(fn: => Unit) = Staging.onAnimationStop(fn)
   def addCodeTemplates(lang: String, templates: Map[String, String]) {
     CodeCompletionUtils.addTemplates(lang, templates)
   }

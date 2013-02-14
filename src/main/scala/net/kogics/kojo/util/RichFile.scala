@@ -17,6 +17,7 @@ package net.kogics.kojo.util
 import java.io._
 
 object RichFile {
+  import language.implicitConversions
   implicit def enrichFile(f: File) = new RichFile(f)
 }
 
@@ -28,7 +29,7 @@ class RichFile(f: File) {
     try {
       var (read, offset) = (0, 0)
       while (read != flen) {
-        val count = fis.read(buf, offset, flen-offset)
+        val count = fis.read(buf, offset, flen - offset)
         read += count; offset += count
       }
       new String(buf, "UTF-8")
@@ -38,7 +39,7 @@ class RichFile(f: File) {
     }
   }
 
-  def write(data: String)  {
+  def write(data: String) {
     val fos = new BufferedOutputStream(new FileOutputStream(f))
     try {
       fos.write(data.getBytes("UTF-8"))

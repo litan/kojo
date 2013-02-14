@@ -21,6 +21,7 @@ import scala.sys.process.stringSeqToProcess
 import net.kogics.kojo.util.Utils
 
 trait StubMain {
+  import language.postfixOps
   def classpath: String
   def firstInstance: Boolean
   def firstMain(args: Array[String]): Unit
@@ -66,12 +67,12 @@ trait StubMain {
 
   def createCp(xs: List[String]): String = {
     val ourCp = new StringBuilder
-//    Bad stuff on the classpath can clobber the launch of the Real Kojo     
-//    val oldCp = System.getenv("CLASSPATH")
-//    if (oldCp != null) {
-//      ourCp.append(oldCp)
-//      ourCp.append(File.pathSeparatorChar)
-//    }
+    //    Bad stuff on the classpath can clobber the launch of the Real Kojo     
+    //    val oldCp = System.getenv("CLASSPATH")
+    //    if (oldCp != null) {
+    //      ourCp.append(oldCp)
+    //      ourCp.append(File.pathSeparatorChar)
+    //    }
 
     // allow another way to customize classpath
     val kojoCp = System.getenv("KOJO_CLASSPATH")

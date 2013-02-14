@@ -26,7 +26,8 @@ class OrthographicCamera(position : Vector3d = Vector3d(0d, 0d, 10d),
              axesVisible : Boolean = Defaults.axesVisible,
              defaultLightsOn : Boolean = Defaults.defaultLightsOn,
              frequency : Int = Defaults.frequency)(implicit canvas3d: Canvas3D) extends Camera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency) {
-  
+  import language.postfixOps
+
   def setPosition(position : Vector3d) =
     new OrthographicCamera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency)
   def setOrientation(orientation : Quaternion4d) =

@@ -14,6 +14,8 @@
  */
 package net.kogics.kojo.util
 
+import language.implicitConversions
+
 // Ideas and a good bit of code borrowed from Scalaz: https://github.com/scalaz/scalaz
 // Can't afford to bundle all of Scalaz within Kojo just yet (because of size constraints)
 object Typeclasses extends Semigroups

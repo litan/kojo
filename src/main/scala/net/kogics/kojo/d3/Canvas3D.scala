@@ -33,6 +33,8 @@ import scala.concurrent.Lock
 import net.kogics.kojo.core.KojoCtx
 
 class Canvas3D extends JPanel with ComponentListener {
+  import language.postfixOps
+
   setLayout(new BorderLayout())
   setBackground(Color.white)
   //  add(new JLabel("Welcome to the world of 3D!"))

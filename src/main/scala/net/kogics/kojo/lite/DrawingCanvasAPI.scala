@@ -8,12 +8,16 @@ import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.TSCanvasFeatures
 import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.core.UnitLen
+import net.kogics.kojo.util.UserCommand
 
 // Turtle and Staging Canvas
 class DrawingCanvasAPI(tCanvas: SCanvas) extends TSCanvasFeatures {
-  lazy val turtle0 = tCanvas.turtle0
+  def turtle0 = tCanvas.turtle0
   override def clear() = tCanvas.clear()
+  UserCommand("clear", Nil, "Clears the screen, and brings the turtle to the center of the window.")
   def cleari() = { clear(); turtle0.invisible() }
+  UserCommand("cleari", Nil, "Clears the turtle canvas and makes the turtle invisible.")
+
   override def zoom(factor: Double) = tCanvas.zoom(factor)
   override def zoom(factor: Double, cx: Double, cy: Double) = tCanvas.zoom(factor, cx, cy)
 

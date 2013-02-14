@@ -10,16 +10,12 @@ import java.util.logging.FileHandler
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
-
 import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.WindowConstants
-
 import scala.collection.convert.WrapAsScala.propertiesAsScalaMap
-
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-
 import net.kogics.kojo.d3.Canvas3D
 import net.kogics.kojo.history.HistoryPanel
 import net.kogics.kojo.lite.canvas.SpriteCanvas
@@ -35,9 +31,9 @@ import net.kogics.kojo.music.FuguePlayer
 import net.kogics.kojo.music.KMp3
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.util.Utils
-
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.theme.ThemeMap
+import net.kogics.kojo.turtle.TurtleWorldAPI
 
 object Main extends AppMenu { main =>
   System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
@@ -156,8 +152,11 @@ object Main extends AppMenu { main =>
 
       val spriteCanvas = new SpriteCanvas(kojoCtx)
       kojoCtx.canvasListener = spriteCanvas.megaListener
-      staging.Impl.canvas = spriteCanvas
-      picture.Impl.canvas = spriteCanvas
+      val Tw = new TurtleWorldAPI(spriteCanvas.turtle0)
+      val TSCanvas = new DrawingCanvasAPI(spriteCanvas)
+      val Staging = new staging.API(spriteCanvas)
+      kojoCtx.stagingAPI = Staging
+
       val storyTeller = new StoryTeller(kojoCtx)
       val ggbCanvas = new GeoGebraCanvas(kojoCtx)
       val canvas3d = new Canvas3D()
@@ -169,7 +168,18 @@ object Main extends AppMenu { main =>
       val fuguePlayer = new FuguePlayer {
         val kojoCtx = main.kojoCtx
       }
-      codeSupport = new CodeExecutionSupport(codePane, kojoCtx, spriteCanvas, storyTeller, fuguePlayer, mp3player, ggbCanvas.Mw)
+      codeSupport = new CodeExecutionSupport(
+        TSCanvas,
+        Tw,
+        Staging,
+        ggbCanvas.Mw,
+        storyTeller,
+        mp3player,
+        fuguePlayer,
+        spriteCanvas,
+        codePane,
+        kojoCtx
+      )
 
       kojoCtx.frame = frame
       kojoCtx.codeSupport = codeSupport

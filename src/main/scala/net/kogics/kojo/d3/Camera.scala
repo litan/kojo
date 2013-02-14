@@ -25,6 +25,7 @@ abstract class Camera(val position : Vector3d = Vector3d(0d, 0d, 10d),
              val axesVisible : Boolean = Defaults.axesVisible,
              val defaultLightsOn : Boolean = Defaults.defaultLightsOn,
              val frequency : Int = Defaults.frequency) extends Mover[Camera] {
+  import language.postfixOps
   
   def setPosition(position : Vector3d) : Camera
   def setOrientation(orientation : Quaternion4d) : Camera

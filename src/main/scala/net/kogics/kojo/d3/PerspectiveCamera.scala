@@ -27,6 +27,7 @@ class PerspectiveCamera(position : Vector3d = Vector3d(0d, 10d, 0d),
              axesVisible : Boolean = Defaults.axesVisible,
              defaultLightsOn : Boolean = Defaults.defaultLightsOn,
              frequency : Int = Defaults.frequency) extends Camera(position, orientation, width, height, axesVisible, defaultLightsOn, frequency) {
+  import language.postfixOps
   
   def setPosition(position : Vector3d) =
     new PerspectiveCamera(position, orientation, width, height, angle, axesVisible, defaultLightsOn, frequency)

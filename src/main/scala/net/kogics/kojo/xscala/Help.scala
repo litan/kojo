@@ -16,6 +16,8 @@
 package net.kogics.kojo
 package xscala
 
+import language.implicitConversions
+
 // Do not format source. It messes up help code formatting.
 
 object Help {

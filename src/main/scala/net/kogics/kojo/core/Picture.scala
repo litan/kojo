@@ -11,6 +11,8 @@ import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.util.Vector2D
 
 trait Picture extends InputAware {
+  type PicCanvas <: SCanvas
+  def canvas: PicCanvas
   def myNode = tnode
   def decorateWith(painter: Painter): Unit
   def draw(): Unit

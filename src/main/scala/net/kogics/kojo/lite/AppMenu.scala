@@ -33,8 +33,6 @@ import net.kogics.kojo.action.Save
 import net.kogics.kojo.action.SaveAs
 import net.kogics.kojo.util.Utils
 
-import net.kogics.kojo.lite.Main
-
 trait AppMenu { self: Main.type =>
   def menuBar = {
     val menuBar = new JMenuBar
