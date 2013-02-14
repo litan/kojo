@@ -160,6 +160,7 @@ object Main extends AppMenu { main =>
       val storyTeller = new StoryTeller(kojoCtx)
       val ggbCanvas = new GeoGebraCanvas(kojoCtx)
       val canvas3d = new Canvas3D()
+      val d3API = new d3.API(kojoCtx, canvas3d)
 
       codePane = new RSyntaxTextArea(5, 80)
       val mp3player = new KMp3 {
@@ -173,6 +174,7 @@ object Main extends AppMenu { main =>
         Tw,
         Staging,
         ggbCanvas.Mw,
+        d3API,
         storyTeller,
         mp3player,
         fuguePlayer,
