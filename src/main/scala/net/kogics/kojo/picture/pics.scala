@@ -37,15 +37,19 @@ import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Cm
+import net.kogics.kojo.core.SCanvas
 
-object Impl {
-  @volatile var canvas: SpriteCanvas = _
-  lazy val camera = canvas.getCamera
-  lazy val picLayer = canvas.pictures
-  lazy val Gf = new GeometryFactory
-}
+//object Impl {
+//  @volatile var canvas: SpriteCanvas = _
+//  lazy val camera = canvas.getCamera
+//  lazy val picLayer = canvas.pictures
+//  lazy val Gf = new GeometryFactory
+//}
 
 trait CorePicOps { self: Picture with RedrawStopper =>
+  type PicCanvas = SpriteCanvas
+  val camera = canvas.getCamera
+  val picLayer = canvas.pictures
   var axes: PNode = _
   var _picGeom: Geometry = _
   var pgTransform = new AffineTransformation
@@ -57,8 +61,8 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   }
 
   def erase() = Utils.runInSwingThread {
-    Impl.picLayer.removeChild(tnode)
-    //    Impl.picLayer.repaint()
+    picLayer.removeChild(tnode)
+    //    picLayer.repaint()
   }
 
   def t2t(t: AffineTransform): AffineTransformation = {
@@ -151,12 +155,12 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 
   def axesOn() = Utils.runInSwingThread {
     if (axes == null) {
-      val (size, delta, num, bigt) = Impl.canvas.unitLen match {
+      val (size, delta, num, bigt) = canvas.unitLen match {
         case Pixel => (200.0f, 20.0f, 10, 5)
         case Inch => (4.0f, 0.25f, 16, 4)
         case Cm => (10f, .5f, 20, 2)
       }
-      val camScale = Impl.canvas.camScale.toFloat
+      val camScale = canvas.camScale.toFloat
       val tickSize = 3 / camScale
       val overrun = 5 / camScale
       def line(x1: Float, y1: Float, x2: Float, y2: Float) = {
@@ -252,7 +256,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 
   def intersection(other: Picture) = Utils.runInSwingThreadAndPause {
     if (this == other) {
-      Impl.Gf.createGeometryCollection(null)
+      Gf.createGeometryCollection(null)
     }
     else if (tnode.getVisible && other.tnode.getVisible) {
       try {
@@ -261,11 +265,11 @@ trait CorePicOps { self: Picture with RedrawStopper =>
       catch {
         case te: TopologyException =>
           println("Unable to determine intersection - " + te.getMessage())
-          Impl.Gf.createGeometryCollection(null)
+          Gf.createGeometryCollection(null)
       }
     }
     else {
-      Impl.Gf.createGeometryCollection(null)
+      Gf.createGeometryCollection(null)
     }
   }
 
@@ -278,7 +282,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     val ab = new ArrayBuffer[Coordinate]
     ab ++= gc
     ab += gc(0)
-    Impl.Gf.createPolygon(Impl.Gf.createLinearRing(ab.toArray), null)
+    Gf.createPolygon(Gf.createLinearRing(ab.toArray), null)
   }
 
   def area = Utils.runInSwingThreadAndPause {
@@ -289,17 +293,18 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     picGeom.getLength
   }
 
-  def myCanvas = Impl.canvas
+  def myCanvas = canvas
 }
 
 trait CorePicOps2 { self: Picture =>
-  // TODO: need to get intersection methods in here too
+  // TODO: Cleanup - need to get intersection methods in here too
   // they follow same pattern with respect to transforms
+  // And we need to get rid of the cast below
   def act(fn: Picture => Unit) {
     if (!isDrawn) {
       throw new IllegalStateException("Ask picture to act after you draw it.")
     }
-    staging.API.loop {
+    canvas.asInstanceOf[SpriteCanvas].figure0.refresh {
       fn(this)
     }
   }
@@ -331,23 +336,24 @@ trait TNodeCacher {
 }
 
 object Pic {
-  def apply(painter: Painter) = new Pic(painter)
+  def apply(painter: Painter)(implicit canvas: SpriteCanvas) = new Pic(painter)
 }
 
-class Pic(painter: Painter) extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
+class Pic(painter: Painter)(implicit val canvas: SpriteCanvas) extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
+  override type PicCanvas = SpriteCanvas
   @volatile var _t: turtle.Turtle = _
   val ErrMsg = "Unable to create picture turtle. This could be because you have a draw() call after an animate{ } or morph{ } call"
 
   def t = {
     if (_t == null) Utils.runInSwingThreadAndWait(1000, ErrMsg) {
       if (_t == null) {
-        val tt = Impl.canvas.newInvisibleTurtle(0, 0)
+        val tt = canvas.newInvisibleTurtle(0, 0)
         tt.setAnimationDelay(0)
         val tl = tt.tlayer
-        Impl.camera.removeLayer(tl)
-        Impl.picLayer.addChild(tl)
+        camera.removeLayer(tl)
+        picLayer.addChild(tl)
         tl.repaint()
-        Impl.picLayer.repaint()
+        picLayer.repaint()
         _t = tt
       }
       else {
@@ -366,7 +372,7 @@ class Pic(painter: Painter) extends Picture with CorePicOps with CorePicOps2 wit
       val tl = tnode
       tl.invalidateFullBounds()
       tl.repaint()
-      Impl.picLayer.repaint
+      picLayer.repaint
     }
   }
 
@@ -385,7 +391,7 @@ class Pic(painter: Painter) extends Picture with CorePicOps with CorePicOps2 wit
     if (cab.size == 1) {
       cab += cab(0)
     }
-    Impl.Gf.createLineString(cab.toArray)
+    Gf.createLineString(cab.toArray)
   }
 
   private def fillColor(fillPaint: Paint) = fillPaint match {
@@ -477,17 +483,17 @@ class Pic(painter: Painter) extends Picture with CorePicOps with CorePicOps2 wit
 }
 
 object Pic0 {
-  def apply(painter: Painter) = new Pic0(painter)
+  def apply(painter: Painter)(implicit canvas: SpriteCanvas) = new Pic0(painter)
 }
 
-class Pic0(painter: Painter) extends Pic(painter) {
+class Pic0(painter: Painter)(implicit canvas0: SpriteCanvas) extends Pic(painter) {
   override def realDraw() {
     try {
-      Impl.canvas.setDefTurtle(t)
+      canvas.setDefTurtle(t)
       super.realDraw()
     }
     finally {
-      Impl.canvas.restoreDefTurtle()
+      canvas.restoreDefTurtle()
     }
   }
   override def copy: Picture = Pic0(painter)
@@ -495,17 +501,19 @@ class Pic0(painter: Painter) extends Pic(painter) {
 
 abstract class BasePicList(val pics: List[Picture])
   extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
-  if (pics.size == 0) {
+  override type PicCanvas = SpriteCanvas
+  if (pics.isEmpty) {
     throw new IllegalArgumentException("A Picture List needs to have at least one Picture.")
   }
+  def canvas = pics.head.canvas.asInstanceOf[this.PicCanvas]
   @volatile var padding = 0.0
   def makeTnode = Utils.runInSwingThreadAndPause {
     val tn = new PNode()
     pics.foreach { pic =>
-      Impl.picLayer.removeChild(pic.tnode)
+      picLayer.removeChild(pic.tnode)
       tn.addChild(pic.tnode)
     }
-    Impl.picLayer.addChild(tn)
+    picLayer.addChild(tn)
     tn
   }
 
@@ -580,7 +588,7 @@ abstract class BasePicList(val pics: List[Picture])
     pg
   }
 
-  protected def picsCopy: List[Picture] = pics.map { _ copy }
+  protected def picsCopy: List[Picture] = pics.map { _.copy }
 
   def dumpInfo() {
     println("--- ")

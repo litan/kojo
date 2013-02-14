@@ -82,7 +82,7 @@ object builtins {
     SpriteCanvas.initedInstance(kojoCtx)
     story.StoryTeller.initedInstance(kojoCtx)
 
-    val ce = CodeExecutionSupport.initedInstance(new javax.swing.JTextArea, KojoCtx.instance())
+    val ce = CodeExecutionSupport.initedInstance(new javax.swing.JTextArea, new KojoTestContext)
     ce.codeRunner.asInstanceOf[core.ProxyCodeRunner].latch.await()
     context.interp.bind("predef", "net.kogics.kojo.xscala.ScalaCodeRunner", ce.codeRunner.asInstanceOf[core.ProxyCodeRunner].codeRunner.asInstanceOf[ScalaCodeRunner])
     context.interp.interpret("val builtins = predef.builtins")

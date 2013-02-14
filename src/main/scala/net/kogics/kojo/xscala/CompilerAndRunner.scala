@@ -38,6 +38,8 @@ import core.CompletionInfo
 import util.Utils
 import net.kogics.kojo.core.RunContext
 
+import language.postfixOps
+
 trait CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String)
   def warning(msg: String, line: Int, column: Int)

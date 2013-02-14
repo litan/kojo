@@ -12,9 +12,12 @@ import net.kogics.kojo.picture.Reflectc
 import net.kogics.kojo.core.SCanvas
 import java.awt.event.KeyEvent
 import net.kogics.kojo.util.Vector2D
+import com.vividsolutions.jts.geom.GeometryFactory
+import net.kogics.kojo.lite.canvas.SpriteCanvas
 
 package object picture {
   type Painter = core.Painter
+  val Gf = new GeometryFactory
   def rot(angle: Double) = Rotc(angle)  
   def rotp(angle: Double, x: Double, y: Double) = Rotpc(angle, x, y)  
   def scale(factor: Double) = Scalec(factor)
@@ -50,13 +53,14 @@ package object picture {
     VPics(lb.toList)
   }
   
-  def protractor(camScale: Double) = {
+  def protractor(camScale: Double)(implicit canvas: SpriteCanvas) = {
     val r = 90 / camScale
     def num(n: Int) = Pic { t =>
       import t._
       setPenFontSize(10)
       write(n)
-    }
+    } 
+    
     def cross = Pic { t =>
       import t._
       def line() {
@@ -70,6 +74,7 @@ package object picture {
       right()
       line()
     }
+    
     def line = Pic { t =>
       import t._
       right()
@@ -78,6 +83,7 @@ package object picture {
       penDown()
       forward(3*r/4)
     }
+    
     def slice = Pic { t =>
       import t._
       right()
@@ -91,6 +97,7 @@ package object picture {
         left(0.2)
       }
     }
+    
     def prot(n: Int): Picture = {
       def angletext(n: Int) = if (n >= 90) {
         trans(1.05*r, 8*r/100) -> num(180-n)

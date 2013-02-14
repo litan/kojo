@@ -13,7 +13,8 @@
  *
  */
 package net.kogics.kojo
-package lite.canvas
+package lite
+package canvas
 
 import java.awt.Color
 import java.awt.Dimension
@@ -28,11 +29,13 @@ import java.awt.event.InputEvent
 import java.awt.geom.Point2D
 import java.io.File
 import java.util.logging.Logger
+
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
+
 import net.kogics.kojo.action.FullScreenCanvasAction
 import net.kogics.kojo.action.FullScreenSupport
 import net.kogics.kojo.action.SaveAs
@@ -45,6 +48,7 @@ import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.SpriteListener
 import net.kogics.kojo.core.UnitLen
+
 import edu.umd.cs.piccolo.PCanvas
 import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.PNode
@@ -60,9 +64,8 @@ import edu.umd.cs.piccolo.util.PPaintContext
 import figure.Figure
 import turtle.Turtle
 import util.Utils
-import net.kogics.kojo.xscala.Builtins
 
-class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
+class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
   val Log = Logger.getLogger(getClass.getName);
   val defLayer = getLayer
   val AxesColor = new Color(100, 100, 100)
@@ -74,6 +77,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   val Dpi = Toolkit.getDefaultToolkit.getScreenResolution
   @volatile var unitLen: UnitLen = Pixel
 
+  def pCanvas: PCanvas = this
+  
   def setUnitLength(ul: UnitLen) {
     throw new UnsupportedOperationException("Use clearWithUL(unit) instead of setUnitLength(unit) and clear().")
   }
@@ -121,6 +126,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   @volatile var turtle = newTurtle()
   val pictures = new PLayer
   getCamera.addLayer(pictures)
+  implicit val picCanvas = this
 
   def turtle0 = turtle
   val figure0 = figure
@@ -564,7 +570,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     Utils.runInSwingThreadAndWait {
       setBackground(Color.white)
       showProt = false
-      turtles.foreach { t => if (t == origTurtle) t.cleart() else t.remove() }
+      turtles.foreach { t => if (t == origTurtle) t.clear() else t.remove() }
       turtles = List(turtles.last)
 
       figures.foreach { f => if (f == figure) f.clear() else f.remove() }
@@ -702,7 +708,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
         setBackground(color)
       case _ =>
         val bounds = cbounds
-        val rect = staging.API.rectangle(bounds.x, bounds.y, bounds.width, bounds.height)
+        val rect = kojoCtx.stagingAPI.rectangle(bounds.x, bounds.y, bounds.width, bounds.height)
         rect.setFillColor(c)
         rect.setPenThickness(0)
         rect.setPenColor(c)

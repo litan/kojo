@@ -24,8 +24,14 @@ import net.kogics.kojo.kgeom.PolyLine
 import util.Utils
 import kgeom.PolyLine
 
+import java.awt.Color
+import java.awt.Paint
+import net.kogics.kojo.core.SCanvas
+
 trait Transformer extends Picture with CorePicOps2 {
+  type PicCanvas = SCanvas
   val tpic: Picture
+  def canvas = tpic.canvas
   def bounds = tpic.bounds
   def dumpInfo() = tpic.dumpInfo()
   def rotate(angle: Double) = tpic.rotate(angle)
@@ -65,7 +71,7 @@ trait Transformer extends Picture with CorePicOps2 {
     }
   def intersection(other: Picture) = {
     if (this == other) {
-      Impl.Gf.createGeometryCollection(null)
+      Gf.createGeometryCollection(null)
     }
     else {
       tpic.intersection(other)
@@ -208,9 +214,6 @@ class Deco(pic: Picture)(painter: Painter) extends Transform(pic) {
   }
   def copy = Deco(pic.copy)(painter)
 }
-
-import java.awt.Color
-import java.awt.Paint
 case class Fill(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
     t.setFillColor(color)
   }) {

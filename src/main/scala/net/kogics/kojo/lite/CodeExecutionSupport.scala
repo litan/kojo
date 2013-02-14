@@ -69,15 +69,20 @@ import util.Utils
 import net.kogics.kojo.xscala.Builtins
 import net.kogics.kojo.xscala.KojoInterpreter
 import net.kogics.kojo.mathworld.MathWorld
+import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.turtle.TurtleWorldAPI
 
 class CodeExecutionSupport(
-  codePane0: JTextArea,
-  val kojoCtx: KojoCtx,
-  tCanvas: SpriteCanvas,
+  TSCanvas: DrawingCanvasAPI,
+  Tw: TurtleWorldAPI,
+  Staging: staging.API,
+  Mw: MathWorld,
   storyTeller: story.StoryTeller,
-  fuguePlayer: music.FuguePlayer,
   mp3player: music.KMp3,
-  Mw: MathWorld) extends core.CodeCompletionSupport with ManipulationContext {
+  fuguePlayer: music.FuguePlayer,
+  tCanvas: SpriteCanvas,
+  codePane0: JTextArea,
+  val kojoCtx: KojoCtx) extends core.CodeCompletionSupport with ManipulationContext {
 
   val Log = Logger.getLogger(getClass.getName);
   val promptColor = new Color(178, 66, 0)
@@ -125,14 +130,16 @@ class CodeExecutionSupport(
 
   val codeRunner = makeCodeRunner()
   val builtins = new Builtins(
-      codeRunner, 
-      storyTeller, 
-      mp3player, 
-      this, 
-      fuguePlayer, 
-      tCanvas, 
-      codeRunner.runContext,
-      Mw)
+    TSCanvas,
+    Tw,
+    Staging,
+    Mw,
+    storyTeller,
+    mp3player,
+    fuguePlayer,
+    tCanvas,
+    codeRunner
+  )
 
   val statusStrip = new StatusStrip()
 
@@ -562,6 +569,10 @@ class CodeExecutionSupport(
           }
         }
         activateEditor()
+      }
+
+      def clickRun() {
+        runCode()
       }
 
       def stopAnimation() {

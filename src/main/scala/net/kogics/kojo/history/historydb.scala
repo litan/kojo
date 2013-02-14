@@ -24,6 +24,7 @@ import java.sql.Types
 // code to simplify jdbc queries from: 
 // http://zcox.wordpress.com/2009/08/17/simple-jdbc-queries-in-scala/
 object Control {
+  import language.reflectiveCalls
   def using[Closeable <: { def close(): Unit }, B](closeable: Closeable)(getB: Closeable => B): B =
     try {
       getB(closeable)

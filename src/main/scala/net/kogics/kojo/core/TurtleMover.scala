@@ -54,7 +54,6 @@ trait TurtleMover extends RichTurtleCommands {
   def write(obj: Any): Unit = write(obj.toString)
   def visible(): Unit
   def invisible(): Unit
-  def cleart(): Unit
   def waitFor(): Unit = animationDelay
   def playSound(voice: Voice): Unit
   def setPenFontSize(n: Int)

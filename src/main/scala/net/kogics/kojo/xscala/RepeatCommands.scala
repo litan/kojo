@@ -16,6 +16,8 @@
 package net.kogics.kojo
 package xscala
 
+import net.kogics.kojo.util.UserCommand
+
 object RepeatCommands extends RepeatCommands
 
 trait RepeatCommands {

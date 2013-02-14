@@ -33,14 +33,21 @@ import net.kogics.kojo.core.InputAware
 import lite.canvas.SpriteCanvas
 import java.util.concurrent.Future
 import edu.umd.cs.piccolo.activities.PActivity
+import net.kogics.kojo.figure.Figure
+import net.kogics.kojo.core.Turtle
 
-object Impl {
+import language.implicitConversions
+import language.postfixOps
+
+private object Impl {
   @volatile var canvas: SpriteCanvas = _
-  lazy val turtle0 = canvas.turtle0
-  lazy val figure0 = canvas.figure0
+  @volatile var turtle0: Turtle = _
+  @volatile var figure0: Figure = _
+  @volatile var API: API = _ 
 }
 
-/** Staging API
+/**
+ * Staging API
  *
  * This object contains the API for using Staging within Kojo scripts.
  *
@@ -51,8 +58,13 @@ object Impl {
  * <URL: http://processing.org/reference/>.
  * The implementation code is the work of Peter Lewerin
  * (<peter.lewerin@tele2.se>) and is not in any way derived from the
- * Processing source. */
-object API {
+ * Processing source.
+ */
+class API(canvas: SpriteCanvas) {
+  Impl.API = this
+  Impl.canvas = canvas
+  Impl.turtle0 = canvas.turtle0
+  Impl.figure0 = canvas.figure0
   //W#summary Developer home-page for the Staging Module
   //W
   //W=Introduction=
@@ -542,7 +554,7 @@ trait Shape  extends InputAware {
   def orientation = heading
   def setHeading(angle: Double) = rotateTo(angle)
 
-  def act(fn: Shape => Unit) = API.loop {
+  def act(fn: Shape => Unit) = Impl.API.loop {
     fn(this)
   }
 }

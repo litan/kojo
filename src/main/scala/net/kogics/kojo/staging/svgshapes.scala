@@ -27,7 +27,11 @@ import javax.swing._
 
 import core._
 
+import language.postfixOps
+
 object SvgShape {
+  import Impl.API
+  
   def getAttr (ns: scala.xml.Node, s: String): Option[String] = {
     ns \ ("@" + s) text match {
       case "" => None

@@ -23,6 +23,7 @@ import java.awt.Color
 import java.awt.Dimension
 
 class Image extends JPanel with MouseControlledMover {
+  import language.postfixOps
 
   var canvas : Option[Canvas3D] = None
   var image = new BufferedImage(Defaults.cameraWidth, Defaults.cameraHeight, BufferedImage.TYPE_INT_RGB)

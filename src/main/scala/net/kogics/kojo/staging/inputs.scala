@@ -20,6 +20,7 @@ import core.Point
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler
 import edu.umd.cs.piccolo.event.PInputEvent
 import util.Utils
+import Impl.API
 
 object Inputs {
   import edu.umd.cs.piccolo.event._
