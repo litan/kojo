@@ -114,7 +114,6 @@ trait AppMenu { self: Main.type =>
     }))
 
     menuBar.add(fileMenu)
-    kojoCtx.saveAsActionListener = saveAsActionListener
 
     def menuItemFor(label: String, file: String) = {
       val item = new JMenuItem(label)
