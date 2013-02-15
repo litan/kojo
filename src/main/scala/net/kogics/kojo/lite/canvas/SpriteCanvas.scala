@@ -63,6 +63,7 @@ import turtle.Turtle
 import util.Utils
 import java.util.concurrent.Future
 import edu.umd.cs.piccolo.activities.PActivity
+import net.kogics.kojo.util.FileChooser
 
 class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
   val Log = Logger.getLogger(getClass.getName);
@@ -819,7 +820,7 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
 
     val saveAsImage = new JMenuItem(Utils.loadString("S_SaveAsImage"))
     saveAsImage.addActionListener(new ActionListener {
-      lazy val fchooser = new SaveAs(kojoCtx)
+      val fchooser = new FileChooser(kojoCtx)
       override def actionPerformed(e: ActionEvent) {
         val file = fchooser.chooseFile("PNG Image File", "png", Utils.stripDots(Utils.loadString("S_SaveAs")))
         if (file != null) {
