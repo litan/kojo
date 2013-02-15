@@ -2,24 +2,33 @@ package net.kogics.kojo.lite
 
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Dimension
+import java.awt.Event
 import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.InputEvent
+import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+
 import javax.swing.AbstractAction
 import javax.swing.Action
+import javax.swing.JButton
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
 import javax.swing.JMenuItem
 import javax.swing.JPanel
 import javax.swing.JPopupMenu
+import javax.swing.JToolBar
 import javax.swing.KeyStroke
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
+
 import org.fife.rsta.ui.search.AbstractFindReplaceDialog
 import org.fife.rsta.ui.search.ReplaceDialog
 import org.fife.ui.autocomplete.AutoCompletion
@@ -38,13 +47,13 @@ import org.fife.ui.rtextarea.IconGroup
 import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rtextarea.RTextScrollPane
 import org.fife.ui.rtextarea.SearchEngine
+
 import net.kogics.kojo.action.ChooseColor
 import net.kogics.kojo.codingmode.SwitchMode
-import net.kogics.kojo.lite.CodeExecutionSupport
-import net.kogics.kojo.lite.KojoCompletionProvider
 import net.kogics.kojo.livecoding.IpmProvider
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
+
 import scalariform.formatter.ScalaFormatter
 import scalariform.formatter.preferences.AlignParameters
 import scalariform.formatter.preferences.AlignSingleLineCaseStatements
@@ -53,15 +62,8 @@ import scalariform.formatter.preferences.FormatXml
 import scalariform.formatter.preferences.FormattingPreferences
 import scalariform.formatter.preferences.IndentSpaces
 import scalariform.formatter.preferences.PreserveDanglingCloseParenthesis
-import javax.swing.JToolBar
-import javax.swing.JButton
-import java.awt.Event
-import java.awt.Dimension
-import javax.swing.event.DocumentListener
-import javax.swing.event.DocumentEvent
-import java.awt.event.KeyAdapter
 
-class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
+class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
 
   val codePane = new RSyntaxTextArea(5, 80)
   val statusStrip = new StatusStrip()
@@ -112,7 +114,7 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
     ctm.addTemplate(ct)
   }
 
-  val provider = new KojoCompletionProvider(codeSupport)
+  val provider = new KojoCompletionProvider(execSupport)
   val ac = new AutoCompletion(provider)
   ac.setParameterAssistanceEnabled(true)
   ac.setAutoActivationEnabled(true)
@@ -131,7 +133,7 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
   var idx = 0
   val popup = codePane.getPopupMenu
 
-  val switcher = new SwitchMode(codeSupport)
+  val switcher = new SwitchMode(execSupport)
   val twCb = new JCheckBoxMenuItem(switcher)
   twCb.setText(Utils.loadString("S_TurtleMode"))
   twCb.setToolTipText(Utils.loadString("S_TurtleModeTT"))
@@ -270,7 +272,7 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(findReplaceItem, idx)
   idx += 1
 
-  val chooseColorItem = new JMenuItem(new ChooseColor(codeSupport))
+  val chooseColorItem = new JMenuItem(new ChooseColor(execSupport))
   popup.add(chooseColorItem, idx)
   idx += 1
 
@@ -279,7 +281,7 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
 
   val typeAtAction = new AbstractAction(Utils.loadString("S_ShowType")) {
     def actionPerformed(ev: ActionEvent) {
-      println(codeSupport.typeAt(codePane.getCaretPosition()))
+      println(execSupport.typeAt(codePane.getCaretPosition()))
     }
   }
   val typeAtItem = new JMenuItem(typeAtAction)
@@ -357,7 +359,7 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
     Utils.schedule(0.3) { codePane.requestFocusInWindow() }
   }
 
-  val ipmProvider = new IpmProvider(codeSupport)
+  val ipmProvider = new IpmProvider(execSupport)
   codePane.addMouseListener(new MouseAdapter {
     override def mouseClicked(e: MouseEvent) {
       try {
@@ -368,7 +370,7 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
           ipmProvider.performClickAction(codePane, offset)
         }
         else {
-          codeSupport.imanip.foreach { _ close () }
+          execSupport.imanip.foreach { _ close () }
         }
       }
       catch {
@@ -392,40 +394,40 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
       def actionPerformed(e: ActionEvent) = e.getActionCommand match {
         case RunScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
-            codeSupport.compileRunCode()
+            execSupport.compileRunCode()
           }
           else {
-            codeSupport.runCode()
+            execSupport.runCode()
           }
           codePane.requestFocusInWindow()
         case RunWorksheet =>
-          codeSupport.runWorksheet()
+          execSupport.runWorksheet()
           codePane.requestFocusInWindow()
         case CompileScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
-            codeSupport.parseCode(false)
+            execSupport.parseCode(false)
           }
           else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
-            codeSupport.parseCode(true)
+            execSupport.parseCode(true)
           }
           else {
-            codeSupport.compileCode()
+            execSupport.compileCode()
           }
         case StopScript =>
-          codeSupport.stopScript()
+          execSupport.stopScript()
           codePane.requestFocusInWindow()
         case HistoryNext =>
-          codeSupport.loadCodeFromHistoryNext()
+          execSupport.loadCodeFromHistoryNext()
           codePane.requestFocusInWindow()
         case HistoryPrev =>
-          codeSupport.loadCodeFromHistoryPrev()
+          execSupport.loadCodeFromHistoryPrev()
           codePane.requestFocusInWindow()
         case ClearEditor =>
           closeFileAndClrEditorIgnoringCancel()
         case ClearOutput =>
-          codeSupport.clrOutput()
+          execSupport.clrOutput()
         case UploadCommand =>
-          codeSupport.upload()
+          execSupport.upload()
       }
     }
 
@@ -483,25 +485,25 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
     statusStrip.linkToPane()
     codePane.addKeyListener(new KeyAdapter {
       override def keyPressed(evt: KeyEvent) {
-        codeSupport.imanip.foreach { _ close () }
+        execSupport.imanip.foreach { _ close () }
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
-            if (evt.isControlDown && (codeSupport.isRunningEnabled || evt.isShiftDown)) {
-              codeSupport.runCode()
+            if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
+              execSupport.runCode()
               evt.consume
             }
-            else if (evt.isShiftDown && codeSupport.isRunningEnabled) {
-              codeSupport.runWorksheet()
+            else if (evt.isShiftDown && execSupport.isRunningEnabled) {
+              execSupport.runWorksheet()
               evt.consume
             }
           case KeyEvent.VK_UP =>
             if (evt.isControlDown && hPrevButton.isEnabled) {
-              codeSupport.loadCodeFromHistoryPrev()
+              execSupport.loadCodeFromHistoryPrev()
               evt.consume
             }
           case KeyEvent.VK_DOWN =>
             if (evt.isControlDown && hNextButton.isEnabled) {
-              codeSupport.loadCodeFromHistoryNext()
+              execSupport.loadCodeFromHistoryNext()
               evt.consume
             }
           case _ => // do nothing special
@@ -537,12 +539,12 @@ class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends
     }
 
     def onDocChange() {
-      if (codeSupport.imanip.isEmpty) {
+      if (execSupport.imanip.isEmpty) {
         if (getBackground != NeutralColor) setBackground(NeutralColor)
       }
       else {
-        if (!codeSupport.imanip.get.inSliderChange) {
-          codeSupport.imanip.get.close()
+        if (!execSupport.imanip.get.inSliderChange) {
+          execSupport.imanip.get.close()
         }
       }
     }

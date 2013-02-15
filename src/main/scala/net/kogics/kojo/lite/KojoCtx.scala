@@ -45,7 +45,7 @@ class KojoCtx extends core.KojoCtx {
   var topcs: TopCs = _
   var frame: JFrame = _
   var saveAsActionListener: ActionListener = _
-  var codeSupport: CodeExecutionSupport = _
+  var execSupport: CodeExecutionSupport = _
   var storyTeller: StoryTeller = _
   var control: CControl = _
   @volatile var fps = 50
@@ -221,11 +221,11 @@ class KojoCtx extends core.KojoCtx {
   def baseDir: String = getLastLoadStoreDir + "/"
 
   def stopActivity() = Utils.runInSwingThread {
-    codeSupport.stopActivity()
+    execSupport.stopActivity()
   }
 
   def stopInterpreter() = Utils.runInSwingThread {
-    codeSupport.stopInterpreter()
+    execSupport.stopInterpreter()
   }
   
   def stopStory() = Utils.runInSwingThread { storyTeller.stop() }
@@ -282,43 +282,43 @@ class KojoCtx extends core.KojoCtx {
   def knownColors = staging.KColor.knownColors
 
   def isVerboseOutput = {
-    codeSupport.verboseOutput == true
+    execSupport.verboseOutput == true
   }
 
   def showVerboseOutput() {
-    codeSupport.verboseOutput = true
+    execSupport.verboseOutput = true
   }
 
   def hideVerboseOutput() = {
-    codeSupport.verboseOutput = false
+    execSupport.verboseOutput = false
   }
 
   def isSriptShownInOutput = {
-    codeSupport.showCode == true
+    execSupport.showCode == true
   }
 
   def showScriptInOutput() {
-    codeSupport.showCode = true
+    execSupport.showCode = true
   }
 
   def hideScriptInOutput() {
-    codeSupport.showCode = false
+    execSupport.showCode = false
   }
 
   def clearOutput() {
-    codeSupport.clrOutput()
+    execSupport.clrOutput()
   }
 
   def setOutputBackground(color: Color) {
-    codeSupport.setOutputBackground(color)
+    execSupport.setOutputBackground(color)
   }
 
   def setOutputForeground(color: Color) {
-    codeSupport.setOutputForeground(color)
+    execSupport.setOutputForeground(color)
   }
   
   def setOutputFontSize(size: Int) {
-    codeSupport.setOutputFontSize(size)
+    execSupport.setOutputFontSize(size)
   }
   
   def formatSource() {

@@ -37,12 +37,12 @@ import net.kogics.kojo.util.Utils
 import FullScreenSupport.sdev
 import lite.CodeExecutionSupport
 
-class ChooseColor(codeSupport: CodeExecutionSupport) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
-  val ctx = codeSupport.kojoCtx 
+class ChooseColor(execSupport: CodeExecutionSupport) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
+  val ctx = execSupport.kojoCtx 
   def actionPerformed(e: ActionEvent) {
     val sColor = JColorChooser.showDialog(null, util.Utils.stripDots(e.getActionCommand), ctx.lastColor)
     if (sColor != null) {
-      val cprint = codeSupport.showOutput(_: String, _: Color)
+      val cprint = execSupport.showOutput(_: String, _: Color)
       cprint("\u2500" * 3 + "\n", sColor)
       print("Selected Color:   ")
       cprint("\u2588" * 6 + "\n", sColor)

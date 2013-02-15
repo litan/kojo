@@ -8,12 +8,12 @@ import net.kogics.kojo.util.RichFile
 trait EditorFileSupport { self: ScriptEditor =>
   var openedFile: Option[File] = None
   private var fileData: String = _
-  val kojoCtx = codeSupport.kojoCtx
+  val kojoCtx = execSupport.kojoCtx
   
   private def saveFileData(d: String) {
-    fileData = codeSupport.removeWorksheetOutput(d)
+    fileData = execSupport.removeWorksheetOutput(d)
   }
-  private def fileChanged = fileData != codeSupport.removeWorksheetOutput(codePane.getText)
+  private def fileChanged = fileData != execSupport.removeWorksheetOutput(codePane.getText)
 
   def hasOpenFile = openedFile.isDefined
 

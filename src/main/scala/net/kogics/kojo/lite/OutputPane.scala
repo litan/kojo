@@ -1,47 +1,48 @@
 package net.kogics.kojo.lite
 
-import javax.swing.JPanel
-import java.awt.CardLayout
-import javax.swing.JScrollPane
 import java.awt.BorderLayout
-import javax.swing.BorderFactory
-import javax.swing.JTextPane
-import javax.swing.JEditorPane
+import java.awt.CardLayout
 import java.awt.Color
-import javax.swing.JTextField
-import javax.swing.BoxLayout
-import javax.swing.JLabel
 import java.awt.Component
-import net.kogics.kojo.util.TerminalAnsiCodes
-import javax.swing.text.StyleConstants
-import javax.swing.text.StyleContext
-import net.kogics.kojo.util.Utils
 import java.awt.Font
-import javax.swing.event.HyperlinkListener
-import javax.swing.event.HyperlinkEvent
-import javax.swing.JTextArea
-import javax.swing.JCheckBoxMenuItem
-import javax.swing.JPopupMenu
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
+import java.awt.event.InputEvent
+import java.awt.event.KeyEvent
+
 import javax.swing.AbstractAction
-import net.kogics.kojo.action.FullScreenOutputAction
+import javax.swing.BorderFactory
+import javax.swing.BoxLayout
+import javax.swing.JCheckBoxMenuItem
+import javax.swing.JEditorPane
+import javax.swing.JLabel
+import javax.swing.JMenuItem
+import javax.swing.JPanel
+import javax.swing.JPopupMenu
+import javax.swing.JScrollPane
+import javax.swing.JTextField
+import javax.swing.JTextPane
 import javax.swing.KeyStroke
 import javax.swing.UIDefaults
-import javax.swing.JMenuItem
-import java.awt.event.ActionEvent
-import net.kogics.kojo.util.NoOpPainter
-import javax.swing.event.PopupMenuListener
-import java.awt.event.KeyEvent
-import java.awt.event.ActionListener
+import javax.swing.event.HyperlinkEvent
+import javax.swing.event.HyperlinkListener
 import javax.swing.event.PopupMenuEvent
-import java.awt.event.InputEvent
-import java.awt.event.FocusAdapter
-import net.kogics.kojo.action.FullScreenSupport
-import java.awt.event.FocusEvent
+import javax.swing.event.PopupMenuListener
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyleContext
 
-class OutputPane(codeSupport: CodeExecutionSupport) extends JPanel {
-  lazy val codePane = codeSupport.codePane
-  val kojoCtx = codeSupport.kojoCtx
-  
+import net.kogics.kojo.action.FullScreenOutputAction
+import net.kogics.kojo.action.FullScreenSupport
+import net.kogics.kojo.util.NoOpPainter
+import net.kogics.kojo.util.TerminalAnsiCodes
+import net.kogics.kojo.util.Utils
+
+class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
+  lazy val codePane = execSupport.codePane
+  val kojoCtx = execSupport.kojoCtx
+
   val DefaultOutputColor = new Color(32, 32, 32)
   val DefaultOutputFontSize = 13
   var outputColor = DefaultOutputColor
@@ -88,6 +89,117 @@ class OutputPane(codeSupport: CodeExecutionSupport) extends JPanel {
       }
     }
   })
+
+  val tdef = new UIDefaults();
+  try {
+    tdef.put("TextPane[Enabled].backgroundPainter", new NoOpPainter);
+    outputWindow.putClientProperty("Nimbus.Overrides", tdef);
+  }
+  catch {
+    case t: Throwable =>
+      println("Not running on an Oracle JVM. Output Pane background colors will not work.")
+  }
+
+  val popup = new JPopupMenu {
+    val verboseOutput = new JCheckBoxMenuItem(Utils.loadString("S_ShowVerboseOutput"))
+    verboseOutput.addActionListener(new ActionListener {
+      override def actionPerformed(e: ActionEvent) {
+        if (verboseOutput.isSelected) {
+          kojoCtx.showVerboseOutput()
+        }
+        else {
+          kojoCtx.hideVerboseOutput()
+        }
+      }
+    })
+    add(verboseOutput)
+
+    val showCode = new JCheckBoxMenuItem(Utils.loadString("S_ShowScriptInOutput"))
+    showCode.addActionListener(new ActionListener {
+      override def actionPerformed(e: ActionEvent) {
+        if (showCode.isSelected) {
+          kojoCtx.showScriptInOutput()
+        }
+        else {
+          kojoCtx.hideScriptInOutput()
+        }
+      }
+    })
+    add(showCode)
+
+    addSeparator()
+
+    val increaseFontSizeAction = new AbstractAction(Utils.loadString("S_IncreaseFontSize")) {
+      override def actionPerformed(e: ActionEvent) {
+        execSupport.increaseOutputFontSize()
+      }
+    }
+    val incrFontSizeItem = new JMenuItem(increaseFontSizeAction)
+    val inputMap = outputWindow.getInputMap
+    val am = outputWindow.getActionMap
+    val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
+    inputMap.put(controlPlus, "increase-font-size")
+    am.put("increase-font-size", increaseFontSizeAction)
+    incrFontSizeItem.setAccelerator(controlPlus)
+    add(incrFontSizeItem)
+
+    val decreaseFontSizeAction = new AbstractAction(Utils.loadString("S_DecreaseFontSize")) {
+      override def actionPerformed(e: ActionEvent) {
+        execSupport.decreaseOutputFontSize()
+      }
+    }
+    val decrFontSizeItem = new JMenuItem(decreaseFontSizeAction)
+    val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
+    inputMap.put(controlMinus, "decrease-font-size")
+    am.put("decrease-font-size", decreaseFontSizeAction)
+    decrFontSizeItem.setAccelerator(controlMinus)
+    add(decrFontSizeItem)
+
+    errorWindow.addFocusListener(new FocusAdapter {
+      override def focusGained(e: FocusEvent) {
+        incrFontSizeItem.setEnabled(false)
+        decrFontSizeItem.setEnabled(false)
+
+      }
+    })
+
+    outputWindow.addFocusListener(new FocusAdapter {
+      override def focusGained(e: FocusEvent) {
+        incrFontSizeItem.setEnabled(true)
+        decrFontSizeItem.setEnabled(true)
+
+      }
+    })
+
+    addSeparator()
+
+    val clearItem = new JMenuItem(Utils.loadString("S_Clear"))
+    clearItem.addActionListener(new ActionListener {
+      override def actionPerformed(e: ActionEvent) {
+        kojoCtx.clearOutput()
+      }
+    })
+    add(clearItem)
+
+    addSeparator()
+
+    val fsOutputAction = FullScreenOutputAction(kojoCtx)
+    val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsOutputAction)
+    add(fullScreenItem)
+
+    addPopupMenuListener(new PopupMenuListener {
+      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+        verboseOutput.setState(kojoCtx.isVerboseOutput)
+        showCode.setState(kojoCtx.isSriptShownInOutput)
+        FullScreenSupport.updateMenuItem(fullScreenItem, fsOutputAction)
+      }
+      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
+      def popupMenuCanceled(e: PopupMenuEvent) {}
+    })
+  }
+
+  outputWindow.setComponentPopupMenu(popup)
+  errorWindow.setComponentPopupMenu(popup)
 
   def resetErrInfo() {
     errText = ""
@@ -152,7 +264,7 @@ class OutputPane(codeSupport: CodeExecutionSupport) extends JPanel {
     // For the case where a warning is sent to the regular Output window
     Utils.schedule(0.9) { outLayout.show(this, "Error") }
   }
-  
+
   def showOutput(outText: String) {
     Utils.runInSwingThread {
       showOutputHelper(outText, outputColor)
@@ -169,13 +281,13 @@ class OutputPane(codeSupport: CodeExecutionSupport) extends JPanel {
 
   def showOutputHelper(outText: String, color: Color): Unit = {
     appendOutput(outText, color)
-    codeSupport.enableClearButton()
+    execSupport.enableClearButton()
   }
 
   def showErrorMsg(errMsg: String) {
     Utils.runInSwingThread {
       appendError(errMsg)
-      codeSupport.enableClearButton()
+      execSupport.enableClearButton()
     }
     //    lastOutput = errMsg
   }
@@ -183,7 +295,7 @@ class OutputPane(codeSupport: CodeExecutionSupport) extends JPanel {
   def showErrorText(errText: String) {
     Utils.runInSwingThread {
       appendError(errText)
-      codeSupport.enableClearButton()
+      execSupport.enableClearButton()
     }
     //    lastOutput = errText
   }
@@ -191,11 +303,11 @@ class OutputPane(codeSupport: CodeExecutionSupport) extends JPanel {
   def showSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
     Utils.runInSwingThread {
       appendError(errText, Some(offset))
-      codeSupport.enableClearButton()
+      execSupport.enableClearButton()
     }
     //    lastOutput = errText
   }
-  
+
   def clear() {
     outputColor = DefaultOutputColor
     setOutputFontSize(DefaultOutputFontSize)
@@ -205,7 +317,7 @@ class OutputPane(codeSupport: CodeExecutionSupport) extends JPanel {
     outoutPanel.remove(readInputPanel)
     outoutPanel.revalidate()
   }
-  
+
   def clearLastOutput() {
     lastOutput = ""
   }
@@ -261,126 +373,11 @@ class OutputPane(codeSupport: CodeExecutionSupport) extends JPanel {
 
   def maybeOutputDelimiter() {
     if (lastOutput.length > 0 && !lastOutput.endsWith(OutputDelimiter))
-      showOutput(OutputDelimiter, codeSupport.promptColor)
-  }
-  
-//  val ow = codeSupport.outputWindow
-//  val ew = codeSupport.errorWindow
-//  val oPanel = codeSupport.outPanel
-
-  val tdef = new UIDefaults();
-  try {
-    tdef.put("TextPane[Enabled].backgroundPainter", new NoOpPainter);
-    outputWindow.putClientProperty("Nimbus.Overrides", tdef);
-  }
-  catch {
-    case t: Throwable =>
-      println("Not running on an Oracle JVM. Output Pane background colors will not work.")
+      showOutput(OutputDelimiter, execSupport.promptColor)
   }
 
-  val popup = new JPopupMenu {
-    val verboseOutput = new JCheckBoxMenuItem(Utils.loadString("S_ShowVerboseOutput"))
-    verboseOutput.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
-        if (verboseOutput.isSelected) {
-          kojoCtx.showVerboseOutput()
-        }
-        else {
-          kojoCtx.hideVerboseOutput()
-        }
-      }
-    })
-    add(verboseOutput)
-
-    val showCode = new JCheckBoxMenuItem(Utils.loadString("S_ShowScriptInOutput"))
-    showCode.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
-        if (showCode.isSelected) {
-          kojoCtx.showScriptInOutput()
-        }
-        else {
-          kojoCtx.hideScriptInOutput()
-        }
-      }
-    })
-    add(showCode)
-
-    addSeparator()
-
-    val increaseFontSizeAction = new AbstractAction(Utils.loadString("S_IncreaseFontSize")) {
-      override def actionPerformed(e: ActionEvent) {
-        codeSupport.increaseOutputFontSize()
-      }
-    }
-    val incrFontSizeItem = new JMenuItem(increaseFontSizeAction)
-    val inputMap = outputWindow.getInputMap
-    val am = outputWindow.getActionMap
-    val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
-    inputMap.put(controlPlus, "increase-font-size")
-    am.put("increase-font-size", increaseFontSizeAction)
-    incrFontSizeItem.setAccelerator(controlPlus)
-    add(incrFontSizeItem)
-
-    val decreaseFontSizeAction = new AbstractAction(Utils.loadString("S_DecreaseFontSize")) {
-      override def actionPerformed(e: ActionEvent) {
-        codeSupport.decreaseOutputFontSize()
-      }
-    }
-    val decrFontSizeItem = new JMenuItem(decreaseFontSizeAction)
-    val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
-    inputMap.put(controlMinus, "decrease-font-size")
-    am.put("decrease-font-size", decreaseFontSizeAction)
-    decrFontSizeItem.setAccelerator(controlMinus)
-    add(decrFontSizeItem)
-
-    errorWindow.addFocusListener(new FocusAdapter {
-      override def focusGained(e: FocusEvent) {
-        incrFontSizeItem.setEnabled(false)
-        decrFontSizeItem.setEnabled(false)
-
-      }
-    })
-
-    outputWindow.addFocusListener(new FocusAdapter {
-      override def focusGained(e: FocusEvent) {
-        incrFontSizeItem.setEnabled(true)
-        decrFontSizeItem.setEnabled(true)
-
-      }
-    })
-
-    addSeparator()
-
-    val clearItem = new JMenuItem(Utils.loadString("S_Clear"))
-    clearItem.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
-        kojoCtx.clearOutput()
-      }
-    })
-    add(clearItem)
-
-    addSeparator()
-
-    val fsOutputAction = FullScreenOutputAction(kojoCtx)
-    val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsOutputAction)
-    add(fullScreenItem)
-
-    addPopupMenuListener(new PopupMenuListener {
-      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-        verboseOutput.setState(kojoCtx.isVerboseOutput)
-        showCode.setState(kojoCtx.isSriptShownInOutput)
-        FullScreenSupport.updateMenuItem(fullScreenItem, fsOutputAction)
-      }
-      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
-      def popupMenuCanceled(e: PopupMenuEvent) {}
-    })
-  }
-
-  outputWindow.setComponentPopupMenu(popup)
-  errorWindow.setComponentPopupMenu(popup)
   // should be called in swing thread
   def scrollToEnd() {
     outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
   }
-  
 }
