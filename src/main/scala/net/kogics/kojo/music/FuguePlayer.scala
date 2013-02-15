@@ -30,7 +30,7 @@ import net.kogics.kojo.core.KojoCtx
 trait FuguePlayer {
   val Log = Logger.getLogger(getClass.getName)
   val kojoCtx: KojoCtx
-  lazy private val listener = kojoCtx.canvasListener
+  lazy private val listener = kojoCtx.activityListener
   private var currMusic: Option[Music] = None
   private var currBgMusic: Option[Music] = None
   val playLock = new ReentrantLock

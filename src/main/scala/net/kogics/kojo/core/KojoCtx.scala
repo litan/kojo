@@ -22,7 +22,7 @@ import net.kogics.kojo.lite.CodeExecutionSupport
 
 trait KojoCtx {
   def topcs: TopCs
-  def canvasListener: SpriteListener
+  def activityListener: SpriteListener
   def codeSupport: CodeExecutionSupport
   def activateDrawingCanvasHolder()
   def activateDrawingCanvas()

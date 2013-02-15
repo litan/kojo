@@ -101,7 +101,7 @@ object Utils {
   import collection.mutable.{ HashSet, SynchronizedSet }
   val threads = new HashSet[Thread] with SynchronizedSet[Thread]
   var kojoCtx: KojoCtx = _
-  lazy val listener = kojoCtx.canvasListener
+  lazy val listener = kojoCtx.activityListener
   var timer: Timer = _
   var startCount = 0
 

@@ -74,7 +74,6 @@ object Main extends AppMenu with ScriptLoader { main =>
       frame.add(control.getContentArea)
 
       val spriteCanvas = new SpriteCanvas(kojoCtx)
-      kojoCtx.canvasListener = spriteCanvas.megaListener
       val Tw = new TurtleWorldAPI(spriteCanvas.turtle0)
       val TSCanvas = new DrawingCanvasAPI(spriteCanvas)
       val Staging = new staging.API(spriteCanvas)

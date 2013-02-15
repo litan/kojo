@@ -31,7 +31,7 @@ trait Mp3Player {
   val pumpEvents: Boolean
   val kojoCtx: KojoCtx
   def showError(msg: String)
-  lazy private val listener = kojoCtx.canvasListener
+  lazy private val listener = kojoCtx.activityListener
 
   @volatile private var mp3Player: Option[Player] = None
   @volatile private var bgmp3Player: Option[Player] = None
