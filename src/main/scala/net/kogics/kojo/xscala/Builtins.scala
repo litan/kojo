@@ -62,7 +62,6 @@ class Builtins(
   Builtins.instance = this
   val ctx = scalaCodeRunner.runContext
   val kojoCtx = tCanvas.kojoCtx
-  val turtle0 = tCanvas.turtle0
 
   type Turtle = core.Turtle
   type Color = java.awt.Color
@@ -563,12 +562,13 @@ Here's a partial list of the available commands:
       val buttonPressedBg = Color(0, 255, 0, 127)
 
       def button(label: String)(fn: => Unit) = {
-        val btn = Picture {
+        val btn = PictureT { t =>
+          import t._
           setPenFontSize(FontSize)
           val te = textExtent(label, FontSize)
           setFillColor(buttonBg)
           setPenColor(Color(255, 255, 255, 200))
-          trect(te.height.toInt + 10, te.width.toInt + 10, turtle0)
+          trect(te.height.toInt + 10, te.width.toInt + 10, t)
           penUp()
           forward(te.height + 5)
           right()
