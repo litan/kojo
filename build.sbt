@@ -1,6 +1,6 @@
 name := "Kojo"
 
-version := "2.0"
+version := "2.1"
 
 scalaVersion := "2.10.0"
 
@@ -28,5 +28,7 @@ libraryDependencies ++= Seq(
     ("org.scalacheck" % "scalacheck_2.10.0" % "1.10.0" intransitive()) % "test",
     "org.scalatest" % "scalatest_2.10.0" % "2.0.M5" % "test"
 )
+
+libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
 
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
