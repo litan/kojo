@@ -47,7 +47,6 @@ import util.Utils
 
 class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   val Log = Logger.getLogger("ScalaCodeRunner")
-  lazy val tCanvas = runContext.tCanvas
   val outputHandler = new InterpOutputHandler(runContext)
 
   // TODO: Cleaning

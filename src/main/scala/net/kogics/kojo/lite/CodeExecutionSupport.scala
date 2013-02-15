@@ -104,7 +104,7 @@ class CodeExecutionSupport(
     storyTeller,
     mp3player,
     fuguePlayer,
-    tCanvas,
+    kojoCtx,
     codeRunner
   )
 
@@ -442,7 +442,6 @@ class CodeExecutionSupport(
         CodeExecutionSupport.this.stopAnimation()
       }
 
-      def tCanvas = CodeExecutionSupport.this.tCanvas
       def setAstStopPhase(phase: String): Unit = astStopPhase = phase
     })
     codeRunner

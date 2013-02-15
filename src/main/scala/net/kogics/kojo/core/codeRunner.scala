@@ -39,7 +39,6 @@ trait CodeRunner {
 }
 
 trait RunContext {
-  def tCanvas: SCanvas
   def initInterp(interp: KojoInterpreter)
   def onInterpreterInit(): Unit
   def onInterpreterStart(code: String): Unit
