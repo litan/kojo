@@ -236,12 +236,10 @@ class Builtins(
 
   def stInsertCodeInline(code: String) = runCtx.insertCodeInline(code)
   def stInsertCodeBlock(code: String) = runCtx.insertCodeBlock(code)
-  def stSetStorytellerWidth(width: Int) = Utils.runInSwingThread {
-    kojoCtx.topcs.sth.setResizeRequest(new Dimension(width, 0), true)
-  }
+  def stSetStorytellerWidth(width: Int) = kojoCtx.setStorytellerWidth(width)
   def stFrame = kojoCtx.frame
   def stSetUserControlsBg(color: Color) = storyTeller.setUserControlsBg(color)
-  def stCanvasLocation = kojoCtx.topcs.dch.getContentPane.getLocationOnScreen
+  def stCanvasLocation = kojoCtx.canvasLocation
 
   UserCommand.addSynopsisSeparator()
 
@@ -482,12 +480,12 @@ Here's a partial list of the available commands:
     kojoCtx.switchToCanvasPerspective()
   }
 
-  val fullScreenAction = FullScreenCanvasAction(kojoCtx)
+  val fullScreenAction = kojoCtx.fullScreenCanvasAction()
   def toggleFullScreenCanvas() = Utils.runInSwingThreadAndWait {
     fullScreenAction.actionPerformed(null)
   }
 
-  val fullScreenOutputAction = FullScreenOutputAction(kojoCtx)
+  val fullScreenOutputAction = kojoCtx.fullScreenOutputAction()
   def toggleFullScreenOutput() = Utils.runInSwingThreadAndWait {
     fullScreenOutputAction.actionPerformed(null)
   }

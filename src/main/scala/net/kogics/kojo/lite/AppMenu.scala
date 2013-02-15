@@ -81,7 +81,7 @@ trait AppMenu { self: Main.type =>
       }
     })
 
-    val scriptEditor = scriptEditorH.se
+    val scriptEditor = scriptEditorHolder.se
     fileMenu.add(new JMenuItem(new NewFile(scriptEditor)))
 
     val openFile = new JMenuItem(Utils.loadString("S_Open"))
@@ -246,11 +246,11 @@ trait AppMenu { self: Main.type =>
 
     windowMenu.addSeparator()
 
-    val fsCanvasAction = FullScreenCanvasAction(kojoCtx)
+    val fsCanvasAction = FullScreenCanvasAction(drawingCanvasHolder, kojoCtx)
     val fullScreenCanvasItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsCanvasAction)
     windowMenu.add(fullScreenCanvasItem)
 
-    val fsOutputAction = FullScreenOutputAction(kojoCtx)
+    val fsOutputAction = FullScreenOutputAction(outputPaneHolder)
     val fullScreenOutputItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsOutputAction)
     windowMenu.add(fullScreenOutputItem)
 

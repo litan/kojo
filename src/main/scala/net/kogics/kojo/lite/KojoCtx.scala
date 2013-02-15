@@ -31,6 +31,9 @@ import bibliothek.gui.dock.common.mode.ExtendedMode
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.core.SpriteListener
 import net.kogics.kojo.core.DelegatingSpriteListener
+import net.kogics.kojo.action.FullScreenCanvasAction
+import net.kogics.kojo.action.FullScreenOutputAction
+import java.awt.Dimension
 
 class KojoCtx extends core.KojoCtx {
 
@@ -56,6 +59,17 @@ class KojoCtx extends core.KojoCtx {
     activityListener.setRealListener(l)
   }
 
+  def fullScreenCanvasAction() = FullScreenCanvasAction(topcs.dch, this)
+  def fullScreenOutputAction() = FullScreenOutputAction(topcs.owh)
+
+  def setStorytellerWidth(width: Int) = Utils.runInSwingThread {
+    topcs.sth.setResizeRequest(new Dimension(width, 0), true)
+  }
+  
+  def canvasLocation = {
+    topcs.dch.getContentPane.getLocationOnScreen
+  }
+  
   def switchToDefaultPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)

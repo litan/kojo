@@ -183,7 +183,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
     addSeparator()
 
-    val fsOutputAction = FullScreenOutputAction(kojoCtx)
+    val fsOutputAction = kojoCtx.fullScreenOutputAction()
     val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsOutputAction)
     add(fullScreenItem)
 

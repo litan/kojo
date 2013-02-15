@@ -32,13 +32,15 @@ import javax.swing.JFrame
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.lite.EditorFileSupport
 import net.kogics.kojo.lite.topc.BaseHolder
+import net.kogics.kojo.lite.topc.DrawingCanvasHolder
+import net.kogics.kojo.lite.topc.OutputWindowHolder
 import net.kogics.kojo.util.Utils
 
 import FullScreenSupport.sdev
 import lite.CodeExecutionSupport
 
 class ChooseColor(execSupport: CodeExecutionSupport) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
-  val ctx = execSupport.kojoCtx 
+  val ctx = execSupport.kojoCtx
   def actionPerformed(e: ActionEvent) {
     val sColor = JColorChooser.showDialog(null, util.Utils.stripDots(e.getActionCommand), ctx.lastColor)
     if (sColor != null) {
@@ -123,7 +125,7 @@ object FullScreenSupport {
   }
 }
 
-class FullScreenBaseAction(kojoCtx: => KojoCtx, key: String, fsComp: => JComponent, fsCompHolder: => BaseHolder)
+class FullScreenBaseAction(key: String, fsComp: => JComponent, fsCompHolder: => BaseHolder)
   extends AbstractAction(key) {
   import FullScreenSupport._
   var frame: JFrame = _
@@ -174,23 +176,22 @@ class FullScreenBaseAction(kojoCtx: => KojoCtx, key: String, fsComp: => JCompone
 
 object FullScreenCanvasAction {
   var instance: FullScreenCanvasAction = _
-  def apply(kojoCtx: => KojoCtx) = {
+  def apply(dch: => DrawingCanvasHolder, kojoCtx: KojoCtx) = {
     if (instance == null) {
-      instance = new FullScreenCanvasAction(kojoCtx)
+      instance = new FullScreenCanvasAction(dch, kojoCtx)
     }
     instance
   }
 }
 
-class FullScreenCanvasAction(kojoCtx: => KojoCtx)
+class FullScreenCanvasAction(dch: => DrawingCanvasHolder, kojoCtx: KojoCtx)
   extends FullScreenBaseAction(
-    kojoCtx,
     Utils.loadString("S_FullScreenCanvas"),
-    kojoCtx.topcs.dch.dc,
-    kojoCtx.topcs.dch
+    dch.dc,
+    dch
   ) {
   override def enterFullScreen() {
-    kojoCtx.topcs.dch.dc.setFocusable(true) // make canvas work with frame.getMostRecentFocusOwner()
+    dch.dc.setFocusable(true) // make canvas work with frame.getMostRecentFocusOwner()
     super.enterFullScreen()
     kojoCtx.activateDrawingCanvas()
   }
@@ -198,23 +199,21 @@ class FullScreenCanvasAction(kojoCtx: => KojoCtx)
 
 object FullScreenOutputAction {
   var instance: FullScreenOutputAction = _
-  def apply(kojoCtx: => KojoCtx) = {
+  def apply(owh: => OutputWindowHolder) = {
     if (instance == null) {
-      instance = new FullScreenOutputAction(kojoCtx)
+      instance = new FullScreenOutputAction(owh)
     }
     instance
   }
 }
 
-class FullScreenOutputAction(kojoCtx: => KojoCtx)
+class FullScreenOutputAction(owh: => OutputWindowHolder)
   extends FullScreenBaseAction(
-    kojoCtx,
     Utils.loadString("S_FullScreenOutput"),
-    kojoCtx.topcs.owh.outputPane,
-    kojoCtx.topcs.owh
+    owh.outputPane,
+    owh
   ) {
   override def enterFullScreen() {
     super.enterFullScreen()
-    //    kojoCtx.activateOutputPane()
   }
 }

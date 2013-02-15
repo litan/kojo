@@ -37,7 +37,6 @@ import net.kogics.kojo.turtle.TurtleWorldAPI
 
 object Main extends AppMenu with ScriptLoader { main =>
   @volatile var codePane: RSyntaxTextArea = _
-  @volatile var scriptEditorH: ScriptEditorHolder = _
   @volatile var frame: JFrame = _
   @volatile var splash: SplashScreen = _
   @volatile var execSupport: CodeExecutionSupport = _
@@ -112,14 +111,14 @@ object Main extends AppMenu with ScriptLoader { main =>
       kojoCtx.storyTeller = storyTeller
 
       val drawingCanvasH = new DrawingCanvasHolder(spriteCanvas, kojoCtx)
-      scriptEditorH = new ScriptEditorHolder(scriptEditor)
-      val outputHolder = new OutputWindowHolder(execSupport.outputPane)
+      val scriptEditorH = new ScriptEditorHolder(scriptEditor)
+      val outputPaneH = new OutputWindowHolder(execSupport.outputPane)
       val storyHolder = new StoryTellerHolder(storyTeller)
       val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
       val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
       val historyHolder = new HistoryHolder(new HistoryPanel(execSupport))
 
-      kojoCtx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder)
+      kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder)
       kojoCtx.switchToDefaultPerspective()
 
       frame.setJMenuBar(menuBar)
@@ -158,9 +157,13 @@ object Main extends AppMenu with ScriptLoader { main =>
     Log.info(s"System Properties:${sysProps}\n\n")
   }
   
+  def drawingCanvasHolder = kojoCtx.topcs.dch
+  def scriptEditorHolder = kojoCtx.topcs.seh
+  def outputPaneHolder = kojoCtx.topcs.owh
+  
   def appExit() {
     try {
-      scriptEditorH.se.closing()
+      scriptEditorHolder.se.closing()
       frame.dispose()
       System.exit(0)
     }

@@ -15,14 +15,17 @@
 
 package net.kogics.kojo.core
 
-import javax.swing.JFrame
 import java.awt.Color
-import net.kogics.kojo.lite.TopCs
-import net.kogics.kojo.lite.CodeExecutionSupport
+
+import javax.swing.Action
+import javax.swing.JFrame
 
 trait KojoCtx {
-  def topcs: TopCs
   def activityListener: SpriteListener
+  def canvasLocation: java.awt.Point
+  def fullScreenCanvasAction(): Action
+  def fullScreenOutputAction(): Action
+  def setStorytellerWidth(width: Int): Unit
   def activateDrawingCanvasHolder()
   def activateDrawingCanvas()
   def activateScriptEditor()

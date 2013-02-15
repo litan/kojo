@@ -849,7 +849,7 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
 
     addSeparator()
 
-    val fsCanvasAction = FullScreenCanvasAction(kojoCtx)
+    val fsCanvasAction = kojoCtx.fullScreenCanvasAction()
     val fullScreenItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsCanvasAction)
     add(fullScreenItem)
 
