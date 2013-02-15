@@ -27,9 +27,8 @@ import javax.swing.Timer
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.core.KojoCtx
 
-trait FuguePlayer {
+class FuguePlayer(kojoCtx: KojoCtx) {
   val Log = Logger.getLogger(getClass.getName)
-  val kojoCtx: KojoCtx
   lazy private val listener = kojoCtx.activityListener
   private var currMusic: Option[Music] = None
   private var currBgMusic: Option[Music] = None

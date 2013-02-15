@@ -84,12 +84,8 @@ object Main extends AppMenu with ScriptLoader { main =>
       val canvas3d = new Canvas3D()
       val d3API = new d3.API(kojoCtx, canvas3d)
 
-      val mp3player = new KMp3 {
-        val kojoCtx = main.kojoCtx
-      }
-      val fuguePlayer = new FuguePlayer {
-        val kojoCtx = main.kojoCtx
-      }
+      val mp3player = new KMp3(kojoCtx) 
+      val fuguePlayer = new FuguePlayer(kojoCtx)
 
       var scriptEditor: ScriptEditor = null
       codeSupport = new CodeExecutionSupport(
