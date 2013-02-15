@@ -153,9 +153,9 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     def interruptionInProgress = interruptTimer.isDefined
 
     def interruptInterpreter() {
-      Log.info("Interruption of Interpreter Requested")
       // Runs on swing thread
       if (interruptionInProgress) {
+        Log.info("Interruption of Interpreter Requested")
         Log.info("Interruption in progress. Bailing out")
         return
       }
@@ -163,6 +163,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       //      kprintln("Attempting to stop Script...\n")
 
       if (interpreterThread.isDefined) {
+        Log.info("Interruption of Interpreter Requested")
         Log.info("Interrupting Interpreter thread...")
         interruptTimer = Some(Utils.schedule(4) {
           // don't need to clean out interrupt state because Kojo needs to be shut down anyway
@@ -172,9 +173,6 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
         })
         outputHandler.interpOutputSuppressed = true
         stoppable.get.stop(interpreterThread.get)
-      }
-      else {
-        //        kprintln("Animation Stopped.\n")
       }
     }
 
