@@ -65,7 +65,7 @@ import java.util.concurrent.Future
 import edu.umd.cs.piccolo.activities.PActivity
 import net.kogics.kojo.util.FileChooser
 
-class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
+class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   val Log = Logger.getLogger(getClass.getName);
   val defLayer = getLayer
   val AxesColor = new Color(100, 100, 100)
@@ -703,7 +703,7 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
         setBackground(color)
       case _ =>
         val bounds = cbounds
-        val rect = kojoCtx.stagingAPI.rectangle(bounds.x, bounds.y, bounds.width, bounds.height)
+        val rect = staging.Impl.API.rectangle(bounds.x, bounds.y, bounds.width, bounds.height)
         rect.setFillColor(c)
         rect.setPenThickness(0)
         rect.setPenColor(c)
@@ -721,6 +721,7 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
   }
   
   def animate(fn: => Unit): Future[PActivity] = figure0.refresh(fn)
+  def stopAnimation() = figure0.stopRefresh()
 
   import core.Picture
   val noPic = picture.Pic { t =>

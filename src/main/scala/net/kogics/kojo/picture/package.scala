@@ -2,18 +2,17 @@ package net.kogics.kojo
 
 import java.awt.Color
 import java.awt.Paint
+import java.awt.event.KeyEvent
+
+import com.vividsolutions.jts.geom.GeometryFactory
+
+import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.picture.AxesOnc
 import net.kogics.kojo.picture.FlipXc
 import net.kogics.kojo.picture.FlipYc
-import core.Picture
-import net.kogics.kojo.xscala.Builtins
-import net.kogics.kojo.picture.Spinc
-import net.kogics.kojo.picture.Reflectc
-import net.kogics.kojo.core.SCanvas
-import java.awt.event.KeyEvent
 import net.kogics.kojo.util.Vector2D
-import com.vividsolutions.jts.geom.GeometryFactory
-import net.kogics.kojo.lite.canvas.SpriteCanvas
+
+import core.Picture
 
 package object picture {
   type Painter = core.Painter

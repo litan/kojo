@@ -33,8 +33,8 @@ import CodeCompletionUtils.InternalVarsRe
 import CodeCompletionUtils.Keywords
 import CodeCompletionUtils.MethodDropFilter
 import CodeCompletionUtils.VarDropFilter
-import KojoInterpreter.IR
-import KojoInterpreter.Settings
+import core.Interpreter.IR
+import core.Interpreter.Settings
 import core.CodeRunner
 import core.CodingMode
 import core.CompletionInfo

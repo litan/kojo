@@ -20,9 +20,15 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 import org.scalatest.junit.ShouldMatchersForJUnit._
+import net.kogics.kojo.lite.NoOpKojoCtx
+import net.kogics.kojo.lite.canvas.SpriteCanvas
 
 @RunWith(classOf[JUnitRunner])
-class PictureEqualsHashTest extends KojoTestBase with FunSuite with xscala.RepeatCommands {
+class PictureEqualsHashTest extends FunSuite with xscala.RepeatCommands {
+  
+  val kojoCtx = new NoOpKojoCtx
+  implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
+  
   case class Box1(p: Painter) extends Pic(p) {
     override def copy: Box1 = new Box1(p)
   }

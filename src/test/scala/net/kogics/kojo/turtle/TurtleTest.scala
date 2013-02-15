@@ -15,27 +15,28 @@
 package net.kogics.kojo
 package turtle
 
-import lite.canvas.SpriteCanvas
-
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.Assert._
-
-import org.scalacheck.{Test => SCTest}
-import org.scalacheck.Test.Parameters.Default
-import org.scalacheck.Prop.forAll
-import org.scalacheck.Gen
-
-import edu.umd.cs.piccolo.PCanvas
-
-import net.kogics.kojo.util.Utils._
-import core.Style
 import java.awt.Color
 
-class TurtleTest extends KojoTestBase {
+import org.junit.After
+import org.junit.Assert._
+import org.junit.Before
+import org.junit.Test
+import org.scalacheck.Gen
+import org.scalacheck.Prop.forAll
+import org.scalacheck.{Test => SCTest}
+import org.scalacheck.Test.Parameters.Default
 
-  val turtle = new Turtle(SpriteCanvas.instance, "/images/turtle32.png")
+import net.kogics.kojo.lite.NoOpKojoCtx
+import net.kogics.kojo.util.Utils._
+
+import core.Style
+import lite.canvas.SpriteCanvas
+
+class TurtleTest {
+
+  val kojoCtx = new NoOpKojoCtx
+  val spriteCanvas = new SpriteCanvas(kojoCtx)
+  val turtle = new Turtle(spriteCanvas, "/images/turtle32.png")
 
   @Before
   def setUp: Unit = {
@@ -199,7 +200,7 @@ class TurtleTest extends KojoTestBase {
     val e0 = theta0 + turnSize
     val expected = {
       if (e0 < 0) 360 + e0 % 360
-      else if (e0 > 360)  e0 % 360
+      else if (e0 > 360) e0 % 360
       else e0
     }
     doublesEqual(expected, theta1, 0.001)
@@ -212,7 +213,7 @@ class TurtleTest extends KojoTestBase {
       turtle.forward(stepSize)
       val pos1 = turtle.position
       (doublesEqual(pos0.x, pos1.x, 0.001)
-       && doublesEqual(pos0.y + stepSize, pos1.y, 0.001))
+        && doublesEqual(pos0.y + stepSize, pos1.y, 0.001))
     }
     assertTrue(SCTest.check(new Default {}, propForward).passed)
   }
@@ -226,7 +227,7 @@ class TurtleTest extends KojoTestBase {
       val e0 = theta0 + turnSize
       val expected = {
         if (e0 < 0) 360 + e0 % 360
-        else if (e0 > 360)  e0 % 360
+        else if (e0 > 360) e0 % 360
         else e0
       }
       doublesEqual(expected, theta1, 0.001)
@@ -238,9 +239,9 @@ class TurtleTest extends KojoTestBase {
   def testManyTowardsQ1 {
     val propTowards = forAll { n: Double =>
       val x = math.abs(n)
-      val y = x+10
+      val y = x + 10
       turtle.towards(x, y)
-      doublesEqual(math.atan(y/x), deg2radians(turtle.heading), 0.001)
+      doublesEqual(math.atan(y / x), deg2radians(turtle.heading), 0.001)
     }
     assertTrue(SCTest.check(new Default {}, propTowards).passed)
   }
@@ -249,9 +250,9 @@ class TurtleTest extends KojoTestBase {
   def testManyTowardsQ2 {
     val propTowards = forAll { n: Double =>
       val x = -math.abs(n)
-      val y = math.abs(n+20)
+      val y = math.abs(n + 20)
       turtle.towards(x, y)
-      doublesEqual(math.Pi + math.atan(y/x), deg2radians(turtle.heading), 0.001)
+      doublesEqual(math.Pi + math.atan(y / x), deg2radians(turtle.heading), 0.001)
     }
     assertTrue(SCTest.check(new Default {}, propTowards).passed)
   }
@@ -262,7 +263,7 @@ class TurtleTest extends KojoTestBase {
       val x = -math.abs(n) - 1
       val y = x - 30
       turtle.towards(x, y)
-      doublesEqual(math.Pi + math.atan(y/x), deg2radians(turtle.heading), 0.001)
+      doublesEqual(math.Pi + math.atan(y / x), deg2radians(turtle.heading), 0.001)
     }
     assertTrue(SCTest.check(new Default {}, propTowards).passed)
   }
@@ -273,7 +274,7 @@ class TurtleTest extends KojoTestBase {
       val x = math.abs(n)
       val y = -x - 10
       turtle.towards(x, y)
-      doublesEqual(2*math.Pi + math.atan(y/x), deg2radians(turtle.heading), 0.001)
+      doublesEqual(2 * math.Pi + math.atan(y / x), deg2radians(turtle.heading), 0.001)
     }
     assertTrue(SCTest.check(new Default {}, propTowards).passed)
   }
@@ -283,11 +284,11 @@ class TurtleTest extends KojoTestBase {
     val smallFloats = Gen.choose(-1000.0, 1000.0)
     val propMoveTo = forAll(smallFloats) { n: Double =>
       val x = n
-      val y = n+15
+      val y = n + 15
       turtle.moveTo(x, y)
       val pos1 = turtle.position
       (doublesEqual(x, pos1.x, 0.01)
-       && doublesEqual(y, pos1.y, 0.01))
+        && doublesEqual(y, pos1.y, 0.01))
     }
     assertTrue(SCTest.check(new Default {}, propMoveTo).passed)
   }
@@ -305,13 +306,13 @@ class TurtleTest extends KojoTestBase {
   @Test
   def testDistanceTo3 {
     turtle.changePos(10, 10)
-    assertEquals(math.sqrt(90*90*2), turtle.distanceTo(100, 100), 0.001)
+    assertEquals(math.sqrt(90 * 90 * 2), turtle.distanceTo(100, 100), 0.001)
   }
 
   @Test
   def testDistanceTo4 {
     turtle.changePos(-10, -10)
-    assertEquals(math.sqrt(90*90*2), turtle.distanceTo(-100, -100), 0.001)
+    assertEquals(math.sqrt(90 * 90 * 2), turtle.distanceTo(-100, -100), 0.001)
   }
 
   @Test
@@ -430,7 +431,7 @@ class TurtleTest extends KojoTestBase {
     turtle.right()
     turtle.forward(50)
     turtle.left(45)
-   
+
     turtle.restorePosHe
 
     val p = turtle.position

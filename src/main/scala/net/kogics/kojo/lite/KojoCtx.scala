@@ -51,7 +51,6 @@ class KojoCtx extends core.KojoCtx {
   var storyTeller: StoryTeller = _
   var control: CControl = _
   @volatile var fps = 50
-  @volatile var stagingAPI: staging.API = _
   
   val activityListener = new DelegatingSpriteListener
   def setActivityListener(l: SpriteListener) {

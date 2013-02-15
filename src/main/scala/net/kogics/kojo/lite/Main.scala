@@ -76,7 +76,6 @@ object Main extends AppMenu with ScriptLoader { main =>
       val Tw = new TurtleWorldAPI(spriteCanvas.turtle0)
       val TSCanvas = new DrawingCanvasAPI(spriteCanvas)
       val Staging = new staging.API(spriteCanvas)
-      kojoCtx.stagingAPI = Staging
 
       val storyTeller = new StoryTeller(kojoCtx)
       val ggbCanvas = new GeoGebraCanvas(kojoCtx)

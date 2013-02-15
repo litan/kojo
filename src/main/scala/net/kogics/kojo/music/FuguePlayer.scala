@@ -24,7 +24,6 @@ import java.util.logging._
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 import javax.swing.Timer
-import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.core.KojoCtx
 
 class FuguePlayer(kojoCtx: KojoCtx) {

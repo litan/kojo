@@ -31,7 +31,6 @@ import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
 import scala.collection._
 import scala.{math => Math}
 
-import net.kogics.kojo._
 import net.kogics.kojo.util._
 import net.kogics.kojo.kgeom._
 import net.kogics.kojo.core._

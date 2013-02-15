@@ -33,7 +33,7 @@ import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.util.ScalaClassLoader
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 import scala.tools.util.PathResolver
-import KojoInterpreter.IR
+import core.Interpreter.IR
 import core.CompletionInfo
 import util.Utils
 import net.kogics.kojo.core.RunContext

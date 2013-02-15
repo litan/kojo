@@ -31,4 +31,5 @@ trait SCanvas extends TSCanvasFeatures {
   def setCanvasBackground(c: Paint)
   def kojoCtx: KojoCtx
   def animate(fn: => Unit): Future[PActivity]
+  def stopAnimation(): Unit
 }
