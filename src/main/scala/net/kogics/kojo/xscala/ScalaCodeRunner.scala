@@ -49,7 +49,6 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   val Log = Logger.getLogger("ScalaCodeRunner")
   val outputHandler = new InterpOutputHandler(runContext)
 
-  // TODO: Cleaning
   // for debugging only!
   @volatile var kojointerp: scala.tools.nsc.interpreter.IMain = _
   @volatile var pcompiler: scala.tools.nsc.interactive.Global = _

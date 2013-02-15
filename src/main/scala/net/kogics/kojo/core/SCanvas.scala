@@ -17,6 +17,8 @@ package net.kogics.kojo.core
 
 import edu.umd.cs.piccolo.util.PBounds
 import java.awt.Paint
+import java.util.concurrent.Future
+import edu.umd.cs.piccolo.activities.PActivity
 
 trait SCanvas extends TSCanvasFeatures {
   // stuff gets added here (instead of in the base class) if any of the following conditions hold:
@@ -28,4 +30,5 @@ trait SCanvas extends TSCanvasFeatures {
   def cbounds: PBounds
   def setCanvasBackground(c: Paint)
   def kojoCtx: KojoCtx
+  def animate(fn: => Unit): Future[PActivity]
 }

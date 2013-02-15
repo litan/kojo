@@ -61,22 +61,6 @@ trait Transformer extends Picture with CorePicOps2 {
   def setFillColor(color: Paint) = tpic.setFillColor(color)
   def morph(fn: Seq[PolyLine] => Seq[PolyLine]) = tpic.morph(fn)
   def foreachPolyLine(fn: PolyLine => Unit) = tpic.foreachPolyLine(fn)
-  def intersects(other: Picture) = {
-      if (this == other) {
-        false
-      }
-      else {
-        tpic.intersects(other)
-      }
-    }
-  def intersection(other: Picture) = {
-    if (this == other) {
-      Gf.createGeometryCollection(null)
-    }
-    else {
-      tpic.intersection(other)
-    }
-  }
   def distanceTo(other: Picture) = tpic.distanceTo(other)
   def area = tpic.area
   def perimeter = tpic.perimeter

@@ -220,8 +220,8 @@ class KojoCtx extends core.KojoCtx {
 
   def baseDir: String = getLastLoadStoreDir + "/"
 
-  def stopAnimation() = Utils.runInSwingThread {
-    codeSupport.stopAnimation()
+  def stopActivity() = Utils.runInSwingThread {
+    codeSupport.stopActivity()
   }
 
   def stopInterpreter() = Utils.runInSwingThread {

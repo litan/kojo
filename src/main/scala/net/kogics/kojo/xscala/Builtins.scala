@@ -16,7 +16,7 @@
 package net.kogics.kojo
 package xscala
 
-import java.awt.{Color => JColor}
+import java.awt.{ Color => JColor }
 import java.awt.Dimension
 import java.awt.GradientPaint
 import java.awt.Paint
@@ -60,8 +60,8 @@ class Builtins(
   kojoCtx: KojoCtx,
   scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
   Builtins.instance = this
-  val ctx = scalaCodeRunner.runContext
-  val tCanvas = TSCanvas.tCanvas 
+  val runCtx = scalaCodeRunner.runContext
+  val tCanvas = TSCanvas.tCanvas
 
   type Turtle = core.Turtle
   type Color = java.awt.Color
@@ -94,16 +94,16 @@ class Builtins(
 
   val Kc = new staging.KeyCodes
 
-  def showScriptInOutput() = ctx.showScriptInOutput()
+  def showScriptInOutput() = runCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
 
-  def hideScriptInOutput() = ctx.hideScriptInOutput()
+  def hideScriptInOutput() = runCtx.hideScriptInOutput()
   UserCommand("hideScriptInOutput", Nil, "Stops the display of scripts in the output window.")
 
-  def showVerboseOutput() = ctx.showVerboseOutput()
+  def showVerboseOutput() = runCtx.showVerboseOutput()
   UserCommand("showVerboseOutput", Nil, "Enables the display of output from the Scala interpreter. By default, output from the interpreter is shown only for single line scripts.")
 
-  def hideVerboseOutput() = ctx.hideVerboseOutput()
+  def hideVerboseOutput() = runCtx.hideVerboseOutput()
   UserCommand("hideVerboseOutput", Nil, "Stops the display of output from the Scala interpreter.")
   UserCommand.addSynopsisSeparator()
 
@@ -115,7 +115,7 @@ class Builtins(
 
   def print(obj: Any) {
     // Runs on Actor pool (interpreter) thread
-    ctx.kprintln("%s" format (obj))
+    runCtx.kprintln("%s" format (obj))
     Throttler.throttle()
   }
   UserCommand.addCompletion("print", List("obj"))
@@ -124,7 +124,7 @@ class Builtins(
   UserCommand.addCompletion("println", List("obj"))
   UserCommand.addSynopsis("println(obj) or print(obj) - Displays the given object as a string in the output window.")
 
-  def readln(prompt: String): String = ctx.readInput(prompt)
+  def readln(prompt: String): String = runCtx.readInput(prompt)
   UserCommand("readln", List("promptString"), "Displays the given prompt in the output window and reads a line that the user enters.")
 
   def readInt(prompt: String): Int = readln(prompt).toInt
@@ -142,9 +142,9 @@ class Builtins(
   def color(r: Int, g: Int, b: Int) = new Color(r, g, b)
   UserCommand("color", List("red", "green", "blue"), "Creates a new color based on the specified red, green, and blue levels.")
 
-  def setAstStopPhase(phase: String): Unit = ctx.setAstStopPhase(phase)
+  def setAstStopPhase(phase: String): Unit = runCtx.setAstStopPhase(phase)
   UserCommand.addSynopsis("astStopPhase - Gets the compiler phase value for AST printing.")
-  UserCommand("setAstStopPhase", List("stopBeforePhase"), "Sets the compiler phase value for AST printing.")
+  UserCommand("setAstStopPhase", List("stopAfterPhase"), "Sets the compiler phase value for AST printing.")
 
   def stClear() {
     storyTeller.clear()
@@ -213,14 +213,14 @@ class Builtins(
   }
   UserCommand("stShowStatusMsg", List("msg"), "Shows the specified message in the Story Teller status bar.")
 
-  def stSetScript(code: String) = ctx.setScript(code)
+  def stSetScript(code: String) = runCtx.setScript(code)
   UserCommand("stSetScript", List("code"), "Copies the supplied code to the script editor.")
 
   def stRunCode(code: String) = interpret(code)
   UserCommand("stRunCode", List("code"), "Runs the supplied code (without copying it to the script editor).")
 
   def stClickRunButton() = Utils.runInSwingThread {
-    ctx.clickRun()
+    runCtx.clickRun()
   }
   UserCommand("stClickRunButton", Nil, "Simulates a click of the run button")
 
@@ -234,8 +234,8 @@ class Builtins(
   }
   UserCommand("stNext", Nil, "Moves the story to the next page/view.")
 
-  def stInsertCodeInline(code: String) = ctx.insertCodeInline(code)
-  def stInsertCodeBlock(code: String) = ctx.insertCodeBlock(code)
+  def stInsertCodeInline(code: String) = runCtx.insertCodeInline(code)
+  def stInsertCodeBlock(code: String) = runCtx.insertCodeBlock(code)
   def stSetStorytellerWidth(width: Int) = Utils.runInSwingThread {
     kojoCtx.topcs.sth.setResizeRequest(new Dimension(width, 0), true)
   }
@@ -292,7 +292,7 @@ Here's a partial list of the available commands:
 
   // undocumented
   def color(rgbHex: Int) = new Color(rgbHex)
-  def clearOutput() = ctx.clearOutput()
+  def clearOutput() = runCtx.clearOutput()
 
   def interpret(code: String) {
     scalaCodeRunner.runCode(code)
@@ -302,10 +302,9 @@ Here's a partial list of the available commands:
     scalaCodeRunner.resetInterp()
   }
 
-  // for debugging only
-  // TODO: Cleanup
-  //  def kojoInterp = scalaCodeRunner.kojointerp
-  //  def pcompiler = scalaCodeRunner.pcompiler
+  // for debugging only!
+  def kojoInterp = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].kojointerp
+  def pcompiler = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].pcompiler
 
   def reimportBuiltins() {
     interpret("import TSCanvas._; import Tw._")
@@ -400,8 +399,9 @@ Here's a partial list of the available commands:
     require(fps >= 20 && fps <= 100, "FPS needs to be in the range: 20 to 100")
     kojoCtx.fps = fps
   }
-  def animate(fn: => Unit) = Staging.loop(fn)
-  def stopAnimation() = ctx.stopAnimation()
+  def animate(fn: => Unit) = tCanvas.animate(fn)
+  def stopAnimation() = stopActivity()
+  def stopActivity() = runCtx.stopActivity()
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def activateEditor() = kojoCtx.activateScriptEditor()
@@ -435,7 +435,7 @@ Here's a partial list of the available commands:
   def isMusicPlaying = fuguePlayer.isMusicPlaying
   def stopMp3() = mp3player.stopMp3()
   def stopMusic() = fuguePlayer.stopMusic()
-  def newMp3Player = new music.KMp3(kojoCtx) 
+  def newMp3Player = new music.KMp3(kojoCtx)
   def onAnimationStop(fn: => Unit) = Staging.onAnimationStop(fn)
   def addCodeTemplates(lang: String, templates: Map[String, String]) {
     CodeCompletionUtils.addTemplates(lang, templates)
