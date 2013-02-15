@@ -22,9 +22,15 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.ShouldMatchersForJUnit._
 import util.Utils._
 import java.util.concurrent.CountDownLatch
+import net.kogics.kojo.lite.NoOpKojoCtx
+import net.kogics.kojo.lite.canvas.SpriteCanvas
 
 @RunWith(classOf[JUnitRunner])
-class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands {
+class PictureTest extends FunSuite with xscala.RepeatCommands {
+
+  val kojoCtx = new NoOpKojoCtx
+  implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
+  val Staging = new staging.API(spriteCanvas) // required for the animation test
 
   val size = 50
   val pt = 2.0
@@ -176,7 +182,7 @@ class PictureTest extends KojoTestBase with FunSuite with xscala.RepeatCommands 
     val latch = new CountDownLatch(1)
     pic.act { me =>
       pic2 = me
-      staging.API.stop()
+      pic.canvas.stopAnimation()
       latch.countDown()
     }
     latch.await()

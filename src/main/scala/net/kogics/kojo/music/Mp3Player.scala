@@ -24,7 +24,6 @@ import java.io._
 import util.Utils
 import Utils.withLock
 import Utils.giveupLock
-import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.core.KojoCtx
 
 trait Mp3Player {

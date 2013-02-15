@@ -21,9 +21,15 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 import org.scalatest.junit.ShouldMatchersForJUnit._
 import util.Utils._
+import net.kogics.kojo.lite.NoOpKojoCtx
+import net.kogics.kojo.lite.canvas.SpriteCanvas
 
 @RunWith(classOf[JUnitRunner])
-class PictureCollisionTest extends KojoTestBase with FunSuite with xscala.RepeatCommands {
+class PictureCollisionTest extends FunSuite with xscala.RepeatCommands {
+  
+  val kojoCtx = new NoOpKojoCtx
+  implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
+
   val size = 50.0
   val delta = 1e-7
   val blue = java.awt.Color.blue

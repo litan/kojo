@@ -29,7 +29,6 @@ import java.io.PrintStream
 import java.io.Writer
 import java.util.concurrent.CountDownLatch
 import java.util.logging.Logger
-
 import javax.swing.JButton
 import javax.swing.JOptionPane
 import javax.swing.JPanel
@@ -38,9 +37,9 @@ import javax.swing.JToolBar
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Utilities
-
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.core.Interpreter
 import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.StagingMode
@@ -54,8 +53,6 @@ import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.FutureResult
 import net.kogics.kojo.util.RichFile.enrichFile
 import net.kogics.kojo.xscala.Builtins
-import net.kogics.kojo.xscala.KojoInterpreter
-
 import util.Utils
 
 class CodeExecutionSupport(
@@ -82,7 +79,7 @@ class CodeExecutionSupport(
   System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
   val outputPane = new OutputPane(this)
   doWelcome()
-  
+
   val commandHistory = CommandHistory()
   val historyManager = new HistoryManager
 
@@ -236,7 +233,7 @@ class CodeExecutionSupport(
       @volatile var suppressInterpOutput = false
       @volatile var astStopPhase = "typer"
 
-      def initInterp(interp: KojoInterpreter) {
+      def initInterp(interp: Interpreter) {
         interp.bind("predef", "net.kogics.kojo.lite.CodeExecutionSupport", CodeExecutionSupport.this)
         interp.interpret("val builtins = predef.builtins")
         interp.interpret("import builtins._")

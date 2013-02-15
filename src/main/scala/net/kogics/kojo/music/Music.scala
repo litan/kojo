@@ -18,7 +18,6 @@ package music
 
 import org.jfugue.{Rhythm => JFRhythm, _}
 import util.Utils
-import net.kogics.kojo.lite.canvas.SpriteCanvas
 
 object Music {
   def apply(mString: String) = new Music(new Pattern(mString))

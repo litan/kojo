@@ -16,8 +16,8 @@
 package net.kogics.kojo.core
 
 import java.util.concurrent.CountDownLatch
-import net.kogics.kojo.xscala.Builtins
-import net.kogics.kojo.xscala.KojoInterpreter
+
+import scala.tools.nsc.interpreter.Results
 
 trait CodeRunner {
   def interruptInterpreter(): Unit
@@ -38,8 +38,20 @@ trait CodeRunner {
   def runContext: RunContext
 }
 
+object Interpreter {
+  type Settings = scala.tools.nsc.Settings
+  val IR = Results
+}
+
+
+trait Interpreter {
+  import Interpreter._
+  def bind(name: String, boundType: String, value: Any): IR.Result
+  def interpret(code: String): IR.Result
+}
+
 trait RunContext {
-  def initInterp(interp: KojoInterpreter)
+  def initInterp(interp: Interpreter)
   def onInterpreterInit(): Unit
   def onInterpreterStart(code: String): Unit
   def onRunError(): Unit

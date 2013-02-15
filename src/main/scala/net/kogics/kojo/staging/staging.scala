@@ -39,7 +39,7 @@ import net.kogics.kojo.core.Turtle
 import language.implicitConversions
 import language.postfixOps
 
-private object Impl {
+object Impl {
   @volatile var canvas: SpriteCanvas = _
   @volatile var turtle0: Turtle = _
   @volatile var figure0: Figure = _

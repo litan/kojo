@@ -1,27 +1,17 @@
-/*
- * Copyright (C) 2012 Lalit Pant <pant.lalit@gmail.com>
- *
- * The contents of this file are subject to the GNU General Public License
- * Version 3 (the "License"); you may not use this file
- * except in compliance with the License. You may obtain a copy of
- * the License at http://www.gnu.org/copyleft/gpl.html
- *
- * Software distributed under the License is distributed on an "AS
- * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
- * implied. See the License for the specific language governing
- * rights and limitations under the License.
- *
- */
-
 package net.kogics.kojo
+package lite
 
-import net.kogics.kojo.lite.canvas.SpriteCanvas
 import javax.swing.JFrame
 import java.awt.Color
-import net.kogics.kojo.lite.TopCs
+import net.kogics.kojo.core.NoopSpriteListener
 
-class KojoTestContext extends core.KojoCtx {
-  def topcs: TopCs = null
+class NoOpKojoCtx extends core.KojoCtx {
+  def activityListener = NoopSpriteListener
+  def canvasLocation = null
+  def fullScreenCanvasAction() = null
+  def fullScreenOutputAction()= null
+  def setStorytellerWidth(width: Int) {}
+  def stopActivity() {}   
   def activateDrawingCanvasHolder() {}
   def activateDrawingCanvas() {}
   def activateScriptEditor() {}
@@ -33,7 +23,6 @@ class KojoTestContext extends core.KojoCtx {
   def make3DCanvasVisible() {}
   def baseDir: String = System.getProperty("user.dir")
   def stopInterpreter() {}
-  def stopAnimation() {}
   def stopStory() {}
   def scrollOutputToEnd() {}
   def frame: JFrame = null
@@ -44,7 +33,6 @@ class KojoTestContext extends core.KojoCtx {
   var llsdir = ""
   def getLastLoadStoreDir() = llsdir
   def setLastLoadStoreDir(dir: String) {llsdir = dir}
-  def saveAsFile() {}
   def drawingCanvasActivated() {}
   def mwActivated(){}
   def d3Activated() {}
@@ -73,11 +61,3 @@ class KojoTestContext extends core.KojoCtx {
   def formatSource() {}
   var fps = 50
 }
-
-class KojoTestBase {
-  val kojoTestCtx = new KojoTestContext
-  SpriteCanvas.initedInstance(kojoTestCtx)
-  mathworld.GeoGebraCanvas.initedInstance(kojoTestCtx)
-  story.StoryTeller.initedInstance(kojoTestCtx)
-}
-

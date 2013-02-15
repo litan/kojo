@@ -17,14 +17,15 @@ package net.kogics.kojo.core
 
 import java.awt.Color
 
-import javax.swing.Action
 import javax.swing.JFrame
+
+import net.kogics.kojo.action.FullScreenBaseAction
 
 trait KojoCtx {
   def activityListener: SpriteListener
   def canvasLocation: java.awt.Point
-  def fullScreenCanvasAction(): Action
-  def fullScreenOutputAction(): Action
+  def fullScreenCanvasAction(): FullScreenBaseAction
+  def fullScreenOutputAction(): FullScreenBaseAction
   def setStorytellerWidth(width: Int): Unit
   def activateDrawingCanvasHolder()
   def activateDrawingCanvas()

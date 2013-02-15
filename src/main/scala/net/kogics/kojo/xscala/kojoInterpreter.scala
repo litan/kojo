@@ -17,13 +17,9 @@ package net.kogics.kojo.xscala
 
 import scala.tools.nsc.interpreter._
 import java.io.PrintWriter
+import net.kogics.kojo.core.Interpreter
 
-object KojoInterpreter {
-  type Settings = scala.tools.nsc.Settings
-  val IR = Results
-}
-
-class KojoInterpreter(settings: KojoInterpreter.Settings, out: PrintWriter) extends StoppableCodeRunner {
+class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends StoppableCodeRunner with Interpreter {
   val interp = new IMain(settings, out) {
     override protected def parentClassLoader = classOf[KojoInterpreter].getClassLoader
   }
