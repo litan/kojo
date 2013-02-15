@@ -22,15 +22,15 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import net.kogics.kojo.core.KojoCtx;
-import net.kogics.kojo.lite.CodeExecutionSupport;
+import net.kogics.kojo.lite.EditorFileSupport;
 
 public final class LoadFrom implements ActionListener {
 	private KojoCtx ctx;
-    private CodeExecutionSupport ces;
+    private EditorFileSupport fileSupport;
 
-	public LoadFrom(CodeExecutionSupport ces) {
-        this.ces = ces;
-        this.ctx = ces.kojoCtx();
+	public LoadFrom(EditorFileSupport fileSupport) {
+        this.fileSupport = fileSupport;
+        this.ctx = fileSupport.kojoCtx();
 	}
 	
     public void actionPerformed(ActionEvent e) {
@@ -53,8 +53,8 @@ public final class LoadFrom implements ActionListener {
             if (returnVal == JFileChooser.APPROVE_OPTION) {
     			File selectedFile = chooser.getSelectedFile();
                 ctx.setLastLoadStoreDir(selectedFile.getParent());
-                ces.closeFileAndClrEditor();
-                ces.openFileWithoutClose(selectedFile);
+                fileSupport.closeFileAndClrEditor();
+                fileSupport.openFileWithoutClose(selectedFile);
             }
         } catch (RuntimeException ex) {
             // ignore user cancel

@@ -17,21 +17,20 @@ package net.kogics.kojo.action;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import net.kogics.kojo.core.KojoCtx;
-import net.kogics.kojo.lite.CodeExecutionSupport;
+import net.kogics.kojo.lite.EditorFileSupport;
 
 public final class Save implements ActionListener {
-    private CodeExecutionSupport ces;
+    private EditorFileSupport fileSupport;
 	SaveAs saveAs;
 
-	public Save(CodeExecutionSupport ces) {
-        this.ces = ces;
-	    saveAs = new SaveAs(ces);
+	public Save(EditorFileSupport fileSupport) {
+        this.fileSupport = fileSupport;
+	    saveAs = new SaveAs(fileSupport);
 	}
 
     public void actionPerformed(ActionEvent e) {
-        if (ces.hasOpenFile()) {
-            ces.saveFile();
+        if (fileSupport.hasOpenFile()) {
+            fileSupport.saveFile();
         } else {
             saveAs.actionPerformed(e);
         }

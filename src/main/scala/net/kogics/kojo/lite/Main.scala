@@ -160,7 +160,7 @@ object Main extends AppMenu with ScriptLoader { main =>
   
   def appExit() {
     try {
-      codeSupport.closing()
+      scriptEditorH.se.closing()
       frame.dispose()
       System.exit(0)
     }

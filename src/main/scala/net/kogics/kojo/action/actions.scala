@@ -30,6 +30,7 @@ import javax.swing.JComponent
 import javax.swing.JFrame
 
 import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.lite.EditorFileSupport
 import net.kogics.kojo.lite.topc.BaseHolder
 import net.kogics.kojo.util.Utils
 
@@ -69,14 +70,14 @@ object CloseFile {
   }
 }
 
-class CloseFile(codeSupport: CodeExecutionSupport)
+class CloseFile(fileSupport: EditorFileSupport)
   extends AbstractAction(Utils.loadString("S_Close"), Utils.loadIcon("/images/extra/close.gif")) {
   setEnabled(false)
   CloseFile.action = this
 
   def actionPerformed(e: ActionEvent) {
     try {
-      codeSupport.closeFileAndClrEditor()
+      fileSupport.closeFileAndClrEditor()
     }
     catch {
       case e: RuntimeException => // user cancelled
@@ -84,14 +85,14 @@ class CloseFile(codeSupport: CodeExecutionSupport)
   }
 }
 
-class NewFile(codeSupport: CodeExecutionSupport)
+class NewFile(fileSupport: EditorFileSupport)
   extends AbstractAction(Utils.loadString("S_New"), Utils.loadIcon("/images/extra/new.gif")) {
 
-  val saveAs = new SaveAs(codeSupport)
+  val saveAs = new SaveAs(fileSupport)
 
   def actionPerformed(e: ActionEvent) {
     try {
-      codeSupport.closeFileAndClrEditor()
+      fileSupport.closeFileAndClrEditor()
       saveAs.actionPerformed(e);
     }
     catch {

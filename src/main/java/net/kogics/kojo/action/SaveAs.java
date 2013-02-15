@@ -18,16 +18,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import net.kogics.kojo.lite.CodeExecutionSupport;
+import net.kogics.kojo.lite.EditorFileSupport;
 import net.kogics.kojo.util.FileChooser;
 
 public final class SaveAs implements ActionListener {
-    private CodeExecutionSupport ces;
+    private EditorFileSupport fileSupport;
     FileChooser fileChooser;
 
-    public SaveAs(CodeExecutionSupport ces) {
-        this.ces = ces;
-        this.fileChooser = new FileChooser(ces.kojoCtx());
+    public SaveAs(EditorFileSupport fileSupport) {
+        this.fileSupport = fileSupport;
+        this.fileChooser = new FileChooser(fileSupport.kojoCtx());
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -36,8 +36,8 @@ public final class SaveAs implements ActionListener {
 
         if (selectedFile != null) {
             try {
-                ces.saveAs(selectedFile);
-                ces.openFileWithoutClose(selectedFile);
+                fileSupport.saveAs(selectedFile);
+                fileSupport.openFileWithoutClose(selectedFile);
             }
             catch (IllegalArgumentException ex) {
                 // user said no to over-writing selected file
