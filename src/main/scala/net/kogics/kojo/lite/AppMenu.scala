@@ -341,7 +341,7 @@ trait AppMenu { self: Main.type =>
         aboutText.setEditable(false)
         aboutText.setText(s"""<html><body>
 <div style="font-size: 12pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
-              <strong>Kojo</strong> 2.0 Beta<br/>
+              <strong>Kojo</strong> ${Versions.KojoMajorVersion}<br/>
               Version: ${Versions.KojoVersion} <br/>
               <em>Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}</em> <br/><br/>
               Copyright &copy; 2009-2013 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
