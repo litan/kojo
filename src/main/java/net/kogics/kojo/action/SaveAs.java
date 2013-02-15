@@ -18,69 +18,39 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import net.kogics.kojo.core.KojoCtx;
 import net.kogics.kojo.lite.CodeExecutionSupport;
+import net.kogics.kojo.util.FileChooser;
 
 public final class SaveAs implements ActionListener {
-	private KojoCtx ctx;
-	private CodeExecutionSupport ces;
+    private CodeExecutionSupport ces;
+    FileChooser fileChooser;
 
-	public SaveAs(KojoCtx ctx) {
-		this.ctx = ctx;
-		this.ces = ctx.codeSupport();
-	}
+    public SaveAs(CodeExecutionSupport ces) {
+        this.ces = ces;
+        this.fileChooser = new FileChooser(ces.kojoCtx());
+    }
 
-	public File chooseFile(String desc, String ext, String title) {
-		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(desc, ext);
-		chooser.setFileFilter(filter);
-		chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		chooser.setDialogTitle(title);
+    public void actionPerformed(ActionEvent e) {
+        File selectedFile = fileChooser.chooseFile("Kojo Files", "kojo",
+                net.kogics.kojo.util.Utils.stripDots(e.getActionCommand()));
 
-		String loadDir = ctx.getLastLoadStoreDir();
-		if (loadDir != null && loadDir != "") {
-			File dir = new File(loadDir);
-			if (dir.exists() && dir.isDirectory()) {
-				chooser.setCurrentDirectory(dir);
-			}
-		}
-
-		int returnVal = chooser.showSaveDialog(ctx.frame());
-
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			ctx.setLastLoadStoreDir(chooser.getSelectedFile().getParent());
-			File selectedFile = chooser.getSelectedFile();
-			if (!selectedFile.getName().contains(".")) {
-				selectedFile = new File(selectedFile.getAbsolutePath() + "."
-						+ ext);
-			}
-			return selectedFile;
-		} else {
-			return null;
-		}
-	}
-
-	public void actionPerformed(ActionEvent e) {
-
-		File selectedFile = chooseFile("Kojo Files", "kojo",
-				net.kogics.kojo.util.Utils.stripDots(e.getActionCommand()));
-
-		if (selectedFile != null) {
-			try {
-				ces.saveAs(selectedFile);
-				ces.openFileWithoutClose(selectedFile);
-			} catch (IllegalArgumentException ex) {
-				// user said no to over-writing selected file
-				// try again
-				actionPerformed(e);
-			} catch (RuntimeException ex) {
-				// user cancelled save
-			} catch (Throwable t) {
-                System.out.println(String.format("Unable to save file: %s", t.getMessage()));
-            }			
-		}
-	}
+        if (selectedFile != null) {
+            try {
+                ces.saveAs(selectedFile);
+                ces.openFileWithoutClose(selectedFile);
+            }
+            catch (IllegalArgumentException ex) {
+                // user said no to over-writing selected file
+                // try again
+                actionPerformed(e);
+            }
+            catch (RuntimeException ex) {
+                // user cancelled save
+            }
+            catch (Throwable t) {
+                System.out.println(String.format("Unable to save file: %s",
+                        t.getMessage()));
+            }
+        }
+    }
 }

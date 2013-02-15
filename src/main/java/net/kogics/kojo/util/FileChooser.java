@@ -19,26 +19,44 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import net.kogics.kojo.core.KojoCtx;
+
 public final class FileChooser {
+    KojoCtx ctx;
+
+    public FileChooser(KojoCtx ctx) {
+        this.ctx = ctx;
+    }
 
     public File chooseFile(String desc, String ext, String title) {
         JFileChooser chooser = new JFileChooser();
-        FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                desc, ext);
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(desc, ext);
         chooser.setFileFilter(filter);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setDialogTitle(title);
 
-        int returnVal = chooser.showSaveDialog(null);
+        String loadDir = ctx.getLastLoadStoreDir();
+        if (loadDir != null && loadDir != "") {
+            File dir = new File(loadDir);
+            if (dir.exists() && dir.isDirectory()) {
+                chooser.setCurrentDirectory(dir);
+            }
+        }
+
+        int returnVal = chooser.showSaveDialog(ctx.frame());
 
         if (returnVal == JFileChooser.APPROVE_OPTION) {
+            ctx.setLastLoadStoreDir(chooser.getSelectedFile().getParent());
             File selectedFile = chooser.getSelectedFile();
-            if (!selectedFile.getName().endsWith("." + ext)) {
-                selectedFile = new File(selectedFile.getAbsolutePath() + "." + ext);
+            if (!selectedFile.getName().contains(".")) {
+                selectedFile = new File(selectedFile.getAbsolutePath() + "."
+                        + ext);
             }
             return selectedFile;
-        } else {
+        }
+        else {
             return null;
         }
     }
+
 }

@@ -84,14 +84,14 @@ class CloseFile(codeSupport: CodeExecutionSupport)
   }
 }
 
-class NewFile(ctx: KojoCtx)
+class NewFile(codeSupport: CodeExecutionSupport)
   extends AbstractAction(Utils.loadString("S_New"), Utils.loadIcon("/images/extra/new.gif")) {
 
-  val saveAs = new SaveAs(ctx)
+  val saveAs = new SaveAs(codeSupport)
 
   def actionPerformed(e: ActionEvent) {
     try {
-      ctx.codeSupport.closeFileAndClrEditor()
+      codeSupport.closeFileAndClrEditor()
       saveAs.actionPerformed(e);
     }
     catch {

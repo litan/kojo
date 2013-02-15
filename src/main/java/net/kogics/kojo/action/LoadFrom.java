@@ -28,9 +28,9 @@ public final class LoadFrom implements ActionListener {
 	private KojoCtx ctx;
     private CodeExecutionSupport ces;
 
-	public LoadFrom(KojoCtx ctx) {
-		this.ctx = ctx;
-        this.ces = ctx.codeSupport();
+	public LoadFrom(CodeExecutionSupport ces) {
+        this.ces = ces;
+        this.ctx = ces.kojoCtx();
 	}
 	
     public void actionPerformed(ActionEvent e) {

@@ -21,14 +21,12 @@ import net.kogics.kojo.core.KojoCtx;
 import net.kogics.kojo.lite.CodeExecutionSupport;
 
 public final class Save implements ActionListener {
-	private KojoCtx ctx;
     private CodeExecutionSupport ces;
 	SaveAs saveAs;
 
-	public Save(KojoCtx ctx) {
-		this.ctx = ctx;
-        this.ces = ctx.codeSupport();
-	    saveAs = new SaveAs(ctx);
+	public Save(CodeExecutionSupport ces) {
+        this.ces = ces;
+	    saveAs = new SaveAs(ces);
 	}
 
     public void actionPerformed(ActionEvent e) {
