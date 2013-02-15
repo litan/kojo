@@ -73,7 +73,7 @@ def sålänge(villkor : => Boolean)(block : => Unit){
 }
 //simple IO
 def utdata(data:Any) = println(data)
-def indata(ledtext:String="") = ctx.readInput(ledtext)
+def indata(ledtext:String="") = readln(ledtext)
 //math functions
 def avrunda(tal:Number, antalDecimaler:Int=0):Double = {
   val faktor = math.pow(10, antalDecimaler).toDouble
