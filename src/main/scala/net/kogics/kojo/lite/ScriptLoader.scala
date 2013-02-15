@@ -17,7 +17,7 @@ trait ScriptLoader { self: Main.type =>
       catch {
         case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
       }
-      scriptEditorH.activate()
+      scriptEditorHolder.activate()
     }
   }
 
@@ -47,6 +47,6 @@ trait ScriptLoader { self: Main.type =>
     catch {
       case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
     }
-    scriptEditorH.activate()
+    scriptEditorHolder.activate()
   }
 }
