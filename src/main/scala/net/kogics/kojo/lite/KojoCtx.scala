@@ -47,7 +47,6 @@ class KojoCtx extends core.KojoCtx {
 
   var topcs: TopCs = _
   var frame: JFrame = _
-  var saveAsActionListener: ActionListener = _
   var execSupport: CodeExecutionSupport = _
   var storyTeller: StoryTeller = _
   var control: CControl = _
@@ -274,10 +273,6 @@ class KojoCtx extends core.KojoCtx {
   def setLastLoadStoreDir(dir: String) {
     lastLoadStoreDir = dir
     prefs.put("lastLoadStoreDir", lastLoadStoreDir)
-  }
-
-  def saveAsFile() {
-    saveAsActionListener.actionPerformed(new ActionEvent(frame, 0, "Save As"))
   }
 
   @volatile var _lastColor = new Color(Integer.parseInt(prefs.get("lastColor", Integer.toString(Color.red.getRGB()))), true)
