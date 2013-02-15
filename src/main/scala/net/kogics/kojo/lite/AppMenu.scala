@@ -81,26 +81,27 @@ trait AppMenu { self: Main.type =>
       }
     })
 
-    fileMenu.add(new JMenuItem(new NewFile(codeSupport)))
+    val scriptEditor = scriptEditorH.se
+    fileMenu.add(new JMenuItem(new NewFile(scriptEditor)))
 
     val openFile = new JMenuItem(Utils.loadString("S_Open"))
-    openFile.addActionListener(new LoadFrom(codeSupport))
+    openFile.addActionListener(new LoadFrom(scriptEditor))
     openFile.setIcon(Utils.loadIcon("/images/extra/open.gif"))
     fileMenu.add(openFile)
 
     val saveFile = new JMenuItem(Utils.loadString("S_Save"))
-    saveFile.addActionListener(new Save(codeSupport))
+    saveFile.addActionListener(new Save(scriptEditor))
     saveFile.setIcon(Utils.loadIcon("/images/extra/save.gif"))
     saveFile.setAccelerator(KeyStroke.getKeyStroke("control S"))
     fileMenu.add(saveFile)
 
-    val saveAsActionListener = new SaveAs(codeSupport)
+    val saveAsActionListener = new SaveAs(scriptEditor)
     val saveAsFile = new JMenuItem(Utils.loadString("S_SaveAs"))
     saveAsFile.addActionListener(saveAsActionListener)
     saveAsFile.setIcon(Utils.loadIcon("/images/extra/saveas.gif"))
     fileMenu.add(saveAsFile)
 
-    fileMenu.add(new JMenuItem(new CloseFile(codeSupport)))
+    fileMenu.add(new JMenuItem(new CloseFile(scriptEditor)))
 
     fileMenu.add(openWeb)
 

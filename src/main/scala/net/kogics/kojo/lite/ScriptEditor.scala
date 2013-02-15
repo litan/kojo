@@ -61,7 +61,7 @@ import javax.swing.event.DocumentListener
 import javax.swing.event.DocumentEvent
 import java.awt.event.KeyAdapter
 
-class ScriptEditor(codeSupport: CodeExecutionSupport, frame: JFrame) extends JPanel {
+class ScriptEditor(val codeSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
 
   val codePane = new RSyntaxTextArea(5, 80)
   val statusStrip = new StatusStrip()
@@ -329,7 +329,7 @@ class ScriptEditor(codeSupport: CodeExecutionSupport, frame: JFrame) extends JPa
   val clearAction = new AbstractAction(Utils.loadString("S_ClearEditor"), Utils.loadIcon("/images/clears.png")) {
     putValue(Action.ACCELERATOR_KEY, ctrlL)
     def actionPerformed(ev: ActionEvent) {
-      codeSupport.closeFileAndClrEditorIgnoringCancel()
+      closeFileAndClrEditorIgnoringCancel()
     }
   }
   val clearItem = new JMenuItem(clearAction)
@@ -421,7 +421,7 @@ class ScriptEditor(codeSupport: CodeExecutionSupport, frame: JFrame) extends JPa
           codeSupport.loadCodeFromHistoryPrev()
           codePane.requestFocusInWindow()
         case ClearEditor =>
-          codeSupport.closeFileAndClrEditorIgnoringCancel()
+          closeFileAndClrEditorIgnoringCancel()
         case ClearOutput =>
           codeSupport.clrOutput()
         case UploadCommand =>
