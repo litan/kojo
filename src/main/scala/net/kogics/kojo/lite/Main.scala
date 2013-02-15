@@ -35,9 +35,7 @@ import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.theme.ThemeMap
 import net.kogics.kojo.turtle.TurtleWorldAPI
 
-object Main extends AppMenu { main =>
-  System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
-
+object Main extends AppMenu with ScriptLoader { main =>
   @volatile var codePane: RSyntaxTextArea = _
   @volatile var scriptEditorH: ScriptEditorHolder = _
   @volatile var frame: JFrame = _
@@ -45,83 +43,8 @@ object Main extends AppMenu { main =>
   @volatile var codeSupport: CodeExecutionSupport = _
   @volatile var kojoCtx: KojoCtx = _
 
-  def setupLogging() {
-    val userHome = System.getProperty("user.home")
-    val logDir = new File(s"$userHome/.kojo/lite/log/")
-    if (!logDir.exists()) {
-      logDir.mkdirs()
-    }
-    val logPath = List(userHome, ".kojo", "lite", "log", "kojo0.log").mkString(File.separator)
-    System.err.println(s"Logging has been redirected to: $logPath")
-    val rootLogger = Logger.getLogger("")
-    val logHandler = new FileHandler("%h/.kojo/lite/log/kojo%g.log", 1 * 1024 * 1024, 6, false)
-    logHandler.setFormatter(new SimpleFormatter())
-    logHandler.setLevel(Level.INFO)
-    rootLogger.removeHandler(rootLogger.getHandlers()(0))
-    rootLogger.setLevel(Level.INFO)
-    rootLogger.addHandler(logHandler)
-  }
-
-  def appExit() {
-    try {
-      codeSupport.closing()
-      frame.dispose()
-      System.exit(0)
-    }
-    catch {
-      case rte: RuntimeException =>
-    }
-  }
-
-  def _loadUrl(url: String)(postfn: => Unit = {}) {
-    codePane.setText("// Loading code from URL: %s ...\n" format (url))
-    Utils.runAsyncMonitored {
-      try {
-        val code = Utils.readUrl(url)
-        Utils.runInSwingThread {
-          codePane.setText(Utils.stripCR(code))
-          codePane.setCaretPosition(0)
-          postfn
-        }
-
-      }
-      catch {
-        case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
-      }
-      scriptEditorH.activate()
-    }
-  }
-
-  def loadUrl(url: String) = _loadUrl(url) {}
-
-  def loadAndRunUrl(url: String, onStartup: Boolean = false) = _loadUrl(url) {
-    if (!url.startsWith("http://www.kogics.net/public/kojolite/samples/") && codePane.getText.toLowerCase.contains("file")) {
-      codePane.insert("// Loaded code from URL: %s\n// ** Not running it automatically ** because it references files.\n// Look carefully at the code before running it.\n\n" format (url), 0)
-      codePane.setCaretPosition(0)
-    }
-    else {
-      val msg2 = if (onStartup) "\n// Please wait, this might take a few seconds as Kojo starts up..." else ""
-      codePane.insert("// Running code loaded from URL: %s%s\n\n" format (url, msg2), 0)
-      codePane.setCaretPosition(0)
-      codeSupport.runCode()
-    }
-  }
-
-  def loadAndRunResource(res: String) = {
-    try {
-      codePane.setText("")
-      val code = Utils.loadResource(res)
-      codePane.setText(Utils.stripCR(code))
-      codePane.setCaretPosition(0)
-      codeSupport.runCode()
-    }
-    catch {
-      case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
-    }
-    scriptEditorH.activate()
-  }
-
   def main(args: Array[String]): Unit = {
+    System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
     System.setSecurityManager(null)
     kojoCtx = new KojoCtx // context needs to be created right up front to set user language
     Utils.kojoCtx = kojoCtx
@@ -168,7 +91,7 @@ object Main extends AppMenu { main =>
       val fuguePlayer = new FuguePlayer {
         val kojoCtx = main.kojoCtx
       }
-      
+
       var scriptEditor: ScriptEditor = null
       codeSupport = new CodeExecutionSupport(
         TSCanvas,
@@ -238,6 +161,34 @@ object Main extends AppMenu { main =>
     val sysProps =
       System.getProperties.toList.sorted.foldLeft(new StringBuilder) { case (sb, kv) => sb append s"\n${kv._1} = ${kv._2}" }
     Log.info(s"System Properties:${sysProps}\n\n")
+  }
+  
+  def appExit() {
+    try {
+      codeSupport.closing()
+      frame.dispose()
+      System.exit(0)
+    }
+    catch {
+      case rte: RuntimeException =>
+    }
+  }
+
+  def setupLogging() {
+    val userHome = System.getProperty("user.home")
+    val logDir = new File(s"$userHome/.kojo/lite/log/")
+    if (!logDir.exists()) {
+      logDir.mkdirs()
+    }
+    val logPath = List(userHome, ".kojo", "lite", "log", "kojo0.log").mkString(File.separator)
+    System.err.println(s"Logging has been redirected to: $logPath")
+    val rootLogger = Logger.getLogger("")
+    val logHandler = new FileHandler("%h/.kojo/lite/log/kojo%g.log", 1 * 1024 * 1024, 6, false)
+    logHandler.setFormatter(new SimpleFormatter())
+    logHandler.setLevel(Level.INFO)
+    rootLogger.removeHandler(rootLogger.getHandlers()(0))
+    rootLogger.setLevel(Level.INFO)
+    rootLogger.addHandler(logHandler)
   }
 
   def runMultiInstancehandler() {
