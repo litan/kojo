@@ -110,7 +110,7 @@ class CodeExecutionSupport(
 
   @volatile var showCode = false
   @volatile var verboseOutput = false
-  setSpriteListener()
+  setActivityListener()
 
   class OutputWindowWriter extends Writer {
     override def write(s: String) {
@@ -450,8 +450,8 @@ class CodeExecutionSupport(
 
   def isRunningEnabled = runButton.isEnabled
 
-  def setSpriteListener() {
-    tCanvas.setTurtleListener(new core.AbstractSpriteListener {
+  def setActivityListener() {
+    kojoCtx.setActivityListener(new core.AbstractSpriteListener {
       def interpreterDone = runButton.isEnabled
       override def hasPendingCommands {
         pendingCommands = true

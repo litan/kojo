@@ -30,6 +30,7 @@ import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.mode.ExtendedMode
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.core.SpriteListener
+import net.kogics.kojo.core.DelegatingSpriteListener
 
 class KojoCtx extends core.KojoCtx {
 
@@ -50,7 +51,10 @@ class KojoCtx extends core.KojoCtx {
   @volatile var fps = 50
   @volatile var stagingAPI: staging.API = _
   
-  var canvasListener: SpriteListener = _
+  val activityListener = new DelegatingSpriteListener
+  def setActivityListener(l: SpriteListener) {
+    activityListener.setRealListener(l)
+  }
 
   def switchToDefaultPerspective() {
     val grid = new CGrid(control)

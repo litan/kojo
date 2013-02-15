@@ -121,7 +121,6 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
     override def componentResized(e: ComponentEvent) = initCamera()
   })
 
-  val megaListener = new DelegatingSpriteListener
   val figure = newFigure()
   @volatile var turtle = newTurtle()
   val pictures = new PLayer
@@ -600,9 +599,9 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
       puzzlers.foreach { t => t.stop }
       turtles.foreach { t => t.stop }
       figures.foreach { f => f.stop }
-      megaListener.pendingCommandsDone()
+      kojoCtx.activityListener.pendingCommandsDone()
       Utils.schedule(0.5) {
-        megaListener.pendingCommandsDone()
+        kojoCtx.activityListener.pendingCommandsDone()
       }
     }
   }
@@ -614,7 +613,7 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
   def newFigure(x: Int = 0, y: Int = 0) = {
     val fig = Utils.runInSwingThreadAndWait {
       val f = Figure(this, x, y)
-      f.setSpriteListener(megaListener)
+      f.setSpriteListener(kojoCtx.activityListener)
       figures = f :: figures
       f
     }
@@ -648,10 +647,6 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
     }
     this.repaint()
     pzl
-  }
-
-  def setTurtleListener(l: SpriteListener) {
-    megaListener.setRealListener(l)
   }
 
   def onKeyPress(fn: Int => Unit) = Utils.runInSwingThread {
