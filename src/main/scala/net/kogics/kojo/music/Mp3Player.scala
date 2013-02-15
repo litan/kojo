@@ -209,7 +209,7 @@ trait Mp3Player {
   }
 }
 
-abstract class KMp3 extends Mp3Player {
+class KMp3(val kojoCtx: KojoCtx) extends Mp3Player {
   val pumpEvents = true
   def showError(msg: String) = println(msg)
 }

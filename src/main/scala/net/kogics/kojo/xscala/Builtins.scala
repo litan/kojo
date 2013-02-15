@@ -435,9 +435,7 @@ Here's a partial list of the available commands:
   def isMusicPlaying = fuguePlayer.isMusicPlaying
   def stopMp3() = mp3player.stopMp3()
   def stopMusic() = fuguePlayer.stopMusic()
-  def newMp3Player = new music.KMp3() {
-    val kojoCtx = builtins.kojoCtx
-  }
+  def newMp3Player = new music.KMp3(kojoCtx) 
   def onAnimationStop(fn: => Unit) = Staging.onAnimationStop(fn)
   def addCodeTemplates(lang: String, templates: Map[String, String]) {
     CodeCompletionUtils.addTemplates(lang, templates)
