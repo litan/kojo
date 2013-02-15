@@ -242,6 +242,39 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     pgTransform.transform(_picGeom)
   }
 
+  def distanceTo(other: Picture) = Utils.runInSwingThreadAndPause {
+    picGeom.distance(other.picGeom)
+  }
+
+  def toPolygon(g: Geometry) = {
+    val gc = g.getCoordinates
+    val ab = new ArrayBuffer[Coordinate]
+    ab ++= gc
+    ab += gc(0)
+    Gf.createPolygon(Gf.createLinearRing(ab.toArray), null)
+  }
+
+  def area = Utils.runInSwingThreadAndPause {
+    toPolygon(picGeom).getArea
+  }
+
+  def perimeter = Utils.runInSwingThreadAndPause {
+    picGeom.getLength
+  }
+
+  def myCanvas = canvas
+}
+
+trait CorePicOps2 { self: Picture =>
+  def act(fn: Picture => Unit) {
+    if (!isDrawn) {
+      throw new IllegalStateException("Ask picture to act after you draw it.")
+    }
+    canvas.animate {
+      fn(this)
+    }
+  }
+  
   def intersects(other: Picture) = Utils.runInSwingThreadAndPause {
     if (this == other) {
       false
@@ -270,42 +303,6 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     }
     else {
       Gf.createGeometryCollection(null)
-    }
-  }
-
-  def distanceTo(other: Picture) = Utils.runInSwingThreadAndPause {
-    picGeom.distance(other.picGeom)
-  }
-
-  def toPolygon(g: Geometry) = {
-    val gc = g.getCoordinates
-    val ab = new ArrayBuffer[Coordinate]
-    ab ++= gc
-    ab += gc(0)
-    Gf.createPolygon(Gf.createLinearRing(ab.toArray), null)
-  }
-
-  def area = Utils.runInSwingThreadAndPause {
-    toPolygon(picGeom).getArea
-  }
-
-  def perimeter = Utils.runInSwingThreadAndPause {
-    picGeom.getLength
-  }
-
-  def myCanvas = canvas
-}
-
-trait CorePicOps2 { self: Picture =>
-  // TODO: Cleanup - need to get intersection methods in here too
-  // they follow same pattern with respect to transforms
-  // And we need to get rid of the cast below
-  def act(fn: Picture => Unit) {
-    if (!isDrawn) {
-      throw new IllegalStateException("Ask picture to act after you draw it.")
-    }
-    canvas.asInstanceOf[SpriteCanvas].figure0.refresh {
-      fn(this)
     }
   }
 }

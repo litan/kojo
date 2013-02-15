@@ -29,13 +29,11 @@ import java.awt.event.InputEvent
 import java.awt.geom.Point2D
 import java.io.File
 import java.util.logging.Logger
-
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
-
 import net.kogics.kojo.action.FullScreenCanvasAction
 import net.kogics.kojo.action.FullScreenSupport
 import net.kogics.kojo.action.SaveAs
@@ -48,7 +46,6 @@ import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.SpriteListener
 import net.kogics.kojo.core.UnitLen
-
 import edu.umd.cs.piccolo.PCanvas
 import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.PNode
@@ -64,6 +61,8 @@ import edu.umd.cs.piccolo.util.PPaintContext
 import figure.Figure
 import turtle.Turtle
 import util.Utils
+import java.util.concurrent.Future
+import edu.umd.cs.piccolo.activities.PActivity
 
 class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
   val Log = Logger.getLogger(getClass.getName);
@@ -719,6 +718,8 @@ class SpriteCanvas(val kojoCtx: KojoCtx) extends PCanvas with SCanvas {
     val paint = new GradientPaint(0, bounds.y.toFloat, c1, 0, (bounds.y + bounds.height).toFloat, c2)
     setCanvasBackground(paint)
   }
+  
+  def animate(fn: => Unit): Future[PActivity] = figure0.refresh(fn)
 
   import core.Picture
   val noPic = picture.Pic { t =>

@@ -90,7 +90,6 @@ class CodeExecutionSupport(
   storyTeller.outputFn = showOutput _
 
   @volatile var pendingCommands = false
-  @volatile var runMonitor: RunMonitor = new NoOpRunMonitor()
   @volatile var codePane: JTextArea = _
   @volatile var startingUp = true
 
@@ -261,7 +260,6 @@ class CodeExecutionSupport(
         showNormalCursor()
         enableRunButton(false)
         stopButton.setEnabled(true)
-        runMonitor.onRunStart()
       }
 
       def onCompileStart() {
@@ -328,7 +326,6 @@ class CodeExecutionSupport(
 
       def kprintln(outText: String) {
         showOutput(outText)
-        runMonitor.reportOutput(outText)
       }
 
       def reportOutput(outText: String) {
@@ -341,17 +338,14 @@ class CodeExecutionSupport(
 
       def reportErrorMsg(errMsg: String) {
         showErrorMsg(errMsg)
-        runMonitor.reportOutput(errMsg)
       }
 
       def reportErrorText(errText: String) {
         showErrorText(errText)
-        runMonitor.reportOutput(errText)
       }
 
       def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
         showSmartErrorText(errText, line, column, offset)
-        runMonitor.reportOutput(errText)
       }
 
       private def interpreterDone() = {
@@ -361,7 +355,6 @@ class CodeExecutionSupport(
             stopButton.setEnabled(false)
           }
         }
-        runMonitor.onRunEnd()
       }
 
       def showScriptInOutput() { showCode = true }
@@ -438,8 +431,8 @@ class CodeExecutionSupport(
         runCode()
       }
 
-      def stopAnimation() {
-        CodeExecutionSupport.this.stopAnimation()
+      def stopActivity() {
+        CodeExecutionSupport.this.stopActivity()
       }
 
       def setAstStopPhase(phase: String): Unit = astStopPhase = phase
@@ -528,14 +521,14 @@ class CodeExecutionSupport(
 
   def stopScript() {
     stopInterpreter()
-    stopAnimation()
+    stopActivity()
   }
 
   def stopInterpreter() {
     codeRunner.interruptInterpreter()
   }
 
-  def stopAnimation() {
+  def stopActivity() {
     Utils.stopMonitoredThreads()
     tCanvas.stop()
     fuguePlayer.stopMusic()
@@ -917,13 +910,6 @@ class CodeExecutionSupport(
     }
   }
 
-  def runCodeWithOutputCapture(): String = {
-    runMonitor = new OutputCapturingRunner()
-    val ret = runMonitor.asInstanceOf[OutputCapturingRunner].go()
-    runMonitor = new NoOpRunMonitor()
-    ret
-  }
-
   def activateEditor() = kojoCtx.activateScriptEditor()
 
   @volatile var codingMode: CodingMode = TwMode // default mode for interp
@@ -962,35 +948,4 @@ class CodeExecutionSupport(
   def isD3Active = codingMode == D3Mode
 
   def knownColors = kojoCtx.knownColors
-
-  class OutputCapturingRunner extends RunMonitor {
-    val outputx: StringBuilder = new StringBuilder()
-    val latch = new CountDownLatch(1)
-
-    def reportOutput(outText: String) = captureOutput(outText)
-    def onRunStart() {}
-    def onRunEnd() = latch.countDown()
-
-    def go(): String = {
-      runCode()
-      latch.await()
-      outputx.toString
-    }
-
-    def captureOutput(output: String) {
-      outputx.append(output)
-    }
-  }
-}
-
-trait RunMonitor {
-  def reportOutput(outText: String)
-  def onRunStart()
-  def onRunEnd()
-}
-
-class NoOpRunMonitor extends RunMonitor {
-  def reportOutput(outText: String) {}
-  def onRunStart() {}
-  def onRunEnd() {}
 }

@@ -68,9 +68,8 @@ trait RunContext {
   def insertCodeInline(code: String): Unit
   def insertCodeBlock(code: String): Unit
 
-  def stopAnimation(): Unit
+  def stopActivity(): Unit
   def clickRun(): Unit
-  // TODO: Cleanup - need to test
   def setAstStopPhase(phase: String): Unit
   def astStopPhase: String
 }

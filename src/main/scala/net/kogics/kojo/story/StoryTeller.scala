@@ -251,7 +251,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     sp.revalidate()
     repaint()
 
-    kojoCtx.stopAnimation()
+    kojoCtx.stopActivity()
     stopMp3()
   }
 

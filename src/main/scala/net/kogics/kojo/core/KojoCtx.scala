@@ -35,7 +35,7 @@ trait KojoCtx {
   def make3DCanvasVisible()
   def baseDir: String
   def stopInterpreter(): Unit
-  def stopAnimation(): Unit
+  def stopActivity(): Unit
   def stopStory(): Unit
   def scrollOutputToEnd(): Unit
   def frame: JFrame
