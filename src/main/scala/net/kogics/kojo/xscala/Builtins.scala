@@ -40,8 +40,8 @@ import util.Read
 import util.Throttler
 import util.Utils
 import net.kogics.kojo.lite.canvas.SpriteCanvas
-
 import language.implicitConversions
+import net.kogics.kojo.core.KojoCtx
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {
@@ -57,11 +57,11 @@ class Builtins(
   storyTeller: story.StoryTeller,
   mp3player: music.KMp3,
   fuguePlayer: music.FuguePlayer,
-  tCanvas: SCanvas,
+  kojoCtx: KojoCtx,
   scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
   Builtins.instance = this
   val ctx = scalaCodeRunner.runContext
-  val kojoCtx = tCanvas.kojoCtx
+  val tCanvas = TSCanvas.tCanvas 
 
   type Turtle = core.Turtle
   type Color = java.awt.Color

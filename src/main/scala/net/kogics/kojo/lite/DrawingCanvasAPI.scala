@@ -11,7 +11,7 @@ import net.kogics.kojo.core.UnitLen
 import net.kogics.kojo.util.UserCommand
 
 // Turtle and Staging Canvas
-class DrawingCanvasAPI(tCanvas: SCanvas) extends TSCanvasFeatures {
+class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def turtle0 = tCanvas.turtle0
   override def clear() = tCanvas.clear()
   UserCommand("clear", Nil, "Clears the screen, and brings the turtle to the center of the window.")
