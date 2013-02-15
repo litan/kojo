@@ -19,7 +19,7 @@ import net.kogics.kojo.xscala.Help
 import net.kogics.kojo.xscala.CodeTemplates
 import java.util.logging.Logger
 
-class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends CompletionProviderBase {
+class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends CompletionProviderBase {
   val Log = Logger.getLogger(getClass.getName)
 
   val METHOD = 10
@@ -197,14 +197,14 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
 
     try {
       if (objid.isEmpty) {
-        val (varCompletions, voffset) = codeSupport.varCompletions(prefix)
+        val (varCompletions, voffset) = execSupport.varCompletions(prefix)
         varCompletions.foreach { completion =>
           proposals.add(proposal(caretOffset - voffset, completion,
             VARIABLE,
             methodTemplate(completion)))
         }
 
-        val (memberCompletions, coffset) = codeSupport.memberCompletions(caretOffset, null, prefix)
+        val (memberCompletions, coffset) = execSupport.memberCompletions(caretOffset, null, prefix)
         memberCompletions.foreach { completion =>
           try {
             proposals.add(proposal2(caretOffset - coffset, completion))
@@ -215,7 +215,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
           }
         }
 
-        val (keywordCompletions, koffset) = codeSupport.keywordCompletions(prefix)
+        val (keywordCompletions, koffset) = execSupport.keywordCompletions(prefix)
         keywordCompletions.foreach { completion =>
           proposals.add(proposal(caretOffset - koffset, completion,
             KEYWORD,
@@ -225,7 +225,7 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
         addTemplateProposals(proposals, prefix.getOrElse(""), caretOffset)
       }
       else {
-        val (memberCompletions, coffset) = codeSupport.memberCompletions(caretOffset, objid.get, prefix)
+        val (memberCompletions, coffset) = execSupport.memberCompletions(caretOffset, objid.get, prefix)
         memberCompletions.foreach { completion =>
           proposals.add(proposal2(caretOffset - coffset, completion))
         }
@@ -240,26 +240,26 @@ class KojoCompletionProvider(codeSupport: CodeExecutionSupport) extends Completi
   }
 
   override def getAlreadyEnteredText(comp: JTextComponent) = {
-    if (codeSupport.startingUp || !codeSupport.isRunningEnabled) {
+    if (execSupport.startingUp || !execSupport.isRunningEnabled) {
       ""
     }
     else {
       val caretOffset = comp.getCaretPosition
-      val (oid, pfx) = codeSupport.objidAndPrefix(caretOffset)
+      val (oid, pfx) = execSupport.objidAndPrefix(caretOffset)
       objid = oid; prefix = pfx
       prefix.getOrElse("")
     }
   }
 
   override def getCompletionsImpl(comp: JTextComponent) = {
-    if (codeSupport.startingUp) {
+    if (execSupport.startingUp) {
       val proposals = new java.util.ArrayList[Completion]
       val completion = "Please try again soon..."
       proposals.add(new TemplateCompletion(this, completion, completion, "${cursor}", null,
         "Kojo is starting up, and the Code Completion Engine is not available yet."))
       proposals
     }
-    else if (codeSupport.isRunningEnabled) {
+    else if (execSupport.isRunningEnabled) {
       complete(comp)
     }
     else {

@@ -29,8 +29,8 @@ import java.awt.Cursor
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 
-class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel { hpanel =>
-  val cmdh = codeSupport.commandHistory
+class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
+  val cmdh = execSupport.commandHistory
   val colNames = List("\u263c", "Code", "Tags", "File", "At")
   val colWidths = List(1, 200, 40, 30, 40)
   val df = DateFormat.getDateTimeInstance
@@ -114,7 +114,7 @@ class HistoryPanel(codeSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   table.getSelectionModel.addListSelectionListener(new ListSelectionListener {
     override def valueChanged(event: ListSelectionEvent) {
       if (!event.getValueIsAdjusting) {
-        codeSupport.loadCodeFromHistory(table.getSelectedRow)
+        execSupport.loadCodeFromHistory(table.getSelectedRow)
       }
     }
   })

@@ -40,7 +40,7 @@ object Main extends AppMenu with ScriptLoader { main =>
   @volatile var scriptEditorH: ScriptEditorHolder = _
   @volatile var frame: JFrame = _
   @volatile var splash: SplashScreen = _
-  @volatile var codeSupport: CodeExecutionSupport = _
+  @volatile var execSupport: CodeExecutionSupport = _
   @volatile var kojoCtx: KojoCtx = _
 
   def main(args: Array[String]): Unit = {
@@ -88,7 +88,7 @@ object Main extends AppMenu with ScriptLoader { main =>
       val fuguePlayer = new FuguePlayer(kojoCtx)
 
       var scriptEditor: ScriptEditor = null
-      codeSupport = new CodeExecutionSupport(
+      execSupport = new CodeExecutionSupport(
         TSCanvas,
         Tw,
         Staging,
@@ -102,22 +102,22 @@ object Main extends AppMenu with ScriptLoader { main =>
         kojoCtx
       )
 
-      scriptEditor = new ScriptEditor(codeSupport, frame)
+      scriptEditor = new ScriptEditor(execSupport, frame)
       codePane = scriptEditor.codePane
-      codeSupport.initPhase2(scriptEditor)
+      execSupport.initPhase2(scriptEditor)
 
       kojoCtx.frame = frame
-      kojoCtx.codeSupport = codeSupport
+      kojoCtx.execSupport = execSupport
       kojoCtx.control = control
       kojoCtx.storyTeller = storyTeller
 
       val drawingCanvasH = new DrawingCanvasHolder(spriteCanvas, kojoCtx)
       scriptEditorH = new ScriptEditorHolder(scriptEditor)
-      val outputHolder = new OutputWindowHolder(codeSupport.outputPane)
+      val outputHolder = new OutputWindowHolder(execSupport.outputPane)
       val storyHolder = new StoryTellerHolder(storyTeller)
       val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
       val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
-      val historyHolder = new HistoryHolder(new HistoryPanel(codeSupport))
+      val historyHolder = new HistoryHolder(new HistoryPanel(execSupport))
 
       kojoCtx.topcs = TopCs(drawingCanvasH, outputHolder, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder)
       kojoCtx.switchToDefaultPerspective()

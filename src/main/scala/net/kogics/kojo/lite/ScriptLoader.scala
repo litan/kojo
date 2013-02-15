@@ -32,7 +32,7 @@ trait ScriptLoader { self: Main.type =>
       val msg2 = if (onStartup) "\n// Please wait, this might take a few seconds as Kojo starts up..." else ""
       codePane.insert("// Running code loaded from URL: %s%s\n\n" format (url, msg2), 0)
       codePane.setCaretPosition(0)
-      codeSupport.runCode()
+      execSupport.runCode()
     }
   }
 
@@ -42,7 +42,7 @@ trait ScriptLoader { self: Main.type =>
       val code = Utils.loadResource(res)
       codePane.setText(Utils.stripCR(code))
       codePane.setCaretPosition(0)
-      codeSupport.runCode()
+      execSupport.runCode()
     }
     catch {
       case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
