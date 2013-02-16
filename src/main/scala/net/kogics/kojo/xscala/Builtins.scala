@@ -477,12 +477,12 @@ Here's a partial list of the available commands:
     kojoCtx.switchToCanvasPerspective()
   }
 
-  val fullScreenAction = kojoCtx.fullScreenCanvasAction()
+  private val fullScreenAction = kojoCtx.fullScreenCanvasAction()
   def toggleFullScreenCanvas() = Utils.runInSwingThreadAndWait {
     fullScreenAction.actionPerformed(null)
   }
 
-  val fullScreenOutputAction = kojoCtx.fullScreenOutputAction()
+  private val fullScreenOutputAction = kojoCtx.fullScreenOutputAction()
   def toggleFullScreenOutput() = Utils.runInSwingThreadAndWait {
     fullScreenOutputAction.actionPerformed(null)
   }

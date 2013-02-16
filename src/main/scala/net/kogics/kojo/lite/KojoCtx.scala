@@ -34,6 +34,9 @@ import net.kogics.kojo.core.DelegatingSpriteListener
 import net.kogics.kojo.action.FullScreenCanvasAction
 import net.kogics.kojo.action.FullScreenOutputAction
 import java.awt.Dimension
+import net.kogics.kojo.action.FullScreenBaseAction
+import javax.swing.JCheckBoxMenuItem
+import net.kogics.kojo.action.FullScreenSupport
 
 class KojoCtx extends core.KojoCtx {
 
@@ -58,9 +61,11 @@ class KojoCtx extends core.KojoCtx {
     activityListener.setRealListener(l)
   }
 
-  def fullScreenCanvasAction() = FullScreenCanvasAction(topcs.dch, this)
-  def fullScreenOutputAction() = FullScreenOutputAction(topcs.owh)
-
+  type ActionLike = FullScreenBaseAction
+  def fullScreenCanvasAction(): ActionLike = FullScreenCanvasAction(topcs.dch, this)
+  def fullScreenOutputAction(): ActionLike = FullScreenOutputAction(topcs.owh)
+  def updateMenuItem(mi: JCheckBoxMenuItem, action: ActionLike) = FullScreenSupport.updateMenuItem(mi, action) 
+    
   def setStorytellerWidth(width: Int) = Utils.runInSwingThread {
     topcs.sth.setResizeRequest(new Dimension(width, 0), true)
   }
