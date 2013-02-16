@@ -345,7 +345,7 @@ trait AppMenu { self: Main.type =>
               <em>Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}</em> <br/><br/>
               Copyright &copy; 2009-2013 Lalit Pant (pant.lalit@gmail.com) and the Kojo Dev Team.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
-              <strong>Kojo</strong> 2.0 Contributors:<ul>
+              <strong>Kojo</strong> Contributors:<ul>
                <li>Lalit Pant</li>
                <li>Bj\u00f6rn Regnell</li>
                <li>Peter Lewerin</li>
