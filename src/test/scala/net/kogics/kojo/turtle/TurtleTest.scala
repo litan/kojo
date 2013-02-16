@@ -36,6 +36,7 @@ class TurtleTest {
 
   val kojoCtx = new NoOpKojoCtx
   val spriteCanvas = new SpriteCanvas(kojoCtx)
+//  val spriteCanvas = new NoOpSCanvas
   val turtle = new Turtle(spriteCanvas, "/images/turtle32.png")
 
   @Before

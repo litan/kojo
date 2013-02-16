@@ -1,11 +1,13 @@
 package net.kogics.kojo
 package lite
 
-import javax.swing.JFrame
 import java.awt.Color
+
+import javax.swing.JFrame
+
 import net.kogics.kojo.core.NoopSpriteListener
-import net.kogics.kojo.util.Utils
 import net.kogics.kojo.core.SpriteListener
+import net.kogics.kojo.util.Utils
 
 class NoOpKojoCtx extends core.KojoCtx {
   Utils.kojoCtx = this
@@ -13,9 +15,9 @@ class NoOpKojoCtx extends core.KojoCtx {
   def setActivityListener(l: SpriteListener) {}
   def canvasLocation = null
   def fullScreenCanvasAction() = null
-  def fullScreenOutputAction()= null
+  def fullScreenOutputAction() = null
   def setStorytellerWidth(width: Int) {}
-  def stopActivity() {}   
+  def stopActivity() {}
   def activateDrawingCanvasHolder() {}
   def activateDrawingCanvas() {}
   def activateScriptEditor() {}
@@ -36,13 +38,13 @@ class NoOpKojoCtx extends core.KojoCtx {
   def fileClosed() {}
   var llsdir = ""
   def getLastLoadStoreDir() = llsdir
-  def setLastLoadStoreDir(dir: String) {llsdir = dir}
+  def setLastLoadStoreDir(dir: String) { llsdir = dir }
   def drawingCanvasActivated() {}
-  def mwActivated(){}
+  def mwActivated() {}
   def d3Activated() {}
   var lc: Color = _
   def lastColor = lc
-  def lastColor_=(c: Color) {lc = c}
+  def lastColor_=(c: Color) { lc = c }
   def knownColors: List[String] = List()
   def isVerboseOutput = false
   def showVerboseOutput() {}
