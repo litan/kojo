@@ -191,7 +191,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
       def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
         verboseOutput.setState(kojoCtx.isVerboseOutput)
         showCode.setState(kojoCtx.isSriptShownInOutput)
-        FullScreenSupport.updateMenuItem(fullScreenItem, fsOutputAction)
+        kojoCtx.updateMenuItem(fullScreenItem, fsOutputAction)
       }
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
       def popupMenuCanceled(e: PopupMenuEvent) {}

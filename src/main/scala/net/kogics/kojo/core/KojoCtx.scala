@@ -17,16 +17,18 @@ package net.kogics.kojo.core
 
 import java.awt.Color
 
+import javax.swing.Action
+import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
-
-import net.kogics.kojo.action.FullScreenBaseAction
 
 trait KojoCtx {
   def activityListener: SpriteListener
   def setActivityListener(l: SpriteListener): Unit
   def canvasLocation: java.awt.Point
-  def fullScreenCanvasAction(): FullScreenBaseAction
-  def fullScreenOutputAction(): FullScreenBaseAction
+  type ActionLike <: Action
+  def fullScreenCanvasAction(): ActionLike
+  def fullScreenOutputAction(): ActionLike
+  def updateMenuItem(mi: JCheckBoxMenuItem, action: ActionLike): Unit
   def setStorytellerWidth(width: Int): Unit
   def activateDrawingCanvasHolder(): Unit
   def activateDrawingCanvas(): Unit

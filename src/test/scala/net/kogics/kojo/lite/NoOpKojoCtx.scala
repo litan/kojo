@@ -3,6 +3,8 @@ package lite
 
 import java.awt.Color
 
+import javax.swing.Action
+import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
 
 import net.kogics.kojo.core.NoopSpriteListener
@@ -14,8 +16,10 @@ class NoOpKojoCtx extends core.KojoCtx {
   def activityListener = NoopSpriteListener
   def setActivityListener(l: SpriteListener) {}
   def canvasLocation = null
+  type ActionLike = Action
   def fullScreenCanvasAction() = null
   def fullScreenOutputAction() = null
+  def updateMenuItem(mi: JCheckBoxMenuItem, action: ActionLike) {}
   def setStorytellerWidth(width: Int) {}
   def stopActivity() {}
   def activateDrawingCanvasHolder() {}

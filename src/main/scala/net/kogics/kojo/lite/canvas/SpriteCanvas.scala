@@ -859,7 +859,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
         axesItem.setState(showAxes)
         gridItem.setState(showGrid)
         protItem.setState(showProt)
-        FullScreenSupport.updateMenuItem(fullScreenItem, fsCanvasAction)
+        kojoCtx.updateMenuItem(fullScreenItem, fsCanvasAction)
       }
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
       def popupMenuCanceled(e: PopupMenuEvent) {}
