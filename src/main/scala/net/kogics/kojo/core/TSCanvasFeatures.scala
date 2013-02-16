@@ -26,21 +26,21 @@ trait TSCanvasFeatures {
   def axesOff(): Unit
   def gridOn(): Unit
   def gridOff(): Unit
-  def zoom(factor: Double)
-  def zoom(factor: Double, cx: Double, cy: Double)
-  def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double)
+  def zoom(factor: Double): Unit
+  def zoom(factor: Double, cx: Double, cy: Double): Unit
+  def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit
   def exportImage(filePrefix: String): java.io.File
   def exportThumbnail(filePrefix: String, height: Int): java.io.File
-  def onKeyPress(fn: Int => Unit)  
-  def onKeyRelease(fn: Int => Unit)  
-  def onMouseClick(fn: (Double, Double) => Unit)
+  def onKeyPress(fn: Int => Unit): Unit
+  def onKeyRelease(fn: Int => Unit): Unit  
+  def onMouseClick(fn: (Double, Double) => Unit): Unit
   def setUnitLength(ul: UnitLen): Unit
   def clearWithUL(ul: UnitLen): Unit
   def camScale: Double
   def wipe(): Unit
-  def setBackgroundH(c1: Color, c2: Color)
-  def setBackgroundV(c1: Color, c2: Color)
-  def drawStage(fillc: Paint)
+  def setBackgroundH(c1: Color, c2: Color): Unit
+  def setBackgroundV(c1: Color, c2: Color): Unit
+  def drawStage(fillc: Paint): Unit
   def stage: Picture
   def stageLeft: Picture
   def stageTop: Picture

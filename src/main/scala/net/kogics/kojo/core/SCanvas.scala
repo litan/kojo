@@ -29,12 +29,12 @@ trait SCanvas extends TSCanvasFeatures {
   // 1) there's a name clash with TurtleWorld 
   // 2) the builtin method name is different from the canvas method name
   def turtle0: Turtle
-  def clear(): Unit
   def activate(): Unit
   def cbounds: PBounds
-  def setCanvasBackground(c: Paint)
+  def setCanvasBackground(c: Paint): Unit
   def kojoCtx: KojoCtx
   def animate(fn: => Unit): Future[PActivity]
+  def animateActivity(a: PActivity): Unit
   def stopAnimation(): Unit
   // stuff for the pictures module
   def getCamera: PCamera
@@ -43,6 +43,6 @@ trait SCanvas extends TSCanvasFeatures {
   def unitLen: UnitLen
   type TurtleLike <: Turtle
   private[kojo] def newInvisibleTurtle(x: Int, y: Int): TurtleLike
-  private[kojo] def setDefTurtle(t: TurtleLike)
+  private[kojo] def setDefTurtle(t: TurtleLike): Unit
   private[kojo] def restoreDefTurtle(): Unit
 }
