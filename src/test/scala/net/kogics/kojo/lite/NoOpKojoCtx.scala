@@ -4,9 +4,13 @@ package lite
 import javax.swing.JFrame
 import java.awt.Color
 import net.kogics.kojo.core.NoopSpriteListener
+import net.kogics.kojo.util.Utils
+import net.kogics.kojo.core.SpriteListener
 
 class NoOpKojoCtx extends core.KojoCtx {
+  Utils.kojoCtx = this
   def activityListener = NoopSpriteListener
+  def setActivityListener(l: SpriteListener) {}
   def canvasLocation = null
   def fullScreenCanvasAction() = null
   def fullScreenOutputAction()= null

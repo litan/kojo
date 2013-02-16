@@ -46,7 +46,6 @@ object Main extends AppMenu with ScriptLoader { main =>
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
     System.setSecurityManager(null)
     kojoCtx = new KojoCtx // context needs to be created right up front to set user language
-    Utils.kojoCtx = kojoCtx
     Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }
