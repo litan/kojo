@@ -432,12 +432,12 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
 
     def makeNavigationButton(imageFile: String, actionCommand: String,
-                             toolTipText: String, altText: String): JButton = {
+                             toolTipText: String): JButton = {
       val button = new JButton()
       button.setActionCommand(actionCommand)
       button.setToolTipText(toolTipText)
       button.addActionListener(actionListener)
-      button.setIcon(Utils.loadIcon(imageFile, altText))
+      button.setIcon(Utils.loadIcon(imageFile))
       // button.setMnemonic(KeyEvent.VK_ENTER)
       button;
     }
@@ -445,15 +445,15 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     val toolbar = new JToolBar
     toolbar.setPreferredSize(new Dimension(100, 24))
 
-    val runButton = makeNavigationButton("/images/run24.png", RunScript, Utils.loadString("S_RunScript"), "Run the Code")
-    val runWorksheetButton = makeNavigationButton("/images/runw24.png", RunWorksheet, Utils.loadString("S_RunWorksheet"), "Run the Code as a Worksheet")
-    val compileButton = makeNavigationButton("/images/check.png", CompileScript, Utils.loadString("S_CheckScript"), "Check the Code")
-    val stopButton = makeNavigationButton("/images/stop24.png", StopScript, Utils.loadString("S_StopScript"), "Stop the Code")
-    val hNextButton = makeNavigationButton("/images/history-next.png", HistoryNext, Utils.loadString("S_HistNext"), "Next in History")
-    val hPrevButton = makeNavigationButton("/images/history-prev.png", HistoryPrev, Utils.loadString("S_HistPrev"), "Prev in History")
-    val clearSButton = makeNavigationButton("/images/clears.png", ClearEditor, Utils.loadString("S_ClearEditorT"), "Clear the Editor and Close Open File")
-    val clearButton = makeNavigationButton("/images/clear24.png", ClearOutput, Utils.loadString("S_ClearOutput"), "Clear the Output")
-    val cexButton = makeNavigationButton("/images/upload.png", UploadCommand, Utils.loadString("S_Upload"), "Upload")
+    val runButton = makeNavigationButton("/images/run24.png", RunScript, Utils.loadString("S_RunScript"))
+    val runWorksheetButton = makeNavigationButton("/images/runw24.png", RunWorksheet, Utils.loadString("S_RunWorksheet"))
+    val compileButton = makeNavigationButton("/images/check.png", CompileScript, Utils.loadString("S_CheckScript"))
+    val stopButton = makeNavigationButton("/images/stop24.png", StopScript, Utils.loadString("S_StopScript"))
+    val hNextButton = makeNavigationButton("/images/history-next.png", HistoryNext, Utils.loadString("S_HistNext"))
+    val hPrevButton = makeNavigationButton("/images/history-prev.png", HistoryPrev, Utils.loadString("S_HistPrev"))
+    val clearSButton = makeNavigationButton("/images/clears.png", ClearEditor, Utils.loadString("S_ClearEditorT"))
+    val clearButton = makeNavigationButton("/images/clear24.png", ClearOutput, Utils.loadString("S_ClearOutput"))
+    val cexButton = makeNavigationButton("/images/upload.png", UploadCommand, Utils.loadString("S_Upload"))
 
     toolbar.add(runButton)
     toolbar.add(runWorksheetButton)

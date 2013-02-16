@@ -50,7 +50,7 @@ class Turtle(canvas: SCanvas, fname: String, initX: Double = 0d,
   if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(layer)
   @volatile private [turtle] var _animationDelay = 0l
 
-  private val turtleImage = new PImage(Utils.loadImage(fname))
+  private val turtleImage = new PImage(Utils.loadImageC(fname))
   private val turtle = new PNode
   def camScale = canvas.camScale
   

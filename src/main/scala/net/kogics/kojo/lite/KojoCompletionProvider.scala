@@ -170,8 +170,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       case KEYWORD  => "/images/scala16x16.png"
       case TEMPLATE => "/images/kindtemplate.png"
     }
-    Utils.loadIcon(fname, "Blah blah")
-
+    Utils.loadIconC(fname)
   }
 
   def methodTemplate(completion: String) = {
