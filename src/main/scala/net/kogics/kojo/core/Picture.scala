@@ -1,18 +1,20 @@
 package net.kogics.kojo
 package core
 
-import java.awt.Paint
-import edu.umd.cs.piccolo.util.PBounds
-import edu.umd.cs.piccolo.PNode
-import java.awt.geom.AffineTransform
 import java.awt.Color
+import java.awt.Paint
+import java.awt.geom.AffineTransform
+
 import com.vividsolutions.jts.geom.Geometry
+
 import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.util.Vector2D
 
+import edu.umd.cs.piccolo.PNode
+import edu.umd.cs.piccolo.util.PBounds
+
 trait Picture extends InputAware {
-  type PicCanvas <: SCanvas
-  def canvas: PicCanvas
+  def canvas: SCanvas
   def myNode = tnode
   def decorateWith(painter: Painter): Unit
   def draw(): Unit

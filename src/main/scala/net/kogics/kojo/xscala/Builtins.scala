@@ -16,20 +16,20 @@
 package net.kogics.kojo
 package xscala
 
-import java.awt.{ Color => JColor }
-import java.awt.Dimension
+import java.awt.{Color => JColor}
 import java.awt.GradientPaint
 import java.awt.Paint
+
 import javax.swing.JComponent
-import net.kogics.kojo.action.FullScreenCanvasAction
-import net.kogics.kojo.action.FullScreenOutputAction
-import net.kogics.kojo.core.SCanvas
+
+import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.lite.DrawingCanvasAPI
 import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.story.HandlerHolder
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.Read
 import net.kogics.kojo.util.UserCommand
+
 import core.Rectangle
 import core.Voice
 import story.HandlerHolder
@@ -39,9 +39,6 @@ import story.VoidHandlerHolder
 import util.Read
 import util.Throttler
 import util.Utils
-import net.kogics.kojo.lite.canvas.SpriteCanvas
-import language.implicitConversions
-import net.kogics.kojo.core.KojoCtx
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {
@@ -381,7 +378,7 @@ Here's a partial list of the available commands:
   val row = picture.row _
   val col = picture.col _
 
-  implicit val picCanvas = tCanvas.asInstanceOf[SpriteCanvas]
+  implicit val picCanvas = tCanvas
   def pict(painter: Painter) = picture.Pic(painter)
   def PictureT(painter: Painter) = picture.Pic(painter)
   def Picture(fn: => Unit) = picture.Pic0 { t =>

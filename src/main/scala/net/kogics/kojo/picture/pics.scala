@@ -16,38 +16,32 @@
 package net.kogics.kojo
 package picture
 
-import core.Picture
-import core.Pixel
-import core.UnitLen
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Paint
 import java.awt.geom.AffineTransform
+
 import scala.collection.mutable.ArrayBuffer
-import kgeom.PolyLine
-import util.Utils
-import util.Math
-import util.Vector2D
-import edu.umd.cs.piccolo.PNode
-import edu.umd.cs.piccolo.nodes.PPath
-import edu.umd.cs.piccolo.util.PBounds
-import com.vividsolutions.jts.geom._
+
+import com.vividsolutions.jts.geom.Coordinate
+import com.vividsolutions.jts.geom.Geometry
+import com.vividsolutions.jts.geom.TopologyException
 import com.vividsolutions.jts.geom.util.AffineTransformation
-import net.kogics.kojo.lite.canvas.SpriteCanvas
-import net.kogics.kojo.core.Pixel
-import net.kogics.kojo.core.Inch
+
 import net.kogics.kojo.core.Cm
+import net.kogics.kojo.core.Inch
+import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
 
-//object Impl {
-//  @volatile var canvas: SpriteCanvas = _
-//  lazy val camera = canvas.getCamera
-//  lazy val picLayer = canvas.pictures
-//  lazy val Gf = new GeometryFactory
-//}
+import core.Picture
+import core.Pixel
+import edu.umd.cs.piccolo.PNode
+import edu.umd.cs.piccolo.nodes.PPath
+import kgeom.PolyLine
+import util.Math
+import util.Utils
 
 trait CorePicOps { self: Picture with RedrawStopper =>
-  type PicCanvas = SpriteCanvas
   val camera = canvas.getCamera
   val picLayer = canvas.pictures
   var axes: PNode = _
@@ -262,7 +256,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     picGeom.getLength
   }
 
-  def myCanvas = canvas
+  def myCanvas = canvas.pCanvas
 }
 
 trait CorePicOps2 { self: Picture =>
@@ -333,12 +327,11 @@ trait TNodeCacher {
 }
 
 object Pic {
-  def apply(painter: Painter)(implicit canvas: SpriteCanvas) = new Pic(painter)
+  def apply(painter: Painter)(implicit canvas: SCanvas) = new Pic(painter)
 }
 
-class Pic(painter: Painter)(implicit val canvas: SpriteCanvas) extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
-  override type PicCanvas = SpriteCanvas
-  @volatile var _t: turtle.Turtle = _
+class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
+  @volatile var _t: canvas.TurtleLike = _
   val ErrMsg = "Unable to create picture turtle. This could be because you have a draw() call after an animate{ } or morph{ } call"
 
   def t = {
@@ -480,10 +473,10 @@ class Pic(painter: Painter)(implicit val canvas: SpriteCanvas) extends Picture w
 }
 
 object Pic0 {
-  def apply(painter: Painter)(implicit canvas: SpriteCanvas) = new Pic0(painter)
+  def apply(painter: Painter)(implicit canvas: SCanvas) = new Pic0(painter)
 }
 
-class Pic0(painter: Painter)(implicit canvas0: SpriteCanvas) extends Pic(painter) {
+class Pic0(painter: Painter)(implicit canvas0: SCanvas) extends Pic(painter) {
   override def realDraw() {
     try {
       canvas.setDefTurtle(t)
@@ -498,11 +491,10 @@ class Pic0(painter: Painter)(implicit canvas0: SpriteCanvas) extends Pic(painter
 
 abstract class BasePicList(val pics: List[Picture])
   extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
-  override type PicCanvas = SpriteCanvas
   if (pics.isEmpty) {
     throw new IllegalArgumentException("A Picture List needs to have at least one Picture.")
   }
-  def canvas = pics.head.canvas.asInstanceOf[this.PicCanvas]
+  def canvas = pics.head.canvas
   @volatile var padding = 0.0
   def makeTnode = Utils.runInSwingThreadAndPause {
     val tn = new PNode()
