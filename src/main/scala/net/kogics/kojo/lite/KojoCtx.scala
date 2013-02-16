@@ -51,6 +51,7 @@ class KojoCtx extends core.KojoCtx {
   var storyTeller: StoryTeller = _
   var control: CControl = _
   @volatile var fps = 50
+  Utils.kojoCtx = this
   
   val activityListener = new DelegatingSpriteListener
   def setActivityListener(l: SpriteListener) {

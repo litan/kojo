@@ -23,19 +23,20 @@ import net.kogics.kojo.action.FullScreenBaseAction
 
 trait KojoCtx {
   def activityListener: SpriteListener
+  def setActivityListener(l: SpriteListener): Unit
   def canvasLocation: java.awt.Point
   def fullScreenCanvasAction(): FullScreenBaseAction
   def fullScreenOutputAction(): FullScreenBaseAction
   def setStorytellerWidth(width: Int): Unit
-  def activateDrawingCanvasHolder()
-  def activateDrawingCanvas()
-  def activateScriptEditor()
-  def activateOutputPane()
-  def makeStagingVisible()
-  def makeTurtleWorldVisible()
-  def makeMathWorldVisible()
-  def makeStoryTellerVisible()
-  def make3DCanvasVisible()
+  def activateDrawingCanvasHolder(): Unit
+  def activateDrawingCanvas(): Unit
+  def activateScriptEditor(): Unit
+  def activateOutputPane(): Unit
+  def makeStagingVisible(): Unit
+  def makeTurtleWorldVisible(): Unit
+  def makeMathWorldVisible(): Unit
+  def makeStoryTellerVisible(): Unit
+  def make3DCanvasVisible(): Unit
   def baseDir: String
   def stopInterpreter(): Unit
   def stopActivity(): Unit
@@ -62,16 +63,16 @@ trait KojoCtx {
   def hideScriptInOutput(): Unit
   def clearOutput(): Unit
   def userLanguage: String
-  def userLanguage_=(lang: String)
-  def switchToDefaultPerspective()
-  def switchToScriptEditingPerspective()
-  def switchToWorksheetPerspective()
-  def switchToStoryViewingPerspective()
-  def switchToHistoryBrowsingPerspective()
-  def switchToCanvasPerspective()
-  def setOutputBackground(color: Color)
-  def setOutputForeground(color: Color)
-  def setOutputFontSize(size: Int)
+  def userLanguage_=(lang: String): Unit
+  def switchToDefaultPerspective(): Unit
+  def switchToScriptEditingPerspective(): Unit
+  def switchToWorksheetPerspective(): Unit
+  def switchToStoryViewingPerspective(): Unit
+  def switchToHistoryBrowsingPerspective(): Unit
+  def switchToCanvasPerspective(): Unit
+  def setOutputBackground(color: Color): Unit
+  def setOutputForeground(color: Color): Unit
+  def setOutputFontSize(size: Int): Unit
   def formatSource(): Unit
   var fps: Int
 }

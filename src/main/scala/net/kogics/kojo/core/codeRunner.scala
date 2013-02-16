@@ -62,12 +62,12 @@ trait RunContext {
   def onCompileSuccess(): Unit
   def onInternalCompilerError(): Unit
 
-  def kprintln(outText: String)
-  def reportOutput(outText: String)
-  def reportWorksheetOutput(result: String, lineNum: Int)
-  def reportErrorMsg(errMsg: String)
-  def reportErrorText(errText: String)
-  def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int)
+  def kprintln(outText: String): Unit
+  def reportOutput(outText: String): Unit
+  def reportWorksheetOutput(result: String, lineNum: Int): Unit
+  def reportErrorMsg(errMsg: String): Unit
+  def reportErrorText(errText: String): Unit
+  def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int): Unit
 
   def readInput(prompt: String): String
 
