@@ -64,7 +64,9 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
     hIndex = history.size
   }
 
-  def add(code: String, file: Option[String]) {
+  def add(code: String): Unit = add(code, None)
+  
+  def add(code: String, file: Option[String]): Unit = {
     try {
       val hi = historySaver.save(code, file)
       internalAdd(hi)
