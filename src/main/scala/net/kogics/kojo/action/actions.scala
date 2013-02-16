@@ -37,7 +37,7 @@ import net.kogics.kojo.lite.topc.OutputWindowHolder
 import net.kogics.kojo.util.Utils
 
 import FullScreenSupport.sdev
-import lite.CodeExecutionSupport
+import core.CodeExecutionSupport
 
 class ChooseColor(execSupport: CodeExecutionSupport) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
   val ctx = execSupport.kojoCtx

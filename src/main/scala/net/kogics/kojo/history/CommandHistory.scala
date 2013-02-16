@@ -15,32 +15,12 @@
 package net.kogics.kojo
 package history
 
-import java.util.Date
-
 import scala.collection.Seq
 import scala.collection.mutable
 
-case class HistoryItem(
-  script: String,
-  file: String = "",
-  var id: Long = 0,
-  var starred: Boolean = false,
-  var tags: String = "",
-  at: Date = new Date)
-
-trait HistoryListener {
-  def itemAdded
-  def selectionChanged(n: Int)
-  def ensureVisible(n: Int)
-}
-
-trait HistorySaver {
-  def save(code: String, file: Option[String]): HistoryItem
-  def readAll(): Seq[HistoryItem]
-  def readSome(filter: String): Seq[HistoryItem]
-  def updateStar(hi: HistoryItem)
-  def updateTags(hi: HistoryItem)
-}
+import net.kogics.kojo.core.HistoryItem
+import net.kogics.kojo.core.HistoryListener
+import net.kogics.kojo.core.HistorySaver
 
 class NoopHistorySaver extends HistorySaver {
   def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
@@ -64,7 +44,7 @@ object CommandHistory {
   }
 }
 
-class CommandHistory private[kojo] (historySaver: HistorySaver) {
+class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.CommandHistory {
   val history = new mutable.ArrayBuffer[HistoryItem]
   @volatile var hIndex = 0
   @volatile var listener: Option[HistoryListener] = None

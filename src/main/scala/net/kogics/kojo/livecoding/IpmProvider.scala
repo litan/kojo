@@ -17,11 +17,10 @@ package net.kogics.kojo
 package livecoding
 
 import javax.swing.text.Document
-import net.kogics.kojo.lite.CodeExecutionSupport
 import javax.swing.text.JTextComponent
 
-class IpmProvider(ces: CodeExecutionSupport) {
-  val manips = List(new IntManipulator(ces), new FloatManipulator(ces), new ColorManipulator(ces))
+class IpmProvider(mctx: ManipulationContext) {
+  val manips = List(new IntManipulator(mctx), new FloatManipulator(mctx), new ColorManipulator(mctx))
   
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
     manips.exists {_ isHyperlinkPoint(pane, offset)}

@@ -2,32 +2,35 @@ package net.kogics.kojo.history
 
 import java.awt.BorderLayout
 import java.awt.Color
+import java.awt.Cursor
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 import java.text.DateFormat
-import net.kogics.kojo.lite.CodeExecutionSupport
+
 import javax.swing.BorderFactory
 import javax.swing.DefaultCellEditor
+import javax.swing.JButton
 import javax.swing.JComponent
-import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTable
+import javax.swing.JTextField
 import javax.swing.ListSelectionModel
 import javax.swing.SwingConstants
+import javax.swing.border.BevelBorder
 import javax.swing.border.CompoundBorder
 import javax.swing.border.EmptyBorder
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
+
+import net.kogics.kojo.core.CodeExecutionSupport
+import net.kogics.kojo.core.HistoryListener
+
 import sun.swing.table.DefaultTableCellHeaderRenderer
-import javax.swing.JTextField
-import javax.swing.JButton
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import javax.swing.border.BevelBorder
-import java.awt.Cursor
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
 
 class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   val cmdh = execSupport.commandHistory
