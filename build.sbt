@@ -4,11 +4,13 @@ version := "2.1"
 
 scalaVersion := "2.10.0"
 
-fork in test := true
+fork in Test := true
 
-javaOptions in test ++= Seq("-Xmx1024m", "-Xss1m", "-XX:PermSize=32m", "-XX:MaxPermSize=512m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled", "-XX:+CMSPermGenSweepingEnabled")
+javaOptions in Test ++= Seq("-Xmx1024m", "-Xss1m", "-XX:PermSize=32m", "-XX:MaxPermSize=512m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled", "-XX:+CMSPermGenSweepingEnabled")
 
-parallelExecution in Test := false
+testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-s")
+
+// parallelExecution in Test := false
 
 autoScalaLibrary := false
 
