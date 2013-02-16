@@ -148,7 +148,7 @@ object Main extends AppMenu with ScriptLoader { main =>
     }
 
     // Do startup logging after scheduling the GUI stuff
-    Log.info(s"Kojo version: ${Versions.KojoVersion}")
+    Log.info(s"Kojo version: ${Versions.KojoMajorVersion}, ${Versions.KojoVersion}")
     Log.info(s"Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}")
     val sysProps =
       System.getProperties.toList.sorted.foldLeft(new StringBuilder) { case (sb, kv) => sb append s"\n${kv._1} = ${kv._2}" }
