@@ -14,12 +14,16 @@
  */
 package net.kogics.kojo.history
 
-import java.sql.DriverManager
-import java.io.File
-import java.sql.ResultSet
 import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.ResultSet
 import java.sql.Timestamp
 import java.sql.Types
+
+import scala.collection.mutable.ListBuffer
+
+import net.kogics.kojo.core.HistoryItem
+import net.kogics.kojo.core.HistorySaver
 
 // code to simplify jdbc queries from: 
 // http://zcox.wordpress.com/2009/08/17/simple-jdbc-queries-in-scala/

@@ -66,7 +66,7 @@ class CodeExecutionSupport(
   fuguePlayer: music.FuguePlayer,
   tCanvas: SpriteCanvas,
   scriptEditor0: => ScriptEditor,
-  val kojoCtx: KojoCtx) extends core.CodeCompletionSupport with ManipulationContext {
+  val kojoCtx: KojoCtx) extends core.CodeExecutionSupport with core.CodeCompletionSupport with ManipulationContext {
   lazy val scriptEditor = scriptEditor0
   import scriptEditor._
   var clearButton = new JButton
