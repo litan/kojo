@@ -53,32 +53,29 @@ import Typeclasses.mkIdentity
 import edu.umd.cs.piccolo.nodes.PText
 import lite.canvas.SpriteCanvas
 import net.kogics.kojo.core.KojoCtx
+import scala.collection.mutable.HashMap
 
 object Utils {
+  lazy val imageCache = new HashMap[String, Image]
+  lazy val iconCache = new HashMap[String, ImageIcon]
 
-  val imageCache = Map(
-    "/images/turtle32.png" -> loadImage0("/images/turtle32.png"),
-    "/images/kindvar.png" -> loadImage0("/images/kindvar.png"),
-    "/images/kindclass.png" -> loadImage0("/images/kindclass.png"),
-    "/images/kindpackage.gif" -> loadImage0("/images/kindpackage.gif"),
-    "/images/kindmethod.png" -> loadImage0("/images/kindmethod.png"),
-    "/images/scala16x16.png" -> loadImage0("/images/scala16x16.png"),
-    "/images/kindtemplate.png" -> loadImage0("/images/kindtemplate.png")
-  )
-
-  def loadImage0(fname: String): Image = {
+  def loadImage(fname: String): Image = {
     val url = getClass.getResource(fname)
     Toolkit.getDefaultToolkit.getImage(url)
   }
 
-  def loadImage(fname: String): Image = {
-    imageCache.get(fname).getOrElse { loadImage0(fname) }
+  def loadImageC(fname: String): Image = {
+    imageCache.getOrElseUpdate(fname, loadImage(fname))
   }
 
-  def loadIcon(fname: String, desc: String = ""): ImageIcon = {
-    new ImageIcon(loadImage(fname), desc)
+  def loadIcon(fname: String): ImageIcon = {
+    new ImageIcon(loadImage(fname))
   }
 
+  def loadIconC(fname: String): ImageIcon = {
+    iconCache.getOrElseUpdate(fname, loadIcon(fname))
+  }
+  
   def loadResource(res: String): String = {
     readStream(getClass.getResourceAsStream(res))
   }
@@ -523,7 +520,7 @@ object Utils {
   case class RunCode(code: () => Unit)
   import scala.actors._
   import scala.actors.Actor._
-  val asyncRunner = actor {
+  lazy val asyncRunner = actor {
     loop {
       react {
         case RunCode(code) =>
