@@ -16,20 +16,17 @@
 package net.kogics.kojo
 package picture
 
-import core.Picture
 import java.awt.Color
 import java.awt.Paint
 import java.awt.geom.AffineTransform
-import net.kogics.kojo.kgeom.PolyLine
-import util.Utils
-import kgeom.PolyLine
 
-import java.awt.Color
-import java.awt.Paint
-import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.core.Picture
+import net.kogics.kojo.kgeom.PolyLine
+
+import core.Picture
+import util.Utils
 
 trait Transformer extends Picture with CorePicOps2 {
-  type PicCanvas = SCanvas
   val tpic: Picture
   def canvas = tpic.canvas
   def bounds = tpic.bounds

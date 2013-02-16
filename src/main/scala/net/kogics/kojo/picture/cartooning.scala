@@ -22,14 +22,13 @@ import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.Point
 import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.util.Utils
-import net.kogics.kojo.xscala.RepeatCommands.repeat
 import staging.KColor.black
 import staging.KColor.white
 import util.Utils
 import Cartooning._
 import Cartooning2._
 import java.util.concurrent.CountDownLatch
-import net.kogics.kojo.lite.canvas.SpriteCanvas
+import net.kogics.kojo.core.SCanvas
 
 object Cartooning {
   import language.implicitConversions
@@ -118,7 +117,7 @@ object Cartooning2 {
 
 case class RichListDD(listDD: ListDD) {
   def toSkeleton = Skeleton(listDD)
-  def toPicture(implicit canvas: SpriteCanvas): Picture = Pic { t =>
+  def toPicture(implicit canvas: SCanvas): Picture = Pic { t =>
     import t._
     listDD match {
       case p :: ps =>
@@ -227,7 +226,7 @@ case class Skeleton(points: Array[Point2D]) { //was MorphTarget
         )
       }
   }
-  def toPicture(implicit canvas: SpriteCanvas) = Pic { t =>
+  def toPicture(implicit canvas: SCanvas) = Pic { t =>
     import t._
     if (size > 1) {
       jumpTo(points(0))
@@ -248,7 +247,7 @@ object Skeleton {
 
 } // end Skeleton
 
-class Animator(canvas: SpriteCanvas) {
+class Animator(canvas: SCanvas) {
   var agenda = Queue.empty[AnimationStep]
   def addToAgenda(w: AnimationStep) = synchronized {
     agenda :+= w
@@ -269,11 +268,11 @@ class Animator(canvas: SpriteCanvas) {
     addToAgenda(w)
   }
   
-  def stop() = canvas.figure0.stopAnimation(animation)
+  def stop() = canvas.stopAnimation() // TODO: canvas.figure0.stopAnimation(animation)
 
   def currTime = System.currentTimeMillis()
   val startTime = currTime
-  val animation = canvas.figure0.refresh {
+  val animation = canvas.animate {
     val work = getFromAgenda
     if (work.isDefined) {
       work.get(currTime - startTime)
@@ -341,7 +340,7 @@ trait AnimClip extends AnimationStep { outer: AnimClip =>
 }
 
 trait SpeakBalloon { self: AnimClip =>
-  implicit val canvas: SpriteCanvas
+  implicit val canvas: SCanvas
   case class WorkItem(var timeStamp: Long, var pic: Option[Picture])
   val wi = WorkItem(0, None)
   val showTimeMillis = 3 // seconds

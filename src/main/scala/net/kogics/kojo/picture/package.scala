@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent
 
 import com.vividsolutions.jts.geom.GeometryFactory
 
-import net.kogics.kojo.lite.canvas.SpriteCanvas
+import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.picture.AxesOnc
 import net.kogics.kojo.picture.FlipXc
 import net.kogics.kojo.picture.FlipYc
@@ -52,7 +52,7 @@ package object picture {
     VPics(lb.toList)
   }
   
-  def protractor(camScale: Double)(implicit canvas: SpriteCanvas) = {
+  def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale
     def num(n: Int) = Pic { t =>
       import t._
