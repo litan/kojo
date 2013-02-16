@@ -518,10 +518,6 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     exportImageHelper(filePrefix, (getWidth.toFloat / getHeight * height).toInt, height)
   }
 
-  def afterClear() = {
-    // initCamera()
-  }
-
   def forceClear() {
     clear()
   }
@@ -721,6 +717,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   }
 
   def animate(fn: => Unit): Future[PActivity] = figure0.refresh(fn)
+  def animateActivity(a: PActivity) = getRoot.addActivity(a)
   def stopAnimation() = figure0.stopRefresh()
 
   import core.Picture

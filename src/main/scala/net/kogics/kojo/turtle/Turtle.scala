@@ -15,8 +15,6 @@
 package net.kogics.kojo
 package turtle
 
-import lite.canvas.SpriteCanvas
-
 import javax.swing._
 import java.awt.{Point => _, _}
 import java.awt.geom._
@@ -38,7 +36,7 @@ import net.kogics.kojo.core._
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
-class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
+class Turtle(canvas: SCanvas, fname: String, initX: Double = 0d,
              initY: Double = 0, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
 
   import TurtleHelper._
@@ -114,12 +112,11 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
 
   def dumpState() {
     Utils.runInSwingThread {
-      val output = canvas.outputFn
       val cIter = layer.getChildrenReference.iterator
-      output("Turtle Layer (%d children):\n" format(layer.getChildrenReference.size))
+      println("Turtle Layer (%d children):\n" format(layer.getChildrenReference.size))
       while (cIter.hasNext) {
         val node = cIter.next.asInstanceOf[PNode]
-        output(stringRep(node))
+        println(stringRep(node))
       }
     }
   }
@@ -256,7 +253,7 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
               }
             }
           })
-        canvas.getRoot.addActivity(forwardAnimation)
+        canvas.animateActivity(forwardAnimation)
       }
       latch.await()
     }
@@ -274,7 +271,6 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
     init()
     // showWorker() - if we want an invisible turtle to show itself after a clear
     turtle.repaint()
-    canvas.afterClear()
   }
 
   def remove() = Utils.runInSwingThread {
@@ -448,7 +444,7 @@ class Turtle(canvas: SpriteCanvas, fname: String, initX: Double = 0d,
       Music(voice).play()
     }
     catch {
-      case e: Exception => canvas.outputFn("Turtle Error while playing sound:\n" + e.getMessage)
+      case e: Exception => println("Turtle Error while playing sound:\n" + e.getMessage)
     }
   }
   
