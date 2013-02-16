@@ -4,11 +4,16 @@ version := "2.1"
 
 scalaVersion := "2.10.0"
 
-fork in run := true
+fork in test := true
 
-// javaOptions in run ++= Seq("-Dide.run=true", "-Xmx512m")
+javaOptions in test ++= Seq("-Xmx1024m", "-Xss1m", "-XX:PermSize=32m", "-XX:MaxPermSize=512m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled", "-XX:+CMSPermGenSweepingEnabled")
+
+parallelExecution in Test := false
+
+autoScalaLibrary := false
 
 libraryDependencies ++= Seq(
+    "org.scala-lang" % "scala-library" % "2.10.0",
     "org.scala-lang" % "scala-compiler" % "2.10.0",
     "org.scala-lang" % "scala-reflect" % "2.10.0",
     "org.scala-lang" % "scala-actors" % "2.10.0",
