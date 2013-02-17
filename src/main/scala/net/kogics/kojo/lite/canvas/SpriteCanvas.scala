@@ -37,7 +37,6 @@ import javax.swing.JPopupMenu
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
-import net.kogics.kojo.action.FullScreenSupport
 import net.kogics.kojo.core
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
