@@ -5,6 +5,10 @@ import net.kogics.kojo.core.RunContext
 
 class NoOpRunContext extends RunContext {
   def initInterp(interp: Interpreter) {}
+  val compilerPrefix = """ {
+  val builtins = net.kogics.kojo.lite.Builtins.instance
+  import builtins._
+"""
   def onInterpreterInit() {}
   def onInterpreterStart(code: String) {}
   def onRunError() {}

@@ -61,13 +61,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
   // If this approach turns out to be too memory intensive, I'm sure there are other ways of running user 
   // submitted code.'
   val prefixHeader = "object Wrapper"
-  val prefix0 = """ {
-  val builtins = net.kogics.kojo.xscala.Builtins.instance
-  import builtins._
-  def entry() {
-    // noop
-  }
-"""
+  val prefix0 = runContext.compilerPrefix
 
   def prefix = "%s%s\n" format (prefix0, initCode.getOrElse(""))
 
