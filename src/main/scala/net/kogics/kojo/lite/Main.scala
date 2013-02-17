@@ -43,16 +43,16 @@ object Main extends AppMenu with ScriptLoader { main =>
   @volatile var kojoCtx: KojoCtx = _
 
   def main(args: Array[String]): Unit = {
-    runMultiInstancehandler()
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
     System.setSecurityManager(null)
     kojoCtx = new KojoCtx // context needs to be created right up front to set user language
     Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }
-
     setupLogging()
     val Log = Logger.getLogger("Main")
+
+    runMultiInstancehandler()
 
     Utils.schedule(0.3) {
       import javax.swing.UIManager
