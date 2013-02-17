@@ -178,24 +178,24 @@ class KojoCtx extends core.KojoCtx {
     activateDrawingCanvasHolder()
   }
 
-  def activateDrawingCanvasHolder() {
+  def activateDrawingCanvasHolder() = Utils.runInSwingThread {
     topcs.dch.activate()
   }
 
-  def activateDrawingCanvas() {
+  def activateDrawingCanvas() = Utils.runInSwingThread {
     topcs.dch.activateCanvas()
   }
 
-  def activateScriptEditor() {
+  def activateScriptEditor() = Utils.runInSwingThread {
     topcs.seh.activate()
   }
 
-  def activateOutputPane() {
+  def activateOutputPane() = Utils.runInSwingThread {
     topcs.owh.toFront()
     //    topcs.owh.ow.requestFocusInWindow()
   }
 
-  def makeTurtleWorldVisible() {
+  def makeTurtleWorldVisible() = Utils.runInSwingThread {
     if (!topcs.dch.isShowing) {
       topcs.dch.toFront()
     }
@@ -203,13 +203,13 @@ class KojoCtx extends core.KojoCtx {
 
   def makeStagingVisible() = makeTurtleWorldVisible()
 
-  def makeMathWorldVisible() {
+  def makeMathWorldVisible() = Utils.runInSwingThread {
     if (!topcs.mwh.isShowing) {
       topcs.mwh.toFront()
     }
   }
 
-  def makeStoryTellerVisible() {
+  def makeStoryTellerVisible() = Utils.runInSwingThread {
     if (!topcs.sth.isShowing) {
       topcs.sth.setExtendedMode(ExtendedMode.NORMALIZED)
       topcs.sth.toFront()
@@ -217,7 +217,7 @@ class KojoCtx extends core.KojoCtx {
     }
   }
 
-  def make3DCanvasVisible() {
+  def make3DCanvasVisible() = Utils.runInSwingThread {
     if (!topcs.d3h.isShowing) {
       topcs.d3h.toFront()
     }
