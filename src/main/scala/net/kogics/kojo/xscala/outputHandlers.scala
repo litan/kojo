@@ -117,14 +117,14 @@ class CompilerOutputHandler(ctx: RunContext) extends CompilerListener {
   }
 
   def warning(msg: String, line: Int, column: Int) {
-    ctx.reportOutput("Warning: %s\n" format (msg))
+    println("Warning: %s\n" format (msg))
   }
 
   def info(msg: String, line: Int, column: Int) {
-    ctx.reportOutput("Info: %s\n" format (msg))
+    println("Info: %s\n" format (msg))
   }
 
   def message(msg: String) {
-    ctx.reportOutput("%s\n" format (msg))
+    println("%s\n" format (msg))
   }
 }
