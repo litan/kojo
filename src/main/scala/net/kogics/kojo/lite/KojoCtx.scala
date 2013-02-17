@@ -319,12 +319,17 @@ class KojoCtx extends core.KojoCtx {
     execSupport.showCode = false
   }
 
-  def clearOutput() {
-    execSupport.clrOutput()
-  }
+  def clearOutput() = execSupport.clrOutput()
+  def kprintln(outText: String) = execSupport.showOutput(outText)
+  def readInput(prompt: String): String = execSupport.readInput(prompt)
+  def setScript(code: String) = execSupport.setScript(code)
+  def insertCodeInline(code: String) = execSupport.insertCodeInline(code)
+  def insertCodeBlock(code: String) = execSupport.insertCodeBlock(code)
+  def clickRun() = execSupport.runCode()
 
-  def kprintln(outText: String) {
-    execSupport.showOutput(outText)
+  @volatile var astStopPhase = "typer"
+  def setAstStopPhase(phase: String) {
+    astStopPhase = phase
   }
 
   def outputPane = topcs.owh.outputPane

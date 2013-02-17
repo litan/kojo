@@ -82,7 +82,7 @@ class CodeExecutionSupport(
   @volatile var codePane: JTextArea = _
   @volatile var startingUp = true
 
-  val codeRunner = makeCodeRunner()
+  val codeRunner = makeRealCodeRunner
   val builtins = new Builtins(
     TSCanvas,
     Tw,
@@ -99,6 +99,13 @@ class CodeExecutionSupport(
   @volatile var showCode = false
   @volatile var verboseOutput = false
   setActivityListener()
+
+  def initPhase2(se: ScriptEditor) {
+    codeRunner.start()
+    clearButton = se.clearButton
+    setCodePane(se.codePane)
+    hPrevButton.setEnabled(commandHistory.hasPrevious)
+  }
 
   class OutputWindowWriter extends Writer {
     override def write(s: String) {
@@ -168,12 +175,6 @@ class CodeExecutionSupport(
     compileButton.setEnabled(enable)
   }
 
-  def initPhase2(se: ScriptEditor) {
-    clearButton = se.clearButton
-    setCodePane(se.codePane)
-    hPrevButton.setEnabled(commandHistory.hasPrevious)
-  }
-
   def doWelcome() = {
     val msg = """Welcome to Kojo 2.0!
     |* To use code completion and see online help ->  Press Ctrl+Space or Ctrl+Alt+Space within the Script Editor
@@ -219,18 +220,60 @@ class CodeExecutionSupport(
     }
   }
 
+  def setScript(code: String) {
+    Utils.runInSwingThreadAndWait {
+      closeFileAndClrEditor()
+      codePane.setText(code)
+      codePane.setCaretPosition(0)
+    }
+  }
+
+  def insertCodeInline(code: String) = smartInsertCode(code, false)
+  def insertCodeBlock(code: String) = smartInsertCode(code, true)
+
+  private def smartInsertCode(code: String, block: Boolean) = Utils.runInSwingThread {
+    val dot = codePane.getCaretPosition
+    val cOffset = code.indexOf("${c}")
+    if (cOffset == -1) {
+      if (block) {
+        val leadingSpaces = dot - Utilities.getRowStart(codePane, dot)
+        codePane.insert("%s\n".format(code).
+          replaceAllLiterally("\n", "\n%s".format(" " * leadingSpaces)), dot)
+        // move to next line. Assumes that a block insert without a ${c} is on a single line - like clear() etc  
+        codePane.setCaretPosition(Utilities.getRowEnd(codePane, dot) + 1 + leadingSpaces)
+      }
+      else {
+        codePane.insert("%s ".format(code), dot)
+      }
+    }
+    else {
+      if (block) {
+        val leadingSpaces = dot - Utilities.getRowStart(codePane, dot)
+        codePane.insert("%s\n".format(code.replaceAllLiterally("${c}", "")).
+          replaceAllLiterally("\n", "\n%s".format(" " * leadingSpaces)), dot)
+        codePane.setCaretPosition(dot + cOffset)
+      }
+      else {
+        codePane.insert("%s ".format(code.replaceAllLiterally("${c}", "")), dot)
+        codePane.setCaretPosition(dot + cOffset)
+      }
+    }
+    activateEditor()
+  }
+
   def makeRealCodeRunner: core.CodeRunner = {
     val codeRunner = new xscala.ScalaCodeRunner(new RunContext {
 
       @volatile var suppressInterpOutput = false
-      @volatile var astStopPhase = "typer"
+
+      def astStopPhase = kojoCtx.astStopPhase
 
       def initInterp(interp: Interpreter) {
         interp.bind("predef", "net.kogics.kojo.lite.CodeExecutionSupport", CodeExecutionSupport.this)
         interp.interpret("val builtins = predef.builtins")
         interp.interpret("import builtins._")
       }
-      
+
       val compilerPrefix = """ {
   val builtins = net.kogics.kojo.lite.Builtins.instance
   import builtins._
@@ -312,9 +355,9 @@ class CodeExecutionSupport(
       private def showInternalErrorMsg() {
         showError("Kojo is unable to process your script. Please modify your code and try again.\n")
         showOutput("The Kojo log file is likely to contain more information about the problem.\n")
-        
+
       }
-      
+
       def onRunInterpError() = {
         showInternalErrorMsg()
         onRunError()
@@ -354,16 +397,6 @@ class CodeExecutionSupport(
         }
       }
 
-      def readInput(prompt: String): String = CodeExecutionSupport.this.readInput(prompt)
-
-      def setScript(code: String) {
-        Utils.runInSwingThreadAndWait {
-          closeFileAndClrEditor()
-          codePane.setText(code)
-          codePane.setCaretPosition(0)
-        }
-      }
-
       def reportWorksheetOutput(result: String, lineNum: Int) {
         appendToCodePaneLine(lineNum, result.replaceAll("\n(.+)", " | $1"))
       }
@@ -384,49 +417,6 @@ class CodeExecutionSupport(
           }
         }
       }
-
-      def insertCodeInline(code: String) = smartInsertCode(code, false)
-      def insertCodeBlock(code: String) = smartInsertCode(code, true)
-
-      private def smartInsertCode(code: String, block: Boolean) = Utils.runInSwingThread {
-        val dot = codePane.getCaretPosition
-        val cOffset = code.indexOf("${c}")
-        if (cOffset == -1) {
-          if (block) {
-            val leadingSpaces = dot - Utilities.getRowStart(codePane, dot)
-            codePane.insert("%s\n".format(code).
-              replaceAllLiterally("\n", "\n%s".format(" " * leadingSpaces)), dot)
-            // move to next line. Assumes that a block insert without a ${c} is on a single line - like clear() etc  
-            codePane.setCaretPosition(Utilities.getRowEnd(codePane, dot) + 1 + leadingSpaces)
-          }
-          else {
-            codePane.insert("%s ".format(code), dot)
-          }
-        }
-        else {
-          if (block) {
-            val leadingSpaces = dot - Utilities.getRowStart(codePane, dot)
-            codePane.insert("%s\n".format(code.replaceAllLiterally("${c}", "")).
-              replaceAllLiterally("\n", "\n%s".format(" " * leadingSpaces)), dot)
-            codePane.setCaretPosition(dot + cOffset)
-          }
-          else {
-            codePane.insert("%s ".format(code.replaceAllLiterally("${c}", "")), dot)
-            codePane.setCaretPosition(dot + cOffset)
-          }
-        }
-        activateEditor()
-      }
-
-      def clickRun() {
-        runCode()
-      }
-
-      def stopActivity() {
-        CodeExecutionSupport.this.stopActivity()
-      }
-
-      def setAstStopPhase(phase: String): Unit = astStopPhase = phase
     })
     codeRunner
   }

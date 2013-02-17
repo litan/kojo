@@ -61,7 +61,6 @@ class Builtins(
   scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
   Builtins.instance = this
   import language.implicitConversions
-  lazy val runCtx = scalaCodeRunner.runContext
   val tCanvas = TSCanvas.tCanvas
 
   type Turtle = core.Turtle
@@ -125,7 +124,7 @@ class Builtins(
   UserCommand.addCompletion("println", List("obj"))
   UserCommand.addSynopsis("println(obj) or print(obj) - Displays the given object as a string in the output window.")
 
-  def readln(prompt: String): String = runCtx.readInput(prompt)
+  def readln(prompt: String): String = kojoCtx.readInput(prompt)
   UserCommand("readln", List("promptString"), "Displays the given prompt in the output window and reads a line that the user enters.")
 
   def readInt(prompt: String): Int = readln(prompt).toInt
@@ -143,7 +142,7 @@ class Builtins(
   def color(r: Int, g: Int, b: Int) = new Color(r, g, b)
   UserCommand("color", List("red", "green", "blue"), "Creates a new color based on the specified red, green, and blue levels.")
 
-  def setAstStopPhase(phase: String): Unit = runCtx.setAstStopPhase(phase)
+  def setAstStopPhase(phase: String): Unit = kojoCtx.setAstStopPhase(phase)
   UserCommand.addSynopsis("astStopPhase - Gets the compiler phase value for AST printing.")
   UserCommand("setAstStopPhase", List("stopAfterPhase"), "Sets the compiler phase value for AST printing.")
 
@@ -214,14 +213,14 @@ class Builtins(
   }
   UserCommand("stShowStatusMsg", List("msg"), "Shows the specified message in the Story Teller status bar.")
 
-  def stSetScript(code: String) = runCtx.setScript(code)
+  def stSetScript(code: String) = kojoCtx.setScript(code)
   UserCommand("stSetScript", List("code"), "Copies the supplied code to the script editor.")
 
   def stRunCode(code: String) = interpret(code)
   UserCommand("stRunCode", List("code"), "Runs the supplied code (without copying it to the script editor).")
 
   def stClickRunButton() = Utils.runInSwingThread {
-    runCtx.clickRun()
+    kojoCtx.clickRun()
   }
   UserCommand("stClickRunButton", Nil, "Simulates a click of the run button")
 
@@ -235,8 +234,8 @@ class Builtins(
   }
   UserCommand("stNext", Nil, "Moves the story to the next page/view.")
 
-  def stInsertCodeInline(code: String) = runCtx.insertCodeInline(code)
-  def stInsertCodeBlock(code: String) = runCtx.insertCodeBlock(code)
+  def stInsertCodeInline(code: String) = kojoCtx.insertCodeInline(code)
+  def stInsertCodeBlock(code: String) = kojoCtx.insertCodeBlock(code)
   def stSetStorytellerWidth(width: Int) = kojoCtx.setStorytellerWidth(width)
   def stFrame = kojoCtx.frame
   def stSetUserControlsBg(color: Color) = storyTeller.setUserControlsBg(color)
@@ -401,7 +400,7 @@ Here's a partial list of the available commands:
   }
   def animate(fn: => Unit) = tCanvas.animate(fn)
   def stopAnimation() = stopActivity()
-  def stopActivity() = runCtx.stopActivity()
+  def stopActivity() = kojoCtx.stopActivity()
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def activateEditor() = kojoCtx.activateScriptEditor()
