@@ -86,35 +86,16 @@ class CompilerAndRunner(makeSettings: () => Settings,
   }
 
   val settings = makeSettings2()
+  
+  val compilerClasspath: List[URL] = new PathResolver(settings) asURLs
+  val classLoader = makeClassLoader()
+  classLoader.setAsContext()
 
-  lazy val compilerClasspath: List[URL] = new PathResolver(settings) asURLs
-
-  private var _classLoader: AbstractFileClassLoader = null
-  def resetClassLoader() = _classLoader = makeClassLoader()
-  def classLoader: AbstractFileClassLoader = {
-    if (_classLoader == null)
-      resetClassLoader()
-
-    _classLoader
-  }
   private def makeClassLoader(): AbstractFileClassLoader = {
-    val parent =
-      if (parentClassLoader == null) ScalaClassLoader fromURLs compilerClasspath
-      else new URLClassLoader(compilerClasspath, parentClassLoader)
-
+    val parent = new URLClassLoader(compilerClasspath, getClass.getClassLoader())
     new AbstractFileClassLoader(virtualDirectory, parent)
   }
   private def loadByName(s: String): Class[_] = (classLoader loadClass s)
-  private def methodByName(c: Class[_], name: String): reflect.Method =
-    c.getMethod(name, classOf[Object])
-
-  protected def parentClassLoader: ClassLoader =
-    this.getClass.getClassLoader()
-
-  def getInterpreterClassLoader() = classLoader
-
-  // Set the current Java "context" class loader to this interpreter's class loader
-  def setContextClassLoader() = classLoader.setAsContext()
 
   val reporter = new Reporter {
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
@@ -138,22 +119,23 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
   def pfxWithCounter = "%s%d%s" format (prefixHeader, counter, prefix)
 
-  def compile(code0: String, stopPhase: List[String] = List("selectiveanf")) = {
+  def compile(code0: String, stopPhase: List[String] = List("cleanup")) = {
     val pfx = pfxWithCounter
     offsetDelta = pfx.length
     val code = codeTemplate format (pfx, code0)
 
-    //    if (code.contains("\r")) {
-    //      println("-- [compiler] Code contains carriage return.")
-    //    }
-    //    else {
-    //      println("-- [compiler] Code does not contain carriage return.")
-    //    }
+    if (compiler.settings.stopAfter.value != stopPhase) {
+      // There seems to be a bug in the PhasesSetting contains method
+      // which makes the compiler not see the new stopAfter value
+      // So we make a new Settings
+      compiler.currentSettings = makeSettings2()
+      compiler.settings.stopAfter.value = stopPhase
+    }
 
-    compiler.settings.stopAfter.value = stopPhase
     val run = new compiler.Run
     reporter.reset
     run.compileSources(List(new BatchSourceFile("scripteditor", code)))
+    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
     if (reporter.hasErrors) IR.Error else IR.Success
   }
 
@@ -209,19 +191,12 @@ class CompilerAndRunner(makeSettings: () => Settings,
     }
     val run = new compiler.Run
     reporter.reset
-    try {
-      run.compileSources(List(new BatchSourceFile("scripteditor", code)))
-    }
-    finally {
-      compiler.currentSettings = makeSettings2()
-    }
+    run.compileSources(List(new BatchSourceFile("scripteditor", code)))
 
     if (reporter.hasErrors) {
       IR.Error
     }
     else {
-      //      val tree = run.units.next.body
-      //      listener.message(tree.toString)
       compiler.printAllUnits()
       IR.Success
     }
