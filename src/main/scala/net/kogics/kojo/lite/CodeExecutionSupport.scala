@@ -572,6 +572,10 @@ class CodeExecutionSupport(
   def runCode() {
     // Runs on swing thread
     val code2run = codeToRun
+    if (invalidCode(code2run.code)) {
+      return
+    }
+    
     if (isWorksheet(code2run.code)) {
       runWorksheet(code2run)
     }
@@ -588,7 +592,12 @@ class CodeExecutionSupport(
   }
 
   def runWorksheet() {
-    runWorksheet(codeToRun)
+    val code2run = codeToRun
+    if (invalidCode(code2run.code)) {
+      return
+    }
+    
+    runWorksheet(code2run)
   }
 
   // impure function!
