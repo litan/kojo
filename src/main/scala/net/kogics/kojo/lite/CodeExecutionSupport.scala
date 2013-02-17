@@ -309,20 +309,20 @@ class CodeExecutionSupport(
         }
       }
 
+      private def showInternalErrorMsg() {
+        showError("Kojo is unable to process your script. Please modify your code and try again.\n")
+        showOutput("The Kojo log file is likely to contain more information about the problem.\n")
+        
+      }
+      
       def onRunInterpError() = {
-        showErrorMsg("Kojo is unable to process your script. Please modify your code and try again.\n")
-        showOutput("More information about the problem - can be viewed - by clicking the red icon at the bottom right of the Kojo screen.\n")
+        showInternalErrorMsg()
         onRunError()
       }
 
       def onInternalCompilerError() = {
-        showErrorMsg("Kojo is unable to process your script. Please modify your code and try again.\n")
-        showOutput("More information about the problem - can be viewed - by clicking the red icon at the bottom right of the Kojo screen.\n")
+        showInternalErrorMsg()
         onCompileError()
-      }
-
-      def kprintln(outText: String) {
-        showOutput(outText)
       }
 
       def reportOutput(outText: String) {
@@ -330,19 +330,19 @@ class CodeExecutionSupport(
           return
         }
 
-        kprintln(outText)
+        showOutput(outText)
       }
 
-      def reportErrorMsg(errMsg: String) {
-        showErrorMsg(errMsg)
+      def reportError(errMsg: String) {
+        showError(errMsg)
       }
 
-      def reportErrorText(errText: String) {
-        showErrorText(errText)
+      def reportException(errText: String) {
+        showException(errText)
       }
 
-      def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
-        showSmartErrorText(errText, line, column, offset)
+      def reportSmartError(errText: String, line: Int, column: Int, offset: Int) {
+        showSmartError(errText, line, column, offset)
       }
 
       private def interpreterDone() = {
@@ -354,13 +354,7 @@ class CodeExecutionSupport(
         }
       }
 
-      def showScriptInOutput() { showCode = true }
-      def hideScriptInOutput() { showCode = false }
-      def showVerboseOutput() { verboseOutput = true }
-      def hideVerboseOutput() { verboseOutput = false }
       def readInput(prompt: String): String = CodeExecutionSupport.this.readInput(prompt)
-
-      def clearOutput() = clrOutput()
 
       def setScript(code: String) {
         Utils.runInSwingThreadAndWait {
@@ -492,10 +486,10 @@ class CodeExecutionSupport(
   def showOutput(outText: String) = outputPane.showOutput(outText)
   def showOutput(outText: String, color: Color) = outputPane.showOutput(outText, color)
   def resetErrInfo() = outputPane.resetErrInfo()
-  def showErrorMsg(errMsg: String) = outputPane.showErrorMsg(errMsg)
-  def showErrorText(errText: String) = outputPane.showErrorText(errText)
-  def showSmartErrorText(errText: String, line: Int, column: Int, offset: Int) =
-    outputPane.showSmartErrorText(errText, line, column, offset)
+  def showError(errMsg: String) = outputPane.showError(errMsg)
+  def showException(errText: String) = outputPane.showException(errText)
+  def showSmartError(errText: String, line: Int, column: Int, offset: Int) =
+    outputPane.showSmartError(errText, line, column, offset)
 
   def showWaitCursor() {
     val wc = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)

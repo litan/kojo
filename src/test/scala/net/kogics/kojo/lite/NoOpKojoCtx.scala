@@ -57,6 +57,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def showScriptInOutput() {}
   def hideScriptInOutput() {}
   def clearOutput() {}
+  def kprintln(outText: String) {}
   def userLanguage: String = "en"
   def userLanguage_=(lang: String) {}
   def switchToDefaultPerspective() {}

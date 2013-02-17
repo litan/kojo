@@ -55,7 +55,7 @@ class KojoCtx extends core.KojoCtx {
   var control: CControl = _
   @volatile var fps = 50
   Utils.kojoCtx = this
-  
+
   val activityListener = new DelegatingSpriteListener
   def setActivityListener(l: SpriteListener) {
     activityListener.setRealListener(l)
@@ -64,16 +64,16 @@ class KojoCtx extends core.KojoCtx {
   type ActionLike = FullScreenBaseAction
   def fullScreenCanvasAction(): ActionLike = FullScreenCanvasAction(topcs.dch, this)
   def fullScreenOutputAction(): ActionLike = FullScreenOutputAction(topcs.owh)
-  def updateMenuItem(mi: JCheckBoxMenuItem, action: ActionLike) = FullScreenSupport.updateMenuItem(mi, action) 
-    
+  def updateMenuItem(mi: JCheckBoxMenuItem, action: ActionLike) = FullScreenSupport.updateMenuItem(mi, action)
+
   def setStorytellerWidth(width: Int) = Utils.runInSwingThread {
     topcs.sth.setResizeRequest(new Dimension(width, 0), true)
   }
-  
+
   def canvasLocation = {
     topcs.dch.getContentPane.getLocationOnScreen
   }
-  
+
   def switchToDefaultPerspective() {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
@@ -245,7 +245,7 @@ class KojoCtx extends core.KojoCtx {
   def stopInterpreter() = Utils.runInSwingThread {
     execSupport.stopInterpreter()
   }
-  
+
   def stopStory() = Utils.runInSwingThread { storyTeller.stop() }
 
   def scrollOutputToEnd() {
@@ -323,6 +323,10 @@ class KojoCtx extends core.KojoCtx {
     execSupport.clrOutput()
   }
 
+  def kprintln(outText: String) {
+    execSupport.showOutput(outText)
+  }
+
   def outputPane = topcs.owh.outputPane
   def setOutputBackground(color: Color) {
     outputPane.setOutputBackground(color)
@@ -331,13 +335,13 @@ class KojoCtx extends core.KojoCtx {
   def setOutputForeground(color: Color) {
     outputPane.setOutputForeground(color)
   }
-  
+
   def setOutputFontSize(size: Int) {
     outputPane.setOutputFontSize(size)
   }
-  
+
   def formatSource() {
     topcs.seh.se.formatAction.actionPerformed(null)
   }
-  
+
 }

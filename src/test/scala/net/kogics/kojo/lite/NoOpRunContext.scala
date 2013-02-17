@@ -19,20 +19,14 @@ class NoOpRunContext extends RunContext {
   def onCompileSuccess() {}
   def onInternalCompilerError() {}
 
-  def kprintln(outText: String) {}
   def reportOutput(outText: String) {}
   def reportWorksheetOutput(result: String, lineNum: Int) {}
-  def reportErrorMsg(errMsg: String) {}
-  def reportErrorText(errText: String) {}
-  def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {}
+  def reportError(errMsg: String) {}
+  def reportException(errText: String) {}
+  def reportSmartError(errText: String, line: Int, column: Int, offset: Int) {}
 
   def readInput(prompt: String) = ""
 
-  def showScriptInOutput() {}
-  def hideScriptInOutput() {}
-  def showVerboseOutput() {}
-  def hideVerboseOutput() {}
-  def clearOutput() {}
   def setScript(code: String) {}
   def insertCodeInline(code: String) {}
   def insertCodeBlock(code: String) {}

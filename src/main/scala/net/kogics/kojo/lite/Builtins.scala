@@ -95,16 +95,16 @@ class Builtins(
 
   val Kc = new staging.KeyCodes
 
-  def showScriptInOutput() = runCtx.showScriptInOutput()
+  def showScriptInOutput() = kojoCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
 
-  def hideScriptInOutput() = runCtx.hideScriptInOutput()
+  def hideScriptInOutput() = kojoCtx.hideScriptInOutput()
   UserCommand("hideScriptInOutput", Nil, "Stops the display of scripts in the output window.")
 
-  def showVerboseOutput() = runCtx.showVerboseOutput()
+  def showVerboseOutput() = kojoCtx.showVerboseOutput()
   UserCommand("showVerboseOutput", Nil, "Enables the display of output from the Scala interpreter. By default, output from the interpreter is shown only for single line scripts.")
 
-  def hideVerboseOutput() = runCtx.hideVerboseOutput()
+  def hideVerboseOutput() = kojoCtx.hideVerboseOutput()
   UserCommand("hideVerboseOutput", Nil, "Stops the display of output from the Scala interpreter.")
   UserCommand.addSynopsisSeparator()
 
@@ -116,7 +116,7 @@ class Builtins(
 
   def print(obj: Any) {
     // Runs on Actor pool (interpreter) thread
-    runCtx.kprintln("%s" format (obj))
+    kojoCtx.kprintln("%s" format (obj))
     Throttler.throttle()
   }
   UserCommand.addCompletion("print", List("obj"))
@@ -291,7 +291,7 @@ Here's a partial list of the available commands:
 
   // undocumented
   def color(rgbHex: Int) = new Color(rgbHex)
-  def clearOutput() = runCtx.clearOutput()
+  def clearOutput() = kojoCtx.clearOutput()
 
   def interpret(code: String) {
     scalaCodeRunner.runCode(code)

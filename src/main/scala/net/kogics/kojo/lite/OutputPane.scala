@@ -282,7 +282,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     execSupport.enableClearButton()
   }
 
-  def showErrorMsg(errMsg: String) {
+  def showError(errMsg: String) {
     Utils.runInSwingThread {
       appendError(errMsg)
       execSupport.enableClearButton()
@@ -290,7 +290,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     //    lastOutput = errMsg
   }
 
-  def showErrorText(errText: String) {
+  def showException(errText: String) {
     Utils.runInSwingThread {
       appendError(errText)
       execSupport.enableClearButton()
@@ -298,7 +298,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     //    lastOutput = errText
   }
 
-  def showSmartErrorText(errText: String, line: Int, column: Int, offset: Int) {
+  def showSmartError(errText: String, line: Int, column: Int, offset: Int) {
     Utils.runInSwingThread {
       appendError(errText, Some(offset))
       execSupport.enableClearButton()

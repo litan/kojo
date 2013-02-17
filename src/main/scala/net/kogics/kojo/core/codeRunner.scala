@@ -63,20 +63,14 @@ trait RunContext {
   def onCompileSuccess(): Unit
   def onInternalCompilerError(): Unit
 
-  def kprintln(outText: String): Unit
   def reportOutput(outText: String): Unit
   def reportWorksheetOutput(result: String, lineNum: Int): Unit
-  def reportErrorMsg(errMsg: String): Unit
-  def reportErrorText(errText: String): Unit
-  def reportSmartErrorText(errText: String, line: Int, column: Int, offset: Int): Unit
+  def reportError(errMsg: String): Unit
+  def reportException(errText: String): Unit
+  def reportSmartError(errText: String, line: Int, column: Int, offset: Int): Unit
 
   def readInput(prompt: String): String
 
-  def showScriptInOutput(): Unit
-  def hideScriptInOutput(): Unit
-  def showVerboseOutput(): Unit
-  def hideVerboseOutput(): Unit
-  def clearOutput(): Unit
   def setScript(code: String): Unit
   def insertCodeInline(code: String): Unit
   def insertCodeBlock(code: String): Unit
