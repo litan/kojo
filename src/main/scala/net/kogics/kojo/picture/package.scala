@@ -7,9 +7,6 @@ import java.awt.event.KeyEvent
 import com.vividsolutions.jts.geom.GeometryFactory
 
 import net.kogics.kojo.core.SCanvas
-import net.kogics.kojo.picture.AxesOnc
-import net.kogics.kojo.picture.FlipXc
-import net.kogics.kojo.picture.FlipYc
 import net.kogics.kojo.util.Vector2D
 
 import core.Picture

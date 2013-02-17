@@ -22,8 +22,6 @@ import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.Point
 import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.util.Utils
-import staging.KColor.black
-import staging.KColor.white
 import util.Utils
 import Cartooning._
 import Cartooning2._
