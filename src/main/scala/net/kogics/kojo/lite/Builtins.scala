@@ -59,6 +59,7 @@ class Builtins(
   kojoCtx: core.KojoCtx,
   scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
   Builtins.instance = this
+  import language.implicitConversions
   val runCtx = scalaCodeRunner.runContext
   val tCanvas = TSCanvas.tCanvas
 

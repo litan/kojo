@@ -43,6 +43,7 @@ import net.kogics.kojo.lite.TestEnv
 
 @RunWith(classOf[JUnitRunner])
 class InterpTest extends FunSuite with ShouldMatchers {
+  import language.reflectiveCalls
 
   def fixture = new {
     val settings = new Settings()
