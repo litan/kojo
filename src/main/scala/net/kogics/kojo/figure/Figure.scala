@@ -16,7 +16,6 @@
 package net.kogics.kojo
 package figure
 
-import lite.canvas.SpriteCanvas
 import edu.umd.cs.piccolo._
 import edu.umd.cs.piccolo.nodes._
 import edu.umd.cs.piccolo.util._
@@ -33,7 +32,7 @@ import java.util.concurrent.Callable
 import net.kogics.kojo.util.FutureResult
 
 object Figure {
-  def apply(canvas: SpriteCanvas, initX: Double = 0d, initY: Double = 0): Figure = {
+  def apply(canvas: SCanvas, initX: Double = 0d, initY: Double = 0): Figure = {
     val fig = Utils.runInSwingThreadAndWait {
       new Figure(canvas, initX, initY)
     }
@@ -41,7 +40,7 @@ object Figure {
   }
 }
 
-class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
+class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
   private val bgLayer = new PLayer
   private val fgLayer = new PLayer
   private var currLayer = bgLayer
@@ -183,7 +182,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
           }
           catch {
             case t: Throwable =>
-              canvas.outputFn("Problem: " + t.toString())
+              println("Problem: " + t.toString())
               terminate(PActivity.TERMINATE_AND_FINISH)
               figAnimations = figAnimations filter { _ != this }
           }
@@ -203,7 +202,7 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
       })
 
       figAnimations = figAnimation :: figAnimations
-      canvas.getRoot.addActivity(figAnimation)
+      canvas.animateActivity(figAnimation)
       promise.set(figAnimation)
     }
     promise
@@ -231,16 +230,17 @@ class Figure private (canvas: SpriteCanvas, initX: Double, initY: Double) {
     }
   }
 
-  def onMouseMove(fn: (Double, Double) => Unit) {
-    canvas.addInputEventListener(new PBasicInputEventHandler {
-      override def mouseMoved(e: PInputEvent) {
-        val pos = e.getPosition
-        fn(pos.getX, pos.getY)
-        currLayer.repaint()
-      }
-    })
-  }
-
+//  def onMouseMove(fn: (Double, Double) => Unit) {
+//    canvas.addInputEventListener(new PBasicInputEventHandler {
+//      override def mouseMoved(e: PInputEvent) {
+//        val pos = e.getPosition
+//        fn(pos.getX, pos.getY)
+//        currLayer.repaint()
+//      }
+//    })
+//  }
+//
+  
   private[kojo] def setSpriteListener(l: SpriteListener) {
     listener = l
   }
