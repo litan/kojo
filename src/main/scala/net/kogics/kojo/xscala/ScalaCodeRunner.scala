@@ -514,10 +514,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     }
 
     def loadCompiler() {
-      compilerAndRunner = new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext) {
-        override protected def parentClassLoader = classOf[ScalaCodeRunner].getClassLoader
-      }
-      compilerAndRunner.setContextClassLoader()
+      compilerAndRunner = new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext)
       pcompiler = compilerAndRunner.pcompiler
       compiler = compilerAndRunner.compiler
     }
