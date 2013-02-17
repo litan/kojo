@@ -52,6 +52,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   // for debugging only!
   @volatile var kojointerp: scala.tools.nsc.interpreter.IMain = _
   @volatile var pcompiler: scala.tools.nsc.interactive.Global = _
+  @volatile var compiler: scala.tools.nsc.Global = _
 
   val codeRunner = startCodeRunner()
 
@@ -518,6 +519,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       }
       compilerAndRunner.setContextClassLoader()
       pcompiler = compilerAndRunner.pcompiler
+      compiler = compilerAndRunner.compiler
     }
 
     def initInterp() {
