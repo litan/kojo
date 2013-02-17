@@ -323,16 +323,17 @@ class KojoCtx extends core.KojoCtx {
     execSupport.clrOutput()
   }
 
+  def outputPane = topcs.owh.outputPane
   def setOutputBackground(color: Color) {
-    execSupport.setOutputBackground(color)
+    outputPane.setOutputBackground(color)
   }
 
   def setOutputForeground(color: Color) {
-    execSupport.setOutputForeground(color)
+    outputPane.setOutputForeground(color)
   }
   
   def setOutputFontSize(size: Int) {
-    execSupport.setOutputFontSize(size)
+    outputPane.setOutputFontSize(size)
   }
   
   def formatSource() {

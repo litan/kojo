@@ -129,7 +129,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
     val increaseFontSizeAction = new AbstractAction(Utils.loadString("S_IncreaseFontSize")) {
       override def actionPerformed(e: ActionEvent) {
-        execSupport.increaseOutputFontSize()
+        increaseOutputFontSize()
       }
     }
     val incrFontSizeItem = new JMenuItem(increaseFontSizeAction)
@@ -143,7 +143,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
     val decreaseFontSizeAction = new AbstractAction(Utils.loadString("S_DecreaseFontSize")) {
       override def actionPerformed(e: ActionEvent) {
-        execSupport.decreaseOutputFontSize()
+        decreaseOutputFontSize()
       }
     }
     val decrFontSizeItem = new JMenuItem(decreaseFontSizeAction)

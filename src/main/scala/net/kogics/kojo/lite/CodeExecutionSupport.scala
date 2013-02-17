@@ -489,13 +489,6 @@ class CodeExecutionSupport(
     input.get
   }
 
-  def appendOutput(s: String, color: Color) = outputPane.appendOutput(s, color)
-  def setOutputBackground(color: Color) = outputPane.setOutputBackground(color)
-  def setOutputForeground(color: Color) = outputPane.setOutputForeground(color)
-  def setOutputFontSize(size: Int) = outputPane.setOutputFontSize(size)
-  def increaseOutputFontSize() = outputPane.increaseOutputFontSize()
-  def decreaseOutputFontSize() = outputPane.decreaseOutputFontSize()
-
   def showOutput(outText: String) = outputPane.showOutput(outText)
   def showOutput(outText: String, color: Color) = outputPane.showOutput(outText, color)
   def resetErrInfo() = outputPane.resetErrInfo()
