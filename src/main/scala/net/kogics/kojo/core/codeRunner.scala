@@ -20,6 +20,7 @@ import java.util.concurrent.CountDownLatch
 import scala.tools.nsc.interpreter.Results
 
 trait CodeRunner {
+  def start()
   def interruptInterpreter(): Unit
   def runCode(code: String): Unit
   def runWorksheet(code: String): Unit
@@ -69,15 +70,6 @@ trait RunContext {
   def reportException(errText: String): Unit
   def reportSmartError(errText: String, line: Int, column: Int, offset: Int): Unit
 
-  def readInput(prompt: String): String
-
-  def setScript(code: String): Unit
-  def insertCodeInline(code: String): Unit
-  def insertCodeBlock(code: String): Unit
-
-  def stopActivity(): Unit
-  def clickRun(): Unit
-  def setAstStopPhase(phase: String): Unit
   def astStopPhase: String
 }
 
@@ -91,6 +83,11 @@ class ProxyCodeRunner(codeRunnerMaker: () => CodeRunner) extends CodeRunner {
         latch.countDown()
       }
     }).start()
+
+  def start() {
+    latch.await()
+    codeRunner.start()
+  }
 
   def interruptInterpreter() {
     latch.await()

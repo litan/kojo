@@ -65,6 +65,13 @@ trait KojoCtx {
   def hideScriptInOutput(): Unit
   def clearOutput(): Unit
   def kprintln(outText: String): Unit
+  def readInput(prompt: String): String
+  def setAstStopPhase(phase: String): Unit
+  def astStopPhase: String
+  def setScript(code: String): Unit
+  def insertCodeInline(code: String): Unit
+  def insertCodeBlock(code: String): Unit
+  def clickRun(): Unit
   def userLanguage: String
   def userLanguage_=(lang: String): Unit
   def switchToDefaultPerspective(): Unit

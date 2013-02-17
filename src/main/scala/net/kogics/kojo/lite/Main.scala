@@ -43,6 +43,7 @@ object Main extends AppMenu with ScriptLoader { main =>
   @volatile var kojoCtx: KojoCtx = _
 
   def main(args: Array[String]): Unit = {
+    runMultiInstancehandler()
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
     System.setSecurityManager(null)
     kojoCtx = new KojoCtx // context needs to be created right up front to set user language
@@ -53,8 +54,6 @@ object Main extends AppMenu with ScriptLoader { main =>
     setupLogging()
     val Log = Logger.getLogger("Main")
 
-    runMultiInstancehandler()
-
     Utils.schedule(0.3) {
       import javax.swing.UIManager
       // using println here clobbers output redirection in CodeExecutionSupport
@@ -62,14 +61,6 @@ object Main extends AppMenu with ScriptLoader { main =>
       val xx = UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
         UIManager.setLookAndFeel(nim.getClassName)
       }
-
-      frame = new JFrame(Utils.loadString("S_Kojo"))
-      frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-      val control = new CControl(frame)
-      val themes = control.getThemes()
-      themes.select(ThemeMap.KEY_ECLIPSE_THEME)
-      frame.setLayout(new GridLayout(1, 1))
-      frame.add(control.getContentArea)
 
       val spriteCanvas = new SpriteCanvas(kojoCtx)
       val Tw = new TurtleWorldAPI(spriteCanvas.turtle0)
@@ -99,15 +90,23 @@ object Main extends AppMenu with ScriptLoader { main =>
         kojoCtx
       )
 
+      kojoCtx.execSupport = execSupport
+      kojoCtx.storyTeller = storyTeller
       scriptEditor = new ScriptEditor(execSupport, frame)
       codePane = scriptEditor.codePane
       execSupport.initPhase2(scriptEditor)
 
-      kojoCtx.frame = frame
-      kojoCtx.execSupport = execSupport
-      kojoCtx.control = control
-      kojoCtx.storyTeller = storyTeller
+      frame = new JFrame(Utils.loadString("S_Kojo"))
+      frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+      val control = new CControl(frame)
+      val themes = control.getThemes()
+      themes.select(ThemeMap.KEY_ECLIPSE_THEME)
+      frame.setLayout(new GridLayout(1, 1))
+      frame.add(control.getContentArea)
 
+      kojoCtx.frame = frame
+      kojoCtx.control = control
+      
       val drawingCanvasH = new DrawingCanvasHolder(spriteCanvas, kojoCtx)
       val scriptEditorH = new ScriptEditorHolder(scriptEditor)
       val outputPaneH = new OutputWindowHolder(execSupport.outputPane)

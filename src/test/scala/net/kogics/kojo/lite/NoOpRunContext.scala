@@ -25,14 +25,6 @@ class NoOpRunContext extends RunContext {
   def reportException(errText: String) {}
   def reportSmartError(errText: String, line: Int, column: Int, offset: Int) {}
 
-  def readInput(prompt: String) = ""
-
-  def setScript(code: String) {}
-  def insertCodeInline(code: String) {}
-  def insertCodeBlock(code: String) {}
-
-  def stopActivity() {}
   def clickRun() {}
-  def setAstStopPhase(phase: String) {}
   def astStopPhase: String = "typer"
 }

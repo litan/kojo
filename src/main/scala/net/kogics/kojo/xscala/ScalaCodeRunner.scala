@@ -54,8 +54,18 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   @volatile var pcompiler: scala.tools.nsc.interactive.Global = _
   @volatile var compiler: scala.tools.nsc.Global = _
 
-  val codeRunner = startCodeRunner()
+  val codeRunner = makeCodeRunner
 
+  private def makeCodeRunner = {
+    val actor = new InterpActor
+    actor.start()
+    actor
+  }
+  
+  def start() = {
+    codeRunner ! Init
+  }
+  
   def resetInterp() = codeRunner.resetInterp()
 
   if (Utils.libJars.size > 0) {
@@ -121,13 +131,6 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
   def typeAt(code: String, caretOffset: Int): String = {
     (codeRunner !? TypeAtRequest(code, caretOffset)).asInstanceOf[String]
-  }
-
-  def startCodeRunner() = {
-    val actor = new InterpActor
-    actor.start()
-    actor ! Init
-    actor
   }
 
   def activateTw() {
