@@ -17,26 +17,19 @@ package lite
 
 import java.awt.Color
 import java.awt.Cursor
-import java.awt.Dimension
-import java.awt.Event
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import java.awt.event.KeyAdapter
-import java.awt.event.KeyEvent
-import java.io.File
 import java.io.OutputStream
 import java.io.PrintStream
 import java.io.Writer
-import java.util.concurrent.CountDownLatch
 import java.util.logging.Logger
+
 import javax.swing.JButton
-import javax.swing.JOptionPane
-import javax.swing.JPanel
 import javax.swing.JTextArea
-import javax.swing.JToolBar
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Utilities
+
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
 import net.kogics.kojo.core.Interpreter
@@ -51,8 +44,7 @@ import net.kogics.kojo.livecoding.ManipulationContext
 import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.FutureResult
-import net.kogics.kojo.util.RichFile.enrichFile
-import net.kogics.kojo.xscala.Builtins
+
 import util.Utils
 
 class CodeExecutionSupport(
@@ -238,6 +230,14 @@ class CodeExecutionSupport(
         interp.interpret("val builtins = predef.builtins")
         interp.interpret("import builtins._")
       }
+      
+      val compilerPrefix = """ {
+  val builtins = net.kogics.kojo.lite.Builtins.instance
+  import builtins._
+  def entry() {
+    // noop
+  }
+"""
 
       def onInterpreterInit() = {
         showOutput(" " * 38 + "_____\n\n")

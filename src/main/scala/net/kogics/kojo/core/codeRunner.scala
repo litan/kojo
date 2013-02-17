@@ -52,6 +52,7 @@ trait Interpreter {
 
 trait RunContext {
   def initInterp(interp: Interpreter)
+  def compilerPrefix: String
   def onInterpreterInit(): Unit
   def onInterpreterStart(code: String): Unit
   def onRunError(): Unit

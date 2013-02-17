@@ -14,7 +14,7 @@
  */
 
 package net.kogics.kojo
-package xscala
+package lite
 
 import java.awt.{Color => JColor}
 import java.awt.GradientPaint
@@ -22,13 +22,15 @@ import java.awt.Paint
 
 import javax.swing.JComponent
 
-import net.kogics.kojo.core.KojoCtx
-import net.kogics.kojo.lite.DrawingCanvasAPI
 import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.story.HandlerHolder
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.Read
 import net.kogics.kojo.util.UserCommand
+import net.kogics.kojo.xscala.CodeCompletionUtils
+import net.kogics.kojo.xscala.Help
+import net.kogics.kojo.xscala.RepeatCommands
+import net.kogics.kojo.xscala.ScalaCodeRunner
 
 import core.Rectangle
 import core.Voice
@@ -54,7 +56,7 @@ class Builtins(
   storyTeller: story.StoryTeller,
   mp3player: music.KMp3,
   fuguePlayer: music.FuguePlayer,
-  kojoCtx: KojoCtx,
+  kojoCtx: core.KojoCtx,
   scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
   Builtins.instance = this
   val runCtx = scalaCodeRunner.runContext
@@ -493,7 +495,7 @@ Here's a partial list of the available commands:
 
   val PShapes = PicShape
   object PicShape {
-    private[xscala] def trect(h: Int, w: Int, t: Turtle) {
+    private[lite] def trect(h: Int, w: Int, t: Turtle) {
       import t._
       repeat(2) {
         forward(h)
