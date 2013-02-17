@@ -72,7 +72,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
   }
 
-  def kprintln(s: String) = runContext.reportOutput(s)
+  def kprintln(s: String) = print(s)
 
   def runCode(code: String) {
     // Runs on swing thread
