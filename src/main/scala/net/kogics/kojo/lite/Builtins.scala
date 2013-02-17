@@ -22,6 +22,7 @@ import java.awt.Paint
 
 import javax.swing.JComponent
 
+import net.kogics.kojo.core.ProxyCodeRunner
 import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.story.HandlerHolder
 import net.kogics.kojo.turtle.TurtleWorldAPI
@@ -60,7 +61,7 @@ class Builtins(
   scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
   Builtins.instance = this
   import language.implicitConversions
-  val runCtx = scalaCodeRunner.runContext
+  lazy val runCtx = scalaCodeRunner.runContext
   val tCanvas = TSCanvas.tCanvas
 
   type Turtle = core.Turtle
@@ -301,8 +302,9 @@ Here's a partial list of the available commands:
   }
 
   // for debugging only!
-  def kojoInterp = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].kojointerp
-  def pcompiler = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].pcompiler
+  def kojoInterp = scalaCodeRunner.asInstanceOf[ProxyCodeRunner].codeRunner.asInstanceOf[ScalaCodeRunner].kojointerp
+  def pcompiler = scalaCodeRunner.asInstanceOf[ProxyCodeRunner].codeRunner.asInstanceOf[ScalaCodeRunner].pcompiler
+  def compiler = scalaCodeRunner.asInstanceOf[ProxyCodeRunner].codeRunner.asInstanceOf[ScalaCodeRunner].compiler
 
   def reimportBuiltins() {
     interpret("import TSCanvas._; import Tw._")
