@@ -62,7 +62,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
   }
 
-  def kprintln(s: String) = runContext.kprintln(s)
+  def kprintln(s: String) = runContext.reportOutput(s)
 
   def runCode(code: String) {
     // Runs on swing thread
@@ -618,7 +618,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       |error: Incomplete code fragment
       |You probably have a missing brace/bracket somewhere in your script
       """.stripMargin
-      runContext.reportErrorMsg(msg)
+      runContext.reportError(msg)
     }
 
     import CodeCompletionUtils._

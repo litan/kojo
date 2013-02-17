@@ -53,7 +53,7 @@ class InterpOutputHandler(ctx: RunContext) {
       output0
     }
     worksheetLineNum foreach { ctx.reportWorksheetOutput(output, _) }
-    ctx.kprintln(output)
+    ctx.reportException(output)
   }
 
   private def reportNonExceptionOutput(output: String) {
@@ -61,7 +61,7 @@ class InterpOutputHandler(ctx: RunContext) {
     if (m.find) {
       val errMsg = output.substring(m.group(1).length, output.length)
       if (worksheetLineNum.isEmpty) {
-        ctx.reportErrorMsg(errMsg)
+        ctx.reportError(errMsg)
       }
       else {
         firstWorksheetError = Some(errMsg)
@@ -76,7 +76,7 @@ class InterpOutputHandler(ctx: RunContext) {
   def flushWorksheetError() {
     firstWorksheetError foreach { msg =>
       worksheetLineNum foreach { ctx.reportWorksheetOutput(msg.lines.next, _) }
-      ctx.reportErrorMsg(msg)
+      ctx.reportError(msg)
     }
     firstWorksheetError = None
   }
@@ -111,20 +111,20 @@ class InterpOutputHandler(ctx: RunContext) {
 
 class CompilerOutputHandler(ctx: RunContext) extends CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String) {
-    ctx.reportErrorMsg("Error[%d,%d]: %s\n" format (line, column, msg))
-    ctx.reportSmartErrorText("%s\n" format (lineContent), line, column, offset)
-    ctx.reportErrorMsg(" " * (column - 1) + "^\n")
+    ctx.reportError("Error[%d,%d]: %s\n" format (line, column, msg))
+    ctx.reportSmartError("%s\n" format (lineContent), line, column, offset)
+    ctx.reportError(" " * (column - 1) + "^\n")
   }
 
   def warning(msg: String, line: Int, column: Int) {
-    ctx.kprintln("Warning: %s\n" format (msg))
+    ctx.reportOutput("Warning: %s\n" format (msg))
   }
 
   def info(msg: String, line: Int, column: Int) {
-    ctx.kprintln("Info: %s\n" format (msg))
+    ctx.reportOutput("Info: %s\n" format (msg))
   }
 
   def message(msg: String) {
-    ctx.kprintln("%s\n" format (msg))
+    ctx.reportOutput("%s\n" format (msg))
   }
 }

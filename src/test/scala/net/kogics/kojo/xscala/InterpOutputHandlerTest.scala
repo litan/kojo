@@ -79,7 +79,7 @@ error: Invalid literal number
       
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).reportErrorMsg(output2)
+        one(runCtx).reportError(output2)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
@@ -113,7 +113,7 @@ error: Invalid literal number
 
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).kprintln(output5)
+        one(runCtx).reportException(output5)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
@@ -147,7 +147,7 @@ error: Invalid literal number
 
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).kprintln(output5)
+        one(runCtx).reportException(output5)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
@@ -163,7 +163,7 @@ error: Invalid literal number
 
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).kprintln(output)
+        one(runCtx).reportException(output)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
@@ -177,7 +177,7 @@ error: Invalid literal number
 
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).kprintln(output)
+        one(runCtx).reportException(output)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
@@ -191,7 +191,7 @@ error: Invalid literal number
 
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).kprintln(output)
+        one(runCtx).reportException(output)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
@@ -208,7 +208,7 @@ error: Invalid literal number
 
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).kprintln(output)
+        one(runCtx).reportException(output)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
@@ -241,7 +241,7 @@ error: Invalid literal number
 
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
     context.checking (new Expectations {
-        one(runCtx).kprintln(output5)
+        one(runCtx).reportException(output5)
       })
 
     val outputHandler = new InterpOutputHandler(runCtx)
