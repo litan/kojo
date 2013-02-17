@@ -16,27 +16,27 @@
 package net.kogics.kojo
 package lite
 
-import net.kogics.kojo.util.Utils
-import java.io.File
-import bibliothek.gui.dock.common.CLocation
-import javax.swing.JFrame
-import net.kogics.kojo.action.CloseFile
-import java.awt.event.ActionListener
-import java.awt.event.ActionEvent
 import java.awt.Color
-import java.util.prefs.Preferences
-import bibliothek.gui.dock.common.CGrid
-import bibliothek.gui.dock.common.CControl
-import bibliothek.gui.dock.common.mode.ExtendedMode
-import net.kogics.kojo.story.StoryTeller
-import net.kogics.kojo.core.SpriteListener
-import net.kogics.kojo.core.DelegatingSpriteListener
-import net.kogics.kojo.action.FullScreenCanvasAction
-import net.kogics.kojo.action.FullScreenOutputAction
 import java.awt.Dimension
-import net.kogics.kojo.action.FullScreenBaseAction
+import java.io.File
+import java.util.prefs.Preferences
+
 import javax.swing.JCheckBoxMenuItem
-import net.kogics.kojo.action.FullScreenSupport
+import javax.swing.JFrame
+
+import net.kogics.kojo.action.CloseFile
+import net.kogics.kojo.core.DelegatingSpriteListener
+import net.kogics.kojo.core.SpriteListener
+import net.kogics.kojo.lite.action.FullScreenBaseAction
+import net.kogics.kojo.lite.action.FullScreenCanvasAction
+import net.kogics.kojo.lite.action.FullScreenOutputAction
+import net.kogics.kojo.lite.action.FullScreenSupport
+import net.kogics.kojo.story.StoryTeller
+import net.kogics.kojo.util.Utils
+
+import bibliothek.gui.dock.common.CControl
+import bibliothek.gui.dock.common.CGrid
+import bibliothek.gui.dock.common.mode.ExtendedMode
 
 class KojoCtx extends core.KojoCtx {
 

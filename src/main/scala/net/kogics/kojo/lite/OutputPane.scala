@@ -33,8 +33,6 @@ import javax.swing.event.PopupMenuListener
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
-import net.kogics.kojo.action.FullScreenOutputAction
-import net.kogics.kojo.action.FullScreenSupport
 import net.kogics.kojo.util.NoOpPainter
 import net.kogics.kojo.util.TerminalAnsiCodes
 import net.kogics.kojo.util.Utils
