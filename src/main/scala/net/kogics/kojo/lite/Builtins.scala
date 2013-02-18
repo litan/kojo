@@ -22,7 +22,6 @@ import java.awt.Paint
 
 import javax.swing.JComponent
 
-import net.kogics.kojo.core.ProxyCodeRunner
 import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.story.HandlerHolder
 import net.kogics.kojo.turtle.TurtleWorldAPI
@@ -301,9 +300,9 @@ Here's a partial list of the available commands:
   }
 
   // for debugging only!
-  def kojoInterp = scalaCodeRunner.asInstanceOf[ProxyCodeRunner].codeRunner.asInstanceOf[ScalaCodeRunner].kojointerp
-  def pcompiler = scalaCodeRunner.asInstanceOf[ProxyCodeRunner].codeRunner.asInstanceOf[ScalaCodeRunner].pcompiler
-  def compiler = scalaCodeRunner.asInstanceOf[ProxyCodeRunner].codeRunner.asInstanceOf[ScalaCodeRunner].compiler
+  def kojoInterp = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].kojointerp
+  def pcompiler = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].pcompiler
+  def compiler = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].compiler
 
   def reimportBuiltins() {
     interpret("import TSCanvas._; import Tw._")

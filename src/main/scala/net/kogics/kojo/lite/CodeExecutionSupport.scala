@@ -59,6 +59,10 @@ class CodeExecutionSupport(
   tCanvas: SpriteCanvas,
   scriptEditor0: => ScriptEditor,
   val kojoCtx: core.KojoCtx) extends core.CodeExecutionSupport with core.CodeCompletionSupport with ManipulationContext {
+  // the script editor that gets passed in is not yet inited (the last remaining circular dependency!)
+  // we access it via a lazy val
+  // and then import the stuff inside it, 
+  // which we could not do if we used a regular var that was inited in phase 2
   lazy val scriptEditor = scriptEditor0
   import scriptEditor._
   var clearButton = new JButton
@@ -82,7 +86,7 @@ class CodeExecutionSupport(
   @volatile var codePane: JTextArea = _
   @volatile var startingUp = true
 
-  val codeRunner = makeRealCodeRunner
+  val codeRunner = makeCodeRunner
   val builtins = new Builtins(
     TSCanvas,
     Tw,
@@ -187,10 +191,6 @@ class CodeExecutionSupport(
     showOutput(msg)
   }
 
-  def makeCodeRunner(): core.CodeRunner = {
-    new core.ProxyCodeRunner(makeRealCodeRunner _)
-  }
-
   def isSingleLine(code: String): Boolean = {
     //    val n = code.count {c => c == '\n'}
     //    if (n > 1) false else true
@@ -261,7 +261,7 @@ class CodeExecutionSupport(
     activateEditor()
   }
 
-  def makeRealCodeRunner: core.CodeRunner = {
+  def makeCodeRunner: core.CodeRunner = {
     val codeRunner = new xscala.ScalaCodeRunner(new RunContext {
 
       @volatile var suppressInterpOutput = false
