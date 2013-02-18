@@ -238,15 +238,9 @@ class KojoCtx extends core.KojoCtx {
 
   def baseDir: String = getLastLoadStoreDir + "/"
 
-  def stopActivity() = Utils.runInSwingThread {
-    execSupport.stopActivity()
-  }
-
-  def stopInterpreter() = Utils.runInSwingThread {
-    execSupport.stopInterpreter()
-  }
-
-  def stopStory() = Utils.runInSwingThread { storyTeller.stop() }
+  def stopActivity() = execSupport.stopActivity()
+  def stopInterpreter() = execSupport.stopInterpreter()
+  def stopStory() = storyTeller.stop()
 
   def scrollOutputToEnd() {
     topcs.owh.scrollToEnd()
