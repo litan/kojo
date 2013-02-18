@@ -272,8 +272,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       story.onStop(fn)
   }
   
-  def stop() {
-    // call in gui thread
+  def stop() = Utils.runInSwingThread {
     kojoCtx.stopInterpreter()
     done()
   }

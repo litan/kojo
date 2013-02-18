@@ -498,11 +498,11 @@ class CodeExecutionSupport(
     stopActivity()
   }
 
-  def stopInterpreter() {
+  def stopInterpreter() = Utils.runInSwingThread {
     codeRunner.interruptInterpreter()
   }
 
-  def stopActivity() {
+  def stopActivity() = Utils.runInSwingThread {
     Utils.stopMonitoredThreads()
     tCanvas.stop()
     fuguePlayer.stopMusic()
