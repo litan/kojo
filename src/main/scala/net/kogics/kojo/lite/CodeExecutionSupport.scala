@@ -569,24 +569,24 @@ class CodeExecutionSupport(
     }
   }
 
-  def runCode() {
-    // Runs on swing thread
+  def runCode() = Utils.runInSwingThread {
     val code2run = codeToRun
     if (invalidCode(code2run.code)) {
-      return
-    }
-    
-    if (isWorksheet(code2run.code)) {
-      runWorksheet(code2run)
+      // do nothing
     }
     else {
-      val code = cleanWsOutput(code2run)
-      preProcessCode(code)
-      if (isStory(code)) {
-        codeRunner.compileRunCode(code)
+      if (isWorksheet(code2run.code)) {
+        runWorksheet(code2run)
       }
       else {
-        codeRunner.runCode(code)
+        val code = cleanWsOutput(code2run)
+        preProcessCode(code)
+        if (isStory(code)) {
+          codeRunner.compileRunCode(code)
+        }
+        else {
+          codeRunner.runCode(code)
+        }
       }
     }
   }
@@ -596,7 +596,7 @@ class CodeExecutionSupport(
     if (invalidCode(code2run.code)) {
       return
     }
-    
+
     runWorksheet(code2run)
   }
 
