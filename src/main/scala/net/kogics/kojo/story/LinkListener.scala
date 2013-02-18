@@ -19,6 +19,7 @@ import java.awt.Desktop
 import java.net.URL
 import javax.swing._
 import javax.swing.event._
+import net.kogics.kojo.util.Utils
 
 class LinkListener(st: StoryTeller) extends HyperlinkListener {
   val linkRegex = """(?i)http://localpage/(\d+)#?(\d*)""".r
@@ -51,7 +52,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
   }
   
   // satisfy url click
-  def gotoUrl(url: URL) {
+  def gotoUrl(url: URL) = Utils.runInSwingThread {
     if (url.getProtocol == "http") {
       if (url.getHost.toLowerCase == "localpage") {
         try {

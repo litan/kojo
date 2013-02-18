@@ -211,8 +211,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  def nextPage() {
-    // needs to run on GUI thread
+  def nextPage()= Utils.runInSwingThread {
     kojoCtx.stopInterpreter()
     newPage()
 

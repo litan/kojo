@@ -218,9 +218,7 @@ class Builtins(
   def stRunCode(code: String) = interpret(code)
   UserCommand("stRunCode", List("code"), "Runs the supplied code (without copying it to the script editor).")
 
-  def stClickRunButton() = Utils.runInSwingThread {
-    kojoCtx.clickRun()
-  }
+  def stClickRunButton() = kojoCtx.clickRun()
   UserCommand("stClickRunButton", Nil, "Simulates a click of the run button")
 
   def stShowStatusError(msg: String) {
@@ -228,9 +226,7 @@ class Builtins(
   }
   UserCommand("stShowStatusError", List("msg"), "Shows the specified error message in the Story Teller status bar.")
 
-  def stNext() = Utils.runInSwingThread {
-    storyTeller.nextPage()
-  }
+  def stNext() = storyTeller.nextPage()
   UserCommand("stNext", Nil, "Moves the story to the next page/view.")
 
   def stInsertCodeInline(code: String) = kojoCtx.insertCodeInline(code)
@@ -331,9 +327,7 @@ Here's a partial list of the available commands:
   }
 
   private val urlHandler = new story.LinkListener(storyTeller)
-  def stGotoUrl(url: String) = Utils.runInSwingThread {
-    urlHandler.gotoUrl(new java.net.URL(url))
-  }
+  def stGotoUrl(url: String) = urlHandler.gotoUrl(new java.net.URL(url))
 
   def stOnStoryStop(story: Story)(fn: => Unit) {
     storyTeller.onStop(story, fn)
@@ -456,39 +450,18 @@ Here's a partial list of the available commands:
     }.get
   }
 
-  def switchToDefaultPerspective() = Utils.runInSwingThreadAndWait {
-    kojoCtx.switchToDefaultPerspective()
-  }
-
-  def switchToScriptEditingPerspective() = Utils.runInSwingThreadAndWait {
-    kojoCtx.switchToScriptEditingPerspective()
-  }
-
-  def switchToWorksheetPerspective() = Utils.runInSwingThreadAndWait {
-    kojoCtx.switchToWorksheetPerspective()
-  }
-
-  def switchToStoryViewingPerspective() = Utils.runInSwingThreadAndWait {
-    kojoCtx.switchToStoryViewingPerspective()
-  }
-
-  def switchToHistoryBrowsingPerspective() = Utils.runInSwingThreadAndWait {
-    kojoCtx.switchToHistoryBrowsingPerspective()
-  }
-
-  def switchToCanvasPerspective() = Utils.runInSwingThreadAndWait {
-    kojoCtx.switchToCanvasPerspective()
-  }
+  def switchToDefaultPerspective() = kojoCtx.switchToDefaultPerspective()
+  def switchToScriptEditingPerspective() = kojoCtx.switchToScriptEditingPerspective()
+  def switchToWorksheetPerspective() = kojoCtx.switchToWorksheetPerspective()
+  def switchToStoryViewingPerspective() = kojoCtx.switchToStoryViewingPerspective()
+  def switchToHistoryBrowsingPerspective() = kojoCtx.switchToHistoryBrowsingPerspective()
+  def switchToCanvasPerspective() = kojoCtx.switchToCanvasPerspective()
 
   private val fullScreenAction = kojoCtx.fullScreenCanvasAction()
-  def toggleFullScreenCanvas() = Utils.runInSwingThreadAndWait {
-    fullScreenAction.actionPerformed(null)
-  }
-
+  def toggleFullScreenCanvas() = fullScreenAction.actionPerformed(null)
+  
   private val fullScreenOutputAction = kojoCtx.fullScreenOutputAction()
-  def toggleFullScreenOutput() = Utils.runInSwingThreadAndWait {
-    fullScreenOutputAction.actionPerformed(null)
-  }
+  def toggleFullScreenOutput() = fullScreenOutputAction.actionPerformed(null)
 
   def setOutputBackground(color: Color) = kojoCtx.setOutputBackground(color)
   def setOutputTextColor(color: Color) = kojoCtx.setOutputForeground(color)

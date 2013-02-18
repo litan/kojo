@@ -70,11 +70,11 @@ class KojoCtx extends core.KojoCtx {
     topcs.sth.setResizeRequest(new Dimension(width, 0), true)
   }
 
-  def canvasLocation = {
+  def canvasLocation = Utils.runInSwingThreadAndWait {
     topcs.dch.getContentPane.getLocationOnScreen
   }
 
-  def switchToDefaultPerspective() {
+  def switchToDefaultPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -90,7 +90,7 @@ class KojoCtx extends core.KojoCtx {
     activateScriptEditor()
   }
 
-  def switchToScriptEditingPerspective() {
+  def switchToScriptEditingPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -107,7 +107,7 @@ class KojoCtx extends core.KojoCtx {
     activateScriptEditor()
   }
 
-  def switchToWorksheetPerspective() {
+  def switchToWorksheetPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 5, topcs.hih)
     grid.add(1, 0, 2, 5, topcs.sth)
@@ -124,7 +124,7 @@ class KojoCtx extends core.KojoCtx {
     activateScriptEditor()
   }
 
-  def switchToStoryViewingPerspective() {
+  def switchToStoryViewingPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -141,7 +141,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.sth.toFront()
   }
 
-  def switchToHistoryBrowsingPerspective() {
+  def switchToHistoryBrowsingPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
@@ -158,7 +158,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.hih.toFront()
   }
 
-  def switchToCanvasPerspective() {
+  def switchToCanvasPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
     // total width = 4, total height = 3
     grid.add(0, 0, 1, 1.75, topcs.sth)
