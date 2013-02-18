@@ -59,11 +59,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   val pageFields = new collection.mutable.HashMap[String, JTextField]()
   val defaultMsg =
     <div style="text-align:center;color:#808080;font-size:15px">
-      {
-        for (idx <- 1 to 6) yield {
-          <br/>
-        }
-      }
+      { for (idx <- 1 to 6) yield { <br/> } }
       <p>
         Run a story by loading/writing your story script within the<em>Script Editor</em>
         , and
@@ -189,12 +185,10 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     displayContent(NoText)
   }
 
-  def showCurrStory() {
-    Utils.runInSwingThread {
-      newPage()
-      displayContent(story.view)
-      updateCp()
-    }
+  def showCurrStory() = Utils.runInSwingThread {
+    newPage()
+    displayContent(story.view)
+    updateCp()
   }
 
   private def prevPage() {
@@ -211,7 +205,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  def nextPage()= Utils.runInSwingThread {
+  def nextPage() = Utils.runInSwingThread {
     kojoCtx.stopInterpreter()
     newPage()
 
@@ -226,7 +220,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   }
 
   def viewPage(page: Int, view: Int) {
-    // needs to run on GUI thread
+    // needs to run on GUI thread. Currently called only from link handler (in GUI thread)
     kojoCtx.stopInterpreter()
     newPage()
 
@@ -269,9 +263,9 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   def pageNumber(name: String): Option[Int] = story.pageNumber(name)
 
   def onStop(story: Story, fn: => Unit) {
-      story.onStop(fn)
+    story.onStop(fn)
   }
-  
+
   def stop() = Utils.runInSwingThread {
     kojoCtx.stopInterpreter()
     done()
@@ -322,12 +316,10 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  private def displayContent(html: xml.Node) {
-    Utils.runInSwingThread {
-      clearStatusBar()
-      ep.setText(html.toString)
-      scrollEp()
-    }
+  private def displayContent(html: xml.Node) = Utils.runInSwingThread {
+    clearStatusBar()
+    ep.setText(html.toString)
+    scrollEp()
   }
 
   def addField(label: String, deflt: Any): JTextField = {
@@ -347,30 +339,28 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     tf
   }
 
-  def fieldValue[T](label: String, default: T)(implicit reader: Read[T]): T = {
-    Utils.runInSwingThreadAndWait {
-      val tf = pageFields.get(label)
-      if (tf.isDefined) {
-        val svalue = tf.get.getText
-        if (svalue != null && svalue.trim != "") {
-          try {
-            reader.read(svalue)
-          }
-          catch {
-            case ex: Exception =>
-              showStatusError("Unable to convert value - %s - to required type %s" format (svalue, reader.typeName))
-              throw ex
-          }
+  def fieldValue[T](label: String, default: T)(implicit reader: Read[T]): T = Utils.runInSwingThreadAndWait {
+    val tf = pageFields.get(label)
+    if (tf.isDefined) {
+      val svalue = tf.get.getText
+      if (svalue != null && svalue.trim != "") {
+        try {
+          reader.read(svalue)
         }
-        else {
-          tf.get.setText(default.toString)
-          default
+        catch {
+          case ex: Exception =>
+            showStatusError("Unable to convert value - %s - to required type %s" format (svalue, reader.typeName))
+            throw ex
         }
       }
       else {
-        showStatusError("Field with label - %s is not defined" format (label))
-        throw new IllegalArgumentException("Field with label - %s is not defined" format (label))
+        tf.get.setText(default.toString)
+        default
       }
+    }
+    else {
+      showStatusError("Field with label - %s is not defined" format (label))
+      throw new IllegalArgumentException("Field with label - %s is not defined" format (label))
     }
   }
 
@@ -389,14 +379,12 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     addUiComponent(but)
   }
 
-  def addUiComponent(c: JComponent) {
-    Utils.runInSwingThread {
-      uc.add(c)
-      uc.setBorder(BorderFactory.createEtchedBorder())
-      uc.revalidate()
-      uc.repaint()
-      scrollEp()
-    }
+  def addUiComponent(c: JComponent) = Utils.runInSwingThread {
+    uc.add(c)
+    uc.setBorder(BorderFactory.createEtchedBorder())
+    uc.revalidate()
+    uc.repaint()
+    scrollEp()
   }
 
   def setUserControlsBg(color: Color) = Utils.runInSwingThread {
@@ -409,12 +397,10 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   })
 
-  def clearStatusBar() {
-    Utils.runInSwingThread {
-      statusBar.setForeground(Color.black)
-      statusBar.setText("")
-      pageNumBar.setText(storyLocation)
-    }
+  def clearStatusBar() = Utils.runInSwingThread {
+    statusBar.setForeground(Color.black)
+    statusBar.setText("")
+    pageNumBar.setText(storyLocation)
   }
 
   def storyLocation = {
@@ -452,7 +438,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   def playStory(story: Story) = Utils.runInSwingThread {
     if (currStory.isDefined) {
-        println("Can't run more than one story.")
+      println("Can't run more than one story.")
     }
     else {
       currStory = Some(story)
@@ -484,7 +470,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   def handleLink(name: String, data: String) {
     story.handleLink(name, data)
   }
-  
+
   def handleLinkEnter(name: String, data: String) {
     story.handleLinkEnter(name, data)
   }
