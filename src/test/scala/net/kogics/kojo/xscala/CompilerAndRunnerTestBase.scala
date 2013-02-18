@@ -25,8 +25,11 @@ import scala.tools.nsc.Settings
 
 abstract class CompilerAndRunnerTestBase {
 
-  val settings = new Settings()
-  settings.usejavacp.value = true
+  def settings = {
+    val settings0 = new Settings()
+    settings0.usejavacp.value = true
+    settings0
+  }
 
   var errLine = 0
   var errColumn = 0
@@ -50,7 +53,7 @@ abstract class CompilerAndRunnerTestBase {
   }
 
   val runner = makeRunner()
-  
+
   def makeRunner(): CompilerAndRunner
 
   @Before
@@ -313,7 +316,7 @@ t10.invisible()
     assertEquals(0, errLine)
     assertEquals(0, errColumn)
   }
-  
+
   @Test
   def testStaging() {
     val code = """import Staging._
@@ -326,7 +329,7 @@ animate {
     c.translate(4, 0)
 }
     """
-  
+
     runner.compile(code)
     assertEquals(0, errLine)
     assertEquals(0, errColumn)
