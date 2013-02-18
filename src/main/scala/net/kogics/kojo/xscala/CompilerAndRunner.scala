@@ -135,7 +135,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
     val run = new compiler.Run
     reporter.reset
     run.compileSources(List(new BatchSourceFile("scripteditor", code)))
-    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
+//    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
     if (reporter.hasErrors) IR.Error else IR.Success
   }
 
