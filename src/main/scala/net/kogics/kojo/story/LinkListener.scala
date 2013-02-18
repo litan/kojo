@@ -79,7 +79,13 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
         }
       }
       else {
-        Desktop.getDesktop().browse(url.toURI)
+        try {
+            Desktop.getDesktop().browse(url.toURI)
+        }
+        catch {
+          case t: Throwable =>
+            st.showStatusError("Problem browsing Url - %s: %s" format(url.toString, t.getMessage))
+        }
       }
     }
     else {
