@@ -27,9 +27,6 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.util.logging.Logger
 
-import net.kogics.kojo.core.KojoCtx
-import net.kogics.kojo.util.Read
-
 import javax.swing.BorderFactory
 import javax.swing.BoxLayout
 import javax.swing.JButton
@@ -40,7 +37,9 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextField
 import javax.swing.text.html.HTMLDocument
-import util.Read
+
+import net.kogics.kojo.util.Read
+
 import util.Utils
 
 class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player {
@@ -61,10 +60,8 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     <div style="text-align:center;color:#808080;font-size:15px">
       { for (idx <- 1 to 6) yield { <br/> } }
       <p>
-        Run a story by loading/writing your story script within the<em>Script Editor</em>
-        , and
-        then clicking the<em>Run</em>
-        button.
+        Run a story by loading/writing your story script within the <em>Script Editor</em>, 
+        and then clicking the <em>Run</em> button.
       </p>
       <p>
         You can control a running story via buttons that appear at the bottom of this pane.
