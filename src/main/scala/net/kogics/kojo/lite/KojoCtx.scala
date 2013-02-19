@@ -238,6 +238,7 @@ class KojoCtx extends core.KojoCtx {
 
   def baseDir: String = getLastLoadStoreDir + "/"
 
+  def stopScript() = execSupport.stopScript()
   def stopActivity() = execSupport.stopActivity()
   def stopInterpreter() = execSupport.stopInterpreter()
   def stopStory() = storyTeller.stop()

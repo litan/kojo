@@ -40,6 +40,7 @@ trait KojoCtx {
   def makeStoryTellerVisible(): Unit
   def make3DCanvasVisible(): Unit
   def baseDir: String
+  def stopScript(): Unit
   def stopInterpreter(): Unit
   def stopActivity(): Unit
   def stopStory(): Unit
