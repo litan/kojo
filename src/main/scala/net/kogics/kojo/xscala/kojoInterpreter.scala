@@ -23,18 +23,21 @@ class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends 
   val interp = new IMain(settings, out) {
     override protected def parentClassLoader = classOf[KojoInterpreter].getClassLoader
   }
-  interp.setContextClassLoader()
+  //  interp.setContextClassLoader()
   val completer = new JLineCompletion(interp)
 
   def bind(name: String, boundType: String, value: Any) = interp.bind(name, boundType, value)
-  def interpret(code: String) = interp.interpret(code)
+  def interpret(code: String) = {
+    interp.setContextClassLoader()
+    interp.interpret(code)
+  }
   def completions(id: String) = completer.completions(id)
   def unqualifiedIds = interp.unqualifiedIds
   def stop(interpThread: Thread) {
     interpThread.interrupt()
-//    interp.lineManager.cancel()
+    //    interp.lineManager.cancel()
   }
   def reset() = interp.reset()
-  
-//  def evalExpr[T: Manifest](line: String): T = false
+
+  //  def evalExpr[T: Manifest](line: String): T = false
 }
