@@ -86,10 +86,13 @@ class CompilerAndRunner(makeSettings: () => Settings,
   val settings = makeSettings2()
 
   val compilerClasspath: List[URL] = new PathResolver(settings) asURLs
-  val classLoader = makeClassLoader()
-  classLoader.setAsContext()
+  var classLoader = makeClassLoader
+  // needed to prevent pcompiler from making the interp's classloader as 
+  // its context loader (which causes a mem leak)
+  // we could make pcompiler lazy, but then the first completion takes a big hit 
+  classLoader.setAsContext()  
 
-  private def makeClassLoader(): AbstractFileClassLoader = {
+  private def makeClassLoader = {
     val parent = new URLClassLoader(compilerClasspath, getClass.getClassLoader())
     new AbstractFileClassLoader(virtualDirectory, parent)
   }
@@ -149,6 +152,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
       }
       else {
         try {
+          classLoader = makeClassLoader
           classLoader.setAsContext()
           val loadedResultObject = loadByName("Wrapper%d" format (counter))
           loadedResultObject.getMethod("entry").invoke(loadedResultObject)
