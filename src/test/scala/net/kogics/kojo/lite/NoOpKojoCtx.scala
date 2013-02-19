@@ -21,7 +21,6 @@ class NoOpKojoCtx extends core.KojoCtx {
   def fullScreenOutputAction() = null
   def updateMenuItem(mi: JCheckBoxMenuItem, action: ActionLike) {}
   def setStorytellerWidth(width: Int) {}
-  def stopActivity() {}
   def activateDrawingCanvasHolder() {}
   def activateDrawingCanvas() {}
   def activateScriptEditor() {}
@@ -32,7 +31,9 @@ class NoOpKojoCtx extends core.KojoCtx {
   def makeStoryTellerVisible() {}
   def make3DCanvasVisible() {}
   def baseDir: String = System.getProperty("user.dir")
+  def stopScript(): Unit = {}
   def stopInterpreter() {}
+  def stopActivity() {}
   def stopStory() {}
   def scrollOutputToEnd() {}
   def frame: JFrame = null

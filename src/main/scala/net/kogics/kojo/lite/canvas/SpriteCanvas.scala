@@ -65,7 +65,6 @@ import util.Utils
 
 class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   val Log = Logger.getLogger(getClass.getName);
-  val defLayer = getLayer
   val AxesColor = new Color(100, 100, 100)
   val GridColor = new Color(200, 200, 200)
   val TickColor = new Color(150, 150, 150)
@@ -518,6 +517,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   }
 
   def forceClear() {
+    kojoCtx.stopScript()
     clear()
   }
 
