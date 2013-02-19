@@ -16,9 +16,8 @@
 package net.kogics.kojo
 package xscala
 
-import java.lang.ClassLoader
-import java.lang.reflect
 import java.net.URL
+
 import scala.collection.mutable.ListBuffer
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.OffsetPosition
@@ -30,15 +29,14 @@ import scala.tools.nsc.interactive.Response
 import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.VirtualDirectory
 import scala.tools.nsc.reporters.Reporter
-import scala.tools.nsc.util.ScalaClassLoader
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 import scala.tools.util.PathResolver
-import core.Interpreter.IR
-import core.CompletionInfo
-import util.Utils
+
 import net.kogics.kojo.core.RunContext
 
-import language.postfixOps
+import core.CompletionInfo
+import core.Interpreter.IR
+import util.Utils
 
 trait CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String)
@@ -86,10 +84,10 @@ class CompilerAndRunner(makeSettings: () => Settings,
   }
 
   val settings = makeSettings2()
-  
+
   val compilerClasspath: List[URL] = new PathResolver(settings) asURLs
   val classLoader = makeClassLoader()
-//  classLoader.setAsContext()
+  classLoader.setAsContext()
 
   private def makeClassLoader(): AbstractFileClassLoader = {
     val parent = new URLClassLoader(compilerClasspath, getClass.getClassLoader())
@@ -135,7 +133,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
     val run = new compiler.Run
     reporter.reset
     run.compileSources(List(new BatchSourceFile("scripteditor", code)))
-//    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
+    //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
     if (reporter.hasErrors) IR.Error else IR.Success
   }
 
@@ -151,7 +149,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
       }
       else {
         try {
-          classLoader.setAsContext()          
+          classLoader.setAsContext()
           val loadedResultObject = loadByName("Wrapper%d" format (counter))
           loadedResultObject.getMethod("entry").invoke(loadedResultObject)
           IR.Success
@@ -214,12 +212,13 @@ class CompilerAndRunner(makeSettings: () => Settings,
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
     }
   }
-  lazy val pcompiler = new interactive.Global(settings, preporter)
+  /*lazy */ val pcompiler = new interactive.Global(settings, preporter)
 
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
     import scala.reflect.internal.Trees
 
+    classLoader.setAsContext()
     val pfx = pfxWithCounter
     val offsetDelta = pfx.length
     val code = codeTemplate format (pfx, code0)
@@ -248,6 +247,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
   }
 
   import core.CompletionInfo
+
   def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     def addMarkerAfterOffset(c: String) = {
       "%s  ; // %s" format (c.substring(0, offset), c.substring(offset, c.length))
@@ -255,6 +255,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
     import interactive._
 
+    classLoader.setAsContext()
     val pfx = pfxWithCounter
     val offsetDelta = pfx.length
     val code = codeTemplate format (pfx, addMarkerAfterOffset(code0))
