@@ -89,7 +89,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
   
   val compilerClasspath: List[URL] = new PathResolver(settings) asURLs
   val classLoader = makeClassLoader()
-  classLoader.setAsContext()
+//  classLoader.setAsContext()
 
   private def makeClassLoader(): AbstractFileClassLoader = {
     val parent = new URLClassLoader(compilerClasspath, getClass.getClassLoader())
@@ -140,6 +140,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
   }
 
   def compileAndRun(code0: String) = {
+    virtualDirectory.clear()
     counter += 1
     val result = compile(code0, Nil)
 
@@ -150,6 +151,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
       }
       else {
         try {
+          classLoader.setAsContext()          
           val loadedResultObject = loadByName("Wrapper%d" format (counter))
           loadedResultObject.getMethod("entry").invoke(loadedResultObject)
           IR.Success
@@ -212,7 +214,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
     }
   }
-  val pcompiler = new interactive.Global(settings, preporter)
+  lazy val pcompiler = new interactive.Global(settings, preporter)
 
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
