@@ -274,9 +274,9 @@ class Turtle(canvas: SCanvas, fname: String, initX: Double = 0d,
   }
 
   def remove() = Utils.runInSwingThread {
-    // pen.clear
-    layer.removeChild(turtle)
     camera.removeLayer(layer)
+    pen.clear()
+    layer.removeAllChildren() 
   }
 
   def penUp() = Utils.runInSwingThread {
