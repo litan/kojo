@@ -273,9 +273,15 @@ class Turtle(canvas: SCanvas, fname: String, initX: Double = 0d,
     turtle.repaint()
   }
 
+  // called for non-default turtles 
   def remove() = Utils.runInSwingThread {
     camera.removeLayer(layer)
-    pen.clear()
+    // this causes a very rare exeception for a subsequent endMove triggered by an earlier stop
+    // so schedule memory reclamation for later
+    // we're reclaiming memory by clearing turtle fields because there's a reference to turtles 
+    // from the Piccolo animation timer, which makes them leak 
+    // you can test all of this with VisualVM!
+    Utils.schedule(60)(pen.clear()) // can do more here, like 'layer = null' etc
     layer.removeAllChildren() 
   }
 
