@@ -554,7 +554,10 @@ class CodeExecutionSupport(
   }
 
   // For IPM
-  def runCode(code: String) = codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
+  def runCode(code: String) {
+    stopScript()
+    codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
+  }
 
   case class CodeToRun(code: String, selection: Option[(Int, Int)])
 
