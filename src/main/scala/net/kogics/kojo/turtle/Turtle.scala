@@ -281,8 +281,10 @@ class Turtle(canvas: SCanvas, fname: String, initX: Double = 0d,
     // we're reclaiming memory by clearing turtle fields because there's a reference to turtles 
     // from the Piccolo animation timer, which makes them leak 
     // you can test all of this with VisualVM!
-    Utils.schedule(60)(pen.clear()) // can do more here, like 'layer = null' etc
-    layer.removeAllChildren() 
+    Utils.schedule(60) {
+      pen.clear()
+      layer.removeAllChildren()
+    }
   }
 
   def penUp() = Utils.runInSwingThread {
