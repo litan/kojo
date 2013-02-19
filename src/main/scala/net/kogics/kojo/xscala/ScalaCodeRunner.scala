@@ -50,9 +50,9 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   val outputHandler = new InterpOutputHandler(runContext)
 
   // for debugging only!
-  @volatile var kojointerp: scala.tools.nsc.interpreter.IMain = _
-  @volatile var pcompiler: scala.tools.nsc.interactive.Global = _
-  @volatile var compiler: scala.tools.nsc.Global = _
+  def kojointerp = codeRunner.interp
+  def pcompiler = codeRunner.compilerAndRunner.pcompiler
+  def compiler = codeRunner.compilerAndRunner.compiler
 
   val codeRunner = makeCodeRunner
 
@@ -61,11 +61,11 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     actor.start()
     actor
   }
-  
+
   def start() = {
     codeRunner ! Init
   }
-  
+
   def resetInterp() = codeRunner.resetInterp()
 
   if (Utils.libJars.size > 0) {
@@ -311,7 +311,8 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
           case ActivateTw =>
             Utils.safeProcess {
-              loadInterp()
+              interp.reset()
+              initInterp()
               activateTurtleMode()
             }
 
@@ -517,8 +518,6 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
     def loadCompiler() {
       compilerAndRunner = new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext)
-      pcompiler = compilerAndRunner.pcompiler
-      compiler = compilerAndRunner.compiler
     }
 
     def initInterp() {
@@ -558,8 +557,6 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
       interp = new KojoInterpreter(iSettings, new GuiPrintWriter())
       initInterp()
-      // for debugging only
-      kojointerp = interp.interp
     }
 
     def createCp(xs: List[String]): String = {
