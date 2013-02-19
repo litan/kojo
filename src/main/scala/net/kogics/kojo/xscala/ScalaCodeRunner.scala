@@ -311,8 +311,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
           case ActivateTw =>
             Utils.safeProcess {
-              interp.reset()
-              initInterp()
+              loadInterp()
               activateTurtleMode()
             }
 
