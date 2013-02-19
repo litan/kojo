@@ -29,7 +29,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
   def isAbsent = colorPopup == null
   def isPresent = !isAbsent
 
-  lazy val ColorPattern = Pattern.compile("""(C\.)?(%s)""" format(ctx.knownColors.mkString("|")))
+  lazy val ColorPattern = Pattern.compile("""(C\.)?(%s)""" format (ctx.knownColors.mkString("|")))
   def matcher(possibleColor: String) = ColorPattern.matcher(possibleColor)
 
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
@@ -87,26 +87,21 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     cc.getSelectionModel.addChangeListener(new ChangeListener {
       override def stateChanged(e: ChangeEvent) {
         val newColor = cc.getColor()
-        if (ctx.isRunningEnabled) {
-          if (oldColor != newColor) {
-            inSliderChange = true
-            doc.remove(targetStart, target.length())
-            target = if (newColor.getAlpha == 255) {
-              "Color(%d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue)
-            }
-            else {
-              "Color(%d, %d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
-            }
-            doc.insertString(targetStart, target, null);
-            inSliderChange = false
-            oldColor = newColor
-            Utils.invokeLaterInSwingThread {
-              ctx.runCode(doc.getText(0, doc.getLength))
-            }
+        if (oldColor != newColor) {
+          inSliderChange = true
+          doc.remove(targetStart, target.length())
+          target = if (newColor.getAlpha == 255) {
+            "Color(%d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue)
           }
-        }
-        else {
-          cc.setColor(oldColor)
+          else {
+            "Color(%d, %d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
+          }
+          doc.insertString(targetStart, target, null);
+          inSliderChange = false
+          oldColor = newColor
+          Utils.invokeLaterInSwingThread {
+            ctx.runCode(doc.getText(0, doc.getLength))
+          }
         }
       }
     })

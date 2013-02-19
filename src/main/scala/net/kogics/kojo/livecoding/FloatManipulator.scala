@@ -92,15 +92,11 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
 
         if (!eslider.getValueIsAdjusting) {
           // drag over
-          if (ctx.isRunningEnabled) {
-            if (lastrunval != ntarget) {
-              lastrunval = ntarget
-              Utils.invokeLaterInSwingThread {
-                ctx.runCode(doc.getText(0, doc.getLength))
-              }
+          if (lastrunval != ntarget) {
+            lastrunval = ntarget
+            Utils.invokeLaterInSwingThread {
+              ctx.runCode(doc.getText(0, doc.getLength))
             }
-          } else {
-            eslider.setValue(num2slider(lastrunval))
           }
           if (newnum == eslider.getMaximum || newnum == eslider.getMinimum) {
             simulateStepButtonClick()
@@ -114,7 +110,8 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
       if (zoomB.isSelected) {
         oldDelta = delta
         reConfigSlider(around, 0.01, zoomB)
-      } else {
+      }
+      else {
         reConfigSlider(around, oldDelta, zoomB)
       }
       stepT.setText(delta.toString)
@@ -125,7 +122,8 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
         val step = stepT.getText.toDouble
         val around = slider2num(slider.getValue)
         reConfigSlider(around, step, zoomB)
-      } catch {
+      }
+      catch {
         case nfe: NumberFormatException =>
           stepT.setText("Err")
       }
