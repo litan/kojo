@@ -575,6 +575,7 @@ class CodeExecutionSupport(
       // do nothing
     }
     else {
+      stopActivity()
       if (isWorksheet(code2run.code)) {
         runWorksheet(code2run)
       }
@@ -597,6 +598,7 @@ class CodeExecutionSupport(
       return
     }
 
+    stopActivity()
     runWorksheet(code2run)
   }
 
