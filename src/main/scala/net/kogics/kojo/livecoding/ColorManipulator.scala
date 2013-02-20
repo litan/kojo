@@ -84,23 +84,28 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     panel.setLayout(new BorderLayout)
     val cc = new JColorChooser
     var oldColor = cc.getColor()
+    var lastChangeTime = 0l
     cc.getSelectionModel.addChangeListener(new ChangeListener {
-      override def stateChanged(e: ChangeEvent) {
-        val newColor = cc.getColor()
-        if (oldColor != newColor) {
-          inSliderChange = true
-          doc.remove(targetStart, target.length())
-          target = if (newColor.getAlpha == 255) {
-            "Color(%d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue)
-          }
-          else {
-            "Color(%d, %d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
-          }
-          doc.insertString(targetStart, target, null);
-          inSliderChange = false
-          oldColor = newColor
-          Utils.invokeLaterInSwingThread {
-            ctx.runCode(doc.getText(0, doc.getLength))
+      def stateChanged(e: ChangeEvent) = Utils.safeProcess {
+        val currTime = System.currentTimeMillis
+        if (currTime - lastChangeTime > 300) {
+          lastChangeTime = currTime
+          val newColor = cc.getColor()
+          if (oldColor != newColor) {
+            inSliderChange = true
+            doc.remove(targetStart, target.length())
+            target = if (newColor.getAlpha == 255) {
+              "Color(%d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue)
+            }
+            else {
+              "Color(%d, %d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
+            }
+            doc.insertString(targetStart, target, null);
+            inSliderChange = false
+            oldColor = newColor
+            Utils.invokeLaterInSwingThread {
+              ctx.runCode(doc.getText(0, doc.getLength))
+            }
           }
         }
       }
