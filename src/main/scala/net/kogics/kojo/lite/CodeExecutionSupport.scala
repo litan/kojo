@@ -73,6 +73,7 @@ class CodeExecutionSupport(
   val WorksheetMarker = " //> "
 
   System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
+  System.setErr(new PrintStream(new WriterOutputStream(new OutputWindowColoredWriter(Color.red))))
   val outputPane = new OutputPane(this)
   doWelcome()
 
@@ -122,6 +123,12 @@ class CodeExecutionSupport(
 
     def close() {}
     def flush() {}
+  }
+
+  class OutputWindowColoredWriter(c: Color) extends OutputWindowWriter {
+    override def write(s: String) {
+      showOutput(s, c)
+    }
   }
 
   class WriterOutputStream(writer: Writer) extends OutputStream {
@@ -186,7 +193,6 @@ class CodeExecutionSupport(
     |* To Interactively Manipulate program output  ->  Click on numbers and colors within the Script Editor
     |* To access the Context Actions for a window  ->  Right-Click on the window to bring up its context menu
     |* To Pan or Zoom the Drawing Canvas           ->  Drag the left mouse button or Roll the mouse wheel
-    |  * To reset Pan and Zoom levels              ->  Use the Drawing Canvas context menu
     |""".stripMargin
 
     showOutput(msg)
