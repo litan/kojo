@@ -85,5 +85,6 @@ trait KojoCtx {
   def setOutputForeground(color: Color): Unit
   def setOutputFontSize(size: Int): Unit
   def formatSource(): Unit
+  def showStatusText(text: String): Unit
   var fps: Int
 }

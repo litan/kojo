@@ -196,8 +196,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
         else prec0
       }
       val statusStr = "Mouse Position: (%%.%df, %%.%df)" format (prec, prec)
-      // TODO Kojo Lite
-      //        StatusDisplayer.getDefault().setStatusText(statusStr format(pos.getX, pos.getY));
+      kojoCtx.showStatusText(statusStr format(pos.getX, pos.getY));
     }
 
     override def mouseWheelRotated(e: PInputEvent) {

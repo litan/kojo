@@ -1,8 +1,8 @@
 package net.kogics.kojo
 package lite
 
+import java.awt.BorderLayout
 import java.awt.Frame
-import java.awt.GridLayout
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
@@ -10,12 +10,15 @@ import java.util.logging.FileHandler
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
+
 import javax.swing.JFrame
-import javax.swing.JPanel
 import javax.swing.UIManager
 import javax.swing.WindowConstants
+
 import scala.collection.convert.WrapAsScala.propertiesAsScalaMap
+
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
+
 import net.kogics.kojo.d3.Canvas3D
 import net.kogics.kojo.history.HistoryPanel
 import net.kogics.kojo.lite.canvas.SpriteCanvas
@@ -30,10 +33,11 @@ import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.music.FuguePlayer
 import net.kogics.kojo.music.KMp3
 import net.kogics.kojo.story.StoryTeller
+import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.Utils
+
 import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.theme.ThemeMap
-import net.kogics.kojo.turtle.TurtleWorldAPI
 
 object Main extends AppMenu with ScriptLoader { main =>
   @volatile var codePane: RSyntaxTextArea = _
@@ -72,7 +76,7 @@ object Main extends AppMenu with ScriptLoader { main =>
       val canvas3d = new Canvas3D()
       val d3API = new d3.API(kojoCtx, canvas3d)
 
-      val mp3player = new KMp3(kojoCtx) 
+      val mp3player = new KMp3(kojoCtx)
       val fuguePlayer = new FuguePlayer(kojoCtx)
 
       var scriptEditor: ScriptEditor = null
@@ -101,12 +105,15 @@ object Main extends AppMenu with ScriptLoader { main =>
       val control = new CControl(frame)
       val themes = control.getThemes()
       themes.select(ThemeMap.KEY_ECLIPSE_THEME)
-      frame.setLayout(new GridLayout(1, 1))
-      frame.add(control.getContentArea)
+      frame.setLayout(new BorderLayout)
+      frame.add(control.getContentArea, BorderLayout.CENTER)
+      val statusBar = new StatusBar
+      frame.add(statusBar, BorderLayout.SOUTH)
 
       kojoCtx.frame = frame
       kojoCtx.control = control
-      
+      kojoCtx.statusBar = statusBar
+
       val drawingCanvasH = new DrawingCanvasHolder(spriteCanvas, kojoCtx)
       val scriptEditorH = new ScriptEditorHolder(scriptEditor)
       val outputPaneH = new OutputWindowHolder(execSupport.outputPane)
@@ -153,11 +160,11 @@ object Main extends AppMenu with ScriptLoader { main =>
       System.getProperties.toList.sorted.foldLeft(new StringBuilder) { case (sb, kv) => sb append s"\n${kv._1} = ${kv._2}" }
     Log.info(s"System Properties:${sysProps}\n\n")
   }
-  
+
   def drawingCanvasHolder = kojoCtx.topcs.dch
   def scriptEditorHolder = kojoCtx.topcs.seh
   def outputPaneHolder = kojoCtx.topcs.owh
-  
+
   def appExit() {
     try {
       scriptEditorHolder.se.closing()

@@ -54,6 +54,7 @@ class KojoCtx extends core.KojoCtx {
   var storyTeller: StoryTeller = _
   var control: CControl = _
   @volatile var fps = 50
+  var statusBar: StatusBar = _
   Utils.kojoCtx = this
 
   val activityListener = new DelegatingSpriteListener
@@ -344,4 +345,7 @@ class KojoCtx extends core.KojoCtx {
     topcs.seh.se.formatAction.actionPerformed(null)
   }
 
+  def showStatusText(text: String) {
+    statusBar.showText(text)
+  }
 }
