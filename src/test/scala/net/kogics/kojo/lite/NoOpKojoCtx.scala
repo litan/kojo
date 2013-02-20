@@ -78,5 +78,6 @@ class NoOpKojoCtx extends core.KojoCtx {
   def setOutputForeground(color: Color) {}
   def setOutputFontSize(n: Int) {}
   def formatSource() {}
+  def showStatusText(text: String) {}
   var fps = 50
 }
