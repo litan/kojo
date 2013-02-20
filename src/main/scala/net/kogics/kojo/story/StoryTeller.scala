@@ -472,7 +472,9 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     story.handleLinkEnter(name, data)
   }
   def handleLinkExit(name: String, data: String) {
-    story.handleLinkExit(name, data)
+    if (currStory.isDefined) { // work around link exits showing up after story ends 
+      story.handleLinkExit(name, data)
+    }
   }
 
   // mp3 player stuff
