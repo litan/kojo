@@ -180,12 +180,13 @@ class CodeExecutionSupport(
   }
 
   def doWelcome() = {
-    val msg = """Welcome to Kojo 2.0!
-    |* To use code completion and see online help ->  Press Ctrl+Space or Ctrl+Alt+Space within the Script Editor
-    |* To interactively manipulate program output ->  Click on numbers and colors within the Script Editor
-    |* To access the context actions for a window ->  Right-Click on the window to bring up its context menu
-    |* To Pan or Zoom the Drawing Canvas          ->  Drag the left mouse button or Roll the mouse wheel
-    |  * To reset Pan and Zoom levels             ->  Use the Drawing Canvas context menu
+    val msg = """Welcome to Kojo 2.1!
+    |* To program with the aid of a Visual Palette ->  Use the 'Tools -> Instruction Palette' menu item
+    |* To use Code-Completion and see online help  ->  Press Ctrl+Space or Ctrl+Alt+Space within the Script Editor
+    |* To Interactively Manipulate program output  ->  Click on numbers and colors within the Script Editor
+    |* To access the Context Actions for a window  ->  Right-Click on the window to bring up its context menu
+    |* To Pan or Zoom the Drawing Canvas           ->  Drag the left mouse button or Roll the mouse wheel
+    |  * To reset Pan and Zoom levels              ->  Use the Drawing Canvas context menu
     |""".stripMargin
 
     showOutput(msg)
