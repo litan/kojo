@@ -50,6 +50,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
                         initCode: => Option[String],
                         listener: CompilerListener,
                         runContext: RunContext) extends StoppableCodeRunner {
+  import language.postfixOps
 
   var counter = 0
   // The Counter above is used to define/create a new wrapper object for every run. The calling of the entry() 
