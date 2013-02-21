@@ -125,6 +125,16 @@ trait AppMenu { self: Main.type =>
       item
     }
 
+    def menuItemNELFor(label: String, file: String) = {
+      val item = new JMenuItem(label)
+      item.addActionListener(new ActionListener {
+        def actionPerformed(ev: ActionEvent) {
+          loadAndRunResourceNEL("/samples/" + file)
+        }
+      })
+      item
+    }
+
     def menuItemForUrl(label: String, url: String) = {
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
@@ -311,7 +321,7 @@ trait AppMenu { self: Main.type =>
 
     val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
     toolsMenu.setMnemonic('T')
-    toolsMenu.add(menuItemFor(Utils.loadString("S_InstructionPalette"), "instruction-palette.kojo"))
+    toolsMenu.add(menuItemNELFor(Utils.loadString("S_InstructionPalette"), "instruction-palette.kojo"))
     menuBar.add(toolsMenu)
 
     val helpMenu = new JMenu(Utils.loadString("S_Help"))

@@ -560,8 +560,7 @@ class CodeExecutionSupport(
     codeRunner.compileRunCode(code2run.code)
   }
 
-  // For IPM
-  def runCode(code: String) {
+  def runIpmCode(code: String) {
     stopScript()
     codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
   }
@@ -579,25 +578,30 @@ class CodeExecutionSupport(
     }
   }
 
-  def runCode() = Utils.runInSwingThread {
-    val code2run = codeToRun
+  def runCode(): Unit = Utils.runInSwingThread {
+    runCode(codeToRun)
+  }
+
+  // code/worksheet running needs to happen on the Swing thread
+  def runCode(code: String): Unit = runCode(CodeToRun(code, None))
+
+  def runCode(code2run: CodeToRun) {
     if (invalidCode(code2run.code)) {
-      // do nothing
+      return
+    }
+
+    stopActivity()
+    if (isWorksheet(code2run.code)) {
+      runWorksheet(code2run)
     }
     else {
-      stopActivity()
-      if (isWorksheet(code2run.code)) {
-        runWorksheet(code2run)
+      val code = cleanWsOutput(code2run)
+      preProcessCode(code)
+      if (isStory(code)) {
+        codeRunner.compileRunCode(code)
       }
       else {
-        val code = cleanWsOutput(code2run)
-        preProcessCode(code)
-        if (isStory(code)) {
-          codeRunner.compileRunCode(code)
-        }
-        else {
-          codeRunner.runCode(code)
-        }
+        codeRunner.runCode(code)
       }
     }
   }
@@ -610,6 +614,14 @@ class CodeExecutionSupport(
 
     stopActivity()
     runWorksheet(code2run)
+  }
+
+  def runWorksheet(code2run0: CodeToRun) {
+    val code2run = extendSelection(code2run0)
+    val cleanCode = removeWorksheetOutput(code2run.code)
+    setWorksheetScript(cleanCode, code2run.selection)
+    preProcessCode(cleanCode)
+    codeRunner.runWorksheet(cleanCode)
   }
 
   // impure function!
@@ -628,14 +640,6 @@ class CodeExecutionSupport(
         codePane.setSelectionEnd(newSelEnd)
         CodeToRun(codePane.getSelectedText, Some(newSelStart, newSelEnd))
     } getOrElse code2run
-  }
-
-  def runWorksheet(code2run0: CodeToRun) {
-    val code2run = extendSelection(code2run0)
-    val cleanCode = removeWorksheetOutput(code2run.code)
-    setWorksheetScript(cleanCode, code2run.selection)
-    preProcessCode(cleanCode)
-    codeRunner.runWorksheet(cleanCode)
   }
 
   // Impure function!

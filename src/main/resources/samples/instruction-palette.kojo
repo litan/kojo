@@ -1,3 +1,6 @@
+// This is the Kojo script that defines the Instruction Palette
+// It is silently run and added to History (as an example of powerful Kojo script) when you load the Palette
+
 val pageStyle = "background-color:#93989c; margin:5px;font-size:small;"
 val titleStyle = "font-size:95%;text-align:center;color:#1a1a1a;margin-top:5px;margin-bottom:3px;"
 val headerStyle = "text-align:center;font-size:95%;color:#fafafa;font-weight:bold;"
@@ -304,4 +307,4 @@ stOnStoryStop(story) {
     switchToDefaultPerspective()
 }
 stPlayStory(story)
-runInBackground { stSetScript("") }
+// runInBackground { stSetScript("") }

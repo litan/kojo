@@ -18,7 +18,7 @@ import javax.swing.text.JTextComponent
 
 trait ManipulationContext {
   def isRunningEnabled: Boolean
-  def runCode(code: String): Unit
+  def runIpmCode(code: String): Unit
   def codePane: JTextComponent
   def addManipulator(im: InteractiveManipulator)
   def removeManipulator(im: InteractiveManipulator)
