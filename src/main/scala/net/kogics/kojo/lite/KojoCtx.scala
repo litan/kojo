@@ -348,4 +348,8 @@ class KojoCtx extends core.KojoCtx {
   def showStatusText(text: String) {
     statusBar.showText(text)
   }
+
+  def showStatusCaretPos(line: Int, col: Int) {
+    statusBar.showCaretPos(line, col)
+  }
 }

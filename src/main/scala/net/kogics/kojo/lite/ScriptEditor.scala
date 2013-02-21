@@ -24,6 +24,8 @@ import javax.swing.JPanel
 import javax.swing.JPopupMenu
 import javax.swing.JToolBar
 import javax.swing.KeyStroke
+import javax.swing.event.CaretEvent
+import javax.swing.event.CaretListener
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.event.PopupMenuEvent
@@ -511,6 +513,16 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       }
 
     })
+    codePane.addCaretListener(new CaretListener {
+      def caretUpdate(e: CaretEvent) {
+        val dot = e.getDot()
+        val line = codePane.getLineOfOffset(dot)
+        val lineStart = codePane.getLineStartOffset(line)
+        val col = dot - lineStart
+        kojoCtx.showStatusCaretPos(line + 1, col + 1)
+      }
+    })
+    kojoCtx.showStatusCaretPos(1, 1)
   }
 
   class StatusStrip extends JPanel {

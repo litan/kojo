@@ -96,6 +96,8 @@ object Main extends AppMenu with ScriptLoader { main =>
 
       kojoCtx.execSupport = execSupport
       kojoCtx.storyTeller = storyTeller
+      val statusBar = new StatusBar
+      kojoCtx.statusBar = statusBar
       scriptEditor = new ScriptEditor(execSupport, frame)
       codePane = scriptEditor.codePane
       execSupport.initPhase2(scriptEditor)
@@ -107,12 +109,10 @@ object Main extends AppMenu with ScriptLoader { main =>
       themes.select(ThemeMap.KEY_ECLIPSE_THEME)
       frame.setLayout(new BorderLayout)
       frame.add(control.getContentArea, BorderLayout.CENTER)
-      val statusBar = new StatusBar
       frame.add(statusBar, BorderLayout.SOUTH)
 
       kojoCtx.frame = frame
       kojoCtx.control = control
-      kojoCtx.statusBar = statusBar
 
       val drawingCanvasH = new DrawingCanvasHolder(spriteCanvas, kojoCtx)
       val scriptEditorH = new ScriptEditorHolder(scriptEditor)
