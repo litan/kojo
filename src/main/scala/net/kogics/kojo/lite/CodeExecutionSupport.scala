@@ -748,7 +748,7 @@ class CodeExecutionSupport(
       val prevCode = commandHistory.previous
       hPrevButton.setEnabled(commandHistory.hasPrevious)
       hNextButton.setEnabled(true)
-      commandHistory.ensureLastEntryVisible()
+//      commandHistory.ensureLastEntryVisible()
     }
 
     def historyMoveForward {
@@ -758,7 +758,7 @@ class CodeExecutionSupport(
         hNextButton.setEnabled(false)
       }
       hPrevButton.setEnabled(true)
-      commandHistory.ensureLastEntryVisible()
+//      commandHistory.ensureLastEntryVisible()
     }
 
     def updateButtons(historyIdx: Int) {
