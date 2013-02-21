@@ -172,7 +172,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   searchField.addActionListener(searcher)
   searchField.addKeyListener(new KeyAdapter {
     override def keyTyped(e: KeyEvent) {
-      if (! (e.getKeyChar() == KeyEvent.VK_ENTER)) {
+      if (!(e.getKeyChar() == KeyEvent.VK_ENTER)) {
         allowSearch = true
         searchBut.setText("Search")
       }
@@ -192,8 +192,13 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
     }
 
     def ensureVisible(n: Int) {
-      //      table
-      //      myList.ensureIndexIsVisible(n)
+      table.scrollRectToVisible(table.getCellRect(n, 0, true))
+    }
+
+    def historyReady() {
+      tableModel.fireTableDataChanged()
+      table.setRowSelectionInterval(cmdh.size, cmdh.size)
+      ensureVisible(cmdh.size)
     }
   })
   table.scrollRectToVisible(table.getCellRect(cmdh.size, 0, true))

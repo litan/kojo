@@ -14,6 +14,7 @@ trait HistoryListener {
   def itemAdded
   def selectionChanged(n: Int)
   def ensureVisible(n: Int)
+  def historyReady()  
 }
 
 trait HistorySaver {

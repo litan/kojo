@@ -17,10 +17,10 @@ package history
 
 import scala.collection.Seq
 import scala.collection.mutable
-
 import net.kogics.kojo.core.HistoryItem
 import net.kogics.kojo.core.HistoryListener
 import net.kogics.kojo.core.HistorySaver
+import net.kogics.kojo.util.Utils
 
 class NoopHistorySaver extends HistorySaver {
   def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
@@ -49,6 +49,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
   @volatile var hIndex = 0
   @volatile var listener: Option[HistoryListener] = None
   loadAll()
+//  loadInit() // async loading
 
   def setListener(l: HistoryListener) {
     //    if (listener.isDefined) throw new IllegalArgumentException("Listener already defined")
@@ -65,7 +66,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
   }
 
   def add(code: String): Unit = add(code, None)
-  
+
   def add(code: String, file: Option[String]): Unit = {
     try {
       val hi = historySaver.save(code, file)
@@ -111,14 +112,8 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
   def size = history.size
   def apply(idx: Int) = history(idx)
 
-  def clear {
-    history.clear
-    hIndex = -1
-    listener = None
-  }
-
   def ensureVisible(idx: Int) {
-    if (listener.isDefined) listener.get.ensureVisible(idx)
+    listener foreach {_ ensureVisible(idx)}
   }
 
   def ensureLastEntryVisible() {
@@ -158,7 +153,18 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
     }
   }
 
+  def loadInit() = Utils.runAsync {
+    val allHistory = historySaver.readAll.reverse
+    Utils.runInSwingThread {
+      allHistory.foreach { hi =>
+        internalAdd(hi)
+      }
+      listener foreach { _ historyReady() }
+    }
+  }
+
   def loadAll() {
+    history.clear()
     historySaver.readAll.reverse.foreach { hi =>
       internalAdd(hi)
     }
