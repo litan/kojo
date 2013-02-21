@@ -133,7 +133,7 @@ package object picture {
       oldx = x
       oldy = y
     }
-    p.onMouseClick { (x, y) =>
+    p.onMousePress { (x, y) =>
       oldx = x
       oldy = y
     }
