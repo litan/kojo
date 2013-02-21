@@ -150,7 +150,7 @@ object Utils {
     threads.clear()
   }
 
-  def invokeLaterInSwingThread(fn: => Unit) {
+  def runLaterInSwingThread(fn: => Unit) {
     javax.swing.SwingUtilities.invokeLater(new Runnable {
       override def run {
         fn
