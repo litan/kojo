@@ -2,6 +2,8 @@ package net.kogics.kojo.lite
 
 import net.kogics.kojo.util.Utils
 
+import net.kogics.kojo.lite.Main
+
 trait ScriptLoader { self: Main.type =>
   def _loadUrl(url: String)(postfn: => Unit = {}) {
     codePane.setText("// Loading code from URL: %s ...\n" format (url))
@@ -45,7 +47,19 @@ trait ScriptLoader { self: Main.type =>
       execSupport.runCode()
     }
     catch {
-      case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
+      case t: Throwable => codePane.append("// Problem loading/running code: %s" format (t.getMessage))
+    }
+    scriptEditorHolder.activate()
+  }
+
+  // No Editor Load version
+  def loadAndRunResourceNEL(res: String) = {
+    try {
+      val code = Utils.loadResource(res)
+      execSupport.runCode(code)
+    }
+    catch {
+      case t: Throwable => println("// Problem loading/running code: %s" format (t.getMessage))
     }
     scriptEditorHolder.activate()
   }

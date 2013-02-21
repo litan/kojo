@@ -95,7 +95,7 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
           if (lastrunval != ntarget) {
             lastrunval = ntarget
             Utils.invokeLaterInSwingThread {
-              ctx.runCode(doc.getText(0, doc.getLength))
+              ctx.runIpmCode(doc.getText(0, doc.getLength))
             }
           }
           if (newnum == eslider.getMaximum || newnum == eslider.getMinimum) {
