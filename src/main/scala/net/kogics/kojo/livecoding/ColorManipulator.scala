@@ -103,7 +103,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
             doc.insertString(targetStart, target, null);
             inSliderChange = false
             oldColor = newColor
-            Utils.invokeLaterInSwingThread {
+            Utils.runLaterInSwingThread {
               ctx.runIpmCode(doc.getText(0, doc.getLength))
             }
           }

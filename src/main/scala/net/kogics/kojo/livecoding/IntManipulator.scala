@@ -89,7 +89,7 @@ class IntManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) {
           // drag over
           if (lastrunval != ntarget) {
             lastrunval = ntarget
-            Utils.invokeLaterInSwingThread {
+            Utils.runLaterInSwingThread {
               ctx.runIpmCode(doc.getText(0, doc.getLength))
             }
           }

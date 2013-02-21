@@ -31,7 +31,7 @@ class CasView(_Mw: MathWorld) {
       cell.setInput(input)
       cast.insertRow(cell, true)
 
-      Utils.invokeLaterInSwingThread {
+      Utils.runLaterInSwingThread {
         cview.setMode(mode, ModeSetter.TOOLBAR)
         try {
           ret.set(cell.getOutputValidExpression)
