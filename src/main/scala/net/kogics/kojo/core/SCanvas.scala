@@ -42,7 +42,7 @@ trait SCanvas extends TSCanvasFeatures {
   def pCanvas: PCanvas
   def unitLen: UnitLen
   type TurtleLike <: Turtle
-  private[kojo] def newInvisibleTurtle(x: Int, y: Int): TurtleLike
+  private[kojo] def newInvisibleTurtle(x: Double, y: Double): TurtleLike
   private[kojo] def setDefTurtle(t: TurtleLike): Unit
   private[kojo] def restoreDefTurtle(): Unit
 }
