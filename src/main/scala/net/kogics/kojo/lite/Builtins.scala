@@ -64,7 +64,8 @@ class Builtins(
 
   type Turtle = core.Turtle
   type Color = java.awt.Color
-  type Point = net.kogics.kojo.core.Point
+  type Point = core.Point
+  val Point = core.Point
   type PolyLine = kgeom.PolyLine
   val PolyLine = kgeom.PolyLine
   type Point2D = java.awt.geom.Point2D.Double
