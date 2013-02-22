@@ -32,6 +32,9 @@ trait Labelled extends VisualElement {
   def setLabel(label: String)
 }
 
+object Point {
+  def apply(x: Double, y: Double) = new Point(x, y)
+}
 class Point(val x: Double, val y: Double) {
   def +(that: Point) = new Point(this.x + that.x, this.y + that.y)
   def -(that: Point) = new Point(this.x - that.x, this.y - that.y)
