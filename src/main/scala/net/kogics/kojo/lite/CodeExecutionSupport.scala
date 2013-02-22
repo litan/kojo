@@ -587,6 +587,7 @@ class CodeExecutionSupport(
 
   def runCode(code2run: CodeToRun) {
     if (invalidCode(code2run.code)) {
+      commandHistory.ensureLastEntryVisible()
       return
     }
 
@@ -609,6 +610,7 @@ class CodeExecutionSupport(
   def runWorksheet() {
     val code2run = codeToRun
     if (invalidCode(code2run.code)) {
+      commandHistory.ensureLastEntryVisible()
       return
     }
 
