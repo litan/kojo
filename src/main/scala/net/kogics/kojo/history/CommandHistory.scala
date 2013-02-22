@@ -117,7 +117,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
   }
 
   def ensureLastEntryVisible() {
-    ensureVisible(hIndex)
+    ensureVisible(size)
   }
 
   def starHelper(hi: HistoryItem, on: Boolean) {
