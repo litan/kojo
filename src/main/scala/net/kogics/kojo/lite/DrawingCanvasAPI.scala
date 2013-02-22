@@ -13,27 +13,33 @@ import net.kogics.kojo.util.UserCommand
 // Turtle and Staging Canvas
 class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def turtle0 = tCanvas.turtle0
-  override def clear() = tCanvas.clear()
+  def clear() = tCanvas.clear()
   UserCommand("clear", Nil, "Clears the screen, and brings the turtle to the center of the window.")
   def cleari() = { clear(); turtle0.invisible() }
   UserCommand("cleari", Nil, "Clears the turtle canvas and makes the turtle invisible.")
 
-  override def zoom(factor: Double) = tCanvas.zoom(factor)
-  override def zoom(factor: Double, cx: Double, cy: Double) = tCanvas.zoom(factor, cx, cy)
+  def zoom(factor: Double) = tCanvas.zoom(factor)
+  def zoom(factor: Double, cx: Double, cy: Double) = tCanvas.zoom(factor, cx, cy)
+  UserCommand("zoom", List("factor"), "Zooms in by the given factor, leaving the center point unchanged.")
+  UserCommand.addSynopsisSeparator()
 
-  override def gridOn() = tCanvas.gridOn()
+  def gridOn() = tCanvas.gridOn()
+  UserCommand("gridOn", Nil, "Shows a grid on the canvas.")
 
-  override def gridOff() = tCanvas.gridOff()
+  def gridOff() = tCanvas.gridOff()
+  UserCommand("gridOff", Nil, "Hides the grid.")
 
-  override def axesOn() = tCanvas.axesOn()
+  def axesOn() = tCanvas.axesOn()
+  UserCommand("axesOn", Nil, "Shows the X and Y axes on the canvas.")
 
-  override def axesOff() = tCanvas.axesOff()
+  def axesOff() = tCanvas.axesOff()
+  UserCommand("axesOff", Nil, "Hides the X and Y axes.")
 
   def newTurtle(): Turtle = newTurtle(0, 0)
-  override def newTurtle(x: Int, y: Int) = tCanvas.newTurtle(x, y)
-  override def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
-  override def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
-  override def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) =
+  def newTurtle(x: Double, y: Double) = tCanvas.newTurtle(x, y)
+  def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
+  def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
+  def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) =
     tCanvas.zoomXY(xfactor, yfactor, cx, cy)
 
   def onKeyPress(fn: Int => Unit) = tCanvas.onKeyPress(fn)

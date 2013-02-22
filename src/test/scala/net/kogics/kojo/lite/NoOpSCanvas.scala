@@ -1,4 +1,5 @@
-package net.kogics.kojo.lite
+package net.kogics.kojo
+package lite
 
 import java.awt.Color
 import java.awt.Paint
@@ -17,7 +18,7 @@ import edu.umd.cs.piccolo.util.PBounds
 
 class NoOpSCanvas extends SCanvas {
   def clear() {}
-  def newTurtle(x: Int, y: Int): Turtle = null
+  def newTurtle(x: Double, y: Double): Turtle = null
   def axesOn() {}
   def axesOff() {}
   def gridOn() {}
@@ -57,7 +58,7 @@ class NoOpSCanvas extends SCanvas {
   def pCanvas: PCanvas = null
   def unitLen = null
   type TurtleLike <: Turtle
-  private[kojo] def newInvisibleTurtle(x: Int, y: Int) = null.asInstanceOf[TurtleLike]
+  private[kojo] def newInvisibleTurtle(x: Double, y: Double) = null.asInstanceOf[TurtleLike]
   private[kojo] def setDefTurtle(t: TurtleLike) {}
   private[kojo] def restoreDefTurtle() {}
 }

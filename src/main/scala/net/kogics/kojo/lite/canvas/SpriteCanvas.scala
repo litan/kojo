@@ -615,7 +615,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     fig
   }
 
-  def newTurtle(x: Int = 0, y: Int = 0) = {
+  def newTurtle(x: Double = 0, y: Double = 0) = {
     val ttl = Utils.runInSwingThreadAndWait {
       val t = new Turtle(this, "/images/turtle32.png", x, y)
       turtles = t :: turtles
@@ -626,7 +626,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   }
 
   // needs to be called on swing thread
-  private[kojo] def newInvisibleTurtle(x: Int = 0, y: Int = 0) = {
+  private[kojo] def newInvisibleTurtle(x: Double = 0, y: Double = 0) = {
     new Turtle(this, "/images/turtle32.png", x, y, true)
   }
 

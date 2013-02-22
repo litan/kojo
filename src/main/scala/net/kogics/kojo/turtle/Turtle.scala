@@ -36,8 +36,8 @@ import net.kogics.kojo.core._
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
-class Turtle(canvas: SCanvas, fname: String, initX: Double = 0d,
-             initY: Double = 0, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
+class Turtle(canvas: SCanvas, fname: String, initX: Double,
+             initY: Double, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
 
   import TurtleHelper._
 

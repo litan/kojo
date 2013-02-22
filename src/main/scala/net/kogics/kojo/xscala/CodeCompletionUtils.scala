@@ -154,12 +154,14 @@ object CodeCompletionUtils {
     "stopMusic" -> "stopMusic()",
     "addCodeTemplates" -> "addCodeTemplates(${lang}, ${templates})",
     "addHelpContent" -> "addHelpContent(${lang}, ${content})",
+    "Point" -> "Point(${x}, ${y})",
     "Point2D" -> "Point2D(${x}, ${y})",
     "drawStage" -> "drawStage(${background})",
     "bounceVecOffStage" -> "bounceVecOffStage(${vec}, ${forPic})"
   )
   
   val TwMethodTemplates = Map(
+    "newTurtle" -> "newTurtle(${x}, ${y})",
     "pict" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "PictureT" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "Picture" -> "Picture {\n    ${cursor}\n}",

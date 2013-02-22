@@ -37,7 +37,7 @@ class TurtleTest {
   val kojoCtx = new NoOpKojoCtx
   val spriteCanvas = new SpriteCanvas(kojoCtx)
 //  val spriteCanvas = new NoOpSCanvas
-  val turtle = new Turtle(spriteCanvas, "/images/turtle32.png")
+  val turtle = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
 
   @Before
   def setUp: Unit = {
