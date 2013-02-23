@@ -25,30 +25,36 @@ trait StubMain {
   def classpath: String
   def firstInstance: Boolean
   def firstMain(args: Array[String]): Unit
+  def firstMainDone(): Unit
   def nthMain(args: Array[String]): Unit
 
   def main(args: Array[String]): Unit = {
     Utils.safeProcess {
       if (firstInstance) {
-        println("First Kojo Instance Requested...")
+        println(s"[INFO] Running first Kojo instance with args: ${args.mkString("[", ", ", "]")}")
         firstMain(args)
-        realMain(args)
+        try {
+          realMain(args)
+        }
+        finally {
+          firstMainDone()
+        }
       }
       else {
-        println("Nth Kojo instance Requested: " + args)
+        println(s"[INFO] Running > first Kojo instance with args: ${args.mkString("[", ", ", "]")}")
         nthMain(args)
       }
     }
-    println("Kojo Launcher Done.")
+    println("[INFO] Kojo Launcher Done.")
     System.exit(0)
   }
 
   def realMain(args: Array[String]) {
     val javaHome = System.getProperty("java.home")
-    println("Java Home: " + javaHome)
+    println("[INFO] Java Home: " + javaHome)
     val javaExec = {
       if (new File(javaHome + "/bin/javaw.exe").exists) {
-        println("Using javaw")
+        println("[INFO] Using javaw")
         javaHome + "/bin/javaw"
       }
       else {
@@ -61,7 +67,6 @@ trait StubMain {
       "-XX:+CMSPermGenSweepingEnabled net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
     val commandSeq = Seq(javaExec, "-cp", classpath) ++ cmdPart.split(' ')
 
-    println("Starting Real Kojo...")
     commandSeq!
   }
 

@@ -183,7 +183,7 @@ object Main extends AppMenu with ScriptLoader { main =>
       logDir.mkdirs()
     }
     val logPath = List(userHome, ".kojo", "lite", "log", "kojo0.log").mkString(File.separator)
-    System.err.println(s"Logging has been redirected to: $logPath")
+    System.err.println(s"[INFO] Logging has been redirected to: $logPath")
     val rootLogger = Logger.getLogger("")
     val logHandler = new FileHandler("%h/.kojo/lite/log/kojo%g.log", 1 * 1024 * 1024, 6, false)
     logHandler.setFormatter(new SimpleFormatter())

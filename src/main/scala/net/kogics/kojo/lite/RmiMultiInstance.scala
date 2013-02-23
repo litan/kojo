@@ -14,10 +14,11 @@
  */
 package net.kogics.kojo.lite
 
-import java.rmi.registry.LocateRegistry
 import java.rmi.RemoteException
+import java.rmi.registry.LocateRegistry
 import java.rmi.registry.Registry
 import java.rmi.server.UnicastRemoteObject
+
 import net.kogics.kojo.util.Utils
 
 trait RmiMultiInstance {
@@ -39,22 +40,28 @@ trait RmiMultiInstance {
   def firstMain(args: Array[String]) {
     try {
       registry = Some(LocateRegistry.createRegistry(MultiInstanceHandler.Port))
-      Runtime.getRuntime.addShutdownHook(new Thread(new Runnable {
-        def run() {
-          registry.foreach { UnicastRemoteObject.unexportObject(_, true) }
-        }
-      }))
     }
     catch {
-      case e: Exception =>
+      case e: Throwable =>
         println("Unable to create RMI registry [%s]. Multi instance support will not work" format (e.getMessage()))
         registry = None
+    }
+  }
+
+  def firstMainDone() {
+    try {
+      println("[INFO] Removing RMI Listener")
+      registry.foreach { UnicastRemoteObject.unexportObject(_, true) }
+    }
+    catch {
+      case e: Throwable =>
     }
   }
 
   def nthMain(args: Array[String]): Unit = Utils.safeProcess {
     registry foreach { r =>
       val mih = r.lookup(MultiInstanceHandler.Name).asInstanceOf[MultiInstanceHandler]
+      println(s"[INFO] Connecting (via RMI) to already running Kojo instance with args: ${args.mkString("[", ", ", "]")}")
       mih.newInstance(args)
     }
   }
