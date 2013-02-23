@@ -68,19 +68,23 @@ object WebstartMain extends StubMain with RmiMultiInstance {
     createCp(lb.toList)
   }
 
+  @volatile var sis: SingleInstanceService = _
+  @volatile var sisl: SingleInstanceListener = _
   override def firstMain(args: Array[String]) {
     super.firstMain(args)
-    val sis = ServiceManager.lookup("javax.jnlp.SingleInstanceService").asInstanceOf[SingleInstanceService]
-    val sisl = new SingleInstanceListener {
+    sis = ServiceManager.lookup("javax.jnlp.SingleInstanceService").asInstanceOf[SingleInstanceService]
+    sisl = new SingleInstanceListener {
       def newActivation(params: Array[String]) {
+        println(s"[INFO] Connected (via WS) with args: ${params.mkString("[", ", ", "]")} to already running Kojo Launcher ")
         nthMain(params)
       }
     }
     sis.addSingleInstanceListener(sisl)
-    Runtime.getRuntime.addShutdownHook(new Thread(new Runnable {
-      def run() {
-        sis.removeSingleInstanceListener(sisl)
-      }
-    }))
+  }
+
+  override def firstMainDone() {
+    super.firstMainDone()
+    println("[INFO] Removing WS Listener")
+    sis.removeSingleInstanceListener(sisl)
   }
 }
