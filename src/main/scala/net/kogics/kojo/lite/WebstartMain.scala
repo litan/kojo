@@ -75,7 +75,7 @@ object WebstartMain extends StubMain with RmiMultiInstance {
     sis = ServiceManager.lookup("javax.jnlp.SingleInstanceService").asInstanceOf[SingleInstanceService]
     sisl = new SingleInstanceListener {
       def newActivation(params: Array[String]) {
-        println(s"[INFO] Connected (via WS) with args: ${params.mkString("[", ", ", "]")} to already running Kojo Launcher ")
+        println(s"[INFO] Connected (via WS) with args: ${params.mkString("[", ", ", "]")} to already running Kojo Launcher")
         nthMain(params)
       }
     }
