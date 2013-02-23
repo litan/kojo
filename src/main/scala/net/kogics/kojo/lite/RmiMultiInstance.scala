@@ -61,7 +61,7 @@ trait RmiMultiInstance {
   def nthMain(args: Array[String]): Unit = Utils.safeProcess {
     registry foreach { r =>
       val mih = r.lookup(MultiInstanceHandler.Name).asInstanceOf[MultiInstanceHandler]
-      println(s"[INFO] Connecting (via RMI) to already running Kojo instance with args: ${args.mkString("[", ", ", "]")}")
+      println(s"[INFO] Connecting (via RMI) with args: ${args.mkString("[", ", ", "]")} to already running Kojo instance")
       mih.newInstance(args)
     }
   }
