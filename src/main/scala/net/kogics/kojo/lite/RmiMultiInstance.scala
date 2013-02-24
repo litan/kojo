@@ -25,7 +25,7 @@ trait RmiMultiInstance {
   @volatile var registry: Option[Registry] = None
   def firstInstance: Boolean = {
     try {
-      registry = Some(LocateRegistry.getRegistry(MultiInstanceHandler.Port))
+      registry = Some(LocateRegistry.getRegistry(Utils.localHostString, Utils.RmiRegistryPort))
       registry.get.lookup(MultiInstanceHandler.Name).asInstanceOf[MultiInstanceHandler]
       // registry is up and name is bound. Not the first instance
       false
@@ -39,7 +39,8 @@ trait RmiMultiInstance {
 
   def firstMain(args: Array[String]) {
     try {
-      registry = Some(LocateRegistry.createRegistry(MultiInstanceHandler.Port))
+      val sf = new RmiLocalhostSocketFactory
+      registry = Some(LocateRegistry.createRegistry(Utils.RmiRegistryPort, sf, sf))
     }
     catch {
       case e: Throwable =>
