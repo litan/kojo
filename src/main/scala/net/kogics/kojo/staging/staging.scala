@@ -451,12 +451,6 @@ case class HSBA(h: Int, s: Int, b: Int, a: Int) extends ColorModes
 case class GRAY(v: Int) extends ColorModes
 case class GRAYA(v: Int, a: Int) extends ColorModes
 
-object Point {
-  def apply(x: Double, y: Double) = new Point(x, y)
-  def unapply(p: Point) = Some((p.x, p.y))
-}
-
-
 //T ShapeMethodsTest begins
 trait Shape  extends InputAware {
   def myCanvas = Impl.canvas
