@@ -32,28 +32,32 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.net.InetAddress
 import java.net.URL
 import java.util.ResourceBundle
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
+
 import javax.swing.ImageIcon
 import javax.swing.Timer
+
 import scala.actors.Actor.actor
 import scala.actors.Actor.loop
 import scala.actors.Actor.react
+import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 import scala.collection.mutable.SynchronizedSet
+
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
+
 import Typeclasses.mkIdentity
 import edu.umd.cs.piccolo.nodes.PText
-import lite.canvas.SpriteCanvas
-import net.kogics.kojo.core.KojoCtx
-import scala.collection.mutable.HashMap
 
 object Utils {
   lazy val imageCache = new HashMap[String, Image]
@@ -85,6 +89,10 @@ object Utils {
     if (stream == null) None else Some(readStream(stream))
   }
 
+  val RmiRegistryPort = 27468
+  def localHostString = localHost.getHostAddress
+  def localHost = InetAddress.getByName(null)
+
   def inSwingThread = EventQueue.isDispatchThread
 
   def runAsync(fn: => Unit) {
@@ -96,7 +104,7 @@ object Utils {
   }
 
   import collection.mutable.{ HashSet, SynchronizedSet }
-  val threads = new HashSet[Thread] with SynchronizedSet[Thread]
+  lazy val threads = new HashSet[Thread] with SynchronizedSet[Thread]
   var kojoCtx: KojoCtx = _
   lazy val listener = kojoCtx.activityListener
   var timer: Timer = _
@@ -307,7 +315,7 @@ object Utils {
 
   def stripCR(str: String) = str.replaceAll("\r\n", "\n")
 
-  val messages = ResourceBundle.getBundle("net.kogics.kojo.lite.Bundle")
+  lazy val messages = ResourceBundle.getBundle("net.kogics.kojo.lite.Bundle")
   def loadString(key: String) = {
     messages.getString(key)
   }
@@ -368,7 +376,7 @@ object Utils {
 
   def isScalaTestAvailable = (libJars ++ installLibJars).exists { fname => fname.toLowerCase contains "scalatest" }
 
-  val scalaTestHelperCode = """
+  lazy val scalaTestHelperCode = """
   import org.scalatest.FunSuite
   import org.scalatest.matchers.ShouldMatchers
 
