@@ -67,7 +67,7 @@ class CodeExecutionSupport(
   import scriptEditor._
   var clearButton = new JButton
 
-  val Log = Logger.getLogger("CodeExecutionSupport");
+  val Log = Logger.getLogger("CodeExecutionSupport")
   val promptColor = new Color(178, 66, 0)
   val codeColor = new Color(0x009b00)
   val WorksheetMarker = " //> "
@@ -161,7 +161,7 @@ class CodeExecutionSupport(
   }
 
   def setCodePane(cp: JTextArea) {
-    codePane = cp;
+    codePane = cp
     codePane.getDocument.addDocumentListener(new DocumentListener {
       def insertUpdate(e: DocumentEvent) {
         clearSButton.setEnabled(true)
@@ -497,7 +497,7 @@ class CodeExecutionSupport(
 
   def showNormalCursor() {
     val nc = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
-    codePane.setCursor(nc);
+    codePane.setCursor(nc)
     tCanvas.setCursor(nc)
   }
 
@@ -592,7 +592,7 @@ class CodeExecutionSupport(
       return
     }
 
-    stopActivity()
+    stopScript()
     if (isWorksheet(code2run.code)) {
       runWorksheet(code2run)
     }
@@ -615,7 +615,7 @@ class CodeExecutionSupport(
       return
     }
 
-    stopActivity()
+    stopScript()
     runWorksheet(code2run)
   }
 
