@@ -445,7 +445,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
 
     val toolbar = new JToolBar
-    toolbar.setPreferredSize(new Dimension(100, 24))
+    toolbar.setFloatable(false)
+    toolbar.setPreferredSize(new Dimension(0, 28))
 
     val runButton = makeNavigationButton("/images/run24.png", RunScript, Utils.loadString("S_RunScript"))
     val runWorksheetButton = makeNavigationButton("/images/runw24.png", RunWorksheet, Utils.loadString("S_RunWorksheet"))
