@@ -67,7 +67,7 @@ class CodeExecutionSupport(
   import scriptEditor._
   var clearButton = new JButton
 
-  val Log = Logger.getLogger(getClass.getName);
+  val Log = Logger.getLogger("CodeExecutionSupport");
   val promptColor = new Color(178, 66, 0)
   val codeColor = new Color(0x009b00)
   val WorksheetMarker = " //> "
@@ -127,6 +127,7 @@ class CodeExecutionSupport(
 
   class OutputWindowColoredWriter(c: Color) extends OutputWindowWriter {
     override def write(s: String) {
+      Log.severe("stderr> " + s)
       showOutput(s, c)
     }
   }
