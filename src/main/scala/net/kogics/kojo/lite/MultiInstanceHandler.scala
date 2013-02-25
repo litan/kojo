@@ -41,7 +41,7 @@ object MultiInstanceHandler {
     }
     catch {
       case t: Throwable =>
-        println("Problem starting MultiInstanceHandler: " + t.getMessage)
+        System.out.println("Problem starting MultiInstanceHandler: " + t.getMessage)
     }
   }
 }
