@@ -74,7 +74,6 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   toolbar.setOpaque(true)
   toolbar.setBackground(new Color(230, 230, 230))
-  addCodePaneHandlers()
 
   val SYNTAX_STYLE_SCALA2 = "text/scala2"
   val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
@@ -362,24 +361,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
 
   val ipmProvider = new IpmProvider(execSupport)
-  codePane.addMouseListener(new MouseAdapter {
-    override def mouseClicked(e: MouseEvent) {
-      try {
-        val pt = new Point(e.getX(), e.getY());
-        val offset = codePane.viewToModel(pt);
-        if (ipmProvider.isHyperlinkPoint(codePane, offset)) {
-          // ipmProvider.getHyperlinkSpan(codePane, offset)
-          ipmProvider.performClickAction(codePane, offset)
-        }
-        else {
-          execSupport.imanip.foreach { _ close () }
-        }
-      }
-      catch {
-        case t: Throwable => println("IPM Problem: " + t.getMessage)
-      }
-    }
-  })
+  addCodePaneListeners()
 
   def makeToolbar() = {
     val RunScript = "RunScript"
@@ -484,7 +466,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton, clearSButton, clearButton, cexButton)
   }
 
-  def addCodePaneHandlers() {
+  def addCodePaneListeners() {
     statusStrip.linkToPane()
     codePane.addKeyListener(new KeyAdapter {
       override def keyPressed(evt: KeyEvent) {
@@ -524,6 +506,25 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       }
     })
     kojoCtx.showStatusCaretPos(1, 1)
+
+    codePane.addMouseListener(new MouseAdapter {
+      override def mouseClicked(e: MouseEvent) {
+        try {
+          val pt = new Point(e.getX(), e.getY());
+          val offset = codePane.viewToModel(pt);
+          if (ipmProvider.isHyperlinkPoint(codePane, offset)) {
+            // ipmProvider.getHyperlinkSpan(codePane, offset)
+            ipmProvider.performClickAction(codePane, offset)
+          }
+          else {
+            execSupport.imanip.foreach { _ close () }
+          }
+        }
+        catch {
+          case t: Throwable => println("IPM Problem: " + t.getMessage)
+        }
+      }
+    })
   }
 
   class StatusStrip extends JPanel {
