@@ -143,6 +143,7 @@ class Builtins(
   UserCommand("color", List("red", "green", "blue"), "Creates a new color based on the specified red, green, and blue levels.")
 
   def setAstStopPhase(phase: String): Unit = kojoCtx.setAstStopPhase(phase)
+  def astStopPhase = kojoCtx.astStopPhase
   UserCommand.addSynopsis("astStopPhase - Gets the compiler phase value for AST printing.")
   UserCommand("setAstStopPhase", List("stopAfterPhase"), "Sets the compiler phase value for AST printing.")
 
@@ -277,10 +278,10 @@ Here's a partial list of the available commands:
   UserCommand("textExtent", List("text", "fontSize"), "Determines the size/extent of the given text fragment for the given font size.")
 
   def runInBackground(code: => Unit) = Utils.runAsyncMonitored(code)
-  UserCommand("runInBackground", List("code"), "Runs the given code in the background, concurrently with other code that follows right after this command.")
+  UserCommand.addSynopsis("runInBackground", List("code"), "Runs the given code in the background, concurrently with other code that follows right after this command.")
 
   def runInGuiThread(code: => Unit) = Utils.runInSwingThread(code)
-  UserCommand("runInGuiThread", List("code"), "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command.")
+  UserCommand.addSynopsis("runInGuiThread", List("code"), "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command.")
 
   def schedule(s: Double)(code: => Unit) = Utils.schedule(s)(code)
 
