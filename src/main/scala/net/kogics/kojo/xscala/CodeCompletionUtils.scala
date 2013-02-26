@@ -124,6 +124,8 @@ object CodeCompletionUtils {
     "setRefreshRate" -> "setRefreshRate(${framesPerSec})",
     "animate" -> "animate {\n    ${cursor}\n}",
     "schedule" -> "schedule (${inSecs}) {\n    ${cursor}\n}",
+    "runInBackground" -> "runInBackground {\n    ${cursor}\n}",
+    "runInGuiThread" -> "runInGuiThread {\n    ${cursor}\n}",
     "onAnimationStop" -> "onAnimationStop {\n    ${cursor}\n}",
     "act" -> "act { self => \n    ${cursor}\n}",
     "row" -> "row(${picture}, ${n})",
