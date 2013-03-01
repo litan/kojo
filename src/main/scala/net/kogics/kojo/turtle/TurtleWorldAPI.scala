@@ -115,5 +115,6 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     def style: Style = turtle0.style
 
     def arc(r: Double, a: Int) = turtle0.arc(r, a)
-    def changeCostume(costume: String) = turtle0.changeCostume(costume)
+    def setCostume(costumeFile: String) = turtle0.setCostume(costumeFile)
+    UserCommand("setCostume", List("costumeFile"), "Changes the costume (i.e. image) associated with the turtle to the image in the specified file.")
 }
