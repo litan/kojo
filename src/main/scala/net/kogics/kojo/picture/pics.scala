@@ -219,7 +219,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def initGeom(): Geometry
   def picGeom: Geometry = {
     if (!drawn) {
-      throw new IllegalStateException("Access geometry after it is drawn.")
+      throw new IllegalStateException("Cannot access a Picture's geometry before it is drawn.")
     }
 
     if (_picGeom == null) {
