@@ -59,4 +59,5 @@ trait TurtleMover extends RichTurtleCommands {
   def setPenFontSize(n: Int)
   def arc(r: Double, a: Int): Unit
   def circle(r: Double) = arc(r, 360)
+  def changeCostume(costume: String): Unit
 }

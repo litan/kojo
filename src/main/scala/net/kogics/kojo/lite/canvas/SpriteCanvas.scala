@@ -615,9 +615,9 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     fig
   }
 
-  def newTurtle(x: Double = 0, y: Double = 0) = {
+  def newTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = {
     val ttl = Utils.runInSwingThreadAndWait {
-      val t = new Turtle(this, "/images/turtle32.png", x, y)
+      val t = new Turtle(this, costume, x, y)
       turtles = t :: turtles
       t
     }

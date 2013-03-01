@@ -21,7 +21,7 @@ import java.awt.Color
 
 trait TSCanvasFeatures {
   def clear(): Unit
-  def newTurtle(x: Double, y: Double): Turtle
+  def newTurtle(x: Double, y: Double, costume: String): Turtle
   def axesOn(): Unit
   def axesOff(): Unit
   def gridOn(): Unit

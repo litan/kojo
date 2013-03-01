@@ -36,7 +36,7 @@ import net.kogics.kojo.core._
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
-class Turtle(canvas: SCanvas, fname: String, initX: Double,
+class Turtle(canvas: SCanvas, costume: String, initX: Double,
              initY: Double, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
 
   import TurtleHelper._
@@ -50,7 +50,7 @@ class Turtle(canvas: SCanvas, fname: String, initX: Double,
   if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(layer)
   @volatile private [turtle] var _animationDelay = 0l
 
-  private val turtleImage = new PImage(Utils.loadImageC(fname))
+  private val turtleImage = new PImage
   private val turtle = new PNode
   def camScale = canvas.camScale
   
@@ -128,15 +128,18 @@ class Turtle(canvas: SCanvas, fname: String, initX: Double,
       new StringBuilder().append("  PNode:\n").append("    Children: %s\n" format n.getChildrenReference).toString
   }
 
-  def initTImage() {
-    turtleImage.getTransformReference(true).setToScale(1/camScale, 1/camScale)
-    turtleImage.translate(-16, -16)
+  def initTImage(costume: String) {
+    turtleImage.setImage(Utils.loadImageC(costume))
+    turtleImage.getTransformReference(true).setToIdentity()
+    turtleImage.getTransformReference(true).setToScale(1/camScale, -1/camScale)
+    turtleImage.rotate(Utils.deg2radians(90))
+    turtleImage.translate(-turtleImage.getWidth/2, -turtleImage.getHeight/2)
   }
   
   private [turtle] def init() {
     _animationDelay = 1000l
     changePos(initX, initY)
-    initTImage()
+    initTImage(costume)
     layer.addChild(turtle)
 
     pen = DownPen
@@ -476,6 +479,11 @@ class Turtle(canvas: SCanvas, fname: String, initX: Double,
     else {
       makeArc(forward _, turn _)
     }
+  }
+  
+  def changeCostume(costume: String) = Utils.runInSwingThread {
+    initTImage(costume)
+    turtleImage.repaint()
   }
 
   private def resetRotation() {
