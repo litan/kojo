@@ -90,9 +90,11 @@ class Builtins(
   val cyan = JColor.cyan
 
   val C = staging.KColor
+//  val Color = staging.KColor
   val noColor = C.noColor
 
   val Kc = new staging.KeyCodes
+  val Costume = new Tw.Costume
 
   def showScriptInOutput() = kojoCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")

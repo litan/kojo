@@ -9,12 +9,12 @@ zoom(0.75, 500, 300)
 val a = 20.0 // initail acceleration
 val u = 10.0 // initial velocity
 
-val car = newTurtle(0, 0, "/images/car.png")
+val car = newTurtle(0, 0, Costume.car)
 
-val splot = newTurtle(0, 0, "/images/pencil.png")
+val splot = newTurtle(0, 0, Costume.pencil)
 splot.setPenColor(blue)
 
-val vplot = newTurtle(0, u, "/images/pencil.png")
+val vplot = newTurtle(0, u, Costume.pencil)
 vplot.setPenColor(green)
 
 val t0 = epochTime // time, in seconds, since a reference time
