@@ -589,6 +589,7 @@ object Help {
         </pre>
     </div>
     ,
+    "setCostume" -> "setCostume(costumeFile) - Changes the costume (i.e. image) associated with the turtle to the image in the specified file.",
     "==" -> 
     <div>
         <strong>a == b</strong> - Evaluates to true if a and b are equal, false otherwise.<br/>

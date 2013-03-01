@@ -36,7 +36,7 @@ import net.kogics.kojo.core._
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.{CountDownLatch, TimeUnit}
 
-class Turtle(canvas: SCanvas, costume: String, initX: Double,
+class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
              initY: Double, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
 
   import TurtleHelper._
@@ -128,8 +128,8 @@ class Turtle(canvas: SCanvas, costume: String, initX: Double,
       new StringBuilder().append("  PNode:\n").append("    Children: %s\n" format n.getChildrenReference).toString
   }
 
-  def initTImage(costume: String) {
-    turtleImage.setImage(Utils.loadImageC(costume))
+  def initTImage(costumeFile: String) {
+    turtleImage.setImage(Utils.loadImageC(costumeFile))
     turtleImage.getTransformReference(true).setToIdentity()
     turtleImage.getTransformReference(true).setToScale(1/camScale, -1/camScale)
     turtleImage.rotate(Utils.deg2radians(90))
@@ -139,7 +139,7 @@ class Turtle(canvas: SCanvas, costume: String, initX: Double,
   private [turtle] def init() {
     _animationDelay = 1000l
     changePos(initX, initY)
-    initTImage(costume)
+    initTImage(costumeFile)
     layer.addChild(turtle)
 
     pen = DownPen
@@ -481,8 +481,8 @@ class Turtle(canvas: SCanvas, costume: String, initX: Double,
     }
   }
   
-  def changeCostume(costume: String) = Utils.runInSwingThread {
-    initTImage(costume)
+  def setCostume(costumeFile: String) = Utils.runInSwingThread {
+    initTImage(costumeFile)
     turtleImage.repaint()
   }
 
