@@ -176,6 +176,11 @@ trait AppMenu { self: Main.type =>
     numProgMenu.add(menuItemFor(Utils.loadString("S_PrimeFactors"), "prime-factors.kojo"))
     samplesMenu.add(numProgMenu)
 
+    val physicsMenu = new JMenu(Utils.loadString("S_Physics"))
+    physicsMenu.add(menuItemFor(Utils.loadString("S_Kinematics"), "physics-uvats.kojo"))
+    physicsMenu.add(menuItemFor(Utils.loadString("S_NewtonsSecond"), "physics-fma.kojo"))
+    samplesMenu.add(physicsMenu)
+
     val animGameMenu = new JMenu(Utils.loadString("S_AnimationsGames"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_TangramSkier"), "tangram-skier.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_Pong"), "pong.kojo"))

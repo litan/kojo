@@ -65,7 +65,12 @@ object Utils {
 
   def loadImage(fname: String): Image = {
     val url = getClass.getResource(fname)
-    Toolkit.getDefaultToolkit.getImage(url)
+    if (url != null) {
+      Toolkit.getDefaultToolkit.createImage(url)
+    }
+    else {
+      Toolkit.getDefaultToolkit.createImage(fname)
+    }
   }
 
   def loadImageC(fname: String): Image = {
@@ -79,7 +84,7 @@ object Utils {
   def loadIconC(fname: String): ImageIcon = {
     iconCache.getOrElseUpdate(fname, loadIcon(fname))
   }
-  
+
   def loadResource(res: String): String = {
     readStream(getClass.getResourceAsStream(res))
   }

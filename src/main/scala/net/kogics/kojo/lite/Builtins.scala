@@ -468,6 +468,9 @@ Here's a partial list of the available commands:
   def setOutputBackground(color: Color) = kojoCtx.setOutputBackground(color)
   def setOutputTextColor(color: Color) = kojoCtx.setOutputForeground(color)
   def setOutputTextFontSize(size: Int) = kojoCtx.setOutputFontSize(size)
+  
+  def epochTimeMillis = System.currentTimeMillis()
+  def epochTime = System.currentTimeMillis() / 1000.0
 
   val PShapes = PicShape
   object PicShape {

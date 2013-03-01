@@ -35,8 +35,7 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def axesOff() = tCanvas.axesOff()
   UserCommand("axesOff", Nil, "Hides the X and Y axes.")
 
-  def newTurtle(): Turtle = newTurtle(0, 0)
-  def newTurtle(x: Double, y: Double) = tCanvas.newTurtle(x, y)
+  def newTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = tCanvas.newTurtle(x, y, costume)
   def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
   def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) =

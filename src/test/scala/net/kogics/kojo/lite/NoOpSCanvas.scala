@@ -18,7 +18,7 @@ import edu.umd.cs.piccolo.util.PBounds
 
 class NoOpSCanvas extends SCanvas {
   def clear() {}
-  def newTurtle(x: Double, y: Double): Turtle = null
+  def newTurtle(x: Double, y: Double, costume: String): Turtle = null
   def axesOn() {}
   def axesOff() {}
   def gridOn() {}
