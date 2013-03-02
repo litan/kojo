@@ -291,10 +291,10 @@ utdata(t2)
       </div>.toString,
       "systemtid" -> <div><strong>systemtid</strong><br/>Ger systemklockans tid i sekunder. Du kan använda systemtid för att mäta hur lång tid något tar.<br/>
         <br/><em>Exempel:</em> <br/><br/>
-        <pre>dröj(1000)
+<pre>
 val start = systemtid
 utdata("Ha tålamod!")
-gå(1000)
+räknaTill(100000000)
 val stopp = systemtid
 val s = stopp - start
 utdata("Du hade tålamod i " + avrunda(s,1) + " sekunder.")
