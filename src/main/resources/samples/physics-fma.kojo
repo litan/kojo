@@ -20,9 +20,9 @@ val t0 = epochTime // time, in seconds, since a reference time
 animate {
     // s = 1/2 * a * t^2
     val t = epochTime - t0 // time, in seconds, since the start of the program
-    val s1 = 0.5 * acc1 * t * t // distance travelled by ball1, in metres
+    val s1 = 0.5 * acc1 * t * t // distance travelled by ball1, in meters
     val s2 = 0.5 * acc2 * t * t
 
-    ball1.setPosition(s1, ball1.position.y) // use pixels instead of metres
+    ball1.setPosition(s1, ball1.position.y) // use pixels instead of meters
     ball2.setPosition(s2, ball2.position.y)
 }
