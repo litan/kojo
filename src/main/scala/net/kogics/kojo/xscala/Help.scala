@@ -146,7 +146,9 @@ object Help {
     "ColorG" -> "ColorG(x1, y1, color1, x2, y2, color2, cyclic) - Creates a color gradient for filling shapes. The cyclic value is optional.",
     "setBackground" -> "setBackground(color) - Sets the canvas background to the specified color. You can use predefined colors for setting the background, or you can create your own colors using the Color, ColorHSB, and ColorG functions.",
     "setBackgroundH" -> "setBackgroundH(color1, color2) - Sets the canvas background to a horizontal color gradient defined by the two specified colors.",
-    "setBackgroundV" -> "setBackgroundV(color1, color2) - Sets the canvas background to a vertical color gradient defined by the two specified colors."
+    "setBackgroundV" -> "setBackgroundV(color1, color2) - Sets the canvas background to a vertical color gradient defined by the two specified colors.",
+    "epochTime" -> "epochTime - the difference, measured in seconds, between the current time and midnight, January 1, 1970 UTC.",
+    "epochTimeMillis" -> "epochTimeMillis - the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC."
   )
 
   val TwContent = Map[String, String](
