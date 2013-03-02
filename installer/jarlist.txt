@@ -1,4 +1,4 @@
-/home/lalit/work/KojoDev/KojoLite/target/scala-2.10/kojo_2.10-2.0.jar
+/home/lalit/work/KojoDev/KojoLite/target/scala-2.10/kojo_2.10-2.1.jar
 /home/lalit/work/KojoDev/KojoLite/lib/AppleJavaExtensions.jar
 /home/lalit/work/KojoDev/KojoLite/lib/rsyntaxtextarea.jar
 /home/lalit/work/KojoDev/KojoLite/lib/rstaui.jar
