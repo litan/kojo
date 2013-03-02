@@ -40,7 +40,7 @@ class Padda {
   def siktePå() = thisTurtle.beamsOn()
   def sikteAv() = thisTurtle.beamsOff()
   val engelska = thisTurtle
-  protected var thisTurtle = newTurtle
+  protected var thisTurtle = newTurtle()
   private var penIsDown = true
   private def saveStateAndDo(doThis: => Unit) {
     val wasDown = penIsDown
