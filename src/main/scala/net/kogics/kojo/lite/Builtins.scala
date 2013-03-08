@@ -19,6 +19,7 @@ package lite
 import java.awt.{Color => JColor}
 import java.awt.GradientPaint
 import java.awt.Paint
+import java.util.concurrent.CountDownLatch
 
 import javax.swing.JComponent
 
@@ -473,6 +474,7 @@ Here's a partial list of the available commands:
   
   def epochTimeMillis = System.currentTimeMillis()
   def epochTime = System.currentTimeMillis() / 1000.0
+  def countDownLatch(n: Int) = new CountDownLatch(n)
 
   val PShapes = PicShape
   object PicShape {
