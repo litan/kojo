@@ -80,8 +80,8 @@ object CodeCompletionUtils {
     "setOutputBackground" -> "setOutputBackground(${color})",
     "setOutputTextColor" -> "setOutputTextColor(${color})",
     "setOutputTextFontSize" -> "setOutputTextFontSize(${size})",
-    "onKeyPress" -> "onKeyPress { k =>\n    k match {\n      case Kc.VK_RIGHT => ${cursor}\n         case _ => \n    }\n}",
-    "onKeyRelease" -> "onKeyRelease { k =>\n    k match {\n      case Kc.VK_RIGHT => ${cursor}\n         case _ => \n    }\n}",
+    "onKeyPress" -> "onKeyPress { k =>\n    k match {\n        case Kc.VK_RIGHT => ${cursor}\n        case _ => \n    }\n}",
+    "onKeyRelease" -> "onKeyRelease { k =>\n    k match {\n        case Kc.VK_RIGHT => ${cursor}\n        case _ => \n    }\n}",
     "onMousePress" -> "onMousePress { (x, y) =>\n    ${cursor}\n}",
     "onMouseClick" -> "onMouseClick { (x, y) =>\n    ${cursor}\n}",
     "onMouseDrag" -> "onMouseDrag { (x, y) =>\n    ${cursor}\n}",
@@ -159,11 +159,13 @@ object CodeCompletionUtils {
     "Point" -> "Point(${x}, ${y})",
     "Point2D" -> "Point2D(${x}, ${y})",
     "drawStage" -> "drawStage(${background})",
-    "bounceVecOffStage" -> "bounceVecOffStage(${vec}, ${forPic})"
+    "bounceVecOffStage" -> "bounceVecOffStage(${vec}, ${forPic})",
+    "countDownLatch" -> "countDownLatch(${count})"
   )
   
   val TwMethodTemplates = Map(
     "newTurtle" -> "newTurtle(${x}, ${y})",
+    "createTurtle" -> "createTurtle(${x}, ${y}) { t =>\n    ${cursor}\n}",
     "pict" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "PictureT" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "Picture" -> "Picture {\n    ${cursor}\n}",
