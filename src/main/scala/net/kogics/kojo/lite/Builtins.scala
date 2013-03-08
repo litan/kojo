@@ -379,7 +379,7 @@ Here's a partial list of the available commands:
   val row = picture.row _
   val col = picture.col _
 
-  implicit val picCanvas = tCanvas
+  implicit val _picCanvas = tCanvas
   def pict(painter: Painter) = picture.Pic(painter)
   def PictureT(painter: Painter) = picture.Pic(painter)
   def Picture(fn: => Unit) = picture.Pic0 { t =>
