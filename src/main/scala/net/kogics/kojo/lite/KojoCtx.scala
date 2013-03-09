@@ -345,6 +345,10 @@ class KojoCtx extends core.KojoCtx {
     topcs.seh.se.formatAction.actionPerformed(null)
   }
 
+  def setEditorTabSize(ts: Int) {
+    topcs.seh.se.setTabSize(ts)
+  }
+
   def showStatusText(text: String) {
     statusBar.showText(text)
   }

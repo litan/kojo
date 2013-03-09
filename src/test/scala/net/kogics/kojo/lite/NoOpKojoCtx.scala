@@ -80,5 +80,6 @@ class NoOpKojoCtx extends core.KojoCtx {
   def formatSource() {}
   def showStatusText(text: String): Unit = {}
   def showStatusCaretPos(line: Int, col: Int): Unit = {}
+  def setEditorTabSize(ts: Int): Unit = {}
   var fps = 50
 }
