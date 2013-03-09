@@ -166,6 +166,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(new JPopupMenu.Separator, idx)
   idx += 1
 
+  var tabSize = 4
+  
   val formatAction = new AbstractAction(Utils.loadString("S_FormatSource")) {
     import scalariform.formatter.preferences._
 
@@ -176,7 +178,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           codePane.getText,
           new FormattingPreferences(
             Map(
-              IndentSpaces -> 4,
+              IndentSpaces -> tabSize,
               CompactControlReadability -> true,
               AlignParameters -> true,
               AlignSingleLineCaseStatements -> true,
@@ -525,6 +527,11 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         }
       }
     })
+  }
+  
+  def setTabSize(ts: Int) = Utils.runInSwingThread {
+    tabSize = ts
+    codePane.setTabSize(ts)
   }
 
   class StatusStrip extends JPanel {

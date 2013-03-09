@@ -160,7 +160,8 @@ object CodeCompletionUtils {
     "Point2D" -> "Point2D(${x}, ${y})",
     "drawStage" -> "drawStage(${background})",
     "bounceVecOffStage" -> "bounceVecOffStage(${vec}, ${forPic})",
-    "countDownLatch" -> "countDownLatch(${count})"
+    "countDownLatch" -> "countDownLatch(${count})",
+    "setEditorTabSize" -> "setEditorTabSize(${tabSize})"
   )
   
   val TwMethodTemplates = Map(
