@@ -39,7 +39,7 @@ class Padda {
   def laddaLägeRiktning() = thisTurtle.restorePosHe()
   def siktePå() = thisTurtle.beamsOn()
   def sikteAv() = thisTurtle.beamsOff()
-  val engelska = thisTurtle
+  lazy val engelska = thisTurtle
   protected var thisTurtle = newTurtle()
   private var penIsDown = true
   private def saveStateAndDo(doThis: => Unit) {
