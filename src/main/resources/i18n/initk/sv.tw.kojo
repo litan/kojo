@@ -1,46 +1,48 @@
 //Contributed by Bjorn Regnell 
-//Swedish Turtle wrapper for Kojo version 3 updated 2012-04-15
-class Padda {
-  def fram(steg:Double) = thisTurtle.forward(steg)
-  def fram() = thisTurtle.forward(25)
-  def höger(vinkel:Double) = thisTurtle.right(vinkel)
-  def höger() = thisTurtle.right(90)
-  def vänster(vinkel:Double) = thisTurtle.left(vinkel) 
-  def vänster() = thisTurtle.left(90) 
-  def hoppaTill(x:Double, y:Double) = thisTurtle.jumpTo(x, y)
-  def gåTill(x:Double, y:Double) = thisTurtle.moveTo(x, y)
+//Swedish Turtle wrapper for Kojo version 5 updated 2013-03-10
+class Padda(englishTurtle: Turtle) {
+  def this () = this(newTurtle)
+  def this (startX: Double, startY: Double) = this (newTurtle(startX, startY))
+  def this (startX: Double, startY: Double, kostymFilNamn: String) = this (newTurtle(startX, startY, kostymFilNamn))
+  def fram(steg:Double) = englishTurtle.forward(steg)
+  def fram() = englishTurtle.forward(25)
+  def höger(vinkel:Double) = englishTurtle.right(vinkel)
+  def höger() = englishTurtle.right(90)
+  def vänster(vinkel:Double) = englishTurtle.left(vinkel) 
+  def vänster() = englishTurtle.left(90) 
+  def hoppaTill(x:Double, y:Double) = englishTurtle.jumpTo(x, y)
+  def gåTill(x:Double, y:Double) = englishTurtle.moveTo(x, y)
   def hoppa(steg:Double) = saveStateAndDo { pennaUpp; fram(steg) }
   def hoppa() = saveStateAndDo { pennaUpp; fram() }
-  def hem() = thisTurtle.home()
-  def mot(x:Double, y:Double) = thisTurtle.towards(x, y)
-  def sättVinkel(vinkel:Double) = thisTurtle.setHeading(vinkel)
-  def vinkel = thisTurtle.heading
-  def öster() = thisTurtle.setHeading(0)
-  def väster() = thisTurtle.setHeading(180)
-  def norr() = thisTurtle.setHeading(90)
-  def söder() = thisTurtle.setHeading(-90)  
-  def sakta(n: Long) = thisTurtle.setAnimationDelay(n) 
-  def skriv(t : Any) = thisTurtle.write(t)
-  def textstorlek(s:Int) = thisTurtle.setPenFontSize(s)
-  def båge(radie:Double, vinkel:Double) = thisTurtle.arc(radie, math.round(vinkel).toInt)
-  def cirkel(radie:Double) = thisTurtle.circle(radie)
-  def synlig() = thisTurtle.visible()
-  def osynlig() = thisTurtle.invisible()
-  def läge = thisTurtle.position
-  def pennaNer() = {penIsDown = true ; thisTurtle.penDown()}
-  def pennaUpp() = {penIsDown = false ; thisTurtle.penUp()}	
+  def hem() = englishTurtle.home()
+  def mot(x:Double, y:Double) = englishTurtle.towards(x, y)
+  def sättVinkel(vinkel:Double) = englishTurtle.setHeading(vinkel)
+  def vinkel = englishTurtle.heading
+  def öster() = englishTurtle.setHeading(0)
+  def väster() = englishTurtle.setHeading(180)
+  def norr() = englishTurtle.setHeading(90)
+  def söder() = englishTurtle.setHeading(-90)  
+  def sakta(n: Long) = englishTurtle.setAnimationDelay(n) 
+  def skriv(t : Any) = englishTurtle.write(t)
+  def textstorlek(s:Int) = englishTurtle.setPenFontSize(s)
+  def båge(radie:Double, vinkel:Double) = englishTurtle.arc(radie, math.round(vinkel).toInt)
+  def cirkel(radie:Double) = englishTurtle.circle(radie)
+  def synlig() = englishTurtle.visible()
+  def osynlig() = englishTurtle.invisible()
+  def läge = englishTurtle.position
+  def pennaNer() = {penIsDown = true ; englishTurtle.penDown()}
+  def pennaUpp() = {penIsDown = false ; englishTurtle.penUp()}  
   def pennanÄrNere = penIsDown
-  def färg(c:java.awt.Color) = thisTurtle.setPenColor(c)
-  def fyll(c:java.awt.Color) = thisTurtle.setFillColor(c)
-  def bredd(n:Double) = thisTurtle.setPenThickness(n)
-  def sparaStil() = thisTurtle.saveStyle()
-  def laddaStil() = thisTurtle.restoreStyle()
-  def sparaLägeRiktning() = thisTurtle.savePosHe()
-  def laddaLägeRiktning() = thisTurtle.restorePosHe()
-  def siktePå() = thisTurtle.beamsOn()
-  def sikteAv() = thisTurtle.beamsOff()
-  lazy val engelska = thisTurtle
-  protected var thisTurtle = newTurtle()
+  def färg(c:java.awt.Color) = englishTurtle.setPenColor(c)
+  def fyll(c:java.awt.Color) = englishTurtle.setFillColor(c)
+  def bredd(n:Double) = englishTurtle.setPenThickness(n)
+  def sparaStil() = englishTurtle.saveStyle()
+  def laddaStil() = englishTurtle.restoreStyle()
+  def sparaLägeRiktning() = englishTurtle.savePosHe()
+  def laddaLägeRiktning() = englishTurtle.restorePosHe()
+  def siktePå() = englishTurtle.beamsOn()
+  def sikteAv() = englishTurtle.beamsOff()
+  def kostym(filNamn: String) = englishTurtle.setCostume(filNamn)
   private var penIsDown = true
   private def saveStateAndDo(doThis: => Unit) {
     val wasDown = penIsDown
@@ -48,11 +50,7 @@ class Padda {
     if (wasDown) pennaNer else pennaUpp
   }
 }
-object padda extends Padda { 
-  //make thisTurtle the same as turtle0 for padda
-  thisTurtle.invisible; thisTurtle = turtle0
-  //create more swedish turtles using "new Padda"
-} 
+object padda extends Padda(turtle0) 
 import padda._  
 def sudda() = clear()
 def suddaUtdata() = clearOutput()
@@ -152,7 +150,8 @@ addCodeTemplates(
         "slumptal" -> "slumptal(${mindreän})", 
         "slumptalMedDecimaler" -> "slumptalMedDecimaler(${mindreän})", 
         "räknaTill" -> "räknaTill(${tal})", 
-        "systemtid" -> "systemtid"
+        "systemtid" -> "systemtid",
+        "kostym" -> "kostym(${filnamn})"
   )
 )
 //help texts
@@ -307,8 +306,15 @@ räknaTill(5000)
         </pre>
       </div>.toString,
       "slumptal" -> <div><strong>slumptal</strong>(mindreÄn)<br/>Ger ett slumptal mellan 0 och mindreÄn.<br/><em>Exempel:</em><br/><pre>  def slump = slumptal(20) + 1 </pre><br/>Ger slumptal från 1 till och med 20</div>.toString,
-      "slumptalMedDecimaler" -> <div><strong>slumptalMedDecimaler</strong>(mindreÄn)<br/>Ger ett slumptal med decimaler mellan 0 och mindreÄn.<br/><em>Exempel:</em><br/><pre> def slump = slumptalMedDecimaler(20) + 1.0</pre><br/>Ger slumptal med decimaler från 1.0 till och med 20.0</div>.toString
-    )
+      "slumptalMedDecimaler" -> <div><strong>slumptalMedDecimaler</strong>(mindreÄn)<br/>Ger ett slumptal med decimaler mellan 0 och mindreÄn.<br/><em>Exempel:</em><br/><pre> def slump = slumptalMedDecimaler(20) + 1.0</pre><br/>Ger slumptal med decimaler från 1.0 till och med 20.0</div>.toString,
+      "kostym" -> <div><strong>kostym</strong>(filNamn)<br/>Ändrar paddans utseende efter bild i fil.<br/><em>Exempel:</em><br/><pre>  
+sudda       
+kostym("bakgrund.jpg") //den vanliga paddan blir bakgrund.jpg 
+fram(100) //bakgrunden flyttas
+val gubbe = new Padda(100,100,"gubbe.jpg") //ny padda skapas på plats (100, 100) med bilden gubbe.jpg 
+gubbe.fram(100) 
+</pre><br/></div>.toString
+      )
 )
 
 utdata("Välkommen till Kojo med svensk padda!")
