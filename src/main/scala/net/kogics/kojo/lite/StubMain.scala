@@ -61,7 +61,7 @@ trait StubMain {
         javaHome + "/bin/java"
       }
     }
-    val cmdPart = "-client -Xms32m -Xmx512m " +
+    val cmdPart = "-client -Xms32m -Xmx768m " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
       "-XX:+CMSPermGenSweepingEnabled net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
