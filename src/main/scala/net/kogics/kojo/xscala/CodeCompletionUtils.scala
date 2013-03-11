@@ -161,7 +161,12 @@ object CodeCompletionUtils {
     "drawStage" -> "drawStage(${background})",
     "bounceVecOffStage" -> "bounceVecOffStage(${vec}, ${forPic})",
     "countDownLatch" -> "countDownLatch(${count})",
-    "setEditorTabSize" -> "setEditorTabSize(${tabSize})"
+    "setEditorTabSize" -> "setEditorTabSize(${tabSize})",
+    "setCostumes" -> "setCostumes(${costume1}, ${etc})",
+    "nextCostume" -> "nextCostume()",
+    "scaleCostume" -> "scaleCostume(${factor})",
+    "changePosition" -> "changePosition(${x}, ${y})",
+    "pause" -> "pause(${secs})"
   )
   
   val TwMethodTemplates = Map(

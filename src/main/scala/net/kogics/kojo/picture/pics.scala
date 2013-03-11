@@ -52,6 +52,10 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 
   def draw() {
     realDraw()
+//    Need to do the following if we ever have turtle commands that modify the turtle's layer transform    
+//    Utils.runInSwingThread {
+//      pgTransform = t2t(tnode.getTransformReference(true))
+//    }
   }
 
   def erase() = Utils.runInSwingThread {

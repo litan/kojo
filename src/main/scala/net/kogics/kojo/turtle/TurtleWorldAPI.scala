@@ -117,6 +117,11 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     def arc(r: Double, a: Int) = turtle0.arc(r, a)
     def setCostume(costumeFile: String) = turtle0.setCostume(costumeFile)
     UserCommand("setCostume", List("costumeFile"), "Changes the costume (i.e. image) associated with the turtle to the image in the specified file.")
+
+    def setCostumes(costumeFiles: Vector[String]) = turtle0.setCostumes(costumeFiles)
+    def nextCostume() = turtle0.nextCostume()
+    def scaleCostume(factor: Double) = turtle0.scaleCostume(factor)
+    def changePosition(x: Double, y: Double) = turtle0.changePosition(x, y)
     
     // need to make this a class to get it to show up reliably in completions
     class Costume {
