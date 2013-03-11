@@ -1,6 +1,6 @@
 //Contributed by Bjorn Regnell 
 //Swedish Turtle wrapper for Kojo version 5 updated 2013-03-10
-class Padda(englishTurtle: Turtle) {
+class Padda(val englishTurtle: Turtle) {
   def this () = this(newTurtle)
   def this (startX: Double, startY: Double) = this (newTurtle(startX, startY))
   def this (startX: Double, startY: Double, kostymFilNamn: String) = this (newTurtle(startX, startY, kostymFilNamn))
