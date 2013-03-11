@@ -479,6 +479,7 @@ Here's a partial list of the available commands:
   def currentDir = Utils.currentDir
   
   def setEditorTabSize(ts: Int) = kojoCtx.setEditorTabSize(ts)
+  def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
 
   val PShapes = PicShape
   object PicShape {
