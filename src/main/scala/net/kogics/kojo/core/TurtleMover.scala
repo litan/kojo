@@ -35,6 +35,7 @@ trait TurtleMover extends RichTurtleCommands {
   def towards(p: Point): Unit = towards(p.x, p.y)
   def position: Point
   def heading: Double
+  def direction = heading
   def jumpTo(x: Double, y: Double): Unit
   def jumpTo(p: Point): Unit = jumpTo(p.x, p.y)
   def setPosition(x: Double, y: Double) = jumpTo(x, y)
@@ -60,4 +61,9 @@ trait TurtleMover extends RichTurtleCommands {
   def arc(r: Double, a: Int): Unit
   def circle(r: Double) = arc(r, 360)
   def setCostume(costumeFile: String): Unit
+  def setCostumes(costumeFiles: Vector[String]): Unit
+  def setCostumes(costumeFiles: String*): Unit = setCostumes(costumeFiles.toVector)
+  def nextCostume(): Unit
+  def scaleCostume(factor: Double): Unit
+  def changePosition(x: Double, y: Double): Unit
 }

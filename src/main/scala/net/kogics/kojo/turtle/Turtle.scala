@@ -79,6 +79,8 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private var areBeamsOn: Boolean = _
   private var forwardAnimation: PActivity = _
   private var stopped = false
+  private var costumes: Option[Vector[String]] = None
+  private var currCostume = 0
 
   private [turtle] def changePos(x: Double, y: Double) {
     _position = new Point2D.Double(x, y)
@@ -271,8 +273,10 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   def clear() = Utils.runInSwingThread {
     pen.clear()
     layer.removeAllChildren() // get rid of stuff not written by pen, like text nodes
+    turtle.getTransformReference(true).setToIdentity()
+    costumes = None
+    currCostume = 0
     init()
-    // showWorker() - if we want an invisible turtle to show itself after a clear
     turtle.repaint()
   }
 
@@ -501,6 +505,31 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     val downPen = new DownPen()
     val upPen = new UpPen()
     (downPen, upPen)
+  }
+
+  def setCostumes(costumeFiles: Vector[String]) = {
+    require(costumeFiles.length > 1, "You need to specify at least two costumes")
+    Utils.runInSwingThread {
+      setCostume(costumeFiles(0))
+      costumes = Some(costumeFiles)
+      currCostume = 0
+    }
+  }
+
+  def nextCostume() = Utils.runInSwingThread {
+    costumes foreach { cseq =>
+      currCostume = if (currCostume == cseq.length - 1) 0 else currCostume + 1
+      setCostume(cseq(currCostume))
+    }
+  }
+
+  def scaleCostume(f: Double) = Utils.runInSwingThread {
+    turtle.scale(f)
+    layer.repaint()
+  }
+  
+  def changePosition(x: Double, y: Double) = Utils.runInSwingThread {
+    jumpTo(_position.getX + x, _position.getY + y)
   }
 
   abstract class AbstractPen extends Pen {
