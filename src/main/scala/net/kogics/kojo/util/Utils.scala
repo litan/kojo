@@ -69,7 +69,7 @@ object Utils {
       Toolkit.getDefaultToolkit.createImage(url)
     }
     else {
-      val pfname = if (fname.startsWith("~")) fname.replaceFirst("~", homeDir) else fname
+      val pfname = if (fname.startsWith("~")) fname.replaceFirst("~", homeDir.replaceAllLiterally("\\", "/")) else fname
       val imageFile = new File(pfname)
       require(imageFile.exists, "Image file should exist: " + imageFile.getAbsolutePath)
       Toolkit.getDefaultToolkit.createImage(pfname)
