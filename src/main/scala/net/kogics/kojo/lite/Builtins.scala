@@ -475,6 +475,8 @@ Here's a partial list of the available commands:
   def epochTimeMillis = System.currentTimeMillis()
   def epochTime = System.currentTimeMillis() / 1000.0
   def countDownLatch(n: Int) = new CountDownLatch(n)
+  def homeDir = Utils.homeDir
+  def currentDir = Utils.currentDir
   
   def setEditorTabSize(ts: Int) = kojoCtx.setEditorTabSize(ts)
 

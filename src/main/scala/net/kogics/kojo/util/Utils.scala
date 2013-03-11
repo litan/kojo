@@ -69,7 +69,10 @@ object Utils {
       Toolkit.getDefaultToolkit.createImage(url)
     }
     else {
-      Toolkit.getDefaultToolkit.createImage(fname)
+      val pfname = if (fname.startsWith("~")) fname.replaceFirst("~", homeDir) else fname
+      val imageFile = new File(pfname)
+      require(imageFile.exists, "Image file should exist: " + imageFile.getAbsolutePath)
+      Toolkit.getDefaultToolkit.createImage(pfname)
     }
   }
 
@@ -271,8 +274,9 @@ object Utils {
     else println("Good")
   }
 
-  // actually - the dir with the jars, one level under the actual install dir
   def installDir = System.getProperty("user.home")
+  def homeDir = System.getProperty("user.home")
+  def currentDir = System.getProperty("user.dir")
 
   def readStream(is: InputStream): String = {
     require(is != null, "resource should exist")
