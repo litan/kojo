@@ -102,25 +102,24 @@ val gutters = Seq(leftGutter, rightGutter)
 val topbot = Seq(stageTop, stageBot)
 val paddles = Seq(paddle1, paddle2)
 
-gameBall.animate {
+gameBall.act { self => 
     if (running) {
-        gameBall.transv(ballVel)
-        val ballpos = gameBall.position
-        if (gameBall.collision(paddles).isDefined) {
+        self.transv(ballVel)
+        if (self.collision(paddles).isDefined) {
             ballVel = Vector2D(-ballVel.x, ballVel.y)
         }
-        else if (gameBall.collision(topbot).isDefined) {
+        else if (self.collision(topbot).isDefined) {
             ballVel = Vector2D(ballVel.x, -ballVel.y)
         }
-        else if (gameBall.collidesWith(leftGutter)) {
-            gameBall.setPosition(0, 0)
+        else if (self.collidesWith(leftGutter)) {
+            self.setPosition(0, 0)
             ballVel = Vector2D(-level.vel.x.abs, level.vel.y)
             scores(paddle1).pScore.erase()
             scores += paddle1 -> scores(paddle1).incrScore
             draw(scores(paddle1).pScore)
         }
-        else if (gameBall.collidesWith(rightGutter)) {
-            gameBall.setPosition(0, 0)
+        else if (self.collidesWith(rightGutter)) {
+            self.setPosition(0, 0)
             ballVel = Vector2D(level.vel.x.abs, level.vel.y)
             scores(paddle2).pScore.erase()
             scores += paddle2 -> scores(paddle2).incrScore
