@@ -70,7 +70,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private val UpPen = pens._2
   private[kojo] var pen: Pen = _
 
-  private var _position: Point2D.Double = _
   private var theta: Double = _
 
   private val savedStyles = new mutable.Stack[Style]
@@ -83,8 +82,15 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private var currCostume = 0
 
   private [turtle] def changePos(x: Double, y: Double) {
-    _position = new Point2D.Double(x, y)
     turtle.setOffset(x, y)
+  }
+
+//  private [turtle] def _position: Point2D.Double = turtle.getOffset.asInstanceOf[Point2D.Double]
+  private def _positionX = turtle.getXOffset
+  private def _positionY = turtle.getYOffset
+
+  def position: Point = Utils.runInSwingThreadAndWait {
+    new Point(_positionX, _positionY)
   }
 
   private def changeHeading(newTheta: Double) {
@@ -93,11 +99,11 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def distanceTo(x: Double, y: Double): Double = {
-    distance(_position.x, _position.y, x, y)
+    distance(_positionX, _positionY, x, y)
   }
 
   private def towardsHelper(x: Double, y: Double): Double = {
-    thetaTowards(_position.x, _position.y, x, y, theta)
+    thetaTowards(_positionX, _positionY, x, y, theta)
   }
 
   def delayFor(dist: Double): Long = {
@@ -110,24 +116,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     val speed = 100f / _animationDelay
     val delay = Math.abs(dist) / speed
     delay.round
-  }
-
-  def dumpState() {
-    Utils.runInSwingThread {
-      val cIter = layer.getChildrenReference.iterator
-      println("Turtle Layer (%d children):\n" format(layer.getChildrenReference.size))
-      while (cIter.hasNext) {
-        val node = cIter.next.asInstanceOf[PNode]
-        println(stringRep(node))
-      }
-    }
-  }
-
-  private def stringRep(node: PNode): String = node match {
-    case l: PolyLine =>
-      new StringBuilder().append("  Polyline:\n").append("    Points: %s\n" format l.points).toString
-    case n: PNode =>
-      new StringBuilder().append("  PNode:\n").append("    Children: %s\n" format n.getChildrenReference).toString
   }
 
   def initTImage(costumeFile: String) {
@@ -167,11 +155,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
   
   def animationDelay = _animationDelay
-
-  def position: Point = Utils.runInSwingThreadAndWait {
-    new Point(_position.getX, _position.getY)
-  }
-
+  
   def heading: Double = Utils.runInSwingThreadAndWait {
     thetaDegrees
   }
@@ -183,8 +167,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private def currStyle = Style(pen.getColor, pen.getThickness, pen.getFillColor, pen.getFontSize)
 
   private def pointAfterForward(n: Double) = {
-    val p0 = _position
-    val p1 = posAfterForward(p0.x, p0.y, theta, n)
+    val p1 = posAfterForward(_positionX, _positionY, theta, n)
     new Point2D.Double(p1._1, p1._2)
   }
   
@@ -226,17 +209,18 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
           stopped = false
         }
 
-        val p0 = _position
+        val p0x = _positionX
+        val p0y = _positionY
         val pf = pointAfterForward(n)
-        pen.startMove(p0.x, p0.y)
+        pen.startMove(p0x, p0y)
 
         forwardAnimation = new PActivity(aDelay) {
           override def activityStep(elapsedTime: Long) {
             val frac = elapsedTime.toDouble / aDelay
-            val currX = p0.x * (1-frac) + pf.x * frac
-            val currY = p0.y * (1-frac) + pf.y * frac
+            val currX = p0x * (1-frac) + pf.x * frac
+            val currY = p0y * (1-frac) + pf.y * frac
             pen.move(currX, currY)
-            turtle.setOffset(currX, currY)
+            changePos(currX, currY)
             turtle.repaint()
           }
         }
@@ -378,7 +362,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def savePosHe() = Utils.runInSwingThread {
-    savedPosHe.push((_position, theta))
+    savedPosHe.push((new Point2D.Double(_positionX, _positionY), theta))
   }
 
   def restoreStyle() = Utils.runInSwingThread {
@@ -529,7 +513,25 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
   
   def changePosition(x: Double, y: Double) = Utils.runInSwingThread {
-    jumpTo(_position.getX + x, _position.getY + y)
+    jumpTo(_positionX + x, _positionY + y)
+  }
+  
+  def dumpState() {
+    Utils.runInSwingThread {
+      val cIter = layer.getChildrenReference.iterator
+      println("Turtle Layer (%d children):\n" format(layer.getChildrenReference.size))
+      while (cIter.hasNext) {
+        val node = cIter.next.asInstanceOf[PNode]
+        println(stringRep(node))
+      }
+    }
+  }
+
+  private def stringRep(node: PNode): String = node match {
+    case l: PolyLine =>
+      new StringBuilder().append("  Polyline:\n").append("    Points: %s\n" format l.points).toString
+    case n: PNode =>
+      new StringBuilder().append("  PNode:\n").append("    Children: %s\n" format n.getChildrenReference).toString
   }
 
   abstract class AbstractPen extends Pen {
@@ -565,7 +567,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
     def newPath(): PolyLine = {
       val penPath = new PolyLine()
-      penPath.addPoint(turtle._position.x, turtle._position.y)
+      penPath.addPoint(_positionX, _positionY)
       penPath.setStroke(lineStroke)
       penPath.setStrokePaint(lineColor)
       penPath.setPaint(fillColor)
@@ -666,7 +668,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
 
     def write(text: String) {
-      val ptext = Utils.textNode(text, _position.x, _position.y, canvas.camScale)
+      val ptext = Utils.textNode(text, _positionX, _positionY, canvas.camScale)
       ptext.setFont(font)
       ptext.setTextPaint(pen.getColor)
       layer.addChild(layer.getChildrenCount-1, ptext)
