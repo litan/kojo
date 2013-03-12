@@ -20,12 +20,14 @@ import java.awt.Stroke
 import scala.collection.mutable.ArrayBuffer
 
 import net.kogics.kojo.kgeom.PolyLine
+import net.kogics.kojo.util.Utils
 
 import edu.umd.cs.piccolo.PLayer
 
 trait Turtle extends TurtleMover {
   def clear(): Unit
   def remove(): Unit
+  def act(fn: Turtle => Unit) = Utils.runAsyncMonitored(fn(this))
   // stuff for the pictures module
   def tlayer: PLayer
   private[kojo] def penPaths: ArrayBuffer[PolyLine]
