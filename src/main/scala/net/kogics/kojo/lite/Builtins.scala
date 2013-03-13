@@ -480,6 +480,9 @@ Here's a partial list of the available commands:
   
   def setEditorTabSize(ts: Int) = kojoCtx.setEditorTabSize(ts)
   def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
+  def mouseX = staging.Inputs.mousePos.x
+  def mouseY = staging.Inputs.mousePos.x
+  def mousePos = staging.Inputs.mousePos
 
   val PShapes = PicShape
   object PicShape {
