@@ -295,7 +295,14 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     turtle.repaint()
   }
 
-  def jumpTo(x: Double, y: Double) = Utils.runInSwingThread {
+  def jumpTo(x: Double, y: Double) = {
+    Throttler.throttleHard()
+    Utils.runInSwingThread {
+      jumpToHelper(x, y)
+    }
+  }
+  
+  private def jumpToHelper(x: Double, y: Double) {
     changePos(x, y)
     pen.updatePosition()
     turtle.repaint()
@@ -468,8 +475,15 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       makeArc(forward _, turn _)
     }
   }
-  
-  def setCostume(costumeFile: String) = Utils.runInSwingThread {
+
+  def setCostume(costumeFile: String) = {
+    Throttler.throttleHard()
+    Utils.runInSwingThread {
+      setCostumeHelper(costumeFile)
+    }
+  }
+
+  private def setCostumeHelper(costumeFile: String) = {
     initTImage(costumeFile)
     turtleImage.repaint()
   }
@@ -493,17 +507,21 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   def setCostumes(costumeFiles: Vector[String]) = {
     require(costumeFiles.length > 1, "You need to specify at least two costumes")
+    Throttler.throttleHard()
     Utils.runInSwingThread {
-      setCostume(costumeFiles(0))
+      setCostumeHelper(costumeFiles(0))
       costumes = Some(costumeFiles)
       currCostume = 0
     }
   }
 
-  def nextCostume() = Utils.runInSwingThread {
-    costumes foreach { cseq =>
-      currCostume = if (currCostume == cseq.length - 1) 0 else currCostume + 1
-      setCostume(cseq(currCostume))
+  def nextCostume() = {
+    Throttler.throttleHard()
+    Utils.runInSwingThread {
+      costumes foreach { cseq =>
+        currCostume = if (currCostume == cseq.length - 1) 0 else currCostume + 1
+        setCostumeHelper(cseq(currCostume))
+      }
     }
   }
 
@@ -511,9 +529,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     turtle.scale(f)
     layer.repaint()
   }
-  
-  def changePosition(x: Double, y: Double) = Utils.runInSwingThread {
-    jumpTo(_positionX + x, _positionY + y)
+
+  def changePosition(x: Double, y: Double) = {
+    Throttler.throttleHard()
+    Utils.runInSwingThread {
+      jumpToHelper(_positionX + x, _positionY + y)
+    }
   }
   
   def dumpState() {
