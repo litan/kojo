@@ -38,10 +38,6 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
 
   def newTurtle(): Turtle = newTurtle(0, 0)
   def newTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = tCanvas.newTurtle(x, y, costume)
-  def createTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png")(fn: Turtle => Unit) = {
-    val t = tCanvas.newTurtle(x, y, costume)
-    Utils.runAsyncMonitored(fn(t))
-  }
   
   def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
   def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
