@@ -23,7 +23,7 @@ import org.junit.Before
 import org.junit.Test
 import org.scalacheck.Gen
 import org.scalacheck.Prop.forAll
-import org.scalacheck.{Test => SCTest}
+import org.scalacheck.{ Test => SCTest }
 import org.scalacheck.Test.Parameters.Default
 
 import net.kogics.kojo.lite.NoOpKojoCtx
@@ -36,7 +36,7 @@ class TurtleTest {
 
   val kojoCtx = new NoOpKojoCtx
   val spriteCanvas = new SpriteCanvas(kojoCtx)
-//  val spriteCanvas = new NoOpSCanvas
+  //  val spriteCanvas = new NoOpSCanvas
   val turtle = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
 
   @Before
@@ -439,5 +439,41 @@ class TurtleTest {
     assertEquals(50, p.x, 0.001)
     assertEquals(100, p.y, 0.001)
     assertEquals(45, turtle.heading, 0.001)
+  }
+
+  @Test
+  def testTurtleDistance1() {
+    val t2 = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
+    turtle.setPosition(10, 10)
+    t2.setPosition(100, 10)
+    val d = turtle.distanceTo(t2)
+    assertEquals(90, d, 0.001)
+  }
+
+  @Test
+  def testTurtleDistance2() {
+    val t2 = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
+    turtle.setPosition(10, 10)
+    t2.setPosition(-100, 10)
+    val d = turtle.distanceTo(t2)
+    assertEquals(110, d, 0.001)
+  }
+
+  @Test
+  def testTurtleDistance3() {
+    val t2 = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
+    turtle.setPosition(10, 10)
+    t2.setPosition(10, 100)
+    val d = turtle.distanceTo(t2)
+    assertEquals(90, d, 0.001)
+  }
+
+  @Test
+  def testTurtleDistance4() {
+    val t2 = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
+    turtle.setPosition(10, 10)
+    t2.setPosition(10, -100)
+    val d = turtle.distanceTo(t2)
+    assertEquals(110, d, 0.001)
   }
 }
