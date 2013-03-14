@@ -66,9 +66,12 @@ trait Picture extends InputAware {
   def setPenColor(color: Color)
   def setPenThickness(th: Double)
   def setFillColor(color: Paint)
-  def act(fn: Picture => Unit)
+  @deprecated("Use picture.react instead", "2.1")
+  def act(fn: Picture => Unit) = react(fn)
+  def react(fn: Picture => Unit)
+  @deprecated("Use picture.react instead", "2.1")
   def animate(fn: => Unit) {
-    act { me =>
+    react { me =>
       fn
     }
   }

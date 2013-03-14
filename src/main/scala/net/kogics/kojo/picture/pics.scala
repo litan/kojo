@@ -264,9 +264,9 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 }
 
 trait CorePicOps2 { self: Picture =>
-  def act(fn: Picture => Unit) {
+  def react(fn: Picture => Unit) {
     if (!isDrawn) {
-      throw new IllegalStateException("Ask picture to act after you draw it.")
+      throw new IllegalStateException("Ask picture to react after you draw it.")
     }
     canvas.animate {
       fn(this)

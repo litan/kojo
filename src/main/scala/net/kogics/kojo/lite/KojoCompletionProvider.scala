@@ -107,7 +107,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     val defn = "%s : %s" format (lhs, rhs)
 
     val specialNames = Set(
-      "act(fn: net.kogics.kojo.core.Picture => Unit)",
+      "react(fn: net.kogics.kojo.core.Picture => Unit)",
       "act(fn: net.kogics.kojo.core.Turtle => Unit)",
       "onMouseClick(fn: (Double, Double) => Unit)",
       "onMousePress(fn: (Double, Double) => Unit)",

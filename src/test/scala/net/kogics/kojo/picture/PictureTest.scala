@@ -175,12 +175,12 @@ class PictureTest extends FunSuite with xscala.RepeatCommands {
     pic.heading should be(30.0 plusOrMinus 0.001)
   }
 
-  test("act provides correct me for transforms") {
+  test("react provides correct me for transforms") {
     val pic = rot(30) -> testPic
     @volatile var pic2: core.Picture = null
     pic.draw()
     val latch = new CountDownLatch(1)
-    pic.act { me =>
+    pic.react { me =>
       pic2 = me
       pic.canvas.stopAnimation()
       latch.countDown()

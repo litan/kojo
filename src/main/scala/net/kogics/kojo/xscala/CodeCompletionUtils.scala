@@ -128,6 +128,7 @@ object CodeCompletionUtils {
     "runInGuiThread" -> "runInGuiThread {\n    ${cursor}\n}",
     "onAnimationStop" -> "onAnimationStop {\n    ${cursor}\n}",
     "act" -> "act { self => \n    ${cursor}\n}",
+    "react" -> "react { self => \n    ${cursor}\n}",
     "row" -> "row(${picture}, ${n})",
     "col" -> "col(${picture}, ${n})",
     "setUnitLength" -> "setUnitLength(${unit})",
@@ -171,7 +172,6 @@ object CodeCompletionUtils {
   
   val TwMethodTemplates = Map(
     "newTurtle" -> "newTurtle(${x}, ${y})",
-    "createTurtle" -> "createTurtle(${x}, ${y}) { t =>\n    ${cursor}\n}",
     "pict" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "PictureT" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "Picture" -> "Picture {\n    ${cursor}\n}",
