@@ -127,7 +127,7 @@ object CodeCompletionUtils {
     "runInBackground" -> "runInBackground {\n    ${cursor}\n}",
     "runInGuiThread" -> "runInGuiThread {\n    ${cursor}\n}",
     "onAnimationStop" -> "onAnimationStop {\n    ${cursor}\n}",
-    "act" -> "act { self => \n    ${cursor}\n}",
+    "act" -> "act { self => // we give this turtle the name 'self' within act {...}\n    ${cursor}\n}",
     "react" -> "react { self => \n    ${cursor}\n}",
     "row" -> "row(${picture}, ${n})",
     "col" -> "col(${picture}, ${n})",
