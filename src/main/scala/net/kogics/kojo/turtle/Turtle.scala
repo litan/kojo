@@ -289,10 +289,13 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  def towards(x: Double, y: Double) = Utils.runInSwingThread {
-    val newTheta = towardsHelper(x, y)
-    changeHeading(newTheta)
-    turtle.repaint()
+  def towards(x: Double, y: Double) = {
+    Throttler.throttleHard()
+    Utils.runInSwingThread {
+      val newTheta = towardsHelper(x, y)
+      changeHeading(newTheta)
+      turtle.repaint()
+    }
   }
 
   def jumpTo(x: Double, y: Double) = {
