@@ -28,6 +28,7 @@ trait Turtle extends TurtleMover {
   def clear(): Unit
   def remove(): Unit
   def act(fn: Turtle => Unit) = Utils.runAsyncMonitored(fn(this))
+  def react(fn: Turtle => Unit): Unit
   // stuff for the pictures module
   def tlayer: PLayer
   private[kojo] def penPaths: ArrayBuffer[PolyLine]
