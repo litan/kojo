@@ -540,6 +540,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
   
+  def react(fn: core.Turtle => Unit) {
+    canvas.animate {
+      fn(this)
+    }
+  }
+  
   def dumpState() {
     Utils.runInSwingThread {
       val cIter = layer.getChildrenReference.iterator
