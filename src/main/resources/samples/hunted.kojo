@@ -122,13 +122,13 @@ def badBehavior(self: Picture) {
     velocities += self -> newv
 }
 
-badguy.act(badBehavior)
-badguy2.act(badBehavior)
-badguy3.act(badBehavior)
-badguy4.act(badBehavior)
-badguy5.act(badBehavior)
+badguy.react(badBehavior)
+badguy2.react(badBehavior)
+badguy3.react(badBehavior)
+badguy4.react(badBehavior)
+badguy5.react(badBehavior)
 
-goodguy.act { self =>
+goodguy.react { self =>
     if (isKeyPressed(Kc.VK_RIGHT)) {
         self.translate(speed * sf, 0)
     }
@@ -148,7 +148,7 @@ val startTime = time
 
 val others = List(badguy, badguy2, badguy3, badguy4, badguy5)
 
-goodguy.act { self =>
+goodguy.react { self =>
     if (self.collision(others).isDefined) {
         stopAnimation()
         self.setFillColor(brown)
