@@ -102,7 +102,7 @@ val gutters = Seq(leftGutter, rightGutter)
 val topbot = Seq(stageTop, stageBot)
 val paddles = Seq(paddle1, paddle2)
 
-gameBall.act { self => 
+gameBall.react { self => 
     if (running) {
         self.transv(ballVel)
         if (self.collision(paddles).isDefined) {
@@ -155,11 +155,11 @@ def paddleBehavior(paddle: Picture, upkey: Int, downkey: Int) {
     }
 }
 
-paddle1.act { self =>
+paddle1.react { self =>
     paddleBehavior(self, Kc.VK_A, Kc.VK_Z)
 }
 
-paddle2.act { self =>
+paddle2.react { self =>
     paddleBehavior(self, Kc.VK_UP, Kc.VK_DOWN)
 }
 
