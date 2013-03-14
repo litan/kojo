@@ -539,11 +539,16 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       jumpToHelper(_positionX + x, _positionY + y)
     }
   }
-  
+
   def react(fn: core.Turtle => Unit) {
     canvas.animate {
       fn(this)
     }
+  }
+
+  def distanceTo(other: core.Turtle) = Utils.runInSwingThreadAndWait {
+    val otherPos = other.position
+    distanceTo(otherPos.x, otherPos.y)
   }
   
   def dumpState() {

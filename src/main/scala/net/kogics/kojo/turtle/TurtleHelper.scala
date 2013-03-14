@@ -55,11 +55,9 @@ object TurtleHelper {
     newTheta
   }
 
-  def distance(px: Double, py: Double, x: Double, y: Double): Double = {
-    val (x0,y0) = (px, py)
-    val delX = math.abs(x-x0)
-    val delY = math.abs(y-y0)
+  def distance(x0: Double, y0: Double, x: Double, y: Double): Double = {
+    val delX = x-x0
+    val delY = y-y0
     math.sqrt(delX * delX + delY * delY)
   }
-
 }
