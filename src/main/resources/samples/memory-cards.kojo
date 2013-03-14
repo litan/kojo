@@ -3,7 +3,6 @@ require(Level >= 1 && Level <= 3, "Level needs to be between 1 and 3")
 
 toggleFullScreenCanvas()
 cleari()
-setRefreshRate(40)
 
 case class GameState(card1: Option[Card], card2: Option[Card], card3: Option[Card]) {
     def click(c: Card) {
