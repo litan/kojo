@@ -334,16 +334,12 @@ class CompilerAndRunner(makeSettings: () => Settings,
   import core.CompletionInfo
 
   def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
-    def addMarkerAfterOffset(c: String) = {
-      "%s  ; // %s" format (c.substring(0, offset), c.substring(offset, c.length))
-    }
-
     import interactive._
 
     classLoader.setAsContext()
     val pfx = pfxWithCounter
     val offsetDelta = pfx.length
-    val code = codeTemplate format (pfx, addMarkerAfterOffset(code0))
+    val code = codeTemplate format (pfx, code0)
 
     val source = new BatchSourceFile("scripteditor", code)
     val pos = new OffsetPosition(source, offset + offsetDelta + 1)
