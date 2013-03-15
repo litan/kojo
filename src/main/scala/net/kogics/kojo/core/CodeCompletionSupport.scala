@@ -17,16 +17,58 @@ package net.kogics.kojo.core
 
 import tools.nsc.interactive.CompilerControl
 
+// code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
+/** The kind of a completion proposal. */
+object MemberKind extends Enumeration {
+  val Class, Trait, Type, Object, Package, PackageObject, Def, Val, Var = Value
+}
+
 case class CompletionInfo(
+  kind: MemberKind.Value,
   name: String,
-  member: CompilerControl#Member,
-  prio: Int) {
-  def isValue: Boolean = member.sym.isValue
-  def isMethod: Boolean = member.sym.isMethod
-  def isClass: Boolean = member.sym.isClass
-  def isPackage: Boolean = member.sym.isPackage
-  def isType: Boolean = member.sym.isType
-  def isObject: Boolean = member.sym.isModule
+  signature: String,
+  owner: String, 
+  prio: Int,
+  isJava: Boolean,
+  paramNames: List[List[String]], // parameter names (excluding any implicit parameter sections)
+  paramTypes: List[List[String]], // parameter types matching parameter names (excluding implicit parameter sections)
+  returnType: String,
+  fullyQualifiedName: String // for Class, Trait, Type, Objects: the fully qualified name
+  ) {
+  
+  def params: String = {
+    if (paramNames.size == 0 && returnType == "Unit") {
+      "()"
+    }
+    else {
+      val contextInfo = for {
+        (names, tpes) <- paramNames.zip(paramTypes)
+      } yield for { (name, tpe) <- names.zip(tpes) } yield "%s: %s".format(name, tpe)
+
+      contextInfo.map(_.mkString("(", ", ", ")")).mkString("")
+    }
+  }
+
+  def templateParams: String = {
+    if (paramNames.size == 0 && returnType == "Unit") {
+      "()"
+    }
+    else {
+      val contextInfo = for {
+        names <- paramNames
+      } yield for { name <- names } yield "${%s}" format (name)
+
+      contextInfo.map(_.mkString("(", ", ", ")")).mkString("")
+    }
+  }
+
+  import MemberKind._
+  def fullCompletion = kind match {
+    case Def => s"$name$params: $returnType"
+    case Val => s"$name$params: $returnType"
+    case Var => s"$name$params: $returnType"
+    case _ => s"$name: $owner"
+  }
 }
 
 trait CodeCompletionSupport {

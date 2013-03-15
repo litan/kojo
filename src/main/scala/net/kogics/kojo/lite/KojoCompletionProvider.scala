@@ -34,7 +34,6 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
 
   def rtsaTemplate(t: String) = {
     val res = if (t.contains("${")) t else "%s${cursor}" format (t)
-    //    println("template: " + res)
     res
   }
 
@@ -47,77 +46,34 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
   }
 
   def proposal2(offset: Int, completion: CompletionInfo) = {
-    def kind = {
-      if (completion.isClass || completion.isType) {
-        CLASS
-      }
-      else if (completion.isPackage || completion.isObject) {
-        PACKAGE
-      }
-      else if (completion.isMethod) {
-        METHOD
-      }
-      else {
-        VARIABLE
-      }
+    import core.MemberKind._
+    def kind = completion.kind match {
+      case Class         => CLASS
+      case Trait         => CLASS
+      case Type          => CLASS
+      case Object        => PACKAGE
+      case Package       => PACKAGE
+      case PackageObject => PACKAGE
+      case Def           => METHOD
+      case Val           => VARIABLE
+      case Var           => VARIABLE
     }
 
-    val valOrNoargItem =
-      (completion.isValue &&
-        completion.member.tpe.resultType.toString != "Unit") ||
-        completion.isPackage ||
-        completion.isClass ||
-        completion.isType ||
-        completion.isObject
-
-    val lhs: String = {
-      val fm = new StringBuilder
-      fm.append(completion.name)
-      val tpe = completion.member.tpe
-      if (tpe.typeParams.size > 0) {
-        val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
-        fm.append(completionTypeParams.mkString("[", ", ", "]"))
-      }
-
-      if (tpe.params.size > 0) {
-        val completionParams = tpe.params.map(_.nameString.replace("$", ""))
-        fm.append(completionParams.zip(tpe.paramTypes).
-          map { p => "%s: %s" format (p._1, p._2) }.
-          mkString("(", ", ", ")"))
-      }
-      else {
-        if (!valOrNoargItem) {
-          // it's a no-arg command
-          fm.append("()")
-        }
-      }
-      fm.toString
-    }
-
-    val rhs: String = {
-      val tpe = completion.member.tpe
-      if (tpe.paramss.size > 1)
-        if (tpe.typeParams.size > 0)
-          tpe.resultType.resultType.toString
-        else
-          tpe.resultType.toString
-      else
-        tpe.finalResultType.toString
-    }
-    val defn = "%s : %s" format (lhs, rhs)
+    val display = completion.fullCompletion
 
     val specialNames = Set(
-      "react(fn: net.kogics.kojo.core.Picture => Unit)",
-      "act(fn: net.kogics.kojo.core.Turtle => Unit)",
-      "react(fn: net.kogics.kojo.core.Turtle => Unit)",
-      "onMouseClick(fn: (Double, Double) => Unit)",
-      "onMousePress(fn: (Double, Double) => Unit)",
-      "onMouseDrag(fn: (Double, Double) => Unit)",
-      "animate(fn: => Unit)"
+      "react(net.kogics.kojo.core.Picture => Unit): Unit",
+      "act(net.kogics.kojo.core.Turtle => Unit): Unit",
+      "react(net.kogics.kojo.core.Turtle => Unit): Unit",
+      "onMouseClick((Double, Double) => Unit): Unit",
+      "onMousePress((Double, Double) => Unit): Unit",
+      "onMouseDrag((Double, Double) => Unit): Unit",
+      "animate(=> Unit): Unit"
     )
+
     def specialMethodTemplate: Option[String] = {
-      //      println("%s lhs - %s " format(completion.name, lhs))
-      if (specialNames contains lhs) {
+      //      println("%s signature - %s " format(completion.name, completion.signature))
+      if (specialNames contains completion.signature) {
         Some(methodTemplate(completion.name))
       }
       else {
@@ -131,33 +87,13 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
         c0.get
       }
       else {
-        val fm = new StringBuilder
-        fm.append(completion.name)
-        val tpe = completion.member.tpe
-        //        if (tpe.typeParams.size > 0) {
-        //          val completionTypeParams = tpe.typeParams.map(_.nameString.replace("$", ""))
-        //          fm.append(completionTypeParams map { "${%s}" format (_) } mkString ("[", ", ", "]"))
-        //        }
-        if (tpe.params.size > 0) {
-          val completionParams = completion.member.tpe.params.map(_.nameString.replace("$", ""))
-          fm.append(completionParams map { "${%s}" format (_) } mkString ("(", ", ", ")"))
-        }
-        else {
-          if (!valOrNoargItem) {
-            // it's a no-arg command
-            fm.append("()")
-          }
-        }
-        fm.toString
+        s"${completion.name}${completion.templateParams}"
       }
     }
 
-    def signature = "<strong>%s</strong> : <em>%s</em>" format (lhs, rhs)
+    def help = completion.fullCompletion
 
-    def help = signature
-
-    //    println(template)
-    new TemplateCompletion(this, defn, defn, rtsaTemplate(template), null, help) {
+    new TemplateCompletion(this, display, display, rtsaTemplate(template), null, help) {
       setRelevance(-completion.prio)
       override def getIcon = kindIcon(kind)
     }
@@ -212,7 +148,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
           }
           catch {
             case t: Throwable =>
-              Log.warning(s"Completion Problem for: ${completion.name} -- ${t.getMessage()}")
+              /*Log.warning*/println(s"Completion Problem for: ${completion.name} -- ${t.getMessage()}")
           }
         }
 
@@ -234,7 +170,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     }
     catch {
       case t: Throwable =>
-        Log.warning("Completion Problem 2: " + t.getMessage())
+        /*Log.warning*/println("Completion Problem 2: " + t.getMessage())
     }
 
     proposals
