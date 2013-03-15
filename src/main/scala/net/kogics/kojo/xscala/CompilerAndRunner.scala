@@ -19,6 +19,7 @@ package xscala
 import java.net.URL
 
 import scala.collection.mutable.ListBuffer
+import scala.reflect.internal.Flags
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.OffsetPosition
 import scala.reflect.internal.util.Position
@@ -32,6 +33,14 @@ import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 import scala.tools.util.PathResolver
 
+import net.kogics.kojo.core.MemberKind.Class
+import net.kogics.kojo.core.MemberKind.Def
+import net.kogics.kojo.core.MemberKind.Object
+import net.kogics.kojo.core.MemberKind.Package
+import net.kogics.kojo.core.MemberKind.PackageObject
+import net.kogics.kojo.core.MemberKind.Trait
+import net.kogics.kojo.core.MemberKind.Type
+import net.kogics.kojo.core.MemberKind.Val
 import net.kogics.kojo.core.RunContext
 
 import core.CompletionInfo
@@ -91,7 +100,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
   // needed to prevent pcompiler from making the interp's classloader as 
   // its context loader (which causes a mem leak)
   // we could make pcompiler lazy, but then the first completion takes a big hit 
-  classLoader.setAsContext()  
+  classLoader.setAsContext()
 
   private def makeClassLoader = {
     val parent = new URLClassLoader(compilerClasspath, getClass.getClassLoader())
@@ -217,7 +226,78 @@ class CompilerAndRunner(makeSettings: () => Settings,
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
     }
   }
-  /*lazy */ val pcompiler = new interactive.Global(settings, preporter)
+  val pcompiler = new interactive.Global(settings, preporter) {
+    def mkCompletionProposal(sym: Symbol, tpe: Type, inherited: Boolean, viaView: Symbol): CompletionInfo = {
+      // code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
+      val kind = if (sym.isSourceMethod && !sym.hasFlag(Flags.ACCESSOR | Flags.PARAMACCESSOR)) Def
+      else if (sym.isPackage) Package
+      else if (sym.isClass) Class
+      else if (sym.isTrait) Trait
+      else if (sym.isPackageObject) PackageObject
+      else if (sym.isModule) Object
+      else if (sym.isType) Type
+      else Val
+      val name = sym.decodedName
+      
+      val returnType = 
+        if (sym.isMethod) tpe.finalResultType.toString 
+        else if (sym.isVal || sym.isVar) tpe.resultType.toString
+        else name
+        
+      val signature =
+        if (sym.isMethod) {
+          "%s: %s" format (
+            name +
+            (if (!sym.typeParams.isEmpty) sym.typeParams.map { _.name }.mkString("[", ",", "]") else "") +
+            tpe.paramss.map(_.map(_.tpe.toString).mkString("(", ", ", ")")).mkString,
+            returnType
+          )
+        }
+        else {
+          s"$name: $returnType"
+        }
+
+      val container = sym.owner.enclClass.fullName
+
+      // rudimentary relevance, place own members before inherited ones, and before view-provided ones
+      var relevance = 100
+      if (!sym.isLocal) relevance += 10 // non-local symbols are less relevant than local ones
+      if (inherited) relevance += 10
+      if (viaView != NoSymbol) relevance += 20
+      if (sym.isPackage) relevance += 30
+      // theoretically we'd need an 'ask' around this code, but given that
+      // Any and AnyRef are definitely loaded, we call directly to definitions.
+      if (sym.owner == definitions.AnyClass
+        || sym.owner == definitions.AnyRefClass
+        || sym.owner == definitions.ObjectClass) {
+        relevance += 40
+      }
+      val casePenalty = if (name.take(prefix.length) != prefix.mkString) 50 else 0
+      relevance += casePenalty
+
+      val namesAndTypes = for {
+        section <- sym.paramss
+        if section.nonEmpty && !section.head.isImplicit
+      } yield for (param <- section) yield (param.name.toString, param.tpe.toString)
+
+      val (scalaParamNames, paramTypes) = namesAndTypes.map(_.unzip).unzip
+
+      val isJavaMethod = sym.isJavaDefined && sym.isMethod
+
+      CompletionInfo(
+        kind,
+        name,
+        signature,
+        container,
+        relevance,
+        sym.isJavaDefined,
+        scalaParamNames,
+        paramTypes,
+        returnType,
+        sym.fullName
+      )
+    }
+  }
 
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
@@ -278,40 +358,19 @@ class CompilerAndRunner(makeSettings: () => Settings,
     else {
       pcompiler.askScopeCompletion(pos, resp)
     }
-    resp.get match {
-      case Left(x) =>
-        // do this in imperitive style as opposed to using a filter and a map - to better deal 
-        // with expections
-        val elb = new ListBuffer[CompletionInfo]
-        x.foreach { e =>
-          try {
-            if ((
-              (e.sym.isMethod && !e.sym.isConstructor && e.sym.isPublic) ||
-              (e.sym.isValue && !e.sym.isMethod && e.sym.nameString != "this") ||
-              ((e.sym.isPackage || e.sym.isClass || e.sym.isType) && e.sym.isPublic)
-            ) &&
-              (
-                e.tpe != pcompiler.NoType &&
-                e.tpe != pcompiler.ErrorType
-              )) {
-              var prio = 100
-              e match {
-                case tm: pcompiler.TypeMember =>
-                  if (tm.implicitlyAdded) prio += 20
-                  if (tm.inherited) prio += 10
-                case sm: pcompiler.ScopeMember =>
-                  if (sm.implicitlyAdded) prio += 20
-                case _ =>
-              }
 
-              // give vals and vars lower priority because we can't seem to distinguish 
-              // between private and public vals/vars.
-              // This way they go below the methods
-              if (e.sym.isValue && !e.sym.isMethod) prio += 5
-              if (e.sym.isClass || e.sym.isType) prio += 100
-              if (e.sym.isPackage) prio += 200
-              val cinfo = CompletionInfo(e.sym.nameString, e, prio)
-              elb += cinfo
+    val elb = new ListBuffer[CompletionInfo]
+    var response: pcompiler.Response[Unit] = null
+    for (completions <- resp.get.left.toOption) {
+      response = pcompiler.askForResponse { () =>
+        for (completion <- completions) {
+          try {
+            completion match {
+              case pcompiler.TypeMember(sym, tpe, true, inherited, viaView) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
+              case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
+              case _ =>
             }
           }
           catch {
@@ -320,9 +379,10 @@ class CompilerAndRunner(makeSettings: () => Settings,
             // ignore, and move on to the next one
           }
         }
-        elb.toList
-
-      case Right(y) => /* println("Completion warning: %s" format(y)); */ Nil
+      }
     }
+    // block till the last response is available
+    response.get(2000)
+    elb.toList
   }
 }
