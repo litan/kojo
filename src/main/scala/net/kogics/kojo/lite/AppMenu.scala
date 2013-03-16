@@ -158,10 +158,19 @@ trait AppMenu { self: Main.type =>
     drawingsMenu.add(menuItemFor(Utils.loadString("S_Circles"), "circles.kojo"))
     drawingsMenu.add(menuItemFor(Utils.loadString("S_SpiralSquareTiles"), "spiral-square-tiles.kojo"))
     drawingsMenu.add(menuItemFor(Utils.loadString("S_SpiralHexagonalTiles"), "spiral-hexagon-tiles.kojo"))
-    drawingsMenu.add(menuItemFor(Utils.loadString("S_FerrisWheel"), "ferris-wheel.kojo"))
-    drawingsMenu.add(menuItemFor(Utils.loadString("S_Rangoli"), "rangoli.kojo"))
     samplesMenu.add(drawingsMenu)
 
+    val multiMenu = new JMenu(Utils.loadString("S_MultipleTurtles"))
+    multiMenu.add(menuItemFor(Utils.loadString("S_SyncSquares"), "synchronized-squares.kojo"))
+    multiMenu.add(menuItemFor(Utils.loadString("S_SyncSquares2"), "synchronized-squares2.kojo"))
+    multiMenu.add(menuItemFor(Utils.loadString("S_Face"), "face-multi.kojo"))
+    multiMenu.add(menuItemFor(Utils.loadString("S_Interaction"), "two-turtle-interaction.kojo"))
+    multiMenu.add(menuItemFor(Utils.loadString("S_Interaction2"), "two-turtle-interaction2.kojo"))
+    multiMenu.add(menuItemFor(Utils.loadString("S_SpriteAnimation"), "sprite-animation.kojo"))
+    multiMenu.add(menuItemFor(Utils.loadString("S_FerrisWheel"), "ferris-wheel.kojo"))
+    multiMenu.add(menuItemFor(Utils.loadString("S_Rangoli"), "rangoli.kojo"))
+    samplesMenu.add(multiMenu)
+    
     val fractalsMenu = new JMenu(Utils.loadString("S_Fractals"))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_Tree"), "tree0.kojo"))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_AnotherTree"), "tree1.kojo"))
@@ -390,6 +399,7 @@ trait AppMenu { self: Main.type =>
               <li>JLaTeXMath (http://forge.scilab.org/index.php/p/jlatexmath/) to display LaTeX commands</li>
               <li>JLayer (http://www.javazoom.net/javalayer/javalayer.html) to play MP3 files</li>
               <li>The Netbeans Platform (http://www.netbeans.org) for some Script Editor Icons</li>
+              <li>The Scratch Project (http://scratch.mit.edu) for some Media files</li>
               </ul>
               </div>
               </body></html>
