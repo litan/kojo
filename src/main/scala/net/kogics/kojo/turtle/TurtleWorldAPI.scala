@@ -125,7 +125,14 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     
     // need to make this a class to get it to show up reliably in completions
     class Costume {
-      val car = "/images/car.png"
-      val pencil = "/images/pencil.png"
+      val car = "/media/costumes/car.png"
+      val pencil = "/media/costumes/pencil.png"
+      val bat1 = "/media/costumes/bat1-a.png"
+      val bat2 = "/media/costumes/bat1-b.png"
+      val womanWaving = "/media/costumes/womanwaving.png"
+    }
+    
+    class Background {
+      val trainTrack = "/media/backgrounds/train-tracks3.gif"
     }
 }

@@ -88,7 +88,7 @@ val badguy3 = fillColor(black) * trans(2 * xmax / 3, 0) * scale(0.3) -> guy
 val badguy4 = fillColor(black) * trans(-xmax / 2, ymax / 2) * scale(0.3) -> guy
 val badguy5 = fillColor(black) * trans(2 * xmax / 3, ymax / 2) * scale(0.3) -> guy
 
-playMp3Loop("/music-loops/Cave.mp3")
+playMp3Loop("/media/music-loops/Cave.mp3")
 invisible()
 draw(goodguy, badguy, badguy2, badguy3, badguy4, badguy5)
 drawAndHide(lostMsg, wonMsg)
@@ -159,7 +159,7 @@ goodguy.react { self =>
     // an example of playing some game event music
     if (goodguy.collidesWith(stage)) {
         if (!isMp3Playing) {
-            playMp3("/music-loops/DrumBeats.mp3")
+            playMp3("/media/music-loops/DrumBeats.mp3")
         }
     }
     else {

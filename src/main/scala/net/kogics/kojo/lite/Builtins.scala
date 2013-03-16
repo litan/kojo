@@ -96,6 +96,7 @@ class Builtins(
 
   val Kc = new staging.KeyCodes
   val Costume = new Tw.Costume
+  val Background = new Tw.Background
 
   def showScriptInOutput() = kojoCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
@@ -393,7 +394,7 @@ Here's a partial list of the available commands:
   }
 
   def setRefreshRate(fps: Int) {
-    require(fps >= 20 && fps <= 100, "FPS needs to be in the range: 20 to 100")
+    require(fps >= 10 && fps <= 100, "FPS needs to be in the range: 10 to 100")
     kojoCtx.fps = fps
   }
   def animate(fn: => Unit) = tCanvas.animate(fn)
