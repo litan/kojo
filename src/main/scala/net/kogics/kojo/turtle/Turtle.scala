@@ -24,6 +24,10 @@ import java.awt.geom.Point2D
 import java.util.concurrent.CountDownLatch
 
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
+
+import com.vividsolutions.jts.geom.Coordinate
+import com.vividsolutions.jts.geom.GeometryFactory
 
 import net.kogics.kojo.core.Point
 import net.kogics.kojo.core.SCanvas
@@ -47,8 +51,6 @@ import music.Music
 
 class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
              initY: Double, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
-
-  import TurtleHelper._
 
   //  private val Log = Logger.getLogger(getClass.getName)
   //  Log.info("Turtle being created in thread: " + Thread.currentThread.getName)
@@ -457,7 +459,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def playSound(voice: core.Voice) = Utils.runInSwingThread {
-    import music._
     try {
       Music(voice).play()
     }
@@ -558,6 +559,38 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   def distanceTo(other: core.Turtle) = Utils.runInSwingThreadAndWait {
     val otherPos = other.position
     distanceTo(otherPos.x, otherPos.y)
+  }
+
+  lazy val Gf = new GeometryFactory
+  private def coordinates: ArrayBuffer[Coordinate] = {
+    val cab = new ArrayBuffer[Coordinate]
+    val pp = penPaths
+    pp.foreach { pl =>
+      pl.points.foreach { pt =>
+        cab += new Coordinate(pt.x, pt.y)
+      }
+    }
+    if (cab.size == 1) {
+      cab += cab(0)
+    }
+    cab
+  }
+
+  private def geometry = {
+    Gf.createLineString(coordinates.toArray)
+  }
+
+  def perimeter = Utils.runInSwingThreadAndWait {
+    geometry.getLength
+  }
+
+  def area = Utils.runInSwingThreadAndWait {
+    def asPolygon = {
+      val gc = coordinates
+      gc += gc(0)
+      Gf.createPolygon(Gf.createLinearRing(gc.toArray), null)
+    }
+    asPolygon.getArea
   }
 
   def dumpState() {

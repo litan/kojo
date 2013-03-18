@@ -30,6 +30,8 @@ trait Turtle extends TurtleMover {
   def act(fn: Turtle => Unit) = Utils.runAsyncMonitored(fn(this))
   def react(fn: Turtle => Unit): Unit
   def distanceTo(other: Turtle): Double
+  def perimeter: Double
+  def area: Double
   // stuff for the pictures module
   def tlayer: PLayer
   private[kojo] def penPaths: ArrayBuffer[PolyLine]
