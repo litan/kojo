@@ -15,54 +15,63 @@
 package net.kogics.kojo
 package turtle
 
-import javax.swing._
-import java.awt.{Point => _, _}
-import java.awt.geom._
-import java.awt.event._
+import java.awt.BasicStroke
+import java.awt.Color
+import java.awt.Font
+import java.awt.Paint
+import java.awt.Stroke
+import java.awt.geom.Point2D
+import java.util.concurrent.CountDownLatch
 
-import edu.umd.cs.piccolo._
-import edu.umd.cs.piccolo.nodes._
-import edu.umd.cs.piccolo.util._
+import scala.collection.mutable
+
+import net.kogics.kojo.core.Point
+import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.core.Style
+import net.kogics.kojo.kgeom.PolyLine
+import net.kogics.kojo.util.Throttler
+import net.kogics.kojo.util.Utils
+
+import TurtleHelper.distance
+import TurtleHelper.posAfterForward
+import TurtleHelper.thetaAfterTurn
+import TurtleHelper.thetaTowards
+import edu.umd.cs.piccolo.PLayer
+import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
-
-import scala.collection._
-import scala.{math => Math}
-
-import net.kogics.kojo.util._
-import net.kogics.kojo.kgeom._
-import net.kogics.kojo.core._
-
-import java.util.concurrent.atomic.AtomicBoolean
-import java.util.concurrent.{CountDownLatch, TimeUnit}
+import edu.umd.cs.piccolo.nodes.PImage
+import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolo.nodes.PText
+import music.Music
 
 class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
              initY: Double, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
 
   import TurtleHelper._
 
-//  private val Log = Logger.getLogger(getClass.getName)
-//  Log.info("Turtle being created in thread: " + Thread.currentThread.getName)
+  //  private val Log = Logger.getLogger(getClass.getName)
+  //  Log.info("Turtle being created in thread: " + Thread.currentThread.getName)
 
   private val layer = new PLayer
   def tlayer: PLayer = layer
   private val camera = canvas.getCamera
   if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(layer)
-  @volatile private [turtle] var _animationDelay = 0l
+  @volatile private[turtle] var _animationDelay = 0l
 
   private val turtleImage = new PImage
   private val turtle = new PNode
   def camScale = canvas.camScale
-  
+
   private val xBeam = PPath.createLine(0, 30, 0, -30)
   xBeam.setStrokePaint(Color.gray)
   private val yBeam = PPath.createLine(-20, 0, 50, 0)
   yBeam.setStrokePaint(Color.gray)
 
-  private [kojo] val penPaths = new mutable.ArrayBuffer[PolyLine]
+  private[kojo] val penPaths = new mutable.ArrayBuffer[PolyLine]
   private var lineColor: Paint = _
   private var fillColor: Paint = _
-  private [kojo] var lineStroke: Stroke = _
+  private[kojo] var lineStroke: Stroke = _
   private var font: Font = _
 
   private val pens = makePens
@@ -81,11 +90,11 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private var costumes: Option[Vector[String]] = None
   private var currCostume = 0
 
-  private [turtle] def changePos(x: Double, y: Double) {
+  private[turtle] def changePos(x: Double, y: Double) {
     turtle.setOffset(x, y)
   }
 
-//  private [turtle] def _position: Point2D.Double = turtle.getOffset.asInstanceOf[Point2D.Double]
+  //  private [turtle] def _position: Point2D.Double = turtle.getOffset.asInstanceOf[Point2D.Double]
   private def _positionX = turtle.getXOffset
   private def _positionY = turtle.getYOffset
 
@@ -110,7 +119,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     if (_animationDelay < 1) {
       return _animationDelay
     }
-    
+
     // _animationDelay is delay for 100 steps;
     // Here we calculate delay for specified distance
     val speed = 100f / _animationDelay
@@ -121,12 +130,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   def initTImage(costumeFile: String) {
     turtleImage.setImage(Utils.loadImageC(costumeFile))
     turtleImage.getTransformReference(true).setToIdentity()
-    turtleImage.getTransformReference(true).setToScale(1/camScale, -1/camScale)
+    turtleImage.getTransformReference(true).setToScale(1 / camScale, -1 / camScale)
     turtleImage.rotate(Utils.deg2radians(90))
-    turtleImage.translate(-turtleImage.getWidth/2, -turtleImage.getHeight/2)
+    turtleImage.translate(-turtleImage.getWidth / 2, -turtleImage.getHeight / 2)
   }
-  
-  private [turtle] def init() {
+
+  private[turtle] def init() {
     _animationDelay = 1000l
     changePos(initX, initY)
     initTImage(costumeFile)
@@ -153,9 +162,9 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   def turn(angle: Double) = Utils.runInSwingThread {
     realTurn(angle)
   }
-  
+
   def animationDelay = _animationDelay
-  
+
   def heading: Double = Utils.runInSwingThreadAndWait {
     thetaDegrees
   }
@@ -170,7 +179,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     val p1 = posAfterForward(_positionX, _positionY, theta, n)
     new Point2D.Double(p1._1, p1._2)
   }
-  
+
   private def endForwardMove(pf: Point2D.Double) {
     pen.endMove(pf.x, pf.y)
     changePos(pf.x, pf.y)
@@ -181,13 +190,13 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private def forwardNoAnim(n: Double) {
     endForwardMove(pointAfterForward(n))
   }
-  
+
   def forward(n: Double): Unit = {
     if (Utils.inSwingThread) {
       forwardNoAnim(n)
       return
     }
-    
+
     val aDelay = delayFor(n)
 
     if (aDelay < 10) {
@@ -217,8 +226,8 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
         forwardAnimation = new PActivity(aDelay) {
           override def activityStep(elapsedTime: Long) {
             val frac = elapsedTime.toDouble / aDelay
-            val currX = p0x * (1-frac) + pf.x * frac
-            val currY = p0y * (1-frac) + pf.y * frac
+            val currX = p0x * (1 - frac) + pf.x * frac
+            val currY = p0y * (1 - frac) + pf.y * frac
             pen.move(currX, currY)
             changePos(currX, currY)
             turtle.repaint()
@@ -226,22 +235,22 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
         }
 
         forwardAnimation.setDelegate(new PActivityDelegate {
-            override def activityStarted(activity: PActivity) {}
-            override def activityStepped(activity: PActivity) {}
-            override def activityFinished(activity: PActivity) {
-              if (stopped) {
-                val cpos = turtle.getOffset
-                endForwardMove(cpos.asInstanceOf[Point2D.Double])
-                endAnim()
-                latch.countDown()
-              }
-              else {
-                endForwardMove(pf)
-                endAnim()
-                latch.countDown()
-              }
+          override def activityStarted(activity: PActivity) {}
+          override def activityStepped(activity: PActivity) {}
+          override def activityFinished(activity: PActivity) {
+            if (stopped) {
+              val cpos = turtle.getOffset
+              endForwardMove(cpos.asInstanceOf[Point2D.Double])
+              endAnim()
+              latch.countDown()
             }
-          })
+            else {
+              endForwardMove(pf)
+              endAnim()
+              latch.countDown()
+            }
+          }
+        })
         canvas.animateActivity(forwardAnimation)
       }
       latch.await()
@@ -304,7 +313,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       jumpToHelper(x, y)
     }
   }
-  
+
   private def jumpToHelper(x: Double, y: Double) {
     changePos(x, y)
     pen.updatePosition()
@@ -317,7 +326,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       Utils.runInSwingThread {
         val newTheta = towardsHelper(x, y)
         changeHeading(newTheta)
-        val d = distanceTo(x,y)
+        val d = distanceTo(x, y)
         forwardNoAnim(d)
       }
     }
@@ -325,7 +334,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       val d = Utils.runInSwingThreadAndWait {
         val newTheta = towardsHelper(x, y)
         changeHeading(newTheta)
-        distanceTo(x,y)
+        distanceTo(x, y)
       }
       forward(d)
     }
@@ -387,7 +396,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     if (savedPosHe.size == 0) {
       throw new IllegalStateException("No saved Position and Heading to restore")
     }
-    val (p,h) = savedPosHe.pop()
+    val (p, h) = savedPosHe.pop()
     jumpTo(p.x, p.y)
     changeHeading(h)
   }
@@ -456,18 +465,18 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       case e: Exception => println("Turtle Error while playing sound:\n" + e.getMessage)
     }
   }
-  
+
   def arc(r: Double, a: Int) {
     def makeArc(lforward: Double => Unit, lturn: Double => Unit) {
       var i = 0
       val (lim, step, trn) = if (a > 0) (a, 2 * math.Pi * r / 360, 1) else (-a, 2 * math.Pi * r / 360, -1)
-      while(i < lim) {
+      while (i < lim) {
         lforward(step)
         lturn(trn)
         i += 1
       }
     }
-    
+
     if (_animationDelay < 5) {
       Throttler.throttle()
       Utils.runInSwingThread {
@@ -495,7 +504,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     changeHeading(Utils.deg2radians(90))
   }
 
-  private [kojo] def stop() = Utils.runInSwingThread {
+  private[kojo] def stop() = Utils.runInSwingThread {
     if (forwardAnimation != null) {
       stopped = true
       forwardAnimation.terminate(PActivity.TERMINATE_AND_FINISH)
@@ -550,11 +559,11 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     val otherPos = other.position
     distanceTo(otherPos.x, otherPos.y)
   }
-  
+
   def dumpState() {
     Utils.runInSwingThread {
       val cIter = layer.getChildrenReference.iterator
-      println("Turtle Layer (%d children):\n" format(layer.getChildrenReference.size))
+      println("Turtle Layer (%d children):\n" format (layer.getChildrenReference.size))
       while (cIter.hasNext) {
         val node = cIter.next.asInstanceOf[PNode]
         println(stringRep(node))
@@ -570,7 +579,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   abstract class AbstractPen extends Pen {
-//    val Log = Logger.getLogger(getClass.getName);
+    //    val Log = Logger.getLogger(getClass.getName);
 
     val turtle = Turtle.this
     val CapThick = BasicStroke.CAP_ROUND
@@ -580,7 +589,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     val DefaultColor = Color.red
     val DefaultFillColor = null
     def DefaultStroke = {
-      val t = 2/camScale
+      val t = 2 / camScale
       val (cap, join) = capJoin(t)
       new BasicStroke(t.toFloat, cap, join)
     }
@@ -591,7 +600,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       val Join = if (t * camScale < 1) JoinThin else JoinThick
       (Cap, Join)
     }
-    
+
     def init() {
       lineColor = DefaultColor
       fillColor = DefaultFillColor
@@ -612,12 +621,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     protected def addNewPath() {
       val penPath = newPath()
       penPaths += penPath
-      layer.addChild(layer.getChildrenCount-1, penPath)
+      layer.addChild(layer.getChildrenCount - 1, penPath)
     }
 
     protected def removeLastPath() {
       val penPath = penPaths.last
-      penPaths.remove(penPaths.size-1)
+      penPaths.remove(penPaths.size - 1)
       layer.removeChild(penPath)
     }
 
@@ -625,7 +634,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     def getFillColor = fillColor
     def getThickness = lineStroke.asInstanceOf[BasicStroke].getLineWidth
     def getFontSize = font.getSize
-    
+
     private def rawSetAttrs(color: Paint, thickness: Double, fColor: Paint, fontSize: Int) {
       lineColor = color
       val (cap, join) = capJoin(thickness)
@@ -685,7 +694,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       tempLine.setStroke(lineStroke)
       tempLine.setStrokePaint(lineAnimationColor)
       tempLine.moveTo(x.toFloat, y.toFloat)
-      layer.addChild(layer.getChildrenCount-1, tempLine)
+      layer.addChild(layer.getChildrenCount - 1, tempLine)
     }
     def move(x: Double, y: Double) {
       tempLine.lineTo(x.toFloat, y.toFloat)
@@ -706,7 +715,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       val ptext = Utils.textNode(text, _positionX, _positionY, canvas.camScale)
       ptext.setFont(font)
       ptext.setTextPaint(pen.getColor)
-      layer.addChild(layer.getChildrenCount-1, ptext)
+      layer.addChild(layer.getChildrenCount - 1, ptext)
       ptext.repaint()
     }
   }
