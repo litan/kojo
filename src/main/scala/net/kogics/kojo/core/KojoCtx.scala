@@ -89,4 +89,5 @@ trait KojoCtx {
   def showStatusText(text: String): Unit
   def showStatusCaretPos(line: Int, col: Int): Unit
   var fps: Int
+  var screenDPI: Int
 }

@@ -18,6 +18,7 @@ package lite
 
 import java.awt.Color
 import java.awt.Dimension
+import java.awt.Toolkit
 import java.io.File
 import java.util.prefs.Preferences
 
@@ -54,6 +55,7 @@ class KojoCtx extends core.KojoCtx {
   var storyTeller: StoryTeller = _
   var control: CControl = _
   @volatile var fps = 50
+  @volatile var screenDPI = Toolkit.getDefaultToolkit.getScreenResolution
   var statusBar: StatusBar = _
   Utils.kojoCtx = this
 

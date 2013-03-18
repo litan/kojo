@@ -71,7 +71,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   val TickLabelColor = new Color(50, 50, 50)
   val TickIntegerLabelColor = Color.blue
 
-  val Dpi = Toolkit.getDefaultToolkit.getScreenResolution
+  def Dpi = kojoCtx.screenDPI
   @volatile var unitLen: UnitLen = Pixel
 
   def pCanvas: PCanvas = this
