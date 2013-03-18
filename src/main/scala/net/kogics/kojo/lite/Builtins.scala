@@ -98,6 +98,7 @@ class Builtins(
   val Kc = new staging.KeyCodes
   val Costume = new Tw.Costume
   val Background = new Tw.Background
+  val Sound = new Tw.Sound
 
   def showScriptInOutput() = kojoCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")

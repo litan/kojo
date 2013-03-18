@@ -135,4 +135,8 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     class Background {
       val trainTrack = "/media/backgrounds/train-tracks3.gif"
     }
+
+    class Sound {
+      val medieval1 = "/media/music-loops/Medieval1.mp3"
+    }
 }

@@ -1,6 +1,13 @@
+// This sample shows you how to use costumes, backgrounds, and sounds
+
+// To access and play with many different costumes, backgrounds, and sounds, 
+// you can download (and unzip) the following media zipfile:
+// code.google.com/p/kojo/downloads/detail?name=scratch-media.zip
 clear()
 setBackground(Color(200, 200, 200))
-turtle0.setCostume(Background.trainTrack)
+// if you want a background image, make it the original turtle's costume
+turtle0.setCostume(Background.trainTrack) 
+
 
 val t1 = newTurtle(-50, -180, Costume.womanWaving)
 t1.act { self =>
@@ -20,4 +27,7 @@ t2.act { self =>
         self.nextCostume()
         pause(0.15)
     }
+    stopActivity() // stops any ongoing animation or music
 }
+// play background music in a loop
+playMp3Loop(Sound.medieval1)
