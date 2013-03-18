@@ -122,6 +122,7 @@ object CodeCompletionUtils {
     "draw" -> "draw(${pic})",
     "drawAndHide" -> "drawAndHide(${pic})",
     "setRefreshRate" -> "setRefreshRate(${framesPerSec})",
+    "setScreenDPI" -> "setScreenDPI(${dotsPerInch})",
     "animate" -> "animate {\n    ${cursor}\n}",
     "schedule" -> "schedule (${inSecs}) {\n    ${cursor}\n}",
     "runInBackground" -> "runInBackground {\n    ${cursor}\n}",

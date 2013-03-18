@@ -19,6 +19,7 @@ package lite
 import java.awt.{Color => JColor}
 import java.awt.GradientPaint
 import java.awt.Paint
+import java.awt.Toolkit
 import java.util.concurrent.CountDownLatch
 
 import javax.swing.JComponent
@@ -483,7 +484,10 @@ Here's a partial list of the available commands:
   def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
   def mouseX = staging.Inputs.mousePos.x
   def mouseY = staging.Inputs.mousePos.x
-  def mousePos = staging.Inputs.mousePos
+  def mousePosition = staging.Inputs.mousePos
+  def screenDPI = kojoCtx.screenDPI
+  def setScreenDPI(dpi: Int) { kojoCtx.screenDPI = dpi}
+  def screenSize = Toolkit.getDefaultToolkit.getScreenSize
 
   val PShapes = PicShape
   object PicShape {
