@@ -1,5 +1,8 @@
 // This sample shows you how to use costumes, backgrounds, and sounds
 
+// When we give a turtle a costume that looks nothing like a turtle, we informally 
+// call it a sprite  
+
 // To access and play with many different costumes, backgrounds, and sounds, 
 // you can download (and unzip) the following media zipfile:
 // code.google.com/p/kojo/downloads/detail?name=scratch-media.zip
