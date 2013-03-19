@@ -14,7 +14,7 @@ t2.setPenColor(Color(0, 255, 0, 120))
 // Don't spend too long in your code, or you'll make the GUI sluggish
 // In the worst case, you might lock the GUI (making a Kojo restart necessary)
 t1.react { self =>
-  self.towards(mousePos)
+  self.towards(mousePosition)
   self.forward(2)
 }
 

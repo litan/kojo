@@ -8,7 +8,7 @@ t1.act { self => // we give this turtle the name 'self' within act {...}
     self.setPenColor(Color(0, 0, 255, 120))
     self.setPenThickness(4)
     repeatWhile(true) {
-      self.towards(mousePos)
+      self.towards(mousePosition)
       self.forward(2)
     } 
 }
