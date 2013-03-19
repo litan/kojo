@@ -122,7 +122,7 @@ class Builtins(
   def print(obj: Any) {
     // Runs on Actor pool (interpreter) thread
     kojoCtx.kprintln("%s" format (obj))
-    Throttler.throttle()
+    Throttler.throttleHard()
   }
   UserCommand.addCompletion("print", List("obj"))
 

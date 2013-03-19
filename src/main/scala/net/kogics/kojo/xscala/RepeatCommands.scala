@@ -17,6 +17,7 @@ package net.kogics.kojo
 package xscala
 
 import net.kogics.kojo.util.UserCommand
+import net.kogics.kojo.util.Throttler
 
 object RepeatCommands extends RepeatCommands
 
@@ -44,6 +45,7 @@ trait RepeatCommands {
   def repeatWhile(cond: => Boolean) (fn: => Unit) {
     while (cond) {
       fn
+      Throttler.throttleHard()
     }
   }
   UserCommand.addCompletion("repeatWhile", " (${condition}) {\n    ${cursor}\n}")
