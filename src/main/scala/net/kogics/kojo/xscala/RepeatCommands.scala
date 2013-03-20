@@ -54,6 +54,7 @@ trait RepeatCommands {
   def repeatUntil(cond: => Boolean) (fn: => Unit) {
     while (!cond) {
       fn
+      Throttler.throttleHard()
     }
   }
   UserCommand.addCompletion("repeatUntil", " (${condition}) {\n    ${cursor}\n}")
