@@ -32,6 +32,7 @@ trait Turtle extends TurtleMover {
   def distanceTo(other: Turtle): Double
   def perimeter: Double
   def area: Double
+  def towards(t: Turtle): Unit = { val pos = t.position; towards(pos.x, pos.y)}
   // stuff for the pictures module
   def tlayer: PLayer
   private[kojo] def penPaths: ArrayBuffer[PolyLine]
