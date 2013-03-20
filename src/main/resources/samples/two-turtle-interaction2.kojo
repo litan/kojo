@@ -19,6 +19,6 @@ t1.react { self =>
 }
 
 t2.react { self =>
-  self.towards(t1.position)
+  self.towards(t1)
   self.forward(1)
 }
