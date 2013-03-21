@@ -5,7 +5,7 @@ cleari()
 // a new command to make squares
 // t - the turtle that draws the square
 // n - the size of the square
-// delay - the turtle's animation delay; this provides the synchronization effect
+// delay - the turtle's animation delay; this controls the synchronization effect
 def square(t: Turtle, n: Int, delay: Int) {
     t.setAnimationDelay(delay)
     repeat(4) {
