@@ -1,23 +1,32 @@
 package net.kogics.kojo
 package lite
 
-import util.Utils
-import org.fife.ui.autocomplete.CompletionProviderBase
-import javax.swing.text.JTextComponent
-import org.fife.ui.autocomplete.Completion
-import java.util.ArrayList
 import java.awt.Point
-import org.fife.ui.autocomplete.BasicCompletion
 import java.util.List
-import java.util.ArrayList
-import net.kogics.kojo.xscala.CodeCompletionUtils
-import net.kogics.kojo.core.CompletionInfo
-import org.fife.ui.autocomplete.TemplateCompletion
-import org.fife.ui.autocomplete.CompletionCellRenderer
-import com.sun.xml.internal.ws.server.UnsupportedMediaException
-import net.kogics.kojo.xscala.Help
-import net.kogics.kojo.xscala.CodeTemplates
 import java.util.logging.Logger
+
+import javax.swing.text.JTextComponent
+
+import org.fife.ui.autocomplete.Completion
+import org.fife.ui.autocomplete.CompletionCellRenderer
+import org.fife.ui.autocomplete.CompletionProviderBase
+import org.fife.ui.autocomplete.TemplateCompletion
+
+import net.kogics.kojo.core.CompletionInfo
+import net.kogics.kojo.xscala.CodeCompletionUtils
+import net.kogics.kojo.xscala.CodeTemplates
+import net.kogics.kojo.xscala.Help
+
+import core.MemberKind.Class
+import core.MemberKind.Def
+import core.MemberKind.Object
+import core.MemberKind.Package
+import core.MemberKind.PackageObject
+import core.MemberKind.Trait
+import core.MemberKind.Type
+import core.MemberKind.Val
+import core.MemberKind.Var
+import util.Utils
 
 class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends CompletionProviderBase {
   val Log = Logger.getLogger(getClass.getName)
@@ -61,37 +70,50 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
 
     val display = completion.fullCompletion
 
-    val specialNames = Set(
+    val knownNames = Set(
       "react(net.kogics.kojo.core.Picture => Unit): Unit",
       "act(net.kogics.kojo.core.Turtle => Unit): Unit",
       "react(net.kogics.kojo.core.Turtle => Unit): Unit",
+      "setCostume(String): Unit",
+      "setCostumes(String*): Unit",
+      "nextCostume(): Unit",
+      "scaleCostume(Double): Unit",
+      "changePosition(Double, Double): Unit",
+      "distanceTo(net.kogics.kojo.core.Turtle): Double",
+      "perimeter: Double",
+      "area: Double",
       "onMouseClick((Double, Double) => Unit): Unit",
       "onMousePress((Double, Double) => Unit): Unit",
       "onMouseDrag((Double, Double) => Unit): Unit",
       "animate(=> Unit): Unit"
     )
 
-    def specialMethodTemplate: Option[String] = {
+    def knownMethodTemplate: Option[String] = {
       //      println("%s signature - %s " format(completion.name, completion.signature))
-      if (specialNames contains completion.signature) {
-        Some(methodTemplate(completion.name))
+      if (knownNames contains completion.signature) {
+        val template = methodTemplate(completion.name)
+        if (template != null) Some(template) else None
       }
       else {
         None
       }
     }
 
-    def template = {
-      val c0 = specialMethodTemplate
-      if (c0.isDefined) {
-        c0.get
+    def template =
+      knownMethodTemplate.getOrElse(s"${completion.name}${completion.templateParams}")
+
+    def knownHelp: Option[String] = {
+      if (knownNames contains completion.signature) {
+        val help = Help(completion.name)
+        if (help != null) Some(help) else None
       }
       else {
-        s"${completion.name}${completion.templateParams}"
+        None
       }
     }
 
-    def help = completion.fullCompletion
+    def help =
+      knownHelp.getOrElse(completion.fullCompletion)
 
     new TemplateCompletion(this, display, display, rtsaTemplate(template), null, help) {
       setRelevance(-completion.prio)
@@ -148,7 +170,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
           }
           catch {
             case t: Throwable =>
-              /*Log.warning*/println(s"Completion Problem for: ${completion.name} -- ${t.getMessage()}")
+              /*Log.warning*/ println(s"Completion Problem for: ${completion.name} -- ${t.getMessage()}")
           }
         }
 
@@ -170,7 +192,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     }
     catch {
       case t: Throwable =>
-        /*Log.warning*/println("Completion Problem 2: " + t.getMessage())
+        /*Log.warning*/ println("Completion Problem 2: " + t.getMessage())
     }
 
     proposals

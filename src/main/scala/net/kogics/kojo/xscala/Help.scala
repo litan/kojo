@@ -592,6 +592,20 @@ object Help {
     </div>
     ,
     "setCostume" -> "setCostume(costumeFile) - Changes the costume (i.e. image) associated with the turtle to the image in the specified file.",
+    "setCostumes" -> """setCostumes(costumeFile1, costumeFile2, ...) - Specifies multiple costumes for the turtle, 
+and sets the turtle's costume to the first one in the sequence. You can cycle through the costumes by calling nextCostume().""",
+    "nextCostume" -> "nextCostume() - Changes the turtle's costume to the next one in the sequence of costumes specified by setCostumes(...).",
+    "scaleCostume" -> "scaleCostume(factor) - Scales the turtle's costume, to make it bigger or smaller, by the given factor.",
+    "changePosition" -> "changePosition(x, y) - Changes the turtle's position by the given x and y.",
+    "act" -> """act { self => yourCode } - Allows this turtle to run concurrently with other turtles, 
+and provides an alias (self) for the turtle to make it easier to write/read the actions of the turtle. 
+The code that you provide to act runs once, in a different thread.""",
+    "react" -> """react { self => yourCode } - Allows this turtle to run concurrently with other turtles, 
+and provides an alias (self) for the turtle to make it easier to write/read the actions of the turtle. 
+The code that you provide to react runs about thirty times per second, in the UI thread.""",
+    "distanceTo" -> "distanceTo(otherTurtle) - Calculates the distance (in the current units) between this turtle and the given turtle",
+    "perimeter" -> "perimeter - calculates the perimeter (in the current units) of the figure made by this turtle",
+    "area" -> "area - calculates the area (in the current units-squared) enclosed by the figure made by this turtle",
     "==" -> 
     <div>
         <strong>a == b</strong> - Evaluates to true if a and b are equal, false otherwise.<br/>
