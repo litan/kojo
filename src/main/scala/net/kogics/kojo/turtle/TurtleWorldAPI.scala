@@ -28,11 +28,9 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     def position: Point = turtle0.position
     UserCommand.addSynopsis("position - Queries the turtle's position.")
 
-    def moveTo() = println("Please provide the coordinates of the point that the turtle should move to - e.g. moveTo(100, 100)")
     def moveTo(x: Double, y: Double) = turtle0.moveTo(x, y)
     UserCommand("moveTo", List("x", "y"), "Turns the turtle towards (x, y) and moves the turtle to that point. ")
 
-    def turn() = println("Please provide the angle to turn in degrees - e.g. turn(45)")
     def turn(angle: Double) = turtle0.turn(angle)
     UserCommand("turn", List("angle"), "Turns the turtle through a specified angle. Angles are positive for counter-clockwise turns.")
 
@@ -42,7 +40,6 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     UserCommand("left", Nil, "Turns the turtle 90 degrees left (counter-clockwise).")
     UserCommand("left", List("angle"), "Turns the turtle angle degrees left (counter-clockwise). ")
 
-    def towards() = println("Please provide the coordinates of the point that the turtle should turn towards - e.g. towards(100, 100)")
     def towards(x: Double, y: Double) = turtle0.towards(x, y)
     UserCommand("towards", List("x", "y"), "Turns the turtle towards the point (x, y).")
 
@@ -58,16 +55,13 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     def penUp() = turtle0.penUp()
     UserCommand("penUp", Nil, "Makes the turtle not draw lines as it moves.")
 
-    def setPenColor() = println("Please provide the color of the pen that the turtle should draw with - e.g setPenColor(blue)")
     def setPenColor(color: Paint) = turtle0.setPenColor(color)
     UserCommand("setPenColor", List("color"), "Specifies the color of the pen that the turtle draws with.")
 
-    def setFillColor() = println("Please provide the fill color for the areas drawn by the turtle - e.g setFillColor(yellow)")
     def setFillColor(color: Paint) = turtle0.setFillColor(color)
     UserCommand("setFillColor", List("color"), "Specifies the fill color of the figures drawn by the turtle.")
     UserCommand.addSynopsisSeparator()
 
-    def setPenThickness() = println("Please provide the thickness of the pen that the turtle should draw with - e.g setPenThickness(1)")
     def setPenThickness(t: Double) = turtle0.setPenThickness(t)
     UserCommand("setPenThickness", List("thickness"), "Specifies the width of the pen that the turtle draws with.")
 
