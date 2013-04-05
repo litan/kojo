@@ -62,19 +62,20 @@ trait Mp3Player {
     }
   }
 
-  private def playHelper(mp3File: String)(fn: (InputStream) => Unit) {
-    val f = new File(mp3File)
-    val f2 = if (f.exists) f else new File(kojoCtx.baseDir + mp3File)
-
-    if (f2.exists) {
-      val is = new FileInputStream(f2)
+  private def playHelper(fname: String)(fn: (InputStream) => Unit) {
+    val is = getClass.getResourceAsStream(fname)
+    if (is != null) {
       fn(is)
-      //      is.close() - player closes the stream
     }
     else {
-      val is = getClass.getResourceAsStream(mp3File)
-      if (is != null) {
+      val mp3File = if (fname.startsWith("~")) fname.replaceFirst("~", Utils.homeDir.replaceAllLiterally("\\", "/")) else fname
+      val f = new File(mp3File)
+      val f2 = if (f.exists) f else new File(kojoCtx.baseDir + mp3File)
+
+      if (f2.exists) {
+        val is = new FileInputStream(f2)
         fn(is)
+        //      is.close() - player closes the stream
       }
       else {
         showError("MP3 file does not exist - %s or %s" format (f.getAbsolutePath, f2.getAbsolutePath))
