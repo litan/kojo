@@ -167,7 +167,23 @@ object Help {
       </pre>
     </div>
     ,
-    
+    "hop" -> 
+    <div>
+      <strong>hop</strong>(numSteps) - Moves the turtle forward by the given number of steps <em>with the pen up</em>, 
+      so that no line is drawn. The pen is put down after the hop<br/>.
+      <br/>
+      <em>Example:</em> <br/><br/>
+      <pre>
+        clear()
+        repeat(5) {{
+          // hop forward by 100 steps
+          hop(10)
+          // move forward by 100 steps
+          forward(10)
+        }}
+      </pre>
+    </div>
+    ,
     "back" -> 
     <div>
       <strong>back</strong>(numSteps) - Moves the turtle back by the given number of steps. <br/>
