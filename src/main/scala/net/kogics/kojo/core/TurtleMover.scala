@@ -66,4 +66,9 @@ trait TurtleMover extends RichTurtleCommands {
   def nextCostume(): Unit
   def scaleCostume(factor: Double): Unit
   def changePosition(x: Double, y: Double): Unit
+  def hop(n: Double) {
+    penUp()
+    forward(n)
+    penDown()
+  }
 }
