@@ -562,35 +562,30 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   lazy val Gf = new GeometryFactory
-  private def coordinates: ArrayBuffer[Coordinate] = {
-    val cab = new ArrayBuffer[Coordinate]
-    val pp = penPaths
-    pp.foreach { pl =>
-      pl.points.foreach { pt =>
-        cab += new Coordinate(pt.x, pt.y)
-      }
-    }
-    if (cab.size == 1) {
-      cab += cab(0)
-    }
-    cab
-  }
-
-  private def geometry = {
-    Gf.createLineString(coordinates.toArray)
-  }
+  private def coords(pl: PolyLine) = pl.points.map { pt => new Coordinate(pt.x, pt.y) }
 
   def perimeter = Utils.runInSwingThreadAndWait {
-    geometry.getLength
+    penPaths.foldLeft(0.0) { (peri, pl) =>
+      peri + { if (pl.size < 2) 0 else Gf.createLineString(coords(pl).toArray).getLength }
+    }
   }
 
   def area = Utils.runInSwingThreadAndWait {
-    def asPolygon = {
-      val gc = coordinates
+    def polyArea(pl: PolyLine) = {
+      val gc = coords(pl)
       gc += gc(0)
-      Gf.createPolygon(Gf.createLinearRing(gc.toArray), null)
+      try {
+        val polygon = Gf.createPolygon(Gf.createLinearRing(gc.toArray), null)
+        polygon.getArea
+      }
+      catch {
+        case ex: IllegalArgumentException => 0
+      }
     }
-    asPolygon.getArea
+
+    penPaths.foldLeft(0.0) { (area, pl) =>
+      area + polyArea(pl)
+    }
   }
 
   def dumpState() {
