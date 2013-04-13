@@ -119,6 +119,8 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     def nextCostume() = turtle0.nextCostume()
     def scaleCostume(factor: Double) = turtle0.scaleCostume(factor)
     def changePosition(x: Double, y: Double) = turtle0.changePosition(x, y)
+    def area = turtle0.area
+    def perimeter = turtle0.perimeter
     
     // need to make this a class to get it to show up reliably in completions
     class Costume {

@@ -476,4 +476,90 @@ class TurtleTest {
     val d = turtle.distanceTo(t2)
     assertEquals(110, d, 0.001)
   }
+
+  //  @Test
+  //  def testManyPerimeters {
+  //    import org.scalacheck.Prop._
+  //    val propPerimeter = forAll { stepSize: Int =>
+  //      (stepSize > 1 && stepSize < 10000) ==> {
+  //        val turtle = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
+  //        println(s">stepSize: $stepSize, 3*stepSize: ${3 * stepSize}, peri: ${turtle.perimeter}")
+  //        turtle.setAnimationDelay(0)
+  //        turtle.forward(stepSize)
+  //        turtle.right()
+  //        turtle.forward(2 * stepSize)
+  //        val peri = turtle.perimeter
+  //        println(s"<stepSize: $stepSize, 3*stepSize: ${3 * stepSize}, peri: $peri")
+  //        doublesEqual(3 * stepSize, peri, 0.001)
+  //      }
+  //    }
+  //    assertTrue(SCTest.check(new Default {}, propPerimeter).passed)
+  //  }
+
+  @Test
+  def testPerimeter1() {
+    assertEquals(0, turtle.perimeter, 0.001)
+  }
+
+  @Test
+  def testPerimeter2() {
+    val stepSize = 10
+    turtle.forward(stepSize)
+    assertEquals(stepSize, turtle.perimeter, 0.001)
+  }
+
+  @Test
+  def testPerimeter3() {
+    val stepSize = 10
+    turtle.forward(stepSize)
+    turtle.right()
+    turtle.forward(2 * stepSize)
+    assertEquals(3 * stepSize, turtle.perimeter, 0.001)
+  }
+
+  @Test
+  def testPerimeter4() {
+    val stepSize = 10
+    for (i <- 1 to 2) {
+      turtle.forward(stepSize)
+      turtle.right()
+      turtle.forward(2 * stepSize)
+      turtle.right()
+    }
+    assertEquals(6 * stepSize, turtle.perimeter, 0.001)
+  }
+
+  @Test
+  def testArea1() {
+    doublesEqual(0, turtle.area, 0.001)
+  }
+
+  @Test
+  def testArea2() {
+    val stepSize = 10
+    turtle.forward(stepSize)
+    assertEquals(0, turtle.area, 0.001)
+  }
+
+  @Test
+  def testArea3() {
+    val stepSize = 10
+    turtle.forward(stepSize)
+    turtle.right()
+    turtle.forward(2 * stepSize)
+    println(turtle.area)
+    assertEquals(stepSize * stepSize, turtle.area, 0.001)
+  }
+
+  @Test
+  def testArea4() {
+    val stepSize = 10
+    for (i <- 1 to 2) {
+      turtle.forward(stepSize)
+      turtle.right()
+      turtle.forward(2 * stepSize)
+      turtle.right()
+    }
+    assertEquals(2 * stepSize * stepSize, turtle.area, 0.001)
+  }
 }

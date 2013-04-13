@@ -71,4 +71,6 @@ trait TurtleMover extends RichTurtleCommands {
     forward(n)
     penDown()
   }
+  def perimeter: Double
+  def area: Double
 }
