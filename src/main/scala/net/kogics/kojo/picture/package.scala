@@ -98,7 +98,7 @@ package object picture {
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale
 
-    def cross = Pic { t =>
+    def cross = stroke(Color.blue) -> Pic { t =>
       import t._
       def line() {
         forward(r / 20)
