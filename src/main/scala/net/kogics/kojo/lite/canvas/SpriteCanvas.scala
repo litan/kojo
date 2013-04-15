@@ -106,6 +106,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   var showAxes = false
   var showGrid = false
   var showProt = false
+  var showScale = false
 
   val grid = new PNode()
   val axes = new PNode()
@@ -563,6 +564,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     Utils.runInSwingThreadAndWait {
       setBackground(Color.white)
       showProt = false
+      showScale = false
       turtles.foreach { t => if (t == origTurtle) t.clear() else t.remove() }
       turtles = List(turtles.last)
 
@@ -814,6 +816,32 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     })
     add(protItem)
 
+    val scaleItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowScale"))
+    scaleItem.addActionListener(new ActionListener {
+      @volatile var ruler: core.Picture = _
+      def scaleOn() {
+        showScale = true
+        ruler = picture.ruler(camScale)
+        // can draw from GUI thread because anim delay is zero, and latch will not be used
+        ruler.draw()
+      }
+
+      def scaleOff() {
+        showScale = false
+        ruler.invisible()
+      }
+
+      override def actionPerformed(e: ActionEvent) {
+        if (scaleItem.isSelected) {
+          scaleOn()
+        }
+        else {
+          scaleOff()
+        }
+      }
+    })
+    add(scaleItem)
+
     val saveAsImage = new JMenuItem(Utils.loadString("S_SaveAsImage"))
     saveAsImage.addActionListener(new ActionListener {
       val fchooser = new FileChooser(kojoCtx)
@@ -857,6 +885,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
         axesItem.setState(showAxes)
         gridItem.setState(showGrid)
         protItem.setState(showProt)
+        scaleItem.setState(showScale)
         kojoCtx.updateMenuItem(fullScreenItem, fsCanvasAction)
       }
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}

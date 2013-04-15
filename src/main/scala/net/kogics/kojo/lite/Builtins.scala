@@ -276,7 +276,7 @@ Here's a partial list of the available commands:
   }
   UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
 
-  def textExtent(text: String, fontSize: Int) = {
+  def textExtent(text: String, fontSize: Int) = Utils.runInSwingThreadAndWait {
     val tnode = Utils.textNode(text, 0, 0, tCanvas.camScale, fontSize)
     val b = tnode.getFullBounds
     new Rectangle(new Point(b.x, b.y), new Point(b.x + b.width, b.y + b.height))
@@ -492,51 +492,11 @@ Here's a partial list of the available commands:
 
   val PShapes = PicShape
   object PicShape {
-    private[lite] def trect(h: Int, w: Int, t: Turtle) {
-      import t._
-      repeat(2) {
-        forward(h)
-        right()
-        forward(w)
-        right()
-      }
-    }
-
-    def text(s0: Any, fontSize: Int = 15) = PictureT { t =>
-      import t._
-      val s = s0.toString
-      setPenFontSize(fontSize)
-      val te = textExtent(s, fontSize)
-      penUp()
-      forward(te.height + 5)
-      penDown()
-      write(s)
-    }
-
-    def rect(h: Int, w: Int) = PictureT { t =>
-      trect(h, w, t)
-    }
-
-    def vline(l: Double) = PictureT { t =>
-      import t._
-      forward(l)
-    }
-
-    def hline(l: Double) = PictureT { t =>
-      import t._
-      right()
-      forward(l)
-    }
-
-    def circle(r: Double) = PictureT { t =>
-      import t._
-      penUp()
-      right()
-      forward(r)
-      left()
-      penDown()
-      t.circle(r)
-    }
+    def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
+    def rect(h: Double, w: Double) = picture.rect(h, w)
+    def vline(l: Double) = picture.vline(l)
+    def hline(l: Double) = picture.hline(l)
+    def circle(r: Double) = picture.circle(r)
   }
 
   object Gaming {
@@ -560,7 +520,7 @@ Here's a partial list of the available commands:
           val te = textExtent(label, FontSize)
           setFillColor(buttonBg)
           setPenColor(Color(255, 255, 255, 200))
-          trect(te.height.toInt + 10, te.width.toInt + 10, t)
+          Utils.trect(te.height.toInt + 10, te.width.toInt + 10, t)
           penUp()
           forward(te.height + 5)
           right()
