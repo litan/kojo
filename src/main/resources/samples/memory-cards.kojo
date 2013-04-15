@@ -57,7 +57,7 @@ val CardGlowBg = Color(0, 0, 255, 127)
 case class Card(num: Int) {
     def decorate(p: Picture) = fillColor(CardBg) * penColor(darkGray) -> p
     val te = textExtent(num.toString, 60)
-    val pFront = decorate(GPics(PicShape.rect(120, 80), trans((80 - te.width) / 2, (120 - te.height) / 2) -> PicShape.text(num, 60)))
+    val pFront = decorate(GPics(PicShape.rect(120, 80), trans((80 - te.width) / 2, te.height + (120 - te.height) / 2) -> PicShape.text(num, 60)))
     val pBack = decorate(PicShape.rect(120, 80))
     def drawAt(i: Int, j: Int) {
         drawAndHide(pFront)
