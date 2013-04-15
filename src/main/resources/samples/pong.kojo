@@ -35,12 +35,12 @@ case class PaddleS(speed: Double, lastUp: Boolean) { outer =>
 
 case class Score(score: Int, left: Boolean) { outer =>
     val xt = if (left) -50 else 50
-    val pScore = trans(xt, Height / 2 - 50) * penColor(black) -> PicShape.text(score, 20)
+    val pScore = trans(xt, Height / 2 - 10) * penColor(black) -> PicShape.text(score, 20)
     def incrScore = copy(score = outer.score + 1)
 }
 
 case class Level(num: Int, vel: Vector2D) {
-    val pLevel = trans(-60, -Height / 2 + 50) * penColor(black) -> PicShape.text(s"Level: $num", 20)
+    val pLevel = trans(-60, -Height / 2 + 40) * penColor(black) -> PicShape.text(s"Level: $num", 20)
 }
 
 var running = false

@@ -534,6 +534,7 @@ Here's a partial list of the available commands:
           forward(te.height + 5)
           right()
           forward(5)
+          left()
           penDown()
           write(label)
         }
@@ -562,7 +563,7 @@ Here's a partial list of the available commands:
           ).withGap(10),
           trans(120, 0) -> HPics(
             levelDownButton,
-            penColor(black) -> text("Level"),
+            penColor(black) * trans(0, 20) -> text("Level"),
             levelUpButton
           ).withGap(10)
         ).withGap(30)

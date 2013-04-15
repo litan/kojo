@@ -599,6 +599,7 @@ pages += IncrPage(
 
                     setPenColor(new Color(random(255), random(255), random(255)))
                     setPosition(-dom, y(m, -dom, c))
+                    setHeading(90)
                     write("m=%.1f, c=%.1f" format(m, c))
                     for(x <- -dom+10 to dom; if (x % 10 == 0)) {
                         moveTo(x, y(m, x, c))
