@@ -85,6 +85,16 @@ package object picture {
     t.circle(r)
   }
 
+  def arc(r: Double, angle: Int)(implicit canvas: SCanvas) = Pic { t =>
+    import t._
+    penUp()
+    right()
+    forward(r)
+    left()
+    penDown()
+    t.arc(r, angle)
+  }
+
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale
 
@@ -148,7 +158,7 @@ package object picture {
         )
       }
     }
-    val p = opac(-0.5) * stroke(Color.black) -> prot(180)
+    val p = opac(-0.5) -> GPics(stroke(Color.black) -> prot(180), opac(-0.5) * stroke(Color.blue) -> arc(r / 4, 180))
     addMouseHandlers(p)
     p
   }
