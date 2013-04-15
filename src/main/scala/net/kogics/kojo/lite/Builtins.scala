@@ -16,7 +16,8 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.{Color => JColor}
+import java.awt.{ Color => JColor }
+import java.awt.{ Font => JFont }
 import java.awt.GradientPaint
 import java.awt.Paint
 import java.awt.Toolkit
@@ -66,6 +67,7 @@ class Builtins(
 
   type Turtle = core.Turtle
   type Color = java.awt.Color
+  type Font = java.awt.Font
   type Point = core.Point
   val Point = core.Point
   type PolyLine = kgeom.PolyLine
@@ -90,9 +92,13 @@ class Builtins(
   val darkGray = JColor.darkGray
   val magenta = JColor.magenta
   val cyan = JColor.cyan
+  
+  val BoldFont = JFont.BOLD
+  val PlainFont = JFont.PLAIN
+  val ItalicFont = JFont.ITALIC
 
   val C = staging.KColor
-//  val Color = staging.KColor
+  //  val Color = staging.KColor
   val noColor = C.noColor
 
   val Kc = new staging.KeyCodes
@@ -417,6 +423,8 @@ Here's a partial list of the available commands:
   type Vector2D = util.Vector2D
   val Vector2D = util.Vector2D
 
+  def Font(name: String, size: Int, style: Int = JFont.PLAIN) = new Font(name, style, size)
+
   def playMp3(mp3File: String) {
     mp3player.playMp3(mp3File)
   }
@@ -467,27 +475,27 @@ Here's a partial list of the available commands:
 
   private val fullScreenAction = kojoCtx.fullScreenCanvasAction()
   def toggleFullScreenCanvas() = fullScreenAction.actionPerformed(null)
-  
+
   private val fullScreenOutputAction = kojoCtx.fullScreenOutputAction()
   def toggleFullScreenOutput() = fullScreenOutputAction.actionPerformed(null)
 
   def setOutputBackground(color: Color) = kojoCtx.setOutputBackground(color)
   def setOutputTextColor(color: Color) = kojoCtx.setOutputForeground(color)
   def setOutputTextFontSize(size: Int) = kojoCtx.setOutputFontSize(size)
-  
+
   def epochTimeMillis = System.currentTimeMillis()
   def epochTime = System.currentTimeMillis() / 1000.0
   def countDownLatch(n: Int) = new CountDownLatch(n)
   def homeDir = Utils.homeDir
   def currentDir = Utils.currentDir
-  
+
   def setEditorTabSize(ts: Int) = kojoCtx.setEditorTabSize(ts)
   def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
   def mouseX = staging.Inputs.mousePos.x
   def mouseY = staging.Inputs.mousePos.x
   def mousePosition = staging.Inputs.mousePos
   def screenDPI = kojoCtx.screenDPI
-  def setScreenDPI(dpi: Int) { kojoCtx.screenDPI = dpi}
+  def setScreenDPI(dpi: Int) { kojoCtx.screenDPI = dpi }
   def screenSize = Toolkit.getDefaultToolkit.getScreenSize
 
   val PShapes = PicShape

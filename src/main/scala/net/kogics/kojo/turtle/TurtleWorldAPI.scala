@@ -1,7 +1,9 @@
 package net.kogics.kojo
 package turtle
 
+import java.awt.Font
 import java.awt.Paint
+
 import net.kogics.kojo.core.Point
 import net.kogics.kojo.core.Style
 import net.kogics.kojo.core.TurtleMover
@@ -70,6 +72,9 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
 
     def setPenFontSize(n: Int) = turtle0.setPenFontSize(n)
     UserCommand("setPenFontSize", List("n"), "Specifies the font size of the pen that the turtle writes with.")
+
+    def setPenFont(font: Font) = turtle0.setPenFont(font)
+    UserCommand("setPenFont", List("font"), "Specifies the font of the pen that the turtle writes with.")
 
     def saveStyle() = turtle0.saveStyle()
     UserCommand.addCompletion("saveStyle", Nil)
