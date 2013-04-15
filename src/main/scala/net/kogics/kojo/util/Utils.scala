@@ -439,6 +439,16 @@ object Utils {
     tnode.setFont(font)
     tnode
   }
+  
+  def trect(h: Double, w: Double, t: core.Turtle) {
+    import t._
+    for (i <- 1 to 2) {
+      forward(h)
+      right()
+      forward(w)
+      right()
+    }
+  }
 
   def reportException(t: Throwable) {
     println("Problem - " + t.getMessage)
