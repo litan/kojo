@@ -30,6 +30,7 @@ trait TSCanvasFeatures {
   def zoom(factor: Double, cx: Double, cy: Double): Unit
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit
   def exportImage(filePrefix: String): java.io.File
+  def exportImage(filePrefix: String, width: Int, height: Int): java.io.File
   def exportThumbnail(filePrefix: String, height: Int): java.io.File
   def onKeyPress(fn: Int => Unit): Unit
   def onKeyRelease(fn: Int => Unit): Unit  

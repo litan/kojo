@@ -512,6 +512,10 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     exportImageHelper(filePrefix, getWidth, getHeight)
   }
 
+  def exportImage(filePrefix: String, width: Int, height: Int): File = {
+    exportImageHelper(filePrefix, width, height)
+  }
+
   def exportThumbnail(filePrefix: String, height: Int): File = {
     exportImageHelper(filePrefix, (getWidth.toFloat / getHeight * height).toInt, height)
   }

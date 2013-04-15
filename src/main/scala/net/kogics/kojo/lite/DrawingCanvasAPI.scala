@@ -40,6 +40,7 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def newTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = tCanvas.newTurtle(x, y, costume)
   
   def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
+  def exportImage(filePrefix: String, width: Int, height: Int) = tCanvas.exportImage(filePrefix, width, height)
   def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) =
     tCanvas.zoomXY(xfactor, yfactor, cx, cy)
