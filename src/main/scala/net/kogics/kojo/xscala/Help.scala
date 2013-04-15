@@ -144,6 +144,7 @@ object Help {
     "ColorHSB" -> "ColorHSB(h, s, b) - Creates a color with the given Hue (0-360), Saturation (0-100), and Brighness (0-100) values.",
     "Color" -> "Color(r, g, b, opac) - Creates a color with the given red, green, blue, and opacity (optional) values.",
     "ColorG" -> "ColorG(x1, y1, color1, x2, y2, color2, cyclic) - Creates a color gradient for filling shapes. The cyclic value is optional.",
+    "Font" -> "Font(name, size) - Creates a font with the given name and size",
     "setBackground" -> "setBackground(color) - Sets the canvas background to the specified color. You can use predefined colors for setting the background, or you can create your own colors using the Color, ColorHSB, and ColorG functions.",
     "setBackgroundH" -> "setBackgroundH(color1, color2) - Sets the canvas background to a horizontal color gradient defined by the two specified colors.",
     "setBackgroundV" -> "setBackgroundV(color1, color2) - Sets the canvas background to a vertical color gradient defined by the two specified colors.",
@@ -399,6 +400,24 @@ object Help {
         forward(50)            
         setPenFontSize(20)
         // write with a font size of 20
+        write("Hi There")
+      </pre>
+    </div>
+    ,
+    "setPenFont" -> 
+    <div>
+      <strong>setPenFont</strong>(font) - Specifies the font of the pen that the turtle writes with. <br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        clear()
+        setPenFont(Font("Cambria", 20))
+        // write with Cambria font
+        write("Hi There")
+        forward(50)
+        setPenFont(Font("Calibri", 20))
+        // write with Calibri font
         write("Hi There")
       </pre>
     </div>

@@ -374,6 +374,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
+  def setPenFont(font: Font) {
+    Utils.runInSwingThread {
+      pen.setFont(font)
+    }
+  }
+
   def setFillColor(color: Paint) = Utils.runInSwingThread {
     pen.setFillColor(color)
   }
@@ -683,7 +689,11 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
 
     def setFontSize(n: Int) {
-      font = new Font(new PText().getFont.getName, Font.PLAIN, n)
+      setFont(new Font(font.getName, font.getStyle, n))
+    }
+
+    def setFont(f: Font) {
+      font = f
       addNewPath()
     }
 
@@ -743,6 +753,9 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       val ptext = Utils.textNode(text, _positionX, _positionY, canvas.camScale)
       ptext.setFont(font)
       ptext.setTextPaint(pen.getColor)
+      if (!Utils.doublesEqual(90.toRadians, theta, 0.001)) {
+        ptext.setRotation(90.toRadians - theta)
+      }
       layer.addChild(layer.getChildrenCount - 1, ptext)
       ptext.repaint()
     }

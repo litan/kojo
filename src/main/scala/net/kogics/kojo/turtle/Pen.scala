@@ -15,6 +15,7 @@
 package net.kogics.kojo
 package turtle
 
+import java.awt.Font
 import java.awt.Paint
 
 import core.Style
@@ -34,6 +35,7 @@ trait Pen {
   def getFillColor: Paint
   def getThickness: Double
   def setFontSize(n: Int)
+  def setFont(f: Font)
   def getFontSize: Int
   def write(text: String)
 }

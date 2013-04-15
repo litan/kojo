@@ -14,6 +14,7 @@
  */
 package net.kogics.kojo.core
 
+import java.awt.Font
 import java.awt.Paint
 
 case class Style(val penColor: Paint, val penThickness: Double, val fillColor: Paint, val fontSize: Int)
@@ -58,6 +59,7 @@ trait TurtleMover extends RichTurtleCommands {
   def waitFor(): Unit = animationDelay
   def playSound(voice: Voice): Unit
   def setPenFontSize(n: Int)
+  def setPenFont(font: Font)
   def arc(r: Double, a: Int): Unit
   def circle(r: Double) = arc(r, 360)
   def setCostume(costumeFile: String): Unit
