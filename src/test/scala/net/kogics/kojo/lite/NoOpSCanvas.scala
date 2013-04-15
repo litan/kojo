@@ -27,6 +27,7 @@ class NoOpSCanvas extends SCanvas {
   def zoom(factor: Double, cx: Double, cy: Double) {}
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) {}
   def exportImage(filePrefix: String): java.io.File = null
+  def exportImage(filePrefix: String, width: Int, height: Int): java.io.File = null
   def exportThumbnail(filePrefix: String, height: Int): java.io.File = null
   def onKeyPress(fn: Int => Unit) {}
   def onKeyRelease(fn: Int => Unit) {}  
