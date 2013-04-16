@@ -197,7 +197,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
         else prec0
       }
       val statusStr = "Mouse Position: (%%.%df, %%.%df)" format (prec, prec)
-      kojoCtx.showStatusText(statusStr format(pos.getX, pos.getY));
+      kojoCtx.showStatusText(statusStr format (pos.getX, pos.getY));
     }
 
     override def mouseWheelRotated(e: PInputEvent) {
@@ -798,6 +798,9 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     protItem.addActionListener(new ActionListener {
       @volatile var prot: core.Picture = _
       def protOn() {
+        if (prot == null) {
+          println("Drag Protractor to move it around; Shift-Drag to rotate.")
+        }
         showProt = true
         prot = picture.protractor(camScale)
         // can draw from GUI thread because anim delay is zero, and latch will not be used
@@ -824,6 +827,9 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     scaleItem.addActionListener(new ActionListener {
       @volatile var ruler: core.Picture = _
       def scaleOn() {
+        if (ruler == null) {
+          println("Drag Scale to move it around; Shift-Drag to rotate.")
+        }
         showScale = true
         ruler = picture.ruler(camScale)
         // can draw from GUI thread because anim delay is zero, and latch will not be used

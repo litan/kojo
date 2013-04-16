@@ -98,20 +98,6 @@ package object picture {
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale
 
-    def cross = stroke(Color.blue) -> Pic { t =>
-      import t._
-      def line() {
-        forward(r / 20)
-        penUp()
-        back(r / 10)
-        penDown()
-        forward(r / 20)
-      }
-      line()
-      right()
-      line()
-    }
-
     def line = Pic { t =>
       import t._
       right()
@@ -147,7 +133,7 @@ package object picture {
         GPics(
           line,
           angletext(n),
-          cross
+          cross(r / 10)
         )
       }
       else {
@@ -198,8 +184,17 @@ package object picture {
     }
 
     def scale(len: Int) = {
+      def sectionLabel(n: Double): String = {
+        val labelnum = len - n + sectionLen
+        canvas.unitLen match {
+          case Pixel => labelnum.toInt.toString
+          case Cm    => labelnum.toInt.toString
+          case Inch  => labelnum.toString
+        }
+      }
+
       def sectionWithLabel(n: Double) =
-        GPics(section, trans(4 * sectionLen / 5, 0) -> text(len - n + sectionLen, 10))
+        GPics(section, trans(4 * sectionLen / 5, 0) -> text(sectionLabel(n), 10))
 
       def side(n: Double): Picture = {
         if (n == sectionLen) {
@@ -216,13 +211,28 @@ package object picture {
         trans(0, -sectionLen - bigTick) -> vline(sectionLen + 2 * bigTick),
         trans(len, -sectionLen - bigTick) -> vline(sectionLen + 2 * bigTick),
         trans(0, -sectionLen) * opac(-0.5) * stroke(Color.blue) -> rect(sectionLen, len),
-        trans(0, -sectionLen - bigTick) * opac(-0.9) * stroke(Color.blue) -> rect(sectionLen + 2 * bigTick, len)
+        trans(0, -sectionLen - bigTick) * opac(-0.9) * stroke(Color.blue) -> rect(sectionLen + 2 * bigTick, len),
+        trans(0, bigTick) * strokeWidth(1/camScale) -> cross(bigTick / 2)
       )
     }
 
     val p = scale(scaleLen)
     addMouseHandlers(p)
     p
+  }
+
+  private def cross(l: Double)(implicit canvas: SCanvas) = stroke(Color.blue) -> Pic { t =>
+    import t._
+    def line() {
+      forward(l / 2)
+      penUp()
+      back(l)
+      penDown()
+      forward(l / 2)
+    }
+    line()
+    right()
+    line()
   }
 
   private def addMouseHandlers(p: Picture) {
