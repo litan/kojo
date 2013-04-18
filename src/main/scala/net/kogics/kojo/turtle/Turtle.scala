@@ -175,7 +175,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     currStyle
   }
 
-  private def currStyle = Style(pen.getColor, pen.getThickness, pen.getFillColor, pen.getFontSize)
+  private def currStyle = Style(pen.getColor, pen.getThickness, pen.getFillColor, pen.getFont, pen == DownPen)
 
   private def pointAfterForward(n: Double) = {
     val p1 = posAfterForward(_positionX, _positionY, theta, n)
@@ -397,6 +397,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       throw new IllegalStateException("No saved style to restore")
     }
     val style = savedStyles.pop()
+    if (style.down) {
+      pen = DownPen
+    }
+    else {
+      pen = UpPen
+    }
     pen.setStyle(style)
   }
 
@@ -668,13 +674,14 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     def getFillColor = fillColor
     def getThickness = lineStroke.asInstanceOf[BasicStroke].getLineWidth
     def getFontSize = font.getSize
+    def getFont = font
 
-    private def rawSetAttrs(color: Paint, thickness: Double, fColor: Paint, fontSize: Int) {
+    private def rawSetAttrs(color: Paint, thickness: Double, fColor: Paint, font0: Font) {
       lineColor = color
       val (cap, join) = capJoin(thickness)
       lineStroke = new BasicStroke(thickness.toFloat, cap, join)
       fillColor = fColor
-      font = new Font(new PText().getFont.getName, Font.PLAIN, fontSize)
+      font = font0
     }
 
     def setColor(color: Paint) {
@@ -703,7 +710,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
 
     def setStyle(style: Style) {
-      rawSetAttrs(style.penColor, style.penThickness, style.fillColor, style.fontSize)
+      rawSetAttrs(style.penColor, style.penThickness, style.fillColor, style.font)
       addNewPath()
     }
 

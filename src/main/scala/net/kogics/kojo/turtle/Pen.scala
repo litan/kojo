@@ -37,5 +37,6 @@ trait Pen {
   def setFontSize(n: Int)
   def setFont(f: Font)
   def getFontSize: Int
+  def getFont: Font
   def write(text: String)
 }

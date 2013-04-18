@@ -16,9 +16,12 @@ package net.kogics.kojo
 package turtle
 
 import java.awt.Color
+import java.awt.Font
 
 import org.junit.After
-import org.junit.Assert._
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.scalacheck.Gen
@@ -27,9 +30,11 @@ import org.scalacheck.{ Test => SCTest }
 import org.scalacheck.Test.Parameters.Default
 
 import net.kogics.kojo.lite.NoOpKojoCtx
-import net.kogics.kojo.util.Utils._
+import net.kogics.kojo.util.Utils.deg2radians
+import net.kogics.kojo.util.Utils.doublesEqual
 
 import core.Style
+import edu.umd.cs.piccolo.nodes.PText
 import lite.canvas.SpriteCanvas
 
 class TurtleTest {
@@ -356,21 +361,85 @@ class TurtleTest {
     }
   }
 
+  val DefaultFont = new Font(new PText().getFont.getName, Font.PLAIN, 18)
+
   @Test
   def testStyleSaveRestore {
     turtle.setPenThickness(1)
     turtle.setPenColor(Color.blue)
     turtle.setFillColor(Color.green)
     turtle.setPenFontSize(19)
-    assertEquals(Style(Color.blue, 1, Color.green, 19), turtle.style)
+    val newFont = new Font(DefaultFont.getName, Font.PLAIN, 19)
+    assertEquals(Style(Color.blue, 1, Color.green, newFont, true), turtle.style)
     turtle.saveStyle()
     turtle.setPenThickness(3)
     turtle.setPenColor(Color.green)
     turtle.setFillColor(Color.blue)
     turtle.setPenFontSize(29)
-    assertEquals(Style(Color.green, 3, Color.blue, 29), turtle.style)
+    val newFont2 = new Font(DefaultFont.getName, Font.PLAIN, 29)
+    assertEquals(Style(Color.green, 3, Color.blue, newFont2, true), turtle.style)
     turtle.restoreStyle()
-    assertEquals(Style(Color.blue, 1, Color.green, 19), turtle.style)
+    assertEquals(Style(Color.blue, 1, Color.green, newFont, true), turtle.style)
+  }
+
+  @Test
+  def testStyleSaveRestore2 {
+    turtle.setPenThickness(1)
+    turtle.setPenColor(Color.blue)
+    turtle.setFillColor(Color.green)
+    val newFont = new Font(Font.SERIF, Font.PLAIN, 19)
+    turtle.setPenFont(newFont)
+    assertEquals(Style(Color.blue, 1, Color.green, newFont, true), turtle.style)
+    turtle.saveStyle()
+    turtle.setPenThickness(3)
+    turtle.setPenColor(Color.green)
+    turtle.setFillColor(Color.blue)
+    val newFont2 = new Font(Font.SANS_SERIF, Font.PLAIN, 29)
+    turtle.setPenFont(newFont2)
+    assertEquals(Style(Color.green, 3, Color.blue, newFont2, true), turtle.style)
+    turtle.restoreStyle()
+    assertEquals(Style(Color.blue, 1, Color.green, newFont, true), turtle.style)
+  }
+
+  @Test
+  def testStyleSaveRestore3 {
+    turtle.setPenThickness(1)
+    turtle.setPenColor(Color.blue)
+    turtle.setFillColor(Color.green)
+    val newFont = new Font(Font.SERIF, Font.PLAIN, 19)
+    turtle.setPenFont(newFont)
+    turtle.penUp()
+    assertEquals(Style(Color.blue, 1, Color.green, newFont, false), turtle.style)
+    turtle.saveStyle()
+    turtle.setPenThickness(3)
+    turtle.setPenColor(Color.green)
+    turtle.setFillColor(Color.blue)
+    val newFont2 = new Font(Font.SANS_SERIF, Font.PLAIN, 29)
+    turtle.setPenFont(newFont2)
+    turtle.penDown()
+    assertEquals(Style(Color.green, 3, Color.blue, newFont2, true), turtle.style)
+    turtle.restoreStyle()
+    assertEquals(Style(Color.blue, 1, Color.green, newFont, false), turtle.style)
+  }
+
+  @Test
+  def testStyleSaveRestore4 {
+    turtle.setPenThickness(1)
+    turtle.setPenColor(Color.blue)
+    turtle.setFillColor(Color.green)
+    val newFont = new Font(Font.SERIF, Font.PLAIN, 19)
+    turtle.setPenFont(newFont)
+    assertEquals(Style(Color.blue, 1, Color.green, newFont, true), turtle.style)
+    turtle.saveStyle()
+    turtle.setPenThickness(3)
+    turtle.setPenColor(Color.green)
+    turtle.setFillColor(Color.blue)
+    val newFont2 = new Font(Font.SANS_SERIF, Font.PLAIN, 29)
+    turtle.setPenFont(newFont2)
+    turtle.penUp()
+    assertEquals(Style(Color.green, 3, Color.blue, newFont2, false), turtle.style)
+    turtle.restoreStyle()
+    assertEquals(Style(Color.blue, 1, Color.green, newFont, true), turtle.style)
   }
 
   def testForwardSeqHelper() {

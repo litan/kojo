@@ -480,7 +480,8 @@ object Help {
           <li>Pen Color</li>
           <li>Pen Thickness</li>
           <li>Fill color</li>
-          <li>Pen Font Size</li>
+          <li>Pen Font</li>
+          <li>Pen Up/Down state</li>
         </ul>
       </p>
       <br/>
@@ -523,7 +524,8 @@ object Help {
           <li>Pen Color</li>
           <li>Pen Thickness</li>
           <li>Fill color</li>
-          <li>Pen Font Size</li>
+          <li>Pen Font</li>
+          <li>Pen Up/Down state</li>
         </ul>
       </p>
       <br/>
