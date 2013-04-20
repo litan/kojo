@@ -205,14 +205,16 @@ package object picture {
         }
       }
 
-      opac(-0.5) * stroke(Color.black) -> GPics(
-        side(len),
-        trans(0, -sectionLen) * rot(180) * trans(-len, 0) -> side(len),
-        trans(0, -sectionLen - bigTick) -> vline(sectionLen + 2 * bigTick),
-        trans(len, -sectionLen - bigTick) -> vline(sectionLen + 2 * bigTick),
-        trans(0, -sectionLen) * opac(-0.5) * stroke(Color.blue) -> rect(sectionLen, len),
-        trans(0, -sectionLen - bigTick) * opac(-0.9) * stroke(Color.blue) -> rect(sectionLen + 2 * bigTick, len),
-        trans(0, bigTick) * strokeWidth(1/camScale) -> cross(bigTick / 2)
+      GPics(
+        trans(0, -bigTick) * opac(-0.5) * stroke(Color.black) -> GPics(
+          side(len),
+          trans(0, -sectionLen) * rot(180) * trans(-len, 0) -> side(len),
+          trans(0, -sectionLen - bigTick) -> vline(sectionLen + 2 * bigTick),
+          trans(len, -sectionLen - bigTick) -> vline(sectionLen + 2 * bigTick),
+          trans(0, -sectionLen) * opac(-0.5) * stroke(Color.blue) -> rect(sectionLen, len),
+          trans(0, -sectionLen - bigTick) * opac(-0.9) * stroke(Color.blue) -> rect(sectionLen + 2 * bigTick, len),
+          trans(0, bigTick) * strokeWidth(1 / camScale) -> cross(bigTick / 2)
+        )
       )
     }
 
