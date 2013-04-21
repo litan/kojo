@@ -19,6 +19,7 @@ import javax.swing.Action
 import javax.swing.JButton
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
+import javax.swing.JMenu
 import javax.swing.JMenuItem
 import javax.swing.JPanel
 import javax.swing.JPopupMenu
@@ -134,40 +135,35 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   var idx = 0
   val popup = codePane.getPopupMenu
 
+  val modeMenu = new JMenu(Utils.loadString("S_Mode"))
+
   val switcher = new SwitchMode(execSupport)
   val twCb = new JCheckBoxMenuItem(switcher)
   twCb.setText(Utils.loadString("S_TurtleMode"))
   twCb.setToolTipText(Utils.loadString("S_TurtleModeTT"))
   twCb.setActionCommand("Tw")
-  popup.add(twCb, idx)
-  idx += 1
+  modeMenu.add(twCb)
 
   val stagingCb = new JCheckBoxMenuItem(switcher)
   stagingCb.setText(Utils.loadString("S_StagingMode"))
   stagingCb.setToolTipText(Utils.loadString("S_StagingModeTT"))
   stagingCb.setActionCommand("Staging")
-  popup.add(stagingCb, idx)
-  idx += 1
+  modeMenu.add(stagingCb)
 
   val mwCb = new JCheckBoxMenuItem(switcher)
   mwCb.setText(Utils.loadString("S_MwMode"))
   mwCb.setToolTipText(Utils.loadString("S_MwModeTT"))
   mwCb.setActionCommand("Mw")
-  popup.add(mwCb, idx)
-  idx += 1
+  modeMenu.add(mwCb)
 
   val d3Cb = new JCheckBoxMenuItem(switcher)
   d3Cb.setText(Utils.loadString("S_D3Mode"))
   d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
   d3Cb.setActionCommand("D3")
-  popup.add(d3Cb, idx)
-  idx += 1
-
-  popup.add(new JPopupMenu.Separator, idx)
-  idx += 1
+  modeMenu.add(d3Cb)
 
   var tabSize = 4
-  
+
   val formatAction = new AbstractAction(Utils.loadString("S_FormatSource")) {
     import scalariform.formatter.preferences._
 
@@ -341,6 +337,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   inputMap.put(ctrlL, "clear-editor")
   am.put("clear-editor", clearAction)
   popup.add(clearItem, idx)
+  idx += 1
+
+  popup.add(modeMenu, idx)
   idx += 1
 
   popup.add(new JPopupMenu.Separator, idx)
@@ -528,7 +527,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       }
     })
   }
-  
+
   def setTabSize(ts: Int) = Utils.runInSwingThread {
     tabSize = ts
     codePane.setTabSize(ts)
