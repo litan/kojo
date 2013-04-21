@@ -201,6 +201,7 @@ class KojoCtx extends core.KojoCtx {
   def makeTurtleWorldVisible() = Utils.runInSwingThread {
     if (!topcs.dch.isShowing) {
       topcs.dch.toFront()
+      activateScriptEditor()
     }
   }
 
@@ -209,6 +210,7 @@ class KojoCtx extends core.KojoCtx {
   def makeMathWorldVisible() = Utils.runInSwingThread {
     if (!topcs.mwh.isShowing) {
       topcs.mwh.toFront()
+      activateScriptEditor()
     }
   }
 
@@ -223,6 +225,7 @@ class KojoCtx extends core.KojoCtx {
   def make3DCanvasVisible() = Utils.runInSwingThread {
     if (!topcs.d3h.isShowing) {
       topcs.d3h.toFront()
+      activateScriptEditor()
     }
   }
 
