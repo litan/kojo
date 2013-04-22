@@ -1,24 +1,27 @@
 package net.kogics.kojo.livecoding
 
-import javax.swing.text.JTextComponent
-import javax.swing.JColorChooser
-import javax.swing.text.Utilities
+import java.awt.BorderLayout
+import java.awt.Color
+import java.awt.Point
+import java.awt.event.ActionEvent
 import java.util.regex.Pattern
-import net.kogics.kojo.util.Utils
+
+import javax.swing.AbstractAction
+import javax.swing.BorderFactory
+import javax.swing.JButton
+import javax.swing.JColorChooser
+import javax.swing.JComponent
+import javax.swing.JPanel
+import javax.swing.KeyStroke
 import javax.swing.Popup
 import javax.swing.PopupFactory
-import javax.swing.AbstractAction
 import javax.swing.SwingUtilities
-import javax.swing.JPanel
-import java.awt.event.ActionEvent
-import java.awt.Point
-import javax.swing.JComponent
-import javax.swing.BorderFactory
-import javax.swing.KeyStroke
-import java.awt.Color
-import javax.swing.event.ChangeListener
-import java.awt.BorderLayout
 import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.text.JTextComponent
+import javax.swing.text.Utilities
+
+import net.kogics.kojo.util.Utils
 
 class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator {
   var target = ""
@@ -119,6 +122,14 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     }
     panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "esc")
     panel.getActionMap.put("esc", closeAction)
+
+    val closeButton = new JButton(closeAction)
+    closeButton.setText(Utils.loadString("S_Close"))
+    val closePanel = new JPanel
+    closePanel.setLayout(new BorderLayout)
+    closePanel.add(closeButton, BorderLayout.SOUTH)
+    closePanel.setBorder(BorderFactory.createEtchedBorder())
+    panel.add(closePanel, BorderLayout.EAST)
 
     colorPopup = factory.getPopup(ctx.codePane, panel, pt.x + 50, pt.y - 300)
     colorPopup.show()
