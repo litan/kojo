@@ -1115,6 +1115,7 @@ animate {
     dy =  if(y < 0 || y > 100) -dy else dy
     y += dy  
 }
+reimportDefaults()
 """.c,
                  "Important note:".b,
                  "If you use 'import Staging._' in an example or your own code then you must do a 'reimportDefaults()' when you finish running it to be able to use Turtle commands again. This is because the Staging environment overrides some of the Turtle commands (like clear, setPenColor, etc).".p,
@@ -1151,6 +1152,7 @@ animate {
     // Keep Score
     text(miss.toString + " missed",0,0)
 }
+reimportDefaults()
 """.c,
                  "Now that you have the basics, try adding more balls, randomising their speed or changing the paddle size. Also see if you can fix the bug - sometimes the ball appears to pass through the paddle.".p,
                  "Keyboard Input".h3,
@@ -1167,6 +1169,7 @@ onKeyPress{ k  => k match {
     }
     forward(20)            
 }
+activateCanvas()
 """.c,
                  "You can modify the actions and re-run to see what happens. Type Kc. to find out what other key events can be recognised.".p,
 
@@ -1205,6 +1208,7 @@ animate{
   
   text(d.toString, -Sc, -Sc-20)
 }
+reimportDefaults()
 """.c,
 
                  "Conway's Game of Life".h3,
@@ -1271,7 +1275,9 @@ def block2=List((0,0),(0,3),(0,4),(1,1),(1,4),(2,0),(2,1),(2,4),(3,2),(4,0),
             (4,1),(4,2),(4,4))
 def tiny=List((-18,0),(-17,0),(-16,0),(-15,0),(-14,0),(-13,0),(-12,0),(-11,0),(-9,0),(-8,0),
         (-7,0),(-6,0),(-5,0),(-1,0),(0,0),(1,0),(8,0),(9,0),(10,0),
-	(11,0),(12,0),(13,0),(14,0),(16,0),(17,0),(18,0),(19,0),(20,0))	""".c,
+	(11,0),(12,0),(13,0),(14,0),(16,0),(17,0),(18,0),(19,0),(20,0))	
+reimportDefaults()
+""".c,
 	
 "Tangle".h3,
 "Here is a game that illustrates how you can use the Scala collections and mouse drag-and-drop to create a fun game to play.".p,
@@ -1334,6 +1340,7 @@ def drawEdges(ev:Vector[EdgeP]){
      te.e=line(x1+xr,y1+yr,x2-xr,y2-yr)
      }) 
    }
+reimportDefaults()
 """.c
     )
 )
