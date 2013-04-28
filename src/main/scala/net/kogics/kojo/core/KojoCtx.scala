@@ -90,4 +90,5 @@ trait KojoCtx {
   def showStatusCaretPos(line: Int, col: Int): Unit
   var fps: Int
   var screenDPI: Int
+  def subKojo: Boolean
 }

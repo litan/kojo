@@ -83,4 +83,5 @@ class NoOpKojoCtx extends core.KojoCtx {
   def setEditorTabSize(ts: Int): Unit = {}
   var fps = 50
   var screenDPI = 72
+  def subKojo: Boolean = false
 }
