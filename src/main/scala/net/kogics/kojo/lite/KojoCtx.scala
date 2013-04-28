@@ -39,7 +39,7 @@ import bibliothek.gui.dock.common.CControl
 import bibliothek.gui.dock.common.CGrid
 import bibliothek.gui.dock.common.mode.ExtendedMode
 
-class KojoCtx extends core.KojoCtx {
+class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   val prefs = Preferences.userRoot().node("Kojolite-Prefs")
 
@@ -256,21 +256,21 @@ class KojoCtx extends core.KojoCtx {
   var fileName = ""
   def fileOpened(file: File) {
     fileName = file.getName
-    topcs.seh.setTitleText("%s - %s" format ("Script Editor", fileName))
+    topcs.seh.fileOpened(fileName)
     CloseFile.onFileOpen()
   }
 
   def fileModified() {
-    topcs.seh.setTitleText("%s - %s*" format ("Script Editor", fileName))
+    topcs.seh.fileModified(fileName)
   }
 
   def fileSaved() {
-    topcs.seh.setTitleText("%s - %s" format ("Script Editor", fileName))
+    topcs.seh.fileSaved(fileName)
   }
 
   def fileClosed() {
     fileName = ""
-    topcs.seh.setTitleText("Script Editor")
+    topcs.seh.fileClosed(fileName)
     CloseFile.onFileClose()
   }
 

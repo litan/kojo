@@ -107,6 +107,18 @@ trait AppMenu { self: Main.type =>
 
     fileMenu.addSeparator()
 
+    val newKojo = new JMenuItem("New Kojo Instance")
+    newKojo.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        Utils.runAsync {
+          NewKojoInstance.main(Array("subKojo"))
+        }
+      }
+    })
+    fileMenu.add(newKojo)
+
+    fileMenu.addSeparator()
+
     fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_Exit")) {
       def actionPerformed(e: ActionEvent) {
         appExit()
@@ -170,7 +182,7 @@ trait AppMenu { self: Main.type =>
     multiMenu.add(menuItemFor(Utils.loadString("S_FerrisWheel"), "ferris-wheel.kojo"))
     multiMenu.add(menuItemFor(Utils.loadString("S_Rangoli"), "rangoli.kojo"))
     samplesMenu.add(multiMenu)
-    
+
     val fractalsMenu = new JMenu(Utils.loadString("S_Fractals"))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_Tree"), "tree0.kojo"))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_AnotherTree"), "tree1.kojo"))
@@ -209,7 +221,7 @@ trait AppMenu { self: Main.type =>
     samplesMenu.add(genProgMenu)
 
     samplesMenu.addSeparator()
-    
+
     val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
     mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
     samplesMenu.add(mgeomMenu)

@@ -31,14 +31,16 @@ class NoopHistorySaver extends HistorySaver {
 }
 
 object CommandHistory {
-  def apply() = {
+  def apply(kojoCtx: core.KojoCtx) = {
     try {
       new CommandHistory(new DBHistorySaver)
     }
     catch {
       case t: Throwable =>
-        println("\nProblem initializing savable history: " + t.getMessage)
-        println("\nUnable to save history during this session")
+        if (!kojoCtx.subKojo) {
+          println("\nProblem initializing savable history: " + t.getMessage)
+          println("\nUnable to save history during this session")
+        }
         new CommandHistory(new NoopHistorySaver)
     }
   }
@@ -49,7 +51,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
   @volatile var hIndex = 0
   @volatile var listener: Option[HistoryListener] = None
   loadAll()
-//  loadInit() // async loading
+  //  loadInit() // async loading
 
   def setListener(l: HistoryListener) {
     //    if (listener.isDefined) throw new IllegalArgumentException("Listener already defined")
@@ -113,7 +115,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
   def apply(idx: Int) = history(idx)
 
   def ensureVisible(idx: Int) {
-    listener foreach {_ ensureVisible(idx)}
+    listener foreach { _ ensureVisible (idx) }
   }
 
   def ensureLastEntryVisible() {
@@ -159,7 +161,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
       allHistory.foreach { hi =>
         internalAdd(hi)
       }
-      listener foreach { _ historyReady() }
+      listener foreach { _ historyReady () }
     }
   }
 

@@ -63,14 +63,16 @@ object Main extends AppMenu with ScriptLoader { main =>
   def main(args: Array[String]): Unit = {
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
     System.setSecurityManager(null)
-    kojoCtx = new KojoCtx // context needs to be created right up front to set user language
+    kojoCtx = new KojoCtx(args.length == 1 && args(0) == "subKojo") // context needs to be created right up front to set user language
     Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }
+
     setupLogging()
     val Log = Logger.getLogger("Main")
-
-    runMultiInstancehandler()
+    if (!kojoCtx.subKojo) {
+      runMultiInstancehandler()
+    }
 
     Utils.schedule(0.3) {
       UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
@@ -113,7 +115,9 @@ object Main extends AppMenu with ScriptLoader { main =>
       codePane = scriptEditor.codePane
       execSupport.initPhase2(scriptEditor)
 
-      frame = new JFrame(Utils.loadString("S_Kojo"))
+      val titleKey = if (kojoCtx.subKojo) "S_Kojo_NoHist" else "S_Kojo"
+      frame = new JFrame(Utils.loadString(titleKey))
+      frame.setIconImage(Utils.loadImage("/images/kojo48.png"))
       frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
       val control = new CControl(frame)
       val themes = control.getThemes()
@@ -145,7 +149,6 @@ object Main extends AppMenu with ScriptLoader { main =>
           appExit()
         }
       })
-      frame.setIconImage(Utils.loadImage("/images/kojo48.png"))
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
       frame.pack()
 
@@ -155,7 +158,7 @@ object Main extends AppMenu with ScriptLoader { main =>
 
       frame.setVisible(true)
 
-      if (args.length == 1) {
+      if (!kojoCtx.subKojo && args.length == 1) {
         loadAndRunUrl(args(0), true)
       }
       else {
@@ -194,7 +197,12 @@ object Main extends AppMenu with ScriptLoader { main =>
       logDir.mkdirs()
     }
     val logPath = List(userHome, ".kojo", "lite", "log", "kojo0.log").mkString(File.separator)
-    System.err.println(s"[INFO] Logging has been redirected to: $logPath")
+    if (kojoCtx.subKojo) {
+      System.err.println(s"[INFO] Logging has been redirected to: $logPath.n")
+    }
+    else {
+      System.err.println(s"[INFO] Logging has been redirected to: $logPath")
+    }
     val rootLogger = Logger.getLogger("")
     val logHandler = new FileHandler("%h/.kojo/lite/log/kojo%g.log", 1 * 1024 * 1024, 6, false)
     logHandler.setFormatter(new SimpleFormatter())

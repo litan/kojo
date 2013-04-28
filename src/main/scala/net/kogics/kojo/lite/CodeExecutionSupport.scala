@@ -77,7 +77,7 @@ class CodeExecutionSupport(
   val outputPane = new OutputPane(this)
   doWelcome()
 
-  val commandHistory = CommandHistory()
+  val commandHistory = CommandHistory(kojoCtx)
   val historyManager = new HistoryManager
 
   tCanvas.outputFn = showOutput _
