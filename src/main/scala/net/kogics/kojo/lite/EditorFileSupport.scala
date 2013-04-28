@@ -19,8 +19,8 @@ trait EditorFileSupport { self: ScriptEditor =>
 
   def openFileWithoutClose(file: java.io.File) {
     import RichFile._
-    val script = file.readAsString
-    codePane.setText(Utils.stripCR(script))
+    val script = Utils.stripCR(file.readAsString)
+    codePane.setText(script)
     codePane.setCaretPosition(0)
     openedFile = Some(file)
     kojoCtx.fileOpened(file)
