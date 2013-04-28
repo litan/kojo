@@ -54,6 +54,7 @@ object CodeTemplates {
 </div>
 """,
     "em" -> "<em>${cursor}</em>",
+    "tt" -> "<tt>${cursor}</tt>",
     "li" -> "<li>${cursor}</li>",
     "p" -> """<p>
     ${cursor}
