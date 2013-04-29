@@ -104,7 +104,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
 
   val increaseFontSizeAction = new IncreaseFontSizeAction()
-  for (i <- 1 to 2) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
+  Utils.safeProcessSilent {
+    for (i <- 1 to 2) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
+  }
 
   RSyntaxTextArea.setTemplatesEnabled(true)
   val ctm = RSyntaxTextArea.getCodeTemplateManager()
@@ -499,11 +501,13 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     })
     codePane.addCaretListener(new CaretListener {
       def caretUpdate(e: CaretEvent) {
-        val dot = e.getDot()
-        val line = codePane.getLineOfOffset(dot)
-        val lineStart = codePane.getLineStartOffset(line)
-        val col = dot - lineStart
-        kojoCtx.showStatusCaretPos(line + 1, col + 1)
+        Utils.safeProcessSilent {
+          val dot = e.getDot()
+          val line = codePane.getLineOfOffset(dot)
+          val lineStart = codePane.getLineStartOffset(line)
+          val col = dot - lineStart
+          kojoCtx.showStatusCaretPos(line + 1, col + 1)
+        }
       }
     })
     kojoCtx.showStatusCaretPos(1, 1)

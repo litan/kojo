@@ -463,6 +463,15 @@ object Utils {
     }
   }
 
+  def safeProcessSilent(fn: => Unit) {
+    try {
+      fn
+    }
+    catch {
+      case t: Throwable => // ignore
+    }
+  }
+
   def withLock[T](lock: Lock)(fn: => T): T = {
     lock.lock()
     try {
