@@ -115,7 +115,7 @@ object Main extends AppMenu with ScriptLoader { main =>
       codePane = scriptEditor.codePane
       execSupport.initPhase2(scriptEditor)
 
-      val titleKey = if (kojoCtx.subKojo) "S_Kojo_NoHist" else "S_Kojo"
+      val titleKey = if (kojoCtx.subKojo) "S_Kojo_Scratchpad" else "S_Kojo"
       frame = new JFrame(Utils.loadString(titleKey))
       frame.setIconImage(Utils.loadImage("/images/kojo48.png"))
       frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)

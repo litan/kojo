@@ -6,6 +6,8 @@ import net.kogics.kojo.util.Utils
 class ScriptEditorHolder(val se: ScriptEditor)
   extends BaseHolder("SE", Utils.loadString("CTL_CodeEditorTopComponent"), se) {
   val title = getTitleText
+  val scratch = Utils.loadString("S_Scratch")
+  
   setNoFileTitle()
 
   def activate() {
@@ -31,7 +33,7 @@ class ScriptEditorHolder(val se: ScriptEditor)
 
   def setNoFileTitle() {
     if (se.kojoCtx.subKojo) {
-      setTitleText("%s - *scratch*" format (title))
+      setTitleText("%s ( %s )" format (title, scratch))
     }
     else {
       setTitleText(title)
