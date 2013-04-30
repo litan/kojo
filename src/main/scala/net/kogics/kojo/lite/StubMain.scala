@@ -27,11 +27,16 @@ trait StubMain {
   def firstMain(args: Array[String]): Unit
   def firstMainDone(): Unit
   def nthMain(args: Array[String]): Unit
+  def log(msg: String) = println(msg)
+  def done() {
+    log("[INFO] Kojo Launcher Done.")
+    System.exit(0)
+  }
 
   def main(args: Array[String]): Unit = {
     Utils.safeProcess {
       if (firstInstance) {
-        println(s"[INFO] Running first Kojo instance with args: ${args.mkString("[", ", ", "]")}")
+        log(s"[INFO] Running first Kojo instance with args: ${args.mkString("[", ", ", "]")}")
         firstMain(args)
         try {
           realMain(args)
@@ -41,25 +46,19 @@ trait StubMain {
         }
       }
       else {
-        println(s"[INFO] Running > first Kojo instance with args: ${args.mkString("[", ", ", "]")}")
+        log(s"[INFO] Running > first Kojo instance with args: ${args.mkString("[", ", ", "]")}")
         nthMain(args)
       }
     }
-    println("[INFO] Kojo Launcher Done.")
-    if (args.length == 1 && args(0) == "subKojo") {
-      // noop
-    }
-    else {
-      System.exit(0)
-    }
+    done()
   }
 
   def realMain(args: Array[String]) {
     val javaHome = System.getProperty("java.home")
-    println("[INFO] Java Home: " + javaHome)
+    log("[INFO] Java Home: " + javaHome)
     val javaExec = {
       if (new File(javaHome + "/bin/javaw.exe").exists) {
-        println("[INFO] Using javaw")
+        log("[INFO] Using javaw")
         javaHome + "/bin/javaw"
       }
       else {
