@@ -188,22 +188,20 @@ class CodeExecutionSupport(
   }
 
   def doWelcome() {
-    val msg = if (kojoCtx.subKojo) {
-      """Welcome to the Kojo Scratchpad!
-    |History for work you do in the Scratchpad will not be saved.   
-    |""".stripMargin
+    if (kojoCtx.subKojo) {
+      showOutput("Welcome to the Kojo Scratchpad!\n")
+      showOutput("History for work you do in the Scratchpad will not be saved.\n", Color.red)
     }
     else {
-      """Welcome to Kojo 2.1!
+      val msg = """Welcome to Kojo 2.1!
     |* To program with the aid of a Visual Palette ->  Use the 'Tools -> Instruction Palette' menu item
     |* To use Code-Completion and see online help  ->  Press Ctrl+Space or Ctrl+Alt+Space within the Script Editor
     |* To Interactively Manipulate program output  ->  Click on numbers and colors within the Script Editor
     |* To access the Context Actions for a window  ->  Right-Click on the window to bring up its context menu
     |* To Pan or Zoom the Drawing Canvas           ->  Drag the left mouse button or Roll the mouse wheel
     |""".stripMargin
+      showOutput(msg)
     }
-
-    showOutput(msg)
   }
 
   def isSingleLine(code: String): Boolean = {
