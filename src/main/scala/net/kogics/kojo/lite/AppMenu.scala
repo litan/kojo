@@ -107,7 +107,7 @@ trait AppMenu { self: Main.type =>
 
     fileMenu.addSeparator()
 
-    val newKojo = new JMenuItem("New Kojo Instance")
+    val newKojo = new JMenuItem(Utils.loadString("S_New_Scratchpad"))
     newKojo.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         Utils.runAsync {

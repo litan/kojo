@@ -187,14 +187,21 @@ class CodeExecutionSupport(
     compileButton.setEnabled(enable)
   }
 
-  def doWelcome() = {
-    val msg = """Welcome to Kojo 2.1!
+  def doWelcome() {
+    val msg = if (kojoCtx.subKojo) {
+      """Welcome to the Kojo Scratchpad!
+    |History for work you do in the Scratchpad will not be saved.   
+    |""".stripMargin
+    }
+    else {
+      """Welcome to Kojo 2.1!
     |* To program with the aid of a Visual Palette ->  Use the 'Tools -> Instruction Palette' menu item
     |* To use Code-Completion and see online help  ->  Press Ctrl+Space or Ctrl+Alt+Space within the Script Editor
     |* To Interactively Manipulate program output  ->  Click on numbers and colors within the Script Editor
     |* To access the Context Actions for a window  ->  Right-Click on the window to bring up its context menu
     |* To Pan or Zoom the Drawing Canvas           ->  Drag the left mouse button or Roll the mouse wheel
     |""".stripMargin
+    }
 
     showOutput(msg)
   }
@@ -751,7 +758,7 @@ class CodeExecutionSupport(
       val prevCode = commandHistory.previous
       hPrevButton.setEnabled(commandHistory.hasPrevious)
       hNextButton.setEnabled(true)
-//      commandHistory.ensureLastEntryVisible()
+      //      commandHistory.ensureLastEntryVisible()
     }
 
     def historyMoveForward {
@@ -761,7 +768,7 @@ class CodeExecutionSupport(
         hNextButton.setEnabled(false)
       }
       hPrevButton.setEnabled(true)
-//      commandHistory.ensureLastEntryVisible()
+      //      commandHistory.ensureLastEntryVisible()
     }
 
     def updateButtons(historyIdx: Int) {
