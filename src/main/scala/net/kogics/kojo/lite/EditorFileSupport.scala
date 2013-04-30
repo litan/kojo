@@ -9,7 +9,7 @@ trait EditorFileSupport { self: ScriptEditor =>
   var openedFile: Option[File] = None
   private var fileData: String = _
   val kojoCtx = execSupport.kojoCtx
-  
+
   private def saveFileData(d: String) {
     fileData = execSupport.removeWorksheetOutput(d)
   }
@@ -108,19 +108,23 @@ trait EditorFileSupport { self: ScriptEditor =>
     if (openedFile.isDefined) {
       closeFileIfOpen()
     }
-    //    else {
-    //      if (codePane.getText.size > 0) {
-    //        val doSave = JOptionPane.showConfirmDialog(
-    //          kojoCtx.frame,
-    //          "You have unsaved work. Do you want to save your script to a file?")
-    //        if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
-    //          throw new RuntimeException("Veto Shutdown")
-    //        }
-    //        else if (doSave == JOptionPane.YES_OPTION) {
-    //          kojoCtx.saveAsFile()
-    //        }
-    //      }
-    //    }
+    else {
+      if (kojoCtx.subKojo && codePane.getText.size > 0) {
+        val doSave = JOptionPane.showOptionDialog(
+          kojoCtx.frame,
+          "You have unsaved work. Do you want to close the Kojo Scratchpad without saving your work?",
+          "Unsaved Work",
+          JOptionPane.YES_NO_OPTION,
+          JOptionPane.WARNING_MESSAGE,
+          null,
+          null,
+          null
+        )
+        if (doSave == JOptionPane.NO_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
+          throw new RuntimeException("Veto Shutdown")
+        }
+      }
+    }
   }
 
 }
