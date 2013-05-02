@@ -112,8 +112,8 @@ trait EditorFileSupport { self: ScriptEditor =>
       if (kojoCtx.subKojo && codePane.getText.size > 0) {
         val doSave = JOptionPane.showOptionDialog(
           kojoCtx.frame,
-          "You have unsaved work. Do you want to close the Kojo Scratchpad without saving your work?",
-          "Unsaved Work",
+          Utils.loadString("S_Unsaved_Code"),
+          Utils.loadString("S_Exit_Scratchpad"),
           JOptionPane.YES_NO_OPTION,
           JOptionPane.WARNING_MESSAGE,
           null,

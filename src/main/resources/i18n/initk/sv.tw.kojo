@@ -318,3 +318,7 @@ gubbe.fram(100)
 )
 
 utdata("Välkommen till Kojo med svensk padda!")
+if (isScratchPad) {
+  utdata("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.") 
+}
+
