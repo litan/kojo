@@ -29,7 +29,7 @@ trait RepeatCommands {
       i += 1
     }
   }
-  UserCommand.addCompletion("repeat", " (${n}) {\n    ${cursor}\n}")
+  UserCommand.addCompletion("repeat", "(${n}) {\n    ${cursor}\n}")
   UserCommand.addSynopsis("repeat(n) {} - Repeats the commands within braces n number of times.")
 
   def repeati(n: Int) (fn: Int => Unit) {
@@ -39,7 +39,7 @@ trait RepeatCommands {
       i += 1
     }
   }
-  UserCommand.addCompletion("repeati", " (${n}) {i => \n    ${cursor}\n}")
+  UserCommand.addCompletion("repeati", "(${n}) { i => \n    ${cursor}\n}")
   UserCommand.addSynopsis("repeati(n) {} - Repeats the commands within braces n number of times. The current repeat index is available within the braces.")
 
   def repeatWhile(cond: => Boolean) (fn: => Unit) {
@@ -48,7 +48,7 @@ trait RepeatCommands {
       Throttler.throttleHard()
     }
   }
-  UserCommand.addCompletion("repeatWhile", " (${condition}) {\n    ${cursor}\n}")
+  UserCommand.addCompletion("repeatWhile", "(${condition}) {\n    ${cursor}\n}")
   UserCommand.addSynopsis("repeatWhile(cond) {} - Repeats the commands within braces while the given condition is true.")
 
   def repeatUntil(cond: => Boolean) (fn: => Unit) {
@@ -57,6 +57,6 @@ trait RepeatCommands {
       Throttler.throttleHard()
     }
   }
-  UserCommand.addCompletion("repeatUntil", " (${condition}) {\n    ${cursor}\n}")
+  UserCommand.addCompletion("repeatUntil", "(${condition}) {\n    ${cursor}\n}")
   UserCommand.addSynopsis("repeatUntil(cond) {} - Repeats the commands within braces until the given condition is true.")
 }
