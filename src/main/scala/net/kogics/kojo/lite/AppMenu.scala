@@ -307,8 +307,8 @@ trait AppMenu { self: Main.type =>
     val langMap = Map(
       "English" -> "en",
       "Swedish" -> "sv",
-      "French (coming-up)" -> "fr",
-      "Italian (coming-up)" -> "it"
+      "French" -> "fr",
+      "Hindi" -> "todo"
     )
     var langMenus: Seq[JCheckBoxMenuItem] = Vector()
     val langHandler = new ActionListener {
@@ -340,9 +340,9 @@ trait AppMenu { self: Main.type =>
     }
 
     langMenu.add(langMenuItem("English"))
-    //    langMenu.add(langMenuItem("French (coming-up)"))
-    //    langMenu.add(langMenuItem("Italian (coming-up)"))
     langMenu.add(langMenuItem("Swedish"))
+    langMenu.add(langMenuItem("French"))
+    //    langMenu.add(langMenuItem("Italian (coming-up)"))
     menuBar.add(langMenu)
 
     val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
