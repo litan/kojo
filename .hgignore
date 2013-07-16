@@ -27,3 +27,4 @@ security/
 .idea_modules/
 .classpath
 .project
+.worksheet
