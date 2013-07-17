@@ -376,6 +376,8 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
   // should be called in swing thread
   def scrollToEnd() {
-    outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
+//    outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
+    val vsb = outoutSp.getVerticalScrollBar
+    vsb.setValue(vsb.getMaximum)
   }
 }
