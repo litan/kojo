@@ -473,7 +473,7 @@ class CodeExecutionSupport(
     Utils.runInSwingThread {
       val inputField = outputPane.createReadInputPanel(prompt)
       kojoCtx.activateOutputPane()
-      Utils.schedule(0.1) { inputField.requestFocusInWindow() }
+      Utils.schedule(0.1) { inputField.requestFocusInWindow(); kojoCtx.scrollOutputToEnd() }
       Utils.schedule(0.9) { inputField.requestFocusInWindow() }
       inputField.addActionListener(new ActionListener {
         def actionPerformed(e: ActionEvent) {
