@@ -477,7 +477,7 @@ class CodeExecutionSupport(
       Utils.schedule(0.9) { inputField.requestFocusInWindow() }
       inputField.addActionListener(new ActionListener {
         def actionPerformed(e: ActionEvent) {
-          println("%s: %s" format (prompt, inputField.getText))
+//          println("%s: %s" format (prompt, inputField.getText))
           input.set(inputField.getText)
           outputPane.removeInputPanel()
         }
