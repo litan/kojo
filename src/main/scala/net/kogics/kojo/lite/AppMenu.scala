@@ -387,16 +387,18 @@ trait AppMenu { self: Main.type =>
                <li>Peter Lewerin</li>
                <li>Phil Bagwell</li>
                <li>Tanu Nayal</li>
-               <li>Jerzy Redlarski</li>
                <li>Vibha Pant</li>
                <li>Anusha Pant</li>
                <li>Nikhil Pant</li>
+               <li>Jerzy Redlarski</li>
                <li>Saurabh Kapoor</li>
                <li>Mushtaq Ahmed</li>
                <li>Ilango</li>
+               <li>Pierre Couillard</li>
+               <li>Audrey Neveu</li>
               </ul>
-              <strong>Kojo</strong> 2.0 is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
-              The list of third-party software used by <strong>Kojo</strong> 2.0 includes:
+              <strong>Kojo</strong> is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
+              The list of third-party software used by <strong>Kojo</strong> 2.x includes:
               <ul>
               <li>The Scala Programming Language (http://www.scala-lang.org)</li>
               <li>Docking Frames (http://dock.javaforge.com/) for providing multiple, dockable windows</li>
