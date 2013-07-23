@@ -82,6 +82,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
     grid.add(3, 0, 3, 2, topcs.d3h)
+    grid.add(3, 0, 3, 2, topcs.aah)
     grid.add(3, 0, 3, 2, topcs.mwh)
     grid.add(3, 0, 3, 2, topcs.dch)
     grid.add(3, 2, 1.75, 1, topcs.seh)
