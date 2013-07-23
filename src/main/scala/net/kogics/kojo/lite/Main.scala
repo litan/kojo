@@ -36,6 +36,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import net.kogics.kojo.d3.Canvas3D
 import net.kogics.kojo.history.HistoryPanel
 import net.kogics.kojo.lite.canvas.SpriteCanvas
+import net.kogics.kojo.lite.topc.ArithAerobicsHolder
 import net.kogics.kojo.lite.topc.D3CanvasHolder
 import net.kogics.kojo.lite.topc.DrawingCanvasHolder
 import net.kogics.kojo.lite.topc.HistoryHolder
@@ -136,8 +137,9 @@ object Main extends AppMenu with ScriptLoader { main =>
       val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
       val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
       val historyHolder = new HistoryHolder(new HistoryPanel(execSupport))
+      val arithAerobicsHolder = new ArithAerobicsHolder(new ArithAerobicsPane(frame))
 
-      kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder)
+      kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder, arithAerobicsHolder)
       kojoCtx.switchToDefaultPerspective()
 
       frame.setJMenuBar(menuBar)
