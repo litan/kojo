@@ -651,13 +651,13 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
 
   def onKeyPress(fn: Int => Unit) = Utils.runInSwingThread {
     staging.Inputs.setKeyPressedHandler { e =>
-      fn(e.getKeyCode)
+      fn(Utils.getKeyCode(e))
     }
   }
 
   def onKeyRelease(fn: Int => Unit) = Utils.runInSwingThread {
     staging.Inputs.setKeyReleasedHandler { e =>
-      fn(e.getKeyCode)
+      fn(Utils.getKeyCode(e))
     }
   }
 

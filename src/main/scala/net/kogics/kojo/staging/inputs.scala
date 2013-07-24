@@ -16,11 +16,11 @@
 package net.kogics.kojo
 package staging
 
+import Impl.API
 import core.Point
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler
 import edu.umd.cs.piccolo.event.PInputEvent
 import util.Utils
-import Impl.API
 
 object Inputs {
   import edu.umd.cs.piccolo.event._
@@ -72,7 +72,7 @@ object Inputs {
         }
         // Will get called whenever a key has been pressed down.
         override def keyPressed(e: PInputEvent) {
-          val evtCode = e.getKeyCode
+          val evtCode = Utils.getKeyCode(e)
           if (heldReleasedKeys contains evtCode) {
             // system generated release - eat it up
             heldReleasedKeys remove evtCode
@@ -86,7 +86,7 @@ object Inputs {
         }
         // Will get called whenever a key has been released.
         override def keyReleased(e: PInputEvent) {
-          val evtCode = e.getKeyCode
+          val evtCode = Utils.getKeyCode(e)
           heldReleasedKeys add evtCode
           Utils.schedule(0.002) {
             if (heldReleasedKeys contains evtCode) {
