@@ -1,9 +1,12 @@
 //Contributed by Bjorn Regnell 
-//Swedish Turtle wrapper for Kojo version 5 updated 2013-03-10
+//Swedish Turtle wrapper for Kojo version 6 updated 2013-07-24
 class Padda(val englishTurtle: Turtle) {
-  def this () = this(newTurtle)
-  def this (startX: Double, startY: Double) = this (newTurtle(startX, startY))
-  def this (startX: Double, startY: Double, kostymFilNamn: String) = this (newTurtle(startX, startY, kostymFilNamn))
+  def this() = this(newTurtle)
+  def this(startX: Double, startY: Double) = this (newTurtle(startX, startY))
+  def this(startX: Double, startY: Double, kostymFilNamn: String) = this (newTurtle(startX, startY, kostymFilNamn))
+  def sudda() = englishTurtle.clear()
+  def synlig() = englishTurtle.visible()
+  def osynlig() = englishTurtle.invisible()
   def fram(steg:Double) = englishTurtle.forward(steg)
   def fram() = englishTurtle.forward(25)
   def höger(vinkel:Double) = englishTurtle.right(vinkel)
@@ -12,8 +15,8 @@ class Padda(val englishTurtle: Turtle) {
   def vänster() = englishTurtle.left(90) 
   def hoppaTill(x:Double, y:Double) = englishTurtle.jumpTo(x, y)
   def gåTill(x:Double, y:Double) = englishTurtle.moveTo(x, y)
-  def hoppa(steg:Double) = saveStateAndDo { pennaUpp; fram(steg) }
-  def hoppa() = saveStateAndDo { pennaUpp; fram() }
+  def hoppa(steg:Double) = englishTurtle.hop(steg) 
+  def hoppa() = englishTurtle.hop(25) 
   def hem() = englishTurtle.home()
   def mot(x:Double, y:Double) = englishTurtle.towards(x, y)
   def sättVinkel(vinkel:Double) = englishTurtle.setHeading(vinkel)
@@ -27,12 +30,10 @@ class Padda(val englishTurtle: Turtle) {
   def textstorlek(s:Int) = englishTurtle.setPenFontSize(s)
   def båge(radie:Double, vinkel:Double) = englishTurtle.arc(radie, math.round(vinkel).toInt)
   def cirkel(radie:Double) = englishTurtle.circle(radie)
-  def synlig() = englishTurtle.visible()
-  def osynlig() = englishTurtle.invisible()
   def läge = englishTurtle.position
-  def pennaNer() = {penIsDown = true ; englishTurtle.penDown()}
-  def pennaUpp() = {penIsDown = false ; englishTurtle.penUp()}  
-  def pennanÄrNere = penIsDown
+  def pennaNer() = englishTurtle.penDown()
+  def pennaUpp() = englishTurtle.penUp()  
+  def pennanÄrNere = style.down
   def färg(c:java.awt.Color) = englishTurtle.setPenColor(c)
   def fyll(c:java.awt.Color) = englishTurtle.setFillColor(c)
   def bredd(n:Double) = englishTurtle.setPenThickness(n)
@@ -43,22 +44,22 @@ class Padda(val englishTurtle: Turtle) {
   def siktePå() = englishTurtle.beamsOn()
   def sikteAv() = englishTurtle.beamsOff()
   def kostym(filNamn: String) = englishTurtle.setCostume(filNamn)
-  private var penIsDown = true
-  private def saveStateAndDo(doThis: => Unit) {
-    val wasDown = penIsDown
-    doThis
-    if (wasDown) pennaNer else pennaUpp
-  }
+  def kostymer(filNamn: String *) = englishTurtle.setCostumes(filNamn:_*)
+  def nästaKostym() = englishTurtle.nextCostume()
 }
 object padda extends Padda(turtle0) 
 import padda._  
-def sudda() = clear()
 def suddaUtdata() = clearOutput()
 val blå=blue; val röd=red; val gul=yellow; val grön=green; val lila=purple;
 val rosa=pink; val brun=brown; val svart=black; val vit=white; 
-val genomskinlig = Color(0, 0, 0, 0)
+val genomskinlig = noColor
 def bakgrund(färg:Color) = setBackground(färg)
 def bakgrund2(färg1:Color, färg2:Color) = setBackgroundV(färg1, färg2)
+object KcSwe { //Key codes for Swedish keys
+    val VK_Å = 197
+    val VK_Ä = 196
+    val VK_Ö = 214
+}
 //loops in Swedish
 def upprepa(n:Int)(block : => Unit){
     for (i <- 1 to n) block
@@ -151,8 +152,9 @@ addCodeTemplates(
         "slumptalMedDecimaler" -> "slumptalMedDecimaler(${mindreän})", 
         "räknaTill" -> "räknaTill(${tal})", 
         "systemtid" -> "systemtid",
-        "kostym" -> "kostym(${filnamn})"
-  )
+        "kostym" -> "kostym(${filnamn})",
+        "kostymer" -> "kostym(${filnamn1},${filnamn2})"
+        "nästaKostym" -> "nästaKostym()",
 )
 //help texts
 addHelpContent(
