@@ -57,6 +57,7 @@ import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
 
 import Typeclasses.mkIdentity
+import edu.umd.cs.piccolo.event.PInputEvent
 import edu.umd.cs.piccolo.nodes.PText
 
 object Utils {
@@ -439,7 +440,7 @@ object Utils {
     tnode.setFont(font)
     tnode
   }
-  
+
   def trect(h: Double, w: Double, t: core.Turtle) {
     import t._
     for (i <- 1 to 2) {
@@ -551,6 +552,11 @@ object Utils {
 
   def sanitizeDoubleString(d: String) = {
     if (needsSanitizing) d.replaceAll(decimalSep, ".") else d
+  }
+
+  def getKeyCode(e: PInputEvent): Int = {
+    val kc = e.getKeyCode
+    if (kc == 0) e.getKeyChar.toUpper.toInt else kc
   }
 
   case class RunCode(code: () => Unit)
