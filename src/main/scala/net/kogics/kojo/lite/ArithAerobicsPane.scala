@@ -24,10 +24,10 @@ class ArithAerobicsPane(frame: JFrame) extends JTabbedPane {
     setFocusCycleRoot(true)
     setTabPlacement(SwingConstants.LEFT)
     setBackground(Color.white)
-    addTab("Addition", adder)
-    addTab("Subtraction", subtractor)
-    addTab("Multiplication", multiplier)
-    addTab("Division", divider)
+    addTab(Utils.loadString("S_Addition"), adder)
+    addTab(Utils.loadString("S_Subtraction"), subtractor)
+    addTab(Utils.loadString("S_Multiplication"), multiplier)
+    addTab(Utils.loadString("S_Division"), divider)
     addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) {
         handleTabChange()
