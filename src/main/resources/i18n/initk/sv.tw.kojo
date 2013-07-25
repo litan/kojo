@@ -1,5 +1,5 @@
 //Contributed by Bjorn Regnell 
-//Swedish Turtle wrapper for Kojo version 6 updated 2013-07-24
+//Swedish Turtle wrapper for Kojo version 7 updated 2013-07-25
 class Padda(val englishTurtle: Turtle) {
   def this() = this(newTurtle)
   def this(startX: Double, startY: Double) = this (newTurtle(startX, startY))
@@ -15,8 +15,12 @@ class Padda(val englishTurtle: Turtle) {
   def vänster() = englishTurtle.left(90) 
   def hoppaTill(x:Double, y:Double) = englishTurtle.jumpTo(x, y)
   def gåTill(x:Double, y:Double) = englishTurtle.moveTo(x, y)
-  def hoppa(steg:Double) = englishTurtle.hop(steg) 
-  def hoppa() = englishTurtle.hop(25) 
+  def hoppa(steg:Double) = {
+    englishTurtle.saveStyle() //to preserve pen state
+    englishTurtle.hop(steg)   //hop change state to penDown after hop
+    englishTurtle.restoreStyle()    
+  }
+  def hoppa(): Unit = hoppa(25) 
   def hem() = englishTurtle.home()
   def mot(x:Double, y:Double) = englishTurtle.towards(x, y)
   def sättVinkel(vinkel:Double) = englishTurtle.setHeading(vinkel)
@@ -153,8 +157,9 @@ addCodeTemplates(
         "räknaTill" -> "räknaTill(${tal})", 
         "systemtid" -> "systemtid",
         "kostym" -> "kostym(${filnamn})",
-        "kostymer" -> "kostym(${filnamn1},${filnamn2})"
-        "nästaKostym" -> "nästaKostym()",
+        "kostymer" -> "kostym(${filnamn1},${filnamn2})",
+        "nästaKostym" -> "nästaKostym()"
+    )
 )
 //help texts
 addHelpContent(
@@ -323,4 +328,3 @@ utdata("Välkommen till Kojo med svensk padda!")
 if (isScratchPad) {
   utdata("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.") 
 }
-
