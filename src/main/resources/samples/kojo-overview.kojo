@@ -1030,7 +1030,7 @@ pages += IncrPage(
             <ul>
                 <li>Making pretty computer sketches and paintings.
                     <div style={smallNoteStyle}>
-                        See the <em>Samples | Turtle Art</em> and <em>Samples | Pictures</em> 
+                        See the <em>Samples | Next Steps</em>, <em>Samples | Fractals</em> and <em>Samples | Multiple Turtles</em> 
                         menu items for many examples.
                     </div>
                 </li>
@@ -1040,14 +1040,18 @@ pages += IncrPage(
             <ul>
                 <li>Creating Animations and Games.
                     <div style={smallNoteStyle}>
-                        See the <em>Samples | Pictures</em> menu item for examples.
+                        See the <em>Samples | Animations and Games</em> menu item for examples.
                     </div>
                 </li>
             </ul>
         ),
         Para(
             <ul>
-                <li>Composing and playing computer generated music.</li>
+                <li>Composing and playing computer generated music.
+                    <div style={smallNoteStyle}>
+                        See the <em>Samples | Music</em> menu item for examples.
+                    </div>
+                </li>
             </ul>
         ),
         Para(
