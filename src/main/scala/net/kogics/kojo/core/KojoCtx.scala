@@ -80,7 +80,7 @@ trait KojoCtx {
   def switchToWorksheetPerspective(): Unit
   def switchToStoryViewingPerspective(): Unit
   def switchToHistoryBrowsingPerspective(): Unit
-  def switchToCanvasPerspective(): Unit
+  def switchToConsoleStoryViewingPerspective(): Unit
   def setOutputBackground(color: Color): Unit
   def setOutputForeground(color: Color): Unit
   def setOutputFontSize(size: Int): Unit

@@ -73,7 +73,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def switchToWorksheetPerspective() {}
   def switchToStoryViewingPerspective() {}
   def switchToHistoryBrowsingPerspective() {}
-  def switchToCanvasPerspective() {}
+  def switchToConsoleStoryViewingPerspective() {}
   def setOutputBackground(color: Color) {}
   def setOutputForeground(color: Color) {}
   def setOutputFontSize(n: Int) {}

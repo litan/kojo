@@ -471,7 +471,7 @@ Here's a partial list of the available commands:
   def switchToWorksheetPerspective() = kojoCtx.switchToWorksheetPerspective()
   def switchToStoryViewingPerspective() = kojoCtx.switchToStoryViewingPerspective()
   def switchToHistoryBrowsingPerspective() = kojoCtx.switchToHistoryBrowsingPerspective()
-  def switchToCanvasPerspective() = kojoCtx.switchToCanvasPerspective()
+  def switchToConsoleStoryViewingPerspective() = kojoCtx.switchToConsoleStoryViewingPerspective()
 
   private val fullScreenAction = kojoCtx.fullScreenCanvasAction()
   def toggleFullScreenCanvas() = fullScreenAction.actionPerformed(null)
