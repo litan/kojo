@@ -162,24 +162,21 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     topcs.hih.toFront()
   }
 
-  def switchToCanvasPerspective() = Utils.runInSwingThread {
+  def switchToConsoleStoryViewingPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
-    // total width = 4, total height = 3
-    grid.add(0, 0, 1, 1.75, topcs.sth)
-    grid.add(0, 1.75, 1, 1.25, topcs.owh)
-    grid.add(1, 0, 3, 1.75, topcs.d3h)
-    grid.add(1, 0, 3, 1.75, topcs.mwh)
-    grid.add(1, 0, 3, 1.75, topcs.dch)
+    grid.add(0, 0, 1, 2, topcs.hih)
+    grid.add(1, 0, 1, 2, topcs.d3h)
+    grid.add(1, 0, 1, 2, topcs.mwh)
+    grid.add(1, 0, 1, 2, topcs.dch)
+    grid.add(2, 0, 1, 2, topcs.sth)
+    grid.add(3, 0, 3, 1, topcs.seh)
+    grid.add(3, 1, 3, 1, topcs.owh)
 
-    grid.add(0, 3, 0, 0, topcs.hih)
-    grid.add(1, 1.75, 3, 1.25, topcs.seh)
     control.getContentArea.deploy(grid)
 
     topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
-    topcs.seh.setExtendedMode(ExtendedMode.MINIMIZED)
-    topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
-    topcs.owh.setExtendedMode(ExtendedMode.MINIMIZED)
-    activateDrawingCanvasHolder()
+    topcs.dch.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.sth.toFront()
   }
 
   def activateDrawingCanvasHolder() = Utils.runInSwingThread {
