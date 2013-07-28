@@ -223,8 +223,12 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         val searchContext = dialog.getSearchContext
         def markAllIf() {
           if (searchContext.getMarkAll) {
+            codePane.clearMarkAllHighlights()
             codePane.markAll(searchContext.getSearchFor, searchContext.getMatchCase(),
               searchContext.getWholeWord, searchContext.isRegularExpression())
+          }
+          else {
+            codePane.clearMarkAllHighlights()
           }
         }
         def find() {
