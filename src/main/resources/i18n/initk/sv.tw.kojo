@@ -52,7 +52,8 @@ class Padda(val englishTurtle: Turtle) {
   def nästaKostym() = englishTurtle.nextCostume()
 }
 object padda extends Padda(turtle0) 
-import padda._  
+import padda.{sudda => _, _}
+def sudda() = clear()
 def suddaUtdata() = clearOutput()
 val blå=blue; val röd=red; val gul=yellow; val grön=green; val lila=purple;
 val rosa=pink; val brun=brown; val svart=black; val vit=white; 
