@@ -211,6 +211,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace"), Utils.loadIcon("/images/extra/find.gif")) {
     lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
+      setTitle(Utils.loadString("S_FindReplace"))
       override def setVisible(visible: Boolean) {
         if (!visible) {
           codePane.clearMarkAllHighlights()
@@ -265,7 +266,6 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         dialog.setSearchString(st)
         codePane.setSelectionEnd(codePane.getSelectionStart)
       }
-      dialog.setTitle(Utils.loadString("S_FindReplace"))
       dialog.setVisible(true)
     }
   }
