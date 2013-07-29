@@ -162,7 +162,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     topcs.hih.toFront()
   }
 
-  def switchToConsoleStoryViewingPerspective() = Utils.runInSwingThread {
+  def switchToOutputStoryViewingPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 2, topcs.hih)
     grid.add(1, 0, 1, 2, topcs.d3h)

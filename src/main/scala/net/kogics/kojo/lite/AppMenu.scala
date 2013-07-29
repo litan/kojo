@@ -271,10 +271,10 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(storyItem)
 
-    val canvasItem = new JMenuItem(Utils.loadString("S_ConsoleStoryViewingPerspective"))
+    val canvasItem = new JMenuItem(Utils.loadString("S_OutputStoryViewingPerspective"))
     canvasItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        kojoCtx.switchToConsoleStoryViewingPerspective()
+        kojoCtx.switchToOutputStoryViewingPerspective()
       }
     })
     windowMenu.add(canvasItem)
