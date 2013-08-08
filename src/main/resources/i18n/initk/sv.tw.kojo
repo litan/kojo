@@ -1,58 +1,63 @@
 //Contributed by Bjorn Regnell 
-//Swedish Turtle wrapper for Kojo version 8 updated 2013-07-29
-class Padda(t0: => Turtle) {
-	def englishTurtle = t0
+//Swedish Turtle wrapper for Kojo version 9 updated 2013-08-08
+trait SwedishTurtle { 
+	def englishTurtle: Turtle 
+  def sudda() = englishTurtle.clear()
+  def synlig() = englishTurtle.visible()
+  def osynlig() = englishTurtle.invisible()
+  def fram(steg:Double) = englishTurtle.forward(steg)
+  def fram() = englishTurtle.forward(25)
+  def höger(vinkel:Double) = englishTurtle.right(vinkel)
+  def höger() = englishTurtle.right(90)
+  def vänster(vinkel:Double) = englishTurtle.left(vinkel) 
+  def vänster() = englishTurtle.left(90) 
+  def hoppaTill(x:Double, y:Double) = englishTurtle.jumpTo(x, y)
+  def gåTill(x:Double, y:Double) = englishTurtle.moveTo(x, y)
+  def hoppa(steg:Double) = {
+    englishTurtle.saveStyle() //to preserve pen state
+    englishTurtle.hop(steg)   //hop change state to penDown after hop
+    englishTurtle.restoreStyle()    
+  }
+  def hoppa(): Unit = hoppa(25) 
+  def hem() = englishTurtle.home()
+  def mot(x:Double, y:Double) = englishTurtle.towards(x, y)
+  def sättVinkel(vinkel:Double) = englishTurtle.setHeading(vinkel)
+  def vinkel = englishTurtle.heading
+  def öster() = englishTurtle.setHeading(0)
+  def väster() = englishTurtle.setHeading(180)
+  def norr() = englishTurtle.setHeading(90)
+  def söder() = englishTurtle.setHeading(-90)  
+  def sakta(n: Long) = englishTurtle.setAnimationDelay(n) 
+  def skriv(t : Any) = englishTurtle.write(t)
+  def textstorlek(s:Int) = englishTurtle.setPenFontSize(s)
+  def båge(radie:Double, vinkel:Double) = englishTurtle.arc(radie, math.round(vinkel).toInt)
+  def cirkel(radie:Double) = englishTurtle.circle(radie)
+  def läge = englishTurtle.position
+  def pennaNer() = englishTurtle.penDown()
+  def pennaUpp() = englishTurtle.penUp()  
+  def pennanÄrNere = style.down
+  def färg(c:java.awt.Color) = englishTurtle.setPenColor(c)
+  def fyll(c:java.awt.Color) = englishTurtle.setFillColor(c)
+  def bredd(n:Double) = englishTurtle.setPenThickness(n)
+  def sparaStil() = englishTurtle.saveStyle()
+  def laddaStil() = englishTurtle.restoreStyle()
+  def sparaLägeRiktning() = englishTurtle.savePosHe()
+  def laddaLägeRiktning() = englishTurtle.restorePosHe()
+  def siktePå() = englishTurtle.beamsOn()
+  def sikteAv() = englishTurtle.beamsOff()
+  def kostym(filNamn: String) = englishTurtle.setCostume(filNamn)
+  def kostymer(filNamn: String *) = englishTurtle.setCostumes(filNamn:_*)
+  def nästaKostym() = englishTurtle.nextCostume()
+}
+class Padda(override val englishTurtle: Turtle) extends SwedishTurtle {
   def this() = this(newTurtle)
   def this(startX: Double, startY: Double) = this (newTurtle(startX, startY))
   def this(startX: Double, startY: Double, kostymFilNamn: String) = this (newTurtle(startX, startY, kostymFilNamn))
-  def sudda() = t0.clear()
-  def synlig() = t0.visible()
-  def osynlig() = t0.invisible()
-  def fram(steg:Double) = t0.forward(steg)
-  def fram() = t0.forward(25)
-  def höger(vinkel:Double) = t0.right(vinkel)
-  def höger() = t0.right(90)
-  def vänster(vinkel:Double) = t0.left(vinkel) 
-  def vänster() = t0.left(90) 
-  def hoppaTill(x:Double, y:Double) = t0.jumpTo(x, y)
-  def gåTill(x:Double, y:Double) = t0.moveTo(x, y)
-  def hoppa(steg:Double) = {
-    t0.saveStyle() //to preserve pen state
-    t0.hop(steg)   //hop change state to penDown after hop
-    t0.restoreStyle()    
-  }
-  def hoppa(): Unit = hoppa(25) 
-  def hem() = t0.home()
-  def mot(x:Double, y:Double) = t0.towards(x, y)
-  def sättVinkel(vinkel:Double) = t0.setHeading(vinkel)
-  def vinkel = t0.heading
-  def öster() = t0.setHeading(0)
-  def väster() = t0.setHeading(180)
-  def norr() = t0.setHeading(90)
-  def söder() = t0.setHeading(-90)  
-  def sakta(n: Long) = t0.setAnimationDelay(n) 
-  def skriv(t : Any) = t0.write(t)
-  def textstorlek(s:Int) = t0.setPenFontSize(s)
-  def båge(radie:Double, vinkel:Double) = t0.arc(radie, math.round(vinkel).toInt)
-  def cirkel(radie:Double) = t0.circle(radie)
-  def läge = t0.position
-  def pennaNer() = t0.penDown()
-  def pennaUpp() = t0.penUp()  
-  def pennanÄrNere = style.down
-  def färg(c:java.awt.Color) = t0.setPenColor(c)
-  def fyll(c:java.awt.Color) = t0.setFillColor(c)
-  def bredd(n:Double) = t0.setPenThickness(n)
-  def sparaStil() = t0.saveStyle()
-  def laddaStil() = t0.restoreStyle()
-  def sparaLägeRiktning() = t0.savePosHe()
-  def laddaLägeRiktning() = t0.restorePosHe()
-  def siktePå() = t0.beamsOn()
-  def sikteAv() = t0.beamsOff()
-  def kostym(filNamn: String) = t0.setCostume(filNamn)
-  def kostymer(filNamn: String *) = t0.setCostumes(filNamn:_*)
-  def nästaKostym() = t0.nextCostume()
 }
-object padda extends Padda(turtle0) 
+class Padda0(t0: => Turtle) extends SwedishTurtle {  //by-name construction as turtle0 is volatile }
+    override def englishTurtle: Turtle = t0 
+}
+object padda extends Padda0(turtle0) 
 import padda.{sudda => _, _}
 def sudda() = clear()
 def suddaUtdata() = clearOutput()
