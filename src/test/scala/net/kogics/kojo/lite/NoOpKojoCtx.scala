@@ -81,6 +81,9 @@ class NoOpKojoCtx extends core.KojoCtx {
   def showStatusText(text: String): Unit = {}
   def showStatusCaretPos(line: Int, col: Int): Unit = {}
   def setEditorTabSize(ts: Int): Unit = {}
+  def showAppWaitCursor(): Unit = {}
+  def hideAppWaitCursor(): Unit = {}
+  
   var fps = 50
   var screenDPI = 72
   def subKojo: Boolean = false

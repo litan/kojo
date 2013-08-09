@@ -88,6 +88,9 @@ trait KojoCtx {
   def setEditorTabSize(ts: Int): Unit
   def showStatusText(text: String): Unit
   def showStatusCaretPos(line: Int, col: Int): Unit
+  def showAppWaitCursor(): Unit
+  def hideAppWaitCursor(): Unit
+  
   var fps: Int
   var screenDPI: Int
   def subKojo: Boolean

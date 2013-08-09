@@ -149,10 +149,11 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
   }
 
   var (objid: Option[String], prefix: Option[String]) = (None, None)
-
+  
   def complete(comp: JTextComponent): List[Completion] = {
     val proposals = new java.util.ArrayList[Completion]
     val caretOffset = comp.getCaretPosition
+    execSupport.kojoCtx.showAppWaitCursor()
 
     try {
       if (objid.isEmpty) {
@@ -194,7 +195,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       case t: Throwable =>
         /*Log.warning*/ println("Completion Problem 2: " + t.getMessage())
     }
-
+    execSupport.kojoCtx.hideAppWaitCursor()
     proposals
   }
 
