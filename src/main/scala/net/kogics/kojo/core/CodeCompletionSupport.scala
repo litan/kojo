@@ -15,8 +15,6 @@
 
 package net.kogics.kojo.core
 
-import tools.nsc.interactive.CompilerControl
-
 // code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
 /** The kind of a completion proposal. */
 object MemberKind extends Enumeration {
@@ -27,7 +25,7 @@ case class CompletionInfo(
   kind: MemberKind.Value,
   name: String,
   signature: String,
-  owner: String, 
+  owner: String,
   prio: Int,
   isJava: Boolean,
   paramNames: List[List[String]], // parameter names (excluding any implicit parameter sections)
@@ -35,7 +33,7 @@ case class CompletionInfo(
   returnType: String,
   fullyQualifiedName: String // for Class, Trait, Type, Objects: the fully qualified name
   ) {
-  
+
   def params: String = {
     if (paramNames.size == 0 && returnType == "Unit") {
       "()"
@@ -63,11 +61,14 @@ case class CompletionInfo(
   }
 
   import MemberKind._
-  def fullCompletion = kind match {
-    case Def => s"$name$params: $returnType"
-    case Val => s"$name$params: $returnType"
-    case Var => s"$name$params: $returnType"
-    case _ => s"$name: $owner"
+  def fullCompletion = {
+    val ret = kind match {
+      case Def => s"$name$params: $returnType"
+      case Val => s"$name$params: $returnType"
+      case Var => s"$name$params: $returnType"
+      case _   => s"$name: $owner"
+    }
+    if (ret endsWith ": ") ret substring (0, ret.length - 2) else ret
   }
 }
 
