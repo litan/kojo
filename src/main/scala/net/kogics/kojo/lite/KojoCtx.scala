@@ -17,6 +17,7 @@ package net.kogics.kojo
 package lite
 
 import java.awt.Color
+import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Toolkit
 import java.io.File
@@ -358,5 +359,17 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   def showStatusCaretPos(line: Int, col: Int) {
     statusBar.showCaretPos(line, col)
+  }
+
+  def showAppWaitCursor() {
+    val gp = frame.getGlassPane()
+    gp.setVisible(true)
+    gp.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
+  }
+
+  def hideAppWaitCursor() {
+    val gp = frame.getGlassPane()
+    gp.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    gp.setVisible(false)
   }
 }
