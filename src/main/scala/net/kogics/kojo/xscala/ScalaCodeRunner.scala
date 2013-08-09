@@ -33,14 +33,13 @@ import CodeCompletionUtils.InternalVarsRe
 import CodeCompletionUtils.Keywords
 import CodeCompletionUtils.MethodDropFilter
 import CodeCompletionUtils.VarDropFilter
-import core.Interpreter.IR
-import core.Interpreter.Settings
 import core.CodeRunner
 import core.CodingMode
 import core.CompletionInfo
+import core.Interpreter.IR
+import core.Interpreter.Settings
 import core.MwMode
 import core.RunContext
-import core.SCanvas
 import core.StagingMode
 import core.TwMode
 import util.Utils
@@ -652,9 +651,8 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       val pfx = prefix.getOrElse("")
       compilerAndRunner.completions(code, caretOffset - pfx.length, objid != null) match {
         case Nil =>
-          (Nil, pfx.length)
-        //          val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
-        //          (ics.map { CompletionInfo(_, null, 100) }, pfx.length)
+          val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
+          (ics.map { CompletionInfo(core.MemberKind.Var, _, "", "", 0, false, Nil, Nil, "", "") }, pfx.length)
         case _@ ccs =>
           (ccs.filter { ci => ignoreCaseStartsWith(ci.name, pfx) }, pfx.length)
       }
