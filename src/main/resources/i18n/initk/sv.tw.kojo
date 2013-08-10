@@ -1,5 +1,12 @@
+//Swedish Turtle wrapper for Kojo
 //Contributed by Bjorn Regnell 
-//Swedish Turtle wrapper for Kojo version 9 updated 2013-08-08
+
+println("Välkommen till Kojo med svensk padda!")
+if (isScratchPad) {
+  println("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.") 
+}
+setEditorTabSize(2)
+
 trait SwedishTurtle { 
 	def englishTurtle: Turtle 
   def sudda() = englishTurtle.clear()
@@ -330,8 +337,3 @@ gubbe.fram(100)
 </pre><br/></div>.toString
       )
 )
-
-utdata("Välkommen till Kojo med svensk padda!")
-if (isScratchPad) {
-  utdata("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.") 
-}
