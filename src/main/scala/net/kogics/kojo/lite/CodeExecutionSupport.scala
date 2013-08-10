@@ -411,7 +411,7 @@ class CodeExecutionSupport(
       }
 
       def reportWorksheetOutput(result: String, lineNum: Int) {
-        appendToCodePaneLine(lineNum, result.replaceAllLiterally("\n", " | "))
+        appendToCodePaneLine(lineNum, result.trim.replaceAllLiterally("\n", " | "))
       }
 
       private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
@@ -419,7 +419,7 @@ class CodeExecutionSupport(
         val dot = codePane.getCaretPosition
         val selStart = codePane.getSelectionStart()
         val selEnd = codePane.getSelectionEnd()
-        codePane.insert(WorksheetMarker + result.trim, insertPos)
+        codePane.insert(WorksheetMarker + result, insertPos)
         if (dot == insertPos) {
           if (selStart == selEnd) {
             codePane.setCaretPosition(dot)
