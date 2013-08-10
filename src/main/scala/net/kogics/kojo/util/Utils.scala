@@ -61,16 +61,47 @@ import edu.umd.cs.piccolo.event.PInputEvent
 import edu.umd.cs.piccolo.nodes.PText
 
 object Utils {
+  def fixHomeDir(fname: String): String = 
+    if (fname.startsWith("~")) fname.replaceFirst("~", homeDir.replaceAllLiterally("\\", "/")) else fname
+
+  def preprocessInclude(code: String): (String, Int) = {
+    def countLines(s: String) = s.count(_ == '\n')
+    val includes = """//#\s*include.*""".r.findAllIn(code)
+    def getFileName(s: String) = """//#\s*include""".r.replaceFirstIn(s, "").trim
+    val kojoDir = net.kogics.kojo.util.Utils.userDir + "/kojo/"
+    def expand(fileName: String) = {
+      val suffix = if (!fileName.contains(".")) ".kojo" else ""
+      val fname = fixHomeDir(fileName + suffix)
+      val f = new java.io.File(fname)
+      val path = if (f.isAbsolute) f.getAbsolutePath else kojoDir + fname
+      path.replaceAllLiterally("\\", "/")
+    }
+    def load(fileName: String): String = {
+      try {
+        val source = scala.io.Source.fromFile(fileName)
+        val codeToInclude = source.getLines.
+          mkString(s"//#begin-include: $fileName \n", "\n", s"//#end-include: $fileName \n")
+        val (result, _) = preprocessInclude(codeToInclude) //non-tail-recursive call
+        println(s"including file: $fileName <- ${countLines(result)} lines included.")
+        result
+      } catch { case e: Throwable => println(s"Error $e when including file: $fileName"); "" }
+    }
+
+    val addedCode = (for (i <- includes) yield load(expand(getFileName(i)))).mkString
+    val baseCode = """//#\s*include.*\n""".r.replaceAllIn(code, "") //replace all include with blank line
+    (addedCode + baseCode, countLines(addedCode))
+  }  
+    
   lazy val imageCache = new HashMap[String, Image]
   lazy val iconCache = new HashMap[String, ImageIcon]
-
+  
   def loadImage(fname: String): Image = {
     val url = getClass.getResource(fname)
     if (url != null) {
       Toolkit.getDefaultToolkit.createImage(url)
     }
     else {
-      val pfname = if (fname.startsWith("~")) fname.replaceFirst("~", homeDir.replaceAllLiterally("\\", "/")) else fname
+      val pfname = fixHomeDir(fname)
       val imageFile = new File(pfname)
       require(imageFile.exists, "Image file should exist: " + imageFile.getAbsolutePath)
       Toolkit.getDefaultToolkit.createImage(pfname)
