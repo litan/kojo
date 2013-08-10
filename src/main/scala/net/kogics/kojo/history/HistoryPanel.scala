@@ -58,7 +58,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
         val hi = cmdh(row)
         col match {
           case 0 => new java.lang.Boolean(hi.starred)
-          case 1 => hi.script.replaceAll("\n", " | ")
+          case 1 => hi.script.replaceAllLiterally("\n", " | ")
           case 2 => hi.tags
           case 3 => hi.file
           case 4 => df.format(hi.at)
