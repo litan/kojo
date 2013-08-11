@@ -45,7 +45,7 @@ class InterpOutputHandler(ctx: RunContext) {
   
   private def reportWorksheetOutput(output: String, line: Int) {
       val wline = line - includedLines
-      if (wline > 0) {
+      if (wline >= 0) {
         ctx.reportWorksheetOutput(output, wline)
       }
   }
