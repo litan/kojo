@@ -73,7 +73,8 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
   def prefix = "%s%s\n" format (prefix0, initCode.getOrElse(""))
 
-  def prefixLines = prefix.lines.size
+  var includedLines: Int = 0
+  def prefixLines = prefix.lines.size + includedLines
 
   val codeTemplate = """%s
 %s
@@ -129,11 +130,17 @@ class CompilerAndRunner(makeSettings: () => Settings,
   val compiler = new Global(settings, reporter)
 
   def pfxWithCounter = "%s%d%s" format (prefixHeader, counter, prefix)
+  
+  def compilerCode(code00: String) = {
+    val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
+    val pfx = pfxWithCounter
+    includedLines = inclLines
+    offsetDelta = pfx.length + includedChars
+    codeTemplate format (pfx, code0)
+  }
 
   def compile(code0: String, stopPhase: List[String] = List("cleanup")) = {
-    val pfx = pfxWithCounter
-    offsetDelta = pfx.length
-    val code = codeTemplate format (pfx, code0)
+    val code = compilerCode(code0)
 
     if (compiler.settings.stopAfter.value != stopPhase) {
       // There seems to be a bug in the PhasesSetting contains method
@@ -195,9 +202,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
   def parse(code0: String, browseAst: Boolean) = {
     compiler.currentSettings = makeSettings2()
-    val pfx = pfxWithCounter
-    offsetDelta = pfx.length
-    val code = codeTemplate format (pfx, code0)
+    val code = compilerCode(code0)
 
     compiler.settings.stopAfter.value = stopPhase()
     if (browseAst) {
@@ -304,9 +309,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
     import scala.reflect.internal.Trees
 
     classLoader.setAsContext()
-    val pfx = pfxWithCounter
-    val offsetDelta = pfx.length
-    val code = codeTemplate format (pfx, code0)
+    val code = compilerCode(code0)
 
     val source = new BatchSourceFile("scripteditor", code)
     val pos = new OffsetPosition(source, offset + offsetDelta + 1)
@@ -332,14 +335,12 @@ class CompilerAndRunner(makeSettings: () => Settings,
   }
 
   import core.CompletionInfo
-
+  
   def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     import interactive._
 
     classLoader.setAsContext()
-    val pfx = pfxWithCounter
-    val offsetDelta = pfx.length
-    val code = codeTemplate format (pfx, code0)
+    val code = compilerCode(code0)
 
     val source = new BatchSourceFile("scripteditor", code)
     val pos = new OffsetPosition(source, offset + offsetDelta + 1)

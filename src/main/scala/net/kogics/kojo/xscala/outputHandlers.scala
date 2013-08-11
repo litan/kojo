@@ -37,9 +37,17 @@ class InterpOutputHandler(ctx: RunContext) {
   @volatile var interpOutputSuppressed = false
   @volatile var worksheetLineNum: Option[Int] = None
   @volatile var firstWorksheetError: Option[String] = None
+  @volatile var includedLines: Int = 0
 
   def showInterpOutput(lineFragment: String) {
     if (!interpOutputSuppressed) reportInterpOutput(lineFragment)
+  }
+  
+  private def reportWorksheetOutput(output: String, line: Int) {
+      val wline = line - includedLines
+      if (wline > 0) {
+        ctx.reportWorksheetOutput(output, wline)
+      }
   }
 
   private def reportExceptionOutput(output0: String) {
@@ -52,7 +60,7 @@ class InterpOutputHandler(ctx: RunContext) {
     else {
       output0
     }
-    worksheetLineNum foreach { ctx.reportWorksheetOutput(output, _) }
+    worksheetLineNum foreach { reportWorksheetOutput(output, _) }
     ctx.reportException(output)
   }
 
@@ -68,14 +76,14 @@ class InterpOutputHandler(ctx: RunContext) {
       }
     }
     else {
-      worksheetLineNum foreach { ctx.reportWorksheetOutput(output, _) }
+      worksheetLineNum foreach { reportWorksheetOutput(output, _) }
       ctx.reportOutput(output)
     }
   }
 
   def flushWorksheetError() {
     firstWorksheetError foreach { msg =>
-      worksheetLineNum foreach { ctx.reportWorksheetOutput(msg.lines.next, _) }
+      worksheetLineNum foreach { reportWorksheetOutput(msg.lines.next, _) }
       ctx.reportError(msg)
     }
     firstWorksheetError = None
