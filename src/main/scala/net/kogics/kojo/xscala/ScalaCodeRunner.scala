@@ -562,43 +562,47 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       xs.mkString(File.pathSeparatorChar.toString)
     }
 
-    def interpretWorksheetLine(lines: List[(String, Int)]): IR.Result = lines match {
+    def interpretWorksheetLines(lines: List[(String, Int)]): IR.Result = lines match {
       case Nil => IR.Success
       case (code, lnum) :: tail =>
         outputHandler.worksheetLineNum = Some(lnum)
         //        println("Interpreting:\n--%s--" format code)
         interp.interpret(code) match {
           case IR.Success =>
-            outputHandler.clearWorksheetError(); interpretWorksheetLine(lines.tail)
+            outputHandler.clearWorksheetError(); interpretWorksheetLines(lines.tail)
           case IR.Error =>
             tail match {
               case Nil =>
                 outputHandler.flushWorksheetError(); IR.Error
-              case (code2, lnum2) :: tail2 => interpretWorksheetLine((code + "\n" + code2, lnum) :: tail2)
+              case (code2, lnum2) :: tail2 => interpretWorksheetLines((code + "\n" + code2, lnum) :: tail2)
             }
           case IR.Incomplete =>
             tail match {
               case Nil                     => IR.Incomplete
-              case (code2, lnum2) :: tail2 => interpretWorksheetLine((code + "\n" + code2, lnum) :: tail2)
+              case (code2, lnum2) :: tail2 => interpretWorksheetLines((code + "\n" + code2, lnum) :: tail2)
             }
         }
     }
 
-    def interpretAsWorksheet(code: String): IR.Result = {
+    def interpretAsWorksheet(code: String, includedLines: Int): IR.Result = {
       val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => line.trim() != "" && !line.trim().startsWith("//") }
       try {
-        interpretWorksheetLine(lines)
+        outputHandler.includedLines = includedLines
+        interpretWorksheetLines(lines)
       }
       finally {
         outputHandler.worksheetLineNum = None
+        outputHandler.includedLines = 0
       }
     }
 
     def interpretAllLines(code: String): IR.Result = interp.interpret(code)
 
-    def interpret(code: String, asWorksheet: Boolean): IR.Result = {
+    def interpret(code0: String, asWorksheet: Boolean): IR.Result = {
+      val (code, includedLines, _) = Utils.preProcessInclude(code0)
+//      println(s"Included lines: $includedLines\ncode: \n$code\n---")
       if (asWorksheet)
-        interpretAsWorksheet(code)
+        interpretAsWorksheet(code, includedLines)
       else
         interpretAllLines(code)
     }
