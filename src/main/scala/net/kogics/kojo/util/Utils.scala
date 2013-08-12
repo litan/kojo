@@ -576,7 +576,7 @@ object Utils {
     }
     def load(fileName: String): String = {
       try {
-        val source = scala.io.Source.fromFile(fileName)
+        val source = scala.io.Source.fromFile(fileName, "utf-8")
         val codeToInclude = source.getLines.
           mkString(s"// #begin-include: $fileName\n", "\n", s"\n// #end-include: $fileName\n")
         val (result, _, _) = preProcessInclude(codeToInclude) //non-tail-recursive call
