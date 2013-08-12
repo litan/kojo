@@ -578,7 +578,7 @@ object Utils {
       try {
         val source = scala.io.Source.fromFile(fileName)
         val codeToInclude = source.getLines.
-          mkString(s"// #begin-include: $fileName\n", "\n", s"// #end-include: $fileName\n")
+          mkString(s"// #begin-include: $fileName\n", "\n", s"\n// #end-include: $fileName\n")
         val (result, _, _) = preProcessInclude(codeToInclude) //non-tail-recursive call
 //        println(s"including file: $fileName <- ${countLines(result)} lines included.")
         result
