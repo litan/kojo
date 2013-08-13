@@ -68,17 +68,15 @@ trait Mp3Player {
       fn(is)
     }
     else {
-      val mp3File = if (fname.startsWith("~")) fname.replaceFirst("~", Utils.homeDir.replaceAllLiterally("\\", "/")) else fname
+      val mp3File = Utils.absolutePath(fname)
       val f = new File(mp3File)
-      val f2 = if (f.exists) f else new File(kojoCtx.baseDir + mp3File)
-
-      if (f2.exists) {
-        val is = new FileInputStream(f2)
+      if (f.exists) {
+        val is = new FileInputStream(f)
         fn(is)
         //      is.close() - player closes the stream
       }
       else {
-        showError("MP3 file does not exist - %s or %s" format (f.getAbsolutePath, f2.getAbsolutePath))
+        showError("MP3 file does not exist - %s" format (f.getAbsolutePath))
       }
     }
   }
