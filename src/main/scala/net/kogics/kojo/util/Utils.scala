@@ -64,8 +64,15 @@ object Utils {
   lazy val imageCache = new HashMap[String, Image]
   lazy val iconCache = new HashMap[String, ImageIcon]
 
-  def fixHomeDir(fname: String): String =
-    if (fname.startsWith("~")) fname.replaceFirst("~", homeDir.replaceAllLiterally("\\", "/")) else fname
+  def absolutePath(fname0: String): String = {
+    def expandHomeDir(fname: String): String =
+      if (fname.startsWith("~")) fname.replaceFirst("~", homeDir.replaceAllLiterally("\\", "/")) else fname
+
+    val fname = expandHomeDir(fname0)
+    val f = new java.io.File(fname)
+    val path = if (f.isAbsolute) f.getAbsolutePath else kojoCtx.baseDir + fname
+    path.replaceAllLiterally("\\", "/")
+  }
 
   def loadImage(fname: String): Image = {
     val url = getClass.getResource(fname)
@@ -73,7 +80,7 @@ object Utils {
       Toolkit.getDefaultToolkit.createImage(url)
     }
     else {
-      val pfname = fixHomeDir(fname)
+      val pfname = absolutePath(fname)
       val imageFile = new File(pfname)
       require(imageFile.exists, "Image file should exist: " + imageFile.getAbsolutePath)
       Toolkit.getDefaultToolkit.createImage(pfname)
@@ -569,10 +576,7 @@ object Utils {
     val kojoDir = net.kogics.kojo.util.Utils.userDir + "/kojo/"
     def expand(fileName: String) = {
       val suffix = if (!fileName.contains(".")) ".kojo" else ""
-      val fname = fixHomeDir(fileName + suffix)
-      val f = new java.io.File(fname)
-      val path = if (f.isAbsolute) f.getAbsolutePath else kojoDir + fname
-      path.replaceAllLiterally("\\", "/")
+      absolutePath(fileName + suffix)
     }
     def load(fileName: String): String = {
       try {
@@ -580,14 +584,14 @@ object Utils {
         val codeToInclude = source.getLines.
           mkString(s"// #begin-include: $fileName\n", "\n", s"\n// #end-include: $fileName\n")
         val (result, _, _) = preProcessInclude(codeToInclude) //non-tail-recursive call
-//        println(s"including file: $fileName <- ${countLines(result)} lines included.")
+        //        println(s"including file: $fileName <- ${countLines(result)} lines included.")
         result
       }
       catch { case e: Throwable => System.err.println(s"Error $e when including file: $fileName"); "" }
     }
 
     val addedCode = (for (i <- includes) yield load(expand(getFileName(i)))).mkString
-    val baseCode = """//(\s)*#include(.*)""".r.replaceAllIn(code, "//$1#Include$2") 
+    val baseCode = """//(\s)*#include(.*)""".r.replaceAllIn(code, "//$1#Include$2")
     (addedCode + baseCode, countLines(addedCode), addedCode.length)
   }
 
