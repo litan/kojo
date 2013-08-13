@@ -92,7 +92,7 @@ class Builtins(
   val darkGray = JColor.darkGray
   val magenta = JColor.magenta
   val cyan = JColor.cyan
-  
+
   val BoldFont = JFont.BOLD
   val PlainFont = JFont.PLAIN
   val ItalicFont = JFont.ITALIC
@@ -105,6 +105,10 @@ class Builtins(
   val Costume = new Tw.Costume
   val Background = new Tw.Background
   val Sound = new Tw.Sound
+
+  implicit def seqToArrD(seq: Seq[Double]): Array[Double] = seq.toArray
+  implicit def seqToArrI(seq: Seq[Int]): Array[Double] = seq.map { _.toDouble }.toArray
+  val Kmath = new Kmath
 
   def showScriptInOutput() = kojoCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
