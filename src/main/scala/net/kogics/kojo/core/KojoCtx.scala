@@ -16,10 +16,13 @@
 package net.kogics.kojo.core
 
 import java.awt.Color
+import java.awt.geom.Point2D
 
 import javax.swing.Action
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
+
+import bibliothek.gui.dock.common.DefaultSingleCDockable
 
 trait KojoCtx {
   def activityListener: SpriteListener
@@ -39,6 +42,7 @@ trait KojoCtx {
   def makeMathWorldVisible(): Unit
   def makeStoryTellerVisible(): Unit
   def make3DCanvasVisible(): Unit
+  def makeTraceWindowVisible(tw: DefaultSingleCDockable): Unit
   def baseDir: String
   def stopScript(): Unit
   def stopInterpreter(): Unit
@@ -90,6 +94,8 @@ trait KojoCtx {
   def showStatusCaretPos(line: Int, col: Int): Unit
   def showAppWaitCursor(): Unit
   def hideAppWaitCursor(): Unit
+  def picLine(p1: Point2D.Double, p2: Point2D.Double): Picture
+  def repaintCanvas(): Unit
   
   var fps: Int
   var screenDPI: Int

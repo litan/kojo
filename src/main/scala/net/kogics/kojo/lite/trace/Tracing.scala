@@ -1,0 +1,548 @@
+/*
+ * Copyright (C) 2013 "Sami Jaber" <jabersami@gmail.com>
+ * Copyright (C) 2013 Lalit Pant <pant.lalit@gmail.com>
+ *
+ * The contents of this file are subject to the GNU General Public License
+ * Version 3 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.gnu.org/copyleft/gpl.html
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ */
+package net.kogics.kojo.lite
+package trace
+
+import java.awt.Color
+import java.awt.geom.Point2D
+import java.io.File
+
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConversions.asScalaIterator
+import scala.collection.mutable.HashMap
+import scala.reflect.internal.util.BatchSourceFile
+import scala.reflect.internal.util.Position
+import scala.tools.nsc.Global
+import scala.tools.nsc.Settings
+import scala.tools.nsc.reporters.Reporter
+import scala.util.control.Breaks.break
+import scala.util.control.Breaks.breakable
+import scala.util.matching.Regex
+
+import com.sun.jdi.AbsentInformationException
+import com.sun.jdi.ArrayReference
+import com.sun.jdi.Bootstrap
+import com.sun.jdi.IntegerValue
+import com.sun.jdi.InvocationException
+import com.sun.jdi.LocalVariable
+import com.sun.jdi.ObjectReference
+import com.sun.jdi.StackFrame
+import com.sun.jdi.StringReference
+import com.sun.jdi.ThreadReference
+import com.sun.jdi.Value
+import com.sun.jdi.VirtualMachine
+import com.sun.jdi.connect.LaunchingConnector
+import com.sun.jdi.event.MethodEntryEvent
+import com.sun.jdi.event.MethodExitEvent
+import com.sun.jdi.event.ThreadStartEvent
+import com.sun.jdi.event.VMDeathEvent
+import com.sun.jdi.event.VMDisconnectEvent
+import com.sun.jdi.event.VMStartEvent
+import com.sun.jdi.request.EventRequest
+
+import net.kogics.kojo.core.Turtle
+import net.kogics.kojo.util.Utils
+
+class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: TraceListener) {
+  var currThread: ThreadReference = _
+  val tmpdir = System.getProperty("java.io.tmpdir")
+  val settings = makeSettings()
+  val turtles = new HashMap[Long, Turtle]
+  var evtReqs: Vector[EventRequest] = _
+  var hiddenEventCount = 0
+  var newTurtles = false
+  var codeLines: Vector[String] = _
+
+  val currEvtVec = new HashMap[String, MethodEvent]
+
+  val reporter = new Reporter {
+    override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
+      severity.count += 1
+      println(msg)
+    }
+  }
+  val compiler = new Global(settings, reporter)
+  val tracingGUI = new TracingGUI(scriptEditor, builtins.kojoCtx)
+  val lineNumOffset = 3
+
+  val wrapperCode = """object Wrapper {
+import net.kogics.kojo.lite.trace.TracingBuiltins._
+def main(args: Array[String]) { 
+    %s
+  }
+} 
+"""
+
+  def stop() {
+    if (currThread != null) {
+      traceListener.onEnd()
+      currThread.virtualMachine.exit(1)
+    }
+  }
+
+  def compile(code0: String) = {
+    val code = wrapperCode format code0
+    val codeFile = new BatchSourceFile("scripteditor", code)
+    val run = new compiler.Run
+    reporter.reset
+    run.compileSources(List(codeFile))
+    if (reporter.hasErrors) {
+      throw new RuntimeException("Trace Compilation Error. Ensure that your program compiles correctly before trying to trace it.")
+    }
+  }
+
+  def makeSettings() = {
+    val iSettings = new Settings()
+    iSettings.usejavacp.value = true
+    iSettings.outputDirs.setSingleOutput(tmpdir)
+    iSettings
+  }
+
+  def launchVM() = {
+    val conns = Bootstrap.virtualMachineManager.allConnectors
+    val connector = conns.find(_.name.equals("com.sun.jdi.CommandLineLaunch")).get.asInstanceOf[LaunchingConnector]
+
+    // set connector arguments
+    val connArgs = connector.defaultArguments()
+    val mArgs = connArgs.get("main")
+    val opts = connArgs.get("options")
+    var optionValue = s"""-classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" """
+
+    if (mArgs == null)
+      throw new Error("Bad launching connector")
+
+    mArgs.setValue("Wrapper") // assign args to main field
+    opts.setValue(optionValue) //assign args to options field
+
+    val vm = connector.launch(connArgs)
+    vm
+  }
+
+  val ignoreMethods = Set("main", "<init>", "<clinit>", "$init$", "repeat", "repeatWhile", "runInBackground")
+  val turtleMethods = Set("setBackground", "color", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "circle", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
+  val notSupported = Set("Picture", "#include", "PicShape")
+
+  def getThread(vm: VirtualMachine, name: String): ThreadReference =
+    vm.allThreads.find(_.name == name).getOrElse(null)
+
+  def trace(code: String) = {
+    stop()
+    notSupported find { code.contains(_) } match {
+      case Some(w) => println(s"Tracing not supported for programs with $w")
+      case None    => realTrace(code)
+    }
+  }
+
+  def realTrace(code: String) = Utils.runAsync {
+    try {
+      traceListener.onStart()
+      turtles.clear()
+      evtReqs = Vector[EventRequest]()
+      currEvtVec.clear
+      hiddenEventCount = 0
+      newTurtles = code.contains("newTurtle")
+      codeLines = code.lines.toVector
+
+      compile(code)
+      //Connect to target VM
+      val vm = launchVM()
+      println("Tracing started...")
+
+      //Create Event Requests
+      val excludes = Array("java.*", "javax.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*")
+      currThread = getThread(vm, "main")
+      createRequests(excludes, vm, currThread)
+      watchThreadStarts
+
+      //Iterate through Events
+      val evtQueue = vm.eventQueue
+      vm.resume
+
+      tracingGUI.reset
+
+      breakable {
+        while (true) {
+          val evtSet = evtQueue.remove()
+          for (evt <- evtSet.eventIterator) {
+            evt match {
+
+              case threadStartEvt: ThreadStartEvent =>
+                val name = threadStartEvt.thread.name
+                if (name.contains("Thread-")) {
+                  createRequests(excludes, vm, threadStartEvt.thread)
+                }
+
+              case methodEnterEvt: MethodEntryEvent =>
+                if (!(ignoreMethods.contains(methodEnterEvt.method.name) || methodEnterEvt.method.name.startsWith("apply"))) {
+                  currThread = methodEnterEvt.thread
+                  try {
+                    handleMethodEntry(methodEnterEvt)
+                  }
+                  catch {
+                    case t: Throwable =>
+                      println(t.printStackTrace())
+                    //println(s"[Exception] [Method Enter] [${t.getClass()}] ${methodEnterEvt.method.name} -- ${t.getMessage}")
+                  }
+                }
+
+              case methodExitEvt: MethodExitEvent =>
+                if (!(ignoreMethods.contains(methodExitEvt.method.name) || methodExitEvt.method.name.startsWith("apply"))) {
+                  currThread = methodExitEvt.thread
+                  try {
+                    handleMethodExit(methodExitEvt)
+                  }
+                  catch {
+                    case t: Throwable =>
+                      println(t.printStackTrace())
+                    //println(s"[Exception] [Method Exit] [${t.getClass()}] ${methodExitEvt.method.name} -- ${t.getMessage}")
+                  }
+                }
+
+              case vmDcEvt: VMDisconnectEvent =>
+                currThread = null
+                traceListener.onEnd()
+                println("VM Disconnected"); break
+
+              case vmStartEvt: VMStartEvent =>
+                println("VM Started")
+
+              case vmDeathEvt: VMDeathEvent =>
+                currThread = null
+                traceListener.onEnd()
+                println("VM Dead")
+
+              case _ =>
+                println("Other")
+            }
+          }
+          evtSet.resume()
+        }
+      }
+    }
+    catch {
+      case t: Throwable => System.err.println(s"[Exception] -- ${t.getMessage}")
+      t.printStackTrace()
+    }
+  }
+
+  def printFrameVarInfo(stkfrm: StackFrame) {
+    try {
+      println(s"Visible Vars: ${stkfrm.visibleVariables}")
+      println(s"Argument Values: ${stkfrm.getArgumentValues}")
+    }
+    catch {
+      case t: Throwable =>
+    }
+  }
+
+  def getCurrentMethodEvent: Option[MethodEvent] = currEvtVec.get(currThread.name)
+
+  def updateCurrentMethodEvent(oNewEvt: Option[MethodEvent]) = oNewEvt match {
+    case Some(newEvt) =>
+      currEvtVec(currThread.name) = newEvt
+    case None =>
+      currEvtVec.remove(currThread.name)
+  }
+
+  def showHiddenEventMark() {
+    hiddenEventCount += 1
+    if (hiddenEventCount % 30 == 0) {
+      print(".")
+      if (hiddenEventCount % (30 * 30) == 0) {
+        print("\n")
+      }
+    }
+  }
+
+  def targetToString(frameVal: Value) = {
+    if (frameVal.isInstanceOf[ObjectReference] &&
+      !frameVal.isInstanceOf[StringReference] &&
+      !frameVal.isInstanceOf[ArrayReference] &&
+      !newTurtles) {
+      val objRef = frameVal.asInstanceOf[ObjectReference]
+      val mthd = objRef.referenceType.methodsByName("toString").find(_.argumentTypes.size == 0).get
+
+      evtReqs.foreach(_.disable)
+      try {
+        //        println(s"Invoking toString for $frameVal")
+        val rtrndValue = objRef.invokeMethod(currThread, mthd, new java.util.ArrayList, 0)
+        //        println(s"toString done: $rtrndValue")
+        rtrndValue.asInstanceOf[StringReference].value()
+      }
+      catch {
+        case inv: InvocationException =>
+          println(s"error0 in invokeMethod: ${inv.exception}")
+          frameVal.toString
+        case inv: Throwable =>
+          println(s"error in invokeMethod for $mthd: ${inv.getMessage}")
+          frameVal.toString
+      }
+      finally {
+        evtReqs.foreach(_.enable)
+      }
+    }
+    else {
+      frameVal.toString
+    }
+  }
+
+  def localToString(frameVal: Value) = String.valueOf(frameVal)
+
+  def handleMethodEntry(methodEnterEvt: MethodEntryEvent) {
+
+    def methodArgs(value: Value => String) = try {
+      if (methodEnterEvt.method.arguments.size > 0)
+        "(%s)" format methodEnterEvt.method.arguments.map { n =>
+          val frame = methodEnterEvt.thread.frame(0)
+          val frameVal = frame.getValue(n)
+          s"arg ${n.name}: ${n.typeName} = ${value(frameVal)}"
+        }.mkString(",")
+      else "()"
+    }
+    catch {
+      case e: AbsentInformationException => "There is an AbsentInformationException"
+    }
+
+    val methodName = methodEnterEvt.method.name
+    val srcName = try { methodEnterEvt.location.sourceName } catch { case e: Throwable => "N/A" }
+    val callerSrcName = try { currThread.frame(1).location.sourceName } catch { case _: Throwable => "N/A" }
+    val lineNum = methodEnterEvt.location.lineNumber - lineNumOffset
+    val callerLineNum = try { currThread.frame(1).location.lineNumber - lineNumOffset } catch { case _: Throwable => -1 }
+    val callerLine = try { codeLines(callerLineNum - 1) } catch { case _: Throwable => "N/A" }
+    val localArgs = try { methodEnterEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
+    val stkfrm = currThread.frame(0)
+    val isTurtle = turtleMethods.contains(methodName)
+
+    val newEvt = new MethodEvent()
+    val mthdEvent = getCurrentMethodEvent
+    newEvt.entryLineNum = lineNum
+    newEvt.setParent(mthdEvent)
+    newEvt.sourceName = srcName
+    newEvt.callerSourceName = callerSrcName
+    newEvt.callerLine = callerLine
+    newEvt.callerLineNum = callerLineNum
+    newEvt.methodName = methodName
+
+    var ret: Option[(Point2D.Double, Point2D.Double)] = None
+    if (isTurtle) {
+      ret = runTurtleMethod(methodName, stkfrm, localArgs)
+    }
+
+    if (srcName == "scripteditor" || (callerSrcName == "scripteditor" && callerLine.contains(methodName))) {
+      val desc = s"[Method Enter] ${methodEnterEvt.method.name}${methodArgs(targetToString)}"
+      newEvt.entry = desc
+      tracingGUI.addEvent(newEvt, ret)
+    }
+    else {
+      val desc = s"[Method Enter] ${methodEnterEvt.method.name}${methodArgs(localToString)}"
+      newEvt.entry = desc
+      showHiddenEventMark()
+      //      println(desc)
+    }
+
+    updateCurrentMethodEvent(Some(newEvt))
+  }
+
+  def handleMethodExit(methodExitEvt: MethodExitEvent) {
+    val methodName = methodExitEvt.method.name
+    val stkfrm = currThread.frame(0)
+    val localArgs = try { methodExitEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
+    val retVal = methodExitEvt.returnValue
+
+    runTurtleMethod2(methodName, stkfrm, localArgs, retVal)
+
+    val mthdEvent = getCurrentMethodEvent
+    mthdEvent.foreach { ce =>
+      val lineNum = methodExitEvt.location.lineNumber - lineNumOffset
+      val retValStr = localToString(retVal)
+      ce.exitLineNum = lineNum
+
+      if (ce.sourceName == "scripteditor" ||
+        (ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) &&
+          retValStr != "<void value>" && retValStr != "null")) {
+
+        ce.returnVal = targetToString(retVal)
+        val desc = s"[Method Exit] ${methodName}(return value: ${ce.returnVal})"
+        ce.exit = desc
+        tracingGUI.addEvent(ce, None)
+      }
+      else {
+        ce.returnVal = retValStr
+        val desc = s"[Method Exit] ${methodName}(return value: ${ce.returnVal})"
+        ce.exit = desc
+        showHiddenEventMark()
+        //        println(desc)
+      }
+      updateCurrentMethodEvent(ce.parent)
+    }
+  }
+
+  def runTurtleMethod(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]): Option[(Point2D.Double, Point2D.Double)] = {
+    if (stkfrm.thisObject() == null) return None
+
+    import builtins.Tw
+    import builtins.TSCanvas
+    var ret: Option[(Point2D.Double, Point2D.Double)] = None
+
+    val turtle = {
+      val caller = stkfrm.thisObject().uniqueID()
+      turtles.getOrElse(caller, Tw.getTurtle)
+    }
+
+    name match {
+      case "clear" =>
+        TSCanvas.clear()
+      case "cleari" =>
+        TSCanvas.cleari()
+      case "invisible" =>
+        turtle.invisible
+      case "forward" =>
+        if (localArgs.length == 1) {
+          val step = stkfrm.getValue(localArgs(0)).toString.toDouble
+          turtle.forward(step)
+          ret = Some(turtle.lastLine)
+        }
+      case "turn" =>
+        val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
+        turtle.turn(angle)
+      case "right" =>
+      case "left"  =>
+      case "back"  =>
+      case "home" =>
+        turtle.home
+      case "jumpTo" =>
+        val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
+        turtle.jumpTo(x, y)
+      case "setCostume" =>
+        val str = stkfrm.getValue(localArgs(0)).toString
+        turtle.setCostume(str)
+      case "setPosition" =>
+        val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
+        turtle.setPosition(x, y)
+      case "setPenColor" =>
+        val color = getColor(stkfrm, localArgs)
+        turtle.setPenColor(color)
+      case "setFillColor" =>
+        val color = getColor(stkfrm, localArgs)
+        turtle.setFillColor(color)
+      case "setAnimationDelay" =>
+        val step = stkfrm.getValue(localArgs(0)).toString.toLong
+        turtle.setAnimationDelay(step)
+      case "setPenThickness" =>
+        val thickness = stkfrm.getValue(localArgs(0)).toString.toDouble
+        turtle.setPenThickness(thickness)
+      case "penUp" =>
+        turtle.penUp
+      case "penDown" =>
+        turtle.penDown
+      case "circle" =>
+        val r = stkfrm.getValue(localArgs(0)).toString.toDouble
+        turtle.circle(r)
+      case "savePosHe" =>
+        turtle.savePosHe
+      case "restorePosHe" =>
+        turtle.restorePosHe
+      case "newTurtle" =>
+      // handled on the exit event
+      case "changePosition" =>
+        val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
+        turtle.changePosition(x, y)
+      case "scaleCostume" =>
+        val a = stkfrm.getValue(localArgs(0)).toString.toDouble
+        turtle.scaleCostume(a)
+      case "setCostumes" =>
+        val (a, b) = (stkfrm.getValue(localArgs(0)).toString, stkfrm.getValue(localArgs(1)).toString)
+        turtle.setCostumes(a, b)
+      case "setBackground" =>
+        var c = getColor(stkfrm, localArgs)
+        TSCanvas.tCanvas.setCanvasBackground(c)
+      case "axesOn" =>
+        TSCanvas.axesOn
+      case "axesOff" =>
+        TSCanvas.axesOff
+      case "gridOn" =>
+        TSCanvas.gridOn
+      case "gridOff" =>
+        TSCanvas.gridOff
+      case "zoom" =>
+        val (x, y, z) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(0)).toString.toDouble)
+        TSCanvas.zoom(x, y, z)
+      case _ =>
+    }
+    ret
+  }
+
+  def runTurtleMethod2(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], retVal: Value) {
+    name match {
+      case "newTurtle" =>
+        import builtins.TSCanvas
+        if (localArgs.length == 3) {
+          val (x, y, str) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(2)).toString)
+          val newTurtle = TSCanvas.newTurtle(x, y, str.slice(1, str.length - 1))
+          val ref = retVal.asInstanceOf[ObjectReference].uniqueID()
+          turtles(ref) = newTurtle
+        }
+
+      case _ =>
+    }
+  }
+
+  def getColor(stkfrm: StackFrame, localArgs: List[LocalVariable]): Color = {
+    var colorVal = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
+
+    var mthd = colorVal.referenceType.methodsByName("toString")(0)
+    var rtrndValue = colorVal.invokeMethod(currThread, mthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    var str = rtrndValue.asInstanceOf[StringReference].value()
+    var pattern = new Regex("\\d{1,3}")
+    var rgb = Vector[Int]()
+    (pattern findAllIn str).foreach(c => rgb = rgb :+ c.toInt)
+
+    var alphaMthd = colorVal.referenceType.methodsByName("getAlpha")(0)
+    var alphaValue = colorVal.invokeMethod(currThread, alphaMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    var alpha = alphaValue.asInstanceOf[IntegerValue].value
+
+    new Color(rgb(0), rgb(1), rgb(2), alpha)
+  }
+
+  def watchThreadStarts() {
+    val evtReqMgr = currThread.virtualMachine.eventRequestManager
+
+    val thrdStartVal = evtReqMgr.createThreadStartRequest
+    thrdStartVal.setSuspendPolicy(EventRequest.SUSPEND_EVENT_THREAD)
+    //thrdStartVal.addThreadFilter(mainThread)
+    thrdStartVal.enable()
+    evtReqs = evtReqs :+ thrdStartVal
+  }
+
+  def createRequests(excludes: Array[String], vm: VirtualMachine, thread: ThreadReference) {
+    val evtReqMgr = vm.eventRequestManager
+
+    val mthdEnterVal = evtReqMgr.createMethodEntryRequest
+    excludes.foreach { mthdEnterVal.addClassExclusionFilter(_) }
+    mthdEnterVal.addThreadFilter(thread)
+    mthdEnterVal.setSuspendPolicy(EventRequest.SUSPEND_EVENT_THREAD)
+    mthdEnterVal.enable()
+    evtReqs = evtReqs :+ mthdEnterVal
+
+    val mthdExitVal = evtReqMgr.createMethodExitRequest
+    excludes.foreach { mthdExitVal.addClassExclusionFilter(_) }
+    mthdExitVal.addThreadFilter(thread)
+    mthdExitVal.setSuspendPolicy(EventRequest.SUSPEND_EVENT_THREAD)
+    mthdExitVal.enable()
+    evtReqs = evtReqs :+ mthdExitVal
+  }
+
+}

@@ -177,6 +177,10 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   private def currStyle = Style(pen.getColor, pen.getThickness, pen.getFillColor, pen.getFont, pen == DownPen)
 
+  def lastLine = Utils.runInSwingThreadAndWait {
+    penPaths.last.lastLine
+  }
+
   private def pointAfterForward(n: Double) = {
     val p1 = posAfterForward(_positionX, _positionY, theta, n)
     new Point2D.Double(p1._1, p1._2)

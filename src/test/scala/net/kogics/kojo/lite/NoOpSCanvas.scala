@@ -30,7 +30,7 @@ class NoOpSCanvas extends SCanvas {
   def exportImage(filePrefix: String, width: Int, height: Int): java.io.File = null
   def exportThumbnail(filePrefix: String, height: Int): java.io.File = null
   def onKeyPress(fn: Int => Unit) {}
-  def onKeyRelease(fn: Int => Unit) {}  
+  def onKeyRelease(fn: Int => Unit) {}
   def onMouseClick(fn: (Double, Double) => Unit) {}
   def setUnitLength(ul: UnitLen) {}
   def clearWithUL(ul: UnitLen) {}
@@ -44,14 +44,16 @@ class NoOpSCanvas extends SCanvas {
   def stageTop: Picture = null
   def stageRight: Picture = null
   def stageBot: Picture = null
-  
+
   def turtle0: Turtle = null
   def activate() {}
   def cbounds: PBounds = null
   def setCanvasBackground(c: Paint) {}
   def kojoCtx: KojoCtx = null
   def animate(fn: => Unit): Future[PActivity] = null
-  def animateActivity(a: PActivity) {}
+  def animateActivity(a: PActivity) {
+    a.getDelegate().activityFinished(a)
+  }
   def stopAnimation() {}
   // stuff for the pictures module
   def getCamera: PCamera = new PCamera

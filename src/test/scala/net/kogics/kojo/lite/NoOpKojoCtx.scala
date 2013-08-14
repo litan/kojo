@@ -2,14 +2,18 @@ package net.kogics.kojo
 package lite
 
 import java.awt.Color
+import java.awt.geom.Point2D
 
 import javax.swing.Action
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
 
 import net.kogics.kojo.core.NoopSpriteListener
+import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SpriteListener
 import net.kogics.kojo.util.Utils
+
+import bibliothek.gui.dock.common.DefaultSingleCDockable
 
 class NoOpKojoCtx extends core.KojoCtx {
   Utils.kojoCtx = this
@@ -30,6 +34,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def makeMathWorldVisible() {}
   def makeStoryTellerVisible() {}
   def make3DCanvasVisible() {}
+  def makeTraceWindowVisible(tw: DefaultSingleCDockable) {}
   def baseDir: String = System.getProperty("user.dir")
   def stopScript(): Unit = {}
   def stopInterpreter() {}
@@ -83,7 +88,9 @@ class NoOpKojoCtx extends core.KojoCtx {
   def setEditorTabSize(ts: Int): Unit = {}
   def showAppWaitCursor(): Unit = {}
   def hideAppWaitCursor(): Unit = {}
-  
+  def picLine(p1: Point2D.Double, p2: Point2D.Double): Picture = null
+  def repaintCanvas() {}
+
   var fps = 50
   var screenDPI = 72
   def subKojo: Boolean = false

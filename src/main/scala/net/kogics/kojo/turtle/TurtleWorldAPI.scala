@@ -11,6 +11,8 @@ import net.kogics.kojo.core.Voice
 import net.kogics.kojo.util.UserCommand
 
 class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
+    def getTurtle = turtle0
+    def lastLine = turtle0.lastLine
     def forward(): Unit = forward(25)
     def forward(n: Double) = turtle0.forward(n)
     UserCommand("forward", List("numSteps"), "Moves the turtle forward a given number of steps.")
