@@ -16,6 +16,7 @@ package net.kogics.kojo.core
 
 import java.awt.Font
 import java.awt.Paint
+import java.awt.geom.Point2D
 
 case class Style(val penColor: Paint, val penThickness: Double, val fillColor: Paint, val font: Font, down: Boolean)
 
@@ -75,4 +76,5 @@ trait TurtleMover extends RichTurtleCommands {
   }
   def perimeter: Double
   def area: Double
+  def lastLine: (Point2D.Double, Point2D.Double)
 }

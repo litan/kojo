@@ -387,6 +387,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             execSupport.compileRunCode()
           }
+          else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
+            execSupport.traceCode()
+          }
           else {
             execSupport.runCode()
           }
@@ -539,6 +542,16 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   def setTabSize(ts: Int) = Utils.runInSwingThread {
     tabSize = ts
     codePane.setTabSize(ts)
+  }
+
+  def markTraceLine(line: Int) {
+    try {
+      codePane.select(codePane.getLineStartOffset(line - 1), codePane.getLineEndOffset(line - 1))
+    }
+    catch {
+      // In case the user changes the contents of the script editor so that it is out of sync with the current trace
+      case t: Throwable =>
+    }
   }
 
   class StatusStrip extends JPanel {

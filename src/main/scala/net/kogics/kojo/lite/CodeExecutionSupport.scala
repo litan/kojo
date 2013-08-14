@@ -477,7 +477,7 @@ class CodeExecutionSupport(
       Utils.schedule(0.9) { inputField.requestFocusInWindow() }
       inputField.addActionListener(new ActionListener {
         def actionPerformed(e: ActionEvent) {
-//          println("%s: %s" format (prompt, inputField.getText))
+          //          println("%s: %s" format (prompt, inputField.getText))
           input.set(inputField.getText)
           outputPane.removeInputPanel()
         }
@@ -507,8 +507,13 @@ class CodeExecutionSupport(
   }
 
   def stopScript() {
-    stopInterpreter()
-    stopActivity()
+    if (traceRunning) {
+      stopTraceScript()
+    }
+    else {
+      stopInterpreter()
+      stopActivity()
+    }
   }
 
   def stopInterpreter() = Utils.runInSwingThread {
@@ -569,6 +574,32 @@ class CodeExecutionSupport(
   def runIpmCode(code: String) {
     stopScript()
     codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
+  }
+
+  var traceRunning = false
+  val traceListener = new trace.TraceListener {
+    def onStart() {
+      enableRunButton(false)
+      stopButton.setEnabled(true)
+      traceRunning = true
+    }
+
+    def onEnd() {
+      enableRunButton(true)
+      stopButton.setEnabled(false)
+      traceRunning = false
+    }
+  }
+
+  lazy val tracer = new trace.Tracing(scriptEditor, builtins, traceListener)
+
+  def traceCode() {
+    val code2run = codeToRun
+    tracer.trace(code2run.code)
+  }
+
+  def stopTraceScript() {
+    tracer.stop()
   }
 
   case class CodeToRun(code: String, selection: Option[(Int, Int)])

@@ -59,7 +59,7 @@ class Builtins(
   storyTeller: story.StoryTeller,
   mp3player: music.KMp3,
   fuguePlayer: music.FuguePlayer,
-  kojoCtx: core.KojoCtx,
+  val kojoCtx: core.KojoCtx,
   scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
   Builtins.instance = this
   import language.implicitConversions
