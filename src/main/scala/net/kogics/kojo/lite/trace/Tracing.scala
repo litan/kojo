@@ -19,6 +19,7 @@ package trace
 import java.awt.Color
 import java.awt.geom.Point2D
 import java.io.File
+import java.util.logging.Logger
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaIterator
@@ -33,10 +34,8 @@ import scala.util.control.Breaks.breakable
 import scala.util.matching.Regex
 
 import com.sun.jdi.AbsentInformationException
-import com.sun.jdi.ArrayReference
 import com.sun.jdi.Bootstrap
 import com.sun.jdi.IntegerValue
-import com.sun.jdi.InvocationException
 import com.sun.jdi.LocalVariable
 import com.sun.jdi.ObjectReference
 import com.sun.jdi.StackFrame
@@ -54,6 +53,8 @@ import com.sun.jdi.event.VMStartEvent
 import com.sun.jdi.request.EventRequest
 
 import net.kogics.kojo.core.Turtle
+import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.util.Utils
 
 class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: TraceListener) {
@@ -65,6 +66,7 @@ class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: Tra
   var hiddenEventCount = 0
   var newTurtles = false
   var codeLines: Vector[String] = _
+  var vmRunning = false
 
   val currEvtVec = new HashMap[String, MethodEvent]
 
@@ -87,8 +89,8 @@ def main(args: Array[String]) {
 """
 
   def stop() {
-    if (currThread != null) {
-      traceListener.onEnd()
+    traceListener.onEnd()
+    if (vmRunning) {
       currThread.virtualMachine.exit(1)
     }
   }
@@ -113,19 +115,36 @@ def main(args: Array[String]) {
 
   def launchVM() = {
     val conns = Bootstrap.virtualMachineManager.allConnectors
-    val connector = conns.find(_.name.equals("com.sun.jdi.CommandLineLaunch")).get.asInstanceOf[LaunchingConnector]
+    val connector = conns.find(_.name.equals("com.sun.jdi.RawCommandLineLaunch")).get.asInstanceOf[LaunchingConnector]
 
     // set connector arguments
     val connArgs = connector.defaultArguments()
-    val mArgs = connArgs.get("main")
-    val opts = connArgs.get("options")
-    var optionValue = s"""-classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" """
-
-    if (mArgs == null)
+    val command = connArgs.get("command")
+    if (command == null)
       throw new Error("Bad launching connector")
+    
+    val port = 8001 + builtins.random(1000)
 
-    mArgs.setValue("Wrapper") // assign args to main field
-    opts.setValue(optionValue) //assign args to options field
+    val cmdLine = if (System.getProperty("os.name").contains("Windows"))
+      s"""-Xrunjdwp:transport=dt_shmem,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" -client -Xms32m -Xmx768m -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled Wrapper"""
+    else
+      s"""-Xrunjdwp:transport=dt_socket,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" -client -Xms32m -Xmx768m -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled Wrapper"""
+
+    val javaHome = System.getProperty("java.home")
+    val javaExec =
+      if (new File(javaHome + "/bin/javaw.exe").exists) {
+        javaHome + "/bin/javaw"
+      }
+      else {
+        javaHome + "/bin/java"
+      }
+
+    command.setValue(s""""$javaExec" $cmdLine""")
+
+//    println(s"command: $command")
+
+    val address = connArgs.get("address")
+    address.setValue(s"127.0.0.1:$port")
 
     val vm = connector.launch(connArgs)
     vm
@@ -139,7 +158,6 @@ def main(args: Array[String]) {
     vm.allThreads.find(_.name == name).getOrElse(null)
 
   def trace(code: String) = {
-    stop()
     notSupported find { code.contains(_) } match {
       case Some(w) => println(s"Tracing not supported for programs with $w")
       case None    => realTrace(code)
@@ -212,16 +230,17 @@ def main(args: Array[String]) {
                 }
 
               case vmDcEvt: VMDisconnectEvent =>
-                currThread = null
-                traceListener.onEnd()
+                vmRunning = false
+                stop()
                 println("VM Disconnected"); break
 
               case vmStartEvt: VMStartEvent =>
+                vmRunning = true
                 println("VM Started")
 
               case vmDeathEvt: VMDeathEvent =>
-                currThread = null
-                traceListener.onEnd()
+                vmRunning = false
+                stop()
                 println("VM Dead")
 
               case _ =>
@@ -233,8 +252,10 @@ def main(args: Array[String]) {
       }
     }
     catch {
-      case t: Throwable => System.err.println(s"[Exception] -- ${t.getMessage}")
-      t.printStackTrace()
+      case t: Throwable =>
+        System.err.println(s"[Exception] -- ${t.getMessage}")
+        vmRunning = false
+        stop()
     }
   }
 
@@ -257,7 +278,9 @@ def main(args: Array[String]) {
       currEvtVec.remove(currThread.name)
   }
 
-  def showHiddenEventMark() {
+  val Log = Logger.getLogger("Trace")
+  def handleHiddenEvent(desc: String) {
+    //    Log.info(desc)
     hiddenEventCount += 1
     if (hiddenEventCount % 30 == 0) {
       print(".")
@@ -267,37 +290,38 @@ def main(args: Array[String]) {
     }
   }
 
-  def targetToString(frameVal: Value) = {
-    if (frameVal.isInstanceOf[ObjectReference] &&
-      !frameVal.isInstanceOf[StringReference] &&
-      !frameVal.isInstanceOf[ArrayReference] &&
-      !newTurtles) {
-      val objRef = frameVal.asInstanceOf[ObjectReference]
-      val mthd = objRef.referenceType.methodsByName("toString").find(_.argumentTypes.size == 0).get
-
-      evtReqs.foreach(_.disable)
-      try {
-        //        println(s"Invoking toString for $frameVal")
-        val rtrndValue = objRef.invokeMethod(currThread, mthd, new java.util.ArrayList, 0)
-        //        println(s"toString done: $rtrndValue")
-        rtrndValue.asInstanceOf[StringReference].value()
-      }
-      catch {
-        case inv: InvocationException =>
-          println(s"error0 in invokeMethod: ${inv.exception}")
-          frameVal.toString
-        case inv: Throwable =>
-          println(s"error in invokeMethod for $mthd: ${inv.getMessage}")
-          frameVal.toString
-      }
-      finally {
-        evtReqs.foreach(_.enable)
-      }
-    }
-    else {
-      frameVal.toString
-    }
-  }
+  def targetToString(frameVal: Value) = localToString(frameVal)
+  //  {
+  //    if (frameVal.isInstanceOf[ObjectReference] &&
+  //      !frameVal.isInstanceOf[StringReference] &&
+  //      !frameVal.isInstanceOf[ArrayReference] &&
+  //      !newTurtles) {
+  //      val objRef = frameVal.asInstanceOf[ObjectReference]
+  //      val mthd = objRef.referenceType.methodsByName("toString").find(_.argumentTypes.size == 0).get
+  //
+  //      evtReqs.foreach(_.disable)
+  //      try {
+  //        //        println(s"Invoking toString for $frameVal")
+  //        val rtrndValue = objRef.invokeMethod(currThread, mthd, new java.util.ArrayList, 0)
+  //        //        println(s"toString done: $rtrndValue")
+  //        rtrndValue.asInstanceOf[StringReference].value()
+  //      }
+  //      catch {
+  //        case inv: InvocationException =>
+  //          println(s"error0 in invokeMethod: ${inv.exception}")
+  //          frameVal.toString
+  //        case inv: Throwable =>
+  //          println(s"error in invokeMethod for $mthd: ${inv.getMessage}")
+  //          frameVal.toString
+  //      }
+  //      finally {
+  //        evtReqs.foreach(_.enable)
+  //      }
+  //    }
+  //    else {
+  //      frameVal.toString
+  //    }
+  //  }
 
   def localToString(frameVal: Value) = String.valueOf(frameVal)
 
@@ -347,10 +371,9 @@ def main(args: Array[String]) {
       tracingGUI.addEvent(newEvt, ret)
     }
     else {
-      val desc = s"[Method Enter] ${methodEnterEvt.method.name}${methodArgs(localToString)}"
+      val desc = s"[Method Enter] ${methodName} -- ${methodEnterEvt.method.signature} -- ${methodEnterEvt.method.declaringType}"
       newEvt.entry = desc
-      showHiddenEventMark()
-      //      println(desc)
+      handleHiddenEvent(desc)
     }
 
     updateCurrentMethodEvent(Some(newEvt))
@@ -381,10 +404,9 @@ def main(args: Array[String]) {
       }
       else {
         ce.returnVal = retValStr
-        val desc = s"[Method Exit] ${methodName}(return value: ${ce.returnVal})"
+        val desc = s"[Method Exit] ${methodName} -- ${methodExitEvt.method.signature} -- ${methodExitEvt.method.declaringType}"
         ce.exit = desc
-        showHiddenEventMark()
-        //        println(desc)
+        handleHiddenEvent(desc)
       }
       updateCurrentMethodEvent(ce.parent)
     }
