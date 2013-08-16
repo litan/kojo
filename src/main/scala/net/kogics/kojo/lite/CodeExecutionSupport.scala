@@ -576,7 +576,7 @@ class CodeExecutionSupport(
     codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
   }
 
-  var traceRunning = false
+  @volatile var traceRunning = false
   val traceListener = new trace.TraceListener {
     def onStart() {
       enableRunButton(false)
