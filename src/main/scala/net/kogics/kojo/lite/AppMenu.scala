@@ -390,6 +390,7 @@ trait AppMenu { self: Main.type =>
                <li>Vibha Pant</li>
                <li>Anusha Pant</li>
                <li>Nikhil Pant</li>
+               <li>Sami Jaber</li>
                <li>Jerzy Redlarski</li>
                <li>Saurabh Kapoor</li>
                <li>Mushtaq Ahmed</li>
@@ -413,6 +414,7 @@ trait AppMenu { self: Main.type =>
               <li>JLaTeXMath (http://forge.scilab.org/index.php/p/jlatexmath/) to display LaTeX commands</li>
               <li>JLayer (http://www.javazoom.net/javalayer/javalayer.html) to play MP3 files</li>
               <li>Table Layout (https://java.net/projects/tablelayout) for Arithmetic Aerobics</li>
+              <li>Apache Commons Compress (http://commons.apache.org/proper/commons-compress/) for jar file processing</li>
               <li>The Netbeans Platform (http://www.netbeans.org) for some Script Editor Icons</li>
               <li>The Scratch Project (http://scratch.mit.edu) for some Media files</li>
               </ul>
