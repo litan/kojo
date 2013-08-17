@@ -19,10 +19,10 @@ import java.net.URLDecoder
 
 import scala.collection.mutable.ListBuffer
 
-import net.kogics.kojo.util.Utils
+import net.kogics.kojo.util.ZipUtils
 
 object DevelMain extends StubMain with RmiMultiInstance {
- val classpath = {
+  val classpath = {
     val urls = Thread.currentThread.getContextClassLoader match {
       case cl: java.net.URLClassLoader => cl.getURLs.toList
       case _                           => sys.error("classloader is not a URLClassLoader")
@@ -30,18 +30,23 @@ object DevelMain extends StubMain with RmiMultiInstance {
     val classp = urls map { URLDecoder decode _.getPath }
     // simulate stuff that happens with webstart
     val lb = new ListBuffer[String]
+    val t0 = System.currentTimeMillis
     classp.foreach { fp =>
       val cpFile = new File(fp)
       if (cpFile.isFile()) {
         val tempFile = File.createTempFile("kojolite-", ".jar");
-        Utils.copyFile(cpFile, tempFile);
+        //        System.out.println(s"processing: ${cpFile.getName}")
+        ZipUtils.copyJar(cpFile, tempFile, Set("META-INF/MANIFEST.MF", "META-INF/LALIT.SF", "META-INF/LALIT.RSA"))
+        //        Utils.copyFile(cpFile, tempFile);
         tempFile.deleteOnExit()
-        lb += tempFile.getAbsolutePath()
+        lb += tempFile.getAbsolutePath
       }
       else {
         lb += fp
       }
     }
+    val t1 = System.currentTimeMillis
+    println(s"Time taken: ${(t1 - t0) / 1000.0} seconds")
     createCp(lb.toList)
   }
 }

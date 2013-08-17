@@ -27,7 +27,7 @@ import scala.collection.mutable.ListBuffer
 
 import com.sun.jnlp.JNLPClassLoader
 
-import net.kogics.kojo.util.Utils
+import net.kogics.kojo.util.ZipUtils
 
 object WebstartMain extends StubMain with RmiMultiInstance {
   val classpath: String = {
@@ -35,10 +35,14 @@ object WebstartMain extends StubMain with RmiMultiInstance {
       val jnlpLoader = JNLPClassLoader.getInstance
       val jds = jnlpLoader.getLaunchDesc.getResources.getEagerOrAllJarDescs(true)
       val lb = new ListBuffer[String]
+      println("Processing Kojo jars...")
+      val t0 = System.currentTimeMillis
       jds.foreach { jd =>
         val jarFile = jnlpLoader.getJarFile(jd.getLocation)
         processJar(jarFile, lb)
       }
+      val t1 = System.currentTimeMillis
+      println(s"Time taken to process jars: ${(t1 - t0) / 1000.0} seconds")
       createCp(lb.toList)
     }
     catch {
@@ -52,7 +56,8 @@ object WebstartMain extends StubMain with RmiMultiInstance {
   def processJar(jarFile: JarFile, lb: ListBuffer[String]) {
     val tempFile = File.createTempFile("kojolite-", ".jar");
     // need to use symlinks on jdk1.7 
-    Utils.copyFile(new File(jarFile.getName()), tempFile);
+    //    Utils.copyFile(new File(jarFile.getName()), tempFile);
+    ZipUtils.copyJar(new File(jarFile.getName()), tempFile, Set("META-INF/MANIFEST.MF", "META-INF/LALIT.SF", "META-INF/LALIT.RSA"))
     tempFile.deleteOnExit()
     lb += tempFile.getAbsolutePath()
   }
