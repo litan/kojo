@@ -34,8 +34,10 @@ import scala.util.control.Breaks.breakable
 import scala.util.matching.Regex
 
 import com.sun.jdi.AbsentInformationException
+import com.sun.jdi.ArrayReference
 import com.sun.jdi.Bootstrap
 import com.sun.jdi.IntegerValue
+import com.sun.jdi.InvocationException
 import com.sun.jdi.LocalVariable
 import com.sun.jdi.ObjectReference
 import com.sun.jdi.StackFrame
@@ -122,7 +124,7 @@ def main(args: Array[String]) {
     val command = connArgs.get("command")
     if (command == null)
       throw new Error("Bad launching connector")
-    
+
     val port = 8001 + builtins.random(1000)
 
     val cmdLine = if (System.getProperty("os.name").contains("Windows"))
@@ -141,7 +143,7 @@ def main(args: Array[String]) {
 
     command.setValue(s""""$javaExec" $cmdLine""")
 
-//    println(s"command: $command")
+    //    println(s"command: $command")
 
     val address = connArgs.get("address")
     address.setValue(s"127.0.0.1:$port")
@@ -290,38 +292,37 @@ def main(args: Array[String]) {
     }
   }
 
-  def targetToString(frameVal: Value) = localToString(frameVal)
-  //  {
-  //    if (frameVal.isInstanceOf[ObjectReference] &&
-  //      !frameVal.isInstanceOf[StringReference] &&
-  //      !frameVal.isInstanceOf[ArrayReference] &&
-  //      !newTurtles) {
-  //      val objRef = frameVal.asInstanceOf[ObjectReference]
-  //      val mthd = objRef.referenceType.methodsByName("toString").find(_.argumentTypes.size == 0).get
-  //
-  //      evtReqs.foreach(_.disable)
-  //      try {
-  //        //        println(s"Invoking toString for $frameVal")
-  //        val rtrndValue = objRef.invokeMethod(currThread, mthd, new java.util.ArrayList, 0)
-  //        //        println(s"toString done: $rtrndValue")
-  //        rtrndValue.asInstanceOf[StringReference].value()
-  //      }
-  //      catch {
-  //        case inv: InvocationException =>
-  //          println(s"error0 in invokeMethod: ${inv.exception}")
-  //          frameVal.toString
-  //        case inv: Throwable =>
-  //          println(s"error in invokeMethod for $mthd: ${inv.getMessage}")
-  //          frameVal.toString
-  //      }
-  //      finally {
-  //        evtReqs.foreach(_.enable)
-  //      }
-  //    }
-  //    else {
-  //      frameVal.toString
-  //    }
-  //  }
+  def targetToString(frameVal: Value) = {
+    if (frameVal.isInstanceOf[ObjectReference] &&
+      !frameVal.isInstanceOf[StringReference] &&
+      !frameVal.isInstanceOf[ArrayReference] &&
+      !newTurtles) {
+      val objRef = frameVal.asInstanceOf[ObjectReference]
+      val mthd = objRef.referenceType.methodsByName("toString").find(_.argumentTypes.size == 0).get
+
+      evtReqs.foreach(_.disable)
+      try {
+        //        println(s"Invoking toString for $frameVal")
+        val rtrndValue = objRef.invokeMethod(currThread, mthd, new java.util.ArrayList, 0)
+        //        println(s"toString done: $rtrndValue")
+        rtrndValue.asInstanceOf[StringReference].value()
+      }
+      catch {
+        case inv: InvocationException =>
+          println(s"error0 in invokeMethod: ${inv.exception}")
+          frameVal.toString
+        case inv: Throwable =>
+          println(s"error in invokeMethod for $mthd: ${inv.getMessage}")
+          frameVal.toString
+      }
+      finally {
+        evtReqs.foreach(_.enable)
+      }
+    }
+    else {
+      frameVal.toString
+    }
+  }
 
   def localToString(frameVal: Value) = String.valueOf(frameVal)
 
