@@ -86,18 +86,14 @@ object ZipUtils {
       val entry = entries.nextElement
       if (!filter.contains(entry.getName)) {
         destZip.putArchiveEntry(entry)
-        if (entry.getSize > 0) {
-          val entryIn = srcZip.getRawInputStream(entry)
-          val buffer = new Array[Byte](1024)
-          var rcount = entryIn.read(buffer)
-          //            var read = 0
-          while (rcount != -1) {
-            //                read += rcount
-            destZip.writeRaw(buffer, 0, rcount)
-            rcount = entryIn.read(buffer)
-          }
-          entryIn.close()
+        val entryIn = srcZip.getRawInputStream(entry)
+        val buffer = new Array[Byte](1024)
+        var rcount = entryIn.read(buffer)
+        while (rcount != -1) {
+          destZip.writeRaw(buffer, 0, rcount)
+          rcount = entryIn.read(buffer)
         }
+        entryIn.close()
         destZip.closeArchiveEntry()
       }
     }
