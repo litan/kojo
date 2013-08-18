@@ -30,6 +30,7 @@ object DevelMain extends StubMain with RmiMultiInstance {
     val classp = urls map { URLDecoder decode _.getPath }
     // simulate stuff that happens with webstart
     val lb = new ListBuffer[String]
+    println("Processing Kojo jars...")
     val t0 = System.currentTimeMillis
     classp.foreach { fp =>
       val cpFile = new File(fp)
