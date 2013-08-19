@@ -57,6 +57,7 @@ import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
 
 import Typeclasses.mkIdentity
+import Typeclasses.some
 import edu.umd.cs.piccolo.event.PInputEvent
 import edu.umd.cs.piccolo.nodes.PText
 
@@ -386,10 +387,10 @@ object Utils {
     loadResource2(s"/i18n/initk/${System.getProperty("user.language")}.${mode.code}.kojo")
   }
 
-  lazy val initCode = collection.mutable.Map[CodingMode, Option[String]]()
+  lazy val initCodeCache = collection.mutable.Map[CodingMode, Option[String]]()
 
-  def kojoInitCode(mode: CodingMode): Option[String] =
-    initCode.getOrElseUpdate(
+  def initkCode(mode: CodingMode): Option[String] =
+    initCodeCache.getOrElseUpdate(
       mode,
       (codeFromScripts(modeFilter(initScripts, mode), initScriptDir) |+| langInit(mode)) map stripCR
     )
@@ -428,6 +429,15 @@ object Utils {
         "// File: %s\n%s\n" format (file, readStream(new FileInputStream(scriptDir + File.separatorChar + file)))
       }.mkString("\n")
     )
+  }
+
+  def initCode(mode: CodingMode): Option[String] = {
+    if (isScalaTestAvailable) {
+      some(scalaTestHelperCode) |+| initkCode(mode)
+    }
+    else {
+      initkCode(mode)
+    }
   }
 
   def runAsyncQueued(fn: => Unit) {

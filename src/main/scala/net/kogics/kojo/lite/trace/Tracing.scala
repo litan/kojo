@@ -54,40 +54,63 @@ import com.sun.jdi.event.VMDisconnectEvent
 import com.sun.jdi.event.VMStartEvent
 import com.sun.jdi.request.EventRequest
 
+import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.Turtle
+import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.util.Utils
+import net.kogics.kojo.xscala.CompilerOutputHandler
 
-class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: TraceListener) {
-  var currThread: ThreadReference = _
+class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
+  @volatile var currThread: ThreadReference = _
   val tmpdir = System.getProperty("java.io.tmpdir")
   val settings = makeSettings()
   val turtles = new HashMap[Long, Turtle]
-  var evtReqs: Vector[EventRequest] = _
-  var hiddenEventCount = 0
-  var newTurtles = false
-  var codeLines: Vector[String] = _
-  var vmRunning = false
+  @volatile var evtReqs: Vector[EventRequest] = _
+  @volatile var hiddenEventCount = 0
+  @volatile var newTurtles = false
+  @volatile var codeLines: Vector[String] = _
+  @volatile var vmRunning = false
 
   val currEvtVec = new HashMap[String, MethodEvent]
+
+  val listener = new CompilerOutputHandler(runCtx)
 
   val reporter = new Reporter {
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
       severity.count += 1
-      println(msg)
+      lazy val line = position.line - lineNumOffset
+      lazy val offset = position.startOrPoint - offsetDelta
+      severity match {
+        case ERROR if position.isDefined =>
+          listener.error(msg, line, position.column, offset, position.lineContent)
+        case WARNING if position.isDefined =>
+          listener.warning(msg, line, position.column)
+        case INFO if position.isDefined =>
+          listener.info(msg, line, position.column)
+        case _ =>
+          listener.message(msg)
+      }
     }
   }
   val compiler = new Global(settings, reporter)
   val tracingGUI = new TracingGUI(scriptEditor, builtins.kojoCtx)
-  val lineNumOffset = 3
 
-  val wrapperCode = """object Wrapper {
+  val prefix0 = """object Wrapper {
 import net.kogics.kojo.lite.trace.TracingBuiltins._
 def main(args: Array[String]) { 
-    %s
+"""
+
+  val prefix = "%s%s\n" format (prefix0, Utils.initCode(TwMode).getOrElse(""))
+  val prefixLines = prefix.lines.size
+  @volatile var includedLines = 0
+  def lineNumOffset = prefixLines + includedLines
+  @volatile var offsetDelta = 0
+
+  val codeTemplate = """%s%s
   }
-} 
+}
 """
 
   def stop() {
@@ -97,13 +120,20 @@ def main(args: Array[String]) {
     }
   }
 
-  def compile(code0: String) = {
-    val code = wrapperCode format code0
+  def compile(code00: String) = {
+    val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
+    includedLines = inclLines
+    offsetDelta = prefix.length + includedChars
+    val code = codeTemplate format (prefix, code0)
+
+    //    println(s"Tracing Code:\n$code\n---")
+
     val codeFile = new BatchSourceFile("scripteditor", code)
     val run = new compiler.Run
     reporter.reset
     run.compileSources(List(codeFile))
     if (reporter.hasErrors) {
+      runCtx.onCompileError()
       throw new RuntimeException("Trace Compilation Error. Ensure that your program compiles correctly before trying to trace it.")
     }
   }
@@ -154,7 +184,7 @@ def main(args: Array[String]) {
 
   val ignoreMethods = Set("main", "<init>", "<clinit>", "$init$", "repeat", "repeatWhile", "runInBackground")
   val turtleMethods = Set("setBackground", "color", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "circle", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
-  val notSupported = Set("Picture", "#include", "PicShape")
+  val notSupported = Set("Picture", "PicShape")
 
   def getThread(vm: VirtualMachine, name: String): ThreadReference =
     vm.allThreads.find(_.name == name).getOrElse(null)
@@ -177,17 +207,13 @@ def main(args: Array[String]) {
       codeLines = code.lines.toVector
 
       compile(code)
-      //Connect to target VM
       val vm = launchVM()
       println("Tracing started...")
-
-      //Create Event Requests
       val excludes = Array("java.*", "javax.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*")
       currThread = getThread(vm, "main")
       createRequests(excludes, vm, currThread)
       watchThreadStarts
 
-      //Iterate through Events
       val evtQueue = vm.eventQueue
       vm.resume
 
@@ -255,7 +281,7 @@ def main(args: Array[String]) {
     }
     catch {
       case t: Throwable =>
-        System.err.println(s"[Exception] -- ${t.getMessage}")
+        System.err.println(s"[Problem] -- ${t.getMessage}")
         vmRunning = false
         stop()
     }
@@ -340,6 +366,12 @@ def main(args: Array[String]) {
     catch {
       case e: AbsentInformationException => "There is an AbsentInformationException"
     }
+
+    //    println(s"Prefix lines: ${prefixLines}")
+    //    println(s"Included lines: ${includedLines}")
+    //    println(s"Line Num Offset: ${lineNumOffset}")
+    //    println(s"Line Num: ${methodEnterEvt.location.lineNumber}")
+    //    println(s"Caller Line Num: ${currThread.frame(1).location.lineNumber}")
 
     val methodName = methodEnterEvt.method.name
     val srcName = try { methodEnterEvt.location.sourceName } catch { case e: Throwable => "N/A" }
@@ -490,7 +522,7 @@ def main(args: Array[String]) {
         val (a, b) = (stkfrm.getValue(localArgs(0)).toString, stkfrm.getValue(localArgs(1)).toString)
         turtle.setCostumes(a, b)
       case "setBackground" =>
-        var c = getColor(stkfrm, localArgs)
+        val c = getColor(stkfrm, localArgs)
         TSCanvas.tCanvas.setCanvasBackground(c)
       case "axesOn" =>
         TSCanvas.axesOn
@@ -524,18 +556,18 @@ def main(args: Array[String]) {
   }
 
   def getColor(stkfrm: StackFrame, localArgs: List[LocalVariable]): Color = {
-    var colorVal = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
+    val colorVal = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
 
-    var mthd = colorVal.referenceType.methodsByName("toString")(0)
-    var rtrndValue = colorVal.invokeMethod(currThread, mthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
-    var str = rtrndValue.asInstanceOf[StringReference].value()
-    var pattern = new Regex("\\d{1,3}")
+    val mthd = colorVal.referenceType.methodsByName("toString")(0)
+    val rtrndValue = colorVal.invokeMethod(currThread, mthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val str = rtrndValue.asInstanceOf[StringReference].value()
+    val pattern = new Regex("\\d{1,3}")
     var rgb = Vector[Int]()
     (pattern findAllIn str).foreach(c => rgb = rgb :+ c.toInt)
 
-    var alphaMthd = colorVal.referenceType.methodsByName("getAlpha")(0)
-    var alphaValue = colorVal.invokeMethod(currThread, alphaMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
-    var alpha = alphaValue.asInstanceOf[IntegerValue].value
+    val alphaMthd = colorVal.referenceType.methodsByName("getAlpha")(0)
+    val alphaValue = colorVal.invokeMethod(currThread, alphaMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val alpha = alphaValue.asInstanceOf[IntegerValue].value
 
     new Color(rgb(0), rgb(1), rgb(2), alpha)
   }
