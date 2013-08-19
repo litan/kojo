@@ -512,7 +512,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     }
 
     def compilerInitCode: Option[String] = {
-      some(cmodeInit) |+| initCode(mode)
+      some(cmodeInit) |+| Utils.initCode(mode)
     }
 
     def loadCompiler() {
@@ -536,18 +536,9 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     }
 
     def loadInitScripts(mode: CodingMode) {
-      initCode(mode).foreach { code =>
+      Utils.initCode(mode).foreach { code =>
         println("\nRunning initk code...")
         runCode(code, false)
-      }
-    }
-
-    def initCode(mode: CodingMode): Option[String] = {
-      if (Utils.isScalaTestAvailable) {
-        some(Utils.scalaTestHelperCode) |+| Utils.kojoInitCode(mode)
-      }
-      else {
-        Utils.kojoInitCode(mode)
       }
     }
 

@@ -273,9 +273,8 @@ class CodeExecutionSupport(
     }
     activateEditor()
   }
-
-  def makeCodeRunner: core.CodeRunner = {
-    val codeRunner = new xscala.ScalaCodeRunner(new RunContext {
+  
+  lazy val runContext = new RunContext {
 
       @volatile var suppressInterpOutput = false
 
@@ -430,7 +429,10 @@ class CodeExecutionSupport(
           }
         }
       }
-    })
+    }
+
+  def makeCodeRunner: core.CodeRunner = {
+    val codeRunner = new xscala.ScalaCodeRunner(runContext)
     codeRunner
   }
 
@@ -591,7 +593,7 @@ class CodeExecutionSupport(
     }
   }
 
-  lazy val tracer = new trace.Tracing(scriptEditor, builtins, traceListener)
+  lazy val tracer = new trace.Tracing(scriptEditor, builtins, traceListener, runContext)
 
   def traceCode() {
     val code2run = codeToRun
