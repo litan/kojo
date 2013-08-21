@@ -113,6 +113,7 @@ object TracingBuiltins {
   def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
   /* turtle creation */
 
+  def newTurtle(): Turtle = newTurtle(0, 0)
   def newTurtle(x: Double, y: Double): core.Turtle = {
     newTurtle(x, y, "/images/turtle32.png")
   }
@@ -126,4 +127,14 @@ object TracingBuiltins {
   }
 
   def runInBackground(code: => Unit) { code }
+  
+  def isScratchPad = false
+  def setEditorTabSize(n: Int) {}
+  def clearOutput() {}
+  def setBackgroundV(c1: Color, c2: Color) {}
+  def readln(prompt: String): String = "Unsupported"
+  def random(upperBound: Int) = Random.nextInt(upperBound)
+  def randomDouble(upperBound: Int) = Random.nextDouble * upperBound
+  def addCodeTemplates(lang: String, templates: Map[String, String]) {}
+  def addHelpContent(lang: String, content: Map[String, String]) {}
 }
