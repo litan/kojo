@@ -40,12 +40,15 @@ import com.sun.jdi.IntegerValue
 import com.sun.jdi.InvocationException
 import com.sun.jdi.LocalVariable
 import com.sun.jdi.ObjectReference
+import com.sun.jdi.ReferenceType
 import com.sun.jdi.StackFrame
 import com.sun.jdi.StringReference
 import com.sun.jdi.ThreadReference
 import com.sun.jdi.Value
 import com.sun.jdi.VirtualMachine
 import com.sun.jdi.connect.LaunchingConnector
+import com.sun.jdi.event.BreakpointEvent
+import com.sun.jdi.event.ClassPrepareEvent
 import com.sun.jdi.event.MethodEntryEvent
 import com.sun.jdi.event.MethodExitEvent
 import com.sun.jdi.event.ThreadStartEvent
@@ -99,7 +102,9 @@ class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: Tra
 
   val prefix0 = """object Wrapper {
 import net.kogics.kojo.lite.trace.TracingBuiltins._
-def main(args: Array[String]) { 
+import turtle0._    
+newTurtle(200, 200)    
+def _main() { 
 """
 
   val prefix = "%s%s\n" format (prefix0, Utils.initCode(TwMode).getOrElse(""))
@@ -109,6 +114,9 @@ def main(args: Array[String]) {
   @volatile var offsetDelta = 0
 
   val codeTemplate = """%s%s
+  }
+def main(args: Array[String]) {
+    _main()
   }
 }
 """
@@ -134,6 +142,7 @@ def main(args: Array[String]) {
     run.compileSources(List(codeFile))
     if (reporter.hasErrors) {
       runCtx.onCompileError()
+      // throw exception to stop trace
       throw new RuntimeException("Trace Compilation Error. Ensure that your program compiles correctly before trying to trace it.")
     }
   }
@@ -182,9 +191,9 @@ def main(args: Array[String]) {
     vm
   }
 
-  val ignoreMethods = Set("main", "<init>", "<clinit>", "$init$", "repeat", "repeatWhile", "runInBackground")
-  val turtleMethods = Set("setBackground", "color", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "circle", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
-  val notSupported = Set("Picture", "PicShape")
+  val ignoreMethods = Set("main", "_main", "<init>", "<clinit>", "$init$", "repeat", "repeatWhile", "runInBackground")
+  val turtleMethods = Set("setBackground", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "circle", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
+  val notSupported = Set("Picture", "PicShape", "animate")
 
   def getThread(vm: VirtualMachine, name: String): ThreadReference =
     vm.allThreads.find(_.name == name).getOrElse(null)
@@ -210,12 +219,8 @@ def main(args: Array[String]) {
       val vm = launchVM()
       println("Tracing started...")
       val excludes = Array("java.*", "javax.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*")
-      currThread = getThread(vm, "main")
-      createRequests(excludes, vm, currThread)
-      watchThreadStarts
 
       val evtQueue = vm.eventQueue
-      vm.resume
 
       tracingGUI.reset
 
@@ -228,7 +233,7 @@ def main(args: Array[String]) {
               case threadStartEvt: ThreadStartEvent =>
                 val name = threadStartEvt.thread.name
                 if (name.contains("Thread-")) {
-                  createRequests(excludes, vm, threadStartEvt.thread)
+                  createMethodRequests(excludes, vm, threadStartEvt.thread)
                 }
 
               case methodEnterEvt: MethodEntryEvent =>
@@ -239,8 +244,8 @@ def main(args: Array[String]) {
                   }
                   catch {
                     case t: Throwable =>
-                      println(t.printStackTrace())
-                    //println(s"[Exception] [Method Enter] [${t.getClass()}] ${methodEnterEvt.method.name} -- ${t.getMessage}")
+                      println(s"[Exception] [Method Enter] ${methodEnterEvt.method.name} -- ${t.getMessage}")
+                      t.printStackTrace()
                   }
                 }
 
@@ -252,10 +257,21 @@ def main(args: Array[String]) {
                   }
                   catch {
                     case t: Throwable =>
-                      println(t.printStackTrace())
-                    //println(s"[Exception] [Method Exit] [${t.getClass()}] ${methodExitEvt.method.name} -- ${t.getMessage}")
+                      println(s"[Exception] [Method Exit] ${methodExitEvt.method.name} -- ${t.getMessage}")
+                      t.printStackTrace()
                   }
                 }
+
+              case classPrepare: ClassPrepareEvent =>
+                if (classPrepare.referenceType.name == "Wrapper$") {
+                  classPrepare.request.disable()
+                  createBreakpointRequest(classPrepare.referenceType, vm, currThread)
+                }
+
+              case bkpt: BreakpointEvent =>
+                bkpt.request.disable()
+                createMethodRequests(excludes, vm, currThread)
+              //                watchThreadStarts()
 
               case vmDcEvt: VMDisconnectEvent =>
                 vmRunning = false
@@ -265,6 +281,8 @@ def main(args: Array[String]) {
               case vmStartEvt: VMStartEvent =>
                 vmRunning = true
                 println("VM Started")
+                currThread = vmStartEvt.thread
+                createClassPrepareRequest(excludes, vm)
 
               case vmDeathEvt: VMDeathEvent =>
                 vmRunning = false
@@ -282,6 +300,7 @@ def main(args: Array[String]) {
     catch {
       case t: Throwable =>
         System.err.println(s"[Problem] -- ${t.getMessage}")
+        t.printStackTrace()
         vmRunning = false
         stop()
     }
@@ -321,8 +340,7 @@ def main(args: Array[String]) {
   def targetToString(frameVal: Value) = {
     if (frameVal.isInstanceOf[ObjectReference] &&
       !frameVal.isInstanceOf[StringReference] &&
-      !frameVal.isInstanceOf[ArrayReference] &&
-      !newTurtles) {
+      !frameVal.isInstanceOf[ArrayReference]) {
       val objRef = frameVal.asInstanceOf[ObjectReference]
       val mthd = objRef.referenceType.methodsByName("toString").find(_.argumentTypes.size == 0).get
 
@@ -468,7 +486,7 @@ def main(args: Array[String]) {
         if (localArgs.length == 1) {
           val step = stkfrm.getValue(localArgs(0)).toString.toDouble
           turtle.forward(step)
-          ret = Some(turtle.lastLine)
+          ret = turtle.lastLine
         }
       case "turn" =>
         val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
@@ -483,7 +501,8 @@ def main(args: Array[String]) {
         turtle.jumpTo(x, y)
       case "setCostume" =>
         val str = stkfrm.getValue(localArgs(0)).toString
-        turtle.setCostume(str)
+        println(str)
+        turtle.setCostume(str.substring(1, str.length - 1))
       case "setPosition" =>
         val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
         turtle.setPosition(x, y)
@@ -518,9 +537,9 @@ def main(args: Array[String]) {
       case "scaleCostume" =>
         val a = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.scaleCostume(a)
-      case "setCostumes" =>
-        val (a, b) = (stkfrm.getValue(localArgs(0)).toString, stkfrm.getValue(localArgs(1)).toString)
-        turtle.setCostumes(a, b)
+      //      case "setCostumes" =>
+      //        val costumes = stkfrm.getValue(localArgs(0))
+      //        turtle.setCostumes(costumes)
       case "setBackground" =>
         val c = getColor(stkfrm, localArgs)
         TSCanvas.tCanvas.setCanvasBackground(c)
@@ -535,7 +554,8 @@ def main(args: Array[String]) {
       case "zoom" =>
         val (x, y, z) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(0)).toString.toDouble)
         TSCanvas.zoom(x, y, z)
-      case _ =>
+      case m @ _ =>
+        println(s"**TODO** - Unimplemented Turtle method - $m")
     }
     ret
   }
@@ -546,7 +566,7 @@ def main(args: Array[String]) {
         import builtins.TSCanvas
         if (localArgs.length == 3) {
           val (x, y, str) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(2)).toString)
-          val newTurtle = TSCanvas.newTurtle(x, y, str.slice(1, str.length - 1))
+          val newTurtle = TSCanvas.newTurtle(x, y, str.substring(1, str.length - 1))
           val ref = retVal.asInstanceOf[ObjectReference].uniqueID()
           turtles(ref) = newTurtle
         }
@@ -557,10 +577,7 @@ def main(args: Array[String]) {
 
   def getColor(stkfrm: StackFrame, localArgs: List[LocalVariable]): Color = {
     val colorVal = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
-
-    val mthd = colorVal.referenceType.methodsByName("toString")(0)
-    val rtrndValue = colorVal.invokeMethod(currThread, mthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
-    val str = rtrndValue.asInstanceOf[StringReference].value()
+    val str = targetToString(colorVal)
     val pattern = new Regex("\\d{1,3}")
     var rgb = Vector[Int]()
     (pattern findAllIn str).foreach(c => rgb = rgb :+ c.toInt)
@@ -576,28 +593,44 @@ def main(args: Array[String]) {
     val evtReqMgr = currThread.virtualMachine.eventRequestManager
 
     val thrdStartVal = evtReqMgr.createThreadStartRequest
-    thrdStartVal.setSuspendPolicy(EventRequest.SUSPEND_EVENT_THREAD)
+    thrdStartVal.setSuspendPolicy(EventRequest.SUSPEND_ALL)
     //thrdStartVal.addThreadFilter(mainThread)
     thrdStartVal.enable()
     evtReqs = evtReqs :+ thrdStartVal
   }
 
-  def createRequests(excludes: Array[String], vm: VirtualMachine, thread: ThreadReference) {
+  def createMethodRequests(excludes: Array[String], vm: VirtualMachine, thread: ThreadReference) {
     val evtReqMgr = vm.eventRequestManager
 
     val mthdEnterVal = evtReqMgr.createMethodEntryRequest
     excludes.foreach { mthdEnterVal.addClassExclusionFilter(_) }
     mthdEnterVal.addThreadFilter(thread)
-    mthdEnterVal.setSuspendPolicy(EventRequest.SUSPEND_EVENT_THREAD)
+    mthdEnterVal.setSuspendPolicy(EventRequest.SUSPEND_ALL)
     mthdEnterVal.enable()
     evtReqs = evtReqs :+ mthdEnterVal
 
     val mthdExitVal = evtReqMgr.createMethodExitRequest
     excludes.foreach { mthdExitVal.addClassExclusionFilter(_) }
     mthdExitVal.addThreadFilter(thread)
-    mthdExitVal.setSuspendPolicy(EventRequest.SUSPEND_EVENT_THREAD)
+    mthdExitVal.setSuspendPolicy(EventRequest.SUSPEND_ALL)
     mthdExitVal.enable()
     evtReqs = evtReqs :+ mthdExitVal
   }
 
+  def createClassPrepareRequest(excludes: Array[String], vm: VirtualMachine) {
+    val evtReqMgr = vm.eventRequestManager
+    val request = evtReqMgr.createClassPrepareRequest
+    excludes.foreach { request.addClassExclusionFilter(_) }
+    request.setSuspendPolicy(EventRequest.SUSPEND_ALL)
+    request.enable()
+  }
+
+  def createBreakpointRequest(wrapperType: ReferenceType, vm: VirtualMachine, thread: ThreadReference) {
+    val evtReqMgr = vm.eventRequestManager
+    val realMain = wrapperType.methodsByName("_main")(0)
+    val request = evtReqMgr.createBreakpointRequest(realMain.location)
+    request.addThreadFilter(thread)
+    request.setSuspendPolicy(EventRequest.SUSPEND_ALL)
+    request.enable()
+  }
 }

@@ -9,11 +9,9 @@ import java.awt.Paint
 import net.kogics.kojo.core.RichTurtleCommands
 import net.kogics.kojo.util.Utils
 
-object TracingBuiltins extends RichTurtleCommands {
+object TracingBuiltins {
 
-  //  lazy val kojoCtx = new NoOpKojoCtx
-  //  lazy val spriteCanvas = new SpriteCanvas(kojoCtx)
-  lazy val spriteCanvas = new NoOpSCanvas
+  val spriteCanvas = new NoOpSCanvas
 
   type Turtle = core.Turtle
   type Color = java.awt.Color
@@ -80,8 +78,8 @@ object TracingBuiltins extends RichTurtleCommands {
   val satMod = Utils.satMod _
   val britMod = Utils.britMod _
 
-  lazy val turtle0 = spriteCanvas.turtle0
-
+  val turtle0: core.Turtle = newTurtle(0.0, 0.0)
+  
   def playMp3Loop(mp3File: String) {
   }
 
@@ -90,27 +88,6 @@ object TracingBuiltins extends RichTurtleCommands {
   def Color(R: Int, B: Int, G: Int, a: Int): Color = new Color(R, B, G, a)
   def setBackground(c: Paint) {}
 
-  /* movement */
-  def savePosHe() {}
-  def restorePosHe() {}
-  def clear() {}
-  def cleari() {}
-  def invisible() {}
-  def forward(n: Double) {}
-  def forward(): Unit = forward(25)
-  def back(): Unit = back(25)
-  def circle(r: Double) {}
-  def turn(n: Double) {}
-  def home() {}
-  def jumpTo(x: Double, y: Double) {}
-  def moveTo(x: Double, y: Double) {}
-  def setPosition(x: Double, y: Double) {}
-  def setPenColor(color: Paint) {}
-  def setFillColor(color: Paint) {}
-  def setAnimationDelay(d: Long) {}
-  def setPenThickness(d: Double) {}
-  def penDown() {}
-  def penUp() {}
   def repeat(n: Int)(fn: => Unit) {
     var i = 0
     while (i < n) {
@@ -125,10 +102,7 @@ object TracingBuiltins extends RichTurtleCommands {
     }
   }
 
-  def changePosition(x: Double, y: Double) {}
-  def scaleCostume(a: Double) {}
-  def setCostumes(costumes: Vector[String]) {}
-
+  def cleari() {}
   def axesOn() {}
   def axesOff() {}
   def gridOn() {}
