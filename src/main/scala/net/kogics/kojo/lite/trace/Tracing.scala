@@ -101,9 +101,10 @@ class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: Tra
 
   val prefix0 = """object Wrapper {
 import net.kogics.kojo.lite.trace.TracingBuiltins._
-import turtle0._    
-newTurtle(200, 200)    
-def _main() { 
+import turtle0._
+newTurtle(200, 200)
+net.kogics.kojo.lite.i18n.LangInit()
+def _main() {
 """
 
   val prefix = "%s%s\n" format (prefix0, Utils.initCode(TwMode).getOrElse(""))
@@ -414,7 +415,7 @@ def main(args: Array[String]) {
       ret = runTurtleMethod(methodName, stkfrm, localArgs)
     }
 
-    if (srcName == "scripteditor" || (callerSrcName == "scripteditor" && callerLine.contains(methodName))) {
+    if ((srcName == "scripteditor" && lineNum > 0) || (callerSrcName == "scripteditor" && callerLine.contains(methodName))) {
       val desc = s"[Method Enter] ${methodEnterEvt.method.name}${methodArgs(targetToString)}"
       newEvt.entry = desc
       tracingGUI.addEvent(newEvt, ret)
@@ -442,7 +443,7 @@ def main(args: Array[String]) {
       val retValStr = localToString(retVal)
       ce.exitLineNum = lineNum
 
-      if (ce.sourceName == "scripteditor" ||
+      if ((ce.sourceName == "scripteditor" && lineNum > 0) ||
         (ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) &&
           retValStr != "<void value>" && retValStr != "null")) {
 
