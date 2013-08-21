@@ -35,6 +35,7 @@ import net.kogics.kojo.lite.action.FullScreenBaseAction
 import net.kogics.kojo.lite.action.FullScreenCanvasAction
 import net.kogics.kojo.lite.action.FullScreenOutputAction
 import net.kogics.kojo.lite.action.FullScreenSupport
+import net.kogics.kojo.lite.i18n.LangInit
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.util.Utils
 
@@ -47,13 +48,7 @@ import bibliothek.gui.dock.common.mode.ExtendedMode
 class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   val prefs = Preferences.userRoot().node("Kojolite-Prefs")
-
-  @volatile var _userLanguage = prefs.get("user.language", System.getProperty("user.language"))
-  if (_userLanguage != null && _userLanguage.trim != "") {
-    java.util.Locale.setDefault(new java.util.Locale(_userLanguage))
-    System.setProperty("user.language", _userLanguage)
-  }
-
+  @volatile var _userLanguage = LangInit.init(prefs)
   var topcs: TopCs = _
   var frame: JFrame = _
   var execSupport: CodeExecutionSupport = _
