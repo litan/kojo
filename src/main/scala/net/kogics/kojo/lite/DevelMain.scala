@@ -19,7 +19,7 @@ import java.net.URLDecoder
 
 import scala.collection.mutable.ListBuffer
 
-import net.kogics.kojo.util.ZipUtils
+import net.kogics.kojo.util.Utils
 
 object DevelMain extends StubMain with RmiMultiInstance {
   val classpath = {
@@ -36,9 +36,8 @@ object DevelMain extends StubMain with RmiMultiInstance {
       val cpFile = new File(fp)
       if (cpFile.isFile()) {
         val tempFile = File.createTempFile("kojolite-", ".jar");
-        //        System.out.println(s"processing: ${cpFile.getName}")
-        ZipUtils.copyJar(cpFile, tempFile, Set("META-INF/MANIFEST.MF", "META-INF/LALIT.SF", "META-INF/LALIT.RSA"))
-        //        Utils.copyFile(cpFile, tempFile);
+        Utils.copyFile(cpFile, tempFile);
+        //        ZipUtils.copyJar(cpFile, tempFile, Set("META-INF/MANIFEST.MF", "META-INF/LALIT.SF", "META-INF/LALIT.RSA"))
         tempFile.deleteOnExit()
         lb += tempFile.getAbsolutePath
       }

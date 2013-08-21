@@ -76,5 +76,5 @@ trait TurtleMover extends RichTurtleCommands {
   }
   def perimeter: Double
   def area: Double
-  def lastLine: (Point2D.Double, Point2D.Double)
+  def lastLine: Option[(Point2D.Double, Point2D.Double)]
 }

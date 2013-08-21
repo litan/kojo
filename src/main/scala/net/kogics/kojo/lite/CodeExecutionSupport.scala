@@ -581,6 +581,7 @@ class CodeExecutionSupport(
   @volatile var traceRunning = false
   val traceListener = new trace.TraceListener {
     def onStart() {
+      resetErrInfo()
       enableRunButton(false)
       stopButton.setEnabled(true)
       traceRunning = true

@@ -80,12 +80,12 @@ class PolyLine extends PNode {
     updateBounds()
   }
 
-  def lastLine: (Point2D.Double, Point2D.Double) = {
+  def lastLine: Option[(Point2D.Double, Point2D.Double)] = {
     val sz = points.size
     if (sz > 1)
-      (points(sz - 2), points(sz - 1))
+      Some(points(sz - 2), points(sz - 1))
     else
-      throw new IllegalStateException
+      None
   }
 
   def close() {

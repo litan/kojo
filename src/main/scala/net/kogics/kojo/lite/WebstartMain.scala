@@ -27,7 +27,7 @@ import scala.collection.mutable.ListBuffer
 
 import com.sun.jnlp.JNLPClassLoader
 
-import net.kogics.kojo.util.ZipUtils
+import net.kogics.kojo.util.Utils
 
 object WebstartMain extends StubMain with RmiMultiInstance {
   val classpath: String = {
@@ -56,8 +56,8 @@ object WebstartMain extends StubMain with RmiMultiInstance {
   def processJar(jarFile: JarFile, lb: ListBuffer[String]) {
     val tempFile = File.createTempFile("kojolite-", ".jar");
     // need to use symlinks on jdk1.7 
-    //    Utils.copyFile(new File(jarFile.getName()), tempFile);
-    ZipUtils.copyJar(new File(jarFile.getName()), tempFile, Set("META-INF/MANIFEST.MF", "META-INF/LALIT.SF", "META-INF/LALIT.RSA"))
+    Utils.copyFile(new File(jarFile.getName()), tempFile);
+    //    ZipUtils.copyJar(new File(jarFile.getName()), tempFile, Set("META-INF/MANIFEST.MF", "META-INF/LALIT.SF", "META-INF/LALIT.RSA"))
     tempFile.deleteOnExit()
     lb += tempFile.getAbsolutePath()
   }
