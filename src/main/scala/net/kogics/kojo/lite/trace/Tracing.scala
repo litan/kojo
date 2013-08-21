@@ -72,7 +72,6 @@ class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: Tra
   val turtles = new HashMap[Long, Turtle]
   @volatile var evtReqs: Vector[EventRequest] = _
   @volatile var hiddenEventCount = 0
-  @volatile var newTurtles = false
   @volatile var codeLines: Vector[String] = _
   @volatile var vmRunning = false
 
@@ -212,7 +211,6 @@ def main(args: Array[String]) {
       evtReqs = Vector[EventRequest]()
       currEvtVec.clear
       hiddenEventCount = 0
-      newTurtles = code.contains("newTurtle")
       codeLines = code.lines.toVector
 
       compile(code)
