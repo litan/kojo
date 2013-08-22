@@ -58,7 +58,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private val layer = new PLayer
   def tlayer: PLayer = layer
   private val camera = canvas.getCamera
-  if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(layer)
+  if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(math.max(camera.getLayerCount-1, 0), layer)
   @volatile private[turtle] var _animationDelay = 0l
 
   private val turtleImage = new PImage
