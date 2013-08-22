@@ -24,7 +24,7 @@ object RichFile {
 class RichFile(f: File) {
   def readAsString: String = {
     val flen = f.length.toInt;
-    val fis = new BufferedInputStream(new FileInputStream(f))
+    val fis = new FileInputStream(f)
     val buf = new Array[Byte](flen)
     try {
       var (read, offset) = (0, 0)
