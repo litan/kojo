@@ -33,11 +33,11 @@ class MethodEvent {
   def pargs = args.mkString("(", ", ", ")")
 
   def entry(level: Int) = {
-    <html><span style="color:rgb(0,50,225)">{ "> " * level } [Enter]</span> { methodName } <span style="color:rgb(0,50,225)">{ pargs }</span></html>.toString
+    <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "> " * level } [Enter]</span> { methodName }<span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
   }
 
   def exit(level: Int) = {
-    <html><span style="color:rgb(225,50,0)">{ "< " * level } [Exit]</span> { methodName } <span style="color:rgb(225,50,0)">[{ returnVal }]</span></html>.toString
+    <html><div style="font-family:Monospace"><span style="color:rgb(225,50,0)">{ "< " * level } [Exit]</span> { methodName } <span style="color:rgb(225,50,0)">[{ returnVal }]</span></div></html>.toString
   }
 
   override def toString() = {

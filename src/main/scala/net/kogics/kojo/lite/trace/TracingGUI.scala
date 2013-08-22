@@ -54,6 +54,8 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
     events.removeAll()
     eventDesc = new JTextArea("Click on an Event to see its details.")
     eventDesc.setEditable(false)
+    eventDesc.setLineWrap(true)
+    eventDesc.setWrapStyleWord(true)
 
     if (eventHolder != null) {
       traceHolder.remove(eventHolder)
