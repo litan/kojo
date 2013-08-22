@@ -546,7 +546,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   def markTraceLine(line: Int) {
     try {
-      codePane.select(codePane.getLineStartOffset(line - 1), codePane.getLineEndOffset(line - 1))
+      val lineStartOffset = codePane.getLineStartOffset(line - 1)
+      Utils.scrollToOffset(lineStartOffset, codePane)
+      codePane.select(lineStartOffset, codePane.getLineEndOffset(line - 1))
     }
     catch {
       // In case the user changes the contents of the script editor so that it is out of sync with the current trace

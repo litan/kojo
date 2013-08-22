@@ -41,6 +41,7 @@ import java.util.concurrent.locks.Lock
 
 import javax.swing.ImageIcon
 import javax.swing.Timer
+import javax.swing.text.JTextComponent
 
 import scala.actors.Actor.actor
 import scala.actors.Actor.loop
@@ -603,6 +604,10 @@ object Utils {
     val addedCode = (for (i <- includes) yield load(expand(getFileName(i)))).mkString
     val baseCode = """//(\s)*#include(.*)""".r.replaceAllIn(code, "//$1#Include$2")
     (addedCode + baseCode, countLines(addedCode), addedCode.length)
+  }
+
+  def scrollToOffset(offset: Int, comp: JTextComponent) {
+    comp.scrollRectToVisible(comp.modelToView(offset))
   }
 
   case class RunCode(code: () => Unit)
