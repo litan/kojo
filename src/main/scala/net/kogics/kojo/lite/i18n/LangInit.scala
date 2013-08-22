@@ -13,7 +13,6 @@ object LangInit {
 
     System.getProperty("user.language") match {
       case "sv" =>
-        System.out.println("Swedish Init")
         val ct = SvInit.codeTemplates
       case _ =>
     }
