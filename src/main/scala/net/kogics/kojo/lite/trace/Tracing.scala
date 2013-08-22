@@ -426,10 +426,11 @@ def main(args: Array[String]) {
     if (isTurtle) {
       ret = runTurtleMethod(methodName, stkfrm, localArgs)
     }
+    newEvt.turtlePoints = ret
 
     if ((srcName == "scripteditor" && lineNum > 0) || (callerSrcName == "scripteditor" && callerLine.contains(methodName))) {
       newEvt.args = methodArgs(targetToString)
-      tracingGUI.addEvent(newEvt, ret)
+      tracingGUI.addStartEvent(newEvt)
     }
     else {
       val desc = s"[Method Enter] ${methodName} -- ${methodEnterEvt.method.signature} -- ${methodEnterEvt.method.declaringType}"
@@ -459,7 +460,7 @@ def main(args: Array[String]) {
           retValStr != "<void value>" && retValStr != "null")) {
 
         ce.returnVal = targetToString(retVal)
-        tracingGUI.addEvent(ce, None)
+        tracingGUI.addEndEvent(ce)
       }
       else {
         ce.returnVal = retValStr

@@ -17,6 +17,7 @@ package net.kogics.kojo.lite.trace
 
 import com.sun.jdi.LocalVariable
 import com.sun.jdi.StackFrame
+import java.awt.geom.Point2D
 
 class MethodEvent {
   var methodName: String = _
@@ -29,9 +30,17 @@ class MethodEvent {
   var callerLineNum: Int = -1
   var callerSourceName: String = _
   var callerLine: String = _
+  var subcalls = Vector[MethodEvent]()
+  var turtlePoints: Option[(Point2D.Double, Point2D.Double)] = None
 
   def pargs = args.mkString("(", ", ", ")")
   def pret = returnVal.replaceAllLiterally("<void value>", "Unit")
+  def psubcalls = _psubcalls(subcalls)
+  def _psubcalls(scs: Seq[MethodEvent]): String = scs match {
+    case Seq() => ""
+    case Seq(x, xs @ _*) => s"> ${x.methodName} ${_psubcalls(x.subcalls)} < ${_psubcalls(xs)}"
+  }
+
 
   def entry(level: Int) = {
     <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "> " * level } [Enter]</span> { methodName }<span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
@@ -57,7 +66,10 @@ Caller Source Line: $callerLine
 
   def setParent(p: Option[MethodEvent]) {
     parent = p
+    parent foreach { _.addChild(this) }
   }
+
+  private def addChild(c: MethodEvent) { subcalls = subcalls :+ c }
 
   def level: Int = parent match {
     case None    => 0
