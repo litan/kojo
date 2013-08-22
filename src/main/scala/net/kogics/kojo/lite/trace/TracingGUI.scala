@@ -85,6 +85,9 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
         addMouseListener(new MouseAdapter {
           override def mouseClicked(e: MouseEvent) {
             eventDesc.setText(meDesc)
+            Utils.runLaterInSwingThread {
+              Utils.scrollToOffset(0, eventDesc)
+            }
             if (me.sourceName == "scripteditor" && lineNum > 0)
               scriptEditor.markTraceLine(lineNum)
             else
