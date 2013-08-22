@@ -20,18 +20,18 @@ import com.sun.jdi.StackFrame
 import java.awt.geom.Point2D
 
 class MethodEvent {
-  var methodName: String = _
-  var args: Seq[String] = _
-  var returnVal: String = _
-  var parent: Option[MethodEvent] = None
-  var entryLineNum: Int = _
-  var exitLineNum: Int = _
-  var sourceName: String = _
-  var callerLineNum: Int = -1
-  var callerSourceName: String = _
-  var callerLine: String = _
-  var subcalls = Vector[MethodEvent]()
-  var turtlePoints: Option[(Point2D.Double, Point2D.Double)] = None
+  @volatile var methodName: String = _
+  @volatile var args: Seq[String] = _
+  @volatile var returnVal: String = _
+  @volatile var parent: Option[MethodEvent] = None
+  @volatile var entryLineNum: Int = _
+  @volatile var exitLineNum: Int = _
+  @volatile var sourceName: String = _
+  @volatile var callerLineNum: Int = -1
+  @volatile var callerSourceName: String = _
+  @volatile var callerLine: String = _
+  @volatile var subcalls = Vector[MethodEvent]()
+  @volatile var turtlePoints: Option[(Point2D.Double, Point2D.Double)] = None
 
   def pargs = args.mkString("(", ", ", ")")
   def pret = returnVal.replaceAllLiterally("<void value>", "Unit")
