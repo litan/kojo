@@ -295,13 +295,17 @@ object Utils {
     require(is != null, "resource should exist")
     val reader = new BufferedReader(new InputStreamReader(is, "UTF-8"))
     val buf = new Array[Char](1024)
-    var nbytes = reader.read(buf)
     val sb = new StringBuffer
-    while (nbytes != -1) {
-      sb.append(buf, 0, nbytes)
-      nbytes = reader.read(buf)
+    try {
+      var nbytes = reader.read(buf)
+      while (nbytes != -1) {
+        sb.append(buf, 0, nbytes)
+        nbytes = reader.read(buf)
+      }
     }
-    reader.close()
+    finally {
+      reader.close()
+    }
     sb.toString
   }
 
@@ -599,11 +603,10 @@ object Utils {
           }
           else {
             included.add(fileName)
-            val source = scala.io.Source.fromFile(fileName, "utf-8")
-            val codeToInclude = source.getLines.
-              mkString(s"// #begin-include: $fileName\n", "\n", s"\n// #end-include: $fileName\n")
+            import RichFile._
+            val fileContent = stripCR(new File(fileName).readAsString)
+            val codeToInclude = s"// #begin-include: $fileName\n$fileContent\n// #end-include: $fileName\n"
             val (result, _, _) = _preProcessInclude(codeToInclude) //non-tail-recursive call
-            //        println(s"including file: $fileName <- ${countLines(result)} lines included.")
             result
           }
         }
@@ -614,7 +617,7 @@ object Utils {
       val baseCode = """//(\s)*#include(.*)""".r.replaceAllIn(code, "//$1#Include$2")
       (addedCode + baseCode, countLines(addedCode), addedCode.length)
     }
-    
+
     _preProcessInclude(code)
   }
 
