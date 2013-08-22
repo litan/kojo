@@ -191,7 +191,7 @@ def main(args: Array[String]) {
   }
 
   val ignoreMethods = Set("main", "_main", "<init>", "<clinit>", "$init$", "repeat", "repeatWhile", "runInBackground")
-  val turtleMethods = Set("setBackground", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "circle", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
+  val turtleMethods = Set("setBackground", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
   val notSupported = Set("Picture", "PicShape", "animate")
 
   def getThread(vm: VirtualMachine, name: String): ThreadReference =
@@ -529,9 +529,6 @@ def main(args: Array[String]) {
         turtle.penUp
       case "penDown" =>
         turtle.penDown
-      case "circle" =>
-        val r = stkfrm.getValue(localArgs(0)).toString.toDouble
-        turtle.circle(r)
       case "savePosHe" =>
         turtle.savePosHe
       case "restorePosHe" =>
