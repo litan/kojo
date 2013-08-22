@@ -581,29 +581,41 @@ object Utils {
   }
 
   def preProcessInclude(code: String): (String, Int, Int) = {
-    def countLines(s: String) = s.count(_ == '\n')
-    val includes = """//\s*#include.*""".r.findAllIn(code)
-    def getFileName(s: String) = """//\s*#include""".r.replaceFirstIn(s, "").trim
-    val kojoDir = net.kogics.kojo.util.Utils.userDir + "/kojo/"
-    def expand(fileName: String) = {
-      val suffix = if (!fileName.contains(".")) ".kojo" else ""
-      absolutePath(fileName + suffix)
-    }
-    def load(fileName: String): String = {
-      try {
-        val source = scala.io.Source.fromFile(fileName, "utf-8")
-        val codeToInclude = source.getLines.
-          mkString(s"// #begin-include: $fileName\n", "\n", s"\n// #end-include: $fileName\n")
-        val (result, _, _) = preProcessInclude(codeToInclude) //non-tail-recursive call
-        //        println(s"including file: $fileName <- ${countLines(result)} lines included.")
-        result
-      }
-      catch { case e: Throwable => System.err.println(s"Error $e when including file: $fileName"); "" }
-    }
+    val included = new HashSet[String]()
 
-    val addedCode = (for (i <- includes) yield load(expand(getFileName(i)))).mkString
-    val baseCode = """//(\s)*#include(.*)""".r.replaceAllIn(code, "//$1#Include$2")
-    (addedCode + baseCode, countLines(addedCode), addedCode.length)
+    def _preProcessInclude(code: String): (String, Int, Int) = {
+      def countLines(s: String) = s.count(_ == '\n')
+      val includes = """//\s*#include.*""".r.findAllIn(code)
+      def getFileName(s: String) = """//\s*#include""".r.replaceFirstIn(s, "").trim
+      val kojoDir = net.kogics.kojo.util.Utils.userDir + "/kojo/"
+      def expand(fileName: String) = {
+        val suffix = if (!fileName.contains(".")) ".kojo" else ""
+        absolutePath(fileName + suffix)
+      }
+      def load(fileName: String): String = {
+        try {
+          if (included.contains(fileName)) {
+            ""
+          }
+          else {
+            included.add(fileName)
+            val source = scala.io.Source.fromFile(fileName, "utf-8")
+            val codeToInclude = source.getLines.
+              mkString(s"// #begin-include: $fileName\n", "\n", s"\n// #end-include: $fileName\n")
+            val (result, _, _) = _preProcessInclude(codeToInclude) //non-tail-recursive call
+            //        println(s"including file: $fileName <- ${countLines(result)} lines included.")
+            result
+          }
+        }
+        catch { case e: Throwable => System.err.println(s"Error $e when including file: $fileName"); "" }
+      }
+
+      val addedCode = (for (i <- includes) yield load(expand(getFileName(i)))).mkString
+      val baseCode = """//(\s)*#include(.*)""".r.replaceAllIn(code, "//$1#Include$2")
+      (addedCode + baseCode, countLines(addedCode), addedCode.length)
+    }
+    
+    _preProcessInclude(code)
   }
 
   def scrollToOffset(offset: Int, comp: JTextComponent) {
