@@ -19,7 +19,6 @@ package trace
 import java.awt.Color
 import java.awt.geom.Point2D
 import java.io.File
-import java.util.logging.Logger
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaIterator
@@ -324,9 +323,8 @@ def main(args: Array[String]) {
       currEvtVec.remove(currThread.name)
   }
 
-  val Log = Logger.getLogger("Trace")
   def handleHiddenEvent(desc: String) {
-    //    Log.info(desc)
+    //    println(desc)
     hiddenEventCount += 1
     if (hiddenEventCount % 30 == 0) {
       print(".")
@@ -369,19 +367,33 @@ def main(args: Array[String]) {
 
   def localToString(frameVal: Value) = String.valueOf(frameVal)
 
+  def desugar(name: String) = {
+    val dindex = name.indexOf('$')
+    if (dindex == -1) {
+      name
+    }
+    else {
+      val ret = name.substring(0, dindex)
+      if (ret.length == 0) name else ret
+    }
+  }
+
   def handleMethodEntry(methodEnterEvt: MethodEntryEvent) {
 
-    def methodArgs(value: Value => String) = try {
-      if (methodEnterEvt.method.arguments.size > 0)
-        "(%s)" format methodEnterEvt.method.arguments.map { n =>
+    def methodArgs(value: Value => String): Seq[String] = try {
+      if (methodEnterEvt.method.arguments.size > 0) {
+        methodEnterEvt.method.arguments.map { n =>
           val frame = methodEnterEvt.thread.frame(0)
           val frameVal = frame.getValue(n)
-          s"arg ${n.name}: ${n.typeName} = ${value(frameVal)}"
-        }.mkString(",")
-      else "()"
+          s"${n.name} = ${value(frameVal)}"
+        }
+      }
+      else {
+        Seq()
+      }
     }
     catch {
-      case e: AbsentInformationException => "There is an AbsentInformationException"
+      case e: AbsentInformationException => Seq("AbsentInformationException")
     }
 
     //    println(s"Prefix lines: ${prefixLines}")
@@ -390,7 +402,7 @@ def main(args: Array[String]) {
     //    println(s"Line Num: ${methodEnterEvt.location.lineNumber}")
     //    println(s"Caller Line Num: ${currThread.frame(1).location.lineNumber}")
 
-    val methodName = methodEnterEvt.method.name
+    val methodName = desugar(methodEnterEvt.method.name)
     val srcName = try { methodEnterEvt.location.sourceName } catch { case e: Throwable => "N/A" }
     val callerSrcName = try { currThread.frame(1).location.sourceName } catch { case _: Throwable => "N/A" }
     val lineNum = methodEnterEvt.location.lineNumber - lineNumOffset
@@ -416,13 +428,12 @@ def main(args: Array[String]) {
     }
 
     if ((srcName == "scripteditor" && lineNum > 0) || (callerSrcName == "scripteditor" && callerLine.contains(methodName))) {
-      val desc = s"[Method Enter] ${methodEnterEvt.method.name}${methodArgs(targetToString)}"
-      newEvt.entry = desc
+      newEvt.args = methodArgs(targetToString)
       tracingGUI.addEvent(newEvt, ret)
     }
     else {
       val desc = s"[Method Enter] ${methodName} -- ${methodEnterEvt.method.signature} -- ${methodEnterEvt.method.declaringType}"
-      newEvt.entry = desc
+      //      newEvt.args = methodArgs(localToString)
       handleHiddenEvent(desc)
     }
 
@@ -430,7 +441,7 @@ def main(args: Array[String]) {
   }
 
   def handleMethodExit(methodExitEvt: MethodExitEvent) {
-    val methodName = methodExitEvt.method.name
+    val methodName = desugar(methodExitEvt.method.name)
     val stkfrm = currThread.frame(0)
     val localArgs = try { methodExitEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
     val retVal = methodExitEvt.returnValue
@@ -448,14 +459,11 @@ def main(args: Array[String]) {
           retValStr != "<void value>" && retValStr != "null")) {
 
         ce.returnVal = targetToString(retVal)
-        val desc = s"[Method Exit] ${methodName}(return value: ${ce.returnVal})"
-        ce.exit = desc
         tracingGUI.addEvent(ce, None)
       }
       else {
         ce.returnVal = retValStr
         val desc = s"[Method Exit] ${methodName} -- ${methodExitEvt.method.signature} -- ${methodExitEvt.method.declaringType}"
-        ce.exit = desc
         handleHiddenEvent(desc)
       }
       updateCurrentMethodEvent(ce.parent)

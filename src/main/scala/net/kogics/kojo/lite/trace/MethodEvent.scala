@@ -19,39 +19,44 @@ import com.sun.jdi.LocalVariable
 import com.sun.jdi.StackFrame
 
 class MethodEvent {
-  var entry: String = _
-  var exit: String = _
-  var parent: Option[MethodEvent] = None
-  var subcalls = Vector[MethodEvent]()
+  var methodName: String = _
+  var args: Seq[String] = _
   var returnVal: String = _
+  var parent: Option[MethodEvent] = None
   var entryLineNum: Int = _
   var exitLineNum: Int = _
-  var methodName: String = _
   var sourceName: String = _
-  var callerSourceName: String = _
   var callerLineNum: Int = -1
+  var callerSourceName: String = _
   var callerLine: String = _
 
+  def pargs = args.mkString("(", ", ", ")")
+
+  def entry(level: Int) = {
+    <html><span style="color:rgb(0,50,225)">{ "> " * level } [Enter]</span> { methodName } <span style="color:rgb(0,50,225)">{ pargs }</span></html>.toString
+  }
+
+  def exit(level: Int) = {
+    <html><span style="color:rgb(225,50,0)">{ "< " * level } [Exit]</span> { methodName } <span style="color:rgb(225,50,0)">[{ returnVal }]</span></html>.toString
+  }
+
   override def toString() = {
-    s"""Entry: $entry
-Exit: $exit
+    s"""Name: $methodName
+Args: $pargs ${if (returnVal != null) s"\nReturn Value: $returnVal" else ""}
 Source: $sourceName
 Entry Line Number: $entryLineNum
 Exit Line Number: $exitLineNum
 Caller Source: $callerSourceName
 Caller Line Number: $callerLineNum
 Caller Source Line: $callerLine
-	"""
+"""
   }
 
-  def ended = exit != null
+  def ended = returnVal != null
 
   def setParent(p: Option[MethodEvent]) {
     parent = p
-    parent foreach { _.addChild(this) }
   }
-
-  private def addChild(c: MethodEvent) { subcalls = subcalls :+ c }
 
   def level: Int = parent match {
     case None    => 0
