@@ -71,7 +71,6 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
 
   def addStartEvent(me: MethodEvent) {
     def findLine(me: MethodEvent): Option[(Point2D.Double, Point2D.Double)] = {
-      println(s"${me.methodName} - ${me.turtlePoints}")
       me.turtlePoints match {
         case tp @ Some(_) => tp
         case None         => findLine2(me.subcalls)
