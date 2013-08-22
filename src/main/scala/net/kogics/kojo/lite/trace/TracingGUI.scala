@@ -18,7 +18,6 @@ package lite
 package trace
 
 import java.awt.Color
-import java.awt.Dimension
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
@@ -34,6 +33,7 @@ import javax.swing.SwingConstants
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.lite.topc.TraceHolder
+import net.kogics.kojo.picture.GPics
 import net.kogics.kojo.util.Utils
 
 class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
@@ -69,10 +69,32 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
     kojoCtx.makeTraceWindowVisible(traceHolder)
   }
 
-  def addEvent(me: MethodEvent, oll: Option[(Point2D.Double, Point2D.Double)]) = {
+  def addStartEvent(me: MethodEvent) {
+    def findLine(me: MethodEvent): Option[(Point2D.Double, Point2D.Double)] = {
+      println(s"${me.methodName} - ${me.turtlePoints}")
+      me.turtlePoints match {
+        case tp @ Some(_) => tp
+        case None         => findLine2(me.subcalls)
+      }
+    }
+
+    def findLine2(scs: Seq[MethodEvent]): Option[(Point2D.Double, Point2D.Double)] = scs match {
+      case Seq() => None
+      case Seq(x, xs @ _*) => findLine(x) match {
+        case tp @ Some(_) => tp
+        case None         => findLine2(xs)
+      }
+    }
+    addEvent(me, findLine(me))
+  }
+  
+  def addEndEvent(me: MethodEvent) {
+    addEvent(me, None)
+  }
+  
+  private def addEvent(me: MethodEvent, oll: => Option[(Point2D.Double, Point2D.Double)]) = {
     lazy val lastLine = oll
     val meDesc = me.toString
-    val ended = me.ended
     val uiLevel = me.level + 1
     val taText = if (me.ended) me.exit(uiLevel) else me.entry(uiLevel)
     val lineNum = if (me.ended) me.exitLineNum else me.entryLineNum
@@ -96,11 +118,15 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
             currMarker foreach { _.erase }
             kojoCtx.repaintCanvas()
             lastLine foreach { ll =>
-              val pic = kojoCtx.picLine(ll._1, ll._2)
-              currMarker = Some(pic)
-              pic.draw()
-              pic.setPenColor(Color.black)
-              pic.setPenThickness(4)
+              val pic1 = kojoCtx.picLine(ll._1, ll._2)
+              val pic2 = kojoCtx.picLine(ll._1, ll._2)
+              val marker = GPics(pic1, pic2)
+              marker.draw()
+              pic1.setPenColor(Color.black)
+              pic1.setPenThickness(10)
+              pic2.setPenColor(Color.yellow)
+              pic2.setPenThickness(4)
+              currMarker = Some(marker)
             }
 
           }
