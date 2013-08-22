@@ -24,12 +24,15 @@ import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
 
 import javax.swing.BoxLayout
+import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JSplitPane
 import javax.swing.JTextArea
+import javax.swing.SwingConstants
 
 import net.kogics.kojo.core.Picture
+import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.lite.topc.TraceHolder
 import net.kogics.kojo.util.Utils
 
@@ -69,15 +72,13 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
     val meDesc = me.toString
     val ended = me.ended
     val uiLevel = me.level + 1
-    val taText = if (me.ended) "< " * uiLevel + me.exit else "> " * uiLevel + me.entry
+    val taText = if (me.ended) me.exit(uiLevel) else me.entry(uiLevel)
     val lineNum = if (me.ended) me.exitLineNum else me.entryLineNum
 
     Utils.runInSwingThread {
-      val te = new JTextArea(taText) {
-        override def getMaximumSize = new Dimension(Short.MaxValue, getPreferredSize.getHeight.toInt)
-        setEditable(false)
-        setLineWrap(true)
-        setWrapStyleWord(true)
+      val te = new JButton(taText) {
+        setBackground(Color.white)
+        setHorizontalAlignment(SwingConstants.LEFT)
 
         addMouseListener(new MouseAdapter {
           override def mouseClicked(e: MouseEvent) {
