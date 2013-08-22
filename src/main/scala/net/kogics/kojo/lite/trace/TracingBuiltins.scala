@@ -74,9 +74,9 @@ object TracingBuiltins {
 
   val Kc = new staging.KeyCodes
 
-  val hueMod = Utils.hueMod _
-  val satMod = Utils.satMod _
-  val britMod = Utils.britMod _
+  def hueMod(c: Color, f: Double) = Utils.hueMod(c, f)
+  def satMod(c: Color, f: Double) = Utils.satMod(c, f)
+  def britMod(c: Color, f: Double) = Utils.britMod(c, f)
 
   val turtle0: core.Turtle = newTurtle(0.0, 0.0)
   
