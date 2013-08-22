@@ -65,8 +65,6 @@ class Padda0(t0: => Turtle) extends SwedishTurtle {  //by-name construction as t
     override def englishTurtle: Turtle = t0 
 }
 object padda extends Padda0(turtle0) 
-import padda.{sudda => _, _}
-def sudda() = clear()
 def suddaUtdata() = clearOutput()
 val blå=blue; val röd=red; val gul=yellow; val grön=green; val lila=purple;
 val rosa=pink; val brun=brown; val svart=black; val vit=white; 
@@ -129,3 +127,5 @@ addHelpContent(
     "sv", 
     helpContent
 )
+import padda.{sudda => _, _}
+def sudda() = clear()
