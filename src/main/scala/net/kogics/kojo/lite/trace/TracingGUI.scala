@@ -86,17 +86,18 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
     }
     addEvent(me, findLine(me))
   }
-  
+
   def addEndEvent(me: MethodEvent) {
     addEvent(me, None)
   }
-  
+
   private def addEvent(me: MethodEvent, oll: => Option[(Point2D.Double, Point2D.Double)]) = {
     lazy val lastLine = oll
     val meDesc = me.toString
     val uiLevel = me.level + 1
-    val taText = if (me.ended) me.exit(uiLevel) else me.entry(uiLevel)
-    val lineNum = if (me.ended) me.exitLineNum else me.entryLineNum
+    val ended = me.ended
+    val taText = if (ended) me.exit(uiLevel) else me.entry(uiLevel)
+    val lineNum = if (ended) me.exitLineNum else me.entryLineNum
 
     Utils.runInSwingThread {
       val te = new JButton(taText) {
@@ -109,7 +110,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
             Utils.runLaterInSwingThread {
               Utils.scrollToOffset(0, eventDesc)
             }
-            if (me.sourceName == "scripteditor" && lineNum > 0)
+            if (ended && me.sourceName == "scripteditor" && lineNum > 0)
               scriptEditor.markTraceLine(lineNum)
             else
               scriptEditor.markTraceLine(me.callerLineNum)
