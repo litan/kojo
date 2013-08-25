@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# point to the version of java that you want, or leave as-is for the default java version
+JAVA=java
+
+SCRIPT_DIR=`dirname $0`
+
+$JAVA -jar $SCRIPT_DIR/uninstaller.jar

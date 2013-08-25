@@ -1,0 +1,26 @@
+<launch4jConfig>
+  <dontWrapJar>true</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar></jar>
+  <outfile>/home/lalit/work/KojoDev/KojoLite/installer/bin/kojo.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>false</customProcName>
+  <stayAlive>false</stayAlive>
+  <manifest></manifest>
+  <icon>/home/lalit/work/KojoDev/KojoLite/installer/icons/kojo48.ico</icon>
+  <classPath>
+    <mainClass>net.kogics.kojo.lite.DesktopMain</mainClass>
+    <cp>../lib/*.jar</cp>
+  </classPath>
+  <jre>
+    <path></path>
+    <minVersion>1.6.0_12</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+  </jre>
+</launch4jConfig>
