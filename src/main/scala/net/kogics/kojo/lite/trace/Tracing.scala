@@ -447,6 +447,7 @@ def main(args: Array[String]) {
     newEvt.callerLine = callerLine
     newEvt.callerLineNum = callerLineNum
     newEvt.methodName = methodName
+    newEvt.returnType = methodEnterEvt.method.returnTypeName
 
     var ret: Option[(Point2D.Double, Point2D.Double)] = None
     if (isTurtle) {
@@ -483,9 +484,7 @@ def main(args: Array[String]) {
       ce.exitLineNum = lineNum
 
       if ((ce.sourceName == "scripteditor" && lineNum > 0) ||
-        (ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) &&
-          retValStr != "<void value>" && retValStr != "null")) {
-
+        (ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) && ce.returnType != "void")) {
         ce.returnVal = targetToString(retVal)
         tracingGUI.addEndEvent(ce)
         handleVerboseUiEvent(ce, false)
