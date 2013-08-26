@@ -12,8 +12,9 @@ net.kogics.kojo.lite.i18n.SwedishAPI.builtins = net.kogics.kojo.lite.Builtins.in
 
 //make swedish names visible
 import net.kogics.kojo.lite.i18n.SvInit
-import net.kogics.kojo.lite.i18n.SwedishAPI.padda.{ sudda => _, _ }
 import net.kogics.kojo.lite.i18n.SwedishAPI._
+import padda.{sudda => _, _}
+
 
 //code completion
 addCodeTemplates(

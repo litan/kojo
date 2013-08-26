@@ -142,13 +142,11 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   var allowSearch = true
   val searcher = new ActionListener {
     def actionPerformed(e: ActionEvent) {
-      val waitCursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
-      val normalCursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
       if (allowSearch) {
         val searchText = searchField.getText
-        hpanel.setCursor(waitCursor); searchField.setCursor(waitCursor)
+        execSupport.kojoCtx.showAppWaitCursor()
         cmdh.filter(searchText)
-        hpanel.setCursor(normalCursor); searchField.setCursor(normalCursor)
+        execSupport.kojoCtx.hideAppWaitCursor()
         tableModel.fireTableDataChanged()
         table.setRowSelectionInterval(cmdh.size, cmdh.size)
         allowSearch = false
@@ -156,9 +154,9 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
         // searchBut.requestFocusInWindow()
       }
       else {
-        hpanel.setCursor(waitCursor)
+        execSupport.kojoCtx.showAppWaitCursor()
         cmdh.loadAll
-        hpanel.setCursor(normalCursor)
+        execSupport.kojoCtx.hideAppWaitCursor()
         tableModel.fireTableDataChanged()
         table.setRowSelectionInterval(cmdh.size, cmdh.size)
         allowSearch = true
@@ -169,10 +167,13 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
     }
   }
   searchBut.addActionListener(searcher)
-  searchField.addActionListener(searcher)
+  //  searchField.addActionListener(searcher)
   searchField.addKeyListener(new KeyAdapter {
     override def keyTyped(e: KeyEvent) {
-      if (!(e.getKeyChar() == KeyEvent.VK_ENTER)) {
+      if (e.getKeyChar == KeyEvent.VK_ENTER && searchField.getText.length > 0) {
+        searcher.actionPerformed(null)
+      }
+      else {
         allowSearch = true
         searchBut.setText("Search")
       }
