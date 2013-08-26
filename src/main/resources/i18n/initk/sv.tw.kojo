@@ -19,34 +19,64 @@
 
 println("Välkommen till Kojo med svensk padda!")
 if (isScratchPad) {
-  println("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.") 
+  println("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.")
 }
 setEditorTabSize(2)
 
-//initialize unstable value
-net.kogics.kojo.lite.i18n.SwedishAPI.builtins = net.kogics.kojo.lite.Builtins.instance
+import net.kogics.kojo.lite.i18n.SwedishAPI.SwedishTurtle
+class Padda(override val englishTurtle: Turtle) extends SwedishTurtle {
+  def this() = this(newTurtle())
+  def this(startX: Double, startY: Double) = this(newTurtle(startX, startY))
+  def this(startX: Double, startY: Double, kostymFilNamn: String) = this(newTurtle(startX, startY, kostymFilNamn))
+}
+class Padda0(t0: => Turtle) extends SwedishTurtle { //by-name construction as turtle0 is volatile }
+  override def englishTurtle: Turtle = t0
+}
+object padda extends Padda0(turtle0)
+import padda.{ sudda => _, _ }
+def sudda() = clear()
+def suddaUtdata() = clearOutput()
+val blå = blue
+val röd = red
+val gul = yellow
+val grön = green
+val lila = purple
+val rosa = pink
+val brun = brown
+val svart = black
+val vit = white
+val genomskinlig = noColor
+def bakgrund(färg: Color) = setBackground(färg)
+def bakgrund2(färg1: Color, färg2: Color) = setBackgroundV(färg1, färg2)
+
+def indata(ledtext: String = "") =  readln(ledtext)
+def slumptal(n: Int) = random(n)
+def slumptalMedDecimaler(n: Int) = randomDouble(n)
 
 //make swedish names visible
 import net.kogics.kojo.lite.i18n.SvInit
 import net.kogics.kojo.lite.i18n.SwedishAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
-  Padda,padda,sudda,suddaUtdata,
-  blå,röd,gul,grön,lila,rosa,brun,svart,vit,genomskinlig,
-  bakgrund, bakgrund2, KcSwe, 
-  upprepa, räkneslinga, sålänge,
-  utdata, indata,
-  avrunda, slumptal, slumptalMedDecimaler,
-  Heltal, Decimaltal, Sträng,
-  systemtid, räknaTill}
-import padda.{sudda => _, _}
+  KcSwe,
+  upprepa,
+  räkneslinga,
+  sålänge,
+  utdata,
+  avrunda,
+  Heltal,
+  Decimaltal,
+  Sträng,
+  systemtid,
+  räknaTill
+}
 
 //code completion
 addCodeTemplates(
-    "sv",
-    SvInit.codeTemplates
+  "sv",
+  SvInit.codeTemplates
 )
 //help texts
 addHelpContent(
-    "sv", 
-    SvInit.helpContent
+  "sv",
+  SvInit.helpContent
 )
