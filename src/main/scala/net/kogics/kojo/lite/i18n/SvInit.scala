@@ -22,7 +22,6 @@ package net.kogics.kojo.lite.i18n
 object SwedishAPI {
   import net.kogics.kojo.core.Turtle
   import java.awt.Color
-  var builtins: net.kogics.kojo.lite.Builtins = _  //unstable reference to module
   
   trait SwedishTurtle {
     def englishTurtle: Turtle
@@ -73,29 +72,7 @@ object SwedishAPI {
     def kostymer(filNamn: String*) = englishTurtle.setCostumes(filNamn: _*)
     def nästaKostym() = englishTurtle.nextCostume()
   }
-  class Padda(override val englishTurtle: Turtle) extends SwedishTurtle {
-    def this() = this(builtins.TSCanvas.newTurtle())
-    def this(startX: Double, startY: Double) = this(builtins.TSCanvas.newTurtle(startX, startY))
-    def this(startX: Double, startY: Double, kostymFilNamn: String) = this(builtins.TSCanvas.newTurtle(startX, startY, kostymFilNamn))
-  }
-  class Padda0(t0: => Turtle) extends SwedishTurtle { //by-name construction as turtle0 is volatile }
-    override def englishTurtle: Turtle = t0
-  }
-  object padda extends Padda0(builtins.TSCanvas.turtle0)
-  def sudda() = builtins.TSCanvas.clear()
-  def suddaUtdata() = builtins.kojoCtx.clearOutput()
-  lazy val blå = builtins.blue 
-  lazy val röd = builtins.red 
-  lazy val gul = builtins.yellow 
-  lazy val grön = builtins.green 
-  lazy val lila = builtins.purple
-  lazy val rosa = builtins.pink 
-  lazy val brun = builtins.brown 
-  lazy val svart = builtins.black 
-  lazy val vit = builtins.white
-  lazy val genomskinlig = builtins.noColor
-  def bakgrund(färg: Color) = builtins.setBackground(färg)
-  def bakgrund2(färg1: Color, färg2: Color) = builtins.TSCanvas.setBackgroundV(färg1, färg2)
+
   object KcSwe { //Key codes for Swedish keys
     lazy val VK_Å = 197
     lazy val VK_Ä = 196
@@ -115,15 +92,12 @@ object SwedishAPI {
   
   //simple IO
   def utdata(data: Any) = println(data)
-  def indata(ledtext: String = "") =  builtins.readln(ledtext)
   
   //math functions
   def avrunda(tal: Number, antalDecimaler: Int = 0): Double = {
     val faktor = math.pow(10, antalDecimaler).toDouble
     math.round(tal.doubleValue * faktor).toLong / faktor
   }
-  def slumptal(n: Int) = builtins.random(n)
-  def slumptalMedDecimaler(n: Int) = builtins.randomDouble(n)
   
   //some type aliases in Swedish
   type Heltal = Int
@@ -151,7 +125,7 @@ object SwedishAPI {
 }
 
 object SvInit {
-  lazy val codeTemplates = Map(
+  val codeTemplates = Map(
     "fram" -> "fram(${steg})",
     "höger" -> "höger(${vinkel})",
     "vänster" -> "vänster(${vinkel})",
@@ -205,7 +179,7 @@ object SvInit {
     "nästaKostym" -> "nästaKostym()"
   )
 
-  lazy val helpContent = Map(
+  val helpContent = Map(
     "fram" ->
       <div>
 <strong>fram</strong>(steg) - Paddan går frammåt det antal steg du anger i riktningen dit nosen pekar.
