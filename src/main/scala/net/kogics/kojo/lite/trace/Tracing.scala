@@ -73,6 +73,7 @@ class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: Tra
   @volatile var hiddenEventCount = 0
   @volatile var codeLines: Vector[String] = _
   @volatile var vmRunning = false
+  @volatile var verbose = false
 
   val currEvtVec = new HashMap[String, MethodEvent]
 
@@ -103,7 +104,10 @@ import net.kogics.kojo.lite.trace.TracingBuiltins._
 import turtle0._
 newTurtle(200, 200)
 net.kogics.kojo.lite.i18n.LangInit()
-def _main() {
+object UserCode {
+  def entry() {
+    // noop
+  }
 """
 
   val prefix = "%s%s\n" format (prefix0, Utils.initCode(TwMode).getOrElse(""))
@@ -113,10 +117,14 @@ def _main() {
   @volatile var offsetDelta = 0
 
   val codeTemplate = """%s%s
-  }
+}
+    
+def _main() {
+    UserCode.entry()
+}
 def main(args: Array[String]) {
-    _main()
-  }
+  _main()
+}
 }
 """
 
@@ -207,6 +215,7 @@ def main(args: Array[String]) {
   def realTrace(code: String) = Utils.runAsync {
     try {
       traceListener.onStart()
+      verbose = if (System.getProperty("kojo.trace.verbose") == "true") true else false
       turtles.clear()
       evtReqs = Vector[EventRequest]()
       currEvtVec.clear
@@ -274,21 +283,21 @@ def main(args: Array[String]) {
               case vmDcEvt: VMDisconnectEvent =>
                 vmRunning = false
                 stop()
-                println("VM Disconnected"); break
+                println("#"); break
 
               case vmStartEvt: VMStartEvent =>
                 vmRunning = true
-                println("VM Started")
+                print(">")
                 currThread = vmStartEvt.thread
                 createClassPrepareRequest(excludes, vm)
 
               case vmDeathEvt: VMDeathEvent =>
                 vmRunning = false
                 stop()
-                println("VM Dead")
+                print("<")
 
-              case _ =>
-                println("Other")
+              case ue @ _ =>
+                println(s"Unhandled trace event: $ue")
             }
           }
           evtSet.resume()
@@ -324,12 +333,29 @@ def main(args: Array[String]) {
   }
 
   def handleHiddenEvent(desc: String) {
-    //    println(desc)
-    hiddenEventCount += 1
-    if (hiddenEventCount % 30 == 0) {
-      print(".")
-      if (hiddenEventCount % (30 * 30) == 0) {
-        print("\n")
+    if (verbose) {
+      println(desc)
+    }
+    else {
+      hiddenEventCount += 1
+      if (hiddenEventCount % 30 == 0) {
+        print(".")
+        if (hiddenEventCount % (30 * 30) == 0) {
+          print("\n")
+        }
+      }
+    }
+  }
+
+  def handleVerboseUiEvent(me: MethodEvent, enter: Boolean) {
+    if (verbose) {
+      val prefix = if (enter) "[UI Method Enter]" else "[UI Method Exit]"
+      print(s"$prefix ${me.methodName}${me.pargs}")
+      if (enter) {
+        println("")
+      }
+      else {
+        println(s": ${me.pret}")
       }
     }
   }
@@ -421,6 +447,7 @@ def main(args: Array[String]) {
     newEvt.callerLine = callerLine
     newEvt.callerLineNum = callerLineNum
     newEvt.methodName = methodName
+    newEvt.returnType = methodEnterEvt.method.returnTypeName
 
     var ret: Option[(Point2D.Double, Point2D.Double)] = None
     if (isTurtle) {
@@ -431,9 +458,10 @@ def main(args: Array[String]) {
     if ((srcName == "scripteditor" && lineNum > 0) || (callerSrcName == "scripteditor" && callerLine.contains(methodName))) {
       newEvt.args = methodArgs(targetToString)
       tracingGUI.addStartEvent(newEvt)
+      handleVerboseUiEvent(newEvt, true)
     }
     else {
-      val desc = s"[Method Enter] ${methodName} -- ${methodEnterEvt.method.signature} -- ${methodEnterEvt.method.declaringType}"
+      val desc = s"[Method Enter] ${methodName}${methodEnterEvt.method.signature} in ${methodEnterEvt.method.declaringType.name}"
       //      newEvt.args = methodArgs(localToString)
       handleHiddenEvent(desc)
     }
@@ -456,15 +484,14 @@ def main(args: Array[String]) {
       ce.exitLineNum = lineNum
 
       if ((ce.sourceName == "scripteditor" && lineNum > 0) ||
-        (ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) &&
-          retValStr != "<void value>" && retValStr != "null")) {
-
+        (ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) && ce.returnType != "void")) {
         ce.returnVal = targetToString(retVal)
         tracingGUI.addEndEvent(ce)
+        handleVerboseUiEvent(ce, false)
       }
       else {
         ce.returnVal = retValStr
-        val desc = s"[Method Exit] ${methodName} -- ${methodExitEvt.method.signature} -- ${methodExitEvt.method.declaringType}"
+        val desc = s"[Method Exit] ${methodName}${methodExitEvt.method.signature} in ${methodExitEvt.method.declaringType.name}"
         handleHiddenEvent(desc)
       }
       updateCurrentMethodEvent(ce.parent)

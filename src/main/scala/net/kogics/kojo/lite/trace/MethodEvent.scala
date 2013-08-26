@@ -23,6 +23,7 @@ class MethodEvent {
   @volatile var methodName: String = _
   @volatile var args: Seq[String] = _
   @volatile var returnVal: String = _
+  @volatile var returnType: String = _
   @volatile var parent: Option[MethodEvent] = None
   @volatile var entryLineNum: Int = _
   @volatile var exitLineNum: Int = _
@@ -33,14 +34,18 @@ class MethodEvent {
   @volatile var subcalls = Vector[MethodEvent]()
   @volatile var turtlePoints: Option[(Point2D.Double, Point2D.Double)] = None
 
-  def pargs = args.mkString("(", ", ", ")")
+  def pargs = if (args.size > 0) {
+    args.mkString("(", ", ", ")")
+  }
+  else {
+    if (returnType == "void") "()" else ""
+  }
   def pret = returnVal.replaceAllLiterally("<void value>", "Unit")
   def psubcalls = _psubcalls(subcalls)
   def _psubcalls(scs: Seq[MethodEvent]): String = scs match {
-    case Seq() => ""
+    case Seq()           => ""
     case Seq(x, xs @ _*) => s"> ${x.methodName} ${_psubcalls(x.subcalls)} < ${_psubcalls(xs)}"
   }
-
 
   def entry(level: Int) = {
     <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "> " * level } [Call]</span> { methodName }<span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
