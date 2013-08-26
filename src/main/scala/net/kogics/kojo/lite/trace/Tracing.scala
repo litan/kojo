@@ -158,6 +158,7 @@ def main(args: Array[String]) {
     val iSettings = new Settings()
     iSettings.usejavacp.value = true
     iSettings.outputDirs.setSingleOutput(tmpdir)
+    iSettings.g.value = "notailcalls"
     iSettings
   }
 
