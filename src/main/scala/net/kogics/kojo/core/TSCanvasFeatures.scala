@@ -20,6 +20,7 @@ import java.awt.Paint
 import java.awt.Color
 
 trait TSCanvasFeatures {
+  def turtle0: Turtle
   def clear(): Unit
   def newTurtle(x: Double, y: Double, costume: String): Turtle
   def axesOn(): Unit
@@ -33,7 +34,7 @@ trait TSCanvasFeatures {
   def exportImage(filePrefix: String, width: Int, height: Int): java.io.File
   def exportThumbnail(filePrefix: String, height: Int): java.io.File
   def onKeyPress(fn: Int => Unit): Unit
-  def onKeyRelease(fn: Int => Unit): Unit  
+  def onKeyRelease(fn: Int => Unit): Unit
   def onMouseClick(fn: (Double, Double) => Unit): Unit
   def setUnitLength(ul: UnitLen): Unit
   def clearWithUL(ul: UnitLen): Unit

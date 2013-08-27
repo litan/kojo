@@ -100,8 +100,10 @@ class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: Tra
   val tracingGUI = new TracingGUI(scriptEditor, builtins.kojoCtx)
 
   val prefix0 = """object Wrapper {
-import net.kogics.kojo.lite.trace.TracingBuiltins._
-import turtle0._
+val builtins = net.kogics.kojo.lite.trace.TracingBuiltins
+import builtins._
+import TSCanvas._
+import turtle0.{ clear => _, _ }
 newTurtle(200, 200)
 net.kogics.kojo.lite.i18n.LangInit()
 object UserCode {
