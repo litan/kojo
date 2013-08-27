@@ -60,55 +60,14 @@ class Builtins(
   mp3player: music.KMp3,
   fuguePlayer: music.FuguePlayer,
   val kojoCtx: core.KojoCtx,
-  scalaCodeRunner: core.CodeRunner) extends RepeatCommands { builtins =>
+  scalaCodeRunner: core.CodeRunner) extends CoreBuiltins with RepeatCommands { builtins =>
   Builtins.instance = this
   import language.implicitConversions
   val tCanvas = TSCanvas.tCanvas
 
-  type Turtle = core.Turtle
-  type Color = java.awt.Color
-  type Font = java.awt.Font
-  type Point = core.Point
-  val Point = core.Point
-  type PolyLine = kgeom.PolyLine
-  val PolyLine = kgeom.PolyLine
-  type Point2D = java.awt.geom.Point2D.Double
-  def Point2D(x: Double, y: Double) = new java.awt.geom.Point2D.Double(x, y)
-
-  val Random = new java.util.Random
-
-  val blue = JColor.blue
-  val red = JColor.red
-  val yellow = JColor.yellow
-  val green = JColor.green
-  val orange = JColor.orange
-  val purple = new Color(0x740f73)
-  val pink = JColor.pink
-  val brown = new Color(0x583a0b)
-  val black = JColor.black
-  val white = JColor.white
-  val gray = JColor.gray
-  val lightGray = JColor.lightGray
-  val darkGray = JColor.darkGray
-  val magenta = JColor.magenta
-  val cyan = JColor.cyan
-
-  val BoldFont = JFont.BOLD
-  val PlainFont = JFont.PLAIN
-  val ItalicFont = JFont.ITALIC
-
-  val C = staging.KColor
-  //  val Color = staging.KColor
-  val noColor = C.noColor
-
-  val Kc = new staging.KeyCodes
   val Costume = new Tw.Costume
   val Background = new Tw.Background
   val Sound = new Tw.Sound
-
-  implicit def seqToArrD(seq: Seq[Double]): Array[Double] = seq.toArray
-  implicit def seqToArrI(seq: Seq[Int]): Array[Double] = seq.map { _.toDouble }.toArray
-  val Kmath = new Kmath
 
   def showScriptInOutput() = kojoCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
@@ -149,13 +108,9 @@ class Builtins(
   def readDouble(prompt: String): Double = readln(prompt).toDouble
   UserCommand("readDouble", List("promptString"), "Displays the given prompt in the output window and reads a Double-precision Real value that the user enters.")
 
-  def random(upperBound: Int) = Random.nextInt(upperBound)
   UserCommand("random", List("upperBound"), "Returns a random Integer between 0 (inclusive) and upperBound (exclusive).")
-
-  def randomDouble(upperBound: Int) = Random.nextDouble * upperBound
   UserCommand("randomDouble", List("upperBound"), "Returns a random Double-precision Real between 0 (inclusive) and upperBound (exclusive).")
 
-  def color(r: Int, g: Int, b: Int) = new Color(r, g, b)
   UserCommand("color", List("red", "green", "blue"), "Creates a new color based on the specified red, green, and blue levels.")
 
   def setAstStopPhase(phase: String): Unit = kojoCtx.setAstStopPhase(phase)
@@ -415,11 +370,6 @@ Here's a partial list of the available commands:
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def activateEditor() = kojoCtx.activateScriptEditor()
-  def Color(r: Int, g: Int, b: Int, a: Int = 255) = new Color(r, g, b, a)
-  def ColorG(x1: Double, y1: Double, c1: Color, x2: Double, y2: Double, c2: Color, cyclic: Boolean = false) = {
-    new GradientPaint(x1.toFloat, y1.toFloat, c1, x2.toFloat, y2.toFloat, c2, cyclic)
-  }
-  def ColorHSB(h: Double, s: Double, b: Double) = java.awt.Color.getHSBColor((h / 360).toFloat, (s / 100).toFloat, (b / 100).toFloat)
   val hueMod = Utils.hueMod _
   val satMod = Utils.satMod _
   val britMod = Utils.britMod _
@@ -487,14 +437,11 @@ Here's a partial list of the available commands:
   def setOutputTextColor(color: Color) = kojoCtx.setOutputForeground(color)
   def setOutputTextFontSize(size: Int) = kojoCtx.setOutputFontSize(size)
 
-  def epochTimeMillis = System.currentTimeMillis()
-  def epochTime = System.currentTimeMillis() / 1000.0
   def countDownLatch(n: Int) = new CountDownLatch(n)
   def homeDir = Utils.homeDir
   def currentDir = Utils.currentDir
 
   def setEditorTabSize(ts: Int) = kojoCtx.setEditorTabSize(ts)
-  def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
   def mouseX = staging.Inputs.mousePos.x
   def mouseY = staging.Inputs.mousePos.y
   def mousePosition = staging.Inputs.mousePos
