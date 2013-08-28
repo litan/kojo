@@ -255,7 +255,6 @@ def main(args: Array[String]) {
                   catch {
                     case t: Throwable =>
                       println(s"[Exception] [Method Enter] ${methodEnterEvt.method.name} -- ${t.getMessage}")
-                      t.printStackTrace()
                   }
                 }
 
@@ -268,7 +267,6 @@ def main(args: Array[String]) {
                   catch {
                     case t: Throwable =>
                       println(s"[Exception] [Method Exit] ${methodExitEvt.method.name} -- ${t.getMessage}")
-                      t.printStackTrace()
                   }
                 }
 
@@ -310,7 +308,6 @@ def main(args: Array[String]) {
     catch {
       case t: Throwable =>
         System.err.println(s"[Problem] -- ${t.getMessage}")
-        t.printStackTrace()
         vmRunning = false
         stop()
     }
