@@ -9,6 +9,7 @@ import java.awt.Paint
 import net.kogics.kojo.core.TSCanvasFeatures
 
 trait CoreBuiltins {
+  import scala.language.implicitConversions
   def TSCanvas: TSCanvasFeatures
 
   type Turtle = core.Turtle
