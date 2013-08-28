@@ -118,7 +118,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
 
             currMarker foreach { _.erase() }
             kojoCtx.repaintCanvas()
-            if (subLines.size < 100) {
+            if (subLines.size < 50) {
               val picCol = new ArrayBuffer[Picture]
               subLines foreach { ll =>
                 val pic1 = picture.stroke(Color.black) * picture.strokeWidth(10) -> kojoCtx.picLine(ll._1, ll._2)
@@ -133,6 +133,33 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
               else {
                 currMarker = None
               }
+            }
+            else {
+              var minx, miny = Double.MaxValue
+              var maxx, maxy = Double.MinValue
+
+              subLines foreach { ll =>
+                val p1 = ll._1; val p2 = ll._2
+                def processBounds(p: Point2D.Double) {
+                  if (p.x < minx) minx = p.x
+                  else if (p.x > maxx) maxx = p.x
+
+                  if (p.y < miny) miny = p.y
+                  else if (p.y > maxy) maxy = p.y
+                }
+                processBounds(p1)
+                processBounds(p2)
+              }
+              val p1 = new Point2D.Double(minx, miny)
+              val p2 = new Point2D.Double(minx, maxy)
+              val p3 = new Point2D.Double(maxx, maxy)
+              val p4 = new Point2D.Double(maxx, miny)
+              val pic1 = picture.stroke(Color.black) -> kojoCtx.picLine(p1, p2)
+              val pic2 = picture.stroke(Color.yellow) -> kojoCtx.picLine(p2, p3)
+              val pic3 = picture.stroke(Color.black) -> kojoCtx.picLine(p3, p4)
+              val pic4 = picture.stroke(Color.yellow) -> kojoCtx.picLine(p4, p1)
+              currMarker = Some(picture.strokeWidth(5) -> GPics(pic1, pic2, pic3, pic4))
+              currMarker foreach { _.draw() }
             }
           }
         })
