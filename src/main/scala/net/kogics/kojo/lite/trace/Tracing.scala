@@ -425,18 +425,17 @@ def main(args: Array[String]) {
       case e: AbsentInformationException => Seq("AbsentInformationException")
     }
 
-    //    println(s"Prefix lines: ${prefixLines}")
-    //    println(s"Included lines: ${includedLines}")
-    //    println(s"Line Num Offset: ${lineNumOffset}")
-    //    println(s"Line Num: ${methodEnterEvt.location.lineNumber}")
-    //    println(s"Caller Line Num: ${currThread.frame(1).location.lineNumber}")
-
     val methodName = desugar(methodEnterEvt.method.name)
     val srcName = try { methodEnterEvt.location.sourceName } catch { case e: Throwable => "N/A" }
     val callerSrcName = try { currThread.frame(1).location.sourceName } catch { case _: Throwable => "N/A" }
-    val lineNum = methodEnterEvt.location.lineNumber - lineNumOffset
-    val callerLineNum = try { currThread.frame(1).location.lineNumber - lineNumOffset } catch { case _: Throwable => -1 }
-    val callerLine = try { codeLines(callerLineNum - 1) } catch { case _: Throwable => "N/A" }
+    val lOffset = if (srcName == "scripteditor") lineNumOffset else 0
+    val clOffset = if (callerSrcName == "scripteditor") lineNumOffset else 0
+    val lineNum = methodEnterEvt.location.lineNumber - lOffset
+    val callerLineNum = try { currThread.frame(1).location.lineNumber - clOffset } catch { case _: Throwable => -1 }
+    val callerLine = if (callerSrcName == "scripteditor")
+      try { codeLines(callerLineNum - 1) } catch { case _: Throwable => "N/A" }
+    else
+      ""
     val localArgs = try { methodEnterEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
     val stkfrm = currThread.frame(0)
     val isTurtle = turtleMethods.contains(methodName)
@@ -482,7 +481,8 @@ def main(args: Array[String]) {
 
     val mthdEvent = getCurrentMethodEvent
     mthdEvent.foreach { ce =>
-      val lineNum = methodExitEvt.location.lineNumber - lineNumOffset
+      val lOffset = if (ce.sourceName == "scripteditor") lineNumOffset else 0
+      val lineNum = methodExitEvt.location.lineNumber - lOffset
       val retValStr = localToString(retVal)
       ce.exitLineNum = lineNum
 
