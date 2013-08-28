@@ -30,6 +30,8 @@ import javax.swing.JSplitPane
 import javax.swing.JTextArea
 import javax.swing.SwingConstants
 
+import scala.collection.mutable.ArrayBuffer
+
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.lite.topc.TraceHolder
@@ -70,29 +72,28 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   }
 
   def addStartEvent(me: MethodEvent) {
-    def findLine(me: MethodEvent): Option[(Point2D.Double, Point2D.Double)] = {
-      me.turtlePoints match {
-        case tp @ Some(_) => tp
-        case None         => findLine2(me.subcalls)
+    def findSubLines(me: MethodEvent): Seq[(Point2D.Double, Point2D.Double)] = {
+      def nodeSeq = me.turtlePoints match {
+        case Some(tp) => Vector(tp)
+        case None     => Vector()
+      }
+
+      me.subcalls match {
+        case Seq()           => nodeSeq
+        case Seq(x, xs @ _*) => nodeSeq ++ findSubLines(x) ++ (xs flatMap findSubLines)
+
       }
     }
 
-    def findLine2(scs: Seq[MethodEvent]): Option[(Point2D.Double, Point2D.Double)] = scs match {
-      case Seq() => None
-      case Seq(x, xs @ _*) => findLine(x) match {
-        case tp @ Some(_) => tp
-        case None         => findLine2(xs)
-      }
-    }
-    addEvent(me, findLine(me))
+    addEvent(me, findSubLines(me))
   }
 
   def addEndEvent(me: MethodEvent) {
-    addEvent(me, None)
+    addEvent(me, Nil)
   }
 
-  private def addEvent(me: MethodEvent, oll: => Option[(Point2D.Double, Point2D.Double)]) = {
-    lazy val lastLine = oll
+  private def addEvent(me: MethodEvent, oll: => Seq[(Point2D.Double, Point2D.Double)]) = {
+    lazy val subLines = oll
     val meDesc = me.toString
     val uiLevel = me.level + 1
     val ended = me.ended
@@ -115,20 +116,24 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
             else
               scriptEditor.markTraceLine(me.callerLineNum)
 
-            currMarker foreach { _.erase }
+            currMarker foreach { _.erase() }
             kojoCtx.repaintCanvas()
-            lastLine foreach { ll =>
-              val pic1 = kojoCtx.picLine(ll._1, ll._2)
-              val pic2 = kojoCtx.picLine(ll._1, ll._2)
-              val marker = GPics(pic1, pic2)
-              marker.draw()
-              pic1.setPenColor(Color.black)
-              pic1.setPenThickness(10)
-              pic2.setPenColor(Color.yellow)
-              pic2.setPenThickness(4)
-              currMarker = Some(marker)
+            if (subLines.size < 100) {
+              val picCol = new ArrayBuffer[Picture]
+              subLines foreach { ll =>
+                val pic1 = picture.stroke(Color.black) * picture.strokeWidth(10) -> kojoCtx.picLine(ll._1, ll._2)
+                val pic2 = picture.stroke(Color.yellow) * picture.strokeWidth(4) -> kojoCtx.picLine(ll._1, ll._2)
+                val marker = GPics(pic1, pic2)
+                picCol += marker
+              }
+              if (picCol.size > 0) {
+                currMarker = Some(GPics(picCol.toList))
+                currMarker foreach { _.draw() }
+              }
+              else {
+                currMarker = None
+              }
             }
-
           }
         })
       }
