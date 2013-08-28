@@ -203,7 +203,7 @@ def main(args: Array[String]) {
 
   val ignoreMethods = Set("main", "_main", "<init>", "<clinit>", "$init$", "repeat", "repeatWhile", "runInBackground")
   val turtleMethods = Set("setBackground", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
-  val notSupported = Set("Picture", "PicShape", "animate")
+  val notSupported = Set("Picture", "PicShape", "animate", "Story", "Staging")
 
   def getThread(vm: VirtualMachine, name: String): ThreadReference =
     vm.allThreads.find(_.name == name).getOrElse(null)
