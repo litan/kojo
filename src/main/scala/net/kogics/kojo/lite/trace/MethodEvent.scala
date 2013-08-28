@@ -57,7 +57,7 @@ class MethodEvent {
 
   override def toString() = {
     s"""Name: $methodName
-Args: $pargs ${if (returnVal != null) s"\nReturn Value: $returnVal" else ""}
+Args: $pargs ${if (returnVal != null) s"\nReturn Value: $pret" else ""}
 Source: $sourceName
 Entry Line Number: $entryLineNum
 Exit Line Number: $exitLineNum
