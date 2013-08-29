@@ -48,6 +48,7 @@ import com.sun.jdi.VirtualMachine
 import com.sun.jdi.connect.LaunchingConnector
 import com.sun.jdi.event.BreakpointEvent
 import com.sun.jdi.event.ClassPrepareEvent
+import com.sun.jdi.event.ExceptionEvent
 import com.sun.jdi.event.MethodEntryEvent
 import com.sun.jdi.event.MethodExitEvent
 import com.sun.jdi.event.ThreadStartEvent
@@ -279,7 +280,11 @@ def main(args: Array[String]) {
               case bkpt: BreakpointEvent =>
                 bkpt.request.disable()
                 createMethodRequests(excludes, vm, currThread)
+                createExceptionRequest(excludes, vm)
               //                watchThreadStarts()
+
+              case ee: ExceptionEvent =>
+                println(s"Exception in Target: ${ee.exception} at ${ee.location}")
 
               case vmDcEvt: VMDisconnectEvent =>
                 vmRunning = false
@@ -505,14 +510,18 @@ def main(args: Array[String]) {
     import builtins.TSCanvas
     var ret: Option[(Point2D.Double, Point2D.Double)] = None
 
-    val turtle = {
-      val caller = stkfrm.thisObject().uniqueID()
-      turtles.getOrElse(caller, Tw.getTurtle)
-    }
+    val caller = stkfrm.thisObject().uniqueID()
+    val turtle = turtles.getOrElse(caller, Tw.getTurtle)
+    val createdTurtle = turtles.contains(caller)
 
     name match {
       case "clear" =>
-        TSCanvas.clear()
+        if (createdTurtle) {
+          turtle.clear()
+        }
+        else {
+          TSCanvas.clear()
+        }
       case "cleari" =>
         TSCanvas.cleari()
       case "invisible" =>
@@ -647,6 +656,15 @@ def main(args: Array[String]) {
     mthdExitVal.setSuspendPolicy(EventRequest.SUSPEND_ALL)
     mthdExitVal.enable()
     evtReqs = evtReqs :+ mthdExitVal
+  }
+  
+  def createExceptionRequest(excludes: Array[String], vm: VirtualMachine) {
+    val evtReqMgr = vm.eventRequestManager
+    val exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true)
+    excludes.foreach { exceptionRequest.addClassExclusionFilter(_) }
+    exceptionRequest.setSuspendPolicy(EventRequest.SUSPEND_ALL)
+    exceptionRequest.enable()
+    evtReqs = evtReqs :+ exceptionRequest
   }
 
   def createClassPrepareRequest(excludes: Array[String], vm: VirtualMachine) {
