@@ -33,7 +33,6 @@ import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
 
-import core.Picture
 import core.Pixel
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.nodes.PPath
@@ -420,7 +419,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     }
   }
 
-  def setPenColor(color: Color) = Utils.runInSwingThread {
+  def setPenColor(color: Paint) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
       pl.setStrokePaint(color)
@@ -540,7 +539,7 @@ abstract class BasePicList(val pics: List[Picture])
     }
   }
 
-  def setPenColor(color: Color) {
+  def setPenColor(color: Paint) {
     pics.foreach { pic =>
       pic.setPenColor(color)
     }

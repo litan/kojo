@@ -553,6 +553,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     catch {
       // In case the user changes the contents of the script editor so that it is out of sync with the current trace
       case t: Throwable =>
+        val cp = codePane.getCaretPosition
+        codePane.select(cp, cp)
     }
   }
 

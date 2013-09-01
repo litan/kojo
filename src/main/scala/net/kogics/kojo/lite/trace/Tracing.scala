@@ -464,10 +464,9 @@ def main(args: Array[String]) {
     def isTurtleCommand = isCommand && methodObjectType.contains("TracingTurtle")
     def isCanvasCommand = isCommand && methodObjectType.contains("TracingTSCanvas")
     def isBuiltinsCommand = isCommand && methodObjectType.endsWith("TracingBuiltins$")
+    def isPicturePackageMethod = methodObjectType contains "net.kogics.kojo.picture."
     def isPictureMethod = methodObjectType == "net.kogics.kojo.picture.Pic"
-    def isPictureDraw = methodName == "draw" && methodEnterEvt.method.signature == "()V"
-
-    //    println(s"Call: $methodObjectStr.${methodEnterEvt.method.name}${methodEnterEvt.method.signature}")
+    def isPictureDraw = methodName == "draw" && isPicturePackageMethod && methodEnterEvt.method.signature == "()V"
 
     val newEvt = new MethodEvent()
     val mthdEvent = getCurrentMethodEvent
@@ -493,8 +492,12 @@ def main(args: Array[String]) {
       runBuiltinsCommand(methodName, stkfrm, localArgs)
     }
     else if (isPictureDraw) {
-      runPictureMethod(methodName, methodEnterEvt.method.signature, stkfrm, localArgs)
+      val caller = methodObject.uniqueID
+      currPicture = Some(pictures(caller))
     }
+//    else if (isPicturePackageMethod) {
+//      runPictureMethod(methodName, methodEnterEvt.method.signature, methodObject, methodObjectType, stkfrm, localArgs)
+//    }
     newEvt.turtlePoints = ret
     newEvt.picture = currPicture
 
@@ -547,24 +550,27 @@ def main(args: Array[String]) {
 
   var currPicture: Option[Picture] = None
 
-  def runPictureMethod(name: String, signature: String, stkfrm: StackFrame, localArgs: List[LocalVariable]) {
-    val caller = stkfrm.thisObject.uniqueID
+  def runPictureMethod(name: String, signature: String, methodObject: ObjectReference, methodObjectType: String, stkfrm: StackFrame, localArgs: List[LocalVariable]) {
+    if (currPicture.isDefined) {
+      return
+    }
+    println(s"RunPictureMethod: $methodObjectType::${name}${signature}")
+
+    val caller = methodObject.uniqueID
     name match {
-      case "draw" =>
-        currPicture = Some(pictures(caller))
-      //      case "translate" if signature.endsWith("CorePicOps;") =>
-      //        val tx = stkfrm.getValue(localArgs(0)).toString.toDouble
-      //        val ty = stkfrm.getValue(localArgs(1)).toString.toDouble
-      //        pictures(caller).translate(tx, ty)
-      //      case "rotate" if signature.endsWith("CorePicOps;") =>
-      //        val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
-      //        pictures(caller).rotate(angle)
-      //      case "scale" if signature.endsWith("CorePicOps;") =>
-      //        val fx = stkfrm.getValue(localArgs(0)).toString.toDouble
-      //        val fy = if (localArgs.length == 2)
-      //          stkfrm.getValue(localArgs(1)).toString.toDouble
-      //        else fx
-      //        pictures(caller).scale(fx, fy)
+      case "translate" if signature.endsWith("CorePicOps;") =>
+        val tx = stkfrm.getValue(localArgs(0)).toString.toDouble
+        val ty = stkfrm.getValue(localArgs(1)).toString.toDouble
+        pictures(caller).translate(tx, ty)
+      case "rotate" if signature.endsWith("CorePicOps;") =>
+        val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
+        pictures(caller).rotate(angle)
+      case "scale" if signature.endsWith("CorePicOps;") =>
+        val fx = stkfrm.getValue(localArgs(0)).toString.toDouble
+        val fy = if (localArgs.length == 2)
+          stkfrm.getValue(localArgs(1)).toString.toDouble
+        else fx
+        pictures(caller).scale(fx, fy)
       case m @ _ =>
       //        println(s"**TODO** - Unimplemented Picture method - $m")
     }
@@ -683,6 +689,22 @@ def main(args: Array[String]) {
     ret
   }
 
+  def targetList(list: ObjectReference): List[ObjectReference] = {
+    val listType = list.referenceType
+    val hdf = listType.fieldByName("scala$collection$immutable$$colon$colon$$hd")
+    val tlf = listType.fieldByName("tl")
+    val lpics = new ArrayBuffer[ObjectReference]
+    var hd = list.getValue(hdf).asInstanceOf[ObjectReference]
+    lpics += hd
+    var tl = list.getValue(tlf).asInstanceOf[ObjectReference]
+    while (tl.referenceType.name != "scala.collection.immutable.Nil$") {
+      hd = tl.getValue(hdf).asInstanceOf[ObjectReference]
+      lpics += hd
+      tl = tl.getValue(tlf).asInstanceOf[ObjectReference]
+    }
+    lpics.toList
+  }
+
   def handleMethodReturn(name: String, declaringType: String, signature: String, stkfrm: StackFrame, localArgs: List[LocalVariable], retVal: Value) {
     name match {
       case "newTurtle" =>
@@ -700,51 +722,46 @@ def main(args: Array[String]) {
         declaringType match {
           case "net.kogics.kojo.picture.Pic" =>
             val newPic = picture.Pic { t => }(TSCanvas.tCanvas)
-            val ref = caller
-            pictures(ref) = newPic
+            pictures(caller) = newPic
           case "net.kogics.kojo.picture.Scale" =>
             if (localArgs.length == 2) {
-              val ref = caller
               val factor = stkfrm.getValue(localArgs(0)).toString.toDouble
               val pic = stkfrm.getValue(localArgs(1)).asInstanceOf[ObjectReference].uniqueID
               val newPic = picture.Scale(factor)(pictures(pic))
-              pictures(ref) = newPic
+              pictures(caller) = newPic
             }
           case "net.kogics.kojo.picture.Rot" =>
             if (localArgs.length == 2) {
-              val ref = caller
               val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
               val pic = stkfrm.getValue(localArgs(1)).asInstanceOf[ObjectReference].uniqueID
               val newPic = picture.Rot(angle)(pictures(pic))
-              pictures(ref) = newPic
+              pictures(caller) = newPic
             }
           case "net.kogics.kojo.picture.Trans" =>
             if (localArgs.length == 3) {
-              val ref = caller
               val x = stkfrm.getValue(localArgs(0)).toString.toDouble
               val y = stkfrm.getValue(localArgs(1)).toString.toDouble
               val pic = stkfrm.getValue(localArgs(2)).asInstanceOf[ObjectReference].uniqueID
               val newPic = picture.Trans(x, y)(pictures(pic))
-              pictures(ref) = newPic
+              pictures(caller) = newPic
             }
           case "net.kogics.kojo.picture.GPics" =>
             val pics = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
-            val picsType = pics.referenceType
-            val hdf = picsType.fieldByName("scala$collection$immutable$$colon$colon$$hd")
-            val tlf = picsType.fieldByName("tl")
-            val lpics = new ArrayBuffer[ObjectReference]
-            var hd = pics.getValue(hdf).asInstanceOf[ObjectReference]
-            lpics += hd
-            var tl = pics.getValue(tlf).asInstanceOf[ObjectReference]
-            while (tl.referenceType.name != "scala.collection.immutable.Nil$") {
-              hd = tl.getValue(hdf).asInstanceOf[ObjectReference]
-              lpics += hd
-              tl = tl.getValue(tlf).asInstanceOf[ObjectReference]
-            }
+            val picVals = targetList(pics)
+            val newPic = picture.GPics(picVals.map { pr => pictures(pr.uniqueID) })
+            pictures(caller) = newPic
 
-            val ref = caller
-            val newPic = picture.GPics(lpics.toList.map { pr => pictures(pr.uniqueID) })
-            pictures(ref) = newPic
+          case "net.kogics.kojo.picture.HPics" =>
+            val pics = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
+            val picVals = targetList(pics)
+            val newPic = picture.HPics(picVals.map { pr => pictures(pr.uniqueID) })
+            pictures(caller) = newPic
+
+          case "net.kogics.kojo.picture.VPics" =>
+            val pics = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
+            val picVals = targetList(pics)
+            val newPic = picture.HPics(picVals.map { pr => pictures(pr.uniqueID) })
+            pictures(caller) = newPic
 
           case _ =>
         }
