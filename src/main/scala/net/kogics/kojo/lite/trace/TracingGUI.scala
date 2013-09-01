@@ -35,6 +35,7 @@ import net.kogics.kojo.lite.topc.TraceHolder
 import net.kogics.kojo.picture.GPics
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.kgeom.PolyLine
+import java.awt.GradientPaint
 
 class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val events: JPanel = new JPanel
@@ -47,7 +48,8 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   traceHolder.setExternalizable(false)
 
   @volatile var currMarker: Option[Picture] = None
-  @volatile var currPicMarker: Option[Picture] = None
+  @volatile var currPicsMarker = Vector[Picture]()
+  val markingClr = new GradientPaint(0, 0, Color.black, 5, 5, Color.yellow, true)
   @volatile var eventDesc: JTextArea = _
   var eventHolder: JSplitPane = _
 
@@ -92,6 +94,11 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   }
 
   private def addEvent(me: MethodEvent, oll: => Seq[(Point2D.Double, Point2D.Double)]) = {
+    def mePictures(me: MethodEvent): Vector[Picture] = me.picture match {
+      case Some(p) => Vector(p)
+      case None    => me.subcalls.flatMap { mePictures(_) }
+    }
+
     lazy val subLines = oll
     val meDesc = me.toString
     val uiLevel = me.level + 1
@@ -110,20 +117,23 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
             Utils.runLaterInSwingThread {
               Utils.scrollToOffset(0, eventDesc)
             }
-            if (ended && me.sourceName == "scripteditor" && lineNum > 0)
+            if (ended && me.sourceName == "scripteditor" && lineNum > 0) {
               scriptEditor.markTraceLine(lineNum)
-            else
+            }
+            else if (me.callerSourceName == "scripteditor") {
               scriptEditor.markTraceLine(me.callerLineNum)
+            }
+            else {
+              scriptEditor.markTraceLine(-1)
+            }
 
             currMarker foreach { _.erase() }
-            currPicMarker foreach { p => p.setPenColor(Color.red); p.setPenThickness(2) }
+            currPicsMarker foreach { p => p.setPenColor(Color.red); p.setPenThickness(2) }
             kojoCtx.repaintCanvas()
 
-            if (me.picture.isDefined) {
-              val markerPic = me.picture.get
-              currPicMarker = me.picture
-              markerPic.setPenColor(Color.black)
-              markerPic.setPenThickness(6)
+            currPicsMarker = mePictures(me)
+            if (currPicsMarker.size > 0) {
+              currPicsMarker foreach { p => p.setPenColor(markingClr); p.setPenThickness(6) }
             }
             else {
               if (subLines.size < 50) {

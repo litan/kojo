@@ -18,6 +18,7 @@ import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.PCanvas
 import java.util.concurrent.Future
+import net.kogics.kojo.picture.HPics
 
 object TracingBuiltins extends CoreBuiltins {
 
@@ -79,14 +80,9 @@ object TracingBuiltins extends CoreBuiltins {
   def addHelpContent(lang: String, content: Map[String, String]) {}
 
   def Picture(fn: => Unit) = new picture.Pic(t => fn)(TSCanvas)
-  type Picture = core.Picture
-  type GPics = picture.GPics
-  val GPics = picture.GPics
   def picStack(pics: Picture*) = new GPics(pics.toList)
-  val trans = picture.trans _
-  val rot = picture.rot _
-  def scale(f: Double) = picture.scale(f)
-  def scale(x: Double, y: Double) = picture.scale(x, y)
+  def picRow(pics: Picture*) = new HPics(pics.toList)
+  def picCol(pics: Picture*) = new VPics(pics.toList)
 
   class TracingTurtle(canvas: SCanvas, costume: String, x: Double, y: Double)
     extends turtle.Turtle(canvas, costume, x, y) {
