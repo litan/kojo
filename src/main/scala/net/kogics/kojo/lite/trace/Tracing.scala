@@ -13,13 +13,13 @@
  * rights and limitations under the License.
  *
  */
-package net.kogics.kojo.lite
+package net.kogics.kojo
+package lite
 package trace
 
 import java.awt.Color
 import java.awt.geom.Point2D
 import java.io.File
-
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaIterator
 import scala.collection.mutable.HashMap
@@ -31,7 +31,6 @@ import scala.tools.nsc.reporters.Reporter
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
 import scala.util.matching.Regex
-
 import com.sun.jdi.AbsentInformationException
 import com.sun.jdi.ArrayReference
 import com.sun.jdi.Bootstrap
@@ -56,20 +55,23 @@ import com.sun.jdi.event.VMDeathEvent
 import com.sun.jdi.event.VMDisconnectEvent
 import com.sun.jdi.event.VMStartEvent
 import com.sun.jdi.request.EventRequest
-
+import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.lite.ScriptEditor
+import net.kogics.kojo.picture.Pic
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CompilerOutputHandler
+import scala.collection.mutable.ArrayBuffer
 
 class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
   @volatile var currThread: ThreadReference = _
   val tmpdir = System.getProperty("java.io.tmpdir")
   val settings = makeSettings()
   val turtles = new HashMap[Long, Turtle]
+  val pictures = new HashMap[Long, Picture]
   @volatile var evtReqs: Vector[EventRequest] = _
   @volatile var hiddenEventCount = 0
   @volatile var codeLines: Vector[String] = _
@@ -105,7 +107,6 @@ val builtins = net.kogics.kojo.lite.trace.TracingBuiltins
 import builtins._
 import TSCanvas._
 import turtle0.{ clear => _, _ }
-newTurtle(200, 200)
 net.kogics.kojo.lite.i18n.LangInit()
 object UserCode {
   def entry() {
@@ -202,9 +203,8 @@ def main(args: Array[String]) {
     vm
   }
 
-  val ignoreMethods = Set("main", "_main", "<init>", "<clinit>", "$init$", "repeat", "repeatWhile", "runInBackground")
-  val turtleMethods = Set("setBackground", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
-  val notSupported = Set("Picture", "PicShape", "animate", "Story", "Staging")
+  val ignoreMethods = Set("main", "_main", "<clinit>", "$init$")
+  val notSupported = Set("PicShape", "animate", "Story", "Staging")
 
   def getThread(vm: VirtualMachine, name: String): ThreadReference =
     vm.allThreads.find(_.name == name).getOrElse(null)
@@ -221,6 +221,7 @@ def main(args: Array[String]) {
       traceListener.onStart()
       verbose = if (System.getProperty("kojo.trace.verbose") == "true") true else false
       turtles.clear()
+      pictures.clear()
       evtReqs = Vector[EventRequest]()
       currEvtVec.clear
       hiddenEventCount = 0
@@ -248,6 +249,11 @@ def main(args: Array[String]) {
                 }
 
               case methodEnterEvt: MethodEntryEvent =>
+                //                val stkfrm = methodEnterEvt.thread.frame(0)
+                //                val methodObject = stkfrm.thisObject
+                //                val methodObjectStr = if (methodObject != null) methodObject.referenceType.name else ""
+                //                val desc = s"[Method Enter] $methodObjectStr.${methodEnterEvt.method.name}${methodEnterEvt.method.signature} in ${methodEnterEvt.method.declaringType.name}"
+                //                println(desc)
                 if (!(ignoreMethods.contains(methodEnterEvt.method.name) || methodEnterEvt.method.name.startsWith("apply"))) {
                   currThread = methodEnterEvt.thread
                   try {
@@ -268,6 +274,7 @@ def main(args: Array[String]) {
                   catch {
                     case t: Throwable =>
                       println(s"[Exception] [Method Exit] ${methodExitEvt.method.name} -- ${t.getMessage}")
+                      t.printStackTrace()
                   }
                 }
 
@@ -365,7 +372,11 @@ def main(args: Array[String]) {
     }
   }
 
-  def targetToString(frameVal: Value) = {
+  def targetToString(frameVal: Value): String = {
+    if (frameVal == null) {
+      return "null"
+    }
+
     if (frameVal.isInstanceOf[ObjectReference] &&
       !frameVal.isInstanceOf[StringReference] &&
       !frameVal.isInstanceOf[ArrayReference]) {
@@ -398,7 +409,8 @@ def main(args: Array[String]) {
 
   def localToString(frameVal: Value) = String.valueOf(frameVal)
 
-  def desugar(name: String) = {
+  def desugar(name0: String) = {
+    val name = name0.replaceAllLiterally("$minus$greater", "->").replaceAllLiterally("$times", "*")
     val dindex = name.indexOf('$')
     if (dindex == -1) {
       name
@@ -438,9 +450,24 @@ def main(args: Array[String]) {
       try { codeLines(callerLineNum - 1) } catch { case _: Throwable => "N/A" }
     else
       ""
+    val srcLine = if (srcName == "scripteditor")
+      try { codeLines(lineNum - 1) } catch { case _: Throwable => "N/A" }
+    else
+      ""
     val localArgs = try { methodEnterEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
     val stkfrm = currThread.frame(0)
-    val isTurtle = turtleMethods.contains(methodName)
+
+    val methodObject = stkfrm.thisObject
+    val methodObjectType = if (methodObject != null) methodObject.referenceType.name else ""
+
+    val isCommand = methodEnterEvt.method.returnTypeName == "void"
+    def isTurtleCommand = isCommand && methodObjectType.contains("TracingTurtle")
+    def isCanvasCommand = isCommand && methodObjectType.contains("TracingTSCanvas")
+    def isBuiltinsCommand = isCommand && methodObjectType.endsWith("TracingBuiltins$")
+    def isPictureMethod = methodObjectType == "net.kogics.kojo.picture.Pic"
+    def isPictureDraw = methodName == "draw" && methodEnterEvt.method.signature == "()V"
+
+    //    println(s"Call: $methodObjectStr.${methodEnterEvt.method.name}${methodEnterEvt.method.signature}")
 
     val newEvt = new MethodEvent()
     val mthdEvent = getCurrentMethodEvent
@@ -448,19 +475,34 @@ def main(args: Array[String]) {
     newEvt.setParent(mthdEvent)
     newEvt.sourceName = srcName
     newEvt.callerSourceName = callerSrcName
+    newEvt.srcLine = srcLine
     newEvt.callerLine = callerLine
     newEvt.callerLineNum = callerLineNum
     newEvt.methodName = methodName
+    newEvt.targetType = methodObjectType
     newEvt.returnType = methodEnterEvt.method.returnTypeName
 
     var ret: Option[(Point2D.Double, Point2D.Double)] = None
-    if (isTurtle) {
-      ret = runTurtleMethod(methodName, stkfrm, localArgs)
+    if (isTurtleCommand) {
+      ret = runTurtleCommand(methodName, stkfrm, localArgs)
+    }
+    else if (isCanvasCommand) {
+      runCanvasCommand(methodName, stkfrm, localArgs)
+    }
+    else if (isBuiltinsCommand) {
+      runBuiltinsCommand(methodName, stkfrm, localArgs)
+    }
+    else if (isPictureDraw) {
+      runPictureMethod(methodName, methodEnterEvt.method.signature, stkfrm, localArgs)
     }
     newEvt.turtlePoints = ret
+    newEvt.picture = currPicture
 
-    if ((srcName == "scripteditor" && lineNum > 0) || (callerSrcName == "scripteditor" && callerLine.contains(methodName))) {
+    if ((srcName == "scripteditor" && lineNum > 0 && srcLine.contains(methodName)) ||
+      (callerSrcName == "scripteditor" && callerLine.contains(methodName)) ||
+      isPictureDraw) {
       newEvt.args = methodArgs(targetToString)
+      newEvt.targetObject = targetToString(methodObject)
       tracingGUI.addStartEvent(newEvt)
       handleVerboseUiEvent(newEvt, true)
     }
@@ -479,7 +521,7 @@ def main(args: Array[String]) {
     val localArgs = try { methodExitEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
     val retVal = methodExitEvt.returnValue
 
-    runTurtleMethod2(methodName, stkfrm, localArgs, retVal)
+    handleMethodReturn(methodName, methodExitEvt.method.declaringType.name, methodExitEvt.method.signature, stkfrm, localArgs, retVal)
 
     val mthdEvent = getCurrentMethodEvent
     mthdEvent.foreach { ce =>
@@ -488,7 +530,7 @@ def main(args: Array[String]) {
       val retValStr = localToString(retVal)
       ce.exitLineNum = lineNum
 
-      if ((ce.sourceName == "scripteditor" && lineNum > 0) ||
+      if ((ce.sourceName == "scripteditor" && lineNum > 0 && ce.srcLine.contains(methodName)) ||
         (ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) && ce.returnType != "void")) {
         ce.returnVal = targetToString(retVal)
         tracingGUI.addEndEvent(ce)
@@ -503,27 +545,81 @@ def main(args: Array[String]) {
     }
   }
 
-  def runTurtleMethod(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]): Option[(Point2D.Double, Point2D.Double)] = {
-    if (stkfrm.thisObject() == null) return None
+  var currPicture: Option[Picture] = None
+
+  def runPictureMethod(name: String, signature: String, stkfrm: StackFrame, localArgs: List[LocalVariable]) {
+    val caller = stkfrm.thisObject.uniqueID
+    name match {
+      case "draw" =>
+        currPicture = Some(pictures(caller))
+      //      case "translate" if signature.endsWith("CorePicOps;") =>
+      //        val tx = stkfrm.getValue(localArgs(0)).toString.toDouble
+      //        val ty = stkfrm.getValue(localArgs(1)).toString.toDouble
+      //        pictures(caller).translate(tx, ty)
+      //      case "rotate" if signature.endsWith("CorePicOps;") =>
+      //        val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
+      //        pictures(caller).rotate(angle)
+      //      case "scale" if signature.endsWith("CorePicOps;") =>
+      //        val fx = stkfrm.getValue(localArgs(0)).toString.toDouble
+      //        val fy = if (localArgs.length == 2)
+      //          stkfrm.getValue(localArgs(1)).toString.toDouble
+      //        else fx
+      //        pictures(caller).scale(fx, fy)
+      case m @ _ =>
+      //        println(s"**TODO** - Unimplemented Picture method - $m")
+    }
+  }
+
+  def runBuiltinsCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]) {
+    import builtins.TSCanvas
+    name match {
+      case "setBackground" =>
+        val c = getColor(stkfrm, localArgs)
+        TSCanvas.tCanvas.setCanvasBackground(c)
+      case c @ _ =>
+      //        println(s"**TODO** - Unimplemented Builtins command - $c")
+    }
+  }
+
+  def runCanvasCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]) {
+    import builtins.TSCanvas
+    name match {
+      case "clear" =>
+        TSCanvas.clear()
+      case "cleari" =>
+        TSCanvas.cleari()
+      case "axesOn" =>
+        TSCanvas.axesOn
+      case "axesOff" =>
+        TSCanvas.axesOff
+      case "gridOn" =>
+        TSCanvas.gridOn
+      case "gridOff" =>
+        TSCanvas.gridOff
+      case "zoom" =>
+        val (x, y, z) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(0)).toString.toDouble)
+        TSCanvas.zoom(x, y, z)
+      case c @ _ =>
+      //        println(s"**TODO** - Unimplemented Canvas command - $c")
+    }
+
+  }
+
+  def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]): Option[(Point2D.Double, Point2D.Double)] = {
 
     import builtins.Tw
-    import builtins.TSCanvas
     var ret: Option[(Point2D.Double, Point2D.Double)] = None
 
-    val caller = stkfrm.thisObject().uniqueID()
-    val turtle = turtles.getOrElse(caller, Tw.getTurtle)
+    val caller = stkfrm.thisObject.uniqueID
+    val turtle = if (currPicture.isDefined)
+      currPicture.get.asInstanceOf[Pic].t
+    else
+      turtles.getOrElse(caller, Tw.getTurtle)
     val createdTurtle = turtles.contains(caller)
 
     name match {
       case "clear" =>
-        if (createdTurtle) {
-          turtle.clear()
-        }
-        else {
-          TSCanvas.clear()
-        }
-      case "cleari" =>
-        TSCanvas.cleari()
+        turtle.clear()
       case "invisible" =>
         turtle.invisible
       case "forward" =>
@@ -581,35 +677,93 @@ def main(args: Array[String]) {
       //      case "setCostumes" =>
       //        val costumes = stkfrm.getValue(localArgs(0))
       //        turtle.setCostumes(costumes)
-      case "setBackground" =>
-        val c = getColor(stkfrm, localArgs)
-        TSCanvas.tCanvas.setCanvasBackground(c)
-      case "axesOn" =>
-        TSCanvas.axesOn
-      case "axesOff" =>
-        TSCanvas.axesOff
-      case "gridOn" =>
-        TSCanvas.gridOn
-      case "gridOff" =>
-        TSCanvas.gridOff
-      case "zoom" =>
-        val (x, y, z) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(0)).toString.toDouble)
-        TSCanvas.zoom(x, y, z)
-      case m @ _ =>
-        println(s"**TODO** - Unimplemented Turtle method - $m")
+      case c @ _ =>
+      //        println(s"**TODO** - Unimplemented Turtle command - $c")
     }
     ret
   }
 
-  def runTurtleMethod2(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], retVal: Value) {
+  def handleMethodReturn(name: String, declaringType: String, signature: String, stkfrm: StackFrame, localArgs: List[LocalVariable], retVal: Value) {
     name match {
       case "newTurtle" =>
         import builtins.TSCanvas
         if (localArgs.length == 3) {
           val (x, y, str) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(2)).toString)
           val newTurtle = TSCanvas.newTurtle(x, y, str.substring(1, str.length - 1))
-          val ref = retVal.asInstanceOf[ObjectReference].uniqueID()
+          val ref = retVal.asInstanceOf[ObjectReference].uniqueID
           turtles(ref) = newTurtle
+        }
+
+      case "<init>" =>
+        import builtins.TSCanvas
+        val caller = stkfrm.thisObject.uniqueID
+        declaringType match {
+          case "net.kogics.kojo.picture.Pic" =>
+            val newPic = picture.Pic { t => }(TSCanvas.tCanvas)
+            val ref = caller
+            pictures(ref) = newPic
+          case "net.kogics.kojo.picture.Scale" =>
+            if (localArgs.length == 2) {
+              val ref = caller
+              val factor = stkfrm.getValue(localArgs(0)).toString.toDouble
+              val pic = stkfrm.getValue(localArgs(1)).asInstanceOf[ObjectReference].uniqueID
+              val newPic = picture.Scale(factor)(pictures(pic))
+              pictures(ref) = newPic
+            }
+          case "net.kogics.kojo.picture.Rot" =>
+            if (localArgs.length == 2) {
+              val ref = caller
+              val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
+              val pic = stkfrm.getValue(localArgs(1)).asInstanceOf[ObjectReference].uniqueID
+              val newPic = picture.Rot(angle)(pictures(pic))
+              pictures(ref) = newPic
+            }
+          case "net.kogics.kojo.picture.Trans" =>
+            if (localArgs.length == 3) {
+              val ref = caller
+              val x = stkfrm.getValue(localArgs(0)).toString.toDouble
+              val y = stkfrm.getValue(localArgs(1)).toString.toDouble
+              val pic = stkfrm.getValue(localArgs(2)).asInstanceOf[ObjectReference].uniqueID
+              val newPic = picture.Trans(x, y)(pictures(pic))
+              pictures(ref) = newPic
+            }
+          case "net.kogics.kojo.picture.GPics" =>
+            val pics = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
+            val picsType = pics.referenceType
+            val hdf = picsType.fieldByName("scala$collection$immutable$$colon$colon$$hd")
+            val tlf = picsType.fieldByName("tl")
+            val lpics = new ArrayBuffer[ObjectReference]
+            var hd = pics.getValue(hdf).asInstanceOf[ObjectReference]
+            lpics += hd
+            var tl = pics.getValue(tlf).asInstanceOf[ObjectReference]
+            while (tl.referenceType.name != "scala.collection.immutable.Nil$") {
+              hd = tl.getValue(hdf).asInstanceOf[ObjectReference]
+              lpics += hd
+              tl = tl.getValue(tlf).asInstanceOf[ObjectReference]
+            }
+
+            val ref = caller
+            val newPic = picture.GPics(lpics.toList.map { pr => pictures(pr.uniqueID) })
+            pictures(ref) = newPic
+
+          case _ =>
+        }
+
+      case "draw" if signature == "()V" =>
+        val mthdEvent = getCurrentMethodEvent
+        var parentPicture = false
+        if (mthdEvent.isDefined) {
+          if (mthdEvent.get.parent.isDefined) {
+            if (mthdEvent.get.parent.get.picture.isDefined) {
+              currPicture = mthdEvent.get.parent.get.picture
+              parentPicture = true
+            }
+          }
+        }
+
+        if (!parentPicture && currPicture.isDefined) {
+          currPicture.get.draw()
+          currPicture = None
         }
 
       case _ =>
@@ -657,7 +811,7 @@ def main(args: Array[String]) {
     mthdExitVal.enable()
     evtReqs = evtReqs :+ mthdExitVal
   }
-  
+
   def createExceptionRequest(excludes: Array[String], vm: VirtualMachine) {
     val evtReqMgr = vm.eventRequestManager
     val exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true)

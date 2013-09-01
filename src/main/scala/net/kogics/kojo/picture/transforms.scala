@@ -80,6 +80,7 @@ case class Rot(angle: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Rot(angle)(pic.copy)
+  override def toString() = s"Rot($angle) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Rotp(angle: Double, x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -96,6 +97,7 @@ case class Scale(factor: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Scale(factor)(pic.copy)
+  override def toString() = s"Scale ($factor) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class ScaleXY(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -112,6 +114,7 @@ case class Trans(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Trans(x, y)(pic.copy)
+  override def toString() = s"Trans ($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Offset(x: Double, y: Double)(pic: Picture) extends Transform(pic) {

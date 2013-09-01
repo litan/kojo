@@ -52,10 +52,10 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 
   def draw() {
     realDraw()
-//    Need to do the following if we ever have turtle commands that modify the turtle's layer transform    
-//    Utils.runInSwingThread {
-//      pgTransform = t2t(tnode.getTransformReference(true))
-//    }
+    //    Need to do the following if we ever have turtle commands that modify the turtle's layer transform    
+    //    Utils.runInSwingThread {
+    //      pgTransform = t2t(tnode.getTransformReference(true))
+    //    }
   }
 
   def erase() = Utils.runInSwingThread {
@@ -155,8 +155,8 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     if (axes == null) {
       val (size, delta, num, bigt) = canvas.unitLen match {
         case Pixel => (200.0f, 20.0f, 10, 5)
-        case Inch => (4.0f, 0.25f, 16, 4)
-        case Cm => (10f, .5f, 20, 2)
+        case Inch  => (4.0f, 0.25f, 16, 4)
+        case Cm    => (10f, .5f, 20, 2)
       }
       val camScale = canvas.camScale.toFloat
       val tickSize = 3 / camScale
@@ -217,7 +217,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     }
     tnode.repaint()
   }
-  
+
   def isVisible() = Utils.runInSwingThreadAndPause { tnode.getVisible() }
 
   def initGeom(): Geometry
@@ -260,6 +260,8 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     picGeom.getLength
   }
 
+  override def toString() = s"Picture with Id: ${System.identityHashCode(this)}"
+
   def myCanvas = canvas.pCanvas
 }
 
@@ -272,7 +274,7 @@ trait CorePicOps2 { self: Picture =>
       fn(this)
     }
   }
-  
+
   def intersects(other: Picture) = Utils.runInSwingThreadAndPause {
     if (this == other) {
       false
@@ -389,9 +391,9 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
   }
 
   private def fillColor(fillPaint: Paint) = fillPaint match {
-    case null => Color.white
+    case null     => Color.white
     case c: Color => c
-    case _ => throw new IllegalStateException("You can't extract rgb values of non Color paints")
+    case _        => throw new IllegalStateException("You can't extract rgb values of non Color paints")
   }
 
   def hueMod(f: Double) = Utils.runInSwingThread {
@@ -667,4 +669,6 @@ class GPics(pics: List[Picture]) extends BasePicList(pics) {
     super.dumpInfo()
     println("<<< GPics End\n\n")
   }
+
+  override def toString() = s"Picture Stack (Id: ${System.identityHashCode(this)})"
 }
