@@ -410,7 +410,7 @@ def main(args: Array[String]) {
   def localToString(frameVal: Value) = String.valueOf(frameVal)
 
   def desugar(name0: String) = {
-    val name = name0.replaceAllLiterally("$minus$greater", "->").replaceAllLiterally("$times", "*")
+    val name = name0.replaceAllLiterally("$minus$greater", "->").replaceAllLiterally("$times", "*").replaceAllLiterally("_$eq", "")
     val dindex = name.indexOf('$')
     if (dindex == -1) {
       name
