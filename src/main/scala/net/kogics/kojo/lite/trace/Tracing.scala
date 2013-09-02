@@ -494,8 +494,7 @@ def main(args: Array[String]) {
     //    }
     newEvt.picture = currPicture
 
-    if ((srcName == "scripteditor" && lineNum > 0 && srcLine.contains(methodName)) ||
-      (callerSrcName == "scripteditor" && callerLine.contains(methodName)) ||
+    if ((callerSrcName == "scripteditor" && callerLine.contains(methodName)) ||
       isPictureDraw) {
       newEvt.args = methodArgs(targetToString)
       newEvt.targetObject = targetToString(methodObject)
@@ -526,8 +525,7 @@ def main(args: Array[String]) {
       val retValStr = localToString(retVal)
       ce.exitLineNum = lineNum
 
-      if ((ce.sourceName == "scripteditor" && lineNum > 0 && ce.srcLine.contains(methodName)) ||
-        (ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) && ce.returnType != "void")) {
+      if ((ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) && ce.returnType != "void")) {
         ce.returnVal = targetToString(retVal)
         tracingGUI.addEndEvent(ce)
         handleVerboseUiEvent(ce, false)
