@@ -105,6 +105,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   private def changeHeading(newTheta: Double) {
+    _oldTheta = theta
     theta = newTheta
     turtle.setRotation(theta)
   }
@@ -177,15 +178,15 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   private def currStyle = Style(pen.getColor, pen.getThickness, pen.getFillColor, pen.getFont, pen == DownPen)
 
-  private var _lastLine: Option[(Point2D.Double, Point2D.Double)] = None
-  private var _lastTurn: Option[(Point2D.Double, Double, Double)] = None
+  var _lastLine = false 
+  private var _oldTheta: Double = Double.NaN
 
-  def lastLine = Utils.runInSwingThreadAndWait {
-    _lastLine
+  def lastLine: Option[(Point2D.Double, Point2D.Double)] = Utils.runInSwingThreadAndWait {
+    if (_lastLine) penPaths.last.lastLine else None
   }
 
-  def lastTurn = Utils.runInSwingThreadAndWait {
-    _lastTurn
+  def lastTurn: Option[(Point2D.Double, Double, Double)] = Utils.runInSwingThreadAndWait {
+    Some(new Point2D.Double(_positionX, _positionY), _oldTheta, theta)
   }
 
   private def pointAfterForward(n: Double) = {
@@ -272,7 +273,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   private def realTurn(angle: Double) {
     val newTheta = thetaAfterTurn(angle, theta)
-    _lastTurn = Some(new Point2D.Double(_positionX, _positionY), theta, newTheta)
     changeHeading(newTheta)
     turtle.repaint()
   }
@@ -738,7 +738,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   class UpPen extends AbstractPen {
     def startMove(x: Double, y: Double) {}
     def move(x: Double, y: Double) {}
-    def endMove(x: Double, y: Double) { /* _lastLine = Some(penPaths.last.points.last, new Point2D.Double(x, y)) */ }
+    def endMove(x: Double, y: Double) { _lastLine = false }
     def updatePosition() {}
     def write(text: String) {}
   }
@@ -762,7 +762,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       tempLine.reset
       penPaths.last.lineTo(x, y)
       penPaths.last.repaint()
-      _lastLine = penPaths.last.lastLine
+      _lastLine = true
     }
 
     def updatePosition() {
