@@ -11,6 +11,14 @@ import net.kogics.kojo.core.TSCanvasFeatures
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.core.UnitLen
 import net.kogics.kojo.core.Picture
+import net.kogics.kojo.core.SCanvas
+import edu.umd.cs.piccolo.util.PBounds
+import edu.umd.cs.piccolo.PCamera
+import edu.umd.cs.piccolo.PLayer
+import edu.umd.cs.piccolo.activities.PActivity
+import edu.umd.cs.piccolo.PCanvas
+import java.util.concurrent.Future
+import net.kogics.kojo.picture.HPics
 
 object TracingBuiltins extends CoreBuiltins {
 
@@ -57,7 +65,6 @@ object TracingBuiltins extends CoreBuiltins {
     }
   }
 
-  def cleari() {}
   def setBackground(c: Paint) {}
 
   /*
@@ -78,48 +85,47 @@ object TracingBuiltins extends CoreBuiltins {
   def addCodeTemplates(lang: String, templates: Map[String, String]) {}
   def addHelpContent(lang: String, content: Map[String, String]) {}
 
-  class TracingTSCanvas extends TSCanvasFeatures {
-    val spriteCanvas = new NoOpSCanvas
-    val turtle0: core.Turtle = newTurtle(0.0, 0.0)
+  def Picture(fn: => Unit) = new picture.Pic(t => fn)(TSCanvas)
+  def picStack(pics: Picture*) = new GPics(pics.toList)
+  def picRow(pics: Picture*) = new HPics(pics.toList)
+  def picCol(pics: Picture*) = new VPics(pics.toList)
 
-    def clear() {}
+  class TracingTurtle(canvas: SCanvas, costume: String, x: Double, y: Double)
+    extends turtle.Turtle(canvas, costume, x, y) {
+
+    override def act(fn: Turtle => Unit) {
+      fn(this)
+    }
+
+    override def toString() = s"Turtle with Id: ${System.identityHashCode(this)}"
+  }
+
+  class TracingTSCanvas extends NoOpSCanvas {
+    override val turtle0: core.Turtle = newTurtle(0.0, 0.0)
+    type TurtleLike <: core.Turtle
+
     def newTurtle(): Turtle = newTurtle(0, 0)
     def newTurtle(x: Double, y: Double): core.Turtle = {
       newTurtle(x, y, "/images/turtle32.png")
     }
-    def newTurtle(x: Double, y: Double, costume: String): core.Turtle = {
-      new net.kogics.kojo.turtle.Turtle(spriteCanvas, costume, x, y) {
-        override def act(fn: Turtle => Unit) {
-          fn(this)
-        }
-      }
+    override def newTurtle(x: Double, y: Double, costume: String): core.Turtle = {
+      _newTurtle(x, y, costume)
     }
 
-    def axesOn() {}
-    def axesOff() {}
-    def gridOn() {}
-    def gridOff() {}
-    def zoom(factor: Double) {}
-    def zoom(factor: Double, cx: Double, cy: Double) {}
-    def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) {}
-    def exportImage(filePrefix: String) = new java.io.File("noop")
-    def exportImage(filePrefix: String, width: Int, height: Int) = new java.io.File("noop")
-    def exportThumbnail(filePrefix: String, height: Int) = new java.io.File("noop")
-    def onKeyPress(fn: Int => Unit) {}
-    def onKeyRelease(fn: Int => Unit) {}
-    def onMouseClick(fn: (Double, Double) => Unit) {}
-    def setUnitLength(ul: UnitLen) {}
-    def clearWithUL(ul: UnitLen) {}
-    def camScale = 1
-    def wipe() {}
-    def setBackgroundH(c1: java.awt.Color, c2: java.awt.Color) {spriteCanvas.setBackgroundH(c1, c2)}
-    def setBackgroundV(c1: Color, c2: Color) {spriteCanvas.setBackgroundV(c1, c2)}
-    def drawStage(fillc: Paint) {}
-    def stage: Picture = null
-    def stageLeft: Picture = null
-    def stageTop: Picture = null
-    def stageRight: Picture = null
-    def stageBot: Picture = null
-  }
+    private def _newTurtle(x: Double, y: Double, costume: String): core.Turtle = {
+      new TracingTurtle(this, costume, x, y)
+    }
 
+    private[kojo] override def newInvisibleTurtle(x: Double, y: Double) = {
+      _newTurtle(x, y, "/images/turtle32.png").asInstanceOf[TurtleLike]
+    }
+
+    override def animateActivity(a: PActivity) {
+      a.getDelegate().activityFinished(a)
+    }
+
+    override lazy val getCamera: PCamera = new PCamera
+    override lazy val pictures: PLayer = new PLayer
+    def cleari() {}
+  }
 }

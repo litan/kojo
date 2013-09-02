@@ -23,7 +23,6 @@ import java.awt.geom.AffineTransform
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.kgeom.PolyLine
 
-import core.Picture
 import util.Utils
 
 trait Transformer extends Picture with CorePicOps2 {
@@ -53,7 +52,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def setPosition(x: Double, y: Double) = tpic.setPosition(x, y)
   def heading = tpic.heading
   def setHeading(angle: Double) = tpic.setHeading(angle)
-  def setPenColor(color: Color) = tpic.setPenColor(color)
+  def setPenColor(color: Paint) = tpic.setPenColor(color)
   def setPenThickness(th: Double) = tpic.setPenThickness(th)
   def setFillColor(color: Paint) = tpic.setFillColor(color)
   def morph(fn: Seq[PolyLine] => Seq[PolyLine]) = tpic.morph(fn)
@@ -80,6 +79,7 @@ case class Rot(angle: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Rot(angle)(pic.copy)
+  override def toString() = s"Rot($angle) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Rotp(angle: Double, x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -96,6 +96,7 @@ case class Scale(factor: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Scale(factor)(pic.copy)
+  override def toString() = s"Scale ($factor) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class ScaleXY(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -104,6 +105,7 @@ case class ScaleXY(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = ScaleXY(x, y)(pic.copy)
+  override def toString() = s"Scale ($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Trans(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -112,6 +114,7 @@ case class Trans(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Trans(x, y)(pic.copy)
+  override def toString() = s"Trans ($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Offset(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -156,7 +159,7 @@ case class Opac(f: Double)(pic: Picture) extends Transform(pic) {
 
 case class Hue(f: Double)(pic: Picture) extends Transform(pic) {
   Utils.checkHsbModFactor(f)
-    
+
   def draw() {
     pic.draw()
     pic.hueMod(f)
@@ -190,33 +193,33 @@ object Deco {
 
 class Deco(pic: Picture)(painter: Painter) extends Transform(pic) {
   def draw() {
-    pic.decorateWith(painter) 
-    pic.draw() 
+    pic.decorateWith(painter)
+    pic.draw()
   }
   def copy = Deco(pic.copy)(painter)
 }
 case class Fill(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
-    t.setFillColor(color)
-  }) {
+  t.setFillColor(color)
+}) {
   override def copy = Fill(color)(pic.copy)
 }
 
 case class Stroke(color: Color)(pic: Picture) extends Deco(pic)({ t =>
-    t.setPenColor(color)
-  }) {
+  t.setPenColor(color)
+}) {
   override def copy = Stroke(color)(pic.copy)
 }
 
 case class StrokeWidth(w: Double)(pic: Picture) extends Deco(pic)({ t =>
-    t.setPenThickness(w)
-  }) {
+  t.setPenThickness(w)
+}) {
   override def copy = StrokeWidth(w)(pic.copy)
 }
 
-abstract class ComposableTransformer extends Function1[Picture,Picture] {outer =>
+abstract class ComposableTransformer extends Function1[Picture, Picture] { outer =>
   def apply(p: Picture): Picture
   def ->(p: Picture) = apply(p)
-  def * (other: ComposableTransformer) = new ComposableTransformer {
+  def *(other: ComposableTransformer) = new ComposableTransformer {
     def apply(p: Picture): Picture = {
       outer.apply(other.apply(p))
     }

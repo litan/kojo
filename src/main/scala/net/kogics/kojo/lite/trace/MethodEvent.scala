@@ -18,9 +18,12 @@ package net.kogics.kojo.lite.trace
 import com.sun.jdi.LocalVariable
 import com.sun.jdi.StackFrame
 import java.awt.geom.Point2D
+import net.kogics.kojo.core.Picture
 
 class MethodEvent {
   @volatile var methodName: String = _
+  @volatile var targetObject: String = _
+  @volatile var targetType: String = _
   @volatile var args: Seq[String] = _
   @volatile var returnVal: String = _
   @volatile var returnType: String = _
@@ -30,9 +33,11 @@ class MethodEvent {
   @volatile var sourceName: String = _
   @volatile var callerLineNum: Int = -1
   @volatile var callerSourceName: String = _
+  @volatile var srcLine: String = _
   @volatile var callerLine: String = _
   @volatile var subcalls = Vector[MethodEvent]()
   @volatile var turtlePoints: Option[(Point2D.Double, Point2D.Double)] = None
+  @volatile var picture: Option[Picture] = None
 
   def pargs = if (args.size > 0) {
     args.mkString("(", ", ", ")")
@@ -57,12 +62,14 @@ class MethodEvent {
 
   override def toString() = {
     s"""Name: $methodName
-Args: $pargs ${if (returnVal != null) s"\nReturn Value: $pret" else ""}
+Args: $pargs${if (returnVal != null) s"\nReturn Value: $pret" else ""}
+Target Object: $targetObject
+Target Type: $targetType
 Source: $sourceName
 Entry Line Number: $entryLineNum
 Exit Line Number: $exitLineNum
 Caller Source: $callerSourceName
-Caller Line Number: $callerLineNum
+Caller Line Number: $callerLineNum${if (srcLine != "") s"\nSource Line: $srcLine" else ""}
 Caller Source Line: $callerLine
 """
   }

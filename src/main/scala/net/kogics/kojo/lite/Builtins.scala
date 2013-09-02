@@ -308,31 +308,18 @@ Here's a partial list of the available commands:
 
   def stHelpFor(instr: String) = Help(instr)
 
-  type Picture = core.Picture
   type Painter = picture.Painter
   type Pic = picture.Pic
-  //  val Pic = picture.Pic
   type Pic0 = picture.Pic0
-  //  val Pic0 = picture.Pic0
-  type HPics = picture.HPics
-  val HPics = picture.HPics
   val picRow = HPics
-  type VPics = picture.VPics
-  val VPics = picture.VPics
   val picCol = VPics
-  type GPics = picture.GPics
-  val GPics = picture.GPics
   val picStack = GPics
 
-  val rot = picture.rot _
   val rotp = picture.rotp _
-  def scale(f: Double) = picture.scale(f)
-  def scale(x: Double, y: Double) = picture.scale(x, y)
   val opac = picture.opac _
   val hue = picture.hue _
   val sat = picture.sat _
   val brit = picture.brit _
-  val trans = picture.trans _
   val offset = picture.offset _
   val flip = picture.flipY
   val flipY = picture.flipY
@@ -354,7 +341,6 @@ Here's a partial list of the available commands:
   def Picture(fn: => Unit) = picture.Pic0 { t =>
     fn
   }
-  def draw(pictures: Picture*) = pictures.foreach { _ draw () }
   def drawAndHide(pictures: Picture*) = pictures.foreach { p => p.draw(); p.invisible() }
   def show(pictures: Picture*) {
     throw new UnsupportedOperationException("Use draw(pic/s) instead of show(pic/s)")
