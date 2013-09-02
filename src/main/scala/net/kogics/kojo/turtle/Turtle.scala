@@ -58,7 +58,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private val layer = new PLayer
   def tlayer: PLayer = layer
   private val camera = canvas.getCamera
-  if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(math.max(camera.getLayerCount-1, 0), layer)
+  if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(math.max(camera.getLayerCount - 1, 0), layer)
   @volatile private[turtle] var _animationDelay = 0l
 
   private val turtleImage = new PImage
@@ -177,8 +177,15 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   private def currStyle = Style(pen.getColor, pen.getThickness, pen.getFillColor, pen.getFont, pen == DownPen)
 
+  private var _lastLine: Option[(Point2D.Double, Point2D.Double)] = None
+  private var _lastTurn: Option[(Point2D.Double, Double, Double)] = None
+
   def lastLine = Utils.runInSwingThreadAndWait {
-    penPaths.last.lastLine
+    _lastLine
+  }
+
+  def lastTurn = Utils.runInSwingThreadAndWait {
+    _lastTurn
   }
 
   private def pointAfterForward(n: Double) = {
@@ -265,6 +272,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   private def realTurn(angle: Double) {
     val newTheta = thetaAfterTurn(angle, theta)
+    _lastTurn = Some(new Point2D.Double(_positionX, _positionY), theta, newTheta)
     changeHeading(newTheta)
     turtle.repaint()
   }
@@ -730,7 +738,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   class UpPen extends AbstractPen {
     def startMove(x: Double, y: Double) {}
     def move(x: Double, y: Double) {}
-    def endMove(x: Double, y: Double) {}
+    def endMove(x: Double, y: Double) { /* _lastLine = Some(penPaths.last.points.last, new Point2D.Double(x, y)) */ }
     def updatePosition() {}
     def write(text: String) {}
   }
@@ -754,6 +762,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       tempLine.reset
       penPaths.last.lineTo(x, y)
       penPaths.last.repaint()
+      _lastLine = penPaths.last.lastLine
     }
 
     def updatePosition() {
