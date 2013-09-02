@@ -32,7 +32,7 @@ package object picture {
   val flipY = FlipYc
   val axesOn = AxesOnc
   def fill(color: Paint) = Fillc(color)
-  def stroke(color: Color) = Strokec(color)
+  def stroke(color: Paint) = Strokec(color)
   def strokeWidth(w: Double) = StrokeWidthc(w)
   def deco(painter: Painter) = Decoc(painter)
 

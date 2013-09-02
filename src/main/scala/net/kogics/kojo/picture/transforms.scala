@@ -16,7 +16,6 @@
 package net.kogics.kojo
 package picture
 
-import java.awt.Color
 import java.awt.Paint
 import java.awt.geom.AffineTransform
 
@@ -204,7 +203,7 @@ case class Fill(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
   override def copy = Fill(color)(pic.copy)
 }
 
-case class Stroke(color: Color)(pic: Picture) extends Deco(pic)({ t =>
+case class Stroke(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
   t.setPenColor(color)
 }) {
   override def copy = Stroke(color)(pic.copy)
@@ -282,7 +281,7 @@ case class Fillc(color: Paint) extends ComposableTransformer {
   def apply(p: Picture) = Fill(color)(p)
 }
 
-case class Strokec(color: Color) extends ComposableTransformer {
+case class Strokec(color: Paint) extends ComposableTransformer {
   def apply(p: Picture) = Stroke(color)(p)
 }
 
