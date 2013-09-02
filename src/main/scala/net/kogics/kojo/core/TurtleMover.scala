@@ -22,6 +22,7 @@ case class Style(val penColor: Paint, val penThickness: Double, val fillColor: P
 
 trait TurtleMover extends RichTurtleCommands {
   def forward(n: Double): Unit
+  def forward(): Unit = forward(25)
   def turn(angle: Double): Unit
   def penUp(): Unit
   def penDown(): Unit
@@ -74,6 +75,7 @@ trait TurtleMover extends RichTurtleCommands {
     forward(n)
     penDown()
   }
+  def hop(): Unit = hop(25)
   def perimeter: Double
   def area: Double
   def lastLine: Option[(Point2D.Double, Point2D.Double)]

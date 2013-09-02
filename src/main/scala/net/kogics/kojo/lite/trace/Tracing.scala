@@ -640,12 +640,6 @@ def main(args: Array[String]) {
       case "turn" =>
         val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.turn(angle)
-      case "hop"   =>
-      //val value = stkfrm.getValue(localArgs(0)).toString.toDouble
-      //turtle.hop(value)
-      case "right" =>
-      case "left"  =>
-      case "back"  =>
       case "home" =>
         turtle.home
       case "jumpTo" =>

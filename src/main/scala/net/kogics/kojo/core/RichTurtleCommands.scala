@@ -25,4 +25,5 @@ trait RichTurtleCommands {
   def left(): Unit = left(90)
   def right(): Unit = right(90)
   def back(n: Double) = forward(-n)
+  def back(): Unit = back(25)
 }
