@@ -13,16 +13,13 @@ import net.kogics.kojo.util.UserCommand
 class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     def getTurtle = turtle0
     def lastLine = turtle0.lastLine
-    def forward(): Unit = forward(25)
     def forward(n: Double) = turtle0.forward(n)
     UserCommand("forward", List("numSteps"), "Moves the turtle forward a given number of steps.")
 
-    def hop(): Unit = hop(25)
-    UserCommand("hop", List("numSteps"), "Moves the turtle forward a given number of steps without drawing a line.")
-
     // all commands that have a UserCommand entry but no implementation come in via
     // RichTurtleCommands or TurtleMover
-    def back(): Unit = back(25)
+    UserCommand("hop", List("numSteps"), "Moves the turtle forward a given number of steps without drawing a line.")
+
     UserCommand("back", List("numSteps"), "Moves the turtle back a given number of steps.")
 
     UserCommand("home", Nil, "Moves the turtle to its original location, and makes it point north.")

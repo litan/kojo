@@ -66,16 +66,7 @@ object TracingBuiltins extends CoreBuiltins {
   }
 
   def setBackground(c: Paint) {}
-
-  /*
-  def forward() {}
-  def back() {}
-  def hop() {}
-*/
-  
   def stopActivity() = {}
-  /* turtle creation */
-
   def runInBackground(code: => Unit) { code }
 
   def isScratchPad = false
