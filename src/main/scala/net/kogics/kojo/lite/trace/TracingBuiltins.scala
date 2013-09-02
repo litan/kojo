@@ -51,7 +51,7 @@ object TracingBuiltins extends CoreBuiltins {
     }
   }
 
-  def repeatWhile(condition: Boolean)(fn: => Unit) {
+  def repeatWhile(condition: => Boolean)(fn: => Unit) {
     while (condition) {
       fn
     }
@@ -60,6 +60,12 @@ object TracingBuiltins extends CoreBuiltins {
   def cleari() {}
   def setBackground(c: Paint) {}
 
+  /*
+  def forward() {}
+  def back() {}
+  def hop() {}
+*/
+  
   def stopActivity() = {}
   /* turtle creation */
 
@@ -106,9 +112,8 @@ object TracingBuiltins extends CoreBuiltins {
     def clearWithUL(ul: UnitLen) {}
     def camScale = 1
     def wipe() {}
-    def setBackground(c: Paint) {}
-    def setBackgroundH(c1: Color, c2: Color) {}
-    def setBackgroundV(c1: Color, c2: Color) {}
+    def setBackgroundH(c1: java.awt.Color, c2: java.awt.Color) {spriteCanvas.setBackgroundH(c1, c2)}
+    def setBackgroundV(c1: Color, c2: Color) {spriteCanvas.setBackgroundV(c1, c2)}
     def drawStage(fillc: Paint) {}
     def stage: Picture = null
     def stageLeft: Picture = null

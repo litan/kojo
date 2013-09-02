@@ -203,7 +203,12 @@ def main(args: Array[String]) {
   }
 
   val ignoreMethods = Set("main", "_main", "<init>", "<clinit>", "$init$", "repeat", "repeatWhile", "runInBackground")
-  val turtleMethods = Set("setBackground", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness", "penDown", "penUp", "savePosHe", "restorePosHe", "newTurtle", "changePosition", "scaleCostume", "setCostume", "setCostumes", "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
+  val turtleMethods = Set("setBackground", "setBackgroundH", "setBackgroundV", "forward", "right", "left", "turn", "clear", "cleari", "invisible", "jumpTo", "back", "hop",
+    "setPenColor", "setFillColor", "setAnimationDelay", "setPenThickness",
+    "penDown", "penUp", "savePosHe", "restorePosHe", "newTurtle", "changePosition",
+    "scaleCostume", "nextCostume", "setCostume", "setCostumes",
+    "axesOn", "axesOff", "gridOn", "gridOff", "zoom")
+
   val notSupported = Set("Picture", "PicShape", "animate", "Story", "Staging")
 
   def getThread(vm: VirtualMachine, name: String): ThreadReference =
@@ -535,6 +540,9 @@ def main(args: Array[String]) {
       case "turn" =>
         val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.turn(angle)
+      case "hop"   =>
+      //val value = stkfrm.getValue(localArgs(0)).toString.toDouble
+      //turtle.hop(value)
       case "right" =>
       case "left"  =>
       case "back"  =>
@@ -545,16 +553,43 @@ def main(args: Array[String]) {
         turtle.jumpTo(x, y)
       case "setCostume" =>
         val str = stkfrm.getValue(localArgs(0)).toString
-        println(str)
         turtle.setCostume(str.substring(1, str.length - 1))
+      case "nextCostume" =>
+        turtle.nextCostume
+      case "setCostumes" =>
+        var arg0 = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
+        if (arg0.toString.contains("Vector")) {
+          var costumes = Vector[String]()
+          val head = arg0.referenceType.methodsByName("head")(0)
+          val tail = arg0.referenceType.methodsByName("tail")(0)
+          var arg = arg0
+          var done = false
+
+          while (!done) {
+            evtReqs.foreach(_.disable)
+            try {
+              val headValue = arg.invokeMethod(currThread, head, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+              val tailValue = arg.invokeMethod(currThread, tail, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+              val str = headValue.asInstanceOf[StringReference].toString()
+              arg = tailValue.asInstanceOf[ObjectReference]
+              costumes = costumes :+ str.substring(1, str.length - 1)
+            }
+            catch {
+              case inv: InvocationException =>
+                done = true
+                turtle.setCostumes(costumes)
+            }
+            evtReqs.foreach(_.enable)
+          }
+        }
       case "setPosition" =>
         val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
         turtle.setPosition(x, y)
       case "setPenColor" =>
-        val color = getColor(stkfrm, localArgs)
+        val color = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
         turtle.setPenColor(color)
       case "setFillColor" =>
-        val color = getColor(stkfrm, localArgs)
+        val color = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
         turtle.setFillColor(color)
       case "setAnimationDelay" =>
         val step = stkfrm.getValue(localArgs(0)).toString.toLong
@@ -578,11 +613,18 @@ def main(args: Array[String]) {
       case "scaleCostume" =>
         val a = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.scaleCostume(a)
-      //      case "setCostumes" =>
-      //        val costumes = stkfrm.getValue(localArgs(0))
-      //        turtle.setCostumes(costumes)
+      case "setBackgroundH" =>
+        println("entered setbackgroundH")
+        val c1 = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
+        val c2 = getColor(stkfrm, stkfrm.getValue(localArgs(1)))
+        println("no error with colors")
+        TSCanvas.setBackgroundH(c1, c2)
+      case "setBackgroundV" =>
+        val c1 = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
+        val c2 = getColor(stkfrm, stkfrm.getValue(localArgs(1)))
+        TSCanvas.setBackgroundV(c1, c2)
       case "setBackground" =>
-        val c = getColor(stkfrm, localArgs)
+        val c = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
         TSCanvas.tCanvas.setCanvasBackground(c)
       case "axesOn" =>
         TSCanvas.axesOn
@@ -616,16 +658,18 @@ def main(args: Array[String]) {
     }
   }
 
-  def getColor(stkfrm: StackFrame, localArgs: List[LocalVariable]): Color = {
-    val colorVal = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
+  def getColor(stkfrm: StackFrame, arg: Value): Color = {
+    val colorVal = arg.asInstanceOf[ObjectReference]
     val str = targetToString(colorVal)
     val pattern = new Regex("\\d{1,3}")
     var rgb = Vector[Int]()
     (pattern findAllIn str).foreach(c => rgb = rgb :+ c.toInt)
 
+    evtReqs.foreach(_.disable)
     val alphaMthd = colorVal.referenceType.methodsByName("getAlpha")(0)
     val alphaValue = colorVal.invokeMethod(currThread, alphaMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val alpha = alphaValue.asInstanceOf[IntegerValue].value
+    evtReqs.foreach(_.enable)
 
     new Color(rgb(0), rgb(1), rgb(2), alpha)
   }
@@ -657,7 +701,7 @@ def main(args: Array[String]) {
     mthdExitVal.enable()
     evtReqs = evtReqs :+ mthdExitVal
   }
-  
+
   def createExceptionRequest(excludes: Array[String], vm: VirtualMachine) {
     val evtReqMgr = vm.eventRequestManager
     val exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true)
