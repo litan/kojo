@@ -620,6 +620,8 @@ class HPics(pics: List[Picture]) extends BasePicList(pics) {
     super.dumpInfo()
     println("<<< HPics End\n\n")
   }
+
+  override def toString() = s"Picture Row (Id: ${System.identityHashCode(this)})"
 }
 
 object VPics {
@@ -646,6 +648,8 @@ class VPics(pics: List[Picture]) extends BasePicList(pics) {
     super.dumpInfo()
     println("<<< VPics End\n\n")
   }
+
+  override def toString() = s"Picture Column (Id: ${System.identityHashCode(this)})"
 }
 
 object GPics {

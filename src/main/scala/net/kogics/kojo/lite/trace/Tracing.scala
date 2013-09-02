@@ -777,7 +777,7 @@ def main(args: Array[String]) {
           case "net.kogics.kojo.picture.VPics" =>
             val pics = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
             val picVals = targetList(pics)
-            val newPic = picture.HPics(picVals.map { pr => pictures(pr.uniqueID) })
+            val newPic = picture.VPics(picVals.map { pr => pictures(pr.uniqueID) })
             pictures(caller) = newPic
 
           case _ =>
