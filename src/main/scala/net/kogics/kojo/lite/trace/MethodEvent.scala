@@ -37,6 +37,7 @@ class MethodEvent {
   @volatile var callerLine: String = _
   @volatile var subcalls = Vector[MethodEvent]()
   @volatile var turtlePoints: Option[(Point2D.Double, Point2D.Double)] = None
+  @volatile var turtleTurn: Option[(Point2D.Double, Double, Double)] = None
   @volatile var picture: Option[Picture] = None
 
   def pargs = if (args.size > 0) {

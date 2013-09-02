@@ -11,8 +11,6 @@ import net.kogics.kojo.core.Voice
 import net.kogics.kojo.util.UserCommand
 
 class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
-    def getTurtle = turtle0
-    def lastLine = turtle0.lastLine
     def forward(n: Double) = turtle0.forward(n)
     UserCommand("forward", List("numSteps"), "Moves the turtle forward a given number of steps.")
 
@@ -142,4 +140,6 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     class Sound {
       val medieval1 = "/media/music-loops/Medieval1.mp3"
     }
+    def lastLine = turtle0.lastLine
+    def lastTurn = turtle0.lastTurn
 }

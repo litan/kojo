@@ -476,9 +476,8 @@ def main(args: Array[String]) {
     newEvt.targetType = methodObjectType
     newEvt.returnType = methodEnterEvt.method.returnTypeName
 
-    var ret: Option[(Point2D.Double, Point2D.Double)] = None
     if (isTurtleCommand) {
-      ret = runTurtleCommand(methodName, stkfrm, localArgs)
+      runTurtleCommand(methodName, stkfrm, localArgs, newEvt)
     }
     else if (isCanvasCommand) {
       runCanvasCommand(methodName, freshStkfrm, localArgs)
@@ -490,10 +489,9 @@ def main(args: Array[String]) {
       val caller = methodObject.uniqueID
       currPicture = Some(pictures(caller))
     }
-//    else if (isPicturePackageMethod) {
-//      runPictureMethod(methodName, methodEnterEvt.method.signature, methodObject, methodObjectType, stkfrm, localArgs)
-//    }
-    newEvt.turtlePoints = ret
+    //    else if (isPicturePackageMethod) {
+    //      runPictureMethod(methodName, methodEnterEvt.method.signature, methodObject, methodObjectType, stkfrm, localArgs)
+    //    }
     newEvt.picture = currPicture
 
     if ((srcName == "scripteditor" && lineNum > 0 && srcLine.contains(methodName)) ||
@@ -614,16 +612,13 @@ def main(args: Array[String]) {
 
   }
 
-  def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]): Option[(Point2D.Double, Point2D.Double)] = {
-
+  def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], me: MethodEvent) {
     import builtins.Tw
-    var ret: Option[(Point2D.Double, Point2D.Double)] = None
-
     val caller = stkfrm.thisObject.uniqueID
     val turtle = if (currPicture.isDefined)
       currPicture.get.asInstanceOf[Pic].t
     else
-      turtles.getOrElse(caller, Tw.getTurtle)
+      turtles.getOrElse(caller, builtins.TSCanvas.turtle0)
     val createdTurtle = turtles.contains(caller)
 
     name match {
@@ -635,11 +630,12 @@ def main(args: Array[String]) {
         if (localArgs.length == 1) {
           val step = stkfrm.getValue(localArgs(0)).toString.toDouble
           turtle.forward(step)
-          ret = turtle.lastLine
+          me.turtlePoints = turtle.lastLine
         }
       case "turn" =>
         val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.turn(angle)
+        me.turtleTurn = turtle.lastTurn
       case "home" =>
         turtle.home
       case "jumpTo" =>
@@ -710,7 +706,6 @@ def main(args: Array[String]) {
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Turtle command - $c")
     }
-    ret
   }
 
   def targetList(list: ObjectReference): List[ObjectReference] = {
