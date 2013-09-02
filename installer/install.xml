@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<!-- 
+    Kojo 2.0 Installer
+    
+    To compile it :
+    - call "compile install.xml"
+-->
+
+<installation version="1.0">
+
+    <!-- 
+        The info section.
+        The meaning of the tags should be natural ...
+    -->
+    <info>
+        <appname>The Kojo Learning Environment</appname>
+        <appversion>v2 </appversion>
+        <appsubpath>Kojo2</appsubpath>
+        <authors>
+            <author name="Lalit Pant" email="pant.lalit@gmail.com"/>
+        </authors>
+        <url>http://www.kogics.net/kojo</url>
+        <run-privileged condition="izpack.windowsinstall.vista|izpack.windowsinstall.7"/>
+        <pack200/>
+        <javaversion>1.6</javaversion>
+    </info>
+
+    <variables>
+        <variable name="DesktopShortcutCheckboxEnabled" value="true"/>
+        <variable name="ApplicationShortcutPath" value="ApplicationShortcuts"/>
+    </variables>
+
+    <!-- 
+        The gui preferences indication.
+        Sets the installer window size.
+    -->
+    <guiprefs width="750" height="540" resizable="yes"/>
+
+    <!-- 
+        The locale section.
+        Asks here to include the English langpack.
+    -->
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
+
+    <!-- 
+        The resources section.
+        The ids must be these ones if you want to use the LicencePanel and/or the InfoPanel.
+    -->
+    <resources>
+        <res src="licenses/Kojoi-license.txt" id="LicencePanel.licence"/>
+        <res src="Unix_shortcutSpec.xml" id="Unix_shortcutSpec.xml"/>
+        <res src="shortcutSpec.xml" id="shortcutSpec.xml"/>
+        <res src="kojo-border.png" id="Installer.image"/>
+    </resources>
+
+    <variables>
+        <variable name="InstallerFrame.logfilePath" value="Default"/>
+    </variables>
+
+    <!-- 
+        The panels section.
+        We indicate here which panels we want to use. The order will be respected.
+    -->
+    <panels>
+        <panel classname="HelloPanel"/>
+        <panel classname="LicencePanel"/>
+        <panel classname="TargetPanel"/>
+        <panel classname="PacksPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="ShortcutPanel"/>
+        <panel classname="SimpleFinishPanel"/>
+    </panels>
+
+    <!-- 
+        The packs section.
+        We specify here our packs.
+    -->
+    <packs>
+        <pack name="Kojo" required="yes">
+            <description>The Kojo files</description>
+            <file src="licenses/Kojo-license.txt" targetdir="$INSTALL_PATH"/>
+            <file src="bin" targetdir="$INSTALL_PATH"/>
+            <file src="Uninstaller" targetdir="$INSTALL_PATH"/>
+            <file src="lib" targetdir="$INSTALL_PATH"/>
+            <file src="licenses" targetdir="$INSTALL_PATH"/>
+            <file src="icons" targetdir="$INSTALL_PATH"/>
+            <executable targetfile="$INSTALL_PATH/bin/kojo" stage="never" keep="true">
+                 <os family="mac"/>
+            </executable>
+            <executable targetfile="$INSTALL_PATH/bin/webkojo" stage="never" keep="true">
+                 <os family="mac"/>
+            </executable>
+            <executable targetfile="$INSTALL_PATH/Uninstaller/uninstall-kojo" stage="never" keep="true">
+                 <os family="mac"/>
+            </executable>
+            <executable targetfile="$INSTALL_PATH/bin/kojo" stage="never" keep="true">
+                 <os family="unix"/>
+            </executable>
+            <executable targetfile="$INSTALL_PATH/bin/webkojo" stage="never" keep="true">
+                 <os family="unix"/>
+            </executable>
+            <executable targetfile="$INSTALL_PATH/Uninstaller/uninstall-kojo" stage="never" keep="true">
+                 <os family="unix"/>
+            </executable>
+        </pack>
+    </packs>
+
+    <native type="izpack" name="ShellLink.dll"/>
+    <native type="izpack" name="ShellLink_x64.dll"/>
+
+</installation>
