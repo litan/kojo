@@ -71,4 +71,17 @@ trait CoreBuiltins {
   def clearOutput()
   def readln(prompt: String): String
   def setBackground(c: Paint)
+  
+  type Picture = core.Picture
+  type HPics = picture.HPics
+  val HPics = picture.HPics
+  type VPics = picture.VPics
+  val VPics = picture.VPics
+  type GPics = picture.GPics
+  val GPics = picture.GPics
+  val trans = picture.trans _
+  val rot = picture.rot _
+  def scale(f: Double) = picture.scale(f)
+  def scale(x: Double, y: Double) = picture.scale(x, y)
+  def draw(pictures: Picture*) = pictures.foreach { _ draw () }
 }

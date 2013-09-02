@@ -21,7 +21,6 @@ import java.awt.Color
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
-
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -29,14 +28,14 @@ import javax.swing.JScrollPane
 import javax.swing.JSplitPane
 import javax.swing.JTextArea
 import javax.swing.SwingConstants
-
 import scala.collection.mutable.ArrayBuffer
-
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.lite.topc.TraceHolder
 import net.kogics.kojo.picture.GPics
 import net.kogics.kojo.util.Utils
+import net.kogics.kojo.kgeom.PolyLine
+import java.awt.GradientPaint
 
 class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val events: JPanel = new JPanel
@@ -48,8 +47,10 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   traceHolder.setMinimizable(false)
   traceHolder.setExternalizable(false)
 
-  var currMarker: Option[Picture] = None
-  var eventDesc: JTextArea = _
+  @volatile var currMarker: Option[Picture] = None
+  @volatile var currPicsMarker = Vector[Picture]()
+  val markingClr = new GradientPaint(0, 0, Color.black, 5, 5, Color.yellow, true)
+  @volatile var eventDesc: JTextArea = _
   var eventHolder: JSplitPane = _
 
   def reset() {
@@ -93,6 +94,11 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   }
 
   private def addEvent(me: MethodEvent, oll: => Seq[(Point2D.Double, Point2D.Double)]) = {
+    def mePictures(me: MethodEvent): Vector[Picture] = me.picture match {
+      case Some(p) => Vector(p)
+      case None    => me.subcalls.flatMap { mePictures(_) }
+    }
+
     lazy val subLines = oll
     val meDesc = me.toString
     val uiLevel = me.level + 1
@@ -111,55 +117,69 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
             Utils.runLaterInSwingThread {
               Utils.scrollToOffset(0, eventDesc)
             }
-            if (ended && me.sourceName == "scripteditor" && lineNum > 0)
+            if (ended && me.sourceName == "scripteditor" && lineNum > 0) {
               scriptEditor.markTraceLine(lineNum)
-            else
+            }
+            else if (me.callerSourceName == "scripteditor") {
               scriptEditor.markTraceLine(me.callerLineNum)
-
-            currMarker foreach { _.erase() }
-            kojoCtx.repaintCanvas()
-            if (subLines.size < 50) {
-              val picCol = new ArrayBuffer[Picture]
-              subLines foreach { ll =>
-                val pic1 = picture.stroke(Color.black) * picture.strokeWidth(10) -> kojoCtx.picLine(ll._1, ll._2)
-                val pic2 = picture.stroke(Color.yellow) * picture.strokeWidth(4) -> kojoCtx.picLine(ll._1, ll._2)
-                val marker = GPics(pic1, pic2)
-                picCol += marker
-              }
-              if (picCol.size > 0) {
-                currMarker = Some(GPics(picCol.toList))
-                currMarker foreach { _.draw() }
-              }
-              else {
-                currMarker = None
-              }
             }
             else {
-              var minx, miny = Double.MaxValue
-              var maxx, maxy = Double.MinValue
+              scriptEditor.markTraceLine(-1)
+            }
 
-              subLines foreach { ll =>
-                val p1 = ll._1; val p2 = ll._2
-                def processBounds(p: Point2D.Double) {
-                  if (p.x < minx) minx = p.x
-                  else if (p.x > maxx) maxx = p.x
+            currMarker foreach { _.erase() }
+            currPicsMarker foreach { p => p.setPenColor(Color.red); p.setPenThickness(2) }
+            kojoCtx.repaintCanvas()
 
-                  if (p.y < miny) miny = p.y
-                  else if (p.y > maxy) maxy = p.y
+            currPicsMarker = mePictures(me)
+            if (currPicsMarker.size > 0) {
+              currPicsMarker foreach { p => p.setPenColor(markingClr); p.setPenThickness(6) }
+            }
+            else {
+              if (subLines.size < 50) {
+                val picCol = new ArrayBuffer[Picture]
+                subLines foreach { ll =>
+                  val pic1 = picture.stroke(Color.black) * picture.strokeWidth(10) -> kojoCtx.picLine(ll._1, ll._2)
+                  val pic2 = picture.stroke(Color.yellow) * picture.strokeWidth(4) -> kojoCtx.picLine(ll._1, ll._2)
+                  val marker = GPics(pic1, pic2)
+                  picCol += marker
                 }
-                processBounds(p1)
-                processBounds(p2)
+                if (picCol.size > 0) {
+                  val markerPic = GPics(picCol.toList)
+                  currMarker = Some(markerPic)
+                  markerPic.draw()
+                }
+                else {
+                  currMarker = None
+                }
               }
-              val p1 = new Point2D.Double(minx, miny)
-              val p2 = new Point2D.Double(minx, maxy)
-              val p3 = new Point2D.Double(maxx, maxy)
-              val p4 = new Point2D.Double(maxx, miny)
-              val pic1 = picture.stroke(Color.black) -> kojoCtx.picLine(p1, p2)
-              val pic2 = picture.stroke(Color.yellow) -> kojoCtx.picLine(p2, p3)
-              val pic3 = picture.stroke(Color.black) -> kojoCtx.picLine(p3, p4)
-              val pic4 = picture.stroke(Color.yellow) -> kojoCtx.picLine(p4, p1)
-              currMarker = Some(picture.strokeWidth(5) -> GPics(pic1, pic2, pic3, pic4))
-              currMarker foreach { _.draw() }
+              else {
+                var minx, miny = Double.MaxValue
+                var maxx, maxy = Double.MinValue
+
+                subLines foreach { ll =>
+                  val p1 = ll._1; val p2 = ll._2
+                  def processBounds(p: Point2D.Double) {
+                    if (p.x < minx) minx = p.x
+                    else if (p.x > maxx) maxx = p.x
+
+                    if (p.y < miny) miny = p.y
+                    else if (p.y > maxy) maxy = p.y
+                  }
+                  processBounds(p1)
+                  processBounds(p2)
+                }
+                val p1 = new Point2D.Double(minx, miny)
+                val p2 = new Point2D.Double(minx, maxy)
+                val p3 = new Point2D.Double(maxx, maxy)
+                val p4 = new Point2D.Double(maxx, miny)
+                val pic1 = picture.stroke(Color.black) -> kojoCtx.picLine(p1, p2)
+                val pic2 = picture.stroke(Color.yellow) -> kojoCtx.picLine(p2, p3)
+                val pic3 = picture.stroke(Color.black) -> kojoCtx.picLine(p3, p4)
+                val pic4 = picture.stroke(Color.yellow) -> kojoCtx.picLine(p4, p1)
+                currMarker = Some(picture.strokeWidth(5) -> GPics(pic1, pic2, pic3, pic4))
+                currMarker foreach { _.draw() }
+              }
             }
           }
         })
