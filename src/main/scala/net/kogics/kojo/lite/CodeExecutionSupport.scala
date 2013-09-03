@@ -184,6 +184,7 @@ class CodeExecutionSupport(
   def enableRunButton(enable: Boolean) {
     runButton.setEnabled(enable)
     runWorksheetButton.setEnabled(enable)
+    traceButton.setEnabled(enable)
     compileButton.setEnabled(enable)
   }
 

@@ -70,7 +70,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   val codePane = new RSyntaxTextArea(5, 80)
   val statusStrip = new StatusStrip()
-  val (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton,
+  val (toolbar, runButton, runWorksheetButton, traceButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
 
   toolbar.setOpaque(true)
@@ -373,6 +373,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   def makeToolbar() = {
     val RunScript = "RunScript"
     val RunWorksheet = "RunWorksheet"
+    val TraceScript = "TraceScript"
     val CompileScript = "CompileScript"
     val StopScript = "StopScript"
     val HistoryNext = "HistoryNext"
@@ -387,15 +388,15 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
             execSupport.compileRunCode()
           }
-          else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
-            execSupport.traceCode()
-          }
           else {
             execSupport.runCode()
           }
           codePane.requestFocusInWindow()
         case RunWorksheet =>
           execSupport.runWorksheet()
+          codePane.requestFocusInWindow()
+        case TraceScript =>
+          execSupport.traceCode()
           codePane.requestFocusInWindow()
         case CompileScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
@@ -442,6 +443,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     val runButton = makeNavigationButton("/images/run24.png", RunScript, Utils.loadString("S_RunScript"))
     val runWorksheetButton = makeNavigationButton("/images/runw24.png", RunWorksheet, Utils.loadString("S_RunWorksheet"))
+    val traceButton = makeNavigationButton("/images/runt24.png", TraceScript, Utils.loadString("S_TraceScript"))
     val compileButton = makeNavigationButton("/images/check.png", CompileScript, Utils.loadString("S_CheckScript"))
     val stopButton = makeNavigationButton("/images/stop24.png", StopScript, Utils.loadString("S_StopScript"))
     val hNextButton = makeNavigationButton("/images/history-next.png", HistoryNext, Utils.loadString("S_HistNext"))
@@ -452,6 +454,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     toolbar.add(runButton)
     toolbar.add(runWorksheetButton)
+    toolbar.add(traceButton)
 
     stopButton.setEnabled(false)
     toolbar.add(stopButton)
@@ -473,7 +476,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     clearButton.setEnabled(false)
     toolbar.add(clearButton)
 
-    (toolbar, runButton, runWorksheetButton, compileButton, stopButton, hNextButton, hPrevButton, clearSButton, clearButton, cexButton)
+    (toolbar, runButton, runWorksheetButton, traceButton, compileButton, stopButton, hNextButton, hPrevButton, clearSButton, clearButton, cexButton)
   }
 
   def addCodePaneListeners() {
@@ -489,6 +492,10 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
             }
             else if (evt.isShiftDown && execSupport.isRunningEnabled) {
               execSupport.runWorksheet()
+              evt.consume
+            }
+            else if (evt.isAltDown && execSupport.isRunningEnabled) {
+              execSupport.traceCode()
               evt.consume
             }
           case KeyEvent.VK_UP =>
