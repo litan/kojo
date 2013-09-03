@@ -12,6 +12,7 @@ import net.kogics.kojo.util.UserCommand
 
 class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     def forward(n: Double) = turtle0.forward(n)
+    override def forward() = turtle0.forward()
     UserCommand("forward", List("numSteps"), "Moves the turtle forward a given number of steps.")
 
     // all commands that have a UserCommand entry but no implementation come in via
