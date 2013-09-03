@@ -18,10 +18,11 @@ package lite
 package trace
 
 import java.awt.Color
-import java.awt.geom.Point2D
 import java.io.File
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaIterator
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.Position
@@ -31,6 +32,7 @@ import scala.tools.nsc.reporters.Reporter
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
 import scala.util.matching.Regex
+
 import com.sun.jdi.AbsentInformationException
 import com.sun.jdi.ArrayReference
 import com.sun.jdi.Bootstrap
@@ -55,6 +57,7 @@ import com.sun.jdi.event.VMDeathEvent
 import com.sun.jdi.event.VMDisconnectEvent
 import com.sun.jdi.event.VMStartEvent
 import com.sun.jdi.request.EventRequest
+
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.Turtle
@@ -64,7 +67,6 @@ import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.picture.Pic
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CompilerOutputHandler
-import scala.collection.mutable.ArrayBuffer
 
 class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
   @volatile var currThread: ThreadReference = _
@@ -249,7 +251,7 @@ def main(args: Array[String]) {
                 }
 
               case methodEnterEvt: MethodEntryEvent =>
-                if (!(ignoreMethods.contains(methodEnterEvt.method.name) || methodEnterEvt.method.name.startsWith("apply"))) {
+                if (!ignoreMethods.contains(methodEnterEvt.method.name)) {
                   currThread = methodEnterEvt.thread
                   try {
                     handleMethodEntry(methodEnterEvt)
@@ -261,7 +263,7 @@ def main(args: Array[String]) {
                 }
 
               case methodExitEvt: MethodExitEvent =>
-                if (!(ignoreMethods.contains(methodExitEvt.method.name) || methodExitEvt.method.name.startsWith("apply"))) {
+                if (!ignoreMethods.contains(methodExitEvt.method.name)) {
                   currThread = methodExitEvt.thread
                   try {
                     handleMethodExit(methodExitEvt)
@@ -403,16 +405,20 @@ def main(args: Array[String]) {
 
   def localToString(frameVal: Value) = String.valueOf(frameVal)
 
-  def desugar(name0: String) = {
-    val name = name0.replaceAllLiterally("$minus$greater", "->").replaceAllLiterally("$times", "*").replaceAllLiterally("_$eq", "")
+  def desugar(name0: String, methodObjectType: String) = {
+    val name = name0.replaceAllLiterally("$minus$greater", "->").replaceAllLiterally("$times", "*").replaceAllLiterally("_$eq", " =")
     val dindex = name.indexOf('$')
-    if (dindex == -1) {
+    val ret = if (dindex == -1) {
       name
     }
     else {
       val ret = name.substring(0, dindex)
       if (ret.length == 0) name else ret
     }
+    if (ret == "apply")
+      methodObjectType.substring(methodObjectType.lastIndexOf(".") + 1).replaceAllLiterally("$", "")
+    else
+      ret
   }
 
   def handleMethodEntry(methodEnterEvt: MethodEntryEvent) {
@@ -433,7 +439,12 @@ def main(args: Array[String]) {
       case e: AbsentInformationException => Seq("AbsentInformationException")
     }
 
-    val methodName = desugar(methodEnterEvt.method.name)
+    val stkfrm = currThread.frame(0)
+    def freshStkfrm = currThread.frame(0)
+    val methodObject = stkfrm.thisObject
+    val methodObjectType = if (methodObject != null) methodObject.referenceType.name else ""
+
+    val methodName = desugar(methodEnterEvt.method.name, methodObjectType)
     val srcName = try { methodEnterEvt.location.sourceName } catch { case e: Throwable => "N/A" }
     val callerSrcName = try { currThread.frame(1).location.sourceName } catch { case _: Throwable => "N/A" }
     val lOffset = if (srcName == "scripteditor") lineNumOffset else 0
@@ -449,11 +460,6 @@ def main(args: Array[String]) {
     else
       ""
     val localArgs = try { methodEnterEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
-    val stkfrm = currThread.frame(0)
-    def freshStkfrm = currThread.frame(0)
-
-    val methodObject = stkfrm.thisObject
-    val methodObjectType = if (methodObject != null) methodObject.referenceType.name else ""
 
     val isCommand = methodEnterEvt.method.returnTypeName == "void"
     def isTurtleCommand = isCommand && methodObjectType.contains("TracingTurtle")
@@ -511,8 +517,11 @@ def main(args: Array[String]) {
   }
 
   def handleMethodExit(methodExitEvt: MethodExitEvent) {
-    val methodName = desugar(methodExitEvt.method.name)
     val stkfrm = currThread.frame(0)
+    val methodObject = stkfrm.thisObject
+    val methodObjectType = if (methodObject != null) methodObject.referenceType.name else ""
+
+    val methodName = desugar(methodExitEvt.method.name, methodObjectType)
     val localArgs = try { methodExitEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
     val retVal = methodExitEvt.returnValue
 
