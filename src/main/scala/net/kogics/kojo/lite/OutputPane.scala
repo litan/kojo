@@ -230,7 +230,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   }
 
   def appendError(s: String, offset: Option[Int] = None) {
-    errText += xml.Unparsed(s)
+    errText += s
     if (offset.isDefined) {
       // errCount is used only for 'Check Script' case
       errCount += 1
