@@ -99,9 +99,24 @@ object TracingBuiltins extends CoreBuiltins {
     }
 
     override def arc(r: Double, a: Int) {
-      
+      def makeArc(lforward: Double => Unit, lturn: Double => Unit) {
+        var i = 0
+        val (lim, step, trn) = if (a > 0) (a, 2 * math.Pi * r / 360, 1) else (-a, 2 * math.Pi * r / 360, -1)
+        while (i < lim) {
+          lforward(step)
+          lturn(trn)
+          i += 1
+        }
+      }
+      makeArc(forward _, turn _)
     }
     
+    override def moveTo(x: Double, y: Double) {
+      towards(x, y)
+      val d = Utils.runInSwingThreadAndWait {distanceTo(x, y) }
+      forward(d)
+    }
+
     override def toString() = s"Turtle with Id: ${System.identityHashCode(this)}"
   }
 
