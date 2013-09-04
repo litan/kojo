@@ -54,11 +54,11 @@ class MethodEvent {
   }
 
   def entry(level: Int) = {
-    <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "> " * level } [Call]</span> { methodName }<span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
+    <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "\u00b7 " * level } CALL</span> { methodName } <span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
   }
 
   def exit(level: Int) = {
-    <html><div style="font-family:Monospace"><span style="color:rgb(225,50,0)">{ "< " * level } [Return]</span> { methodName } <span style="color:rgb(225,50,0)">[{ pret }]</span></div></html>.toString
+    <html><div style="font-family:Monospace"><span style="color:rgb(225,50,0)">{ "\u00b7 " * level } RETURN</span> { methodName } <span style="color:rgb(225,50,0)">= { pret }</span></div></html>.toString
   }
 
   override def toString() = {
