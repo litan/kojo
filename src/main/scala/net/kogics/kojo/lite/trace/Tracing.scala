@@ -141,7 +141,7 @@ def main(args: Array[String]) {
     }
   }
 
-  def compile(code00: String) = {
+  def compile(code00: String): Boolean = {
     val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
     includedLines = inclLines
     offsetDelta = prefix.length + includedChars
@@ -153,11 +153,7 @@ def main(args: Array[String]) {
     val run = new compiler.Run
     reporter.reset
     run.compileSources(List(codeFile))
-    if (reporter.hasErrors) {
-      runCtx.onCompileError()
-      // throw exception to stop trace
-      throw new RuntimeException("Trace Compilation Error. Ensure that your program compiles correctly before trying to trace it.")
-    }
+    !reporter.hasErrors
   }
 
   def makeSettings() = {
@@ -206,14 +202,15 @@ def main(args: Array[String]) {
   }
 
   val ignoreMethods = Set("main", "_main", "<clinit>", "$init$")
-  val notSupported = Set("PicShape", "animate", "Story", "Staging")
+  val notSupported = Set("animate", "Story", "Staging.", "Mw.")
+  val pictureKeywords = Set("Picture", "PicShape")
 
   def getThread(vm: VirtualMachine, name: String): ThreadReference =
     vm.allThreads.find(_.name == name).getOrElse(null)
 
   def trace(code: String) = {
     notSupported find { code.contains(_) } match {
-      case Some(w) => println(s"Tracing not supported for programs with $w")
+      case Some(w) => println(s"Tracing is not supported for scripts that use $w")
       case None    => realTrace(code)
     }
   }
@@ -229,7 +226,27 @@ def main(args: Array[String]) {
       hiddenEventCount = 0
       codeLines = code.lines.toVector
 
-      compile(code)
+      val success = compile(code)
+      if (!success) {
+        pictureKeywords find { code.contains(_) } match {
+          case Some(_) =>
+            val msg = """Picture tracing is only supported for scripts that use -
+Picture, PictureT, PicShape, 
+picStack, picRow, picCol, rot, trans, and scale."""
+            runCtx.reportError(msg)
+          case None =>
+            val msg = """This is a Script Error under Tracing.
+You see this error because either there's a problem in your script 
+(you can use the 'Check Script' button to make sure),
+or because you're using a Kojo feature 
+that is not supported under Tracing.
+"""
+            runCtx.reportError(msg)
+        }
+        runCtx.onCompileError()
+        throw new RuntimeException("Script Error under Tracing")
+      }
+
       val vm = launchVM()
       println("Tracing started...")
       val excludes = Array("java.*", "javax.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*")
