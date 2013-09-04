@@ -660,6 +660,10 @@ that is not supported under Tracing.
         val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.turn(angle)
         me.turtleTurn = turtle.lastTurn
+      case "arc" => 
+        val radius = stkfrm.getValue(localArgs(0)).toString.toDouble
+        val angle = stkfrm.getValue(localArgs(1)).toString.toInt
+        turtle.arc(radius, angle)
       case "home" =>
         turtle.home
       case "jumpTo" =>
