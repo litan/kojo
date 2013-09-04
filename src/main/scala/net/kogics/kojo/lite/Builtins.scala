@@ -435,6 +435,7 @@ Here's a partial list of the available commands:
   def setScreenDPI(dpi: Int) { kojoCtx.screenDPI = dpi }
   def screenSize = Toolkit.getDefaultToolkit.getScreenSize
   def isScratchPad = kojoCtx.subKojo
+  def isTracing = false
 
   val PShapes = PicShape
   object PicShape {
