@@ -98,6 +98,10 @@ object TracingBuiltins extends CoreBuiltins {
       fn(this)
     }
 
+    override def arc(r: Double, a: Int) {
+      
+    }
+    
     override def toString() = s"Turtle with Id: ${System.identityHashCode(this)}"
   }
 
