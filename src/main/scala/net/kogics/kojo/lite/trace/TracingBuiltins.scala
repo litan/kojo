@@ -2,23 +2,18 @@ package net.kogics.kojo
 package lite
 package trace
 
-import java.awt.{ Color => JColor }
-import java.awt.{ Font => JFont }
 import java.awt.Paint
-import net.kogics.kojo.core.RichTurtleCommands
-import net.kogics.kojo.util.Utils
-import net.kogics.kojo.core.TSCanvasFeatures
-import net.kogics.kojo.turtle.TurtleWorldAPI
-import net.kogics.kojo.core.UnitLen
-import net.kogics.kojo.core.Picture
+
+import scala.tools.nsc.interpreter.IMain
+
 import net.kogics.kojo.core.SCanvas
-import edu.umd.cs.piccolo.util.PBounds
+import net.kogics.kojo.lite.CoreBuiltins
+import net.kogics.kojo.lite.NoOpSCanvas
+import net.kogics.kojo.util.Utils
+
 import edu.umd.cs.piccolo.PCamera
 import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.activities.PActivity
-import edu.umd.cs.piccolo.PCanvas
-import java.util.concurrent.Future
-import net.kogics.kojo.picture.HPics
 
 object TracingBuiltins extends CoreBuiltins {
 
@@ -75,6 +70,8 @@ object TracingBuiltins extends CoreBuiltins {
   def readln(prompt: String): String = "Unsupported"
   def addCodeTemplates(lang: String, templates: Map[String, String]) {}
   def addHelpContent(lang: String, content: Map[String, String]) {}
+  def isTracing = true
+  def kojoInterp = new TracingInterp // get reqT to work with tracing
 
   implicit val picCanvas = TSCanvas
   def Picture(fn: => Unit) = new picture.Pic(t => fn)
@@ -89,6 +86,10 @@ object TracingBuiltins extends CoreBuiltins {
     def hline(l: Double) = picture.hline(l)
     def circle(r: Double) = picture.circle(r)
     def arc(r: Double, angle: Int) = picture.arc(r, angle)
+  }
+
+  class TracingInterp {
+    def interp: IMain = null
   }
 
   class TracingTurtle(canvas: SCanvas, costume: String, x: Double, y: Double)
@@ -110,10 +111,10 @@ object TracingBuiltins extends CoreBuiltins {
       }
       makeArc(forward _, turn _)
     }
-    
+
     override def moveTo(x: Double, y: Double) {
       towards(x, y)
-      val d = Utils.runInSwingThreadAndWait {distanceTo(x, y) }
+      val d = Utils.runInSwingThreadAndWait { distanceTo(x, y) }
       forward(d)
     }
 
