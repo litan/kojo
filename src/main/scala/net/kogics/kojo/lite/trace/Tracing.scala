@@ -36,6 +36,7 @@ import scala.util.matching.Regex
 import com.sun.jdi.AbsentInformationException
 import com.sun.jdi.ArrayReference
 import com.sun.jdi.Bootstrap
+import com.sun.jdi.DoubleValue
 import com.sun.jdi.IntegerValue
 import com.sun.jdi.InvocationException
 import com.sun.jdi.LocalVariable
@@ -137,7 +138,7 @@ def main(args: Array[String]) {
   def stop() {
     traceListener.onEnd()
     if (vmRunning) {
-      currThread.virtualMachine.exit(1)
+      try { currThread.virtualMachine.exit(1) } catch { case t: Throwable => }
     }
   }
 
@@ -660,15 +661,20 @@ that is not supported under Tracing.
         val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.turn(angle)
         me.turtleTurn = turtle.lastTurn
-      case "arc" => 
-        val radius = stkfrm.getValue(localArgs(0)).toString.toDouble
-        val angle = stkfrm.getValue(localArgs(1)).toString.toInt
-        turtle.arc(radius, angle)
+      case "towards" =>
+        if (localArgs.length == 2) {
+          val x = stkfrm.getValue(localArgs(0)).asInstanceOf[DoubleValue].value
+          val y = stkfrm.getValue(localArgs(1)).asInstanceOf[DoubleValue].value
+          turtle.towards(x, y)
+          me.turtleTurn = turtle.lastTurn
+        }
       case "home" =>
         turtle.home
       case "jumpTo" =>
-        val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
-        turtle.jumpTo(x, y)
+        if (localArgs.length == 2) {
+          val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
+          turtle.jumpTo(x, y)
+        }
       case "setCostume" =>
         val str = stkfrm.getValue(localArgs(0)).toString
         turtle.setCostume(str.substring(1, str.length - 1))
@@ -700,9 +706,6 @@ that is not supported under Tracing.
             evtReqs.foreach(_.enable)
           }
         }
-      case "setPosition" =>
-        val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
-        turtle.setPosition(x, y)
       case "setPenColor" =>
         val color = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
         turtle.setPenColor(color)
