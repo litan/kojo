@@ -76,10 +76,20 @@ object TracingBuiltins extends CoreBuiltins {
   def addCodeTemplates(lang: String, templates: Map[String, String]) {}
   def addHelpContent(lang: String, content: Map[String, String]) {}
 
-  def Picture(fn: => Unit) = new picture.Pic(t => fn)(TSCanvas)
+  implicit val picCanvas = TSCanvas
+  def Picture(fn: => Unit) = new picture.Pic(t => fn)
+  def PictureT(fn: Turtle => Unit) = new picture.Pic(fn)
   def picStack(pics: Picture*) = new GPics(pics.toList)
   def picRow(pics: Picture*) = new HPics(pics.toList)
   def picCol(pics: Picture*) = new VPics(pics.toList)
+  object PicShape {
+    def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
+    def rect(h: Double, w: Double) = picture.rect(h, w)
+    def vline(l: Double) = picture.vline(l)
+    def hline(l: Double) = picture.hline(l)
+    def circle(r: Double) = picture.circle(r)
+    def arc(r: Double, angle: Int) = picture.arc(r, angle)
+  }
 
   class TracingTurtle(canvas: SCanvas, costume: String, x: Double, y: Double)
     extends turtle.Turtle(canvas, costume, x, y) {
