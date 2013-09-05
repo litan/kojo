@@ -64,12 +64,11 @@ import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.lite.Builtins
-import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.picture.Pic
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CompilerOutputHandler
 
-class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
+class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
   @volatile var currThread: ThreadReference = _
   val tmpdir = System.getProperty("java.io.tmpdir")
   val settings = makeSettings()
@@ -103,7 +102,6 @@ class Tracing(scriptEditor: ScriptEditor, builtins: Builtins, traceListener: Tra
     }
   }
   val compiler = new Global(settings, reporter)
-  val tracingGUI = new TracingGUI(scriptEditor, builtins.kojoCtx)
 
   val prefix0 = """object Wrapper {
 val builtins = net.kogics.kojo.lite.trace.TracingBuiltins
@@ -212,11 +210,11 @@ def main(args: Array[String]) {
   def trace(code: String) = {
     notSupported find { code.contains(_) } match {
       case Some(w) => println(s"Tracing is not supported for scripts that use $w")
-      case None    => realTrace(code)
+      case None    => Utils.runAsync { realTrace(code) }
     }
   }
 
-  def realTrace(code: String) = Utils.runAsync {
+  def realTrace(code: String) {
     try {
       traceListener.onStart()
       verbose = if (System.getProperty("kojo.trace.verbose") == "true") true else false
@@ -254,7 +252,7 @@ that is not supported under Tracing.
 
       val evtQueue = vm.eventQueue
 
-      tracingGUI.reset
+      traceListener.onStart()
 
       breakable {
         while (true) {
@@ -522,7 +520,7 @@ that is not supported under Tracing.
       isPictureDraw) {
       newEvt.args = methodArgs(targetToString)
       newEvt.targetObject = targetToString(methodObject)
-      tracingGUI.addStartEvent(newEvt)
+      traceListener.onMethodEnter(newEvt)
       handleVerboseUiEvent(newEvt, true)
     }
     else {
@@ -554,7 +552,7 @@ that is not supported under Tracing.
 
       if ((ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) && ce.returnType != "void")) {
         ce.returnVal = targetToString(retVal)
-        tracingGUI.addEndEvent(ce)
+        traceListener.onMethodExit(ce)
         handleVerboseUiEvent(ce, false)
       }
       else {
@@ -855,7 +853,7 @@ that is not supported under Tracing.
 
     new Color(rgb(0), rgb(1), rgb(2), alpha)
   }
-  
+
   def stringValue(arg: Value): String = {
     arg.asInstanceOf[StringReference].value
   }
