@@ -598,8 +598,11 @@ that is not supported under Tracing.
     import builtins.TSCanvas
     name match {
       case "setBackground" =>
-        val c = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
+        val c = colorValue(stkfrm.getValue(localArgs(0)))
         TSCanvas.tCanvas.setCanvasBackground(c)
+      case "print" =>
+        val toPrint = stringValue(stkfrm.getValue(localArgs(0)))
+        builtins.print(toPrint)
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Builtins command - $c")
     }
@@ -624,12 +627,12 @@ that is not supported under Tracing.
         val (x, y, z) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(0)).toString.toDouble)
         TSCanvas.zoom(x, y, z)
       case "setBackgroundH" =>
-        val c1 = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
-        val c2 = getColor(stkfrm, stkfrm.getValue(localArgs(1)))
+        val c1 = colorValue(stkfrm.getValue(localArgs(0)))
+        val c2 = colorValue(stkfrm.getValue(localArgs(1)))
         TSCanvas.setBackgroundH(c1, c2)
       case "setBackgroundV" =>
-        val c1 = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
-        val c2 = getColor(stkfrm, stkfrm.getValue(localArgs(1)))
+        val c1 = colorValue(stkfrm.getValue(localArgs(0)))
+        val c2 = colorValue(stkfrm.getValue(localArgs(1)))
         TSCanvas.setBackgroundV(c1, c2)
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Canvas command - $c")
@@ -676,8 +679,8 @@ that is not supported under Tracing.
           turtle.jumpTo(x, y)
         }
       case "setCostume" =>
-        val str = stkfrm.getValue(localArgs(0)).toString
-        turtle.setCostume(str.substring(1, str.length - 1))
+        val costume = stringValue(stkfrm.getValue(localArgs(0)))
+        turtle.setCostume(costume)
       case "nextCostume" =>
         turtle.nextCostume
       case "setCostumes" =>
@@ -694,9 +697,9 @@ that is not supported under Tracing.
             try {
               val headValue = arg.invokeMethod(currThread, head, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
               val tailValue = arg.invokeMethod(currThread, tail, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
-              val str = headValue.asInstanceOf[StringReference].toString()
+              val costume = headValue.asInstanceOf[StringReference].value
               arg = tailValue.asInstanceOf[ObjectReference]
-              costumes = costumes :+ str.substring(1, str.length - 1)
+              costumes = costumes :+ costume
             }
             catch {
               case inv: InvocationException =>
@@ -707,10 +710,10 @@ that is not supported under Tracing.
           }
         }
       case "setPenColor" =>
-        val color = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
+        val color = colorValue(stkfrm.getValue(localArgs(0)))
         turtle.setPenColor(color)
       case "setFillColor" =>
-        val color = getColor(stkfrm, stkfrm.getValue(localArgs(0)))
+        val color = colorValue(stkfrm.getValue(localArgs(0)))
         turtle.setFillColor(color)
       case "setAnimationDelay" =>
         val step = stkfrm.getValue(localArgs(0)).toString.toLong
@@ -760,8 +763,8 @@ that is not supported under Tracing.
       case "newTurtle" =>
         import builtins.TSCanvas
         if (localArgs.length == 3) {
-          val (x, y, str) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(2)).toString)
-          val newTurtle = TSCanvas.newTurtle(x, y, str.substring(1, str.length - 1))
+          val (x, y, costume) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stringValue(stkfrm.getValue(localArgs(2))))
+          val newTurtle = TSCanvas.newTurtle(x, y, costume)
           val ref = retVal.asInstanceOf[ObjectReference].uniqueID
           turtles(ref) = newTurtle
         }
@@ -837,7 +840,7 @@ that is not supported under Tracing.
     }
   }
 
-  def getColor(stkfrm: StackFrame, arg: Value): Color = {
+  def colorValue(arg: Value): Color = {
     val colorVal = arg.asInstanceOf[ObjectReference]
     val str = targetToString(colorVal)
     val pattern = new Regex("\\d{1,3}")
@@ -851,6 +854,10 @@ that is not supported under Tracing.
     evtReqs.foreach(_.enable)
 
     new Color(rgb(0), rgb(1), rgb(2), alpha)
+  }
+  
+  def stringValue(arg: Value): String = {
+    arg.asInstanceOf[StringReference].value
   }
 
   def watchThreadStarts() {
