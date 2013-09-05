@@ -114,7 +114,6 @@ object SwedishAPI {
   }
   
   //simple IO
-  def utdata(data: Any) = println(data)
   def indata(ledtext: String = "") =  builtins.readln(ledtext)
   
   //math functions
