@@ -72,6 +72,8 @@ object TracingBuiltins extends CoreBuiltins {
   def addHelpContent(lang: String, content: Map[String, String]) {}
   def isTracing = true
   def kojoInterp = new TracingInterp // get reqT to work with tracing
+  def print(obj: Any) {}
+  def println(obj: Any): Unit = print("%s\n" format (obj))
 
   implicit val picCanvas = TSCanvas
   def Picture(fn: => Unit) = new picture.Pic(t => fn)
