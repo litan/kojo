@@ -2,7 +2,7 @@ package net.kogics.kojo.lite
 
 object Versions {
   val KojoMajorVersion = "2.1 Beta"
-  val KojoVersion = "050913-3"
+  val KojoVersion = "050913-4"
   val JavaVersion = geogebra.main.AppD.getJavaVersion
   val ScalaVersion = scala.tools.nsc.Properties.versionString.substring("version ".length)
 }

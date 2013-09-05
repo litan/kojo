@@ -34,11 +34,14 @@ import net.kogics.kojo.lite.i18n.SwedishAPI.{
   blå,röd,gul,grön,lila,rosa,brun,svart,vit,genomskinlig,
   bakgrund, bakgrund2, KcSwe, 
   upprepa, räkneslinga, sålänge,
-  utdata, indata,
+  indata,
   avrunda, slumptal, slumptalMedDecimaler,
   Heltal, Decimaltal, Sträng,
   systemtid, räknaTill}
 import padda.{sudda => _, _}
+
+//simple IO
+def utdata(data: Any) = println(data)
 
 //code completion
 addCodeTemplates(
