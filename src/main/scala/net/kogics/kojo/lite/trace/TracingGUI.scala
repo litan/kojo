@@ -114,7 +114,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
     val meDesc = me.toString
     val uiLevel = me.level
     val ended = me.ended
-    val taText = if (ended) me.exit(uiLevel + 1) else me.entry(uiLevel)
+    val taText = if (ended) me.exit(uiLevel) else me.entry(uiLevel)
     val lineNum = if (ended) me.exitLineNum else me.entryLineNum
 
     Utils.runInSwingThread {
