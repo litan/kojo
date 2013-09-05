@@ -581,7 +581,9 @@ class CodeExecutionSupport(
   }
 
   @volatile var traceRunning = false
-  val traceListener = new trace.TraceListener {
+  lazy val traceListener = new trace.TraceListener {
+    val tracingGUI = new trace.TracingGUI(scriptEditor, kojoCtx)
+
     def onStart() {
       resetErrInfo()
       enableRunButton(false)
@@ -605,7 +607,6 @@ class CodeExecutionSupport(
     }
   }
 
-  lazy val tracingGUI = new trace.TracingGUI(scriptEditor, kojoCtx)
   lazy val tracer = new trace.Tracing(builtins, traceListener, runContext)
 
   def traceCode() {
