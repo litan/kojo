@@ -18,9 +18,11 @@ package lite
 package trace
 
 import java.awt.Color
+import java.awt.GradientPaint
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
+
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -28,14 +30,14 @@ import javax.swing.JScrollPane
 import javax.swing.JSplitPane
 import javax.swing.JTextArea
 import javax.swing.SwingConstants
+
 import scala.collection.mutable.ArrayBuffer
+
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.lite.ScriptEditor
 import net.kogics.kojo.lite.topc.TraceHolder
 import net.kogics.kojo.picture.GPics
 import net.kogics.kojo.util.Utils
-import net.kogics.kojo.kgeom.PolyLine
-import java.awt.GradientPaint
 
 class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val events: JPanel = new JPanel
@@ -53,7 +55,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   @volatile var eventDesc: JTextArea = _
   var eventHolder: JSplitPane = _
 
-  def reset() {
+  def reset() = Utils.runInSwingThread {
     events.removeAll()
     eventDesc = new JTextArea("Click on an Event to see its details.")
     eventDesc.setEditable(false)
