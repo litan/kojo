@@ -72,11 +72,11 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
     kojoCtx.makeTraceWindowVisible(traceHolder)
   }
 
-  def addStartEvent(me: MethodEvent) {
+  def addEnterEvent(me: MethodEvent) {
     addEvent(me)
   }
 
-  def addEndEvent(me: MethodEvent) {
+  def addExitEvent(me: MethodEvent) {
     addEvent(me)
   }
 
