@@ -610,8 +610,9 @@ class CodeExecutionSupport(
   lazy val tracer = new trace.Tracing(builtins, traceListener, runContext)
 
   def traceCode() {
-    val code2run = codeToRun
-    tracer.trace(code2run.code)
+    val code = codeToRun.code
+    historyManager.codeRun(code)
+    tracer.trace(code)
   }
 
   def stopTraceScript() {
