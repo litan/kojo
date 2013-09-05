@@ -252,8 +252,6 @@ that is not supported under Tracing.
 
       val evtQueue = vm.eventQueue
 
-      traceListener.onStart()
-
       breakable {
         while (true) {
           val evtSet = evtQueue.remove()
