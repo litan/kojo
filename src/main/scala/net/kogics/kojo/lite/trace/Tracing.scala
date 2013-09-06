@@ -78,7 +78,9 @@ class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunConte
   @volatile var hiddenEventCount = 0
   @volatile var codeLines: Vector[String] = _
   @volatile var vmRunning = false
-  @volatile var verbose = false
+  @volatile var verboseTrace = false
+  @volatile var verboseTrace2 = false
+  @volatile var outputTrace = false
 
   val currEvtVec = new HashMap[String, MethodEvent]
 
@@ -217,7 +219,9 @@ def main(args: Array[String]) {
   def realTrace(code: String) {
     try {
       traceListener.onStart()
-      verbose = if (System.getProperty("kojo.trace.verbose") == "true") true else false
+      verboseTrace = if (System.getProperty("kojo.trace.verbose") == "true") true else false
+      verboseTrace2 = if (System.getProperty("kojo.trace.verbose2") == "true") true else false
+      outputTrace = if (System.getProperty("kojo.trace.output") == "true") true else false
       turtles.clear()
       pictures.clear()
       evtReqs = Vector[EventRequest]()
@@ -355,7 +359,7 @@ that is not supported under Tracing.
   }
 
   def handleHiddenEvent(desc: String) {
-    if (verbose) {
+    if (outputTrace) {
       println(desc)
     }
     else {
@@ -369,8 +373,8 @@ that is not supported under Tracing.
     }
   }
 
-  def handleVerboseUiEvent(me: MethodEvent, enter: Boolean) {
-    if (verbose) {
+  def handleOutputUiEvent(me: MethodEvent, enter: Boolean) {
+    if (outputTrace) {
       val prefix = if (enter) "[UI Method Enter]" else "[UI Method Exit]"
       print(s"$prefix ${me.methodName}${me.pargs}")
       if (enter) {
@@ -433,6 +437,17 @@ that is not supported under Tracing.
       methodObjectType.substring(methodObjectType.lastIndexOf(".") + 1).replaceAllLiterally("$", "")
     else
       ret
+  }
+
+  def verboseEntry(name: String, callerLineNum: Int): Boolean = {
+    (verboseTrace2 ||
+      (verboseTrace &&
+        name != "<init>" &&
+        !name.startsWith("box") &&
+        !name.startsWith("unbox") &&
+        !name.startsWith("wrap"))) &&
+        (callerLineNum > 0 &&
+          callerLineNum <= codeLines.size)
   }
 
   def handleMethodEntry(methodEnterEvt: MethodEntryEvent) {
@@ -514,12 +529,13 @@ that is not supported under Tracing.
     //    }
     newEvt.picture = currPicture
 
-    if ((callerSrcName == "scripteditor" && callerLine.contains(methodName)) ||
+    if ((callerSrcName == "scripteditor" &&
+      (callerLine.contains(methodName) || verboseEntry(methodName, callerLineNum))) ||
       isPictureDraw) {
       newEvt.args = methodArgs(targetToString)
       newEvt.targetObject = targetToString(methodObject)
       traceListener.onMethodEnter(newEvt)
-      handleVerboseUiEvent(newEvt, true)
+      handleOutputUiEvent(newEvt, true)
     }
     else {
       val desc = s"[Method Enter] ${methodName}${methodEnterEvt.method.signature} in ${methodEnterEvt.method.declaringType.name}"
@@ -548,10 +564,12 @@ that is not supported under Tracing.
       val retValStr = localToString(retVal)
       ce.exitLineNum = lineNum
 
-      if ((ce.callerSourceName == "scripteditor" && ce.callerLine.contains(methodName) && ce.returnType != "void")) {
+      if (ce.callerSourceName == "scripteditor" &&
+        (ce.callerLine.contains(methodName) || verboseEntry(methodName, ce.callerLineNum)) &&
+        ce.returnType != "void") {
         ce.returnVal = targetToString(retVal)
         traceListener.onMethodExit(ce)
-        handleVerboseUiEvent(ce, false)
+        handleOutputUiEvent(ce, false)
       }
       else {
         ce.returnVal = retValStr
