@@ -91,7 +91,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
 
       me.subcalls match {
         case Seq()           => nodeSeq
-        case Seq(x, xs @ _*) => nodeSeq ++ meSubLines(x) ++ (xs flatMap meSubLines)
+        case x +: xs => nodeSeq ++ meSubLines(x) ++ (xs flatMap meSubLines)
 
       }
     }
@@ -104,7 +104,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
 
       me.subcalls match {
         case Seq()           => nodeSeq
-        case Seq(x, xs @ _*) => nodeSeq ++ meSubTurns(x) ++ (xs flatMap meSubTurns)
+        case x +: xs => nodeSeq ++ meSubTurns(x) ++ (xs flatMap meSubTurns)
       }
     }
 
