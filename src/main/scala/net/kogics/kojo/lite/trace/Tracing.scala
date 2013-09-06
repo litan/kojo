@@ -356,9 +356,9 @@ that is not supported under Tracing.
       currEvtVec.remove(currThread.name)
   }
 
-  def handleHiddenEvent(desc: String) {
+  def handleHiddenEvent(me: MethodEvent, enter: Boolean) {
     if (verboseTrace) {
-      println(desc)
+      handleOutputEvent(me, enter, "[> Method Enter]", "[< Method Exit]")
     }
     else {
       hiddenEventCount += 1
@@ -371,16 +371,18 @@ that is not supported under Tracing.
     }
   }
 
+  def handleOutputEvent(me: MethodEvent, enter: Boolean, enterTag: String, exitTag: String) {
+    val prefix = s"${"  " * me.level}<${me.level}> ${if (enter) enterTag else exitTag}"
+    print(s"$prefix ${me.methodName}${me.pargs}")
+    if (!enter) {
+      print(s": ${me.pret}")
+    }
+    println(s" in ${me.declaringType}")
+  }
+
   def handleOutputUiEvent(me: MethodEvent, enter: Boolean) {
     if (verboseTrace) {
-      val prefix = if (enter) "[UI Method Enter]" else "[UI Method Exit]"
-      print(s"$prefix ${me.methodName}${me.pargs}")
-      if (enter) {
-        println("")
-      }
-      else {
-        println(s": ${me.pret}")
-      }
+      handleOutputEvent(me, enter, "[> UI Method Enter]", "[< UI Method Exit]")
     }
   }
 
@@ -507,6 +509,7 @@ that is not supported under Tracing.
     newEvt.callerLineNum = callerLineNum
     newEvt.methodName = methodName
     newEvt.targetType = methodObjectType
+    newEvt.declaringType = methodEnterEvt.method.declaringType.name
     newEvt.returnType = methodEnterEvt.method.returnTypeName
 
     if (isTurtleCommand) {
@@ -536,9 +539,8 @@ that is not supported under Tracing.
       handleOutputUiEvent(newEvt, true)
     }
     else {
-      val desc = s"[Method Enter] ${methodName}${methodEnterEvt.method.signature} in ${methodEnterEvt.method.declaringType.name}"
-      //      newEvt.args = methodArgs(localToString)
-      handleHiddenEvent(desc)
+      newEvt.args = methodArgs(localToString)
+      handleHiddenEvent(newEvt, true)
     }
 
     updateCurrentMethodEvent(Some(newEvt))
@@ -571,8 +573,7 @@ that is not supported under Tracing.
       }
       else {
         ce.returnVal = retValStr
-        val desc = s"[Method Exit] ${methodName}${methodExitEvt.method.signature} in ${methodExitEvt.method.declaringType.name}"
-        handleHiddenEvent(desc)
+        handleHiddenEvent(ce, false)
       }
       updateCurrentMethodEvent(ce.parent)
     }

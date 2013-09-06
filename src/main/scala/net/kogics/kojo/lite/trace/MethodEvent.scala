@@ -24,6 +24,7 @@ class MethodEvent {
   @volatile var methodName: String = _
   @volatile var targetObject: String = _
   @volatile var targetType: String = _
+  @volatile var declaringType: String = _
   @volatile var args: Seq[String] = _
   @volatile var returnVal: String = _
   @volatile var returnType: String = _
@@ -85,7 +86,7 @@ Caller Source Line: $callerLine
 
   private def addChild(c: MethodEvent) { subcalls = subcalls :+ c }
 
-  def level: Int = parent match {
+  lazy val level: Int = parent match {
     case None    => 0
     case Some(p) => p.level + 1
   }
