@@ -64,6 +64,7 @@ class MethodEvent {
   override def toString() = {
     s"""Name: $methodName
 Args: $pargs${if (returnVal != null) s"\nReturn Value: $pret" else ""}
+Call Level: $level
 Target Object: $targetObject
 Target Type: $targetType
 Source: $sourceName
