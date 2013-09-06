@@ -79,8 +79,7 @@ class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunConte
   @volatile var codeLines: Vector[String] = _
   @volatile var vmRunning = false
   @volatile var verboseTrace = false
-  @volatile var verboseTrace2 = false
-  @volatile var outputTrace = false
+  @volatile var traceLevel = 1
 
   val currEvtVec = new HashMap[String, MethodEvent]
 
@@ -220,8 +219,7 @@ def main(args: Array[String]) {
     try {
       traceListener.onStart()
       verboseTrace = if (System.getProperty("kojo.trace.verbose") == "true") true else false
-      verboseTrace2 = if (System.getProperty("kojo.trace.verbose2") == "true") true else false
-      outputTrace = if (System.getProperty("kojo.trace.output") == "true") true else false
+      traceLevel = try { System.getProperty("kojo.trace.level", "1").toInt } catch { case t: Throwable => 1 }
       turtles.clear()
       pictures.clear()
       evtReqs = Vector[EventRequest]()
@@ -359,7 +357,7 @@ that is not supported under Tracing.
   }
 
   def handleHiddenEvent(desc: String) {
-    if (outputTrace) {
+    if (verboseTrace) {
       println(desc)
     }
     else {
@@ -374,7 +372,7 @@ that is not supported under Tracing.
   }
 
   def handleOutputUiEvent(me: MethodEvent, enter: Boolean) {
-    if (outputTrace) {
+    if (verboseTrace) {
       val prefix = if (enter) "[UI Method Enter]" else "[UI Method Exit]"
       print(s"$prefix ${me.methodName}${me.pargs}")
       if (enter) {
@@ -440,8 +438,8 @@ that is not supported under Tracing.
   }
 
   def verboseEntry(name: String, callerLineNum: Int): Boolean = {
-    (verboseTrace2 ||
-      (verboseTrace &&
+    (traceLevel > 2 ||
+      (traceLevel == 2 &&
         name != "<init>" &&
         !name.startsWith("box") &&
         !name.startsWith("unbox") &&
