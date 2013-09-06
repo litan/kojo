@@ -437,7 +437,7 @@ that is not supported under Tracing.
       ret
   }
 
-  def verboseEntry(name: String, callerLineNum: Int): Boolean = {
+  def traceLevelEntry(name: String, callerLineNum: Int): Boolean = {
     (traceLevel > 2 ||
       (traceLevel == 2 &&
         name != "<init>" &&
@@ -528,7 +528,7 @@ that is not supported under Tracing.
     newEvt.picture = currPicture
 
     if ((callerSrcName == "scripteditor" &&
-      (callerLine.contains(methodName) || verboseEntry(methodName, callerLineNum))) ||
+      (callerLine.contains(methodName) || traceLevelEntry(methodName, callerLineNum))) ||
       isPictureDraw) {
       newEvt.args = methodArgs(targetToString)
       newEvt.targetObject = targetToString(methodObject)
@@ -563,7 +563,7 @@ that is not supported under Tracing.
       ce.exitLineNum = lineNum
 
       if (ce.callerSourceName == "scripteditor" &&
-        (ce.callerLine.contains(methodName) || verboseEntry(methodName, ce.callerLineNum)) &&
+        (ce.callerLine.contains(methodName) || traceLevelEntry(methodName, ce.callerLineNum)) &&
         ce.returnType != "void") {
         ce.returnVal = targetToString(retVal)
         traceListener.onMethodExit(ce)
