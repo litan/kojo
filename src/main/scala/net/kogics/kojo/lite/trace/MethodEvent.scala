@@ -93,4 +93,15 @@ Caller Source Line: $callerLine
     case None    => 0
     case Some(p) => p.level + 1
   }
+
+  def hasVisibleSubcall = {
+    def visibleSubCall(sme: Seq[MethodEvent]): Boolean = sme match {
+      case Seq() => false
+      case x +: xs =>
+        if (!x.uiElems.isEmpty)
+          true
+        else if (visibleSubCall(x.subcalls)) true else visibleSubCall(xs)
+    }
+    visibleSubCall(subcalls)
+  }
 }

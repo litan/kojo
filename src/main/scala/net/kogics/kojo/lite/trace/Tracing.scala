@@ -566,7 +566,7 @@ that is not supported under Tracing.
 
       if (ce.callerSourceName == "scripteditor" &&
         (ce.callerLine.contains(methodName) || traceLevelEntry(methodName, ce.callerLineNum)) &&
-        ce.returnType != "void") {
+        (ce.returnType != "void" || ce.hasVisibleSubcall)) {
         ce.returnVal = targetToString(retVal)
         traceListener.onMethodExit(ce)
         handleOutputUiEvent(ce, false)
