@@ -16,8 +16,9 @@ package net.kogics.kojo.util
 
 object Throttler {
   val systemThrottler = new Throttler(100, 0)
+  val hardSystemThrottler = new Throttler(100, 10)  
   def throttle() = systemThrottler.throttle()
-  def throttleHard() = systemThrottler.throttle()
+  def throttleHard() = hardSystemThrottler.throttle()
 }
 
 class Throttler(after: Int, sleepTime: Int) {
