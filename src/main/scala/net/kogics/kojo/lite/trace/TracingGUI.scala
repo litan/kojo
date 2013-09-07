@@ -19,6 +19,8 @@ package trace
 
 import java.awt.Color
 import java.awt.GradientPaint
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
@@ -54,6 +56,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val markingClr = new GradientPaint(0, 0, Color.black, 5, 5, Color.yellow, true)
   @volatile var eventDesc: JTextArea = _
   var eventHolder: JSplitPane = _
+  val highlightColor = new Color(205, 222, 238)
 
   def reset() = Utils.runInSwingThread {
     events.removeAll()
@@ -90,7 +93,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
       }
 
       me.subcalls match {
-        case Seq()           => nodeSeq
+        case Seq()   => nodeSeq
         case x +: xs => nodeSeq ++ meSubLines(x) ++ (xs flatMap meSubLines)
 
       }
@@ -103,7 +106,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
       }
 
       me.subcalls match {
-        case Seq()           => nodeSeq
+        case Seq()   => nodeSeq
         case x +: xs => nodeSeq ++ meSubTurns(x) ++ (xs flatMap meSubTurns)
       }
     }
@@ -123,9 +126,10 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
       val te = new JButton(taText) {
         setBackground(Color.white)
         setHorizontalAlignment(SwingConstants.LEFT)
+        me.uiElems += this
 
         addMouseListener(new MouseAdapter {
-          override def mouseClicked(e: MouseEvent) {
+          override def mousePressed(e: MouseEvent) {
             eventDesc.setText(meDesc)
             Utils.runLaterInSwingThread {
               Utils.scrollToOffset(0, eventDesc)
@@ -215,6 +219,16 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
                 }
               }
             }
+          }
+          override def mouseReleased(e: MouseEvent) {
+            me.uiElems.foreach { _.setBackground(highlightColor) }
+          }
+
+        })
+
+        addFocusListener(new FocusAdapter {
+          override def focusLost(e: FocusEvent) {
+            me.uiElems.foreach { _.setBackground(Color.white) }
           }
         })
       }
