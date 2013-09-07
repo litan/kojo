@@ -192,30 +192,35 @@ object Utils {
 
   val batchLock = new ReentrantLock
   val batchQ = new LinkedList[() => Unit]
-  def runInSwingThreadBatched(fn: => Unit) {
-    def drainer() {
-      withLock(batchLock) {
-        while (!batchQ.isEmpty) {
-          batchQ.remove.apply()
-        }
-      }
-    }
-
-    withLock(batchLock) {
-      val sreq = batchQ.isEmpty
-      batchQ.add(fn _)
-      if (sreq) {
-        runLaterInSwingThread(drainer)
-      }
-    }
-  }
-
+  // this is the core of Kojo UI performance - so the code is a little low-level 
   def runInSwingThread(fn: => Unit) {
-    if (inSwingThread) {
+    if (EventQueue.isDispatchThread) {
       fn
     }
     else {
-      runInSwingThreadBatched(fn)
+      batchLock.lock()
+      try {
+        val needDrainer = batchQ.isEmpty
+        batchQ.add(fn _)
+        if (needDrainer) {
+          javax.swing.SwingUtilities.invokeLater(new Runnable {
+            override def run {
+              batchLock.lock()
+              try {
+                while (!batchQ.isEmpty) {
+                  batchQ.remove.apply()
+                }
+              }
+              finally {
+                batchLock.unlock()
+              }
+            }
+          })
+        }
+      }
+      finally {
+        batchLock.unlock()
+      }
     }
   }
 
