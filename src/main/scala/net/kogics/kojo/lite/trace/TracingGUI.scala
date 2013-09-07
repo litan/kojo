@@ -41,6 +41,10 @@ import net.kogics.kojo.lite.topc.TraceHolder
 import net.kogics.kojo.picture.GPics
 import net.kogics.kojo.util.Utils
 
+import bibliothek.gui.dock.common.event.CDockableStateListener
+import bibliothek.gui.dock.common.intern.CDockable
+import bibliothek.gui.dock.common.mode.ExtendedMode
+
 class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val events: JPanel = new JPanel
   events.setLayout(new BoxLayout(events, BoxLayout.Y_AXIS))
@@ -57,6 +61,17 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   @volatile var eventDesc: JTextArea = _
   var eventHolder: JSplitPane = _
   val highlightColor = new Color(205, 222, 238)
+
+  traceHolder.addCDockableStateListener(new CDockableStateListener {
+    def visibilityChanged(dockable: CDockable) {
+      if (!dockable.isVisible) {
+        events.removeAll()
+        traceHolder.remove(eventHolder)
+        eventHolder = null
+      }
+    }
+    def extendedModeChanged(dockable: CDockable, mode: ExtendedMode) {}
+  })
 
   def reset() = Utils.runInSwingThread {
     events.removeAll()
