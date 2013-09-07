@@ -34,10 +34,12 @@ import java.io.PrintWriter
 import java.io.StringWriter
 import java.net.InetAddress
 import java.net.URL
+import java.util.LinkedList
 import java.util.ResourceBundle
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 
 import javax.swing.ImageIcon
 import javax.swing.Timer
@@ -57,6 +59,7 @@ import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
 
+import RichFile.enrichFile
 import Typeclasses.mkIdentity
 import Typeclasses.some
 import edu.umd.cs.piccolo.event.PInputEvent
@@ -187,16 +190,32 @@ object Utils {
     })
   }
 
+  val batchLock = new ReentrantLock
+  val batchQ = new LinkedList[() => Unit]
+  def runInSwingThreadBatched(fn: => Unit) {
+    def drainer() {
+      withLock(batchLock) {
+        while (!batchQ.isEmpty) {
+          batchQ.remove.apply()
+        }
+      }
+    }
+
+    withLock(batchLock) {
+      val sreq = batchQ.isEmpty
+      batchQ.add(fn _)
+      if (sreq) {
+        runLaterInSwingThread(drainer)
+      }
+    }
+  }
+
   def runInSwingThread(fn: => Unit) {
     if (inSwingThread) {
       fn
     }
     else {
-      javax.swing.SwingUtilities.invokeLater(new Runnable {
-        override def run {
-          fn
-        }
-      })
+      runInSwingThreadBatched(fn)
     }
   }
 
