@@ -313,7 +313,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def towards(x: Double, y: Double) = {
-    Throttler.throttleHard()
+    Throttler.throttle()
     Utils.runInSwingThread {
       val newTheta = towardsHelper(x, y)
       changeHeading(newTheta)
@@ -322,7 +322,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def jumpTo(x: Double, y: Double) = {
-    Throttler.throttleHard()
+    Throttler.throttle()
     Utils.runInSwingThread {
       jumpToHelper(x, y)
     }
@@ -514,7 +514,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def setCostume(costumeFile: String) = {
-    Throttler.throttleHard()
+    Throttler.throttle()
     Utils.runInSwingThread {
       setCostumeHelper(costumeFile)
     }
@@ -544,7 +544,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   def setCostumes(costumeFiles: Vector[String]) = {
     require(costumeFiles.length > 1, "You need to specify at least two costumes")
-    Throttler.throttleHard()
+    Throttler.throttle()
     Utils.runInSwingThread {
       setCostumeHelper(costumeFiles(0))
       costumes = Some(costumeFiles)
@@ -553,7 +553,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def nextCostume() = {
-    Throttler.throttleHard()
+    Throttler.throttle()
     Utils.runInSwingThread {
       costumes foreach { cseq =>
         currCostume = if (currCostume == cseq.length - 1) 0 else currCostume + 1
@@ -568,7 +568,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def changePosition(x: Double, y: Double) = {
-    Throttler.throttleHard()
+    Throttler.throttle()
     Utils.runInSwingThread {
       jumpToHelper(_positionX + x, _positionY + y)
     }
