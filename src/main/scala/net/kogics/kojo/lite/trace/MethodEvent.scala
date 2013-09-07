@@ -24,6 +24,7 @@ import javax.swing.JComponent
 
 class MethodEvent {
   @volatile var methodName: String = _
+  @volatile var rawName: String = _
   @volatile var targetObject: String = _
   @volatile var targetType: String = _
   @volatile var declaringType: String = _

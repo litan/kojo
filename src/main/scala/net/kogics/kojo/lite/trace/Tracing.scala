@@ -373,7 +373,7 @@ that is not supported under Tracing.
 
   def handleOutputEvent(me: MethodEvent, enter: Boolean, enterTag: String, exitTag: String) {
     val prefix = s"${"  " * me.level}<${me.level}> ${if (enter) enterTag else exitTag}"
-    print(s"$prefix ${me.methodName}${me.pargs}")
+    print(s"$prefix ${me.rawName}${me.pargs}")
     if (!enter) {
       print(s": ${me.pret}")
     }
@@ -500,6 +500,8 @@ that is not supported under Tracing.
 
     val newEvt = new MethodEvent()
     val mthdEvent = getCurrentMethodEvent
+    newEvt.methodName = methodName
+    newEvt.rawName = methodEnterEvt.method.name
     newEvt.entryLineNum = lineNum
     newEvt.setParent(mthdEvent)
     newEvt.sourceName = srcName
@@ -507,7 +509,6 @@ that is not supported under Tracing.
     newEvt.srcLine = srcLine
     newEvt.callerLine = callerLine
     newEvt.callerLineNum = callerLineNum
-    newEvt.methodName = methodName
     newEvt.targetType = methodObjectType
     newEvt.declaringType = methodEnterEvt.method.declaringType.name
     newEvt.returnType = methodEnterEvt.method.returnTypeName
