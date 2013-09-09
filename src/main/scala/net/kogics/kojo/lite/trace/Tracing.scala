@@ -886,15 +886,11 @@ that is not supported under Tracing.
     val nameMthd = fontVal.referenceType.methodsByName("getFontName")(0)
     val nameValue = fontVal.invokeMethod(currThread, nameMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val name = nameValue.asInstanceOf[StringReference].value
-    evtReqs.foreach(_.enable)
 
-    evtReqs.foreach(_.disable)
     val styleMthd = fontVal.referenceType.methodsByName("getStyle")(0)
     val styleValue = fontVal.invokeMethod(currThread, styleMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val style = styleValue.asInstanceOf[IntegerValue].value
-    evtReqs.foreach(_.enable)
 
-    evtReqs.foreach(_.disable)
     val sizeMthd = fontVal.referenceType.methodsByName("getSize")(0)
     val sizeValue = fontVal.invokeMethod(currThread, sizeMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val size = sizeValue.asInstanceOf[IntegerValue].value
