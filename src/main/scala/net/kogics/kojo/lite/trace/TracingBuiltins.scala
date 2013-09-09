@@ -14,7 +14,6 @@ import net.kogics.kojo.util.Utils
 import edu.umd.cs.piccolo.PCamera
 import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.activities.PActivity
-import util.Throttler
 
 object TracingBuiltins extends CoreBuiltins {
 
@@ -46,34 +45,25 @@ object TracingBuiltins extends CoreBuiltins {
 
   def Font(name: String, size: Int) = new Font(name, 0, size)
 
-  /* those are basically still no-ops
-   * 
-  def showScriptInOutput() = TSCanvas.kojoCtx.showScriptInOutput
-  def hideScriptInOutput() = TSCanvas.kojoCtx.hideScriptInOutput()
-  def showVerboseOutput() = TSCanvas.kojoCtx.showVerboseOutput()
-  def hideVerboseOutput() = TSCanvas.kojoCtx.hideVerboseOutput()
+  def showScriptInOutput() = {}
+  def hideScriptInOutput() = {}
+  def showVerboseOutput() = {}
+  def hideVerboseOutput() = {}
   def retainSingleLineCode() = {}
   def clearSingleLineCode() = {}
-  def version = println("Scala " + scala.tools.nsc.Properties.versionString)
-  def switchToDefaultPerspective() = TSCanvas.kojoCtx.switchToDefaultPerspective()
-  def switchToScriptEditingPerspective() = TSCanvas.kojoCtx.switchToScriptEditingPerspective()
-  def switchToWorksheetPerspective() = TSCanvas.kojoCtx.switchToWorksheetPerspective()
-  def switchToStoryViewingPerspective() = TSCanvas.kojoCtx.switchToStoryViewingPerspective()
-  def switchToHistoryBrowsingPerspective() = TSCanvas.kojoCtx.switchToHistoryBrowsingPerspective()
-  def switchToOutputStoryViewingPerspective() = TSCanvas.kojoCtx.switchToOutputStoryViewingPerspective()
-  private val fullScreenAction = TSCanvas.kojoCtx.fullScreenCanvasAction()
-  def toggleFullScreenCanvas() = fullScreenAction.actionPerformed(null)
+  def version = {}
+  def switchToDefaultPerspective() = {}
+  def switchToScriptEditingPerspective() = {}
+  def switchToWorksheetPerspective() = {}
+  def switchToStoryViewingPerspective() = {}
+  def switchToHistoryBrowsingPerspective() = {}
+  def switchToOutputStoryViewingPerspective() = {}
+  def toggleFullScreenCanvas() = {}
+  def toggleFullScreenOutput() = {}
+  def setOutputBackground(color: Color) = {}
+  def setOutputTextColor(color: Color) = {}
+  def setOutputTextFontSize(size: Int) = {}
 
-  private val fullScreenOutputAction = TSCanvas.kojoCtx.fullScreenOutputAction()
-  def toggleFullScreenOutput() = fullScreenOutputAction.actionPerformed(null)
-
-  def setOutputBackground(color: Color) = TSCanvas.kojoCtx.setOutputBackground(color)
-  def setOutputTextColor(color: Color) = TSCanvas.kojoCtx.setOutputForeground(color)
-  def setOutputTextFontSize(size: Int) = TSCanvas.kojoCtx.setOutputFontSize(size)
-*/
-  
-  
-  
   def playMp3Loop(mp3File: String) {
   }
 
@@ -98,9 +88,9 @@ object TracingBuiltins extends CoreBuiltins {
   def isScratchPad = false
   def setEditorTabSize(n: Int) {}
   def clearOutput() {}
-  def readln(prompt: String): String = TSCanvas.kojoCtx.readInput(prompt)
-  def readInt(prompt: String): Int = readln(prompt).toInt
-  def readDouble(prompt: String): Double = readln(prompt).toDouble
+  def readln(prompt: String): String = "Unsupported"
+  //  def readInt(prompt: String): Int = 0
+  //  def readDouble(prompt: String): Double = 0
   def addCodeTemplates(lang: String, templates: Map[String, String]) {}
   def addHelpContent(lang: String, content: Map[String, String]) {}
   def isTracing = true
