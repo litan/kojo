@@ -358,8 +358,6 @@ Here's a partial list of the available commands:
   type Vector2D = util.Vector2D
   val Vector2D = util.Vector2D
 
-  def Font(name: String, size: Int, style: Int = JFont.PLAIN) = new Font(name, style, size)
-
   def playMp3(mp3File: String) {
     mp3player.playMp3(mp3File)
   }

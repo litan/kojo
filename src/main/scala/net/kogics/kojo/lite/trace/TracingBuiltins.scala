@@ -43,8 +43,6 @@ object TracingBuiltins extends CoreBuiltins {
   def satMod(c: Color, f: Double) = Utils.satMod(c, f)
   def britMod(c: Color, f: Double) = Utils.britMod(c, f)
 
-  def Font(name: String, size: Int) = new Font(name, 0, size)
-
   def showScriptInOutput() = {}
   def hideScriptInOutput() = {}
   def showVerboseOutput() = {}
