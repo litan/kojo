@@ -48,7 +48,6 @@ object TracingBuiltins extends CoreBuiltins {
 
   /* those are basically still no-ops
    * 
-   */
   def showScriptInOutput() = TSCanvas.kojoCtx.showScriptInOutput
   def hideScriptInOutput() = TSCanvas.kojoCtx.hideScriptInOutput()
   def showVerboseOutput() = TSCanvas.kojoCtx.showVerboseOutput()
@@ -71,7 +70,7 @@ object TracingBuiltins extends CoreBuiltins {
   def setOutputBackground(color: Color) = TSCanvas.kojoCtx.setOutputBackground(color)
   def setOutputTextColor(color: Color) = TSCanvas.kojoCtx.setOutputForeground(color)
   def setOutputTextFontSize(size: Int) = TSCanvas.kojoCtx.setOutputFontSize(size)
-
+*/
   
   
   
