@@ -31,7 +31,7 @@ import core.CodeExecutionSupport
 class ChooseColor(execSupport: CodeExecutionSupport) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
   val ctx = execSupport.kojoCtx
   def actionPerformed(e: ActionEvent) {
-    val sColor = JColorChooser.showDialog(null, util.Utils.stripDots(e.getActionCommand), ctx.lastColor)
+    val sColor = JColorChooser.showDialog(execSupport.kojoCtx.frame, util.Utils.stripDots(e.getActionCommand), ctx.lastColor)
     if (sColor != null) {
       val cprint = execSupport.showOutput(_: String, _: Color)
       cprint("\u2500" * 3 + "\n", sColor)
