@@ -19,7 +19,6 @@ package trace
 
 import java.awt.Color
 import java.io.File
-
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaIterator
 import scala.collection.mutable.ArrayBuffer
@@ -32,7 +31,6 @@ import scala.tools.nsc.reporters.Reporter
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
 import scala.util.matching.Regex
-
 import com.sun.jdi.AbsentInformationException
 import com.sun.jdi.ArrayReference
 import com.sun.jdi.Bootstrap
@@ -58,7 +56,6 @@ import com.sun.jdi.event.VMDeathEvent
 import com.sun.jdi.event.VMDisconnectEvent
 import com.sun.jdi.event.VMStartEvent
 import com.sun.jdi.request.EventRequest
-
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.Turtle
@@ -67,6 +64,7 @@ import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.picture.Pic
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CompilerOutputHandler
+import java.awt.Font
 
 class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
   @volatile var currThread: ThreadReference = _
@@ -668,6 +666,8 @@ that is not supported under Tracing.
         turtle.clear()
       case "invisible" =>
         turtle.invisible
+      case "visible" =>
+        turtle.visible
       case "forward" =>
         if (localArgs.length == 1) {
           val step = stkfrm.getValue(localArgs(0)).toString.toDouble
@@ -751,6 +751,30 @@ that is not supported under Tracing.
       case "scaleCostume" =>
         val a = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.scaleCostume(a)
+      case "saveStyle" =>
+        turtle.saveStyle
+      case "restoreStyle" =>
+        turtle.restoreStyle
+      case "remove" =>
+        turtle.remove
+      case "beamsOn" =>
+        turtle.beamsOn
+      case "beamsOff" =>
+        turtle.beamsOff
+      case "setPenFontSize" =>
+        val n = stkfrm.getValue(localArgs(0)).toString.toInt
+        turtle.setPenFontSize(n)
+      case "setPenFont" =>
+        val font = fontValue(stkfrm.getValue(localArgs(0)))
+        turtle.setPenFont(font)
+      case "setHeading" =>
+        val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
+        turtle.setHeading(angle)
+      case "write" =>
+        val text = stringValue(stkfrm.getValue(localArgs(0)))
+        turtle.write(text)
+      case "showScriptInOutput" =>
+        
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Turtle command - $c")
     }
@@ -852,6 +876,30 @@ that is not supported under Tracing.
 
       case _ =>
     }
+  }
+
+  def fontValue(arg: Value): Font = {
+    val fontVal = arg.asInstanceOf[ObjectReference]
+
+    evtReqs.foreach(_.disable)
+    val nameMthd = fontVal.referenceType.methodsByName("getFontName")(0)
+    val nameValue = fontVal.invokeMethod(currThread, nameMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val name = nameValue.asInstanceOf[StringReference].value
+    evtReqs.foreach(_.enable)
+
+    evtReqs.foreach(_.disable)
+    val styleMthd = fontVal.referenceType.methodsByName("getStyle")(0)
+    val styleValue = fontVal.invokeMethod(currThread, styleMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val style = styleValue.asInstanceOf[IntegerValue].value
+    evtReqs.foreach(_.enable)
+
+    evtReqs.foreach(_.disable)
+    val sizeMthd = fontVal.referenceType.methodsByName("getSize")(0)
+    val sizeValue = fontVal.invokeMethod(currThread, sizeMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val size = sizeValue.asInstanceOf[IntegerValue].value
+    evtReqs.foreach(_.enable)
+
+    new Font(name, style, size)
   }
 
   def colorValue(arg: Value): Color = {
