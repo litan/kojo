@@ -97,7 +97,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   codePane.getSyntaxScheme.setStyle(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, new Style(new Color(200, 50, 0)))
   //  val commentFont = codePane.getSyntaxScheme.getStyle(TokenTypes.COMMENT_MULTILINE).font
   //  codePane.getSyntaxScheme.setStyle(TokenTypes.COMMENT_MULTILINE, new Style(new Color(10, 110, 10), null, commentFont))
-  codePane.setSelectionColor(new Color(125, 150, 255))
+  codePane.setSelectionColor(new Color(142, 191, 238))
   codePane.setMarkOccurrencesColor(new Color(150, 175, 200))
 
   val inputMap = codePane.getInputMap()

@@ -1,0 +1,6 @@
+set -x
+hg push ../KojoLite
+cd ../KojoLite
+hg -v up
+hg log --limit 6
+hg push
