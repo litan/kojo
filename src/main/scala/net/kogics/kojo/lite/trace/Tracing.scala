@@ -773,8 +773,6 @@ that is not supported under Tracing.
       case "write" =>
         val text = stringValue(stkfrm.getValue(localArgs(0)))
         turtle.write(text)
-      case "showScriptInOutput" =>
-        
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Turtle command - $c")
     }
