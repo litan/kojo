@@ -5,6 +5,7 @@ import java.awt.{ Color => JColor }
 import java.awt.{ Font => JFont }
 import java.awt.GradientPaint
 import java.awt.Paint
+import java.util.concurrent.CountDownLatch
 
 import scala.language.implicitConversions
 
@@ -81,6 +82,10 @@ trait CoreBuiltins {
     val b = tnode.getFullBounds
     new Rectangle(new Point(b.x, b.y), new Point(b.x + b.width, b.y + b.height))
   }
+  def countDownLatch(n: Int) = new CountDownLatch(n)
+  def homeDir = Utils.homeDir
+  def currentDir = Utils.currentDir
+  def installDir = Utils.installDir
 
   type Picture = core.Picture
   type HPics = picture.HPics

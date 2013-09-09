@@ -368,7 +368,6 @@ Here's a partial list of the available commands:
   }
   UserCommand("playMp3Loop", List("fileName"), "Plays the specified MP3 file in the background.")
 
-  def installDir = Utils.installDir
   def canvasBounds = tCanvas.cbounds
   def setBackground(c: Paint) = tCanvas.setCanvasBackground(c)
 
@@ -415,10 +414,6 @@ Here's a partial list of the available commands:
   def setOutputBackground(color: Color) = kojoCtx.setOutputBackground(color)
   def setOutputTextColor(color: Color) = kojoCtx.setOutputForeground(color)
   def setOutputTextFontSize(size: Int) = kojoCtx.setOutputFontSize(size)
-
-  def countDownLatch(n: Int) = new CountDownLatch(n)
-  def homeDir = Utils.homeDir
-  def currentDir = Utils.currentDir
 
   def setEditorTabSize(ts: Int) = kojoCtx.setEditorTabSize(ts)
   def mouseX = staging.Inputs.mousePos.x
