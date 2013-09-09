@@ -19,14 +19,13 @@ package trace
 
 import java.awt.Color
 import java.awt.GradientPaint
-import java.awt.event.FocusAdapter
-import java.awt.event.FocusEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
 
 import javax.swing.BoxLayout
 import javax.swing.JButton
+import javax.swing.JComponent
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JSplitPane
@@ -57,10 +56,11 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
 
   @volatile var currMarker: Option[Picture] = None
   @volatile var currPicsMarker = Vector[Picture]()
+  @volatile var currUiElems = new ArrayBuffer[JComponent](0)
   val markingClr = new GradientPaint(0, 0, Color.black, 5, 5, Color.yellow, true)
   @volatile var eventDesc: JTextArea = _
   var eventHolder: JSplitPane = _
-  val highlightColor = new Color(205, 222, 238)
+  val highlightColor = new Color(173, 206, 238)
 
   traceHolder.addCDockableStateListener(new CDockableStateListener {
     def visibilityChanged(dockable: CDockable) {
@@ -236,14 +236,9 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
             }
           }
           override def mouseReleased(e: MouseEvent) {
+            currUiElems.foreach { _.setBackground(Color.white) }
             me.uiElems.foreach { _.setBackground(highlightColor) }
-          }
-
-        })
-
-        addFocusListener(new FocusAdapter {
-          override def focusLost(e: FocusEvent) {
-            me.uiElems.foreach { _.setBackground(Color.white) }
+            currUiElems = me.uiElems
           }
         })
       }

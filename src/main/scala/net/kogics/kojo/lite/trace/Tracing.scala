@@ -18,7 +18,9 @@ package lite
 package trace
 
 import java.awt.Color
+import java.awt.Font
 import java.io.File
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaIterator
 import scala.collection.mutable.ArrayBuffer
@@ -31,6 +33,7 @@ import scala.tools.nsc.reporters.Reporter
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
 import scala.util.matching.Regex
+
 import com.sun.jdi.AbsentInformationException
 import com.sun.jdi.ArrayReference
 import com.sun.jdi.Bootstrap
@@ -56,6 +59,7 @@ import com.sun.jdi.event.VMDeathEvent
 import com.sun.jdi.event.VMDisconnectEvent
 import com.sun.jdi.event.VMStartEvent
 import com.sun.jdi.request.EventRequest
+
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.Turtle
@@ -64,7 +68,6 @@ import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.picture.Pic
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CompilerOutputHandler
-import java.awt.Font
 
 class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
   @volatile var currThread: ThreadReference = _
