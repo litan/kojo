@@ -60,7 +60,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val markingClr = new GradientPaint(0, 0, Color.black, 5, 5, Color.yellow, true)
   @volatile var eventDesc: JTextArea = _
   var eventHolder: JSplitPane = _
-  val highlightColor = new Color(205, 222, 238)
+  val highlightColor = new Color(173, 206, 238)
 
   traceHolder.addCDockableStateListener(new CDockableStateListener {
     def visibilityChanged(dockable: CDockable) {
