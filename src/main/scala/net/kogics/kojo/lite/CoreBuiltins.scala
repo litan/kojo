@@ -6,7 +6,11 @@ import java.awt.{ Font => JFont }
 import java.awt.GradientPaint
 import java.awt.Paint
 
+import scala.language.implicitConversions
+
+import net.kogics.kojo.core.Rectangle
 import net.kogics.kojo.core.TSCanvasFeatures
+import net.kogics.kojo.util.Utils
 
 trait CoreBuiltins {
   import scala.language.implicitConversions
@@ -71,7 +75,12 @@ trait CoreBuiltins {
   def clearOutput()
   def readln(prompt: String): String
   def setBackground(c: Paint)
-  
+  def textExtent(text: String, fontSize: Int) = Utils.runInSwingThreadAndWait {
+    val tnode = Utils.textNode(text, 0, 0, TSCanvas.camScale, fontSize)
+    val b = tnode.getFullBounds
+    new Rectangle(new Point(b.x, b.y), new Point(b.x + b.width, b.y + b.height))
+  }
+
   type Picture = core.Picture
   type HPics = picture.HPics
   val HPics = picture.HPics

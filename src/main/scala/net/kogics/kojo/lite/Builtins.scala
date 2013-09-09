@@ -241,11 +241,6 @@ Here's a partial list of the available commands:
   }
   UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
 
-  def textExtent(text: String, fontSize: Int) = Utils.runInSwingThreadAndWait {
-    val tnode = Utils.textNode(text, 0, 0, tCanvas.camScale, fontSize)
-    val b = tnode.getFullBounds
-    new Rectangle(new Point(b.x, b.y), new Point(b.x + b.width, b.y + b.height))
-  }
   UserCommand("textExtent", List("text", "fontSize"), "Determines the size/extent of the given text fragment for the given font size.")
 
   def runInBackground(code: => Unit) = Utils.runAsyncMonitored(code)
