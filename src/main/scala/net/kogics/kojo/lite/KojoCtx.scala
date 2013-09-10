@@ -233,9 +233,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
       tw.setLocation(CLocation.base.normalWest(0.3))
       tw.setVisible(true)
     }
-    else {
-      tw.toFront()
-    }
+    tw.toFront()
   }
 
   def drawingCanvasActivated() {
