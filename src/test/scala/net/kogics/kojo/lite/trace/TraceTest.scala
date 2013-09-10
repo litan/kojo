@@ -1,6 +1,8 @@
 package net.kogics.kojo
 package lite.trace
 
+import java.awt.Color
+
 import org.jmock.Expectations
 import org.jmock.Expectations.returnValue
 import org.jmock.Mockery
@@ -10,11 +12,11 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.ShouldMatchersForJUnit
 
 import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.lite.DrawingCanvasAPI
 import net.kogics.kojo.lite.NoOpRunContext
 import net.kogics.kojo.lite.NoOpSCanvas
-import net.kogics.kojo.turtle.Turtle
 import net.kogics.kojo.turtle.TurtleWorldAPI
 
 import edu.umd.cs.piccolo.activities.PActivity
@@ -31,12 +33,14 @@ class TraceTest extends ShouldMatchersForJUnit {
   @Test
   def test1 {
     val code = """clear()
+setPenColor(blue)
 forward(100)
 right()
 """
 
     val mockTurtle = context.mock(classOf[core.Turtle]).asInstanceOf[core.Turtle]
     context.checking(new Expectations {
+      one(mockTurtle).setPenColor(Color.blue)
       one(mockTurtle).forward(100.0)
       one(mockTurtle).turn(-90.0)
       allowing(mockTurtle).lastLine; will(returnValue(None))
@@ -52,7 +56,7 @@ right()
         startEvents :+= me
       }
       def onMethodExit(me: MethodEvent) {
-        endEvents :+ me
+        endEvents :+= me
       }
       def onEnd() {}
     }
@@ -78,7 +82,7 @@ right()
 
     println(s"Calls: $startEvents")
     println(s"Returns: $endEvents")
-    startEvents.size should be(3)
-    endEvents.size should be(0)
+    startEvents.size should be(5)
+    endEvents.size should be(1)
   }
 }
