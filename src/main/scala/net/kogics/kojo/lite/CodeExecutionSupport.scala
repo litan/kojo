@@ -601,6 +601,7 @@ class CodeExecutionSupport(
     }
 
     def onEnd() {
+      activateEditor()
       enableRunButton(true)
       stopButton.setEnabled(false)
       traceRunning = false
