@@ -1,4 +1,5 @@
-package net.kogics.kojo.lite.trace
+package net.kogics.kojo
+package lite.trace
 
 import org.jmock.Expectations
 import org.jmock.Expectations.returnValue
@@ -34,6 +35,14 @@ forward(100)
 right()
 """
 
+    val mockTurtle = context.mock(classOf[core.Turtle]).asInstanceOf[core.Turtle]
+    context.checking(new Expectations {
+      one(mockTurtle).forward(100.0)
+      one(mockTurtle).turn(-90.0)
+      allowing(mockTurtle).lastLine; will(returnValue(None))
+      allowing(mockTurtle).lastTurn; will(returnValue(None))
+    })
+
     var startEvents = Vector[MethodEvent]()
     var endEvents = Vector[MethodEvent]()
 
@@ -49,7 +58,7 @@ right()
     }
 
     val sCanvas: SCanvas = new NoOpSCanvas {
-      override val turtle0 = new Turtle(this, "/images/turtle32.png", 0, 0)
+      override val turtle0 = mockTurtle
       override def animateActivity(a: PActivity) {
         a.getDelegate().activityFinished(a)
       }
@@ -57,7 +66,7 @@ right()
     val TSCanvas = new DrawingCanvasAPI(sCanvas)
     val Tw = new TurtleWorldAPI(sCanvas.turtle0)
 
-    val builtins = (context.mock(classOf[Builtins])).asInstanceOf[Builtins]
+    val builtins = context.mock(classOf[Builtins]).asInstanceOf[Builtins]
     context.checking(new Expectations {
       one(builtins).random(1000); will(returnValue(300))
       allowing(builtins).TSCanvas; will(returnValue(TSCanvas))
