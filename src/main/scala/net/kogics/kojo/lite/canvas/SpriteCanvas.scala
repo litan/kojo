@@ -20,7 +20,6 @@ import java.awt.Color
 import java.awt.Dimension
 import java.awt.GradientPaint
 import java.awt.Paint
-import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.ComponentAdapter
@@ -201,7 +200,11 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     }
 
     override def mouseWheelRotated(e: PInputEvent) {
-      zoomBy(1 - e.getWheelRotation * 0.1, e.getPosition)
+      // If wheelRotation is 10, zoomFactor is 0, which causes an exception in zoomBy
+      // If wheelRotation is > 10, zoomFactor is < 0.  The fix is to limit 
+      // wheelRotation to 9.
+      val wheelRotation = math.min(e.getWheelRotation, 9)
+      zoomBy(1 - wheelRotation * 0.1, e.getPosition)
     }
   })
 
@@ -449,17 +452,15 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   // zoom, leaving the current mouse position point (in canvas/world coordinates) unchanged
   def zoomBy(factor: Double, mousePos: Point2D): Unit = {
     require(factor != 0, "Zoom factor can't be 0.")
-    Utils.runInSwingThreadAndWait {
-      //      val tx = getCamera.getViewTransformReference.getTranslateX
-      //      val ty = getCamera.getViewTransformReference.getTranslateY
-      //      val oldZoom = currZoom
-      //      getCamera.getViewTransformReference.setToIdentity()
-      //      getCamera.getViewTransformReference.scale(oldZoom, -oldZoom)
-      //      getCamera.getViewTransformReference.setOffset(tx, ty)
-      //      getCamera.getViewTransformReference.translate(mousePos.getX, mousePos.getY)
-      //      getCamera.getViewTransformReference.scale(factor, factor)
-      //      getCamera.getViewTransformReference.translate(-mousePos.getX, -mousePos.getY)
+    val czoom = currZoom
+    if (czoom < 1.0E-30 || czoom > 1.0E30) {
+      // restrict current zoom to practically usable range, with plenty to spare - canvas items 
+      // disappear after a zoom of approximately 1.0E(+-)10. 
+      // Without restriction, the current zoom eventually becomes NaN or Infinity  
+      return
+    }
 
+    Utils.runInSwingThreadAndWait {
       getCamera.getViewTransformReference.scaleAboutPoint(factor, mousePos.getX, mousePos.getY)
       updateAxesAndGrid()
       repaint()
@@ -903,5 +904,3 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     })
   }
 }
-
-
