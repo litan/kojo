@@ -453,10 +453,11 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   def zoomBy(factor: Double, mousePos: Point2D): Unit = {
     require(factor != 0, "Zoom factor can't be 0.")
     val czoom = currZoom
-    if (czoom < 1.0E-30 || czoom > 1.0E30) {
+    if ((czoom < 1.0E-30 && factor < 1) ||
+      (czoom > 1.0E30 && factor > 1)) {
       // restrict current zoom to practically usable range, with plenty to spare - canvas items 
       // disappear after a zoom of approximately 1.0E(+-)10. 
-      // Without restriction, the current zoom eventually becomes NaN or Infinity  
+      // without restriction, the current zoom eventually becomes NaN or Infinity  
       return
     }
 
