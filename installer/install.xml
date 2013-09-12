@@ -84,7 +84,10 @@
             <file src="licenses/Kojo-license.txt" targetdir="$INSTALL_PATH"/>
             <file src="bin" targetdir="$INSTALL_PATH"/>
             <file src="Uninstaller" targetdir="$INSTALL_PATH"/>
-            <file src="lib" targetdir="$INSTALL_PATH"/>
+            <file src="lib" targetdir="$INSTALL_PATH" override="true"/>
+            <file src="jdi.jar" targetdir="$INSTALL_PATH/lib" override="true" os="unix"/>
+            <file src="jdi.jar" targetdir="$INSTALL_PATH/lib" override="true" os="mac"/>
+            <file src="jdi-win.jar" targetdir="$INSTALL_PATH/lib" override="true" os="windows"/>
             <file src="licenses" targetdir="$INSTALL_PATH"/>
             <file src="icons" targetdir="$INSTALL_PATH"/>
             <executable targetfile="$INSTALL_PATH/bin/kojo" stage="never" keep="true">

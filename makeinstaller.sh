@@ -10,6 +10,9 @@ cd installer
 scala cp-staging-jars.scala
 cd ..
 
+cp lib/jdi.jar installerbuild
+cp lib/jdi-win.jar installerbuild
+
 # run IzPack to create installer
 cp -var installer/* installerbuild/
 cd installerbuild
