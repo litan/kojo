@@ -615,7 +615,6 @@ object Utils {
       def countLines(s: String) = s.count(_ == '\n')
       val includes = """//\s*#include.*""".r.findAllIn(code)
       def getFileName(s: String) = """//\s*#include""".r.replaceFirstIn(s, "").trim
-      val kojoDir = net.kogics.kojo.util.Utils.userDir + "/kojo/"
       def expand(fileName: String) = {
         val suffix = if (!fileName.contains(".")) ".kojo" else ""
         absolutePath(fileName + suffix)

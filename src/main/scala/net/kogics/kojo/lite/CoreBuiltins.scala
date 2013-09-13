@@ -66,7 +66,8 @@ trait CoreBuiltins {
   def randomDouble(upperBound: Int) = Random.nextDouble * upperBound
 
   def color(r: Int, g: Int, b: Int) = new Color(r, g, b)
-  def Color(r: Int, g: Int, b: Int, a: Int = 255) = new Color(r, g, b, a)
+  def Color(r: Int, g: Int, b: Int) = new Color(r, g, b, 255)
+  def Color(r: Int, g: Int, b: Int, a: Int) = new Color(r, g, b, a)
   def ColorG(x1: Double, y1: Double, c1: Color, x2: Double, y2: Double, c2: Color, cyclic: Boolean = false) = {
     new GradientPaint(x1.toFloat, y1.toFloat, c1, x2.toFloat, y2.toFloat, c2, cyclic)
   }
