@@ -42,7 +42,8 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     val lineEnd = Utilities.getRowEnd(pane, offset)
     val line = pane.getDocument.getText(lineStart, lineEnd - lineStart)
     val m = matcher2(line)
-    if (m.find()) {
+    var found = false
+    while (!found && m.find()) {
       val start = m.start
       val end = m.end
       val lineOffset = offset - lineStart
@@ -50,15 +51,10 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
         target = m.group
         targetStart = lineStart + start
         targetEnd = lineStart + end
-        true
-      }
-      else {
-        false
+        found = true
       }
     }
-    else {
-      false
-    }
+    found
   }
 
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
