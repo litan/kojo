@@ -77,7 +77,8 @@ trait CoreBuiltins {
   def clearOutput()
   def readln(prompt: String): String
   def setBackground(c: Paint)
-  def Font(name: String, size: Int, style: Int = JFont.PLAIN) = new Font(name, style, size)
+  def Font(name: String, size: Int) = new Font(name, JFont.PLAIN, size)
+  def Font(name: String, size: Int, style: Int) = new Font(name, style, size)
   def textExtent(text: String, fontSize: Int) = Utils.runInSwingThreadAndWait {
     val tnode = Utils.textNode(text, 0, 0, TSCanvas.camScale, fontSize)
     val b = tnode.getFullBounds
