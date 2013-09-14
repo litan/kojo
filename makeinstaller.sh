@@ -12,6 +12,7 @@ cd ..
 
 cp lib/jdi.jar installerbuild
 cp lib/jdi-win.jar installerbuild
+cp lib/jdi-mac.jar installerbuild
 
 # run IzPack to create installer
 cp -var installer/* installerbuild/
