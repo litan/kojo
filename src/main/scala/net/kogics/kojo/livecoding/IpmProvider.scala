@@ -20,19 +20,15 @@ import javax.swing.text.Document
 import javax.swing.text.JTextComponent
 
 class IpmProvider(mctx: ManipulationContext) {
-  val manips = List(new IntManipulator(mctx), new FloatManipulator(mctx), new ColorManipulator(mctx))
-  
+  val manips = List(new ColorManipulator(mctx), new IntManipulator(mctx), new FloatManipulator(mctx))
+  var currManip: Option[InteractiveManipulator] = None
+
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
-    manips.exists {_ isHyperlinkPoint(pane, offset)}
+    currManip = manips.find { _ isHyperlinkPoint (pane, offset) }
+    currManip.isDefined
   }
-  
-  def getHyperlinkSpan(pane: JTextComponent, offset: Int): Array[Int] = {
-    val manip = manips.find { _ isHyperlinkPoint(pane, offset) }
-    manip.map { _ getHyperlinkSpan(pane, offset)}.getOrElse(null)
-  }
-  
+
   def performClickAction(pane: JTextComponent, offset: Int) {
-    val manip = manips.find { _ isHyperlinkPoint(pane, offset) }
-    manip.foreach { _ activate(pane, offset)}
+    currManip.foreach { _ activate (pane, offset) }
   }
 }

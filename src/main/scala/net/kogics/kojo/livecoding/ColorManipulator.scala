@@ -34,6 +34,32 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
 
   lazy val ColorPattern = Pattern.compile("""(C\.)?(%s)""" format (ctx.knownColors.mkString("|")))
   def matcher(possibleColor: String) = ColorPattern.matcher(possibleColor)
+  lazy val ColorPattern2 = Pattern.compile("""Color\(\d+,\s*\d+,\s*\d+(,\s*\d+)?\)""")
+  def matcher2(possibleColorLine: String) = ColorPattern2.matcher(possibleColorLine)
+
+  def findColorFunction(pane: JTextComponent, offset: Int): Boolean = {
+    val lineStart = Utilities.getRowStart(pane, offset)
+    val lineEnd = Utilities.getRowEnd(pane, offset)
+    val line = pane.getDocument.getText(lineStart, lineEnd - lineStart)
+    val m = matcher2(line)
+    if (m.find()) {
+      val start = m.start
+      val end = m.end
+      val lineOffset = offset - lineStart
+      if (start <= lineOffset && lineOffset <= end) {
+        target = m.group
+        targetStart = lineStart + start
+        targetEnd = lineStart + end
+        true
+      }
+      else {
+        false
+      }
+    }
+    else {
+      false
+    }
+  }
 
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
     try {
@@ -53,7 +79,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
           true
         }
         else {
-          false
+          findColorFunction(pane, offset)
         }
       }
     }
