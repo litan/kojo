@@ -198,19 +198,34 @@ class Deco(pic: Picture)(painter: Painter) extends Transform(pic) {
   def copy = Deco(pic.copy)(painter)
 }
 case class Fill(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
-  pic.setFillColor(color)
+  if (t != null) {
+    t.setFillColor(color)
+  }
+  else {
+    pic.setFillColor(color)
+  }
 }) {
   override def copy = Fill(color)(pic.copy)
 }
 
 case class Stroke(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
-  pic.setPenColor(color)
+  if (t != null) {
+    t.setPenColor(color)
+  }
+  else {
+    pic.setPenColor(color)
+  }
 }) {
   override def copy = Stroke(color)(pic.copy)
 }
 
 case class StrokeWidth(w: Double)(pic: Picture) extends Deco(pic)({ t =>
-  pic.setPenThickness(w)
+  if (t != null) {
+    t.setPenThickness(w)
+  }
+  else {
+    pic.setPenThickness(w)
+  }
 }) {
   override def copy = StrokeWidth(w)(pic.copy)
 }
