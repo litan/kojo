@@ -612,6 +612,9 @@ class CodeExecutionSupport(
 
   def traceCode() {
     val code = codeToRun.code
+    if (invalidCode(code)) {
+      return
+    }    
     historyManager.codeRun(code)
     tracer.trace(code)
   }
