@@ -107,8 +107,8 @@ object TracingBuiltins extends CoreBuiltins {
     def rect(h: Double, w: Double) = picture.rect(h, w)
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
-    def circle(r: Double) = picture.circle(r)
-    def arc(r: Double, angle: Int) = picture.arc(r, angle)
+//    def circle(r: Double) = picture.circle(r)
+//    def arc(r: Double, angle: Int) = picture.arc(r, angle)
   }
 
   class TracingInterp {
