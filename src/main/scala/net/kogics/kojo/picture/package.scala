@@ -99,10 +99,6 @@ package object picture {
       penDown()
       forward(3 * r / 4)
       left()
-      for (i <- 1 to 50) {
-        forward(2 * math.Pi * r / 360 * 0.2)
-        left(0.2)
-      }
     }
 
     def prot(n: Int): Picture = {
@@ -128,7 +124,11 @@ package object picture {
         )
       }
     }
-    val p = opac(-0.5) -> GPics(stroke(Color.black) -> prot(180), opac(-0.5) * stroke(Color.blue) -> arc(r / 4, 180))
+    val p = opac(-0.5) -> GPics(
+      stroke(Color.black) -> prot(180),
+      fill(new Color(0, 0, 0, 0)) * stroke(Color.black) -> arc(r, 180),
+      opac(-0.5) * stroke(Color.blue) -> arc(r / 4, 180)
+    )
     addMouseHandlers(p)
     p
   }
