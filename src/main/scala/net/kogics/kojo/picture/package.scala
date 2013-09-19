@@ -75,25 +75,9 @@ package object picture {
     forward(l)
   }
 
-  def circle(r: Double)(implicit canvas: SCanvas) = Pic { t =>
-    import t._
-    penUp()
-    right()
-    forward(r)
-    left()
-    penDown()
-    t.circle(r)
-  }
+  def circle(r: Double)(implicit canvas: SCanvas) = new CirclePic(r)
 
-  def arc(r: Double, angle: Int)(implicit canvas: SCanvas) = Pic { t =>
-    import t._
-    penUp()
-    right()
-    forward(r)
-    left()
-    penDown()
-    t.arc(r, angle)
-  }
+  def arc(r: Double, angle: Int)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale

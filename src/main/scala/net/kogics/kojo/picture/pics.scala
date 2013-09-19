@@ -262,6 +262,12 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   override def toString() = s"Picture with Id: ${System.identityHashCode(this)}"
 
   def myCanvas = canvas.pCanvas
+
+  protected def fillColor(fillPaint: Paint) = fillPaint match {
+    case null     => Color.white
+    case c: Color => c
+    case _        => throw new IllegalStateException("You can't extract rgb values of non Color paints")
+  }
 }
 
 trait CorePicOps2 { self: Picture =>
@@ -387,12 +393,6 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
       cab += cab(0)
     }
     Gf.createLineString(cab.toArray)
-  }
-
-  private def fillColor(fillPaint: Paint) = fillPaint match {
-    case null     => Color.white
-    case c: Color => c
-    case _        => throw new IllegalStateException("You can't extract rgb values of non Color paints")
   }
 
   def hueMod(f: Double) = Utils.runInSwingThread {
