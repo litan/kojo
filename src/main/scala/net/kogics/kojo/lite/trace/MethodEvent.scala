@@ -51,6 +51,7 @@ class MethodEvent {
   else {
     if (returnType == "void") "()" else ""
   }
+  def assignArg = args(0).substring(args(0).indexOf('='), args(0).length)
   def pret = returnVal.replaceAllLiterally("<void value>", "()")
   def psubcalls = _psubcalls(subcalls)
   def _psubcalls(scs: Seq[MethodEvent]): String = scs match {
@@ -59,7 +60,10 @@ class MethodEvent {
   }
 
   def entry(level: Int) = {
-    <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "\u00b7 " * level } CALL</span> { methodName } <span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
+    if (rawName.endsWith("_$eq"))
+      <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "\u00b7 " * level } CALL assign</span> { methodName } <span style="color:rgb(0,50,225)"> { assignArg }</span></div></html>.toString
+    else
+      <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "\u00b7 " * level } CALL</span> { methodName } <span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
   }
 
   def exit(level: Int) = {

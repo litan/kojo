@@ -425,7 +425,7 @@ that is not supported under Tracing.
   def localToString(frameVal: Value) = String.valueOf(frameVal)
 
   def desugar(name0: String, methodObjectType: String) = {
-    val name = name0.replaceAllLiterally("$minus$greater", "->").replaceAllLiterally("$times", "*").replaceAllLiterally("_$eq", " =")
+    val name = name0.replaceAllLiterally("$minus$greater", "->").replaceAllLiterally("$times", "*").replaceAllLiterally("_$eq", "")
     val dindex = name.indexOf('$')
     val ret = if (dindex == -1) {
       name
