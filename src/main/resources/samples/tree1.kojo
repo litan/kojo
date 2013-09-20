@@ -2,7 +2,7 @@
 val size = 100
 def S = Picture {
     repeat (4) {
-        forward(100)
+        forward(size)
         right()
     }
 }
