@@ -15,10 +15,8 @@ import edu.umd.cs.piccolo.nodes.PPath
 
 trait PicShapeOps { self: Picture with CorePicOps =>
   def realDraw() = Utils.runInSwingThread {
-    if (tnode.getParent == null) {
-      picLayer.addChild(tnode)
-      picLayer.repaint()
-    }
+    tnode.setVisible(true)
+    tnode.repaint()
   }
 
   def bounds = Utils.runInSwingThreadAndPause {
@@ -51,19 +49,19 @@ trait PicShapeOps { self: Picture with CorePicOps =>
 
   def setPenColor(color: java.awt.Paint) = Utils.runInSwingThread {
     _setPenColor(tnode, color)
+    tnode.repaint()
   }
   protected def _setPenColor(node: PNode, color: java.awt.Paint) {
     node.asInstanceOf[PPath].setStrokePaint(color)
-    node.repaint()
   }
 
   def setPenThickness(th: Double) = Utils.runInSwingThread {
     _setPenThickness(tnode, th)
+    tnode.repaint()
   }
   protected def _setPenThickness(node: PNode, th: Double) {
     val stroke = new BasicStroke(th.toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
     node.asInstanceOf[PPath].setStroke(stroke)
-    node.repaint()
   }
 
   def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) {}
@@ -86,6 +84,8 @@ class CirclePic(r: Double)(implicit val canvas: SCanvas) extends Picture with Co
     val node = PPath.createEllipse(-fr, -fr, d, d)
     _setPenColor(node, Color.red)
     _setPenThickness(node, 2)
+    node.setVisible(false)
+    picLayer.addChild(node)
     node
   }
 
@@ -104,11 +104,12 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val fr = r.toFloat
     val d = 2 * fr
-
     val node = new PPath
     node.setPathTo(new java.awt.geom.Arc2D.Float(-fr, -fr, d, d, 0, -angle.toFloat, Arc2D.OPEN))
     _setPenColor(node, Color.red)
     _setPenThickness(node, 2)
+    node.setVisible(false)
+    picLayer.addChild(node)
     node
   }
 
