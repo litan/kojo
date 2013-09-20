@@ -233,7 +233,7 @@ def main(args: Array[String]) {
         pictureKeywords find { code.contains(_) } match {
           case Some(_) =>
             val msg = """Picture tracing is only supported for scripts that use -
-Picture, PictureT, PicShape, 
+Picture, PictureT,
 picStack, picRow, picCol, rot, trans, and scale."""
             runCtx.reportError(msg)
           case None =>
