@@ -504,8 +504,10 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               evt.consume
             }
           case KeyEvent.VK_DOWN =>
-            if (evt.isControlDown && hNextButton.isEnabled) {
-              execSupport.loadCodeFromHistoryNext()
+            if (evt.isControlDown) {
+              if (hNextButton.isEnabled) {
+                execSupport.loadCodeFromHistoryNext()
+              }
               evt.consume
             }
           case _ => // do nothing special
