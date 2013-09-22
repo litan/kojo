@@ -61,7 +61,7 @@ class MethodEvent {
 
   def entry(level: Int) = {
     if (rawName.endsWith("_$eq"))
-      <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "\u00b7 " * level } CALL assign</span> { methodName } <span style="color:rgb(0,50,225)"> { assignArg }</span></div></html>.toString
+      <html><div style="font-family:Monospace"><span style="color:rgb(200,0,200)">{ "\u00b7 " * level } ASSIGN</span> { methodName } <span style="color:rgb(200,0,200)"> { assignArg }</span></div></html>.toString
     else
       <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "\u00b7 " * level } CALL</span> { methodName } <span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
   }
