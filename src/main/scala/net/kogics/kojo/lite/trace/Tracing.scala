@@ -774,8 +774,11 @@ that is not supported under Tracing.
         val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.setHeading(angle)
       case "write" =>
-        val text = stringValue(stkfrm.getValue(localArgs(0)))
-        turtle.write(text)
+        val arg = stkfrm.getValue(localArgs(0))
+        if (arg.isInstanceOf[StringReference]) {
+          val text = stringValue(arg)
+          turtle.write(text)
+        }
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Turtle command - $c")
     }
