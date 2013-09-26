@@ -611,6 +611,7 @@ that is not supported under Tracing.
 
   def runBuiltinsCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]) {
     import builtins.TSCanvas
+    import builtins.kojoCtx
     name match {
       case "setBackground" =>
         val c = colorValue(stkfrm.getValue(localArgs(0)))
@@ -618,6 +619,10 @@ that is not supported under Tracing.
       case "print" =>
         val toPrint = stringValue(stkfrm.getValue(localArgs(0)))
         builtins.print(toPrint)
+      case "showScriptInOutput" =>
+        kojoCtx.showScriptInOutput
+      case "hideScriptInOutput" =>
+        kojoCtx.hideScriptInOutput
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Builtins command - $c")
     }
@@ -688,8 +693,6 @@ that is not supported under Tracing.
           turtle.towards(x, y)
           me.turtleTurn = turtle.lastTurn
         }
-      case "home" =>
-        turtle.home
       case "jumpTo" =>
         if (localArgs.length == 2) {
           val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
@@ -770,9 +773,6 @@ that is not supported under Tracing.
       case "setPenFont" =>
         val font = fontValue(stkfrm.getValue(localArgs(0)))
         turtle.setPenFont(font)
-      case "setHeading" =>
-        val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
-        turtle.setHeading(angle)
       case "write" =>
         val arg = stkfrm.getValue(localArgs(0))
         if (arg.isInstanceOf[StringReference]) {

@@ -3,6 +3,7 @@ package lite.trace
 
 import java.awt.Color
 import java.awt.Font
+import java.awt.Point
 
 import org.jmock.Expectations
 import org.jmock.Expectations.any
@@ -12,6 +13,7 @@ import org.jmock.lib.legacy.ClassImposteriser
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.scalatest.junit.AssertionsForJUnit
 import org.scalatest.junit.ShouldMatchersForJUnit
 
 import net.kogics.kojo.core.SCanvas
@@ -25,7 +27,7 @@ import net.kogics.kojo.turtle.TurtleWorldAPI
 import edu.umd.cs.piccolo.activities.PActivity
 
 @RunWith(classOf[org.jmock.integration.junit4.JMock])
-class TraceTest extends ShouldMatchersForJUnit {
+class TraceTest extends ShouldMatchersForJUnit with AssertionsForJUnit {
 
   val context: Mockery = new Mockery() {
     {
@@ -116,6 +118,48 @@ right()
 
     context.assertIsSatisfied()
   }
+  
+  @Test
+  def areaTest {
+    //Rich Turtle Command functions
+    val code = """clear()
+forward()
+right()
+forward()
+right()
+forward()
+right()
+forward()
+right()
+area
+"""
+    context.checking(new Expectations {
+      oneOf(mockTurtle).forward(25.0)
+      oneOf(mockTurtle).turn(-90.0)
+      oneOf(mockTurtle).forward(25.0)
+      oneOf(mockTurtle).turn(-90.0)
+      oneOf(mockTurtle).forward(25.0)
+      oneOf(mockTurtle).turn(-90.0)
+      oneOf(mockTurtle).forward(25.0)
+      oneOf(mockTurtle).turn(-90.0)
+
+      allowing(mockTurtle).lastLine; will(returnValue(None))
+      allowing(mockTurtle).lastTurn; will(returnValue(None))
+    })
+
+    context.checking(new Expectations {
+      oneOf(builtins).random(1000); will(returnValue(300))
+      allowing(builtins).TSCanvas; will(returnValue(TSCanvas))
+      allowing(builtins).Tw; will(returnValue(Tw))
+    })
+
+    tracer.realTrace(code)
+    startEvents.size should be(10)
+    endEvents.size should be(1)
+    
+    assert(endEvents(0).pret === "625.0")
+
+  }
 
   @Test
   def movTest2 {
@@ -130,19 +174,21 @@ hop()
 hop(10)
 jumpTo(new Point(0, 0))
 moveTo(40, 0)
+position
 moveTo(new Point(40, 10))
 towards(10,10)
+heading
+direction
 setHeading(270)
 jumpTo(0, 30)
 home()
+perimeter
 arc(100,40)
 circle(10)
 """
-    /*
- * 
- */
 
-    //val getHeading = mockTurtle.heading
+    val pos = new Point(40, 0)
+    pos.setLocation(40.00, 0.00)
 
     context.checking(new Expectations {
       oneOf(mockTurtle).forward(25.0)
@@ -174,21 +220,21 @@ circle(10)
       oneOf(mockTurtle).towards(10.0, 10.0)
 
       //setHeading
-      oneOf(mockTurtle).setHeading(270.0)
-      allowing(mockTurtle).turn(90.0)
+      oneOf(mockTurtle).turn(90.0)
 
       oneOf(mockTurtle).jumpTo(0.0, 30.0)
 
       //home
-      oneOf(mockTurtle).home()
-      allowing(mockTurtle).towards(0.0, 0.0)
-      allowing(mockTurtle).forward(30.0)
-      allowing(mockTurtle).setHeading(90.0)
-      allowing(mockTurtle).turn(-180.0)
+      oneOf(mockTurtle).towards(0.0, 0.0)
+      oneOf(mockTurtle).forward(30.0)
+      oneOf(mockTurtle).turn(-180.0)
 
       //arc & circle
-      allowing(mockTurtle).forward(`with`(any(classOf[Double])))
-      allowing(mockTurtle).turn(`with`(any(classOf[Double])))
+      exactly(40).of(mockTurtle).forward(`with`(any(classOf[Double])))
+      exactly(40).of(mockTurtle).turn(`with`(any(classOf[Double])))
+
+      exactly(360).of(mockTurtle).forward(`with`(any(classOf[Double])))
+      exactly(360).of(mockTurtle).turn(`with`(any(classOf[Double])))
 
       allowing(mockTurtle).lastLine; will(returnValue(None))
       allowing(mockTurtle).lastTurn; will(returnValue(None))
@@ -201,8 +247,20 @@ circle(10)
     })
 
     tracer.realTrace(code)
-    startEvents.size should be(17)
-    endEvents.size should be(0)
+    startEvents.size should be(21)
+    endEvents.size should be(4)
+
+    val position = endEvents(0)
+    assert(position.pret === "Point(40.00 , 0.00)")
+
+    val heading = endEvents(1)
+    assert(heading.pret === "180.0")
+
+    val direction = endEvents(2)
+    assert(direction.pret === "180.0")
+
+    val perimeter = endEvents(3)
+    assert(perimeter.pret === "105.0")
 
     context.assertIsSatisfied()
   }
@@ -229,6 +287,7 @@ invisible()
 write(black)
 setPenFontSize(12)
 setPenFont(new Font("Arial", 0, 18))
+style
 """
     val testFont = new Font("Arial", 0, 18)
     val (x, y, z) = (testFont.getFontName, testFont.getStyle, testFont.getSize)
@@ -266,8 +325,11 @@ setPenFont(new Font("Arial", 0, 18))
     })
 
     tracer.realTrace(code)
-    startEvents.size should be(22)
-    endEvents.size should be(3)
+    startEvents.size should be(23)
+    endEvents.size should be(4)
+
+    val style = endEvents(3)
+    assert(style.pret === "Style(java.awt.Color[r=10,g=10,b=10],10.0,java.awt.Color[r=10,g=10,b=10],java.awt.Font[family=Arial,name=Arial,style=plain,size=18],true)")
 
     context.assertIsSatisfied()
   }
