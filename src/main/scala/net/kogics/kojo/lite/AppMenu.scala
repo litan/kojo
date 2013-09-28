@@ -362,7 +362,7 @@ trait AppMenu { self: Main.type =>
     val about = new JMenuItem(Utils.loadString("S_About"))
     about.addActionListener(new ActionListener {
       def actionPerformed(ev: ActionEvent) {
-        val aboutBox = new JDialog
+        val aboutBox = new JDialog(frame)
         val aboutPanel = new JPanel
         aboutPanel.setLayout(new BoxLayout(aboutPanel, BoxLayout.Y_AXIS))
 
@@ -399,6 +399,7 @@ trait AppMenu { self: Main.type =>
                <li>Audrey Neveu</li>
               </ul>
               <strong>Kojo</strong> is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
+              Kojo runs on the Java Platform.<br/><br/>
               The list of third-party software used by <strong>Kojo</strong> 2.x includes:
               <ul>
               <li>The Scala Programming Language (http://www.scala-lang.org)</li>
@@ -416,6 +417,7 @@ trait AppMenu { self: Main.type =>
               <li>Table Layout (https://java.net/projects/tablelayout) for Arithmetic Aerobics</li>
               <li>The Netbeans Platform (http://www.netbeans.org) for some Script Editor Icons</li>
               <li>The Scratch Project (http://scratch.mit.edu) for some Media files</li>
+              <li>The OpenJDK Project (http://openjdk.java.net/) for Tracing support</li>
               </ul>
               </div>
               </body></html>
