@@ -1,28 +1,29 @@
-/home/lalit/work/KojoDev/KojoLite/target/scala-2.10/kojo_2.10-2.1.jar -> kojo2.jar
-/home/lalit/work/KojoDev/KojoLite/lib/AppleJavaExtensions.jar
-/home/lalit/work/KojoDev/KojoLite/lib/rsyntaxtextarea.jar
-/home/lalit/work/KojoDev/KojoLite/lib/rstaui.jar
-/home/lalit/work/KojoDev/KojoLite/lib/autocomplete.jar
-/home/lalit/work/KojoDev/KojoLite/lib/scalariform.jar
-/home/lalit/work/KojoDev/KojoLite/lib/js-1.6R5.jar
-/home/lalit/work/KojoDev/KojoLite/lib/geogebra_main.jar
-/home/lalit/work/KojoDev/KojoLite/lib/geogebra.jar
-/home/lalit/work/KojoDev/KojoLite/lib/geogebra_algos.jar
-/home/lalit/work/KojoDev/KojoLite/lib/jtidy-4aug2000r7-dev.jar
-/home/lalit/work/KojoDev/KojoLite/lib/docking-frames-common.jar
-/home/lalit/work/KojoDev/KojoLite/lib/jl1.0.1.jar
-/home/lalit/work/KojoDev/KojoLite/lib/jlatexmath.jar
-/home/lalit/work/KojoDev/KojoLite/lib/geogebra_cas.jar
-/home/lalit/work/KojoDev/KojoLite/lib/group-panel.jar
-/home/lalit/work/KojoDev/KojoLite/lib/jfugue-4.1.jar -> jfugue.jar
-/home/lalit/work/KojoDev/KojoLite/lib/httpunit.jar
-/home/lalit/work/KojoDev/KojoLite/lib/geogebra_properties.jar
-/home/lalit/work/KojoDev/KojoLite/lib/geogebra_export.jar
-/home/lalit/work/KojoDev/KojoLite/lib/geogebra_gui.jar
-/home/lalit/work/KojoDev/KojoLite/lib/geogebra_javascript.jar
-/home/lalit/work/KojoDev/KojoLite/lib/docking-frames-core.jar
-/home/lalit/work/KojoDev/KojoLite/lib/rithica.jar
-/home/lalit/work/KojoDev/KojoLite/lib/table-layout.jar
+../target/scala-2.10/kojo_2.10-2.1.jar -> kojo2.jar
+../lib/AppleJavaExtensions.jar
+../lib/rsyntaxtextarea.jar
+../lib/rstaui.jar
+../lib/autocomplete.jar
+../lib/scalariform.jar
+../lib/js-1.6R5.jar
+../lib/geogebra_main.jar
+../lib/geogebra.jar
+../lib/geogebra_algos.jar
+../lib/jtidy-4aug2000r7-dev.jar
+../lib/docking-frames-common.jar
+../lib/jl1.0.1.jar
+../lib/jlatexmath.jar
+../lib/geogebra_cas.jar
+../lib/group-panel.jar
+../lib/jfugue-4.1.jar -> jfugue.jar
+../lib/httpunit.jar
+../lib/geogebra_properties.jar
+../lib/geogebra_export.jar
+../lib/geogebra_gui.jar
+../lib/geogebra_javascript.jar
+../lib/docking-frames-core.jar
+../lib/rithica.jar
+../lib/table-layout.jar
+../lib/jdi.jar
 /home/lalit/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.10.2.jar -> scala-reflect.jar
 /home/lalit/.ivy2/cache/org.scala-lang/scala-actors/jars/scala-actors-2.10.2.jar -> scala-actors.jar 
 /home/lalit/.ivy2/cache/org.scala-lang/scala-swing/jars/scala-swing-2.10.2.jar -> scala-swing.jar
