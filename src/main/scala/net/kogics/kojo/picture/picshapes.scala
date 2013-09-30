@@ -83,7 +83,8 @@ class CirclePic(r: Double)(implicit val canvas: SCanvas) extends Picture with Co
     val d = 2 * fr
     val node = PPath.createEllipse(-fr, -fr, d, d)
     _setPenColor(node, Color.red)
-    _setPenThickness(node, 2)
+    _setPenThickness(node, 2 / canvas.camScale)
+    node.setPaint(null)
     node.setVisible(false)
     picLayer.addChild(node)
     node
@@ -107,7 +108,8 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
     val node = new PPath
     node.setPathTo(new java.awt.geom.Arc2D.Float(-fr, -fr, d, d, 0, -angle.toFloat, Arc2D.OPEN))
     _setPenColor(node, Color.red)
-    _setPenThickness(node, 2)
+    _setPenThickness(node, 2 / canvas.camScale)
+    node.setPaint(null)
     node.setVisible(false)
     picLayer.addChild(node)
     node
