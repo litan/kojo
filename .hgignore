@@ -28,3 +28,6 @@ security/
 .classpath
 .project
 .worksheet
+lib/javaws.jar
+lib/deploy.jar
+
