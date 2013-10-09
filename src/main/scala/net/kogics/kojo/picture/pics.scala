@@ -20,6 +20,7 @@ import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Paint
 import java.awt.geom.AffineTransform
+import java.util.concurrent.Future
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -35,6 +36,7 @@ import net.kogics.kojo.core.SCanvas
 
 import core.Pixel
 import edu.umd.cs.piccolo.PNode
+import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.nodes.PPath
 import kgeom.PolyLine
 import util.Math
@@ -42,7 +44,6 @@ import util.Utils
 
 trait CorePicOps { self: Picture with RedrawStopper =>
   val camera = canvas.getCamera
-  val picLayer = canvas.pictures
   var axes: PNode = _
   var _picGeom: Geometry = _
   var pgTransform = new AffineTransformation
@@ -55,11 +56,6 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     //    Utils.runInSwingThread {
     //      pgTransform = t2t(tnode.getTransformReference(true))
     //    }
-  }
-
-  def erase() = Utils.runInSwingThread {
-    picLayer.removeChild(tnode)
-    //    picLayer.repaint()
   }
 
   def t2t(t: AffineTransform): AffineTransformation = {
@@ -271,13 +267,28 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 }
 
 trait CorePicOps2 { self: Picture =>
+  def picLayer = canvas.pictures
+  var reactions = Vector.empty[Future[PActivity]]
+
   def react(fn: Picture => Unit) {
     if (!isDrawn) {
       throw new IllegalStateException("Ask picture to react after you draw it.")
     }
-    canvas.animate {
+    val reaction = canvas.animate {
       fn(this)
     }
+    reactions :+= reaction
+  }
+
+  def stopReactions() {
+    reactions.foreach { canvas.stopAnimation(_) }
+    reactions = Vector.empty
+  }
+
+  def erase() = Utils.runInSwingThread {
+    stopReactions()
+    picLayer.removeChild(tnode)
+    //    picLayer.repaint()
   }
 
   def intersects(other: Picture) = Utils.runInSwingThreadAndPause {

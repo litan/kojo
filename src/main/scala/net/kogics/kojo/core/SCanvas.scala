@@ -36,6 +36,7 @@ trait SCanvas extends TSCanvasFeatures {
   def animate(fn: => Unit): Future[PActivity]
   def animateActivity(a: PActivity): Unit
   def stopAnimation(): Unit
+  def stopAnimation(a: Future[PActivity]): Unit
   // stuff for the pictures module
   def getCamera: PCamera
   def pictures: PLayer
