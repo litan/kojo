@@ -30,11 +30,15 @@ case class Vector2D(x: Double, y: Double) {
   def scale(factor: Double): Vector2D = {
     vec.multiply(factor)
   }
-  def add(other: Vector2D): Vector2D = {
-    vec.add(other)
+  def normalize: Vector2D = vec.normalize
+  def magnitude = vec.length
+  def magSquared = vec.lengthSquared
+  def limit(m: Double): Vector2D = {
+    if (magnitude < m) this
+    else normalize * m
   }
-  
   def + (other: Vector2D): Vector2D = vec.add(other)
+  def - (other: Vector2D): Vector2D = vec.subtract(other)
   def * (factor: Double): Vector2D = vec.multiply(factor)
   
   def heading = vec.angle.toDegrees
