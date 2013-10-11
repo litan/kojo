@@ -728,6 +728,12 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   def stopAnimation(a: Future[PActivity]) {
     figure0.stopAnimation(a)
   }
+  def onAnimationStart(fn: => Unit) {
+    figure0.onStart(fn)
+  }
+  def onAnimationStop(fn: => Unit) {
+    figure0.onStop(fn)
+  }
 
   import core.Picture
   val noPic = picture.Pic { t =>

@@ -28,15 +28,14 @@ trait SCanvas extends TSCanvasFeatures {
   // stuff gets added here (instead of in the base class) if any of the following conditions hold:
   // 1) there's a name clash with TurtleWorld 
   // 2) the builtin method name is different from the canvas method name
+  // 3) there is no builtin method corresponding to the canvas method
   def turtle0: Turtle
   def activate(): Unit
   def cbounds: PBounds
   def setCanvasBackground(c: Paint): Unit
   def kojoCtx: KojoCtx
-  def animate(fn: => Unit): Future[PActivity]
   def animateActivity(a: PActivity): Unit
   def stopAnimation(): Unit
-  def stopAnimation(a: Future[PActivity]): Unit
   // stuff for the pictures module
   def getCamera: PCamera
   def pictures: PLayer

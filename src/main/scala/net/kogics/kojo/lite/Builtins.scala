@@ -345,8 +345,6 @@ Here's a partial list of the available commands:
     require(fps >= 10 && fps <= 100, "FPS needs to be in the range: 10 to 100")
     kojoCtx.fps = fps
   }
-  def animate(fn: => Unit) = tCanvas.animate(fn)
-  def stopAnimation() = stopActivity()
   def stopActivity() = kojoCtx.stopActivity()
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
@@ -376,7 +374,6 @@ Here's a partial list of the available commands:
   def stopMp3() = mp3player.stopMp3()
   def stopMusic() = fuguePlayer.stopMusic()
   def newMp3Player = new music.KMp3(kojoCtx)
-  def onAnimationStop(fn: => Unit) = Staging.onAnimationStop(fn)
   def addCodeTemplates(lang: String, templates: Map[String, String]) {
     CodeCompletionUtils.addTemplates(lang, templates)
   }

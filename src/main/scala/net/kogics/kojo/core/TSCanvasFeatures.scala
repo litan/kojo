@@ -16,8 +16,11 @@
 package net.kogics.kojo
 package core
 
-import java.awt.Paint
 import java.awt.Color
+import java.awt.Paint
+import java.util.concurrent.Future
+
+import edu.umd.cs.piccolo.activities.PActivity
 
 trait TSCanvasFeatures {
   def turtle0: Turtle
@@ -48,4 +51,8 @@ trait TSCanvasFeatures {
   def stageTop: Picture
   def stageRight: Picture
   def stageBot: Picture
+  def animate(fn: => Unit): Future[PActivity]
+  def stopAnimation(a: Future[PActivity]): Unit
+  def onAnimationStart(fn: => Unit): Unit
+  def onAnimationStop(fn: => Unit): Unit
 }

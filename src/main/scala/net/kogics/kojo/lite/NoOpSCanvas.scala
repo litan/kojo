@@ -54,6 +54,8 @@ class NoOpSCanvas extends SCanvas {
   def animateActivity(a: PActivity) {}
   def stopAnimation() {}
   def stopAnimation(a: Future[PActivity]) {}
+  def onAnimationStart(fn: => Unit) {}
+  def onAnimationStop(fn: => Unit) {}
   // stuff for the pictures module
   def getCamera: PCamera = new PCamera
   def pictures: PLayer = null

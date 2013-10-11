@@ -60,6 +60,9 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
   private var _fillColor: Paint = _
   private var _lineStroke: Stroke = _
 
+  @volatile var startFn: Option[() => Unit] = None
+  @volatile var stopFn: Option[() => Unit] = None
+
   camera.addLayer(bgLayer)
   camera.addLayer(fgLayer)
   init()
@@ -97,6 +100,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
       init()
       repaint()
       stopFn = None
+      startFn = None
       canvas.kojoCtx.fps = 50
     }
   }
@@ -201,6 +205,10 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         }
       })
 
+      if (figAnimations.isEmpty && startFn.isDefined) {
+        startFn.get.apply()
+      }
+
       figAnimations = figAnimation :: figAnimations
       canvas.animateActivity(figAnimation)
       promise.set(figAnimation)
@@ -227,25 +235,20 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
       val figAnimation = f.get
       figAnimation.terminate(PActivity.TERMINATE_AND_FINISH)
       figAnimations = figAnimations.filterNot {_ == figAnimation}
+      if (figAnimations.isEmpty && stopFn.isDefined) {
+        stopFn.get.apply()
+      }
     }
   }
 
-//  def onMouseMove(fn: (Double, Double) => Unit) {
-//    canvas.addInputEventListener(new PBasicInputEventHandler {
-//      override def mouseMoved(e: PInputEvent) {
-//        val pos = e.getPosition
-//        fn(pos.getX, pos.getY)
-//        currLayer.repaint()
-//      }
-//    })
-//  }
-//
-  
   private[kojo] def setSpriteListener(l: SpriteListener) {
     listener = l
   }
 
-  @volatile var stopFn: Option[() => Unit] = None
+  def onStart(fn: => Unit) = Utils.runInSwingThread {
+    startFn = Some(fn _)
+  }
+
   def onStop(fn: => Unit) = Utils.runInSwingThread {
     stopFn = Some(fn _)
   }
