@@ -3,13 +3,15 @@ package lite
 
 import java.awt.Color
 import java.awt.Paint
+import java.util.concurrent.Future
 
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.TSCanvasFeatures
 import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.core.UnitLen
 import net.kogics.kojo.util.UserCommand
-import net.kogics.kojo.util.Utils
+
+import edu.umd.cs.piccolo.activities.PActivity
 
 // Turtle and Staging Canvas
 class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
@@ -38,7 +40,7 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
 
   def newTurtle(): Turtle = newTurtle(0, 0)
   def newTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = tCanvas.newTurtle(x, y, costume)
-  
+
   def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
   def exportImage(filePrefix: String, width: Int, height: Int) = tCanvas.exportImage(filePrefix, width, height)
   def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
@@ -64,4 +66,8 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def stageTop = tCanvas.stageTop
   def stageRight = tCanvas.stageRight
   def stageBot = tCanvas.stageBot
+  def animate(fn: => Unit) = tCanvas.animate(fn)
+  def stopAnimation(a: Future[PActivity]) = tCanvas.stopAnimation(a)
+  def onAnimationStart(fn: => Unit) = tCanvas.onAnimationStart(fn)
+  def onAnimationStop(fn: => Unit) = tCanvas.onAnimationStop(fn)
 }
