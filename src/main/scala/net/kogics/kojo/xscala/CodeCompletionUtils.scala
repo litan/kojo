@@ -127,6 +127,7 @@ object CodeCompletionUtils {
     "schedule" -> "schedule (${inSecs}) {\n    ${cursor}\n}",
     "runInBackground" -> "runInBackground {\n    ${cursor}\n}",
     "runInGuiThread" -> "runInGuiThread {\n    ${cursor}\n}",
+    "onAnimationStart" -> "onAnimationStart {\n    ${cursor}\n}",
     "onAnimationStop" -> "onAnimationStop {\n    ${cursor}\n}",
     "act" -> "act { self => // we give this turtle the name 'self' within act {...}\n    ${cursor}\n}",
     "react" -> "react { self => \n    ${cursor}\n}",
