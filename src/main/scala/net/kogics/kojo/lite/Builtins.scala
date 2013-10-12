@@ -345,7 +345,7 @@ Here's a partial list of the available commands:
     require(fps >= 10 && fps <= 100, "FPS needs to be in the range: 10 to 100")
     kojoCtx.fps = fps
   }
-  def stopActivity() = kojoCtx.stopActivity()
+  def stopAnimations() = kojoCtx.stopActivity()
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def activateEditor() = kojoCtx.activateScriptEditor()
