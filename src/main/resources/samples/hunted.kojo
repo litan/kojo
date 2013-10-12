@@ -150,7 +150,7 @@ val others = List(badguy, badguy2, badguy3, badguy4, badguy5)
 
 goodguy.react { self =>
     if (self.collision(others).isDefined) {
-        stopAnimation()
+        stopAnimations()
         self.setFillColor(brown)
         lostMsg.setPosition(0, 0)
         lostMsg.visible()
@@ -167,7 +167,7 @@ goodguy.react { self =>
     }
 
     if (time - startTime > 60 * 1000) {
-        stopAnimation()
+        stopAnimations()
         wonMsg.setPosition(0, 0)
         wonMsg.visible()
     }
@@ -176,7 +176,8 @@ goodguy.react { self =>
 onKeyPress { k =>
     k match {
         case Kc.VK_ESCAPE =>
-            stopAnimation()
+            stopAnimations()
         case _            =>
     }
 }
+activateCanvas()
