@@ -104,13 +104,17 @@ val vec3 = Vector2D(-speed, 0)
 val vec4 = vec2
 val vec5 = vec3
 
-var velocities = Map(
-    badguy -> vec,
-    badguy2 -> vec2,
-    badguy3 -> vec3,
-    badguy4 -> vec4,
-    badguy5 -> vec5
-)
+var velocities: Map[Picture, Vector2D] = _
+
+onAnimationStart {
+    velocities = Map(
+        badguy -> vec,
+        badguy2 -> vec2,
+        badguy3 -> vec3,
+        badguy4 -> vec4,
+        badguy5 -> vec5
+    )
+}
 
 def badBehavior(self: Picture) {
     var newv = velocities(self).rotate(randomDouble(10) - 5)
@@ -177,7 +181,7 @@ onKeyPress { k =>
     k match {
         case Kc.VK_ESCAPE =>
             stopAnimations()
-        case _            =>
+        case _ =>
     }
 }
 activateCanvas()
