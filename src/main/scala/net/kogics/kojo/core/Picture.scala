@@ -50,8 +50,8 @@ trait Picture extends InputAware {
     others.filter {this intersects _}
   }
   def collision(others: Seq[Picture]): Option[Picture] = {
-    others.filter {this intersects _}.headOption
-  } 
+    others.find {this intersects _}
+  }
   def intersection(other: Picture): Geometry
   def distanceTo(other: Picture): Double
   def area: Double
