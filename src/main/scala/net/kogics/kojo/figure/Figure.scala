@@ -173,7 +173,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     @volatile var figAnimation: PActivity = null
     val promise = new FutureResult[PActivity]
 
-    Utils.runInSwingThread {
+    Utils.runLaterInSwingThread {
       figAnimation = new PActivity(-1, 1000/canvas.kojoCtx.fps) {
         override def activityStep(elapsedTime: Long) {
           currLayer = fgLayer
