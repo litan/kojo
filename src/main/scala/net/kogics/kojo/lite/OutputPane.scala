@@ -321,6 +321,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   }
 
   def createReadInputPanel(prompt: String) = {
+//    outoutPanel.remove(readInputPanel)
     readInputPanel = new JPanel()
     readInputPanel.setLayout(new BoxLayout(readInputPanel, BoxLayout.Y_AXIS))
     val label = new JLabel(" %s" format (prompt))

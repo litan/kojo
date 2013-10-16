@@ -517,6 +517,7 @@ class CodeExecutionSupport(
     else {
       stopInterpreter()
       stopActivity()
+      outputPane.removeInputPanel()
     }
   }
 
@@ -614,7 +615,7 @@ class CodeExecutionSupport(
     val code = codeToRun.code
     if (invalidCode(code)) {
       return
-    }    
+    }
     historyManager.codeRun(code)
     tracer.trace(code)
   }
