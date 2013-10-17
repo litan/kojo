@@ -5,6 +5,7 @@ import java.awt.CardLayout
 import java.awt.Color
 import java.awt.Component
 import java.awt.Font
+import java.awt.Insets
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusAdapter
@@ -321,13 +322,19 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   }
 
   def createReadInputPanel(prompt: String) = {
-//    outoutPanel.remove(readInputPanel)
+    //    outoutPanel.remove(readInputPanel)
     readInputPanel = new JPanel()
     readInputPanel.setLayout(new BoxLayout(readInputPanel, BoxLayout.Y_AXIS))
     val label = new JLabel(" %s" format (prompt))
     label.setAlignmentX(Component.LEFT_ALIGNMENT)
+    val lfont = label.getFont()
+    label.setFont(new Font(lfont.getName, Font.BOLD, lfont.getSize + 2))
+    label.setBorder(BorderFactory.createEmptyBorder(6, 1, 3, 1))
     val inputField = new JTextField
     inputField.setAlignmentX(Component.LEFT_ALIGNMENT)
+    val ifont = inputField.getFont()
+    inputField.setFont(new Font(ifont.getName, Font.BOLD, ifont.getSize + 2))
+    inputField.setMargin(new Insets(3, 1, 3, 1))
     readInputPanel.add(label)
     readInputPanel.add(inputField)
     outoutPanel.add(readInputPanel, BorderLayout.SOUTH)
@@ -377,7 +384,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
   // should be called in swing thread
   def scrollToEnd() {
-//    outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
+    //    outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
     val vsb = outoutSp.getVerticalScrollBar
     vsb.setValue(vsb.getMaximum)
   }
