@@ -40,7 +40,7 @@ animate {
 
 onKeyPress { k =>
     k match {
-      case Kc.VK_ESCAPE => stopAnimation()
+      case Kc.VK_ESCAPE => stopAnimations()
       case _ =>
     }
 }
