@@ -69,6 +69,15 @@ class Builtins(
   val Background = new Tw.Background
   val Sound = new Tw.Sound
 
+  UserCommand.addCompletion("repeat", "(${n}) {\n    ${cursor}\n}")
+  UserCommand.addSynopsis("repeat(n) {} - Repeats the commands within braces n number of times.")
+  UserCommand.addCompletion("repeati", "(${n}) { i => \n    ${cursor}\n}")
+  UserCommand.addSynopsis("repeati(n) {} - Repeats the commands within braces n number of times. The current repeat index is available within the braces.")
+  UserCommand.addCompletion("repeatWhile", "(${condition}) {\n    ${cursor}\n}")
+  UserCommand.addSynopsis("repeatWhile(cond) {} - Repeats the commands within braces while the given condition is true.")
+  UserCommand.addCompletion("repeatUntil", "(${condition}) {\n    ${cursor}\n}")
+  UserCommand.addSynopsis("repeatUntil(cond) {} - Repeats the commands within braces until the given condition is true.")
+
   def showScriptInOutput() = kojoCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
 

@@ -10,12 +10,13 @@ import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.NoOpSCanvas
 import net.kogics.kojo.util.Utils
+import net.kogics.kojo.xscala.RepeatCommands
 
 import edu.umd.cs.piccolo.PCamera
 import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.activities.PActivity
 
-object TracingBuiltins extends CoreBuiltins {
+object TracingBuiltins extends CoreBuiltins with RepeatCommands {
 
   val TSCanvas = new TracingTSCanvas
 
@@ -63,20 +64,6 @@ object TracingBuiltins extends CoreBuiltins {
   def setOutputTextFontSize(size: Int) = {}
 
   def playMp3Loop(mp3File: String) {
-  }
-
-  def repeat(n: Int)(fn: => Unit) {
-    var i = 0
-    while (i < n) {
-      fn
-      i += 1
-    }
-  }
-
-  def repeatWhile(condition: => Boolean)(fn: => Unit) {
-    while (condition) {
-      fn
-    }
   }
 
   def setBackground(c: Paint) {}
