@@ -26,7 +26,9 @@ import javax.swing.JToggleButton
 import net.kogics.kojo.util.Utils
 
 class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) {
-  val FloatPattern = Pattern.compile("""\d*\.\d\d?""")
+  // support a max of 12 digits after decimal point
+  // formatting precision does not seem to work after 16 digits, so there has to be an upper limit 
+  val FloatPattern = Pattern.compile("""\d*\.\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?""")  
 
   def matcher(possibleNumber: String) = FloatPattern.matcher(possibleNumber)
 
@@ -39,6 +41,13 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
   }
 
   def activate(pane: JTextComponent, offset: Int, target0: String, targetStart: Int) = Utils.safeProcess {
+
+    def digitsAfterPoint(n: String) = { 
+      val pointLoc = n.indexOf('.')
+      val digits = n.length - 1 - pointLoc
+      if (digits < 2) 2 else digits
+    }
+
     val doc = pane.getDocument
     close()
     ctx.addManipulator(this)
@@ -46,7 +55,7 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
     var ncenter = target0.toDouble
     var ntarget = ncenter
     var delta = 0.1
-    var formatter = "%.2f"
+    var formatter = s"%.${digitsAfterPoint(target0)}f"
     var oldDelta = delta
     val slider = new JSlider();
     val leftLabel = new JLabel
