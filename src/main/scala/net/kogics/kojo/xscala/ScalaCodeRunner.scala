@@ -175,7 +175,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
           kprintln("Unable to stop script.\nPlease restart the Kojo Environment unless you see a 'Script Stopped' message soon.\n")
         })
         outputHandler.interpOutputSuppressed = true
-        stoppable.get.stop(interpreterThread.get)
+        stoppable.foreach { _.stop(interpreterThread.get) }
       }
     }
 
@@ -591,7 +591,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
     def interpret(code0: String, asWorksheet: Boolean): IR.Result = {
       val (code, includedLines, _) = Utils.preProcessInclude(code0)
-//      println(s"Included lines: $includedLines\ncode: \n$code\n---")
+      //      println(s"Included lines: $includedLines\ncode: \n$code\n---")
       if (asWorksheet)
         interpretAsWorksheet(code, includedLines)
       else
