@@ -97,14 +97,15 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   def switchToDefault2Perspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
-    val seWidth = 2.1
+    val seWidth = 2
+    val owHeight = 0.9
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
     grid.add(3, 0, seWidth, 3, topcs.seh)
-    grid.add(3 + seWidth, 0, 7 - seWidth, 2, topcs.d3h)
-    grid.add(3 + seWidth, 0, 7 - seWidth, 2, topcs.mwh)
-    grid.add(3 + seWidth, 0, 7 - seWidth, 2, topcs.dch)
-    grid.add(3 + seWidth, 2, 7 - seWidth, 1, topcs.owh)
+    grid.add(3 + seWidth, 0, 7 - seWidth, 3 - owHeight, topcs.d3h)
+    grid.add(3 + seWidth, 0, 7 - seWidth, 3 - owHeight, topcs.mwh)
+    grid.add(3 + seWidth, 0, 7 - seWidth, 3 - owHeight, topcs.dch)
+    grid.add(3 + seWidth, 2, 7 - seWidth, owHeight, topcs.owh)
     control.getContentArea.deploy(grid)
 
     topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
