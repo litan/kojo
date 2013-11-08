@@ -21,7 +21,7 @@ t1.act { self =>
     }
 }
 
-val t2 = newTurtle(-250, 200)
+val t2 = newTurtle(-250, 180)
 t2.setCostumes(Costume.bat1, Costume.bat2)
 t2.scaleCostume(0.5)
 t2.act { self =>
@@ -30,7 +30,7 @@ t2.act { self =>
         self.nextCostume()
         pause(0.15)
     }
-    stopActivity() // stops any ongoing animation or music
+    stopAnimations() // stops any ongoing animation or music
 }
 // play background music in a loop
 playMp3Loop(Sound.medieval1)
