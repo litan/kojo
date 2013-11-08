@@ -553,7 +553,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       xs.mkString(File.pathSeparatorChar.toString)
     }
 
-    def interpretWorksheetLines(lines: List[(String, Int)]): IR.Result = lines match {
+    def interpretWorksheetLines(lines: List[(String, Int)], inError: Boolean = false): IR.Result = lines match {
       case Nil => IR.Success
       case (code, lnum) :: tail =>
         outputHandler.worksheetLineNum = Some(lnum)
@@ -565,12 +565,13 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
             tail match {
               case Nil =>
                 outputHandler.flushWorksheetError(); IR.Error
-              case (code2, lnum2) :: tail2 => interpretWorksheetLines((code + "\n" + code2, lnum) :: tail2)
+              case (code2, lnum2) :: tail2 => interpretWorksheetLines((s"$code\n$code2", lnum) :: tail2, true)
             }
           case IR.Incomplete =>
-            tail match {
+            if (inError) { outputHandler.flushWorksheetError(); IR.Error }
+            else tail match {
               case Nil                     => IR.Incomplete
-              case (code2, lnum2) :: tail2 => interpretWorksheetLines((code + "\n" + code2, lnum) :: tail2)
+              case (code2, lnum2) :: tail2 => interpretWorksheetLines((s"$code\n$code2", lnum2) :: tail2)
             }
         }
     }
