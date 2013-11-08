@@ -74,6 +74,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def userLanguage: String = "en"
   def userLanguage_=(lang: String) {}
   def switchToDefaultPerspective() {}
+  def switchToDefault2Perspective() {}
   def switchToScriptEditingPerspective() {}
   def switchToWorksheetPerspective() {}
   def switchToStoryViewingPerspective() {}

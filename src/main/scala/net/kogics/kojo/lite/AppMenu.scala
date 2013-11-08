@@ -239,6 +239,14 @@ trait AppMenu { self: Main.type =>
     })
     windowMenu.add(resetWindows)
 
+    val resetWindows2 = new JMenuItem(Utils.loadString("S_Default2Perspective"))
+    resetWindows2.addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        kojoCtx.switchToDefault2Perspective()
+      }
+    })
+    windowMenu.add(resetWindows2)
+
     val worksheetItem = new JMenuItem(Utils.loadString("S_WorksheetPerspective"))
     worksheetItem.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {

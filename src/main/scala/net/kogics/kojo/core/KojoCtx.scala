@@ -80,6 +80,7 @@ trait KojoCtx {
   def userLanguage: String
   def userLanguage_=(lang: String): Unit
   def switchToDefaultPerspective(): Unit
+  def switchToDefault2Perspective(): Unit
   def switchToScriptEditingPerspective(): Unit
   def switchToWorksheetPerspective(): Unit
   def switchToStoryViewingPerspective(): Unit

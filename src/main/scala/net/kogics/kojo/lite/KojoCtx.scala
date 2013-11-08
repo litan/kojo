@@ -79,14 +79,32 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   def switchToDefaultPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
+    val seHeight = 1.1
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
-    grid.add(3, 0, 3, 2, topcs.d3h)
-    grid.add(3, 0, 3, 2, topcs.aah)
-    grid.add(3, 0, 3, 2, topcs.mwh)
-    grid.add(3, 0, 3, 2, topcs.dch)
-    grid.add(3, 2, 1.75, 1, topcs.seh)
-    grid.add(4.75, 2, 1.25, 1, topcs.owh)
+    grid.add(3, 0, 3, 3 - seHeight, topcs.d3h)
+    grid.add(3, 0, 3, 3 - seHeight, topcs.aah)
+    grid.add(3, 0, 3, 3 - seHeight, topcs.mwh)
+    grid.add(3, 0, 3, 3 - seHeight, topcs.dch)
+    grid.add(3, 2, 1.7, seHeight, topcs.seh)
+    grid.add(4.75, 2, 1.3, seHeight, topcs.owh)
+    control.getContentArea.deploy(grid)
+
+    topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
+    topcs.sth.setExtendedMode(ExtendedMode.MINIMIZED)
+    activateScriptEditor()
+  }
+
+  def switchToDefault2Perspective() = Utils.runInSwingThread {
+    val grid = new CGrid(control)
+    val seWidth = 2.1
+    grid.add(0, 0, 1, 3, topcs.hih)
+    grid.add(1, 0, 2, 3, topcs.sth)
+    grid.add(3, 0, seWidth, 3, topcs.seh)
+    grid.add(3 + seWidth, 0, 7 - seWidth, 2, topcs.d3h)
+    grid.add(3 + seWidth, 0, 7 - seWidth, 2, topcs.mwh)
+    grid.add(3 + seWidth, 0, 7 - seWidth, 2, topcs.dch)
+    grid.add(3 + seWidth, 2, 7 - seWidth, 1, topcs.owh)
     control.getContentArea.deploy(grid)
 
     topcs.hih.setExtendedMode(ExtendedMode.MINIMIZED)
