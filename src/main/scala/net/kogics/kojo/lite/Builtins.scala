@@ -405,6 +405,7 @@ Here's a partial list of the available commands:
   }
 
   def switchToDefaultPerspective() = kojoCtx.switchToDefaultPerspective()
+  def switchToDefault2Perspective() = kojoCtx.switchToDefault2Perspective()
   def switchToScriptEditingPerspective() = kojoCtx.switchToScriptEditingPerspective()
   def switchToWorksheetPerspective() = kojoCtx.switchToWorksheetPerspective()
   def switchToStoryViewingPerspective() = kojoCtx.switchToStoryViewingPerspective()
