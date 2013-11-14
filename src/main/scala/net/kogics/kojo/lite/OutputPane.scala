@@ -12,6 +12,8 @@ import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseWheelEvent
 
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory
@@ -169,6 +171,20 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
       }
     })
+
+    val mListener = new MouseAdapter {
+      override def mouseWheelMoved(e: MouseWheelEvent) {
+        if (e.isControlDown) {
+          val delta = e.getWheelRotation
+          val action = if (delta < 0) increaseFontSizeAction else decreaseFontSizeAction
+          action.actionPerformed(null)
+        }
+        else {
+          outoutSp.getMouseWheelListeners foreach { _.mouseWheelMoved(e) }
+        }
+      }
+    }
+    outputWindow.addMouseWheelListener(mListener)
 
     addSeparator()
 
