@@ -645,7 +645,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
     def memberCompletions(code0: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
       val pfx = prefix.getOrElse("")
-      val code = if (pfx.length == 0)
+      val code = if (pfx.length == 0 || objid == null)
         code0
       else
         "%s %s" format (code0.substring(0, caretOffset - pfx.length), code0.substring(caretOffset, code0.length))
