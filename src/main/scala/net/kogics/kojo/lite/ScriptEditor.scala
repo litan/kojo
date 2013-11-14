@@ -13,6 +13,7 @@ import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
+import java.awt.event.MouseWheelEvent
 
 import javax.swing.AbstractAction
 import javax.swing.Action
@@ -528,7 +529,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     })
     kojoCtx.showStatusCaretPos(1, 1)
 
-    codePane.addMouseListener(new MouseAdapter {
+    val mouseListener = new MouseAdapter {
       override def mouseClicked(e: MouseEvent) {
         try {
           val pt = new Point(e.getX(), e.getY());
@@ -545,7 +546,20 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           case t: Throwable => println("IPM Problem: " + t.getMessage)
         }
       }
-    })
+
+      override def mouseWheelMoved(e: MouseWheelEvent) {
+        if (e.isControlDown) {
+          val delta = e.getWheelRotation
+          val action = if (delta < 0) increaseFontSizeAction else decreaseFontSizeAction
+          action.actionPerformedImpl(null, codePane)
+        }
+        else {
+          sp.getMouseWheelListeners foreach { _.mouseWheelMoved(e) }
+        }
+      }
+    }
+    codePane.addMouseListener(mouseListener)
+    codePane.addMouseWheelListener(mouseListener)
   }
 
   def setTabSize(ts: Int) = Utils.runInSwingThread {
