@@ -40,7 +40,12 @@ case class Vector2D(x: Double, y: Double) {
   def + (other: Vector2D): Vector2D = vec.add(other)
   def - (other: Vector2D): Vector2D = vec.subtract(other)
   def * (factor: Double): Vector2D = vec.multiply(factor)
+  def / (factor: Double): Vector2D = vec.divide(factor)
   
+  def dot(other: Vector2D): Double = vec.dot(other)
+  def cross(other: Vector2D): Vector2D = vec.cross(other)
+  def distance(other: Vector2D): Double = vec.distance(other)
+
   def heading = vec.angle.toDegrees
   def angle(v: Vector2D) = vec.angle(v).toDegrees
   def angleTo(v: Vector2D) = vec.angleTo(v).toDegrees
