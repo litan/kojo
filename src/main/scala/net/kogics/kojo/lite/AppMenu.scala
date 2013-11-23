@@ -193,6 +193,7 @@ trait AppMenu { self: Main.type =>
     samplesMenu.add(fractalsMenu)
 
     val imageMenu = new JMenu(Utils.loadString("S_ImageLayout"))
+    imageMenu.add(menuItemFor(Utils.loadString("S_ImageCollage"), "image-collage.kojo"))
     imageMenu.add(menuItemFor(Utils.loadString("S_ImageRightSplit"), "image-right-split.kojo"))
     samplesMenu.add(imageMenu)
 
