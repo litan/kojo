@@ -43,7 +43,7 @@ case class Vector2D(x: Double, y: Double) {
   def / (factor: Double): Vector2D = vec.divide(factor)
   
   def dot(other: Vector2D): Double = vec.dot(other)
-  def cross(other: Vector2D): Vector2D = vec.cross(other)
+  def lerp(other: Vector2D, frac: Double): Vector2D = vec.weightedSum(other, frac)
   def distance(other: Vector2D): Double = vec.distance(other)
 
   def heading = vec.angle.toDegrees
