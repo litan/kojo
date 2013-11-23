@@ -192,6 +192,10 @@ trait AppMenu { self: Main.type =>
     fractalsMenu.add(menuItemFor(Utils.loadString("S_LSystems"), "l-systems.kojo"))
     samplesMenu.add(fractalsMenu)
 
+    val imageMenu = new JMenu(Utils.loadString("S_ImageLayout"))
+    imageMenu.add(menuItemFor(Utils.loadString("S_ImageRightSplit"), "image-right-split.kojo"))
+    samplesMenu.add(imageMenu)
+
     val numProgMenu = new JMenu(Utils.loadString("S_Numbers"))
     numProgMenu.add(menuItemFor(Utils.loadString("S_Primes"), "primes.kojo"))
     numProgMenu.add(menuItemFor(Utils.loadString("S_PrimeFactors"), "prime-factors.kojo"))
