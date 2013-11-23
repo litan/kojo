@@ -70,6 +70,7 @@ object CodeCompletionUtils {
   val BuiltinsMethodTemplates = collection.mutable.Map(
     "resetInterpreter" -> "resetInterpreter()",
     "switchToDefaultPerspective" -> "switchToDefaultPerspective()",
+    "switchToDefault2Perspective" -> "switchToDefault2Perspective()",
     "switchToScriptEditingPerspective" -> "switchToScriptEditingPerspective()",
     "switchToWorksheetPerspective" -> "switchToWorksheetPerspective()",
     "switchToStoryViewingPerspective" -> "switchToStoryViewingPerspective()",
