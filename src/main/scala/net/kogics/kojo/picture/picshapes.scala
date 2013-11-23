@@ -11,6 +11,7 @@ import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.util.Utils
 
 import edu.umd.cs.piccolo.PNode
+import edu.umd.cs.piccolo.nodes.PImage
 import edu.umd.cs.piccolo.nodes.PPath
 
 trait PicShapeOps { self: Picture with CorePicOps =>
@@ -116,4 +117,28 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
   }
 
   def copy: net.kogics.kojo.core.Picture = new CirclePic(r)
+}
+
+class ImagePic(file: String)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with PicShapeOps {
+
+  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    throw new IllegalStateException("Geometry is not available for images")
+  }
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    val inode = new PImage(Utils.loadImageC(file))
+    inode.getTransformReference(true).setToScale(1 / canvas.camScale, -1 / canvas.camScale)
+    inode.translate(0, -inode.getHeight)
+
+    val node = PPath.createRectangle(0, 0, inode.getWidth.toFloat, inode.getHeight.toFloat)
+    node.setPaint(null)
+    node.setStroke(null)
+    node.setVisible(false)
+    node.addChild(inode)
+    picLayer.addChild(node)
+    node
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new ImagePic(file)
 }

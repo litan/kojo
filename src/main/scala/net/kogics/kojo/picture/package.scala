@@ -79,6 +79,8 @@ package object picture {
 
   def arc(r: Double, angle: Int)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
+  def image(file: String)(implicit canvas: SCanvas) = new ImagePic(file)
+
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale
 
