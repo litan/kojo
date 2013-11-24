@@ -1,4 +1,5 @@
 // Example from http://lalitpant.blogspot.in/2012/05/recursive-drawing-with-kojo.html
+// This example is based on Kojo Pictures
 val size = 100
 def S = Picture {
     repeat (4) {

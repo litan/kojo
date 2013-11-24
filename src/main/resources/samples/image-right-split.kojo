@@ -1,3 +1,4 @@
+// This example is based on Kojo Pictures
 def p = PicShape.image(Costume.womanWaving) 
 // def p = PicShape.image("filename")
 
