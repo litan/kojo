@@ -231,7 +231,8 @@ class CompilerAndRunner(makeSettings: () => Settings,
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
     }
   }
-  val pcompiler = new interactive.Global(settings, preporter) {
+  
+  class KGlobal(s: Settings, r: Reporter) extends interactive.Global(s, r) {
     def mkCompletionProposal(sym: Symbol, tpe: Type, inherited: Boolean, viaView: Symbol): CompletionInfo = {
       // code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
       val kind = if (sym.isSourceMethod && !sym.hasFlag(Flags.ACCESSOR | Flags.PARAMACCESSOR)) Def
@@ -303,6 +304,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
       )
     }
   }
+  val pcompiler = new KGlobal(settings, preporter)
 
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
