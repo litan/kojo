@@ -562,7 +562,8 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
           case IR.Success =>
             outputHandler.clearWorksheetError(); interpretWorksheetLines(lines.tail)
           case IR.Error =>
-            tail match {
+            if (InterruptionManager.interruptionInProgress) { outputHandler.flushWorksheetError(); IR.Error }
+            else tail match {
               case Nil =>
                 outputHandler.flushWorksheetError(); IR.Error
               case (code2, lnum2) :: tail2 => interpretWorksheetLines((s"$code\n$code2", lnum) :: tail2, true)
@@ -592,7 +593,6 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
     def interpret(code0: String, asWorksheet: Boolean): IR.Result = {
       val (code, includedLines, _) = Utils.preProcessInclude(code0)
-      //      println(s"Included lines: $includedLines\ncode: \n$code\n---")
       if (asWorksheet)
         interpretAsWorksheet(code, includedLines)
       else
