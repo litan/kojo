@@ -84,12 +84,14 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       "area: Double",
       "onMouseClick((Double, Double) => Unit): Unit",
       "onMousePress((Double, Double) => Unit): Unit",
+      "onMouseRelease((Double, Double) => Unit): Unit",
       "onMouseDrag((Double, Double) => Unit): Unit",
-      "animate(=> Unit): Unit"
+      "animate(=> Unit): Unit",
+      "button(String)(=> Unit): net.kogics.kojo.picture.Pic"
     )
 
     def knownMethodTemplate: Option[String] = {
-      //      println("%s signature - %s " format(completion.name, completion.signature))
+      //      println("%s signature - %s " format (completion.name, completion.signature))
       if (knownNames contains completion.signature) {
         val template = methodTemplate(completion.name)
         if (template != null) Some(template) else None
@@ -149,7 +151,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
   }
 
   var (objid: Option[String], prefix: Option[String]) = (None, None)
-  
+
   def complete(comp: JTextComponent): List[Completion] = {
     val proposals = new java.util.ArrayList[Completion]
     val caretOffset = comp.getCaretPosition

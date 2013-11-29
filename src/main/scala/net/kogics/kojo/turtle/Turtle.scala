@@ -136,14 +136,18 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     turtleImage.getTransformReference(true).setToScale(1 / camScale, -1 / camScale)
     turtleImage.rotate(Utils.deg2radians(90))
     turtleImage.translate(-turtleImage.getWidth / 2, -turtleImage.getHeight / 2)
-    turtleImage.setTransparency(1f)
+    if (hidden || costumeFile.endsWith("turtle32.png")) {
+      turtleImage.setTransparency(0.7f)
+    }
+    else {
+      turtleImage.setTransparency(1f)
+    }
   }
 
   private[turtle] def init() {
     _animationDelay = 1000l
     changePos(initX, initY)
     initTImage(costumeFile)
-    turtleImage.setTransparency(0.7f)
     layer.addChild(turtle)
 
     pen = DownPen
@@ -180,7 +184,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   private def currStyle = Style(pen.getColor, pen.getThickness, pen.getFillColor, pen.getFont, pen == DownPen)
 
-  var _lastLine = false 
+  var _lastLine = false
   private var _oldTheta: Double = Double.NaN
 
   def lastLine: Option[(Point2D.Double, Point2D.Double)] = Utils.runInSwingThreadAndWait {
