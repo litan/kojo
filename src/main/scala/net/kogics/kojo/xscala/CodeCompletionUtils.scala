@@ -84,6 +84,7 @@ object CodeCompletionUtils {
     "onKeyPress" -> "onKeyPress { k =>\n    k match {\n        case Kc.VK_RIGHT => ${cursor}\n        case _ => \n    }\n}",
     "onKeyRelease" -> "onKeyRelease { k =>\n    k match {\n        case Kc.VK_RIGHT => ${cursor}\n        case _ => \n    }\n}",
     "onMousePress" -> "onMousePress { (x, y) =>\n    ${cursor}\n}",
+    "onMouseRelease" -> "onMouseRelease { (x, y) =>\n    ${cursor}\n}",
     "onMouseClick" -> "onMouseClick { (x, y) =>\n    ${cursor}\n}",
     "onMouseDrag" -> "onMouseDrag { (x, y) =>\n    ${cursor}\n}",
     "stAddLinkHandler" -> "stAddLinkHandler(${handlerName}, ${story}) {d: ${argType} =>\n    ${cursor}\n}",
