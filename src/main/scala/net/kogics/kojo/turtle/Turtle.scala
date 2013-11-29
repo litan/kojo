@@ -136,12 +136,14 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     turtleImage.getTransformReference(true).setToScale(1 / camScale, -1 / camScale)
     turtleImage.rotate(Utils.deg2radians(90))
     turtleImage.translate(-turtleImage.getWidth / 2, -turtleImage.getHeight / 2)
+    turtleImage.setTransparency(1f)
   }
 
   private[turtle] def init() {
     _animationDelay = 1000l
     changePos(initX, initY)
     initTImage(costumeFile)
+    turtleImage.setTransparency(0.7f)
     layer.addChild(turtle)
 
     pen = DownPen
