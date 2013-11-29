@@ -171,7 +171,8 @@ object CodeCompletionUtils {
     "nextCostume" -> "nextCostume()",
     "scaleCostume" -> "scaleCostume(${factor})",
     "changePosition" -> "changePosition(${x}, ${y})",
-    "pause" -> "pause(${secs})"
+    "pause" -> "pause(${secs})",
+    "button" -> "button(${label}) {\n    ${cursor}\n}"
   )
   
   val TwMethodTemplates = Map(

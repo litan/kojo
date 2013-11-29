@@ -39,6 +39,19 @@ trait InputAware {
     myNode.addInputEventListener(h)
   }
   
+  def onMouseRelease(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
+    val h = new PBasicInputEventHandler {
+      override def mouseReleased(event: PInputEvent) {
+        val pos = event.getPosition
+        Utils.safeProcess {
+          fn(pos.getX, pos.getY)
+        }
+      }
+    }
+    h.setEventFilter(new PInputEventFilter(java.awt.event.InputEvent.BUTTON1_MASK))
+    myNode.addInputEventListener(h)
+  }
+  
   def onMouseClick(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
       override def mouseClicked(event: PInputEvent) {

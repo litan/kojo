@@ -441,6 +441,37 @@ Here's a partial list of the available commands:
     def circle(r: Double) = picture.circle(r)
     def arc(r: Double, angle: Int) = picture.arc(r, angle)
     def image(file: String) = picture.image(file)
+    def button(label: String)(fn: => Unit) = {
+      val FontSize = 20
+      val buttonBg = Color(0, 51, 102)
+      val buttonPressedBg = buttonBg.brighter.brighter
+
+      val btn = PictureT { t =>
+        import t._
+        setPenFontSize(FontSize)
+        val te = textExtent(label, FontSize)
+        setFillColor(buttonBg)
+        setPenColor(Color(255, 255, 255, 200))
+        Utils.trect(te.height.toInt + 10, te.width.toInt + 10, t)
+        penUp()
+        forward(te.height + 5)
+        right()
+        forward(5)
+        left()
+        penDown()
+        write(label)
+      }
+      btn.onMousePress { (x, y) =>
+        btn.setFillColor(buttonPressedBg)
+        fn
+      }
+      btn.onMouseRelease { (x, y) =>
+        schedule(0.1) {
+          btn.setFillColor(buttonBg)
+        }
+      }
+      btn
+    }
   }
 
   object Gaming {
@@ -452,36 +483,6 @@ Here's a partial list of the available commands:
       onLevelUp: => Unit,
       onLevelDown: => Unit) = {
       import Tw._
-      val FontSize = 20
-
-      val buttonBg = Color(0, 0, 255, 100)
-      val buttonPressedBg = Color(0, 255, 0, 127)
-
-      def button(label: String)(fn: => Unit) = {
-        val btn = PictureT { t =>
-          import t._
-          setPenFontSize(FontSize)
-          val te = textExtent(label, FontSize)
-          setFillColor(buttonBg)
-          setPenColor(Color(255, 255, 255, 200))
-          Utils.trect(te.height.toInt + 10, te.width.toInt + 10, t)
-          penUp()
-          forward(te.height + 5)
-          right()
-          forward(5)
-          left()
-          penDown()
-          write(label)
-        }
-        btn.onMouseClick { (x, y) =>
-          btn.setFillColor(buttonPressedBg)
-          schedule(0.25) {
-            btn.setFillColor(buttonBg)
-          }
-          fn
-        }
-        btn
-      }
 
       val startButton = button("Start")(onStart)
       val stopButton = button("Stop")(onStop)
