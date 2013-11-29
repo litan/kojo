@@ -3,9 +3,9 @@
 
 // Change these value to tweak the behavior of the buttons
 val fdStep = 50
-val fdStep2 = 20
+val fdStep2 = 10
 val rtStep = 90
-val rtStep2 =20
+val rtStep2 =10
 val bgColor = white
 val sBgColor = "white"
 // End tweak region
