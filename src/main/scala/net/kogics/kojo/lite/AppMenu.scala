@@ -361,6 +361,7 @@ trait AppMenu { self: Main.type =>
     val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
     toolsMenu.setMnemonic('T')
     toolsMenu.add(menuItemNELFor(Utils.loadString("S_InstructionPalette"), "instruction-palette.kojo"))
+    toolsMenu.add(menuItemFor(Utils.loadString("S_TurtleController"), "turtle-controller.kojo"))
     menuBar.add(toolsMenu)
 
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
