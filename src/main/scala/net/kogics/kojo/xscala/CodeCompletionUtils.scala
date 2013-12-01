@@ -173,8 +173,16 @@ object CodeCompletionUtils {
     "scaleCostume" -> "scaleCostume(${factor})",
     "changePosition" -> "changePosition(${x}, ${y})",
     "pause" -> "pause(${secs})",
-    "button" -> "button(${label}) {\n    ${cursor}\n}"
-  )
+    "button" -> "button(${label}) {\n    ${cursor}\n}",
+    "showGrid" -> "showGrid()",
+    "hideGrid" -> "hideGrid()",
+    "showAxes" -> "showAxes()",
+    "hideAxes" -> "hideAxes()",
+    "showProtractor" -> "showProtractor()",
+    "hideProtractor" -> "hideProtractor()",
+    "showScale" -> "showScale()",
+    "hideScale" -> "hideScale()"
+)
   
   val TwMethodTemplates = Map(
     "newTurtle" -> "newTurtle(${x}, ${y})",

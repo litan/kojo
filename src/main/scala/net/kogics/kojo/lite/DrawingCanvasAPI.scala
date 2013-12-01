@@ -26,18 +26,24 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   UserCommand("zoom", List("factor"), "Zooms in by the given factor, leaving the center point unchanged.")
   UserCommand.addSynopsisSeparator()
 
-  def gridOn() = tCanvas.gridOn()
+//  def showScale = tCanvas.
+  def showGrid() = tCanvas.showGrid()
   UserCommand("gridOn", Nil, "Shows a grid on the canvas.")
 
-  def gridOff() = tCanvas.gridOff()
+  def hideGrid() = tCanvas.hideGrid()
   UserCommand("gridOff", Nil, "Hides the grid.")
 
-  def axesOn() = tCanvas.axesOn()
+  def showAxes() = tCanvas.showAxes()
   UserCommand("axesOn", Nil, "Shows the X and Y axes on the canvas.")
 
-  def axesOff() = tCanvas.axesOff()
+  def hideAxes() = tCanvas.hideAxes()
   UserCommand("axesOff", Nil, "Hides the X and Y axes.")
 
+  def showProtractor() = tCanvas.showProtractor()
+  def hideProtractor() = tCanvas.hideProtractor()
+  def showScale() = tCanvas.showScale()
+  def hideScale() = tCanvas.hideScale()
+  
   def newTurtle(): Turtle = newTurtle(0, 0)
   def newTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = tCanvas.newTurtle(x, y, costume)
 
