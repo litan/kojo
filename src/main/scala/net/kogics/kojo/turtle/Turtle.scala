@@ -497,7 +497,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  def arc(r: Double, a: Int) {
+  override def arc(r: Double, a: Int) {
     def makeArc(lforward: Double => Unit, lturn: Double => Unit) {
       var i = 0
       val (lim, step, trn) = if (a > 0) (a, 2 * math.Pi * r / 360, 1) else (-a, 2 * math.Pi * r / 360, -1)
