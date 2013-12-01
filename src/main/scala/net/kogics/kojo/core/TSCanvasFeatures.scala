@@ -26,10 +26,18 @@ trait TSCanvasFeatures {
   def turtle0: Turtle
   def clear(): Unit
   def newTurtle(x: Double, y: Double, costume: String): Turtle
-  def axesOn(): Unit
-  def axesOff(): Unit
-  def gridOn(): Unit
-  def gridOff(): Unit
+  def showAxes(): Unit
+  def hideAxes(): Unit
+  def axesOn() = showAxes()
+  def axesOff()= hideAxes()
+  def showGrid(): Unit
+  def hideGrid(): Unit
+  def gridOn() = showGrid()
+  def gridOff() = hideGrid()
+  def showProtractor(): Picture
+  def hideProtractor(): Unit
+  def showScale(): Picture
+  def hideScale(): Unit
   def zoom(factor: Double): Unit
   def zoom(factor: Double, cx: Double, cy: Double): Unit
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit

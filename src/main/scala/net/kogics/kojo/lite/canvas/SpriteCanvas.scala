@@ -102,10 +102,12 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   var figures: List[Figure] = Nil
   var eventListeners: List[PInputEventListener] = Nil
 
-  var showAxes = false
-  var showGrid = false
-  var showProt = false
-  var showScale = false
+  var _showAxes = false
+  var _showGrid = false
+  var _showProt = false
+  var _showScale = false
+  var prot: core.Picture = _
+  var ruler: core.Picture = _
 
   val grid = new PNode()
   val axes = new PNode()
@@ -222,43 +224,83 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     updateAxesAndGrid()
   }
 
-  def gridOn() {
+  def showGrid() {
     Utils.runInSwingThreadAndWait {
-      if (!showGrid) {
-        showGrid = true
+      if (!_showGrid) {
+        _showGrid = true
         updateAxesAndGrid()
         repaint()
       }
     }
   }
 
-  def gridOff() {
+  def hideGrid() {
     Utils.runInSwingThreadAndWait {
-      if (showGrid) {
-        showGrid = false
+      if (_showGrid) {
+        _showGrid = false
         grid.removeAllChildren()
         repaint()
       }
     }
   }
 
-  def axesOn() {
+  def showAxes() {
     Utils.runInSwingThreadAndWait {
-      if (!showAxes) {
-        showAxes = true
+      if (!_showAxes) {
+        _showAxes = true
         updateAxesAndGrid()
         repaint()
       }
     }
   }
 
-  def axesOff() {
+  def hideAxes() {
     Utils.runInSwingThreadAndWait {
-      if (showAxes) {
-        showAxes = false
+      if (_showAxes) {
+        _showAxes = false
         axes.removeAllChildren()
         repaint()
       }
+    }
+  }
+
+  def showProtractor() = Utils.runInSwingThreadAndWait {
+    if (!_showProt) {
+      if (prot == null) {
+        println("Drag Protractor to move it around; Shift-Drag to rotate.")
+      }
+      _showProt = true
+      prot = picture.protractor(camScale)
+      // can draw from GUI thread because anim delay is zero, and latch will not be used
+      prot.draw()
+    }
+    prot
+  }
+
+  def hideProtractor() = Utils.runInSwingThreadAndWait {
+    if (_showProt) {
+      _showProt = false
+      prot.erase()
+    }
+  }
+
+  def showScale() = Utils.runInSwingThreadAndWait {
+    if (!_showScale) {
+      if (ruler == null) {
+        println("Drag Scale to move it around; Shift-Drag to rotate.")
+      }
+      _showScale = true
+      ruler = picture.ruler(camScale)
+      // can draw from GUI thread because anim delay is zero, and latch will not be used
+      ruler.draw()
+    }
+    ruler
+  }
+
+  def hideScale() = Utils.runInSwingThreadAndWait {
+    if (_showScale) {
+      _showScale = false
+      ruler.erase()
     }
   }
 
@@ -276,7 +318,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
       case Cm    => Dpi / 2.54
     }
 
-    if (!(showGrid || showAxes))
+    if (!(_showGrid || _showAxes))
       return
 
     val scale = getCamera.getViewScale
@@ -343,7 +385,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     val ymin = yStart - deltap.getY
     val ymax = yStart + (numyTicks + 1) * deltap.getY
 
-    if (showAxes) {
+    if (_showAxes) {
       val xa1 = getCamera.viewToLocal(new Point2D.Double(xmin, 0))
       var xa2 = getCamera.viewToLocal(new Point2D.Double(xmax, 0))
       val xAxis = PPath.createLine(xa1.getX.toFloat, xa1.getY.toFloat, xa2.getX.toFloat, xa2.getY.toFloat)
@@ -360,7 +402,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     // gridlines and ticks on y axis
     for (i <- 0 until numyTicks) {
       val ycoord = yStart + i * deltap.getY
-      if (showGrid) {
+      if (_showGrid) {
         // gridOn
         val pt1 = getCamera.viewToLocal(new Point2D.Double(xmin, ycoord))
         val pt2 = getCamera.viewToLocal(new Point2D.Double(xmax, ycoord))
@@ -368,7 +410,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
         gridline.setStrokePaint(GridColor)
         grid.addChild(gridline)
       }
-      if (showAxes) {
+      if (_showAxes) {
         val pt1 = getCamera.viewToLocal(new Point2D.Double(-tickSize / scale, ycoord))
         val pt2 = getCamera.viewToLocal(new Point2D.Double(tickSize / scale, ycoord))
         val tick = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
@@ -393,14 +435,14 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     // gridlines and ticks on x axis
     for (i <- 0 until numxTicks) {
       val xcoord = xStart + i * deltap.getX
-      if (showGrid) {
+      if (_showGrid) {
         val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, ymax))
         val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, ymin))
         val gridline = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
         gridline.setStrokePaint(GridColor)
         grid.addChild(gridline)
       }
-      if (showAxes) {
+      if (_showAxes) {
         val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, tickSize / scale))
         val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, -tickSize / scale))
         val tick = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
@@ -569,8 +611,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     axesOff()
     Utils.runInSwingThreadAndWait {
       setBackground(Color.white)
-      showProt = false
-      showScale = false
+      _showProt = false
+      _showScale = false
       turtles.foreach { t => if (t == origTurtle) t.clear() else t.remove() }
       turtles = List(turtles.last)
 
@@ -807,28 +849,12 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
 
     val protItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowProtractor"))
     protItem.addActionListener(new ActionListener {
-      @volatile var prot: core.Picture = _
-      def protOn() {
-        if (prot == null) {
-          println("Drag Protractor to move it around; Shift-Drag to rotate.")
-        }
-        showProt = true
-        prot = picture.protractor(camScale)
-        // can draw from GUI thread because anim delay is zero, and latch will not be used
-        prot.draw()
-      }
-
-      def protOff() {
-        showProt = false
-        prot.invisible()
-      }
-
       override def actionPerformed(e: ActionEvent) {
         if (protItem.isSelected) {
-          protOn()
+          showProtractor()
         }
         else {
-          protOff()
+          hideProtractor()
         }
       }
     })
@@ -836,28 +862,12 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
 
     val scaleItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowScale"))
     scaleItem.addActionListener(new ActionListener {
-      @volatile var ruler: core.Picture = _
-      def scaleOn() {
-        if (ruler == null) {
-          println("Drag Scale to move it around; Shift-Drag to rotate.")
-        }
-        showScale = true
-        ruler = picture.ruler(camScale)
-        // can draw from GUI thread because anim delay is zero, and latch will not be used
-        ruler.draw()
-      }
-
-      def scaleOff() {
-        showScale = false
-        ruler.invisible()
-      }
-
       override def actionPerformed(e: ActionEvent) {
         if (scaleItem.isSelected) {
-          scaleOn()
+          showScale()
         }
         else {
-          scaleOff()
+          hideScale()
         }
       }
     })
@@ -903,10 +913,10 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     add("<html><em>%s</em></html>" format (Utils.loadString("S_MouseActions")))
     addPopupMenuListener(new PopupMenuListener {
       def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-        axesItem.setState(showAxes)
-        gridItem.setState(showGrid)
-        protItem.setState(showProt)
-        scaleItem.setState(showScale)
+        axesItem.setState(_showAxes)
+        gridItem.setState(_showGrid)
+        protItem.setState(_showProt)
+        scaleItem.setState(_showScale)
         kojoCtx.updateMenuItem(fullScreenItem, fsCanvasAction)
       }
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}

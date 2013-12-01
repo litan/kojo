@@ -19,10 +19,14 @@ import edu.umd.cs.piccolo.util.PBounds
 class NoOpSCanvas extends SCanvas {
   def clear() {}
   def newTurtle(x: Double, y: Double, costume: String): Turtle = null
-  def axesOn() {}
-  def axesOff() {}
-  def gridOn() {}
-  def gridOff() {}
+  def showAxes() {}
+  def hideAxes() {}
+  def showGrid() {}
+  def hideGrid() {}
+  def showProtractor() = null
+  def hideProtractor() {}
+  def showScale() = null
+  def hideScale() {}
   def zoom(factor: Double) {}
   def zoom(factor: Double, cx: Double, cy: Double) {}
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) {}
