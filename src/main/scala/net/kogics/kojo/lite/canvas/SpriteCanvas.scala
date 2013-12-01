@@ -264,7 +264,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     }
   }
 
-  def showProtractor() = Utils.runInSwingThreadAndWait {
+  def showProtractor(x: Double = 0, y: Double = 0) = Utils.runInSwingThreadAndWait {
     if (!_showProt) {
       if (prot == null) {
         println("Drag Protractor to move it around; Shift-Drag to rotate.")
@@ -274,6 +274,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
       // can draw from GUI thread because anim delay is zero, and latch will not be used
       prot.draw()
     }
+    prot.translate(x, y)
     prot
   }
 
@@ -284,7 +285,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
     }
   }
 
-  def showScale() = Utils.runInSwingThreadAndWait {
+  def showScale(x: Double = 0, y: Double = 0) = Utils.runInSwingThreadAndWait {
     if (!_showScale) {
       if (ruler == null) {
         println("Drag Scale to move it around; Shift-Drag to rotate.")
@@ -294,6 +295,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
       // can draw from GUI thread because anim delay is zero, and latch will not be used
       ruler.draw()
     }
+    ruler.translate(x, y)
     ruler
   }
 

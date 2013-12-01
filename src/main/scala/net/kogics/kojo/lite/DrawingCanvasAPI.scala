@@ -39,9 +39,11 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def hideAxes() = tCanvas.hideAxes()
   UserCommand("axesOff", Nil, "Hides the X and Y axes.")
 
-  def showProtractor() = tCanvas.showProtractor()
+  def showProtractor() = tCanvas.showProtractor(-tCanvas.cbounds.getWidth/2, -tCanvas.cbounds.getHeight/2)
+  def showProtractor(x: Double, y: Double) = tCanvas.showProtractor(x, y)
   def hideProtractor() = tCanvas.hideProtractor()
-  def showScale() = tCanvas.showScale()
+  def showScale() = tCanvas.showScale(-tCanvas.cbounds.getWidth/2, tCanvas.cbounds.getHeight/2)
+  def showScale(x: Double, y: Double) = tCanvas.showScale(x, y)
   def hideScale() = tCanvas.hideScale()
   
   def newTurtle(): Turtle = newTurtle(0, 0)
