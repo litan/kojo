@@ -23,9 +23,9 @@ class NoOpSCanvas extends SCanvas {
   def hideAxes() {}
   def showGrid() {}
   def hideGrid() {}
-  def showProtractor() = null
+  def showProtractor(x: Double, y: Double) = null
   def hideProtractor() {}
-  def showScale() = null
+  def showScale(x: Double, y: Double) = null
   def hideScale() {}
   def zoom(factor: Double) {}
   def zoom(factor: Double, cx: Double, cy: Double) {}

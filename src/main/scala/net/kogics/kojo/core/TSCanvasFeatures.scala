@@ -34,9 +34,9 @@ trait TSCanvasFeatures {
   def hideGrid(): Unit
   def gridOn() = showGrid()
   def gridOff() = hideGrid()
-  def showProtractor(): Picture
+  def showProtractor(x: Double, y: Double): Picture
   def hideProtractor(): Unit
-  def showScale(): Picture
+  def showScale(x: Double, y: Double): Picture
   def hideScale(): Unit
   def zoom(factor: Double): Unit
   def zoom(factor: Double, cx: Double, cy: Double): Unit
