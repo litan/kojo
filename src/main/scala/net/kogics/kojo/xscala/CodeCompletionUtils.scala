@@ -184,7 +184,10 @@ object CodeCompletionUtils {
     "showProtractor" -> "showProtractor()",
     "hideProtractor" -> "hideProtractor()",
     "showScale" -> "showScale()",
-    "hideScale" -> "hideScale()"
+    "hideScale" -> "hideScale()",
+    "foreach" -> "foreach { n => \n    ${cursor}\n}",
+    "map" -> "map { n => \n    ${cursor}\n}",
+    "filter" -> "filter { n => \n    ${cursor}\n}"
 )
   
   val TwMethodTemplates = Map(
