@@ -57,7 +57,7 @@ class NoOpSCanvas extends SCanvas {
   def animate(fn: => Unit): Future[PActivity] = null
   def animateActivity(a: PActivity) {}
   def stopAnimation() {}
-  def stopAnimation(a: Future[PActivity]) {}
+  def stopAnimationActivity(a: Future[PActivity]) {}
   def onAnimationStart(fn: => Unit) {}
   def onAnimationStop(fn: => Unit) {}
   // stuff for the pictures module

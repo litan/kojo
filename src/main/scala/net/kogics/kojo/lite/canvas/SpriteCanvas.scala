@@ -769,8 +769,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   def animate(fn: => Unit): Future[PActivity] = figure0.refresh(fn)
   def animateActivity(a: PActivity) = getRoot.addActivity(a)
   def stopAnimation() = figure0.stopRefresh()
-  def stopAnimation(a: Future[PActivity]) {
-    figure0.stopAnimation(a)
+  def stopAnimationActivity(a: Future[PActivity]) {
+    figure0.stopAnimationActivity(a)
   }
   def onAnimationStart(fn: => Unit) {
     figure0.onStart(fn)
