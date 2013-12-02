@@ -75,7 +75,7 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def stageRight = tCanvas.stageRight
   def stageBot = tCanvas.stageBot
   def animate(fn: => Unit) = tCanvas.animate(fn)
-  def stopAnimation(a: Future[PActivity]) = tCanvas.stopAnimation(a)
+  def stopAnimationActivity(a: Future[PActivity]) = tCanvas.stopAnimationActivity(a)
   def onAnimationStart(fn: => Unit) = tCanvas.onAnimationStart(fn)
   def onAnimationStop(fn: => Unit) = tCanvas.onAnimationStop(fn)
 }

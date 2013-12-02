@@ -281,7 +281,7 @@ trait CorePicOps2 { self: Picture =>
   }
 
   def stopReactions() {
-    reactions.foreach { canvas.stopAnimation(_) }
+    reactions.foreach { canvas.stopAnimationActivity(_) }
     reactions = Vector.empty
   }
 

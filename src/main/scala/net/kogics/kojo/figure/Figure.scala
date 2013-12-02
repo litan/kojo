@@ -230,7 +230,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     }
   }
 
-  def stopAnimation(f: Future[PActivity]) {
+  def stopAnimationActivity(f: Future[PActivity]) {
     Utils.runInSwingThread {
       val figAnimation = f.get
       figAnimation.terminate(PActivity.TERMINATE_AND_FINISH)

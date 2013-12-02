@@ -393,7 +393,7 @@ class API(canvas: SpriteCanvas) {
   def loop(fn: => Unit) = Impl.figure0.refresh(fn)
   def animate(fn: => Unit) = loop(fn)
   def stop() = Impl.figure0.stopRefresh()
-  def stopActivity(a: Future[PActivity]) = Impl.figure0.stopAnimation(a)
+  def stopActivity(a: Future[PActivity]) = Impl.figure0.stopAnimationActivity(a)
   def reset() = {
     Impl.canvas.clearStaging()
     Impl.canvas.turtle0.invisible()
