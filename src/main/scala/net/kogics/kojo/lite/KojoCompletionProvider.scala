@@ -93,9 +93,15 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       "button(String)(=> Unit): net.kogics.kojo.picture.Pic"
     )
 
+    val collectionOps = Set(
+      "foreach",
+      "map",
+      "filter"
+    )
+
     def knownMethodTemplate: Option[String] = {
-      //      println("%s signature - %s " format (completion.name, completion.signature))
-      if (knownNames contains completion.signature) {
+      //      println(s"signature for ${completion.name} -- %s ${completion.signature}")
+      if ((knownNames contains completion.signature) || (collectionOps contains completion.name)) {
         val template = methodTemplate(completion.name)
         if (template != null) Some(template) else None
       }
