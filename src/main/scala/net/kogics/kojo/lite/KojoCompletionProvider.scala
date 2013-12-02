@@ -86,6 +86,9 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       "onMousePress((Double, Double) => Unit): Unit",
       "onMouseRelease((Double, Double) => Unit): Unit",
       "onMouseDrag((Double, Double) => Unit): Unit",
+      "onMouseMove((Double, Double) => Unit): Unit",
+      "onMouseEnter((Double, Double) => Unit): Unit",
+      "onMouseExit((Double, Double) => Unit): Unit",
       "animate(=> Unit): Unit",
       "button(String)(=> Unit): net.kogics.kojo.picture.Pic"
     )
