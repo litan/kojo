@@ -79,6 +79,45 @@ trait InputAware {
     myNode.addInputEventListener(h)
   }
   
+  def onMouseMove(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
+    val h = new PBasicInputEventHandler {
+      override def mouseMoved(event: PInputEvent) {
+        val pos = event.getPosition
+        event.setHandled(true)
+        Utils.safeProcess {
+          fn(pos.getX, pos.getY)
+        }
+      }
+    }
+    myNode.addInputEventListener(h)
+  }
+
+  def onMouseEnter(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
+    val h = new PBasicInputEventHandler {
+      override def mouseEntered(event: PInputEvent) {
+        val pos = event.getPosition
+        event.setHandled(true)
+        Utils.safeProcess {
+          fn(pos.getX, pos.getY)
+        }
+      }
+    }
+    myNode.addInputEventListener(h)
+  }
+  
+  def onMouseExit(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
+    val h = new PBasicInputEventHandler {
+      override def mouseExited(event: PInputEvent) {
+        val pos = event.getPosition
+        event.setHandled(true)
+        Utils.safeProcess {
+          fn(pos.getX, pos.getY)
+        }
+      }
+    }
+    myNode.addInputEventListener(h)
+  }
+  
 //  import java.awt.event.KeyEvent
 //  def onKeyPress(fn: Int => Unit) = Utils.runInSwingThread {
 //    val eh = new PBasicInputEventHandler {

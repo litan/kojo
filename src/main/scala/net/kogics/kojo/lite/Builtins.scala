@@ -445,7 +445,8 @@ Here's a partial list of the available commands:
     def button(label: String)(fn: => Unit) = {
       val FontSize = 20
       val buttonBg = Color(0, 51, 102)
-      val buttonPressedBg = buttonBg.brighter.brighter
+      val buttonMoveBg = buttonBg.brighter.brighter
+      val buttonPressedBg = buttonMoveBg.brighter
 
       val btn = PictureT { t =>
         import t._
@@ -468,8 +469,14 @@ Here's a partial list of the available commands:
       }
       btn.onMouseRelease { (x, y) =>
         schedule(0.1) {
-          btn.setFillColor(buttonBg)
+          btn.setFillColor(buttonMoveBg)
         }
+      }
+      btn.onMouseEnter { (x, y) =>
+        btn.setFillColor(buttonMoveBg)
+      }
+      btn.onMouseExit { (x, y) =>
+        btn.setFillColor(buttonBg)
       }
       btn
     }
