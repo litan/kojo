@@ -149,7 +149,41 @@ object Help {
     "setBackgroundH" -> "setBackgroundH(color1, color2) - Sets the canvas background to a horizontal color gradient defined by the two specified colors.",
     "setBackgroundV" -> "setBackgroundV(color1, color2) - Sets the canvas background to a vertical color gradient defined by the two specified colors.",
     "epochTime" -> "epochTime - the difference, measured in seconds, between the current time and midnight, January 1, 1970 UTC.",
-    "epochTimeMillis" -> "epochTimeMillis - the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC."
+    "epochTimeMillis" -> "epochTimeMillis - the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.",
+    "map" -> 
+    <div>
+    	sequence.<strong>map</strong> {{ function }} - maps (or transforms) the sequence into another sequence 
+        based on the supplied transformation function.<br/>
+      <br/>
+      <em>Example:</em> <br/><br/>
+      <pre>
+        Seq(1, 2, 3).map {{ n => 
+          n * 2 
+        }} //> res6: Seq[Int] = List(2, 4, 6)
+      </pre> 
+    </div>,
+    "filter" -> 
+    <div>
+    	sequence.<strong>filter</strong> {{ condition }} - filters the sequence based on the supplied condition.<br/>
+      <br/>
+      <em>Example:</em> <br/><br/>
+      <pre>
+       Seq(1, 2, 3, 4, 5, 6).filter {{ n =>
+         n % 2 != 0
+       }} //> res1: Seq[Int] = List(1, 3, 5)
+      </pre> 
+    </div>,
+    "foreach" -> 
+    <div>
+    	sequence.<strong>foreach</strong> {{ command }} - runs the given command for each element of the sequence.<br/>
+      <br/>
+      <em>Example:</em> <br/><br/>
+      <pre>
+       Seq(1, 2, 3).foreach {{ n =>
+         println(n)
+       }} 
+      </pre> 
+    </div>
   )
 
   val TwContent = Map[String, String](

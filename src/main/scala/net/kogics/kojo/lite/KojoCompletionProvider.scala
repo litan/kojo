@@ -114,7 +114,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       knownMethodTemplate.getOrElse(s"${completion.name}${completion.templateParams}")
 
     def knownHelp: Option[String] = {
-      if (knownNames contains completion.signature) {
+      if ((knownNames contains completion.signature) || (collectionOps contains completion.name)) {
         val help = Help(completion.name)
         if (help != null) Some(help) else None
       }
