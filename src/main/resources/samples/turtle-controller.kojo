@@ -40,18 +40,18 @@ def button(forcmd: String) = PicShape.button(cmd(forcmd)) { action(cmd(forcmd)) 
 
 val panel = trans(-width / 2, -height / 2) -> VPics(
     HPics(
+        button("left2"),
         button("forward2"),
-        button("hop2"),
-        PicShape.button(s"erase($fdStep2)") { action(eraseCmds(fdStep2)) },
         button("right2"),
-        button("left2")
+        button("hop2"),
+        PicShape.button(s"erase($fdStep2)") { action(eraseCmds(fdStep2)) }
     ),
     HPics(
+        button("left1"),
         button("forward1"),
-        button("hop1"),
-        PicShape.button(s"erase($fdStep)") { action(eraseCmds(fdStep)) },
         button("right1"),
-        button("left1")
+        button("hop1"),
+        PicShape.button(s"erase($fdStep)") { action(eraseCmds(fdStep)) }
     )
 )
 
