@@ -307,4 +307,3 @@ stOnStoryStop(story) {
     switchToDefaultPerspective()
 }
 stPlayStory(story)
-// runInBackground { stSetScript("") }
