@@ -255,7 +255,7 @@ Here's a partial list of the available commands:
   def runInBackground(code: => Unit) = Utils.runAsyncMonitored(code)
   UserCommand.addSynopsis("runInBackground", List("code"), "Runs the given code in the background, concurrently with other code that follows right after this command.")
 
-  def runInGuiThread(code: => Unit) = Utils.runInSwingThread(code)
+  def runInGuiThread(code: => Unit) = runInBackground(Utils.runInSwingThread(code))
   UserCommand.addSynopsis("runInGuiThread", List("code"), "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command.")
 
   def schedule(s: Double)(code: => Unit) = Utils.schedule(s)(code)
