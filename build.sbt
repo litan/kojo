@@ -39,3 +39,6 @@ libraryDependencies ++= Seq(
 libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
 
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
+
+packageOptions in (Compile, packageBin) +=
+    Package.ManifestAttributes("Permissions" -> "all-permissions")
