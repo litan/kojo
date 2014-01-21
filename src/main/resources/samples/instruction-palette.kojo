@@ -206,47 +206,6 @@ import java.awt.event._
 @volatile var footerPanel: JPanel = _
 @volatile var helpOn = true
 
-runInGuiThread {
-    helpFrame = new JWindow(stFrame)
-    helpFrame.setBounds(300, 100, 500, 300)
-    helpPane = new JEditorPane
-    helpPane.setBackground(Color(255, 255, 51))
-    helpPane.setContentType("text/html")
-    helpPane.setEditable(false)
-    val helpScroller = new JScrollPane(helpPane)
-    helpScroller.setBorder(BorderFactory.createLineBorder(gray, 1))
-    helpFrame.getContentPane.add(helpScroller)
-    helpPane.addFocusListener(new FocusAdapter {
-        override def focusLost(e: FocusEvent) = schedule(0.3) {
-            if (!helpPane.isFocusOwner) { // make Linux work
-                helpFrame.setVisible(false)
-            }
-        }
-    })
-
-    footerPanel = new JPanel
-    footerPanel.setBackground(footerPanelColor)
-    val helpLabel = new JLabel("Live Help"); helpLabel.setForeground(color(0xfafafa))
-    footerPanel.add(helpLabel)
-    val onButton = new JRadioButton("On"); onButton.setForeground(color(0xfafafa))
-    onButton.setSelected(true)
-    val offButton = new JRadioButton("Off"); offButton.setForeground(color(0xfafafa))
-    offButton.setSelected(false)
-    val onOff = new ButtonGroup; onOff.add(onButton); onOff.add(offButton)
-    footerPanel.add(onButton)
-    footerPanel.add(offButton)
-    onButton.addActionListener(new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-            helpOn = true
-        }
-    })
-    offButton.addActionListener(new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-            helpOn = false
-        }
-    })
-}
-
 def insertCodeInline(cat: String, idx: Int) {
     stInsertCodeInline(templates(cat)(instructions(cat)(idx)))
     helpFrame.setVisible(false)
@@ -307,3 +266,44 @@ stOnStoryStop(story) {
     switchToDefaultPerspective()
 }
 stPlayStory(story)
+
+runInGuiThread {
+    helpFrame = new JWindow(stFrame)
+    helpFrame.setBounds(300, 100, 500, 300)
+    helpPane = new JEditorPane
+    helpPane.setBackground(Color(255, 255, 51))
+    helpPane.setContentType("text/html")
+    helpPane.setEditable(false)
+    val helpScroller = new JScrollPane(helpPane)
+    helpScroller.setBorder(BorderFactory.createLineBorder(gray, 1))
+    helpFrame.getContentPane.add(helpScroller)
+    helpPane.addFocusListener(new FocusAdapter {
+        override def focusLost(e: FocusEvent) = schedule(0.3) {
+            if (!helpPane.isFocusOwner) { // make Linux work
+                helpFrame.setVisible(false)
+            }
+        }
+    })
+
+    footerPanel = new JPanel
+    footerPanel.setBackground(footerPanelColor)
+    val helpLabel = new JLabel("Live Help"); helpLabel.setForeground(color(0xfafafa))
+    footerPanel.add(helpLabel)
+    val onButton = new JRadioButton("On"); onButton.setForeground(color(0xfafafa))
+    onButton.setSelected(true)
+    val offButton = new JRadioButton("Off"); offButton.setForeground(color(0xfafafa))
+    offButton.setSelected(false)
+    val onOff = new ButtonGroup; onOff.add(onButton); onOff.add(offButton)
+    footerPanel.add(onButton)
+    footerPanel.add(offButton)
+    onButton.addActionListener(new ActionListener {
+        override def actionPerformed(e: ActionEvent) {
+            helpOn = true
+        }
+    })
+    offButton.addActionListener(new ActionListener {
+        override def actionPerformed(e: ActionEvent) {
+            helpOn = false
+        }
+    })
+}
