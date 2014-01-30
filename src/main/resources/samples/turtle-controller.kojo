@@ -12,6 +12,7 @@ val sBgColor = "white"
 
 clear()
 clearOutput()
+beamsOn()
 val width = canvasBounds.width
 val height = canvasBounds.height
 
