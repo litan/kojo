@@ -63,8 +63,8 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
   @volatile var startFn: Option[() => Unit] = None
   @volatile var stopFn: Option[() => Unit] = None
 
-  camera.addLayer(bgLayer)
-  camera.addLayer(fgLayer)
+  camera.addLayer(camera.getLayerCount - 1, bgLayer)
+  camera.addLayer(camera.getLayerCount - 1, fgLayer)
   init()
 
   def init() {

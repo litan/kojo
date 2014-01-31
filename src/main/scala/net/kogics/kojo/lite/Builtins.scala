@@ -442,77 +442,14 @@ Here's a partial list of the available commands:
     def circle(r: Double) = picture.circle(r)
     def arc(r: Double, angle: Int) = picture.arc(r, angle)
     def image(file: String) = picture.image(file)
-    def button(label: String)(fn: => Unit) = {
-      val FontSize = 20
-      val buttonBg = Color(0, 51, 102)
-      val buttonMoveBg = buttonBg.brighter.brighter
-      val buttonPressedBg = buttonMoveBg.brighter
-
-      val btn = PictureT { t =>
-        import t._
-        setPenFontSize(FontSize)
-        val te = textExtent(label, FontSize)
-        setFillColor(buttonBg)
-        setPenColor(Color(255, 255, 255, 200))
-        Utils.trect(te.height.toInt + 10, te.width.toInt + 10, t)
-        penUp()
-        forward(te.height + 5)
-        right()
-        forward(5)
-        left()
-        penDown()
-        write(label)
-      }
-      btn.onMousePress { (x, y) =>
-        btn.setFillColor(buttonPressedBg)
-        fn
-      }
-      btn.onMouseRelease { (x, y) =>
-        schedule(0.1) {
-          btn.setFillColor(buttonMoveBg)
-        }
-      }
-      btn.onMouseEnter { (x, y) =>
-        btn.setFillColor(buttonMoveBg)
-      }
-      btn.onMouseExit { (x, y) =>
-        btn.setFillColor(buttonBg)
-      }
-      btn
-    }
+    def widget(swingComponent: JComponent) = picture.widget(swingComponent)
+    def button(label: String)(fn: => Unit) = widget(Button(label)(fn))
   }
-
-  object Gaming {
-    import PicShape._
-    def gamePanel(
-      onStart: => Unit,
-      onPause: => Unit,
-      onStop: => Unit,
-      onLevelUp: => Unit,
-      onLevelDown: => Unit) = {
-      import Tw._
-
-      val startButton = button("Start")(onStart)
-      val stopButton = button("Stop")(onStop)
-      val pauseButton = button("Pause")(onPause)
-      val levelUpButton = button(" \u25b2 ")(onLevelUp)
-      val levelDownButton = button(" \u25bc ")(onLevelDown)
-      val gPanel = GPics(
-        fillColor(Color(255, 0, 0, 127)) -> rect(200, 400),
-        trans(0, 30) -> VPics(
-          trans(90, 0) -> HPics(
-            startButton,
-            pauseButton,
-            stopButton
-          ).withGap(10),
-          trans(120, 0) -> HPics(
-            levelDownButton,
-            penColor(black) * trans(0, 20) -> text("Level"),
-            levelUpButton
-          ).withGap(10)
-        ).withGap(30)
-      )
-      trans(-200, -100) -> gPanel
-    }
-  }
+  type Widget = JComponent
+  val TextField = xswing.TextField
+  val Label = xswing.Label
+  val Button = xswing.Button
+  val DropDown = xswing.DropDown
+  val RowPanel = xswing.RowPanel
+  val ColPanel = xswing.ColPanel
 }

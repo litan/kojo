@@ -4,6 +4,8 @@ import java.awt.Color
 import java.awt.Paint
 import java.awt.event.KeyEvent
 
+import javax.swing.JComponent
+
 import com.vividsolutions.jts.geom.GeometryFactory
 
 import net.kogics.kojo.core.Cm
@@ -80,6 +82,8 @@ package object picture {
   def arc(r: Double, angle: Int)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
   def image(file: String)(implicit canvas: SCanvas) = new ImagePic(file)
+
+  def widget(swingComponent: JComponent)(implicit canvas: SCanvas) = new SwingPic2(swingComponent)
 
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale

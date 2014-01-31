@@ -3,6 +3,12 @@ package net.kogics.kojo.picture
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.geom.Arc2D
+import java.awt.geom.Rectangle2D
+
+import javax.swing.JComboBox
+import javax.swing.JComponent
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
 
 import com.vividsolutions.jts.geom.Coordinate
 
@@ -13,6 +19,7 @@ import net.kogics.kojo.util.Utils
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.nodes.PImage
 import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolox.pswing.PSwing
 
 trait PicShapeOps { self: Picture with CorePicOps =>
   def realDraw() = Utils.runInSwingThread {
@@ -141,4 +148,45 @@ class ImagePic(file: String)(implicit val canvas: SCanvas) extends Picture with 
   }
 
   def copy: net.kogics.kojo.core.Picture = new ImagePic(file)
+}
+
+class SwingPic2(swingComponent: JComponent)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with PicShapeOps {
+
+  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    throw new UnsupportedOperationException("Geometry is not available for Swing Pictures")
+  }
+
+  def pswingHook(ps: PSwing) {}
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    val pswing = new PSwing(swingComponent)
+    if (swingComponent.isInstanceOf[JComboBox]) {
+      val comp = swingComponent.asInstanceOf[JComboBox]
+      comp.addItem(" " * 10)
+      comp.addPopupMenuListener(new PopupMenuListener {
+        def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+          comp.setBounds(getNodeBoundsInCanvas(pswing, comp))
+        }
+        def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
+        def popupMenuCanceled(e: PopupMenuEvent) {}
+      })
+
+    }
+    pswing.getTransformReference(true).setToScale(1 / canvas.camScale, -1 / canvas.camScale)
+    pswing.translate(0, -pswing.getHeight)
+
+    val node = new PNode
+    node.addChild(pswing)
+    picLayer.addChild(node)
+    node
+  }
+  private def getNodeBoundsInCanvas(pSwing: PSwing, comp: JComboBox) = {
+    val r1c = new Rectangle2D.Double(pSwing.getX(), pSwing.getY(), comp.getWidth() + 10, comp.getHeight());
+    pSwing.localToGlobal(r1c)
+    canvas.getCamera.globalToLocal(r1c)
+    canvas.getCamera.getViewTransform.createTransformedShape(r1c).getBounds
+  }
+
+  def copy = throw new UnsupportedOperationException("Can't copy swing pictures")
 }
