@@ -5,7 +5,7 @@
 val fdStep = 50
 val fdStep2 = 10
 val rtStep = 90
-val rtStep2 =10
+val rtStep2 = 10
 val bgColor = white
 val sBgColor = "white"
 // End tweak region
@@ -39,7 +39,7 @@ def eraseCmds(n: Int) =
 
 def button(forcmd: String) = PicShape.button(cmd(forcmd)) { action(cmd(forcmd)) }
 
-val panel = trans(-width / 2, -height / 2) -> VPics(
+val panel = trans(-width / 2, -height / 2) * scale(1.4) -> VPics(
     HPics(
         button("left2"),
         button("forward2"),

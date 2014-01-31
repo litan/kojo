@@ -46,7 +46,6 @@ import net.kogics.kojo.core.UnitLen
 import net.kogics.kojo.util.FileChooser
 
 import edu.umd.cs.piccolo.PCanvas
-import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler
@@ -58,11 +57,14 @@ import edu.umd.cs.piccolo.event.PZoomEventHandler
 import edu.umd.cs.piccolo.nodes.PPath
 import edu.umd.cs.piccolo.nodes.PText
 import edu.umd.cs.piccolo.util.PPaintContext
+import edu.umd.cs.piccolox.pswing.PSwingCanvas
 import figure.Figure
 import turtle.Turtle
 import util.Utils
 
-class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
+class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas {
+  val origLayer = getLayer()
+
   val Log = Logger.getLogger(getClass.getName);
   val AxesColor = new Color(100, 100, 100)
   val GridColor = new Color(200, 200, 200)
@@ -122,8 +124,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
 
   val figure = newFigure()
   @volatile var turtle = newTurtle()
-  val pictures = new PLayer
-  getCamera.addLayer(pictures)
+  val pictures = origLayer
+  //  getCamera.addLayer(getCamera.getLayerCount - 1, pictures)
   implicit val picCanvas = this
 
   def turtle0 = turtle
@@ -680,19 +682,6 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PCanvas with SCanvas {
   // needs to be called on swing thread
   private[kojo] def newInvisibleTurtle(x: Double = 0, y: Double = 0) = {
     new Turtle(this, "/images/turtle32.png", x, y, true)
-  }
-
-  def newPuzzler(x: Int = 0, y: Int = 0) = {
-    val pzl = Utils.runInSwingThreadAndWait {
-      val t = new Turtle(this, "/images/puzzler32.png", x, y, false, true)
-      t.setPenThickness(1)
-      t.setPenColor(Color.blue)
-      t.setAnimationDelay(10)
-      puzzlers = t :: puzzlers
-      t
-    }
-    this.repaint()
-    pzl
   }
 
   def onKeyPress(fn: Int => Unit) = Utils.runInSwingThread {
