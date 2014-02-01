@@ -151,7 +151,7 @@ class ImagePic(file: String)(implicit val canvas: SCanvas) extends Picture with 
   def copy: net.kogics.kojo.core.Picture = new ImagePic(file)
 }
 
-class SwingPic2(swingComponent: JComponent)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with PicShapeOps {
 
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {
@@ -162,22 +162,24 @@ class SwingPic2(swingComponent: JComponent)(implicit val canvas: SCanvas) extend
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val pswing = new PSwing(swingComponent)
-    def handleCombo(comp: JComboBox) {
-      comp.addItem(" " * 10)
-      comp.addPopupMenuListener(new PopupMenuListener {
+    def handleCombo(combo: JComboBox) {
+      combo.addItem(" " * 10)
+      combo.addPopupMenuListener(new PopupMenuListener {
         def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-          comp.setBounds(getNodeBoundsInCanvas(pswing, comp))
-          comp.revalidate()
+          combo.setBounds(getNodeBoundsInCanvas(pswing, combo))
+          if (insidePanel(combo)) {
+            combo.revalidate()
+          }
         }
         def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
         def popupMenuCanceled(e: PopupMenuEvent) {}
       })
     }
     swingComponent match {
-      case comp: JComboBox => handleCombo(comp)
+      case combo: JComboBox => handleCombo(combo)
       case jp: JPanel => jp.getComponents foreach { c =>
         c match {
-          case comp: JComboBox => handleCombo(comp)
+          case combo: JComboBox => handleCombo(combo)
           case _               =>
         }
       }
@@ -191,10 +193,12 @@ class SwingPic2(swingComponent: JComponent)(implicit val canvas: SCanvas) extend
     picLayer.addChild(node)
     node
   }
-  private def getNodeBoundsInCanvas(pSwing: PSwing, comp: JComboBox) = {
-    val embeddedCombo = comp.getParent.isInstanceOf[JPanel]
-    val (deltax, deltay) = if (embeddedCombo) (comp.getX, comp.getY) else (0, 0)
-    val r1c = new Rectangle2D.Double(pSwing.getX + deltax, pSwing.getY + deltay, comp.getWidth, comp.getHeight)
+
+  def insidePanel(c: JComponent) = c.getParent.isInstanceOf[JPanel]
+
+  private def getNodeBoundsInCanvas(pSwing: PSwing, combo: JComboBox) = {
+    val (deltax, deltay) = if (insidePanel(combo)) (combo.getX, combo.getY) else (0, 0)
+    val r1c = new Rectangle2D.Double(pSwing.getX + deltax, pSwing.getY + deltay, combo.getWidth, combo.getHeight)
     pSwing.localToGlobal(r1c)
     canvas.getCamera.viewToLocal(r1c)
     r1c.getBounds
