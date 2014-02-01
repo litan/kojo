@@ -7,6 +7,7 @@ import java.awt.geom.Rectangle2D
 
 import javax.swing.JComboBox
 import javax.swing.JComponent
+import javax.swing.JPanel
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
@@ -161,17 +162,26 @@ class SwingPic2(swingComponent: JComponent)(implicit val canvas: SCanvas) extend
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val pswing = new PSwing(swingComponent)
-    if (swingComponent.isInstanceOf[JComboBox]) {
-      val comp = swingComponent.asInstanceOf[JComboBox]
+    def handleCombo(comp: JComboBox) {
       comp.addItem(" " * 10)
       comp.addPopupMenuListener(new PopupMenuListener {
         def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
           comp.setBounds(getNodeBoundsInCanvas(pswing, comp))
+          comp.revalidate()
         }
         def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
         def popupMenuCanceled(e: PopupMenuEvent) {}
       })
-
+    }
+    swingComponent match {
+      case comp: JComboBox => handleCombo(comp)
+      case jp: JPanel => jp.getComponents foreach { c =>
+        c match {
+          case comp: JComboBox => handleCombo(comp)
+          case _               =>
+        }
+      }
+      case _ =>
     }
     pswing.getTransformReference(true).setToScale(1 / canvas.camScale, -1 / canvas.camScale)
     pswing.translate(0, -pswing.getHeight)
@@ -182,10 +192,12 @@ class SwingPic2(swingComponent: JComponent)(implicit val canvas: SCanvas) extend
     node
   }
   private def getNodeBoundsInCanvas(pSwing: PSwing, comp: JComboBox) = {
-    val r1c = new Rectangle2D.Double(pSwing.getX(), pSwing.getY(), comp.getWidth() + 10, comp.getHeight());
+    val embeddedCombo = comp.getParent.isInstanceOf[JPanel]
+    val (deltax, deltay) = if (embeddedCombo) (comp.getX, comp.getY) else (0, 0)
+    val r1c = new Rectangle2D.Double(pSwing.getX + deltax, pSwing.getY + deltay, comp.getWidth, comp.getHeight)
     pSwing.localToGlobal(r1c)
-    canvas.getCamera.globalToLocal(r1c)
-    canvas.getCamera.getViewTransform.createTransformedShape(r1c).getBounds
+    canvas.getCamera.viewToLocal(r1c)
+    r1c.getBounds
   }
 
   def copy = throw new UnsupportedOperationException("Can't copy swing pictures")
