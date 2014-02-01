@@ -52,8 +52,8 @@ case class Button(label: String)(al: => Unit) extends JButton(label) {
   })
 }
 
-case class DropDown[T](options: Seq[T], editable: Boolean = false)(implicit reader: Read[T]) extends JComboBox(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]) {
-  setEditable(editable)
+case class DropDown[T](options: T *)(implicit reader: Read[T]) extends JComboBox(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]) {
+  setEditable(false)
   def value: T = reader.read(getSelectedItem.asInstanceOf[String])
 }
 
