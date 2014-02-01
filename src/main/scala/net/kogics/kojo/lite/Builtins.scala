@@ -450,6 +450,7 @@ Here's a partial list of the available commands:
   val Label = xswing.Label
   val Button = xswing.Button
   val DropDown = xswing.DropDown
+  val Slider = xswing.Slider
   val RowPanel = xswing.RowPanel
   val ColPanel = xswing.ColPanel
 }

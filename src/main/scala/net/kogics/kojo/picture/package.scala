@@ -83,7 +83,7 @@ package object picture {
 
   def image(file: String)(implicit canvas: SCanvas) = new ImagePic(file)
 
-  def widget(swingComponent: JComponent)(implicit canvas: SCanvas) = new SwingPic2(swingComponent)
+  def widget(swingComponent: JComponent)(implicit canvas: SCanvas) = new SwingPic(swingComponent)
 
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale

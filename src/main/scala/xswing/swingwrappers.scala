@@ -14,6 +14,7 @@ import javax.swing.JTextField
 import scala.collection.mutable.ArraySeq
 import scala.reflect.ClassTag
 import net.kogics.kojo.util.Read
+import javax.swing.JSlider
 
 //def borderWithMargin(m: Int) = {
 //    import javax.swing.border._
@@ -40,7 +41,7 @@ case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
 }
 
 case class TextField(n: Int) extends JTextField(n) {
-  def text = getText
+  def value = getText
 }
 case class Label(label: String) extends JLabel(label)
 case class Button(label: String)(al: => Unit) extends JButton(label) {
@@ -53,5 +54,16 @@ case class Button(label: String)(al: => Unit) extends JButton(label) {
 
 case class DropDown[T](options: Seq[T], editable: Boolean = false)(implicit reader: Read[T]) extends JComboBox(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]) {
   setEditable(editable)
-  def selectedItem: T = reader.read(getSelectedItem.asInstanceOf[String])
+  def value: T = reader.read(getSelectedItem.asInstanceOf[String])
+}
+
+case class Slider(min: Int, max: Int, curr: Int, spacing: Int) extends JSlider {
+  setMinimum(min)
+  setMaximum(max)
+  setValue(curr)
+  setMajorTickSpacing(spacing)
+  setPaintTicks(true)
+  setPaintLabels(true)
+  setSnapToTicks(true)
+  def value = getValue
 }
