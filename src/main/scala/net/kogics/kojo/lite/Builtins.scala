@@ -16,14 +16,12 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.{ Color => JColor }
-import java.awt.{ Font => JFont }
-import java.awt.GradientPaint
 import java.awt.Paint
 import java.awt.Toolkit
-import java.util.concurrent.CountDownLatch
 
 import javax.swing.JComponent
+
+import scala.language.implicitConversions
 
 import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.story.HandlerHolder
@@ -35,7 +33,6 @@ import net.kogics.kojo.xscala.Help
 import net.kogics.kojo.xscala.RepeatCommands
 import net.kogics.kojo.xscala.ScalaCodeRunner
 
-import core.Rectangle
 import core.Voice
 import story.HandlerHolder
 import story.IntHandlerHolder
@@ -446,11 +443,11 @@ Here's a partial list of the available commands:
     def button(label: String)(fn: => Unit) = widget(Button(label)(fn))
   }
   type Widget = JComponent
-  val TextField = xswing.TextField
-  val Label = xswing.Label
-  val Button = xswing.Button
-  val DropDown = xswing.DropDown
-  val Slider = xswing.Slider
-  val RowPanel = xswing.RowPanel
-  val ColPanel = xswing.ColPanel
+  val TextField = widget.TextField
+  val Label = widget.Label
+  val Button = widget.Button
+  val DropDown = widget.DropDown
+  val Slider = widget.Slider
+  val RowPanel = widget.RowPanel
+  val ColPanel = widget.ColPanel
 }

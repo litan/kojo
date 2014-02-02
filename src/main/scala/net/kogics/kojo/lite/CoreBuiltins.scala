@@ -9,12 +9,14 @@ import java.util.concurrent.CountDownLatch
 
 import scala.language.implicitConversions
 
+import org.apache.commons.math.fraction.BigFractionFormat
+
 import net.kogics.kojo.core.Rectangle
 import net.kogics.kojo.core.TSCanvasFeatures
+import net.kogics.kojo.kmath.Kmath.Rational
 import net.kogics.kojo.util.Utils
 
 trait CoreBuiltins {
-  import scala.language.implicitConversions
   def TSCanvas: TSCanvasFeatures
 
   type Turtle = core.Turtle
@@ -55,9 +57,15 @@ trait CoreBuiltins {
 
   val Kc = new staging.KeyCodes
 
-  implicit def seqToArrD(seq: Seq[Double]): Array[Double] = seq.toArray
-  implicit def seqToArrI(seq: Seq[Int]): Array[Double] = seq.map { _.toDouble }.toArray
-  val Kmath = new Kmath
+  val kmath = net.kogics.kojo.kmath.Kmath
+
+  implicit class RationalMaker(val sc: StringContext) {
+    val bff = new BigFractionFormat
+    def r(args: Any*): kmath.Rational = {
+      require(args.isEmpty && sc.parts.size == 1, """Write rationals as "m/n" """)
+      bff.parse(sc.parts(0))
+    }
+  }
 
   def epochTimeMillis = System.currentTimeMillis()
   def epochTime = System.currentTimeMillis() / 1000.0
