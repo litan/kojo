@@ -1,20 +1,20 @@
-package xswing
+package net.kogics.kojo.widget
 
 import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.JTextField
-import scala.collection.mutable.ArraySeq
-import scala.reflect.ClassTag
-import net.kogics.kojo.util.Read
 import javax.swing.JSlider
+import javax.swing.JTextField
+
+import net.kogics.kojo.util.Read
 
 //def borderWithMargin(m: Int) = {
 //    import javax.swing.border._
@@ -52,7 +52,7 @@ case class Button(label: String)(al: => Unit) extends JButton(label) {
   })
 }
 
-case class DropDown[T](options: T *)(implicit reader: Read[T]) extends JComboBox(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]) {
+case class DropDown[T](options: T*)(implicit reader: Read[T]) extends JComboBox(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]) {
   setEditable(false)
   def value: T = reader.read(getSelectedItem.asInstanceOf[String])
 }
