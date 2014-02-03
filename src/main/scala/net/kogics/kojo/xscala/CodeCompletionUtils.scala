@@ -189,7 +189,7 @@ object CodeCompletionUtils {
     "map" -> "map { n => \n    ${cursor}\n}",
     "filter" -> "filter { n => \n    ${cursor}\n}",
     "Label" -> "Label(${label})",
-    "TextField" -> "TextField(${size})",
+    "TextField" -> "TextField(${default})",
     "DropDown" -> "DropDown(${elems})",
     "Button" -> "Button(${label}) {\n    ${cursor}\n}",
     "Slider" -> "Slider(${min}, ${max}, ${current}, ${tickSpacing})",
