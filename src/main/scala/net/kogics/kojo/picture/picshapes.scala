@@ -194,7 +194,19 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
   }
 
   def insidePanel(c: JComponent) = c.getParent.isInstanceOf[JPanel]
-
+  def panelOffset(c: Component): (Int, Int) = {
+    var parent = c.getParent
+    val ret = if (parent != null && parent.isInstanceOf[JPanel]) {
+      val po = panelOffset(parent)
+      (c.getX + po._1, c.getY + po._2)
+    }
+    else {
+      (0, 0)
+    }
+    println(s"Panel offset of $c is $ret")
+    ret
+  }
+  
   private def getNodeBoundsInCanvas(pSwing: PSwing, combo: JComboBox) = {
     val (deltax, deltay) = if (insidePanel(combo)) (combo.getX, combo.getY) else (0, 0)
     val r1c = new Rectangle2D.Double(pSwing.getX + deltax, pSwing.getY + deltay, combo.getWidth, combo.getHeight)
