@@ -187,7 +187,14 @@ object CodeCompletionUtils {
     "hideScale" -> "hideScale()",
     "foreach" -> "foreach { n => \n    ${cursor}\n}",
     "map" -> "map { n => \n    ${cursor}\n}",
-    "filter" -> "filter { n => \n    ${cursor}\n}"
+    "filter" -> "filter { n => \n    ${cursor}\n}",
+    "Label" -> "Label(${label})",
+    "TextField" -> "TextField(${size})",
+    "DropDown" -> "DropDown(${elems})",
+    "Button" -> "Button(${label}) {\n    ${cursor}\n}",
+    "Slider" -> "Slider(${min}, ${max}, ${current}, ${tickSpacing})",
+    "RowPanel" -> "RowPanel(\n      ${widget},\n      w\n)",
+    "ColPanel" -> "ColPanel(\n      ${widget},\n      w\n)"
 )
   
   val TwMethodTemplates = Map(
