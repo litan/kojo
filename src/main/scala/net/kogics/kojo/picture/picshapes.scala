@@ -2,6 +2,7 @@ package net.kogics.kojo.picture
 
 import java.awt.BasicStroke
 import java.awt.Color
+import java.awt.Component
 import java.awt.geom.Arc2D
 import java.awt.geom.Rectangle2D
 
@@ -175,16 +176,14 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
         def popupMenuCanceled(e: PopupMenuEvent) {}
       })
     }
-    swingComponent match {
-      case combo: JComboBox => handleCombo(combo)
-      case jp: JPanel => jp.getComponents foreach { c =>
-        c match {
-          case combo: JComboBox => handleCombo(combo)
-          case _               =>
-        }
+    def handleComponent(comp: Component) {
+      comp match {
+        case combo: JComboBox => handleCombo(combo)
+        case jp: JPanel       => jp.getComponents foreach { handleComponent }
+        case _                =>
       }
-      case _ =>
     }
+    handleComponent(swingComponent)
     pswing.getTransformReference(true).setToScale(1 / canvas.camScale, -1 / canvas.camScale)
     pswing.translate(0, -pswing.getHeight)
 
