@@ -28,20 +28,21 @@ trait PreferredMax { self: JComponent =>
   override def getMaximumSize = getPreferredSize
 }
 
-case class RowPanel(comps: JComponent*) extends JPanel with PreferredMax {
-  comps.foreach { add(_) }
-  setLayout(new FlowLayout)
+case class RowPanel(comps: JComponent*) extends JPanel {
   setBackground(Color.white)
+  setLayout(new FlowLayout(FlowLayout.LEFT))
+  comps.foreach { add(_) }
 }
 
 case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
-  comps.foreach { add(_) }
-  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   setBackground(Color.white)
+  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  comps.foreach { add(_) }
 }
 
-case class TextField(n: Int) extends JTextField(n) {
-  def value = getText
+case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField(6) {
+  setText(default.toString)
+  def value = reader.read(getText)
 }
 case class Label(label: String) extends JLabel(label)
 case class Button(label: String)(al: => Unit) extends JButton(label) {
