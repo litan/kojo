@@ -32,8 +32,8 @@ libraryDependencies ++= Seq(
     "org.objenesis" % "objenesis" % "1.0" % "test",
     "org.hamcrest" % "hamcrest-core" % "1.1" % "test",
     "org.hamcrest" % "hamcrest-library" % "1.1" % "test",
-    ("org.scalacheck" % "scalacheck_2.10.0" % "1.10.0" intransitive()) % "test",
-    "org.scalatest" % "scalatest_2.10.0" % "2.0.M5" % "test"
+    ("org.scalacheck" % "scalacheck_2.10" % "1.11.3" intransitive()) % "test",
+    ("org.scalatest" % "scalatest_2.10" % "2.1.0-RC2" intransitive()) % "test"
 )
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
@@ -41,4 +41,5 @@ libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
 packageOptions in (Compile, packageBin) +=
-    Package.ManifestAttributes("Permissions" -> "all-permissions")
+    Package.ManifestAttributes("Permissions" -> "all-permissions", "Application-Name" -> "Kojo")
+
