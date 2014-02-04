@@ -214,6 +214,10 @@ trait AppMenu { self: Main.type =>
     animGameMenu.add(menuItemFor(Utils.loadString("S_Hunted"), "hunted.kojo"))
     samplesMenu.add(animGameMenu)
 
+    val widgetsMenu = new JMenu(Utils.loadString("S_Widgets"))
+    widgetsMenu.add(menuItemFor(Utils.loadString("S_WidgetsInCanvas"), "widgets-canvas.kojo"))
+    samplesMenu.add(widgetsMenu)
+
     val musicMenu = new JMenu(Utils.loadString("S_Music"))
     musicMenu.add(menuItemFor(Utils.loadString("S_SomeNotes"), "some-notes.kojo"))
     musicMenu.add(menuItemFor(Utils.loadString("S_Tune1"), "tune1.kojo"))
