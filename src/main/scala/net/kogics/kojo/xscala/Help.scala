@@ -962,7 +962,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "pict" -> "pict { t => } is obsolete. Use the PictureT (preferred) or Picture function instead.",
     "Picture" -> 
     <div>
-      <strong>Picture</strong>{{ drawingCode }} - Makes a picture out of the given turtle drawing code. <br/>
+      <strong>Picture</strong> {{ drawingCode }} - Makes a picture out of the given turtle drawing code. <br/>
       The picture needs to be drawn for it to become visible in the turtle canvas. <br/>
       <br/>
       <em>Example:</em> <br/>
@@ -982,7 +982,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     ,
     "PictureT" -> 
     <div>
-      <strong>PictureT</strong>{{ t => drawingCode }} - Makes a picture out of the given turtle drawing code, 
+      <strong>PictureT</strong> {{ t => drawingCode }} - Makes a picture out of the given turtle drawing code, 
       which needs to draw using the supplied turtle <tt>t</tt>.<br/>
       The picture needs to be drawn for it to become visible in the turtle canvas. <br/>
       <br/>
@@ -1046,15 +1046,48 @@ The code that you provide to react runs about thirty times per second, in the UI
         draw(PicShape.circle(50))
       </pre>
     </div>,
+    "PicShape.arc" -> 
+    <div>
+      <strong>PicShape.arc</strong>(radius, angle) - Creates a picture of an arc with the given radius and angle.<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PicShape.arc(50, 45))
+      </pre>
+    </div>,
     "PicShape.text" -> 
     <div>
-      <strong>PicShape.text</strong>(content, size) - Creates a picture of the given text with the given font-size.<br/>
+      <strong>PicShape.text</strong>(content, size) - Creates a picture out of the given text with the given font-size.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
         draw(PicShape.text("Hi There", 18))
+      </pre>
+    </div>,
+    "PicShape.image" -> 
+    <div>
+      <strong>PicShape.image</strong>(fileName) - Creates a picture out of an image from the file with the given name.<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PicShape.image(Costume.womanWaving))
+      </pre>
+    </div>,
+    "PicShape.widget" -> 
+    <div>
+      <strong>PicShape.widget</strong>(component) - Creates a picture out of the given widget.<br/>
+      <br/>
+      <em>Example:</em> <br/>
+      <br/>
+      <pre>
+        cleari()
+        draw(PicShape.widget(Label("Hi there")))
       </pre>
     </div>,
     "draw" -> 

@@ -119,7 +119,10 @@ val pTemplates = LinkedHashMap(
     "PicShape.vline(len)" -> "PicShape.vline(${c}50)",
     "PicShape.rect(h, w)" -> "PicShape.rect(${c}50, 100)",
     "PicShape.circle(r)" -> "PicShape.circle(${c}50)",
-    "PicShape.text(s, n)" -> """PicShape.text(${c}"Hello", 18)"""
+    "PicShape.arc(r, a)" -> "PicShape.arc(${c}50, 45)",
+    "PicShape.text(s, n)" -> """PicShape.text(${c}"Hello", 18)""",
+    "PicShape.image(f)" -> "PicShape.image(${c}Costume.womanWaving)",
+    "PicShape.widget(c)" -> """PicShape.widget(${c}Label("Hi there"))"""
 )
 
 val ptTemplates = LinkedHashMap(

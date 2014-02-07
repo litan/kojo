@@ -438,8 +438,8 @@ Here's a partial list of the available commands:
     def hline(l: Double) = picture.hline(l)
     def circle(r: Double) = picture.circle(r)
     def arc(r: Double, angle: Int) = picture.arc(r, angle)
-    def image(file: String) = picture.image(file)
-    def widget(swingComponent: JComponent) = picture.widget(swingComponent)
+    def image(fileName: String) = picture.image(fileName)
+    def widget(component: JComponent) = picture.widget(component)
     def button(label: String)(fn: => Unit) = widget(Button(label)(fn))
   }
   type Widget = JComponent
