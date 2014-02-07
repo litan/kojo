@@ -68,13 +68,14 @@ trait Picture extends InputAware {
   def setFillColor(color: Paint)
   @deprecated("Use picture.react instead", "2.1")
   def act(fn: Picture => Unit) = react(fn)
-  def react(fn: Picture => Unit)
+  def react(fn: Picture => Unit): Unit
   @deprecated("Use picture.react instead", "2.1")
   def animate(fn: => Unit) {
     react { me =>
       fn
     }
   }
+  def stopReactions(): Unit
   // provide these explicitly, so that subclasses that are case
   // classes can live within sets and maps
   override def equals(other: Any) = this eq other.asInstanceOf[AnyRef]
