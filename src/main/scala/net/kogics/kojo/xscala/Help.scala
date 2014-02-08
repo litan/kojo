@@ -137,7 +137,8 @@ object Help {
     "playMusic" -> "playMusic(score) - Plays the specified melody, rhythm, or score.",
     "playMusicUntilDone" -> "playMusicUntilDone(score) - Plays the specified melody, rhythm, or score, and waits till the music finishes.",
     "playMusicLoop" -> "playMusicLoop(score) - Plays the specified melody, rhythm, or score in the background - in a loop.",
-    "textExtent" -> "textExtent(text, fontSize) - Determines the size/extent of the given text fragment for the given font size.",
+    "textExtent" -> "textExtent(text, fontSize) - Computes and returns the size/extent of the given text fragment for the given font size. The extent is returned as a bounding rectangle with the bottom left and the top right points.",
+    "activateCanvas" -> "activateCanvas - Transfers focus to the canvas, so that keyboard events are directed to the canvas.",
     "runInBackground" -> "runInBackground(command) - Runs the given code in the background, concurrently with other code that follows right after this command.",
     "playMp3" -> "playMp3(fileName) - Plays the specified MP3 file.",
     "playMp3Loop" -> "playMp3Loop(fileName) - Plays the specified MP3 file in the background.",
@@ -148,8 +149,9 @@ object Help {
     "setBackground" -> "setBackground(color) - Sets the canvas background to the specified color. You can use predefined colors for setting the background, or you can create your own colors using the Color, ColorHSB, and ColorG functions.",
     "setBackgroundH" -> "setBackgroundH(color1, color2) - Sets the canvas background to a horizontal color gradient defined by the two specified colors.",
     "setBackgroundV" -> "setBackgroundV(color1, color2) - Sets the canvas background to a vertical color gradient defined by the two specified colors.",
-    "epochTime" -> "epochTime - the difference, measured in seconds, between the current time and midnight, January 1, 1970 UTC.",
-    "epochTimeMillis" -> "epochTimeMillis - the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.",
+    "epochTime" -> "epochTime - The difference, measured in seconds, between the current time and midnight, January 1, 1970 UTC.",
+    "epochTimeMillis" -> "epochTimeMillis - The difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.",
+    "canvasBounds" -> "canvasBounds - Returns the bounds of the canvas: the x and y coordinates of its bottom left point, and its width and height.",
     "map" -> 
     <div>
     	sequence.<strong>map</strong> {{ function }} - maps (or transforms) the sequence into another sequence 
@@ -1263,7 +1265,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "rot" -> 
     <div>
       <strong>rot</strong>(angle) -> picture <br/>
-      Rotates the given picture by the given angle. <br/>
+      Creates a new picture by rotating the given picture by the given angle. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -1285,7 +1287,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "trans" -> 
     <div>
       <strong>trans</strong>(x, y) -> picture <br/>
-      Translates the given picture by the given x and y values. <br/>
+      Creates a new picture by translating the given picture by the given x and y values. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -1306,7 +1308,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "offset" -> 
     <div>
       <strong>offset</strong>(x, y) -> picture <br/>
-      Offsets the given picture by the given x and y values, with respect to the
+      Creates a new picture by offsetting the given picture by the given x and y values, with respect to the
       global (canvas) coordinate system. <br/>
       <br/>
       <em>Example:</em> <br/>
@@ -1330,7 +1332,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     <div>
       <strong>scale</strong>(factor) -> picture <br/>
       <strong>scale</strong>(xf, yf) -> picture <br/>
-      Scales the given picture by the given scaling factor(s). <br/>
+      Creates a new picture by scaling the given picture by the given scaling factor(s). <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -1351,7 +1353,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "fillColor" -> 
     <div>
       <strong>fillColor</strong>(color) -> picture <br/>
-      Fills the given picture with the given color. <br/>
+      Creates a new picture by filling the given picture with the given color. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -1372,7 +1374,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "penColor" -> 
     <div>
       <strong>penColor</strong>(color) -> picture <br/>
-      Sets the pen color for the given picture to the given color. <br/>
+      Creates a new picture by setting the pen color for the given picture to the given color. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -1393,7 +1395,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "penWidth" -> 
     <div>
       <strong>penWidth</strong>(thickness) -> picture <br/>
-      Sets the pen width for the given picture to the given thickness. <br/>
+      Creates a new picture by setting the pen width for the given picture to the given thickness. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -1414,7 +1416,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "hue" -> 
     <div>
       <strong>hue</strong>(factor) -> picture <br/>
-      Changes the hue of the given picture's fill color by the given factor. <br/>
+      Creates a new picture by changing the hue of the given picture's fill color by the given factor. <br/>
       The factor needs to be between -1 and 1. <br/>
       <br/>
       <em>Example:</em> <br/>
@@ -1437,7 +1439,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "sat" -> 
     <div>
       <strong>sat</strong>(factor) -> picture <br/>
-      Changes the saturation of the given picture's fill color by the given factor. <br/>
+      Creates a new picture by changing the saturation of the given picture's fill color by the given factor. <br/>
       The factor needs to be between -1 and 1. <br/>
       <br/>
       <em>Example:</em> <br/>
@@ -1459,7 +1461,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "brit" -> 
     <div>
       <strong>brit</strong>(factor) -> picture <br/>
-      Changes the brightness of the given picture's fill color by the given factor.<br/>
+      Creates a new picture by changing the brightness of the given picture's fill color by the given factor.<br/>
       The factor needs to be between -1 and 1. <br/>
       <br/>
       <em>Example:</em> <br/>
@@ -1481,7 +1483,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "opac" -> 
     <div>
       <strong>opac</strong>(factor) -> picture <br/>
-      Changes the opacity of the given picture by the given factor.<br/>
+      Creates a new picture by changing the opacity of the given picture by the given factor.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -1599,7 +1601,7 @@ repeat(5) {{
     "axes" -> 
     <div>
       <strong>axes</strong> -> picture <br/>
-      Turns on local axes for the picture (to help during picture construction). <br/>
+      Creates a new picture by turning on the local axes for the given picture (to help during picture construction). <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
