@@ -14,6 +14,8 @@ object LangInit {
     System.getProperty("user.language") match {
       case "sv" =>
         val ct = SvInit.codeTemplates
+      case "pl" =>
+        val ct = PlInit.codeTemplates
       case _ =>
     }
     userLanguage

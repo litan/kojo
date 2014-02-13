@@ -325,6 +325,7 @@ trait AppMenu { self: Main.type =>
       "English" -> "en",
       "Swedish" -> "sv",
       "French" -> "fr",
+      "Polish (Experimental)" -> "pl",
       "Hindi" -> "todo"
     )
     var langMenus: Seq[JCheckBoxMenuItem] = Vector()
@@ -359,6 +360,7 @@ trait AppMenu { self: Main.type =>
     langMenu.add(langMenuItem("English"))
     langMenu.add(langMenuItem("Swedish"))
     langMenu.add(langMenuItem("French"))
+    langMenu.add(langMenuItem("Polish (Experimental)"))
     //    langMenu.add(langMenuItem("Italian (coming-up)"))
     menuBar.add(langMenu)
 
@@ -415,6 +417,7 @@ trait AppMenu { self: Main.type =>
                <li>Ilango</li>
                <li>Pierre Couillard</li>
                <li>Audrey Neveu</li>
+               <li>Mikołaj Sochacki</li>
               </ul>
               <strong>Kojo</strong> is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
               Kojo runs on the Java Platform.<br/><br/>
