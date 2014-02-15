@@ -167,7 +167,7 @@ object PlInit {
     "podnieśPisak" -> "podnieśPisak()",
     "czyśćStylPisaka" -> "czyśćStylPisaka",
     "kolor" -> "kolor(${kolorPisaka})",
-    "ustawWypełnieKolorem" -> "ustawWypełnieKolorem(${kolorWypełnienia)",
+    "ustawWypełnieKolorem" -> "ustawWypełnieKolorem(${kolorWypełnienia})",
     "grubość" -> "grubość(${grubośćPisaka})",
     "zapiszStyl" -> "zapiszStyl()",
     "przywróćStyl" -> "przywróćStyl()",
