@@ -325,7 +325,7 @@ trait AppMenu { self: Main.type =>
       "English" -> "en",
       "Swedish" -> "sv",
       "French" -> "fr",
-      "Polish (Experimental)" -> "pl",
+      "Polish" -> "pl",
       "Hindi" -> "todo"
     )
     var langMenus: Seq[JCheckBoxMenuItem] = Vector()
@@ -360,7 +360,7 @@ trait AppMenu { self: Main.type =>
     langMenu.add(langMenuItem("English"))
     langMenu.add(langMenuItem("Swedish"))
     langMenu.add(langMenuItem("French"))
-    langMenu.add(langMenuItem("Polish (Experimental)"))
+    langMenu.add(langMenuItem("Polish"))
     //    langMenu.add(langMenuItem("Italian (coming-up)"))
     menuBar.add(langMenu)
 
