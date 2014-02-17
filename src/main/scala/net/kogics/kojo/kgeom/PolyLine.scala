@@ -94,6 +94,7 @@ class PolyLine extends PNode {
 
   override def paint(paintContext: PPaintContext) {
     val g2 = paintContext.getGraphics()
+    g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
     val fillPaint = getPaint()
 
     if (fillPaint != null) {
