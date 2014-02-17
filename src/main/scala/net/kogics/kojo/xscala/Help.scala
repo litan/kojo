@@ -697,10 +697,10 @@ and sets the turtle's costume to the first one in the sequence. You can cycle th
     "nextCostume" -> "nextCostume() - Changes the turtle's costume to the next one in the sequence of costumes specified by setCostumes(...).",
     "scaleCostume" -> "scaleCostume(factor) - Scales the turtle's costume, to make it bigger or smaller, by the given factor.",
     "changePosition" -> "changePosition(x, y) - Changes the turtle's position by the given x and y.",
-    "act" -> """act { self => yourCode } - Allows this turtle to run concurrently with other turtles, 
+    "Turtle.act" -> """act { self => yourCode } - Allows this turtle to run concurrently with other turtles, 
 and provides an alias (self) for the turtle to make it easier to write/read the actions of the turtle. 
 The code that you provide to act runs once, in a different thread.""",
-    "react" -> """react { self => yourCode } - Allows this turtle to run concurrently with other turtles, 
+    "Turtle.react" -> """react { self => yourCode } - Allows this turtle to run concurrently with other turtles, 
 and provides an alias (self) for the turtle to make it easier to write/read the actions of the turtle. 
 The code that you provide to react runs about thirty times per second, in the UI thread.""",
     "distanceTo" -> "distanceTo(otherTurtle) - Calculates the distance (in the current units) between this turtle and the given turtle",
@@ -1845,12 +1845,12 @@ repeat(5) {{
     }
   }
   
-  def apply(topic: String) = {
+  def apply(topic: String): String = {
     CommonContent.getOrElse(
       topic, 
       modeSpecificContent.getOrElse(
         topic, 
-        langHelp(topic, System.getProperty("user.language")).getOrElse("Coming Soon...")
+        langHelp(topic, System.getProperty("user.language")).getOrElse(null)
       )
     )
   }
