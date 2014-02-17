@@ -76,6 +76,12 @@ trait TurtleMover extends RichTurtleCommands {
     penDown()
   }
   def hop(): Unit = hop(25)
+  def dot(diameter: Int): Unit = {
+    saveStyle()
+    setPenThickness(diameter)
+    forward(0.01)
+    restoreStyle()
+  }
   def perimeter: Double
   def area: Double
   def lastLine: Option[(Point2D.Double, Point2D.Double)]

@@ -51,4 +51,12 @@ trait RepeatCommands {
       Throttler.throttle()
     }
   }
+  
+  def repeatFor[T](seq: Iterable[T])(fn: T => Unit) {
+    val iter = seq.iterator
+    while (iter.hasNext) {
+      fn(iter.next)
+      Throttler.throttle()
+    }
+  } 
 }

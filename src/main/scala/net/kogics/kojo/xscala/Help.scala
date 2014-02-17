@@ -107,6 +107,30 @@ object Help {
       </pre>
     </div>
     ,
+    "repeatFor" -> 
+    <div>
+      <strong>repeatFor</strong>(seq){{ }} - For each element in the given sequence, repeats the given block of commands (within braces).<br/>
+      <br/>
+      <em>Example:</em> <br/><br/>
+      <pre>
+        clear()
+        repeatFor (40 to 60 by 5) {{ e =>
+          forward(e)
+          right()
+        }}
+      </pre>
+      <em>Example2:</em> <br/>
+      <br/>
+      <pre>
+        clear()
+        repeatFor (Seq(blue, green, yellow)) {{ e =>
+          setPenColor(e)
+          forward(100)
+          right()
+        }}
+      </pre>
+    </div>
+    ,
     "repeati" -> "repeati(n) {i => } - Repeats the commands within braces n number of times. The current repeat index is available within the braces.",
     "repeatWhile" -> "repeatWhile(cond) {} - Repeats the commands within braces while the given condition is true.",
     "repeatUntil" -> "repeatUntil(cond) {} - Repeats the commands within braces until the given condition is true.",
@@ -133,6 +157,8 @@ object Help {
     "readDouble" -> "readDouble(promptString) - Displays the given prompt in the output window and reads a Double-precision Real value that the user enters.",
     "random" -> "random(upperBound) - Returns a random Integer between 0 (inclusive) and upperBound (exclusive).",
     "randomDouble" -> "randomDouble(upperBound) - Returns a random Double-precision Real between 0 (inclusive) and upperBound (exclusive).",
+    "randomBoolean" -> "randomBoolean - Returns a random boolean value. This is like a coin toss.",
+    "randomFrom" -> "randomFrom(sequence) - Returns a random value from the given sequence.",
     "inspect" -> "inspect(obj) - Opens up a window showing the internal fields of the given object",
     "playMusic" -> "playMusic(score) - Plays the specified melody, rhythm, or score.",
     "playMusicUntilDone" -> "playMusicUntilDone(score) - Plays the specified melody, rhythm, or score, and waits till the music finishes.",
@@ -152,6 +178,7 @@ object Help {
     "epochTime" -> "epochTime - The difference, measured in seconds, between the current time and midnight, January 1, 1970 UTC.",
     "epochTimeMillis" -> "epochTimeMillis - The difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.",
     "canvasBounds" -> "canvasBounds - Returns the bounds of the canvas: the x and y coordinates of its bottom left point, and its width and height.",
+    "dot" -> "dot(diameter) - Makes a dot with the given diameter.",
     "map" -> 
     <div>
     	sequence.<strong>map</strong> {{ function }} - maps (or transforms) the sequence into another sequence 

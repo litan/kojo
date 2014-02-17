@@ -194,7 +194,9 @@ object CodeCompletionUtils {
     "Button" -> "Button(${label}) {\n    ${cursor}\n}",
     "Slider" -> "Slider(${min}, ${max}, ${current}, ${tickSpacing})",
     "RowPanel" -> "RowPanel(\n      ${widget},\n      w\n)",
-    "ColPanel" -> "ColPanel(\n      ${widget},\n      w\n)"
+    "ColPanel" -> "ColPanel(\n      ${widget},\n      w\n)",
+    "repeatFor" -> "repeatFor(${seq}) { e =>\n    ${cursor}\n}",
+    "randomFrom" -> "randomFrom(${seq})"
 )
   
   val TwMethodTemplates = Map(
@@ -207,7 +209,8 @@ object CodeCompletionUtils {
     "show" -> "draw(${pic/s})",
     "wipe" -> "wipe()",
     "morph" -> "morph { polyLines =>\n    ${cursor}\n}",
-    "PolyLine" -> "PolyLine(List(Point2D(${x1}, ${y1}), Point2D(${x2}, ${y2})))"
+    "PolyLine" -> "PolyLine(List(Point2D(${x1}, ${y1}), Point2D(${x2}, ${y2})))",
+    "dot" -> "dot(${diameter})"
   ) 
 
   val MwMethodTemplates = Map(
