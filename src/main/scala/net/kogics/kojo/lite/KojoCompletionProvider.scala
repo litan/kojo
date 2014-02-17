@@ -70,40 +70,39 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
 
     val display = completion.fullCompletion
 
-    val knownNames = Set(
-      "react(net.kogics.kojo.core.Picture => Unit): Unit",
-      "act(net.kogics.kojo.core.Turtle => Unit): Unit",
-      "react(net.kogics.kojo.core.Turtle => Unit): Unit",
-      "setCostume(String): Unit",
-      "setCostumes(String*): Unit",
-      "nextCostume(): Unit",
-      "scaleCostume(Double): Unit",
-      "changePosition(Double, Double): Unit",
-      "distanceTo(net.kogics.kojo.core.Turtle): Double",
-      "perimeter: Double",
-      "area: Double",
-      "onMouseClick((Double, Double) => Unit): Unit",
-      "onMousePress((Double, Double) => Unit): Unit",
-      "onMouseRelease((Double, Double) => Unit): Unit",
-      "onMouseDrag((Double, Double) => Unit): Unit",
-      "onMouseMove((Double, Double) => Unit): Unit",
-      "onMouseEnter((Double, Double) => Unit): Unit",
-      "onMouseExit((Double, Double) => Unit): Unit",
-      "animate(=> Unit): Unit",
-      "button(String)(=> Unit): net.kogics.kojo.picture.Pic"
+    val knownOwners = Set(
+      "PicShape",
+      "CorePicOps2",
+      "Turtle",
+      "TurtleMover",
+      "InputAware",
+      "Picture",
+      "TraversableLike",
+      "IterableLike"
     )
 
-    val collectionOps = Set(
-      "foreach",
-      "map",
-      "filter"
-    )
+    lazy val ownerName = {
+      val s = completion.owner
+      if (s == null) {
+        ""
+      }
+      else {
+        val dotpos = s.lastIndexOf('.')
+        if (dotpos == -1) s else s.substring(dotpos + 1)
+      }
+    }
+    lazy val qualifiedName = s"${ownerName}.${completion.name}"
+
+    def knownCompletion = knownOwners contains ownerName
 
     def knownMethodTemplate: Option[String] = {
-      //      println(s"signature for ${completion.name} -- %s ${completion.signature}")
-      if ((knownNames contains completion.signature) || (collectionOps contains completion.name)) {
-        val template = methodTemplate(completion.name)
-        if (template != null) Some(template) else None
+      //      println(s"owner for ${completion.name} -- ${completion.owner}")
+      if (knownCompletion) {
+        var template = methodTemplate(qualifiedName)
+        if (template != null) Some(template) else {
+          template = methodTemplate(completion.name)
+          if (template != null) Some(template) else None
+        }
       }
       else {
         None
@@ -114,9 +113,12 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       knownMethodTemplate.getOrElse(s"${completion.name}${completion.templateParams}")
 
     def knownHelp: Option[String] = {
-      if ((knownNames contains completion.signature) || (collectionOps contains completion.name)) {
-        val help = Help(completion.name)
-        if (help != null) Some(help) else None
+      if (knownCompletion) {
+        var help = Help(qualifiedName)
+        if (help != null) Some(help) else {
+          help = Help(completion.name)
+          if (help != null) Some(help) else None
+        }
       }
       else {
         None
