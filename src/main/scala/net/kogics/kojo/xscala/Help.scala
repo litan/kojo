@@ -282,7 +282,7 @@ object Help {
     ,
     "setPosition" -> 
     <div>
-      <strong>setPosition</strong>() - (x, y) - Sends the turtle to the point (x, y) without drawing a line. The turtle's heading is not changed. <br/>
+      <strong>setPosition</strong>() - (x, y) - Places the turtle at the point (x, y) without drawing a line. The turtle's heading is not changed. <br/>
       <br/>
       <em>Examples:</em> <br/><br/>
       <pre>
@@ -294,7 +294,7 @@ object Help {
     ,
     "position" -> 
     <div>
-      <strong>position</strong> - Tells you the turtle's current position. <br/>
+      <strong>position</strong> - Returns the turtle's current position. <br/>
       <br/>
       <em>Example:</em> <br/><br/>
       <pre>
@@ -696,7 +696,7 @@ object Help {
 and sets the turtle's costume to the first one in the sequence. You can cycle through the costumes by calling nextCostume().""",
     "nextCostume" -> "nextCostume() - Changes the turtle's costume to the next one in the sequence of costumes specified by setCostumes(...).",
     "scaleCostume" -> "scaleCostume(factor) - Scales the turtle's costume, to make it bigger or smaller, by the given factor.",
-    "changePosition" -> "changePosition(x, y) - Changes the turtle's position by the given x and y.",
+    "changePosition" -> "changePosition(x, y) - Changes the turtle's position by the given x and y without drawing a line.",
     "Turtle.act" -> """act { self => yourCode } - Allows this turtle to run concurrently with other turtles, 
 and provides an alias (self) for the turtle to make it easier to write/read the actions of the turtle. 
 The code that you provide to act runs once, in a different thread.""",
