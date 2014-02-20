@@ -52,6 +52,7 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
   def clearSingleLineCode() = {}
   def version = {}
   def switchToDefaultPerspective() = {}
+  def switchToDefault2Perspective() = {}
   def switchToScriptEditingPerspective() = {}
   def switchToWorksheetPerspective() = {}
   def switchToStoryViewingPerspective() = {}
