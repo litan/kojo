@@ -206,14 +206,18 @@ object Utils {
           javax.swing.SwingUtilities.invokeLater(new Runnable {
             override def run {
               batchLock.lock()
-              try {
-                while (!batchQ.isEmpty) {
+              while (!batchQ.isEmpty) {
+                try {
                   batchQ.remove.apply()
                 }
+                catch {
+                  case t: Throwable =>
+                    Utils.runLaterInSwingThread {
+                      reportException(t)
+                    }
+                }
               }
-              finally {
-                batchLock.unlock()
-              }
+              batchLock.unlock()
             }
           })
         }
