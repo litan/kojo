@@ -1,6 +1,7 @@
 package net.kogics.kojo
 
 import java.awt.Color
+import java.awt.Image
 import java.awt.Paint
 import java.awt.event.KeyEvent
 
@@ -81,7 +82,9 @@ package object picture {
 
   def arc(r: Double, angle: Int)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
-  def image(file: String)(implicit canvas: SCanvas) = new ImagePic(file)
+  def image(file: String)(implicit canvas: SCanvas) = new FileImagePic(file)
+
+  def image(img: Image)(implicit canvas: SCanvas) = new ImagePic(img)
 
   def widget(swingComponent: JComponent)(implicit canvas: SCanvas) = new SwingPic(swingComponent)
 
