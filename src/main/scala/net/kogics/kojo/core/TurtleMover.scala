@@ -17,6 +17,7 @@ package net.kogics.kojo.core
 import java.awt.Font
 import java.awt.Paint
 import java.awt.geom.Point2D
+import java.awt.Image
 
 case class Style(val penColor: Paint, val penThickness: Double, val fillColor: Paint, val font: Font, down: Boolean)
 
@@ -64,9 +65,12 @@ trait TurtleMover extends RichTurtleCommands {
   def setPenFont(font: Font)
   def arc(r: Double, a: Int): Unit
   def circle(r: Double) = arc(r, 360)
+  def setCostumeImage(image: Image): Unit
   def setCostume(costumeFile: String): Unit
   def setCostumes(costumeFiles: Vector[String]): Unit
   def setCostumes(costumeFiles: String*): Unit = setCostumes(costumeFiles.toVector)
+  def setCostumeImages(images: Vector[Image]): Unit
+  def setCostumeImages(images: Image*): Unit = setCostumeImages(images.toVector)
   def nextCostume(): Unit
   def scaleCostume(factor: Double): Unit
   def changePosition(x: Double, y: Double): Unit

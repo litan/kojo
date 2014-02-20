@@ -18,13 +18,13 @@ package turtle
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Font
+import java.awt.Image
 import java.awt.Paint
 import java.awt.Stroke
 import java.awt.geom.Point2D
 import java.util.concurrent.CountDownLatch
 
 import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
 
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.GeometryFactory
@@ -89,7 +89,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private var areBeamsOn: Boolean = _
   private var forwardAnimation: PActivity = _
   private var stopped = false
-  private var costumes: Option[Vector[String]] = None
+  private var costumes: Option[Vector[Image]] = None
   private var currCostume = 0
 
   private[turtle] def changePos(x: Double, y: Double) {
@@ -131,12 +131,16 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def initTImage(costumeFile: String) {
-    turtleImage.setImage(Utils.loadImageC(costumeFile))
+    initTImage(Utils.loadImageC(costumeFile), costumeFile.endsWith("turtle32.png"))
+  }
+
+  def initTImage(image: Image, translucent: Boolean) {
+    turtleImage.setImage(image)
     turtleImage.getTransformReference(true).setToIdentity()
     turtleImage.getTransformReference(true).setToScale(1 / camScale, -1 / camScale)
     turtleImage.rotate(Utils.deg2radians(90))
     turtleImage.translate(-turtleImage.getWidth / 2, -turtleImage.getHeight / 2)
-    if (hidden || costumeFile.endsWith("turtle32.png")) {
+    if (hidden || translucent) {
       turtleImage.setTransparency(0.7f)
     }
     else {
@@ -526,8 +530,20 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
+  def setCostumeImage(image: Image) = {
+    Throttler.throttle()
+    Utils.runInSwingThread {
+      setCostumeHelper(image)
+    }
+  }
+
   private def setCostumeHelper(costumeFile: String) = {
     initTImage(costumeFile)
+    turtleImage.repaint()
+  }
+
+  private def setCostumeHelper(image: Image) = {
+    initTImage(image, false)
     turtleImage.repaint()
   }
 
@@ -552,8 +568,18 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     require(costumeFiles.length > 1, "You need to specify at least two costumes")
     Throttler.throttle()
     Utils.runInSwingThread {
-      setCostumeHelper(costumeFiles(0))
-      costumes = Some(costumeFiles)
+      costumes = Some(costumeFiles map Utils.loadImageC)
+      setCostumeHelper(costumes.get(0))
+      currCostume = 0
+    }
+  }
+
+  def setCostumeImages(images: Vector[Image]) = {
+    require(images.length > 1, "You need to specify at least two costumes")
+    Throttler.throttle()
+    Utils.runInSwingThread {
+      costumes = Some(images)
+      setCostumeHelper(costumes.get(0))
       currCostume = 0
     }
   }

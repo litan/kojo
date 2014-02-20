@@ -2,6 +2,7 @@ package net.kogics.kojo
 package turtle
 
 import java.awt.Font
+import java.awt.Image
 import java.awt.Paint
 
 import net.kogics.kojo.core.Point
@@ -115,10 +116,12 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
     def style: Style = turtle0.style
 
     override def arc(r: Double, a: Int) = turtle0.arc(r, a)
+    def setCostumeImage(image: Image) = turtle0.setCostumeImage(image)
     def setCostume(costumeFile: String) = turtle0.setCostume(costumeFile)
     UserCommand("setCostume", List("costumeFile"), "Changes the costume (i.e. image) associated with the turtle to the image in the specified file.")
 
     def setCostumes(costumeFiles: Vector[String]) = turtle0.setCostumes(costumeFiles)
+    def setCostumeImages(images: Vector[Image]) = turtle0.setCostumeImages(images)
     def nextCostume() = turtle0.nextCostume()
     def scaleCostume(factor: Double) = turtle0.scaleCostume(factor)
     def changePosition(x: Double, y: Double) = turtle0.changePosition(x, y)
