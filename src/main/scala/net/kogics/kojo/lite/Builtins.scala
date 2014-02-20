@@ -16,6 +16,7 @@
 package net.kogics.kojo
 package lite
 
+import java.awt.Image
 import java.awt.Paint
 import java.awt.Toolkit
 
@@ -348,7 +349,7 @@ Here's a partial list of the available commands:
   }
 
   def setRefreshRate(fps: Int) {
-    require(fps >= 10 && fps <= 100, "FPS needs to be in the range: 10 to 100")
+    require(fps >= 1 && fps <= 200, "FPS needs to be in the range: 1 to 200")
     kojoCtx.fps = fps
   }
   def stopAnimations() = kojoCtx.stopActivity()
@@ -439,6 +440,7 @@ Here's a partial list of the available commands:
     def circle(r: Double) = picture.circle(r)
     def arc(r: Double, angle: Int) = picture.arc(r, angle)
     def image(fileName: String) = picture.image(fileName)
+    def image(image: Image) = picture.image(image)
     def widget(component: JComponent) = picture.widget(component)
     def button(label: String)(fn: => Unit) = widget(Button(label)(fn))
   }

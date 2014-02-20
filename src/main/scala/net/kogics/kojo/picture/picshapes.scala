@@ -3,6 +3,7 @@ package net.kogics.kojo.picture
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Component
+import java.awt.Image
 import java.awt.geom.Arc2D
 import java.awt.geom.Rectangle2D
 
@@ -128,7 +129,7 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
   def copy: net.kogics.kojo.core.Picture = new CirclePic(r)
 }
 
-class ImagePic(file: String)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+class ImagePic(img: Image)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with PicShapeOps {
 
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {
@@ -136,7 +137,7 @@ class ImagePic(file: String)(implicit val canvas: SCanvas) extends Picture with 
   }
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
-    val inode = new PImage(Utils.loadImageC(file))
+    val inode = new PImage(img)
     inode.getTransformReference(true).setToScale(1 / canvas.camScale, -1 / canvas.camScale)
     inode.translate(0, -inode.getHeight)
 
@@ -149,7 +150,11 @@ class ImagePic(file: String)(implicit val canvas: SCanvas) extends Picture with 
     node
   }
 
-  def copy: net.kogics.kojo.core.Picture = new ImagePic(file)
+  def copy: net.kogics.kojo.core.Picture = new ImagePic(img)
+}
+
+class FileImagePic(file: String)(implicit canvas: SCanvas) extends ImagePic(Utils.loadImageC(file)) {
+  override def copy: net.kogics.kojo.core.Picture = new FileImagePic(file)
 }
 
 class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
@@ -206,7 +211,7 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
     println(s"Panel offset of $c is $ret")
     ret
   }
-  
+
   private def getNodeBoundsInCanvas(pSwing: PSwing, combo: JComboBox) = {
     val (deltax, deltay) = if (insidePanel(combo)) (combo.getX, combo.getY) else (0, 0)
     val r1c = new Rectangle2D.Double(pSwing.getX + deltax, pSwing.getY + deltay, combo.getWidth, combo.getHeight)
