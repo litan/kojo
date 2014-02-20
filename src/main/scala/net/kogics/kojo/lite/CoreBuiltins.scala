@@ -5,6 +5,7 @@ import java.awt.{ Color => JColor }
 import java.awt.{ Font => JFont }
 import java.awt.GradientPaint
 import java.awt.Paint
+import java.awt.image.BufferedImage
 import java.util.concurrent.CountDownLatch
 
 import scala.language.implicitConversions
@@ -101,4 +102,9 @@ trait CoreBuiltins extends Rationals {
   def scale(f: Double) = picture.scale(f)
   def scale(x: Double, y: Double) = picture.scale(x, y)
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
+
+  type Image = java.awt.Image
+  val RGBImage = BufferedImage.TYPE_INT_RGB
+  val RGBAImage = BufferedImage.TYPE_INT_ARGB
+  def image(height: Int, width: Int, typ: Int = BufferedImage.TYPE_INT_RGB) = new BufferedImage(width, height, typ)
 }
