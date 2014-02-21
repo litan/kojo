@@ -99,7 +99,8 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       //      println(s"owner for ${completion.name} -- ${completion.owner}")
       if (knownCompletion) {
         var template = methodTemplate(qualifiedName)
-        if (template != null) Some(template) else {
+        if (template == "") None
+        else if (template != null) Some(template) else {
           template = methodTemplate(completion.name)
           if (template != null) Some(template) else None
         }
