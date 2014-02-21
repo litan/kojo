@@ -141,11 +141,6 @@ object CodeCompletionUtils {
     "setUnitLength" -> "setUnitLength(${unit})",
     "clearWithUL" -> "clearWithUL(${unit})",
     "clearOutput" -> "clearOutput()",
-//    "intersects" -> "intersects(${otherPic})",
-//    "intersection" -> "intersection(${otherPic})",
-//    "collidesWith" -> "collidesWith(${otherPic})",
-//    "collisions" -> "collisions(pics)",
-//    "distanceTo" -> "distanceTo(${otherPic})",
     "stopAnimation" -> "stopAnimation()",
     "isKeyPressed" -> "isKeyPressed(Kc.VK_${cursor})",
     "activateCanvas" -> "activateCanvas()",
@@ -172,6 +167,8 @@ object CodeCompletionUtils {
     "countDownLatch" -> "countDownLatch(${count})",
     "setEditorTabSize" -> "setEditorTabSize(${tabSize})",
     "setCostumes" -> "setCostumes(${costume1}, ${etc})",
+    "setCostumeImage" -> "setCostumeImage(${img})",
+    "setCostumeImages" -> "setCostumeImages(${img1}, ${etc})",
     "nextCostume" -> "nextCostume()",
     "scaleCostume" -> "scaleCostume(${factor})",
     "changePosition" -> "changePosition(${x}, ${y})",
@@ -196,7 +193,10 @@ object CodeCompletionUtils {
     "RowPanel" -> "RowPanel(\n      ${widget},\n      w\n)",
     "ColPanel" -> "ColPanel(\n      ${widget},\n      w\n)",
     "repeatFor" -> "repeatFor(${seq}) { e =>\n    ${cursor}\n}",
-    "randomFrom" -> "randomFrom(${seq})"
+    "randomFrom" -> "randomFrom(${seq})",
+    "image" -> "image(${height}, ${width})",
+    "PicShape.image" -> "", // use default via reflection
+    "setImagePixel" -> "setImagePixel(${img}, ${x}, ${y}, ${color})"
 )
   
   val TwMethodTemplates = Map(

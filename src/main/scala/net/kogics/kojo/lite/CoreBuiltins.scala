@@ -104,7 +104,6 @@ trait CoreBuiltins extends Rationals {
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
 
   type Image = java.awt.Image
-  val RGBImage = BufferedImage.TYPE_INT_RGB
-  val RGBAImage = BufferedImage.TYPE_INT_ARGB
-  def image(height: Int, width: Int, typ: Int = BufferedImage.TYPE_INT_RGB) = new BufferedImage(width, height, typ)
+  def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
+  def setImagePixel(image: BufferedImage, x: Int, y: Int, c: Color) = image.setRGB(x, image.getHeight - 1 - y, c.getRGB) 
 }

@@ -691,8 +691,14 @@ object Help {
         </pre>
     </div>
     ,
+    "image" -> """image(height, width) - Creates an image with the given height and width. 
+    This image is blank to begin with. You can set the individual pixels in the image by using the setImagePixel() command.""",
+    "setImagePixel" -> "setImagePixel(img, x, y, color) - Sets the pixel at the given (x, y) location in the given image to the given color.",
     "setCostume" -> "setCostume(costumeFile) - Changes the costume (i.e. image) associated with the turtle to the image in the specified file.",
+    "setCostumeImage" -> "setCostumeImage(image) - Changes the costume (i.e. image) associated with the turtle to the specified image. The image can be created with the image(height, width) function.",
     "setCostumes" -> """setCostumes(costumeFile1, costumeFile2, ...) - Specifies multiple costumes for the turtle, 
+and sets the turtle's costume to the first one in the sequence. You can cycle through the costumes by calling nextCostume().""",
+    "setCostumeImages" -> """setCostumeImages(image1, image2, ...) - Specifies multiple costumes for the turtle, 
 and sets the turtle's costume to the first one in the sequence. You can cycle through the costumes by calling nextCostume().""",
     "nextCostume" -> "nextCostume() - Changes the turtle's costume to the next one in the sequence of costumes specified by setCostumes(...).",
     "scaleCostume" -> "scaleCostume(factor) - Scales the turtle's costume, to make it bigger or smaller, by the given factor.",
@@ -1100,6 +1106,7 @@ The code that you provide to react runs about thirty times per second, in the UI
     "PicShape.image" -> 
     <div>
       <strong>PicShape.image</strong>(fileName) - Creates a picture out of an image from the file with the given name.<br/>
+      <strong>PicShape.image</strong>(image) - Creates a picture out of the given image. The image can be created with the image(height, width) function.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
