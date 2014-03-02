@@ -534,12 +534,10 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         try {
           val pt = new Point(e.getX(), e.getY());
           val offset = codePane.viewToModel(pt);
+          execSupport.imanip.foreach { _ close () }
           if (ipmProvider.isHyperlinkPoint(codePane, offset)) {
             // ipmProvider.getHyperlinkSpan(codePane, offset)
             ipmProvider.performClickAction(codePane, offset)
-          }
-          else {
-            execSupport.imanip.foreach { _ close () }
           }
         }
         catch {
