@@ -63,7 +63,7 @@ trait TurtleMover extends RichTurtleCommands {
   def playSound(voice: Voice): Unit
   def setPenFontSize(n: Int)
   def setPenFont(font: Font)
-  def arc(r: Double, a: Int): Unit
+  def arc(r: Double, a: Double): Unit
   def circle(r: Double) = arc(r, 360)
   def setCostumeImage(image: Image): Unit
   def setCostume(costumeFile: String): Unit

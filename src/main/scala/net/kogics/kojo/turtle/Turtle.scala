@@ -501,25 +501,18 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  override def arc(r: Double, a: Int) {
-    def makeArc(lforward: Double => Unit, lturn: Double => Unit) {
-      var i = 0
-      val (lim, step, trn) = if (a > 0) (a, 2 * math.Pi * r / 360, 1) else (-a, 2 * math.Pi * r / 360, -1)
-      while (i < lim) {
-        lforward(step)
-        lturn(trn)
-        i += 1
-      }
+  override def arc(r: Double, a: Double) {
+    def x(t: Double) = r * math.cos(t.toRadians)
+    def y(t: Double) = r * math.sin(t.toRadians)
+    val pos = position
+    var currAngle = 0.0
+    while (currAngle < a.floor) {
+      currAngle += 1
+      moveTo(pos.x - r + x(currAngle), pos.y + y(currAngle))
     }
-
-    if (_animationDelay < 5) {
-      Throttler.throttle()
-      Utils.runInSwingThread {
-        makeArc(forwardNoAnim _, realTurn _)
-      }
-    }
-    else {
-      makeArc(forward _, turn _)
+    if (a.floor != a) {
+      currAngle += a - a.floor
+      moveTo(pos.x - r + x(currAngle), pos.y + y(currAngle))
     }
   }
 
