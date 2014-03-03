@@ -27,7 +27,7 @@ trait RichTurtleCommands {
   def back(n: Double) = forward(-n)
   def back(): Unit = back(25)
 
-  def arc(r: Double, a: Int): Unit = throw new UnsupportedOperationException("making arcs is not supported")
+  def arc(r: Double, a: Double): Unit = throw new UnsupportedOperationException("making arcs is not supported")
   def left(angle: Int, rad: Double) = arc(rad, angle)
   def right(angle: Int, rad: Double) = arc(rad, -angle)
   def turn(angle: Int, rad: Double) = arc(rad, angle)
