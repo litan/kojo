@@ -80,7 +80,7 @@ package object picture {
 
   def circle(r: Double)(implicit canvas: SCanvas) = new CirclePic(r)
 
-  def arc(r: Double, angle: Int)(implicit canvas: SCanvas) = new ArcPic(r, angle)
+  def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
   def image(file: String)(implicit canvas: SCanvas) = new FileImagePic(file)
 

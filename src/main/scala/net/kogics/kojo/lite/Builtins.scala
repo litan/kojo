@@ -438,7 +438,7 @@ Here's a partial list of the available commands:
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
     def circle(r: Double) = picture.circle(r)
-    def arc(r: Double, angle: Int) = picture.arc(r, angle)
+    def arc(r: Double, angle: Double) = picture.arc(r, angle)
     def image(fileName: String) = picture.image(fileName)
     def image(image: Image) = picture.image(image)
     def widget(component: JComponent) = picture.widget(component)
