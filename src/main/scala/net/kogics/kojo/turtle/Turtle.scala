@@ -21,6 +21,7 @@ import java.awt.Font
 import java.awt.Image
 import java.awt.Paint
 import java.awt.Stroke
+import java.awt.geom.AffineTransform
 import java.awt.geom.Point2D
 import java.util.concurrent.CountDownLatch
 
@@ -505,14 +506,23 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     def x(t: Double) = r * math.cos(t.toRadians)
     def y(t: Double) = r * math.sin(t.toRadians)
     val pos = position
+    val head = heading
     var currAngle = 0.0
+    val trans = new AffineTransform()
+    trans.translate(pos.x, pos.y)
+    trans.rotate((head - 90).toRadians)
+    trans.translate(-r, 0)
     while (currAngle < a.floor) {
       currAngle += 1
-      moveTo(pos.x - r + x(currAngle), pos.y + y(currAngle))
+      val pt = new Point2D.Double(x(currAngle), y(currAngle))
+      trans.transform(pt, pt)
+      moveTo(pt.x, pt.y)
     }
     if (a.floor != a) {
       currAngle += a - a.floor
-      moveTo(pos.x - r + x(currAngle), pos.y + y(currAngle))
+      val pt = new Point2D.Double(x(currAngle), y(currAngle))
+      trans.transform(pt, pt)
+      moveTo(pt.x, pt.y)
     }
   }
 
