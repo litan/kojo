@@ -616,7 +616,6 @@ class TurtleTest {
     turtle.forward(stepSize)
     turtle.right()
     turtle.forward(2 * stepSize)
-    println(turtle.area)
     assertEquals(stepSize * stepSize, turtle.area, 0.001)
   }
 

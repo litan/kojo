@@ -512,15 +512,19 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     trans.translate(pos.x, pos.y)
     trans.rotate((head - 90).toRadians)
     trans.translate(-r, 0)
-    while (currAngle < a.floor) {
-      currAngle += 1
-      val pt = new Point2D.Double(x(currAngle), y(currAngle))
+    val step = if (a >= 0) 1 else -1
+    val pt = new Point2D.Double(0, 0)
+    val aabs = a.abs
+    val aabsFloor = aabs.floor
+    while (currAngle.abs < aabsFloor) {
+      currAngle += step
+      pt.setLocation(x(currAngle), y(currAngle))
       trans.transform(pt, pt)
       moveTo(pt.x, pt.y)
     }
     if (a.floor != a) {
-      currAngle += a - a.floor
-      val pt = new Point2D.Double(x(currAngle), y(currAngle))
+      currAngle += (aabs - aabs.floor) * step
+      pt.setLocation(x(currAngle), y(currAngle))
       trans.transform(pt, pt)
       moveTo(pt.x, pt.y)
     }
