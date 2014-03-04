@@ -118,7 +118,7 @@ right()
 
     context.assertIsSatisfied()
   }
-  
+
   @Test
   def areaTest {
     //Rich Turtle Command functions
@@ -156,7 +156,7 @@ area
     tracer.realTrace(code)
     startEvents.size should be(10)
     endEvents.size should be(1)
-    
+
     assert(endEvents(0).pret === "625.0")
 
   }
@@ -230,11 +230,11 @@ circle(10)
       oneOf(mockTurtle).turn(-180.0)
 
       //arc & circle
+      exactly(40).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
       exactly(40).of(mockTurtle).forward(`with`(any(classOf[Double])))
-      exactly(40).of(mockTurtle).turn(`with`(any(classOf[Double])))
 
+      exactly(360).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
       exactly(360).of(mockTurtle).forward(`with`(any(classOf[Double])))
-      exactly(360).of(mockTurtle).turn(`with`(any(classOf[Double])))
 
       allowing(mockTurtle).lastLine; will(returnValue(None))
       allowing(mockTurtle).lastTurn; will(returnValue(None))
