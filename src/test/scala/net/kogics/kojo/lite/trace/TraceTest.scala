@@ -183,7 +183,7 @@ setHeading(270)
 jumpTo(0, 30)
 home()
 perimeter
-arc(100,30)
+arc2(100,30)
 //circle(10)
 """
 

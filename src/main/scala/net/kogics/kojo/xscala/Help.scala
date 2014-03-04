@@ -660,6 +660,28 @@ object Help {
     <div>
         <strong>arc</strong>(radius, angle) - Gets the turtle to make an arc with the given 
         radius and angle.<br/>
+        Positive angles make the turtle go left (anti-clockwise). Negative angles make the turtle go right (clockwise) <br/>
+        <br/>
+        <em>Examples:</em> <br/>
+        <br/>
+        <pre>
+            // a simple arc
+            clear()    
+            arc(100, 45)
+
+            // a pattern of arcs
+            clear()   
+            right(135)
+            repeat (5) {{
+              arc(50, 90)
+              arc(50, -90)
+            }}
+        </pre>
+    </div>,
+    "arc2" ->
+    <div>
+        <strong>arc2</strong>(radius, angle) - Gets the turtle to make an arc with the given 
+        radius and angle.<br/>
         Positive angles result in an anti-clockwise arc. Negative angles result in a clockwise arc. <br/>
         <br/>
         <em>Examples:</em> <br/>
@@ -667,19 +689,18 @@ object Help {
         <pre>
             // a simple arc
             clear()
-            arc(100, -45)
+            arc2(100, -45)
 
             // a pattern of arcs
             clear()
             right(135)
             repeat(4) {{
-                arc(50, 90)
+                arc2(50, 90)
                 right(90)
-                arc(50, 90)
+                arc2(50, 90)
             }}
         </pre>
-    </div>
-    ,
+    </div>,
     "circle" ->
     <div>
         <strong>circle</strong>(radius) - Gets the turtle to make a circle with the given 
