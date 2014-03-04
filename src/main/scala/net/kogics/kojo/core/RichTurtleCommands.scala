@@ -28,6 +28,6 @@ trait RichTurtleCommands {
 
   def arc(r: Double, a: Double): Unit = throw new UnsupportedOperationException("making arcs is not supported")
   def left(angle: Int, rad: Double): Unit = arc(rad, angle)
-  def right(angle: Int, rad: Double): Unit = { right(180); arc(rad, -angle) }
+  def right(angle: Int, rad: Double): Unit = { if (angle == 0) return; right(180); arc(rad, -angle) }
   def turn(angle: Int, rad: Double): Unit = if (angle < 0) right(angle, rad) else left(angle, rad)
 }
