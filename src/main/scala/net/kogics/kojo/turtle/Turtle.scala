@@ -503,6 +503,10 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   override def arc(r: Double, a: Double) {
+    if (a == 0) {
+      return
+    }
+    
     def x(t: Double) = r * math.cos(t.toRadians)
     def y(t: Double) = r * math.sin(t.toRadians)
     val pos = position
@@ -512,7 +516,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     trans.translate(pos.x, pos.y)
     trans.rotate((head - 90).toRadians)
     trans.translate(-r, 0)
-    val step = if (a >= 0) 1 else -1
+    val step = if (a > 0) 1 else -1
     val pt = new Point2D.Double(0, 0)
     val aabs = a.abs
     val aabsFloor = aabs.floor
@@ -527,6 +531,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       pt.setLocation(x(currAngle), y(currAngle))
       trans.transform(pt, pt)
       moveTo(pt.x, pt.y)
+    }
+    if (a > 0) {
+      setHeading(head + a)
+    }
+    else {
+      setHeading(head + 180 + a)
     }
   }
 

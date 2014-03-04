@@ -183,8 +183,8 @@ setHeading(270)
 jumpTo(0, 30)
 home()
 perimeter
-arc(100,40)
-circle(10)
+arc(100,30)
+//circle(10)
 """
 
     val pos = new Point(40, 0)
@@ -229,12 +229,14 @@ circle(10)
       oneOf(mockTurtle).forward(30.0)
       oneOf(mockTurtle).turn(-180.0)
 
-      //arc & circle
-      exactly(40).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
-      exactly(40).of(mockTurtle).forward(`with`(any(classOf[Double])))
-
-      exactly(360).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
-      exactly(360).of(mockTurtle).forward(`with`(any(classOf[Double])))
+      //arc
+      exactly(30).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
+      exactly(30).of(mockTurtle).forward(`with`(any(classOf[Double])))
+      exactly(1).of(mockTurtle).turn(`with`(any(classOf[Double])))
+      
+      //circle
+//      exactly(360).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
+//      exactly(360).of(mockTurtle).forward(`with`(any(classOf[Double])))
 
       allowing(mockTurtle).lastLine; will(returnValue(None))
       allowing(mockTurtle).lastTurn; will(returnValue(None))
@@ -247,7 +249,7 @@ circle(10)
     })
 
     tracer.realTrace(code)
-    startEvents.size should be(21)
+    startEvents.size should be(20)
     endEvents.size should be(4)
 
     val position = endEvents(0)

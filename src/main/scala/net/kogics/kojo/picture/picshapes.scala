@@ -109,7 +109,8 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {
     def x(t: Double) = r * math.cos(t.toRadians)
     def y(t: Double) = r * math.sin(t.toRadians)
-    var cPoints = for (i <- 0 to angle.toInt) yield new Coordinate(x(i), y(i))
+    val step = if (angle > 0) 1 else -1
+    var cPoints = for (i <- 0 to angle.toInt by step) yield new Coordinate(x(i), y(i))
     if (angle.floor != angle) {
       cPoints = cPoints :+ new Coordinate(x(angle), y(angle))
     }
