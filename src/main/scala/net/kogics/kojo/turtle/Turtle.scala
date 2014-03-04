@@ -502,7 +502,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  override def arc(r: Double, a: Double) {
+  override def arc2(r: Double, a: Double) {
     if (a == 0) {
       return
     }

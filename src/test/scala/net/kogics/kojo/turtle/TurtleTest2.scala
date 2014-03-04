@@ -28,7 +28,7 @@ class TurtleTest2 extends FunSuite with Matchers with BeforeAndAfter {
   
   test("arc1") {
     turtle.setPosition(100, 50)
-    turtle.arc(100, 45)
+    turtle.arc2(100, 45)
     val pos = turtle.position
     pos.x shouldBe 100 * math.cos(45.toRadians) +- 0.001
     pos.y shouldBe (50 + 100 * math.sin(45.toRadians)) +- 0.001
@@ -39,7 +39,7 @@ class TurtleTest2 extends FunSuite with Matchers with BeforeAndAfter {
       (a > 20 && a < 1000 && a != 0) ==> {
         turtle.setPosition(x, y)
         turtle.setHeading(90)
-        turtle.arc(100, a)
+        turtle.arc2(100, a)
         val pos = turtle.position
         Utils.doublesEqual(x - (100 - 100 * math.cos(a.toDouble.toRadians)), pos.x, 0.001) &&
           Utils.doublesEqual(y + 100 * math.sin(a.toDouble.toRadians), pos.y, 0.001)
