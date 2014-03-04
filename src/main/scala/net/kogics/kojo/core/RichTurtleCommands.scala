@@ -13,14 +13,13 @@
  *
  */
 
-
 package net.kogics.kojo.core
 
 trait RichTurtleCommands {
-  def turn(angle: Double)
-  def forward(n: Double)
-  
-  def left(angle: Double) = turn(angle)
+  def turn(angle: Double): Unit
+  def forward(n: Double): Unit
+
+  def left(angle: Double): Unit = turn(angle)
   def right(angle: Double) = turn(-angle)
   def left(): Unit = left(90)
   def right(): Unit = right(90)
@@ -28,7 +27,7 @@ trait RichTurtleCommands {
   def back(): Unit = back(25)
 
   def arc(r: Double, a: Double): Unit = throw new UnsupportedOperationException("making arcs is not supported")
-  def left(angle: Int, rad: Double) = arc(rad, angle)
-  def right(angle: Int, rad: Double) = arc(rad, -angle)
-  def turn(angle: Int, rad: Double) = arc(rad, angle)
+  def left(angle: Int, rad: Double): Unit = arc(rad, angle)
+  def right(angle: Int, rad: Double): Unit = { right(180); arc(rad, -angle) }
+  def turn(angle: Int, rad: Double): Unit = if (angle < 0) right(angle, rad) else left(angle, rad)
 }

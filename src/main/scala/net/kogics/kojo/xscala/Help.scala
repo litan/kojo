@@ -323,6 +323,7 @@ object Help {
     <div>
       <strong>right</strong>() - Turns the turtle 90 degrees right (clockwise). <br/>
       <strong>right</strong>(angle) - Turns the turtle right (clockwise) through the given angle in degrees.<br/>
+      <strong>right</strong>(angle, radius) - Turns the turtle right (clockwise) through the given angle in degrees, around the given turning radius.<br/>
       <br/>
       <em>Examples:</em> <br/>
       <br/>
@@ -339,6 +340,7 @@ object Help {
     <div>
       <strong>left</strong>() - Turns the turtle 90 degrees left (anti-clockwise). <br/>
       <strong>left</strong>(angle) - Turns the turtle left (anti-clockwise) through the given angle in degrees.<br/>
+      <strong>left</strong>(angle, radius) - Turns the turtle left (anti-clockwise) through the given angle in degrees, around the given turning radius.<br/>
       <br/>
       <em>Examples:</em> <br/>
       <br/>
@@ -658,21 +660,22 @@ object Help {
     <div>
         <strong>arc</strong>(radius, angle) - Gets the turtle to make an arc with the given 
         radius and angle.<br/>
-        Positive angles make the turtle go left (ant-clockwise). Negative angles make the turtle go right (clockwise) <br/>
+        Positive angles result in an anti-clockwise arc. Negative angles result in a clockwise arc. <br/>
         <br/>
         <em>Examples:</em> <br/>
         <br/>
         <pre>
             // a simple arc
-            clear()    
-            arc(100, 45)
+            clear()
+            arc(100, -45)
 
             // a pattern of arcs
-            clear()   
+            clear()
             right(135)
-            repeat (5) {{
-              arc(50, 90)
-              arc(50, -90)
+            repeat(4) {{
+                arc(50, 90)
+                right(90)
+                arc(50, 90)
             }}
         </pre>
     </div>

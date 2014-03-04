@@ -18,7 +18,7 @@ class ArcDoubleAngleTest extends FunSuite with Matchers {
     val line = Pic { t =>
       import t._
       moveTo(100 * math.cos(45.6.toRadians), 100 * math.sin(45.6.toRadians))
-    } //> line: net.kogics.kojo.picture.Pic0 = Picture with Id: 197773
+    } 
     arc1.draw(); line.draw()
     arc1.collidesWith(line) shouldBe true    
   }
@@ -28,7 +28,7 @@ class ArcDoubleAngleTest extends FunSuite with Matchers {
     val line = Pic { t =>
       import t._
       moveTo(100 * math.cos(45.6.toRadians), 100 * math.sin(45.6.toRadians))
-    } //> line: net.kogics.kojo.picture.Pic0 = Picture with Id: 197773
+    } 
     arc1.draw(); line.draw()
     arc1.collidesWith(line) shouldBe false    
   }
@@ -38,9 +38,21 @@ class ArcDoubleAngleTest extends FunSuite with Matchers {
     val line = Pic { t =>
       import t._
       moveTo(100 * math.cos(45.6.toRadians), 100 * math.sin(45.6.toRadians))
-    } //> line: net.kogics.kojo.picture.Pic0 = Picture with Id: 197773
+    } 
     arc1.draw(); line.draw()
     arc1.collidesWith(line) shouldBe true    
   }
 
+  test("negative angle touching") {
+    val angle = -45.6
+    val arc1 = arc(100, angle)
+    val line = Pic { t =>
+      import t._
+      // add a small delta to x coord to force a collision
+      // otherwise small floating point calculation differences result in no collision
+      moveTo(100 * math.cos(angle.toRadians) + 0.001, 100 * math.sin(angle.toRadians))
+    } 
+    arc1.draw(); line.draw()
+    arc1.collidesWith(line) shouldBe true
+  }
 }
