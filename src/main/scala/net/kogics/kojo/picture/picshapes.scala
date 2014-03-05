@@ -135,23 +135,26 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
 
 class ImagePic(img: Image)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with PicShapeOps {
+  val inode = new PImage(img)
 
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {
     throw new IllegalStateException("Geometry is not available for images")
   }
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
-    val inode = new PImage(img)
     inode.getTransformReference(true).setToScale(1 / canvas.camScale, -1 / canvas.camScale)
-    inode.translate(0, -inode.getHeight)
+    inode.translate(-inode.getWidth / 2, -inode.getHeight / 2)
 
-    val node = PPath.createRectangle(0, 0, inode.getWidth.toFloat, inode.getHeight.toFloat)
-    node.setPaint(null)
-    node.setStroke(null)
+    val node = new PNode
     node.setVisible(false)
     node.addChild(inode)
     picLayer.addChild(node)
     node
+  }
+
+  override def realDraw() = Utils.runInSwingThread {
+    tnode.translate(inode.getWidth.toInt / 2, inode.getHeight.toInt / 2)
+    super.realDraw()
   }
 
   def copy: net.kogics.kojo.core.Picture = new ImagePic(img)
