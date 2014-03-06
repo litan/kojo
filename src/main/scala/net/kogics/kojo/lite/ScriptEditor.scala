@@ -89,7 +89,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   codePane.setMatchedBracketBGColor(new Color(247, 247, 247))
   codePane.setMatchedBracketBorderColor(new Color(192, 192, 192))
   codePane.setAnimateBracketMatching(false)
-  codePane.setCloseCurlyBraces(false)
+  codePane.setCloseCurlyBraces(true)
   codePane.setTabsEmulated(true)
   codePane.setTabSize(4)
   codePane.setCodeFoldingEnabled(true)
