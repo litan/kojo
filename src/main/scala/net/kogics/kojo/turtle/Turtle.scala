@@ -510,28 +510,30 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     def x(t: Double) = r * math.cos(t.toRadians)
     def y(t: Double) = r * math.sin(t.toRadians)
     def makeArc() {
-      val pos = position
       val head = heading
-      var currAngle = 0.0
-      val trans = new AffineTransform()
-      trans.translate(pos.x, pos.y)
-      trans.rotate((head - 90).toRadians)
-      trans.translate(-r, 0)
-      val step = if (a > 0) 1 else -1
-      val pt = new Point2D.Double(0, 0)
-      val aabs = a.abs
-      val aabsFloor = aabs.floor
-      while (currAngle.abs < aabsFloor) {
-        currAngle += step
-        pt.setLocation(x(currAngle), y(currAngle))
-        trans.transform(pt, pt)
-        moveTo(pt.x, pt.y)
-      }
-      if (a.floor != a) {
-        currAngle += (aabs - aabs.floor) * step
-        pt.setLocation(x(currAngle), y(currAngle))
-        trans.transform(pt, pt)
-        moveTo(pt.x, pt.y)
+      if (r != 0) {
+        val pos = position
+        var currAngle = 0.0
+        val trans = new AffineTransform()
+        trans.translate(pos.x, pos.y)
+        trans.rotate((head - 90).toRadians)
+        trans.translate(-r, 0)
+        val step = if (a > 0) 1 else -1
+        val pt = new Point2D.Double(0, 0)
+        val aabs = a.abs
+        val aabsFloor = aabs.floor
+        while (currAngle.abs < aabsFloor) {
+          currAngle += step
+          pt.setLocation(x(currAngle), y(currAngle))
+          trans.transform(pt, pt)
+          moveTo(pt.x, pt.y)
+        }
+        if (a.floor != a) {
+          currAngle += (aabs - aabs.floor) * step
+          pt.setLocation(x(currAngle), y(currAngle))
+          trans.transform(pt, pt)
+          moveTo(pt.x, pt.y)
+        }
       }
       if (a > 0) {
         setHeading(head + a)
@@ -540,7 +542,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
         setHeading(head + 180 + a)
       }
     }
-    
+
     if (_animationDelay < 11) Utils.runInSwingThread {
       makeArc()
     }
