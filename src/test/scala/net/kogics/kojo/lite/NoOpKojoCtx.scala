@@ -87,6 +87,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def showStatusText(text: String): Unit = {}
   def showStatusCaretPos(line: Int, col: Int): Unit = {}
   def setEditorTabSize(ts: Int): Unit = {}
+  def setEditorFont(name: String): Unit = {}
   def showAppWaitCursor(): Unit = {}
   def hideAppWaitCursor(): Unit = {}
   def picLine(p1: Point2D.Double, p2: Point2D.Double): Picture = null

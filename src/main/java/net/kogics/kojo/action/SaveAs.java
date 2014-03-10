@@ -22,35 +22,33 @@ import net.kogics.kojo.lite.EditorFileSupport;
 import net.kogics.kojo.util.FileChooser;
 
 public final class SaveAs implements ActionListener {
-    private EditorFileSupport fileSupport;
-    FileChooser fileChooser;
+	private EditorFileSupport fileSupport;
+	FileChooser fileChooser;
 
-    public SaveAs(EditorFileSupport fileSupport) {
-        this.fileSupport = fileSupport;
-        this.fileChooser = new FileChooser(fileSupport.kojoCtx());
-    }
+	public SaveAs(EditorFileSupport fileSupport) {
+		this.fileSupport = fileSupport;
+		this.fileChooser = new FileChooser(fileSupport.kojoCtx());
+	}
 
-    public void actionPerformed(ActionEvent e) {
-        File selectedFile = fileChooser.chooseFile("Kojo Files", "kojo",
-                net.kogics.kojo.util.Utils.stripDots(e.getActionCommand()));
+	public void actionPerformed(ActionEvent e) {
+		File selectedFile = fileChooser.chooseFile(
+				net.kogics.kojo.util.Utils.stripDots(e.getActionCommand()),
+				"Kojo Files", "kojo", "scala");
 
-        if (selectedFile != null) {
-            try {
-                fileSupport.saveAs(selectedFile);
-                fileSupport.openFileWithoutClose(selectedFile);
-            }
-            catch (IllegalArgumentException ex) {
-                // user said no to over-writing selected file
-                // try again
-                actionPerformed(e);
-            }
-            catch (RuntimeException ex) {
-                // user cancelled save
-            }
-            catch (Throwable t) {
-                System.out.println(String.format("Unable to save file: %s",
-                        t.getMessage()));
-            }
-        }
-    }
+		if (selectedFile != null) {
+			try {
+				fileSupport.saveAs(selectedFile);
+				fileSupport.openFileWithoutClose(selectedFile);
+			} catch (IllegalArgumentException ex) {
+				// user said no to over-writing selected file
+				// try again
+				actionPerformed(e);
+			} catch (RuntimeException ex) {
+				// user cancelled save
+			} catch (Throwable t) {
+				System.out.println(String.format("Unable to save file: %s",
+						t.getMessage()));
+			}
+		}
+	}
 }

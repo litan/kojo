@@ -380,6 +380,10 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     topcs.seh.se.setTabSize(ts)
   }
 
+  def setEditorFont(name: String) {
+    topcs.seh.se.setFont(name)
+  }
+
   def showStatusText(text: String) {
     statusBar.showText(text)
   }

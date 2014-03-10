@@ -36,7 +36,7 @@ public final class LoadFrom implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                "Kojo Files", "kojo");
+                "Kojo Files", "kojo", "scala");
         chooser.setFileFilter(filter);
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 

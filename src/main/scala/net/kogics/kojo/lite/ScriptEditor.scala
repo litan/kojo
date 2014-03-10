@@ -4,6 +4,7 @@ import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Event
+import java.awt.Font
 import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
@@ -563,6 +564,11 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   def setTabSize(ts: Int) = Utils.runInSwingThread {
     tabSize = ts
     codePane.setTabSize(ts)
+  }
+
+  def setFont(name: String) = Utils.runInSwingThread {
+    val currFont = codePane.getFont()
+    codePane.setFont(new Font(name, currFont.getStyle, currFont.getSize))
   }
 
   def markTraceLine(line: Int) {

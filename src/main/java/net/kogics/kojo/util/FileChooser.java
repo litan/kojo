@@ -28,7 +28,7 @@ public final class FileChooser {
         this.ctx = ctx;
     }
 
-    public File chooseFile(String desc, String ext, String title) {
+    public File chooseFile(String title, String desc, String... ext) {
         JFileChooser chooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter(desc, ext);
         chooser.setFileFilter(filter);
@@ -50,7 +50,7 @@ public final class FileChooser {
             File selectedFile = chooser.getSelectedFile();
             if (!selectedFile.getName().contains(".")) {
                 selectedFile = new File(selectedFile.getAbsolutePath() + "."
-                        + ext);
+                        + ext[0]);
             }
             return selectedFile;
         }
