@@ -91,6 +91,7 @@ trait KojoCtx {
   def setOutputFontSize(size: Int): Unit
   def formatSource(): Unit
   def setEditorTabSize(ts: Int): Unit
+  def setEditorFont(name: String): Unit
   def showStatusText(text: String): Unit
   def showStatusCaretPos(line: Int, col: Int): Unit
   def showAppWaitCursor(): Unit

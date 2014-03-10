@@ -422,6 +422,7 @@ Here's a partial list of the available commands:
   def setOutputTextFontSize(size: Int) = kojoCtx.setOutputFontSize(size)
 
   def setEditorTabSize(ts: Int) = kojoCtx.setEditorTabSize(ts)
+  def setEditorFont(name: String) = kojoCtx.setEditorFont(name)
   def mouseX = staging.Inputs.mousePos.x
   def mouseY = staging.Inputs.mousePos.y
   def mousePosition = staging.Inputs.mousePos

@@ -73,6 +73,7 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
 
   def isScratchPad = false
   def setEditorTabSize(n: Int) {}
+  def setEditorFont(name: String) {}
   def clearOutput() {}
   def readln(prompt: String): String = "Unsupported"
   //  def readInt(prompt: String): Int = 0

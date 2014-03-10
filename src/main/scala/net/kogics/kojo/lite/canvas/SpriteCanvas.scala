@@ -868,7 +868,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     saveAsImage.addActionListener(new ActionListener {
       val fchooser = new FileChooser(kojoCtx)
       override def actionPerformed(e: ActionEvent) {
-        val file = fchooser.chooseFile("PNG Image File", "png", Utils.stripDots(Utils.loadString("S_SaveAs")))
+        val file = fchooser.chooseFile(Utils.stripDots(Utils.loadString("S_SaveAs")), "PNG Image File", "png")
         if (file != null) {
           exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)
         }
