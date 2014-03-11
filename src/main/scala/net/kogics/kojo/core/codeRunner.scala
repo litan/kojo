@@ -36,6 +36,7 @@ trait CodeRunner {
   def activateMw(): Unit
   def activateD3(): Unit
   def resetInterp(): Unit
+  def resetInterpUI(): Unit
   def runContext: RunContext
 }
 

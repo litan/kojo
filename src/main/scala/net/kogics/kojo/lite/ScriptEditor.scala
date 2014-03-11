@@ -347,6 +347,15 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(clearItem, idx)
   idx += 1
 
+  val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
+    def actionPerformed(ev: ActionEvent) {
+      execSupport.codeRunner.resetInterpUI()
+    }
+  }
+  val resetInterpItem = new JMenuItem(resetInterpAction)
+  popup.add(resetInterpItem, idx)
+  idx += 1
+
   popup.add(modeMenu, idx)
   idx += 1
 
