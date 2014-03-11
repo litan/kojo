@@ -66,6 +66,8 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   }
 
   def resetInterp() = codeRunner.resetInterp()
+  // entry point for interp reset from GUI
+  def resetInterpUI() = codeRunner ! ResetInterp
 
   if (Utils.libJars.size > 0) {
     kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
@@ -112,6 +114,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   case object ActivateStaging
   case object ActivateMw
   case object ActivateD3
+  case object ResetInterp
 
   def varCompletions(prefix: Option[String]): (List[String], Int) = {
     val resp = (codeRunner !? VarCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
@@ -255,11 +258,14 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     }
 
     // meant to be called from scripts - so that it runs on the interp thread
-    def resetInterp() = Utils.safeProcess {
+    def resetInterp() = {
       if (Thread.currentThread != InterruptionManager.interpreterThread.getOrElse(null)) {
         throw new RuntimeException("Resetting Interp from outside Interp running thread!")
       }
-
+      realResetInterp()
+    }
+    
+    private def realResetInterp() = Utils.safeProcess {
       interp.reset()
       initInterp()
       mode match {
@@ -461,6 +467,9 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
             safeProcessResponse("") {
               typeAt(code, caretOffset)
             }
+            
+          case ResetInterp =>
+            realResetInterp()
         }
       }
     }
