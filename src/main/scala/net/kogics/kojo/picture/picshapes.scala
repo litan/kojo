@@ -4,6 +4,7 @@ import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Component
 import java.awt.Image
+import java.awt.RenderingHints
 import java.awt.geom.Arc2D
 import java.awt.geom.Rectangle2D
 
@@ -22,6 +23,7 @@ import net.kogics.kojo.util.Utils
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.nodes.PImage
 import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolo.util.PPaintContext
 import edu.umd.cs.piccolox.pswing.PSwing
 
 trait PicShapeOps { self: Picture with CorePicOps =>
@@ -135,26 +137,27 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
 
 class ImagePic(img: Image)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with PicShapeOps {
-  val inode = new PImage(img)
-
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {
     throw new IllegalStateException("Geometry is not available for images")
   }
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    val inode = new PImage(img) {
+      override def paint(paintContext: PPaintContext) {
+        val g2 = paintContext.getGraphics()
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+        super.paint(paintContext)
+      }
+    }
+
     inode.getTransformReference(true).setToScale(1 / canvas.camScale, -1 / canvas.camScale)
-    inode.translate(-inode.getWidth / 2, -inode.getHeight / 2)
+    inode.translate(0, -inode.getHeight)
 
     val node = new PNode
     node.setVisible(false)
     node.addChild(inode)
     picLayer.addChild(node)
     node
-  }
-
-  override def realDraw() = Utils.runInSwingThread {
-    tnode.translate(inode.getWidth.toInt / 2, inode.getHeight.toInt / 2)
-    super.realDraw()
   }
 
   def copy: net.kogics.kojo.core.Picture = new ImagePic(img)
