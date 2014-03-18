@@ -397,10 +397,10 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       def actionPerformed(e: ActionEvent) = e.getActionCommand match {
         case RunScript =>
           if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
-            execSupport.compileRunCode()
+            execSupport.runCode()
           }
           else {
-            execSupport.runCode()
+            execSupport.compileRunCode()
           }
           codePane.requestFocusInWindow()
         case RunWorksheet =>
@@ -498,7 +498,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
-              execSupport.runCode()
+              execSupport.compileRunCode()
               evt.consume
             }
             else if (evt.isShiftDown && execSupport.isRunningEnabled) {
