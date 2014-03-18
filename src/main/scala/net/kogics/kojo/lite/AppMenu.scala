@@ -233,9 +233,17 @@ trait AppMenu { self: Main.type =>
 
     val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
     mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
+    mgeomMenu.add(menuItemFor(Utils.loadString("S_AnglesAnimation"), "angles.kojo"))
     samplesMenu.add(mgeomMenu)
 
     menuBar.add(samplesMenu)
+
+    val showcaseMenu = new JMenu(Utils.loadString("S_Showcase"))
+    showcaseMenu.setMnemonic('c')
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_Mandel"), "mandelbrot.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_Fern"), "fern.kojo"))
+
+    menuBar.add(showcaseMenu)
 
     val windowMenu = new JMenu(Utils.loadString("S_Window"))
     windowMenu.setMnemonic('W')
