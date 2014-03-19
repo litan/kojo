@@ -111,6 +111,7 @@ import builtins._
 import TSCanvas._
 import turtle0.{ clear => _, _ }
 net.kogics.kojo.lite.i18n.LangInit()
+net.kogics.kojo.lite.i18n.LangInit.initPhase2(builtins)
 val _sq = 1 to 5 // speed things up for Scala 2.10.3
 object UserCode {
   def entry() {

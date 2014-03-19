@@ -2,6 +2,7 @@ package net.kogics.kojo.lite.i18n
 
 import net.kogics.kojo.util.Utils
 import java.util.prefs.Preferences
+import net.kogics.kojo.lite.CoreBuiltins
 
 object LangInit {
   def init(prefs: Preferences) = {
@@ -11,14 +12,17 @@ object LangInit {
       System.setProperty("user.language", userLanguage)
     }
 
+    userLanguage
+  }
+  
+  def initPhase2(b: CoreBuiltins) {
     System.getProperty("user.language") match {
       case "sv" =>
-        val ct = SvInit.codeTemplates
+        val ct = SvInit.init(b)
       case "pl" =>
-        val ct = PlInit.codeTemplates
+        val ct = PlInit.init(b)
       case _ =>
     }
-    userLanguage
   }
   
   def apply() {

@@ -39,6 +39,7 @@ import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.lite.canvas.SpriteCanvas
+import net.kogics.kojo.lite.i18n.LangInit
 import net.kogics.kojo.lite.trace.MethodEvent
 import net.kogics.kojo.livecoding.InteractiveManipulator
 import net.kogics.kojo.livecoding.ManipulationContext
@@ -300,6 +301,7 @@ class CodeExecutionSupport(
       showOutput(" " * 38 + "_____\n\n")
       outputPane.clearLastOutput()
       startingUp = false
+      LangInit.initPhase2(builtins)
     }
 
     def onInterpreterStart(code: String) {

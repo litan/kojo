@@ -17,15 +17,6 @@
 
 //Swedish Turtle wrapper init for Kojo
 
-println("Välkommen till Kojo med svensk padda!")
-if (isScratchPad) {
-  println("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.") 
-}
-setEditorTabSize(2)
-
-//initialize unstable value
-net.kogics.kojo.lite.i18n.SwedishAPI.builtins = builtins
-
 //make swedish names visible
 import net.kogics.kojo.lite.i18n.SvInit
 import net.kogics.kojo.lite.i18n.SwedishAPI.{
@@ -42,14 +33,3 @@ import padda.{sudda => _, _}
 
 //simple IO
 def utdata(data: Any) = println(data)
-
-//code completion
-addCodeTemplates(
-    "sv",
-    SvInit.codeTemplates
-)
-//help texts
-addHelpContent(
-    "sv", 
-    SvInit.helpContent
-)
