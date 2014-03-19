@@ -1,7 +1,8 @@
 /*
  * Copyright (C) 2013 
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
- *   Lalit Pant <pant.lalit@gmail.com> 
+ *   Lalit Pant <pant.lalit@gmail.com>,
+ *   Mikołaj Sochacki <mbsochacki@wp.pl>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -15,9 +16,12 @@
  *
  */
 
-//Swedish Turtle wrapper for Kojo
+//Polish Turtle wrapper for Kojo
 
 package net.kogics.kojo.lite.i18n
+
+import net.kogics.kojo.lite.CoreBuiltins
+import net.kogics.kojo.lite.Builtins
 
 object PolishAPI {
   import net.kogics.kojo.core.Turtle
@@ -131,7 +135,7 @@ object PolishAPI {
   def liczbaLosowa(n: Int) = builtins.random(n)
   def liczbaLosowaRzeczywista(n: Int) = builtins.randomDouble(n)
   
-  //some type aliases in Swedish
+  //some type aliases in Polish
   type Całkowita = Int
   type Rzeczywista = Double
   type Napis = String
@@ -141,6 +145,32 @@ object PolishAPI {
 }
 
 object PlInit {
+  def init(builtins: CoreBuiltins) {
+    //initialize unstable value
+    net.kogics.kojo.lite.i18n.PolishAPI.builtins = builtins
+    builtins match {
+      case b: Builtins =>
+        println("Witamy w Kojo w polskiej wersji!")
+        if (b.isScratchPad) {
+          println("Jesteś w brudnopisie, historia zmian nie zostanie zapisana po jego zamknięciu") 
+        }
+        b.setEditorTabSize(2)
+
+        //code completion
+        b.addCodeTemplates(
+          "pl",
+          codeTemplates
+        )
+        //help texts
+        b.addHelpContent(
+          "pl",
+          helpContent
+        )
+
+      case _ =>
+    }
+  }
+  
   val codeTemplates = Map(
     "naprzód" -> "naprzód(${kroki})",
     "prawo" -> "prawo(${kąt})",

@@ -1,7 +1,8 @@
 /*
  * Copyright (C) 2013 
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
- *   Lalit Pant <pant.lalit@gmail.com>
+ *   Lalit Pant <pant.lalit@gmail.com>,
+ *   Mikołaj Sochacki <mbsochacki@wp.pl>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -15,18 +16,9 @@
  *
  */
 
-//Swedish Turtle wrapper init for Kojo
+//Polish Turtle wrapper init for Kojo
 
-println("Witamy w Kojo w polskiej wersji!")
-if (isScratchPad) {
-  println("Jesteś w brudnopisie, historia zmian nie zostanie zapisana po jego zamknięciu") 
-}
-setEditorTabSize(2)
-
-//initialize unstable value
-net.kogics.kojo.lite.i18n.PolishAPI.builtins = builtins
-
-//make swedish names visible
+//make polish names visible
 import net.kogics.kojo.lite.i18n.PlInit
 import net.kogics.kojo.lite.i18n.PolishAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
@@ -42,14 +34,3 @@ import żółw.{czyść => _, _}
 
 //simple IO
 def drukuj(data: Any) = println(data)
-
-//code completion
-addCodeTemplates(
-    "pl",
-    PlInit.codeTemplates
-)
-//help texts
-addHelpContent(
-    "pl", 
-    PlInit.helpContent
-)

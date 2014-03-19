@@ -19,6 +19,9 @@
 
 package net.kogics.kojo.lite.i18n
 
+import net.kogics.kojo.lite.CoreBuiltins
+import net.kogics.kojo.lite.Builtins
+
 object SwedishAPI {
   import net.kogics.kojo.core.Turtle
   import java.awt.Color
@@ -150,6 +153,32 @@ object SwedishAPI {
 }
 
 object SvInit {
+  def init(builtins: CoreBuiltins) {
+    //initialize unstable value
+    net.kogics.kojo.lite.i18n.SwedishAPI.builtins = builtins
+    builtins match {
+      case b: Builtins =>
+        println("Välkommen till Kojo med svensk padda!")
+        if (b.isScratchPad) {
+          println("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.")
+        }
+        b.setEditorTabSize(2)
+
+        //code completion
+        b.addCodeTemplates(
+          "sv",
+          codeTemplates
+        )
+        //help texts
+        b.addHelpContent(
+          "sv",
+          helpContent
+        )
+
+      case _ =>
+    }
+  }
+  
   val codeTemplates = Map(
     "fram" -> "fram(${steg})",
     "höger" -> "höger(${vinkel})",
