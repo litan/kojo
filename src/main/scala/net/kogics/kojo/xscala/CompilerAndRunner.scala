@@ -182,7 +182,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
               realT = realT.getCause
             }
             if (realT.isInstanceOf[InterruptedException]) {
-              listener.message("Execution thread interrupted.")
+//              listener.message("Execution thread interrupted.")
             }
             else {
               listener.message(Utils.stackTraceAsString(realT))
