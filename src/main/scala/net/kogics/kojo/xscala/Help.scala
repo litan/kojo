@@ -179,6 +179,56 @@ object Help {
     "epochTimeMillis" -> "epochTimeMillis - The difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.",
     "canvasBounds" -> "canvasBounds - Returns the bounds of the canvas: the x and y coordinates of its bottom left point, and its width and height.",
     "dot" -> "dot(diameter) - Makes a dot with the given diameter.",
+    "ColorLinearG" ->
+    <div>
+      <strong>ColorLinearG</strong><tt>(x1, y1, x2, y2, distribution, colors, cyclic)</tt> - creates a linear color gradient.
+      <tt>(x1, y1)</tt> is the start point of the gradient and <tt>(x2, y2)</tt> is the end point. The distribution of colors between
+      these points is specified by the given <tt>distribution</tt> and <tt>colors</tt>. If <tt>cyclic</tt> is true, the gradient is reflected 
+      beyond the end point.<br/>
+      <br/>
+      <em>Example:</em> <br/><br/>
+      <pre>
+def sq(n: Int) {{
+    repeat(4) {{
+        forward(n)
+        right()
+    }}
+}}
+
+clear()
+setAnimationDelay(100)
+setFillColor(
+    ColorLinearG(0, 0, 100, 100, Seq(0.0f, 0.3f, 0.6f, 1.0f), Seq(blue, yellow, orange, green), true))
+sq(100)
+setPosition(100, 100)
+sq(100)
+      </pre> 
+    </div>,
+    "ColorRadialG" ->
+    <div>
+      <strong>ColorRadialG</strong><tt>(x, y, radius, distribution, colors, cyclic)</tt> - creates a circular color gradient. 
+      <tt>(x, y)</tt> is the start point of the gradient. The gradient extends radially in a circle with the given <tt>radius</tt>. 
+      The distribution of colors within this circle is specified by the given <tt>distribution</tt> and <tt>colors</tt>. 
+      If <tt>cyclic</tt> is true, the gradient is reflected beyond the circle.<br/>
+      <br/>
+      <em>Example:</em> <br/><br/>
+      <pre>
+def sq(n: Int) {{
+    repeat(4) {{
+        forward(n)
+        right()
+    }}
+}}
+
+clear()
+setAnimationDelay(100)
+setFillColor(
+    ColorRadialG(0, 0, 100, Seq(0.0f, 0.3f, 0.6f, 1.0f), Seq(blue, yellow, orange, green), true))
+sq(100)
+setPosition(100, 100)
+sq(100)
+      </pre> 
+    </div>,
     "map" -> 
     <div>
     	sequence.<strong>map</strong> {{ function }} - maps (or transforms) the sequence into another sequence 

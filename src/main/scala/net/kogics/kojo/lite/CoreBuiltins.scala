@@ -4,12 +4,14 @@ package lite
 import java.awt.{ Color => JColor }
 import java.awt.{ Font => JFont }
 import java.awt.GradientPaint
+import java.awt.LinearGradientPaint
 import java.awt.MultipleGradientPaint
 import java.awt.Paint
 import java.awt.RadialGradientPaint
 import java.awt.image.BufferedImage
 import java.util.concurrent.CountDownLatch
 
+import scala.Array.canBuildFrom
 import scala.language.implicitConversions
 
 import net.kogics.kojo.core.Rectangle
@@ -74,9 +76,15 @@ trait CoreBuiltins extends Rationals {
   def ColorG(x1: Double, y1: Double, c1: Color, x2: Double, y2: Double, c2: Color, cyclic: Boolean = false) = {
     new GradientPaint(x1.toFloat, y1.toFloat, c1, x2.toFloat, y2.toFloat, c2, cyclic)
   }
-  def ColorRadialG(x: Double, y: Double, radius: Double, distribution: Seq[Float], colors: Seq[Color], cyclic: Boolean = false) = {
+  def ColorRadialG(x: Double, y: Double, radius: Double, distribution: Seq[Double], colors: Seq[Color], cyclic: Boolean = false) = {
     val cycleMode = if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
-    new RadialGradientPaint(x.toFloat, y.toFloat, radius.toFloat, distribution.toArray, colors.toArray, cycleMode)
+    val floatD: Array[Float] = distribution.map { _.toFloat }(collection.breakOut)
+    new RadialGradientPaint(x.toFloat, y.toFloat, radius.toFloat, floatD, colors.toArray, cycleMode)
+  }
+  def ColorLinearG(x1: Double, y1: Double, x2: Double, y2: Double, distribution: Seq[Double], colors: Seq[Color], cyclic: Boolean = false) = {
+    val cycleMode = if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
+    val floatD: Array[Float] = distribution.map { _.toFloat }(collection.breakOut)
+    new LinearGradientPaint(x1.toFloat, y1.toFloat, x2.toFloat, y2.toFloat, floatD, colors.toArray, cycleMode)
   }
   def ColorHSB(h: Double, s: Double, b: Double) = java.awt.Color.getHSBColor((h / 360).toFloat, (s / 100).toFloat, (b / 100).toFloat)
   def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
