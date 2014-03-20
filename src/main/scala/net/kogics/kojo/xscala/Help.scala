@@ -198,7 +198,7 @@ def sq(n: Int) {{
 clear()
 setAnimationDelay(100)
 setFillColor(
-    ColorLinearG(0, 0, 100, 100, Seq(0.0f, 0.3f, 0.6f, 1.0f), Seq(blue, yellow, orange, green), true))
+    ColorLinearG(0, 0, 100, 100, Seq(0.0, 0.3, 0.6, 1.0), Seq(blue, yellow, orange, green), true))
 sq(100)
 setPosition(100, 100)
 sq(100)
@@ -223,7 +223,7 @@ def sq(n: Int) {{
 clear()
 setAnimationDelay(100)
 setFillColor(
-    ColorRadialG(0, 0, 100, Seq(0.0f, 0.3f, 0.6f, 1.0f), Seq(blue, yellow, orange, green), true))
+    ColorRadialG(0, 0, 100, Seq(0.0, 0.3, 0.6, 1.0), Seq(blue, yellow, orange, green), true))
 sq(100)
 setPosition(100, 100)
 sq(100)
