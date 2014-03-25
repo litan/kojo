@@ -552,7 +552,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   private def exportImageToFile(outfile: File, width: Int, height: Int) {
-    val image = getCamera.toImage(width, height, java.awt.Color.white)
+    val image = getCamera.toImage(width, height, getBackground)
     javax.imageio.ImageIO.write(image.asInstanceOf[java.awt.image.BufferedImage], "png", outfile)
   }
 
