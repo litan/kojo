@@ -20,6 +20,7 @@ import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Paint
 import java.awt.geom.AffineTransform
+import java.awt.image.BufferedImage
 import java.util.concurrent.Future
 
 import scala.collection.mutable.ArrayBuffer
@@ -263,6 +264,10 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     case null     => Color.white
     case c: Color => c
     case _        => throw new IllegalStateException("You can't extract rgb values of non Color paints")
+  }
+
+  override def toImage = Utils.runInSwingThreadAndWait {
+    tnode.toImage.asInstanceOf[BufferedImage]
   }
 }
 

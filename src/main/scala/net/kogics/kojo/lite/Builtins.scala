@@ -433,6 +433,7 @@ Here's a partial list of the available commands:
   def isTracing = false
 
   val PShapes = PicShape
+  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
   object PicShape {
     def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
     def rect(h: Double, w: Double) = picture.rect(h, w)
@@ -444,6 +445,7 @@ Here's a partial list of the available commands:
     def image(image: Image) = picture.image(image)
     def widget(component: JComponent) = picture.widget(component)
     def button(label: String)(fn: => Unit) = widget(Button(label)(fn))
+    def effectablePic(pic: Picture) = picture.effectablePic(pic)
   }
   type Widget = JComponent
   val TextField = widget.TextField

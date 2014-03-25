@@ -1,3 +1,17 @@
+/*
+ * Copyright (C) 2011 Lalit Pant <pant.lalit@gmail.com>
+ *
+ * The contents of this file are subject to the GNU General Public License
+ * Version 3 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.gnu.org/copyleft/gpl.html
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ */
 package net.kogics.kojo
 
 import java.awt.Color
@@ -38,6 +52,9 @@ package object picture {
   def stroke(color: Paint) = Strokec(color)
   def strokeWidth(w: Double) = StrokeWidthc(w)
   def deco(painter: Painter) = Decoc(painter)
+  def fade(n: Int) = Fadec(n)
+  def blur(n: Int) = Blurc(n)
+  def lights(n: Int) = Lightsc(n)
 
   def spin(n: Int) = Spinc(n)
   def reflect(n: Int) = Reflectc(n)
@@ -87,6 +104,8 @@ package object picture {
   def image(img: Image)(implicit canvas: SCanvas) = new ImagePic(img)
 
   def widget(swingComponent: JComponent)(implicit canvas: SCanvas) = new SwingPic(swingComponent)
+  
+  def effectablePic(pic: Picture)(implicit canvas: SCanvas) = new EffectableImagePic(pic)
 
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
     val r = 90 / camScale
