@@ -1,9 +1,9 @@
 package net.kogics.kojo
 package core
 
-import java.awt.Color
 import java.awt.Paint
 import java.awt.geom.AffineTransform
+import java.awt.image.BufferedImage
 
 import com.vividsolutions.jts.geom.Geometry
 
@@ -47,17 +47,17 @@ trait Picture extends InputAware {
   def intersects(other: Picture): Boolean
   def collidesWith(other: Picture) = intersects(other)
   def collisions(others: Set[Picture]): Set[Picture] = {
-    others.filter {this intersects _}
+    others.filter { this intersects _ }
   }
   def collision(others: Seq[Picture]): Option[Picture] = {
-    others.find {this intersects _}
+    others.find { this intersects _ }
   }
   def intersection(other: Picture): Geometry
   def distanceTo(other: Picture): Double
   def area: Double
   def perimeter: Double
   def picGeom: Geometry
-  
+
   def position: Point
   def setPosition(x: Double, y: Double): Unit
   def setPosition(p: Point): Unit = setPosition(p.x, p.y)
@@ -80,10 +80,15 @@ trait Picture extends InputAware {
   // classes can live within sets and maps
   override def equals(other: Any) = this eq other.asInstanceOf[AnyRef]
   override def hashCode = System.identityHashCode(this)
-  
+
   def morph(fn: Seq[PolyLine] => Seq[PolyLine])
-  def foreachPolyLine(fn: PolyLine => Unit) 
+  def foreachPolyLine(fn: PolyLine => Unit)
+  def toImage: BufferedImage = ???
 
   // Todo
   // def bounceOff(other: Picture, vec: Vector2D)
 }
+
+//trait PictureImg extends Picture {
+//  def reflected: PictureImg
+//}

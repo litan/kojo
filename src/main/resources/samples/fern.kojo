@@ -16,9 +16,15 @@ def fern(x: Double) {
     }
 }
 
-clear()
+def fernp = Picture {
+    fern(50)
+}
+
+cleari()
 setAnimationDelay(10)
-setPenThickness(1.4)
 setBackgroundV(Color(255, 255, 150), white)
-hop(-100)
-fern(60)
+val pic = picCol(
+      flipX -> (fade(280) * blur(2) -> fernp),
+      trans(0, 5) -> fernp
+)
+draw(pic)
