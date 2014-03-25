@@ -447,7 +447,7 @@ trait AppMenu { self: Main.type =>
               <li>The Netbeans Platform (http://www.netbeans.org) for some Script Editor Icons</li>
               <li>The Scratch Project (http://scratch.mit.edu) for some Media files</li>
               <li>The OpenJDK Project (http://openjdk.java.net/) for Tracing support</li>
-              <li>JHLabs image filter (http://www.jhlabs.com/ip/filters/) for Picture effects</li>
+              <li>JHLabs image filters (http://www.jhlabs.com/ip/filters/) for Picture effects</li>
               </ul>
               </div>
               </body></html>

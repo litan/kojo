@@ -83,12 +83,8 @@ trait Picture extends InputAware {
 
   def morph(fn: Seq[PolyLine] => Seq[PolyLine])
   def foreachPolyLine(fn: PolyLine => Unit)
-  def toImage: BufferedImage = ???
+  def toImage: BufferedImage
 
   // Todo
   // def bounceOff(other: Picture, vec: Vector2D)
 }
-
-//trait PictureImg extends Picture {
-//  def reflected: PictureImg
-//}

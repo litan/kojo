@@ -20,15 +20,17 @@ import java.awt.Color
 import java.awt.GradientPaint
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
+
+import com.jhlabs.image.GaussianFilter
+import com.jhlabs.image.LightFilter
+
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.util.Utils
+
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.nodes.PImage
 import edu.umd.cs.piccolo.util.PPaintContext
-import com.jhlabs.image.GaussianFilter
-import com.jhlabs.image.LightFilter
-import com.jhlabs.image.LightFilter.Light
 
 trait ImageOp {
   def filter(img: BufferedImage): BufferedImage
@@ -59,10 +61,14 @@ class BlurImageOp(n: Int) extends ImageOp {
   }
 }
 
-class LightImageOp(n: Int) extends ImageOp {
+class LightImageOp(distance: Double, elevation: Double, azimuth: Double) extends ImageOp {
   def filter(img: BufferedImage): BufferedImage = {
     val fltr = new LightFilter
-    fltr.addLight(new Light())
+    val light = new fltr.PointLight
+    light.setDistance(distance.toFloat)
+    light.setElevation(elevation.toFloat)
+    light.setAzimuth(azimuth.toFloat)
+    fltr.addLight(light)
     fltr.filter(img, null)
   }
 }
@@ -70,7 +76,7 @@ class LightImageOp(n: Int) extends ImageOp {
 trait EffectablePicture extends Picture {
   def fade(n: Int): Unit
   def blur(n: Int): Unit
-  def lights(n: Int): Unit
+  def lights(distance: Double, elevation: Double, azimuth: Double): Unit
 }
 
 class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
@@ -121,8 +127,8 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   def blur(n: Int) {
     effects = effects :+ new BlurImageOp(n)
   }
-  def lights(n: Int) {
-    effects = effects :+ new LightImageOp(n)
+  def lights(distance: Double, elevation: Double, azimuth: Double) {
+    effects = effects :+ new LightImageOp(distance, elevation, azimuth)
   }
 }
 
@@ -130,7 +136,7 @@ abstract class ImageEffect(pic: EffectablePicture) extends EffectablePicture wit
   val tpic = pic
   def fade(n: Int) = pic.fade(n)
   def blur(n: Int) = pic.blur(n)
-  def lights(n: Int) = pic.lights(n)
+  def lights(distance: Double, elevation: Double, azimuth: Double) = pic.lights(distance, elevation, azimuth)
 }
 
 case class Fade(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
@@ -151,13 +157,13 @@ case class Blur(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
   override def toString() = s"Blur ($n) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class Lights(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class Lights(distance: Double, elevation: Double, azimuth: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
   def draw() {
-    pic.lights(n)
+    pic.lights(distance, elevation, azimuth)
     pic.draw()
   }
-  def copy = Lights(n)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"Lights ($n) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  def copy = Lights(distance, elevation, azimuth)(pic.copy.asInstanceOf[EffectablePicture])
+  override def toString() = s"Lights ($distance, $elevation, $azimuth) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 abstract class ComposableImageEffect extends Function1[EffectablePicture, EffectablePicture] { outer =>
@@ -178,6 +184,6 @@ case class Blurc(n: Int) extends ComposableImageEffect {
   def apply(p: EffectablePicture) = Blur(n)(p)
 }
 
-case class Lightsc(n: Int) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = Lights(n)(p)
+case class Lightsc(distance: Double, elevation: Double, azimuth: Double) extends ComposableImageEffect {
+  def apply(p: EffectablePicture) = Lights(distance, elevation, azimuth)(p)
 }
