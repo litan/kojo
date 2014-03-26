@@ -21,6 +21,8 @@ import java.awt.event.KeyEvent
 
 import javax.swing.JComponent
 
+import com.jhlabs.image.LightFilter
+import com.jhlabs.image.LightFilter.Light
 import com.vividsolutions.jts.geom.GeometryFactory
 
 import net.kogics.kojo.core.Cm
@@ -58,6 +60,29 @@ package object picture {
     PointLightc(x, y, direction, elevation, distance)
   def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = 
     SpotLightc(x, y, direction, elevation, distance)
+  def lights(lights: Light*) = Lightsc(lights: _*)
+  def PointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = {
+    val fltr = new LightFilter
+    val light = new fltr.PointLight
+    light.setCentreX(x.toFloat)
+    light.setCentreY(y.toFloat)
+    light.setAzimuth(direction.toRadians.toFloat)
+    light.setElevation(elevation.toRadians.toFloat)
+    light.setDistance(distance.toFloat)
+    light.setConeAngle(30.toRadians)
+    light
+  }
+  def SpotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = {
+    val fltr = new LightFilter
+    val light = new fltr.SpotLight
+    light.setCentreX(x.toFloat)
+    light.setCentreY(y.toFloat)
+    light.setAzimuth(direction.toRadians.toFloat)
+    light.setElevation(elevation.toRadians.toFloat)
+    light.setDistance(distance.toFloat)
+    light.setConeAngle(30.toRadians)
+    light
+  }
 
   def spin(n: Int) = Spinc(n)
   def reflect(n: Int) = Reflectc(n)

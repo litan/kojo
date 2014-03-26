@@ -1,8 +1,8 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.{ Color => JColor }
-import java.awt.{ Font => JFont }
+import java.awt.{Color => JColor}
+import java.awt.{Font => JFont}
 import java.awt.GradientPaint
 import java.awt.LinearGradientPaint
 import java.awt.MultipleGradientPaint
@@ -13,6 +13,8 @@ import java.util.concurrent.CountDownLatch
 
 import scala.Array.canBuildFrom
 import scala.language.implicitConversions
+
+import com.jhlabs.image.LightFilter.Light
 
 import net.kogics.kojo.core.Rectangle
 import net.kogics.kojo.core.TSCanvasFeatures
@@ -120,6 +122,9 @@ trait CoreBuiltins extends Rationals {
   val blur = picture.blur _
   val pointLight = picture.pointLight _
   val spotLight = picture.spotLight _
+  def lights(lights: Light*) = picture.lights(lights: _*)
+  val PointLight = picture.PointLight _
+  val SpotLight = picture.SpotLight _
 
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)

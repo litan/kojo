@@ -128,6 +128,8 @@ object CodeCompletionUtils {
     "blur" -> "blur(${radius})",
     "pointLight" -> "pointLight(${x}, ${y}, ${direction}, ${elevation}, ${distance})",
     "spotLight" -> "spotLight(${x}, ${y}, ${direction}, ${elevation}, ${distance})",
+    "PointLight" -> "PointLight(${x}, ${y}, ${direction}, ${elevation}, ${distance})",
+    "SpotLight" -> "SpotLight(${x}, ${y}, ${direction}, ${elevation}, ${distance})",
     "draw" -> "draw(${pic})",
     "drawAndHide" -> "drawAndHide(${pic})",
     "setRefreshRate" -> "setRefreshRate(${framesPerSec})",
