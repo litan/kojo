@@ -240,8 +240,13 @@ trait AppMenu { self: Main.type =>
 
     val showcaseMenu = new JMenu(Utils.loadString("S_Showcase"))
     showcaseMenu.setMnemonic('c')
-    showcaseMenu.add(menuItemFor(Utils.loadString("S_Mandel"), "mandelbrot.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_Eye"), "eye.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_Spiral"), "spiral.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_RandomDots"), "random-dots.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_TanTheta"), "tan-theta.kojo"))
     showcaseMenu.add(menuItemFor(Utils.loadString("S_Fern"), "fern.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_LightedStar"), "lighted-star.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_Mandel"), "mandelbrot.kojo"))
 
     menuBar.add(showcaseMenu)
 
