@@ -23,6 +23,7 @@ import java.awt.image.BufferedImage
 
 import com.jhlabs.image.GaussianFilter
 import com.jhlabs.image.LightFilter
+import com.jhlabs.image.LightFilter.Light
 
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
@@ -61,13 +62,39 @@ class BlurImageOp(n: Int) extends ImageOp {
   }
 }
 
-class LightImageOp(distance: Double, elevation: Double, azimuth: Double) extends ImageOp {
+class PointLightImageOp(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ImageOp {
   def filter(img: BufferedImage): BufferedImage = {
     val fltr = new LightFilter
     val light = new fltr.PointLight
+    light.setCentreX(x.toFloat)
+    light.setCentreY(y.toFloat)
+    light.setAzimuth(direction.toRadians.toFloat)
+    light.setElevation(elevation.toRadians.toFloat)
     light.setDistance(distance.toFloat)
-    light.setElevation(elevation.toFloat)
-    light.setAzimuth(azimuth.toFloat)
+
+    fltr.setBumpShape(4)
+    light.setConeAngle(30.toRadians)
+
+    fltr.removeLight(fltr.getLights().get(0).asInstanceOf[Light])
+    fltr.addLight(light)
+    fltr.filter(img, null)
+  }
+}
+
+class SpotLightImageOp(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ImageOp {
+  def filter(img: BufferedImage): BufferedImage = {
+    val fltr = new LightFilter
+    val light = new fltr.SpotLight
+    light.setCentreX(x.toFloat)
+    light.setCentreY(y.toFloat)
+    light.setAzimuth(direction.toRadians.toFloat)
+    light.setElevation(elevation.toRadians.toFloat)
+    light.setDistance(distance.toFloat)
+
+    fltr.setBumpShape(4)
+    light.setConeAngle(30.toRadians)
+
+    fltr.removeLight(fltr.getLights().get(0).asInstanceOf[Light])
     fltr.addLight(light)
     fltr.filter(img, null)
   }
@@ -76,7 +103,8 @@ class LightImageOp(distance: Double, elevation: Double, azimuth: Double) extends
 trait EffectablePicture extends Picture {
   def fade(n: Int): Unit
   def blur(n: Int): Unit
-  def lights(distance: Double, elevation: Double, azimuth: Double): Unit
+  def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)
+  def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)
 }
 
 class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
@@ -127,8 +155,11 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   def blur(n: Int) {
     effects = effects :+ new BlurImageOp(n)
   }
-  def lights(distance: Double, elevation: Double, azimuth: Double) {
-    effects = effects :+ new LightImageOp(distance, elevation, azimuth)
+  def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) {
+    effects = effects :+ new PointLightImageOp(x, y, direction, elevation, distance)
+  }
+  def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) {
+    effects = effects :+ new SpotLightImageOp(x, y, direction, elevation, distance)
   }
 }
 
@@ -136,7 +167,10 @@ abstract class ImageEffect(pic: EffectablePicture) extends EffectablePicture wit
   val tpic = pic
   def fade(n: Int) = pic.fade(n)
   def blur(n: Int) = pic.blur(n)
-  def lights(distance: Double, elevation: Double, azimuth: Double) = pic.lights(distance, elevation, azimuth)
+  def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) =
+    pic.pointLight(x, y, direction, elevation, distance)
+  def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) =
+    pic.spotLight(x, y, direction, elevation, distance)
 }
 
 case class Fade(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
@@ -157,13 +191,22 @@ case class Blur(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
   override def toString() = s"Blur ($n) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class Lights(distance: Double, elevation: Double, azimuth: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class PointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
   def draw() {
-    pic.lights(distance, elevation, azimuth)
+    pic.pointLight(x, y, direction, elevation, distance)
     pic.draw()
   }
-  def copy = Lights(distance, elevation, azimuth)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"Lights ($distance, $elevation, $azimuth) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  def copy = PointLight(x, y, direction, elevation, distance)(pic.copy.asInstanceOf[EffectablePicture])
+  override def toString() = s"Lights ($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+}
+
+case class SpotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
+  def draw() {
+    pic.spotLight(x, y, direction, elevation, distance)
+    pic.draw()
+  }
+  def copy = SpotLight(x, y, direction, elevation, distance)(pic.copy.asInstanceOf[EffectablePicture])
+  override def toString() = s"Lights ($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 abstract class ComposableImageEffect extends Function1[EffectablePicture, EffectablePicture] { outer =>
@@ -184,6 +227,10 @@ case class Blurc(n: Int) extends ComposableImageEffect {
   def apply(p: EffectablePicture) = Blur(n)(p)
 }
 
-case class Lightsc(distance: Double, elevation: Double, azimuth: Double) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = Lights(distance, elevation, azimuth)(p)
+case class PointLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
+  def apply(p: EffectablePicture) = PointLight(x, y, direction, elevation, distance)(p)
+}
+
+case class SpotLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
+  def apply(p: EffectablePicture) = SpotLight(x, y, direction, elevation, distance)(p)
 }
