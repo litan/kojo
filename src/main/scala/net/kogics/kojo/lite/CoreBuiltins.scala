@@ -118,7 +118,8 @@ trait CoreBuiltins extends Rationals {
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
   val fade = picture.fade _
   val blur = picture.blur _
-  val lights = picture.lights _
+  val pointLight = picture.pointLight _
+  val spotLight = picture.spotLight _
 
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)

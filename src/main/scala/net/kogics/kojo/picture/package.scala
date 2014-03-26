@@ -54,7 +54,10 @@ package object picture {
   def deco(painter: Painter) = Decoc(painter)
   def fade(n: Int) = Fadec(n)
   def blur(n: Int) = Blurc(n)
-  def lights(distance: Double, elevation: Double, azimuth: Double) = Lightsc(distance, elevation, azimuth)
+  def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = 
+    PointLightc(x, y, direction, elevation, distance)
+  def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = 
+    SpotLightc(x, y, direction, elevation, distance)
 
   def spin(n: Int) = Spinc(n)
   def reflect(n: Int) = Reflectc(n)
