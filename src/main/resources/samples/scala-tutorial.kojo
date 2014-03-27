@@ -1119,7 +1119,7 @@ animate {
 """.c,
                  "The next example is a simple game - a single player version of what must be one of the oldest games ever played on computers called 'Pong'. The idea is to hit the ball back with a paddle which you can move with the mouse. Each of your misses will be recorded. Have fun!".p,
                  """import Staging._
-import Staging.{circle, clear, animate} // explicitly import names that clash
+import Staging.{circle, clear, animate, setFillColor, wipe, mouseX, mouseY} // explicitly import names that clash
 clear()
 var x = 0 ; var y = 0  // ball position
 var dy = 10 ; var dx = 3 // ball speed
@@ -1174,7 +1174,7 @@ activateCanvas()
                  "Here is a short example that illustrates how to use the staging graphics to display a clock.".p, 
                  "The Date library functions are used to find current time and date.".p,
    """import Staging._
-import Staging.{circle, clear, animate} // explicitly import names that clash
+import Staging.{circle, clear, animate, wipe, setPenColor} // explicitly import names that clash
 clear
 val Sc=100
 val Pi2=2.0*math.Pi // 2*Pi radians in a circle
@@ -1222,7 +1222,7 @@ table(row("Any live cell with fewer than two live neighbours dies, as if caused 
 
 "The time per generation can changed by modifying the 'mod' value on t in the animate function.".p,  
                  """import Staging._
-import Staging.{circle, clear, animate} // explicitly import names that clash
+import Staging.{circle, clear, animate, setFillColor, wipe} // explicitly import names that clash
 clear()
 setFillColor(blue)
 // ES is edge size of 'world' 
