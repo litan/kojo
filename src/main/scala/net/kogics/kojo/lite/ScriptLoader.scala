@@ -34,7 +34,7 @@ trait ScriptLoader { self: Main.type =>
       val msg2 = if (onStartup) "\n// Please wait, this might take a few seconds as Kojo starts up..." else ""
       codePane.insert("// Running code loaded from URL: %s%s\n\n" format (url, msg2), 0)
       codePane.setCaretPosition(0)
-      execSupport.runCode()
+      execSupport.compileRunCode()
     }
   }
 
@@ -44,7 +44,7 @@ trait ScriptLoader { self: Main.type =>
       val code = Utils.loadResource(res)
       codePane.setText(Utils.stripCR(code))
       codePane.setCaretPosition(0)
-      execSupport.runCode()
+      execSupport.compileRunCode()
     }
     catch {
       case t: Throwable => codePane.append("// Problem loading/running code: %s" format (t.getMessage))
@@ -56,7 +56,7 @@ trait ScriptLoader { self: Main.type =>
   def loadAndRunResourceNEL(res: String) = {
     try {
       val code = Utils.loadResource(res)
-      execSupport.runCode(code)
+      execSupport.compileRunCode(code)
     }
     catch {
       case t: Throwable => println("// Problem loading/running code: %s" format (t.getMessage))

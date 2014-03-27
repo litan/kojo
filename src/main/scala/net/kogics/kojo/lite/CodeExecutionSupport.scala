@@ -433,6 +433,8 @@ class CodeExecutionSupport(
         }
       }
     }
+    
+    def isStoryRunning = storyTeller.currStory.isDefined
   }
 
   def makeCodeRunner: core.CodeRunner = {
@@ -572,12 +574,6 @@ class CodeExecutionSupport(
     code.indexOf("#worksheet") != -1
   }
 
-  def compileRunCode() {
-    val code2run = codeToRun
-    preProcessCode(code2run.code)
-    codeRunner.compileRunCode(code2run.code)
-  }
-
   def runIpmCode(code: String) {
     stopScript()
     codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
@@ -646,7 +642,7 @@ class CodeExecutionSupport(
   // code/worksheet running needs to happen on the Swing thread
   def runCode(code: String): Unit = runCode(CodeToRun(code, None))
 
-  def runCode(code2run: CodeToRun) {
+  private def runCode(code2run: CodeToRun) {
     if (invalidCode(code2run.code)) {
       commandHistory.ensureLastEntryVisible()
       return
@@ -665,6 +661,36 @@ class CodeExecutionSupport(
       else {
         codeRunner.runCode(code)
       }
+    }
+  }
+
+  def _compileRunCode() {
+    val code2run = codeToRun
+    preProcessCode(code2run.code)
+    codeRunner.compileRunCode(code2run.code)
+  }
+
+  def compileRunCode(): Unit = Utils.runInSwingThread {
+    compileRunCode(codeToRun)
+  }
+
+  // code/worksheet running needs to happen on the Swing thread
+  def compileRunCode(code: String): Unit = runCode(CodeToRun(code, None))
+
+  private def compileRunCode(code2run: CodeToRun) {
+    if (invalidCode(code2run.code)) {
+      commandHistory.ensureLastEntryVisible()
+      return
+    }
+
+    stopScript()
+    if (isWorksheet(code2run.code)) {
+      runWorksheet(code2run)
+    }
+    else {
+      val code = cleanWsOutput(code2run)
+      preProcessCode(code)
+      codeRunner.compileRunCode(code)
     }
   }
 

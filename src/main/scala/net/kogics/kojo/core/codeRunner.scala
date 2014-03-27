@@ -72,4 +72,5 @@ trait RunContext {
   def reportSmartError(errText: String, line: Int, column: Int, offset: Int): Unit
 
   def astStopPhase: String
+  def isStoryRunning: Boolean
 }

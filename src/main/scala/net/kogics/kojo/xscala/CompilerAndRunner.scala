@@ -130,7 +130,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
   val compiler = new Global(settings, reporter)
 
   def pfxWithCounter = "%s%d%s" format (prefixHeader, counter, prefix)
-  
+
   def compilerCode(code00: String) = {
     val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
     val pfx = pfxWithCounter
@@ -158,7 +158,9 @@ class CompilerAndRunner(makeSettings: () => Settings,
   }
 
   def compileAndRun(code0: String) = {
-    virtualDirectory.clear()
+    if (!runContext.isStoryRunning) {
+      virtualDirectory.clear()
+    }
     counter += 1
     val result = compile(code0, Nil)
 
@@ -182,7 +184,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
               realT = realT.getCause
             }
             if (realT.isInstanceOf[InterruptedException]) {
-//              listener.message("Execution thread interrupted.")
+              //              listener.message("Execution thread interrupted.")
             }
             else {
               listener.message(Utils.stackTraceAsString(realT))
@@ -231,7 +233,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
     }
   }
-  
+
   class KGlobal(s: Settings, r: Reporter) extends interactive.Global(s, r) {
     def mkCompletionProposal(sym: Symbol, tpe: Type, inherited: Boolean, viaView: Symbol): CompletionInfo = {
       // code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
@@ -244,12 +246,12 @@ class CompilerAndRunner(makeSettings: () => Settings,
       else if (sym.isType) Type
       else Val
       val name = sym.decodedName
-      
-      val returnType = 
-        if (sym.isMethod) tpe.finalResultType.toString 
+
+      val returnType =
+        if (sym.isMethod) tpe.finalResultType.toString
         else if (sym.isVal || sym.isVar) tpe.resultType.toString
         else name
-        
+
       val signature =
         if (sym.isMethod) {
           "%s: %s" format (
@@ -337,7 +339,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
   }
 
   import core.CompletionInfo
-  
+
   def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     import interactive._
 
