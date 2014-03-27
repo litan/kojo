@@ -1100,6 +1100,7 @@ pages += Page(
                  "In the first example you can see that a Staging environment is initialized, and the screen cleared. A ball is created, and then the ball bouncing movement is defined in the animation loop. Staging causes this loop to be executed every 20 to 32 milli-seconds giving a frame rate of around 30 to 50 frames per second depending on your computer performance. Using these principles you can create sophisticated animated graphics.".p,
   
                  """import Staging._
+import Staging.{circle, clear, animate} // explicitly import names that clash
 clear()
 gridOn()
 val ball = circle(-200, -100, 5)
@@ -1115,13 +1116,10 @@ animate {
     dy =  if(y < 0 || y > 100) -dy else dy
     y += dy  
 }
-reimportDefaults()
 """.c,
-                 "Important note:".b,
-                 "If you use 'import Staging._' in an example or your own code then you must do a 'reimportDefaults()' when you finish running it to be able to use Turtle commands again. This is because the Staging environment overrides some of the Turtle commands (like clear, setPenColor, etc).".p,
-                 "reimportDefaults()".c,
                  "The next example is a simple game - a single player version of what must be one of the oldest games ever played on computers called 'Pong'. The idea is to hit the ball back with a paddle which you can move with the mouse. Each of your misses will be recorded. Have fun!".p,
                  """import Staging._
+import Staging.{circle, clear, animate} // explicitly import names that clash
 clear()
 var x = 0 ; var y = 0  // ball position
 var dy = 10 ; var dx = 3 // ball speed
@@ -1152,7 +1150,6 @@ animate {
     // Keep Score
     text(miss.toString + " missed",0,0)
 }
-reimportDefaults()
 """.c,
                  "Now that you have the basics, try adding more balls, randomising their speed or changing the paddle size. Also see if you can fix the bug - sometimes the ball appears to pass through the paddle.".p,
                  "Keyboard Input".h3,
@@ -1177,6 +1174,7 @@ activateCanvas()
                  "Here is a short example that illustrates how to use the staging graphics to display a clock.".p, 
                  "The Date library functions are used to find current time and date.".p,
    """import Staging._
+import Staging.{circle, clear, animate} // explicitly import names that clash
 clear
 val Sc=100
 val Pi2=2.0*math.Pi // 2*Pi radians in a circle
@@ -1208,7 +1206,6 @@ animate{
   
   text(d.toString, -Sc, -Sc-20)
 }
-reimportDefaults()
 """.c,
 
                  "Conway's Game of Life".h3,
@@ -1225,6 +1222,7 @@ table(row("Any live cell with fewer than two live neighbours dies, as if caused 
 
 "The time per generation can changed by modifying the 'mod' value on t in the animate function.".p,  
                  """import Staging._
+import Staging.{circle, clear, animate} // explicitly import names that clash
 clear()
 setFillColor(blue)
 // ES is edge size of 'world' 
@@ -1276,7 +1274,6 @@ def block2=List((0,0),(0,3),(0,4),(1,1),(1,4),(2,0),(2,1),(2,4),(3,2),(4,0),
 def tiny=List((-18,0),(-17,0),(-16,0),(-15,0),(-14,0),(-13,0),(-12,0),(-11,0),(-9,0),(-8,0),
         (-7,0),(-6,0),(-5,0),(-1,0),(0,0),(1,0),(8,0),(9,0),(10,0),
 	(11,0),(12,0),(13,0),(14,0),(16,0),(17,0),(18,0),(19,0),(20,0))	
-reimportDefaults()
 """.c,
 	
 "Tangle".h3,
@@ -1286,6 +1283,7 @@ reimportDefaults()
 "The inspiration for Tangle is Planarity".link("http://www.planarity.net/"),
 				 
 """import Staging._
+import Staging.{circle, clear, animate} // explicitly import names that clash
 import math.pow,math.random
 // Tangle based on Planarity
 clear()
@@ -1340,7 +1338,6 @@ def drawEdges(ev:Vector[EdgeP]){
      te.e=line(x1+xr,y1+yr,x2-xr,y2-yr)
      }) 
    }
-reimportDefaults()
 """.c
     )
 )

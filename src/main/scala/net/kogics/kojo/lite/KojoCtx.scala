@@ -352,7 +352,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def setScript(code: String) = execSupport.setScript(code)
   def insertCodeInline(code: String) = execSupport.insertCodeInline(code)
   def insertCodeBlock(code: String) = execSupport.insertCodeBlock(code)
-  def clickRun() = execSupport.runCode()
+  def clickRun() = execSupport.compileRunCode()
 
   @volatile var astStopPhase = "typer"
   def setAstStopPhase(phase: String) {
