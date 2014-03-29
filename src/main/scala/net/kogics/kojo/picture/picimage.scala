@@ -21,9 +21,12 @@ import java.awt.GradientPaint
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 
+import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.GaussianFilter
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
+import com.jhlabs.image.NoiseFilter
+import com.jhlabs.image.WeaveFilter
 
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
@@ -65,14 +68,7 @@ class BlurImageOp(n: Int) extends ImageOp {
 class PointLightImageOp(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ImageOp {
   def filter(img: BufferedImage): BufferedImage = {
     val fltr = new LightFilter
-    val light = new fltr.PointLight
-    light.setCentreX(x.toFloat)
-    light.setCentreY(y.toFloat)
-    light.setAzimuth(direction.toRadians.toFloat)
-    light.setElevation(elevation.toRadians.toFloat)
-    light.setDistance(distance.toFloat)
-    light.setConeAngle(30.toRadians)
-
+    val light = PointLight(x, y, direction, elevation, distance)
     fltr.setBumpShape(4)
     fltr.removeLight(fltr.getLights().get(0).asInstanceOf[Light])
     fltr.addLight(light)
@@ -83,14 +79,7 @@ class PointLightImageOp(x: Double, y: Double, direction: Double, elevation: Doub
 class SpotLightImageOp(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ImageOp {
   def filter(img: BufferedImage): BufferedImage = {
     val fltr = new LightFilter
-    val light = new fltr.SpotLight
-    light.setCentreX(x.toFloat)
-    light.setCentreY(y.toFloat)
-    light.setAzimuth(direction.toRadians.toFloat)
-    light.setElevation(elevation.toRadians.toFloat)
-    light.setDistance(distance.toFloat)
-    light.setConeAngle(30.toRadians)
-
+    val light = SpotLight(x, y, direction, elevation, distance)
     fltr.setBumpShape(4)
     fltr.removeLight(fltr.getLights().get(0).asInstanceOf[Light])
     fltr.addLight(light)
@@ -107,12 +96,62 @@ class LightsImageOp(lights: Light*) extends ImageOp {
   }
 }
 
+class NoiseImageOp(amount: Int, density: Double) extends ImageOp {
+  def filter(img: BufferedImage): BufferedImage = {
+    val fltr = new NoiseFilter()
+    fltr.setAmount(amount)
+    fltr.setDensity(density.toFloat)
+    fltr.filter(img, null)
+  }
+}
+
+class WeaveImageOp(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) extends ImageOp {
+  def filter(img: BufferedImage): BufferedImage = {
+    val fltr = new WeaveFilter()
+    fltr.setXWidth(xWidth.toFloat)
+    fltr.setXGap(xGap.toFloat)
+    fltr.setYWidth(yWidth.toFloat)
+    fltr.setYGap(yGap.toFloat)
+    fltr.setUseImageColors(true)
+    fltr.setRoundThreads(false)
+    fltr.setShadeCrossings(true)
+    fltr.filter(img, null)
+  }
+}
+
+class SomeEffectImageOp(name0: Symbol, props: Pair[Symbol, Any]*) extends ImageOp {
+  val name = name0.name
+  def filter(img: BufferedImage): BufferedImage = {
+    val cls = Class.forName(s"com.jhlabs.image.${name.head.toUpper + name.tail}Filter")
+    val fltr = cls.newInstance().asInstanceOf[AbstractBufferedImageOp]
+    props.foreach { pv =>
+      val prop0 = pv._1.name
+      val prop = prop0.head.toUpper + prop0.tail
+      val value = pv._2
+      val valueClass = value match {
+        case i: Int   => 1.getClass
+        case f: Float => 1f.getClass
+      }
+      val method = cls.getMethod(s"set$prop", valueClass)
+      val wrappedValue = value match {
+        case i: Int   => java.lang.Integer.valueOf(i)
+        case f: Float => java.lang.Float.valueOf(f)
+      }
+      method.invoke(fltr, wrappedValue)
+    }
+    fltr.filter(img, null)
+  }
+}
+
 trait EffectablePicture extends Picture {
   def fade(n: Int): Unit
   def blur(n: Int): Unit
   def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double): Unit
   def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double): Unit
   def lights(lights: Light*): Unit
+  def noise(amount: Int, density: Double): Unit
+  def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double): Unit
+  def effect(name: Symbol, props: Pair[Symbol, Any]*): Unit
 }
 
 class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
@@ -172,6 +211,15 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   def lights(lights: Light*) {
     effects = effects :+ new LightsImageOp(lights: _*)
   }
+  def noise(amount: Int, density: Double) {
+    effects = effects :+ new NoiseImageOp(amount, density)
+  }
+  def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) {
+    effects = effects :+ new WeaveImageOp(xWidth, xGap, yWidth, yGap)
+  }
+  def effect(name: Symbol, props: Pair[Symbol, Any]*) {
+    effects = effects :+ new SomeEffectImageOp(name, props: _*)
+  }
 }
 
 abstract class ImageEffect(pic: EffectablePicture) extends EffectablePicture with Transformer {
@@ -182,7 +230,10 @@ abstract class ImageEffect(pic: EffectablePicture) extends EffectablePicture wit
     pic.pointLight(x, y, direction, elevation, distance)
   def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) =
     pic.spotLight(x, y, direction, elevation, distance)
-  def lights(lights: Light*)  = pic.lights(lights: _*)
+  def lights(lights: Light*) = pic.lights(lights: _*)
+  def noise(amount: Int, density: Double) = pic.noise(amount, density)
+  def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) = pic.weave(xWidth, xGap, yWidth, yGap)
+  def effect(name: Symbol, props: Pair[Symbol, Any]*) = pic.effect(name, props: _*)
 }
 
 case class Fade(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
@@ -200,7 +251,7 @@ case class Blur(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
     pic.draw()
   }
   def copy = Blur(n)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"Blur ($n) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  override def toString() = s"Blur($n) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
@@ -209,7 +260,7 @@ case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: 
     pic.draw()
   }
   def copy = PointLightEffect(x, y, direction, elevation, distance)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"Lights ($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  override def toString() = s"PointLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
@@ -218,7 +269,7 @@ case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: D
     pic.draw()
   }
   def copy = SpotLightEffect(x, y, direction, elevation, distance)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"Lights ($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  override def toString() = s"SpotLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Lights(lights: Light*)(pic: EffectablePicture) extends ImageEffect(pic) {
@@ -227,7 +278,34 @@ case class Lights(lights: Light*)(pic: EffectablePicture) extends ImageEffect(pi
     pic.draw()
   }
   def copy = Lights(lights: _*)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"Lights ($lights) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  override def toString() = s"Lights($lights) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+}
+
+case class Noise(amount: Int, density: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
+  def draw() {
+    pic.noise(amount, density)
+    pic.draw()
+  }
+  def copy = Noise(amount, density)(pic.copy.asInstanceOf[EffectablePicture])
+  override def toString() = s"Noise($amount, $density) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+}
+
+case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
+  def draw() {
+    pic.weave(xWidth, xGap, yWidth, yGap)
+    pic.draw()
+  }
+  def copy = Weave(xWidth, xGap, yWidth, yGap)(pic.copy.asInstanceOf[EffectablePicture])
+  override def toString() = s"Weave($xWidth, $xGap, $yWidth, $yGap) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+}
+
+case class SomeEffect(name: Symbol, props: Pair[Symbol, Any]*)(pic: EffectablePicture) extends ImageEffect(pic) {
+  def draw() {
+    pic.effect(name, props: _*)
+    pic.draw()
+  }
+  def copy = SomeEffect(name, props: _*)(pic.copy.asInstanceOf[EffectablePicture])
+  override def toString() = s"Effect($name, $props) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 abstract class ComposableImageEffect extends Function1[EffectablePicture, EffectablePicture] { outer =>
@@ -258,4 +336,16 @@ case class SpotLightc(x: Double, y: Double, direction: Double, elevation: Double
 
 case class Lightsc(lights: Light*) extends ComposableImageEffect {
   def apply(p: EffectablePicture) = Lights(lights: _*)(p)
+}
+
+case class Noisec(amount: Int, density: Double) extends ComposableImageEffect {
+  def apply(p: EffectablePicture) = Noise(amount, density)(p)
+}
+
+case class Weavec(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) extends ComposableImageEffect {
+  def apply(p: EffectablePicture) = Weave(xWidth, xGap, yWidth, yGap)(p)
+}
+
+case class SomeEffectc(name: Symbol, props: Pair[Symbol, Any]*) extends ComposableImageEffect {
+  def apply(p: EffectablePicture) = SomeEffect(name, props: _*)(p)
 }

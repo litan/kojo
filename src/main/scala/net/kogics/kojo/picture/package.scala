@@ -61,6 +61,10 @@ package object picture {
   def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = 
     SpotLightc(x, y, direction, elevation, distance)
   def lights(lights: Light*) = Lightsc(lights: _*)
+  def noise(amount: Int, density: Double) = Noisec(amount, density)
+  def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) = Weavec(xWidth, xGap, yWidth, yGap)
+  def effect(name: Symbol, props: Pair[Symbol, Any]*) = SomeEffectc(name, props: _*)
+  
   def PointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = {
     val fltr = new LightFilter
     val light = new fltr.PointLight
@@ -70,6 +74,7 @@ package object picture {
     light.setElevation(elevation.toRadians.toFloat)
     light.setDistance(distance.toFloat)
     light.setConeAngle(30.toRadians)
+    light.setFocus(0.5f)
     light
   }
   def SpotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = {
@@ -81,6 +86,7 @@ package object picture {
     light.setElevation(elevation.toRadians.toFloat)
     light.setDistance(distance.toFloat)
     light.setConeAngle(30.toRadians)
+    light.setFocus(0.5f)
     light
   }
 
