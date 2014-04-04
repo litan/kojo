@@ -11,7 +11,10 @@ import org.apache.commons.math.fraction.BigFractionFormat
 trait Rationals {
   implicit def itor(n: Int) = Rational(new BigFraction(n))
   implicit def ltor(n: Long) = Rational(new BigFraction(n))
-  implicit def dtor(n: Double) = Rational(new BigFraction(n))
+  implicit def dtor(n: Double) = {
+    val ret = Rational(new BigFraction(n, 1E-9, Int.MaxValue))
+    if (n != 0 && ret == 0) Rational(new BigFraction(n)) else ret
+  }
   implicit def ftor(n: Float) = Rational(new BigFraction(n))
 
   implicit class RationalMaker(val sc: StringContext) {
@@ -29,7 +32,7 @@ trait Rationals {
   }
 
   implicit class Rational(val rep: BigFraction) {
-    def r = this // allow easy conversion of scalal numbers to rationals
+    def r = this // allow easy conversion of scala numbers to rationals
     def +(other: Rational): Rational = rep.add(other.rep)
     def -(other: Rational): Rational = rep.subtract(other.rep)
     def *(other: Rational): Rational = rep.multiply(other.rep)
