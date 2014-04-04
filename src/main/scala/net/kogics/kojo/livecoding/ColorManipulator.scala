@@ -27,7 +27,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
   var target = ""
   var targetStart = 0
   var targetEnd = 0
-  var targetColor: Color
+  var targetColor: Color = null
   var colorPopup: Popup = _
   var inSliderChange = false
   def isAbsent = colorPopup == null
