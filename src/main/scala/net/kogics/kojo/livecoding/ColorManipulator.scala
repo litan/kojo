@@ -115,6 +115,18 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     panel.setBorder(BorderFactory.createLineBorder(Color.darkGray, 1))
     panel.setLayout(new BorderLayout)
     val cc = new JColorChooser(targetColor)
+    val panels = cc.getChooserPanels.toVector
+    val rgbPanel = panels.find { p =>
+      // a hack, but can't think of anything better
+      // need to check RGB text for each new language
+      p.getDisplayName.contains("RGB") || p.getDisplayName.contains("RVB")
+    }
+    rgbPanel match {
+      case Some(rgbp) =>
+        val newps = rgbp +: panels.filter { p => p != rgbp }
+        cc.setChooserPanels(newps.toArray)
+      case None =>
+    }
     var oldColor = cc.getColor()
     var lastChangeTime = 0l
     cc.getSelectionModel.addChangeListener(new ChangeListener {
