@@ -15,6 +15,7 @@
 package net.kogics.kojo.livecoding
 
 import javax.swing.text.JTextComponent
+import java.awt.Color
 
 trait ManipulationContext {
   def isRunningEnabled: Boolean
@@ -24,6 +25,7 @@ trait ManipulationContext {
   def removeManipulator(im: InteractiveManipulator)
   def activateEditor()
   def knownColors: List[String]
+  def knownColor(name: String): Color
 }
 
 trait InteractiveManipulator {

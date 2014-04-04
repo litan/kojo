@@ -321,6 +321,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   }
 
   def knownColors = staging.KColor.knownColors
+  def knownColor(name: String): Color = staging.KColor.knownColorsMap(name)
 
   def isVerboseOutput = {
     execSupport.verboseOutput == true

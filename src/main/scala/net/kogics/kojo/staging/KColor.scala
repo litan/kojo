@@ -39,7 +39,24 @@ object KColor {
   val cyan = new Color(0, 255, 255);
   val noColor = new Color(0, 0, 0, 0)
 
-  def knownColors = List("blue", "red", "yellow", "green", "orange", "purple", "pink", "brown", "black", "white",
-    "gray", "lightGray", "darkGray", "magenta", "cyan", "noColor"
+  def knownColorsMap = Map(
+    "blue" -> blue,
+    "red" -> red,
+    "yellow" -> yellow,
+    "green" -> green,
+    "orange" -> orange,
+    "purple" -> purple,
+    "pink" -> pink,
+    "brown" -> brown,
+    "black" -> black,
+    "white" -> white,
+    "gray" -> gray,
+    "lightGray" -> lightGray,
+    "darkGray" -> darkGray,
+    "magenta" -> magenta,
+    "cyan" -> cyan,
+    "noColor" -> noColor
   )
+  
+  lazy val knownColors = knownColorsMap.keySet.toList
 }
