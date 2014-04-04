@@ -27,6 +27,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
   var target = ""
   var targetStart = 0
   var targetEnd = 0
+  var targetColor: Color
   var colorPopup: Popup = _
   var inSliderChange = false
   def isAbsent = colorPopup == null
@@ -34,7 +35,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
 
   lazy val ColorPattern = Pattern.compile("""(C\.)?(%s)""" format (ctx.knownColors.mkString("|")))
   def matcher(possibleColor: String) = ColorPattern.matcher(possibleColor)
-  lazy val ColorPattern2 = Pattern.compile("""Color\(\d+,\s*\d+,\s*\d+(,\s*\d+)?\)""")
+  lazy val ColorPattern2 = Pattern.compile("""Color\((\d+),\s*(\d+),\s*(\d+)(,\s*(\d+))?\)""")
   def matcher2(possibleColorLine: String) = ColorPattern2.matcher(possibleColorLine)
 
   def findColorFunction(pane: JTextComponent, offset: Int): Boolean = {
@@ -49,6 +50,11 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
       val lineOffset = offset - lineStart
       if (start <= lineOffset && lineOffset <= end) {
         target = m.group
+        val rgba = Seq(1, 2, 3, 5) map { e =>
+          val ret = m.group(e)
+          if (ret != null) ret.toInt else 255
+        }
+        targetColor = new Color(rgba(0), rgba(1), rgba(2), rgba(3))
         targetStart = lineStart + start
         targetEnd = lineStart + end
         found = true
@@ -70,6 +76,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
         val m = matcher(possibleColor)
         if (m.matches()) {
           target = possibleColor
+          targetColor = ctx.knownColor(possibleColor)
           targetStart = wordStart
           targetEnd = wordEnd
           true
@@ -107,7 +114,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     val panel = new JPanel()
     panel.setBorder(BorderFactory.createLineBorder(Color.darkGray, 1))
     panel.setLayout(new BorderLayout)
-    val cc = new JColorChooser
+    val cc = new JColorChooser(targetColor)
     var oldColor = cc.getColor()
     var lastChangeTime = 0l
     cc.getSelectionModel.addChangeListener(new ChangeListener {
@@ -153,7 +160,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     closePanel.setBorder(BorderFactory.createEtchedBorder())
     panel.add(closePanel, BorderLayout.EAST)
 
-    colorPopup = factory.getPopup(ctx.codePane, panel, pt.x + 50, pt.y - 300)
+    colorPopup = factory.getPopup(ctx.codePane, panel, math.max(pt.x + 50, 10), math.max(pt.y - 300, 10))
     colorPopup.show()
   }
 

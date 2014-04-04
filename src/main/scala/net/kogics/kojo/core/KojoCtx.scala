@@ -62,6 +62,7 @@ trait KojoCtx {
   def lastColor: Color
   def lastColor_=(c: Color)
   def knownColors: List[String]
+  def knownColor(name: String): Color
   def isVerboseOutput: Boolean
   def showVerboseOutput(): Unit
   def hideVerboseOutput(): Unit

@@ -921,4 +921,5 @@ class CodeExecutionSupport(
   def isD3Active = codingMode == D3Mode
 
   def knownColors = kojoCtx.knownColors
+  def knownColor(name: String): Color = kojoCtx.knownColor(name)
 }
