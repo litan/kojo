@@ -87,6 +87,7 @@ case class Rotp(angle: Double, x: Double, y: Double)(pic: Picture) extends Trans
     pic.draw()
   }
   def copy = Rotp(angle, x, y)(pic.copy)
+  override def toString() = s"Rotp($angle, $x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Scale(factor: Double)(pic: Picture) extends Transform(pic) {
@@ -95,7 +96,7 @@ case class Scale(factor: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Scale(factor)(pic.copy)
-  override def toString() = s"Scale ($factor) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  override def toString() = s"Scale($factor) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class ScaleXY(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -104,7 +105,7 @@ case class ScaleXY(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = ScaleXY(x, y)(pic.copy)
-  override def toString() = s"Scale ($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  override def toString() = s"Scale($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Trans(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -113,7 +114,7 @@ case class Trans(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Trans(x, y)(pic.copy)
-  override def toString() = s"Trans ($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  override def toString() = s"Trans($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Offset(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
@@ -122,6 +123,7 @@ case class Offset(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Trans(x, y)(pic.copy)
+  override def toString() = s"Offset($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class FlipY(pic: Picture) extends Transform(pic) {
@@ -130,6 +132,7 @@ case class FlipY(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = FlipY(pic.copy)
+  override def toString() = s"FlipY(Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class FlipX(pic: Picture) extends Transform(pic) {
@@ -138,6 +141,7 @@ case class FlipX(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = FlipX(pic.copy)
+  override def toString() = s"FlipX(Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class AxesOn(pic: Picture) extends Transform(pic) {
@@ -146,6 +150,7 @@ case class AxesOn(pic: Picture) extends Transform(pic) {
     pic.axesOn()
   }
   def copy = AxesOn(pic.copy)
+  override def toString() = s"AxesOn(Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Opac(f: Double)(pic: Picture) extends Transform(pic) {
@@ -154,6 +159,7 @@ case class Opac(f: Double)(pic: Picture) extends Transform(pic) {
     pic.draw()
   }
   def copy = Opac(f)(pic.copy)
+  override def toString() = s"Opac($f)(Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Hue(f: Double)(pic: Picture) extends Transform(pic) {
@@ -164,6 +170,7 @@ case class Hue(f: Double)(pic: Picture) extends Transform(pic) {
     pic.hueMod(f)
   }
   def copy = Hue(f)(pic.copy)
+  override def toString() = s"Hue($f) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Sat(f: Double)(pic: Picture) extends Transform(pic) {
@@ -174,6 +181,7 @@ case class Sat(f: Double)(pic: Picture) extends Transform(pic) {
     pic.satMod(f)
   }
   def copy = Sat(f)(pic.copy)
+  override def toString() = s"Sat($f) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Brit(f: Double)(pic: Picture) extends Transform(pic) {
@@ -184,6 +192,7 @@ case class Brit(f: Double)(pic: Picture) extends Transform(pic) {
     pic.britMod(f)
   }
   def copy = Brit(f)(pic.copy)
+  override def toString() = s"Brit($f) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 object Deco {
@@ -206,6 +215,7 @@ case class Fill(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
   }
 }) {
   override def copy = Fill(color)(pic.copy)
+  override def toString() = s"Fill($color) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class Stroke(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
@@ -217,6 +227,7 @@ case class Stroke(color: Paint)(pic: Picture) extends Deco(pic)({ t =>
   }
 }) {
   override def copy = Stroke(color)(pic.copy)
+  override def toString() = s"Stroke($color) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class StrokeWidth(w: Double)(pic: Picture) extends Deco(pic)({ t =>
@@ -228,6 +239,7 @@ case class StrokeWidth(w: Double)(pic: Picture) extends Deco(pic)({ t =>
   }
 }) {
   override def copy = StrokeWidth(w)(pic.copy)
+  override def toString() = s"StrokeWidth($w) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 abstract class ComposableTransformer extends Function1[Picture, Picture] { outer =>

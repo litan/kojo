@@ -187,7 +187,8 @@ class CompilerAndRunner(makeSettings: () => Settings,
               //              listener.message("Execution thread interrupted.")
             }
             else {
-              listener.message(Utils.stackTraceAsString(realT))
+//              listener.message(Utils.stackTraceAsString(realT))
+              listener.message(realT.getMessage)
             }
             IR.Error
         }

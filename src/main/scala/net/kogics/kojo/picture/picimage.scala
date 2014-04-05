@@ -155,11 +155,8 @@ trait EffectablePicture extends Picture {
 }
 
 class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
-  with TNodeCacher with RedrawStopper with PicShapeOps with EffectablePicture {
+  with TNodeCacher with RedrawStopper with NonVectorPicOps with EffectablePicture {
   @volatile var effects = Vector.empty[ImageOp]
-  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
-    throw new IllegalStateException("Geometry is not available for images")
-  }
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val node = new PNode
@@ -196,6 +193,8 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   }
 
   def copy: net.kogics.kojo.core.Picture = new EffectableImagePic(pic.copy)
+  override def toString() = s"EffectableImagePic (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+  
   def fade(n: Int) {
     effects = effects :+ new FadeImageOp(n)
   }
@@ -222,7 +221,7 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   }
 }
 
-abstract class ImageEffect(pic: EffectablePicture) extends EffectablePicture with Transformer {
+abstract class EffectableTransformer(pic: EffectablePicture) extends EffectablePicture with Transformer {
   val tpic = pic
   def fade(n: Int) = pic.fade(n)
   def blur(n: Int) = pic.blur(n)
@@ -236,7 +235,7 @@ abstract class ImageEffect(pic: EffectablePicture) extends EffectablePicture wit
   def effect(name: Symbol, props: Pair[Symbol, Any]*) = pic.effect(name, props: _*)
 }
 
-case class Fade(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class Fade(n: Int)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.fade(n)
     pic.draw()
@@ -245,7 +244,7 @@ case class Fade(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
   override def toString() = s"Fade($n) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class Blur(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class Blur(n: Int)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.blur(n)
     pic.draw()
@@ -254,7 +253,7 @@ case class Blur(n: Int)(pic: EffectablePicture) extends ImageEffect(pic) {
   override def toString() = s"Blur($n) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.pointLight(x, y, direction, elevation, distance)
     pic.draw()
@@ -263,7 +262,7 @@ case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: 
   override def toString() = s"PointLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.spotLight(x, y, direction, elevation, distance)
     pic.draw()
@@ -272,7 +271,7 @@ case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: D
   override def toString() = s"SpotLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class Lights(lights: Light*)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class Lights(lights: Light*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.lights(lights: _*)
     pic.draw()
@@ -281,7 +280,7 @@ case class Lights(lights: Light*)(pic: EffectablePicture) extends ImageEffect(pi
   override def toString() = s"Lights($lights) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class Noise(amount: Int, density: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class Noise(amount: Int, density: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.noise(amount, density)
     pic.draw()
@@ -290,7 +289,7 @@ case class Noise(amount: Int, density: Double)(pic: EffectablePicture) extends I
   override def toString() = s"Noise($amount, $density) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.weave(xWidth, xGap, yWidth, yGap)
     pic.draw()
@@ -299,7 +298,7 @@ case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic
   override def toString() = s"Weave($xWidth, $xGap, $yWidth, $yGap) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class SomeEffect(name: Symbol, props: Pair[Symbol, Any]*)(pic: EffectablePicture) extends ImageEffect(pic) {
+case class SomeEffect(name: Symbol, props: Pair[Symbol, Any]*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.effect(name, props: _*)
     pic.draw()
@@ -308,44 +307,41 @@ case class SomeEffect(name: Symbol, props: Pair[Symbol, Any]*)(pic: EffectablePi
   override def toString() = s"Effect($name, $props) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-abstract class ComposableImageEffect extends Function1[EffectablePicture, EffectablePicture] { outer =>
-  def apply(p: EffectablePicture): EffectablePicture
-  def ->(p: EffectablePicture) = apply(p)
-  def *(other: ComposableImageEffect) = new ComposableImageEffect {
-    def apply(p: EffectablePicture): EffectablePicture = {
-      ComposableImageEffect.this.apply(other.apply(p))
-    }
+abstract class ComposableImageEffect extends ComposableTransformer { 
+  def epic(p: Picture) = p match {
+    case ep: EffectablePicture => ep
+    case _                     => new EffectableImagePic(p)(p.canvas)
   }
 }
 
 case class Fadec(n: Int) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = Fade(n)(p)
+  def apply(p: Picture) = Fade(n)(epic(p))
 }
 
 case class Blurc(n: Int) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = Blur(n)(p)
+  def apply(p: Picture) = Blur(n)(epic(p))
 }
 
 case class PointLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = PointLightEffect(x, y, direction, elevation, distance)(p)
+  def apply(p: Picture) = PointLightEffect(x, y, direction, elevation, distance)(epic(p))
 }
 
 case class SpotLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = SpotLightEffect(x, y, direction, elevation, distance)(p)
+  def apply(p: Picture) = SpotLightEffect(x, y, direction, elevation, distance)(epic(p))
 }
 
 case class Lightsc(lights: Light*) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = Lights(lights: _*)(p)
+  def apply(p: Picture) = Lights(lights: _*)(epic(p))
 }
 
 case class Noisec(amount: Int, density: Double) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = Noise(amount, density)(p)
+  def apply(p: Picture) = Noise(amount, density)(epic(p))
 }
 
 case class Weavec(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = Weave(xWidth, xGap, yWidth, yGap)(p)
+  def apply(p: Picture) = Weave(xWidth, xGap, yWidth, yGap)(epic(p))
 }
 
 case class SomeEffectc(name: Symbol, props: Pair[Symbol, Any]*) extends ComposableImageEffect {
-  def apply(p: EffectablePicture) = SomeEffect(name, props: _*)(p)
+  def apply(p: Picture) = SomeEffect(name, props: _*)(epic(p))
 }
