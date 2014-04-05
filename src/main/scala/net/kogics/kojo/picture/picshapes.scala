@@ -41,7 +41,11 @@ import edu.umd.cs.piccolo.nodes.PPath
 import edu.umd.cs.piccolo.util.PPaintContext
 import edu.umd.cs.piccolox.pswing.PSwing
 
-trait PicShapeOps { self: Picture with CorePicOps =>
+trait UnsupportedOps {
+  def notSupported(name: String) = throw new UnsupportedOperationException(s"$name - operation not available for non-vector picture:\n${toString}") 
+}
+
+trait PicShapeOps extends UnsupportedOps { self: Picture with CorePicOps =>
   def realDraw() = Utils.runInSwingThread {
     tnode.setVisible(true)
     tnode.repaint()
@@ -92,9 +96,40 @@ trait PicShapeOps { self: Picture with CorePicOps =>
     node.asInstanceOf[PPath].setStroke(stroke)
   }
 
-  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) {}
+  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine])  = notSupported("morph")
   def dumpInfo() {}
-  def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) {}
+  def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine")
+}
+
+trait NonVectorPicOps extends UnsupportedOps { self: Picture with CorePicOps =>
+  def realDraw() = Utils.runInSwingThread {
+    tnode.setVisible(true)
+    tnode.repaint()
+  }
+
+  def bounds = Utils.runInSwingThreadAndPause {
+    tnode.getFullBounds
+  }
+  
+  def decorateWith(painter: Painter) = notSupported("decorateWith")
+
+  def britMod(f: Double) = notSupported("britMod")
+
+  def hueMod(f: Double) = notSupported("hueMod")
+
+  def satMod(f: Double) = notSupported("satMod")
+
+  def setFillColor(color: java.awt.Paint) = notSupported("setFillColor")
+
+  def setPenColor(color: java.awt.Paint) = notSupported("setPenColor")
+
+  def setPenThickness(th: Double) = notSupported("setPenThickness")
+
+  def initGeom(): com.vividsolutions.jts.geom.Geometry = notSupported("initGeometry")
+  
+  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine])  = notSupported("morph")
+  def dumpInfo() {}
+  def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine")
 }
 
 class CirclePic(r: Double)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
@@ -151,10 +186,7 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
 }
 
 class ImagePic(img: Image)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
-  with TNodeCacher with RedrawStopper with PicShapeOps {
-  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
-    throw new IllegalStateException("Geometry is not available for images")
-  }
+  with TNodeCacher with RedrawStopper with NonVectorPicOps {
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val inode = new PImage(img) {
@@ -176,6 +208,7 @@ class ImagePic(img: Image)(implicit val canvas: SCanvas) extends Picture with Co
   }
 
   def copy: net.kogics.kojo.core.Picture = new ImagePic(img)
+  override def toString() = s"ImagePic (Id: ${System.identityHashCode(this)})"
 }
 
 class FileImagePic(file: String)(implicit canvas: SCanvas) extends ImagePic(Utils.loadImageC(file)) {
@@ -183,11 +216,7 @@ class FileImagePic(file: String)(implicit canvas: SCanvas) extends ImagePic(Util
 }
 
 class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
-  with TNodeCacher with RedrawStopper with PicShapeOps {
-
-  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
-    throw new UnsupportedOperationException("Geometry is not available for Swing Pictures")
-  }
+  with TNodeCacher with RedrawStopper with NonVectorPicOps {
 
   def pswingHook(ps: PSwing) {}
 
@@ -245,5 +274,6 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
     r1c.getBounds
   }
 
-  def copy = throw new UnsupportedOperationException("Can't copy swing pictures")
+  def copy = notSupported("copy")
+  override def toString() = s"SwingPic (Id: ${System.identityHashCode(this)})"
 }
