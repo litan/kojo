@@ -309,6 +309,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   def updateAxesAndGrid() {
+    if (!(_showGrid || _showAxes))
+      return
 
     //    def isInteger(d: Double) = Utils.doublesEqual(d.floor, d, 0.0000000001)
     def isInteger(label: String) = {
@@ -321,9 +323,6 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       case Inch  => Dpi
       case Cm    => Dpi / 2.54
     }
-
-    if (!(_showGrid || _showAxes))
-      return
 
     val scale = getCamera.getViewScale
     val MaxPrec = 10
@@ -544,6 +543,14 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
+  def scroll(x: Double, y: Double) {
+    Utils.runInSwingThreadAndWait {
+      getCamera.getViewTransformReference.translate(-x, -y)
+      updateAxesAndGrid()
+      repaint()
+    }
+  }
+  
   import java.io.File
   private def exportImageHelper(filePrefix: String, width: Int, height: Int): java.io.File = {
     val outfile = File.createTempFile(filePrefix + "-", ".png")

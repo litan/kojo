@@ -25,6 +25,8 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def zoom(factor: Double, cx: Double, cy: Double) = tCanvas.zoom(factor, cx, cy)
   UserCommand("zoom", List("factor"), "Zooms in by the given factor, leaving the center point unchanged.")
   UserCommand.addSynopsisSeparator()
+  
+  def scroll(x: Double, y: Double) = tCanvas.scroll(x, y)
 
 //  def showScale = tCanvas.
   def showGrid() = tCanvas.showGrid()
