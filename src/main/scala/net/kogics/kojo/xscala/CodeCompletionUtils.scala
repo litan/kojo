@@ -207,7 +207,8 @@ object CodeCompletionUtils {
     "randomFrom" -> "randomFrom(${seq})",
     "image" -> "image(${height}, ${width})",
     "PicShape.image" -> "", // use default via reflection
-    "setImagePixel" -> "setImagePixel(${img}, ${x}, ${y}, ${color})"
+    "setImagePixel" -> "setImagePixel(${img}, ${x}, ${y}, ${color})",
+    "scroll" -> "scroll(${x}, ${y})"
 )
   
   val TwMethodTemplates = Map(

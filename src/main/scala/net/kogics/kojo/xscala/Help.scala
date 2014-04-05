@@ -139,6 +139,7 @@ object Help {
        <br/>
        zoom(factor, cx, cy) - Zooms in by the given factor, and positions (cx, cy) at the center of the turtle canvas.
 """,
+    "scroll" -> "scroll(x, y) - Scrolls the canvas by the given x and y amounts.",
     "gridOn" -> "gridOn() - Shows a grid on the turtle canvas.",
     "gridOff" -> "gridOff() - Hides the grid on the turtle canvas.",
     "axesOn" -> "axesOn() - Shows the X and Y axes on the turtle canvas.",
