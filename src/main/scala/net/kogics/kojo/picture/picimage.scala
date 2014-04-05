@@ -20,8 +20,8 @@ import java.awt.Color
 import java.awt.GradientPaint
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
+import java.awt.image.BufferedImageOp
 
-import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.GaussianFilter
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
@@ -123,7 +123,7 @@ class SomeEffectImageOp(name0: Symbol, props: Pair[Symbol, Any]*) extends ImageO
   val name = name0.name
   def filter(img: BufferedImage): BufferedImage = {
     val cls = Class.forName(s"com.jhlabs.image.${name.head.toUpper + name.tail}Filter")
-    val fltr = cls.newInstance().asInstanceOf[AbstractBufferedImageOp]
+    val fltr = cls.newInstance().asInstanceOf[BufferedImageOp]
     props.foreach { pv =>
       val prop0 = pv._1.name
       val prop = prop0.head.toUpper + prop0.tail
