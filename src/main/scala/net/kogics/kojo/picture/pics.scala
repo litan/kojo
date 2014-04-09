@@ -124,7 +124,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def setPosition(x: Double, y: Double) = Utils.runInSwingThread {
     tnode.setOffset(x, y)
     pgTransform = t2t(tnode.getTransformReference(true))
-    tnode.repaint()
+//    tnode.repaint()
   }
 
   def heading = Utils.runInSwingThreadAndPause {
@@ -134,7 +134,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def setHeading(angle: Double) = Utils.runInSwingThread {
     rotate(angle - heading)
     pgTransform = t2t(tnode.getTransformReference(true))
-    tnode.repaint()
+//    tnode.repaint()
   }
 
   def flipX() = {

@@ -1,5 +1,7 @@
-// zoomable mandelbrot set
-// click and drag the left mouse button to specify the zoom-in area
+// Zoomable mandelbrot set.
+// Click and drag the left mouse button to specify the zoom-in area.
+// this sample builds upon:
+// http://justindomke.wordpress.com/2008/11/29/mandelbrot-in-scala/
 toggleFullScreenCanvas()
 case class Complex(re: Double, im: Double) {
     def +(other: Complex) =
@@ -38,7 +40,7 @@ def mandel(xmin: Double, xmax: Double, ymin: Double, ymax: Double): Image = {
     for { xi <- 0 until size; yi <- 0 until size } {
         val x = xmin + xi * (xmax - xmin) / size
         val y = ymin + yi * (ymax - ymin) / size
-        var z = Complex(0, 0); var c = Complex(x, y)
+        var z = Complex(0, 0); val c = Complex(x, y)
         var i = 0
         while (z.abs < 2 && i < level) {
             z *= z; z += c; i += 1

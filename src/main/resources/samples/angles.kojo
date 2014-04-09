@@ -1,5 +1,8 @@
-// An animation that tries to show:
+// An animation that tries to answer the question:
 // What are angles and how are they measured?
+// Based on ideas from:
+// (1) Calculus without limits (course notes) by C. K. Raju
+// (2) http://1ucasvb.tumblr.com/ 
 val pauseTime = 1 // seconds
 val rLen = 100.0
 val smallR = rLen / 4
