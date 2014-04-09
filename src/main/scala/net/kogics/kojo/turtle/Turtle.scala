@@ -56,7 +56,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   //  private val Log = Logger.getLogger(getClass.getName)
   //  Log.info("Turtle being created in thread: " + Thread.currentThread.getName)
 
-  private val layer = new PLayer
+  private val layer = new PLayer /*; canvas.getCamera.getRoot().addChild(layer) */
   def tlayer: PLayer = layer
   private val camera = canvas.getCamera
   if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(math.max(camera.getLayerCount - 1, 0), layer)
@@ -300,7 +300,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   // called for non-default turtles 
   def remove() = Utils.runInSwingThread {
-    camera.removeLayer(layer)
+    camera.removeLayer(layer) /*; camera.getRoot().removeChild(layer) */
     // this causes a very rare exeception for a subsequent endMove triggered by an earlier stop
     // so schedule memory reclamation for later
     // we're reclaiming memory by clearing turtle fields because there's a reference to turtles 
@@ -819,9 +819,9 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
     def endMove(x: Double, y: Double) {
       layer.removeChild(tempLine)
-      tempLine.reset
+      tempLine.reset()
       penPaths.last.lineTo(x, y)
-      penPaths.last.repaint()
+      //      penPaths.last.repaint()
       _lastLine = true
     }
 
