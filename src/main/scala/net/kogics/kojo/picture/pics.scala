@@ -76,7 +76,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     tnode.transformBy(trans)
     //    pgTransform.composeBefore(t2t(trans))
     pgTransform = t2t(tnode.getTransformReference(true))
-    tnode.repaint()
+//    tnode.repaint()
   }
 
   def rotateAboutPoint(angle: Double, x: Double, y: Double) = {

@@ -191,7 +191,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
               figAnimations = figAnimations filter { _ != this }
           }
           finally {
-            repaint()
+//            repaint()
             currLayer = bgLayer
           }
         }
