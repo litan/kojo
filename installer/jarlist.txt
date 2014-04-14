@@ -24,6 +24,7 @@
 ../lib/rithica.jar
 ../lib/table-layout.jar
 ../lib/jdi.jar
+../lib/image-filters.jar
 /home/lalit/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.10.3.jar -> scala-reflect.jar
 /home/lalit/.ivy2/cache/org.scala-lang/scala-actors/jars/scala-actors-2.10.3.jar -> scala-actors.jar 
 /home/lalit/.ivy2/cache/org.scala-lang/scala-swing/jars/scala-swing-2.10.3.jar -> scala-swing.jar
