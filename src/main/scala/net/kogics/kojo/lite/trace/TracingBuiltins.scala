@@ -96,8 +96,8 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
     def rect(h: Double, w: Double) = picture.rect(h, w)
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
-//    def circle(r: Double) = picture.circle(r)
-//    def arc(r: Double, angle: Int) = picture.arc(r, angle)
+    //    def circle(r: Double) = picture.circle(r)
+    //    def arc(r: Double, angle: Int) = picture.arc(r, angle)
   }
 
   class TracingInterp {
@@ -117,6 +117,9 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
       forward(d)
     }
 
+    override protected def arcHelper(makeArc: () => Unit) {
+      makeArc()
+    }
     override def toString() = s"Turtle with Id: ${System.identityHashCode(this)}"
   }
 

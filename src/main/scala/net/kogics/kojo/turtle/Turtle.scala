@@ -542,7 +542,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
         setHeading(head + 180 + a)
       }
     }
-
+    
+    arcHelper(makeArc)
+  }
+  
+  // hook for tracing turtle
+  protected def arcHelper(makeArc: () => Unit) {
     if (_animationDelay < 11) Utils.runInSwingThread {
       makeArc()
     }
