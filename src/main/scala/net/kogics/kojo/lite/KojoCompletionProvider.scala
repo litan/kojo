@@ -173,9 +173,11 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       if (objid.isEmpty) {
         val (varCompletions, voffset) = execSupport.varCompletions(prefix)
         varCompletions.foreach { completion =>
-          proposals.add(proposal(caretOffset - voffset, completion,
-            VARIABLE,
-            methodTemplate(completion)))
+          if (!completion.contains("$")) {
+            proposals.add(proposal(caretOffset - voffset, completion,
+              VARIABLE,
+              methodTemplate(completion)))
+          }
         }
 
         val (memberCompletions, coffset) = execSupport.memberCompletions(caretOffset, null, prefix)

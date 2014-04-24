@@ -23,7 +23,7 @@ object MemberKind extends Enumeration {
 
 case class CompletionInfo(
   kind: MemberKind.Value,
-  name: String,
+  name0: String,
   signature: String,
   owner: String,
   prio: Int,
@@ -34,6 +34,7 @@ case class CompletionInfo(
   fullyQualifiedName: String // for Class, Trait, Type, Objects: the fully qualified name
   ) {
 
+  val name = name0.trim
   def params: String = {
     if (paramNames.size == 0 && returnType == "Unit") {
       "()"

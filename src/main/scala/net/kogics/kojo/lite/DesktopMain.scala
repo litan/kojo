@@ -17,12 +17,12 @@ package net.kogics.kojo.lite
 import java.net.URLDecoder
 
 object DesktopMain extends StubMain with RmiMultiInstance {
-   val classpath = {
+  val classpath = {
     val urls = Thread.currentThread.getContextClassLoader match {
       case cl: java.net.URLClassLoader => cl.getURLs.toList
-      case _                           => sys.error("classloader is not a URLClassLoader")
+      case cl                          => sys.error(s"classloader ($cl) is not a URLClassLoader")
     }
-    
+
     createCp(urls map { URLDecoder decode _.getPath })
   }
 }
