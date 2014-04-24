@@ -308,7 +308,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
       )
     }
   }
-  val pcompiler = new KGlobal(settings, preporter)
+  val pcompiler = new KGlobal(makeSettings(), preporter)
 
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
