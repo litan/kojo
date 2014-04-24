@@ -332,7 +332,7 @@ style
     endEvents.size should be(4)
 
     val style = endEvents(3)
-    assert(style.pret === "Style(java.awt.Color[r=10,g=10,b=10],10.0,java.awt.Color[r=10,g=10,b=10],java.awt.Font[family=Arial,name=Arial,style=plain,size=18],true)")
+    style.pret should fullyMatch regex """Style\(java.awt.Color\[r=10,g=10,b=10\],10.0,java.awt.Color\[r=10,g=10,b=10\],java.awt.Font\[family=.*,name=Arial,style=plain,size=18\],true\)"""
 
     context.assertIsSatisfied()
   }
