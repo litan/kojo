@@ -19,7 +19,9 @@ package xscala
 import java.net.URL
 
 import scala.collection.mutable.ListBuffer
+import scala.language.postfixOps
 import scala.reflect.internal.Flags
+import scala.reflect.internal.util.AbstractFileClassLoader
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.OffsetPosition
 import scala.reflect.internal.util.Position
@@ -27,7 +29,6 @@ import scala.tools.nsc.Global
 import scala.tools.nsc.Settings
 import scala.tools.nsc.interactive
 import scala.tools.nsc.interactive.Response
-import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.VirtualDirectory
 import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
@@ -187,7 +188,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
               //              listener.message("Execution thread interrupted.")
             }
             else {
-//              listener.message(Utils.stackTraceAsString(realT))
+              //              listener.message(Utils.stackTraceAsString(realT))
               listener.message(realT.getMessage)
             }
             IR.Error
@@ -239,7 +240,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
     def mkCompletionProposal(sym: Symbol, tpe: Type, inherited: Boolean, viaView: Symbol): CompletionInfo = {
       // code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
       val kind = if (sym.isSourceMethod && !sym.hasFlag(Flags.ACCESSOR | Flags.PARAMACCESSOR)) Def
-      else if (sym.isPackage) Package
+      else if (sym.hasPackageFlag) Package
       else if (sym.isClass) Class
       else if (sym.isTrait) Trait
       else if (sym.isPackageObject) PackageObject
@@ -270,10 +271,10 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
       // rudimentary relevance, place own members before inherited ones, and before view-provided ones
       var relevance = 100
-      if (!sym.isLocal) relevance += 10 // non-local symbols are less relevant than local ones
+      if (!sym.isLocalToBlock) relevance += 10 // non-local symbols are less relevant than local ones
       if (inherited) relevance += 10
       if (viaView != NoSymbol) relevance += 20
-      if (sym.isPackage) relevance += 30
+      if (sym.hasPackageFlag) relevance += 30
       // theoretically we'd need an 'ask' around this code, but given that
       // Any and AnyRef are definitely loaded, we call directly to definitions.
       if (sym.owner == definitions.AnyClass

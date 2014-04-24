@@ -1,9 +1,14 @@
 package net.kogics.kojo.lexer
 
+import javax.swing.JTextArea
+import javax.swing.event.DocumentEvent
+import javax.swing.text.Segment
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.ShouldMatchersForJUnit
-import javax.swing.text.Segment
+import org.scalatest.Matchers
+import org.scalatest.junit.JUnitRunner
+
 import scalariform.lexer.Token
 import scalariform.lexer.Tokens.EQUALS
 import scalariform.lexer.Tokens.INTEGER_LITERAL
@@ -11,15 +16,9 @@ import scalariform.lexer.Tokens.STRING_LITERAL
 import scalariform.lexer.Tokens.VAL
 import scalariform.lexer.Tokens.VARID
 import scalariform.lexer.Tokens.WS
-import scalariform.lexer.Tokens.XML_NAME
-import scalariform.lexer.Tokens.XML_START_OPEN
-import scalariform.lexer.Tokens.XML_TAG_CLOSE
-import org.scalatest.junit.JUnitRunner
-import javax.swing.event.DocumentEvent
-import javax.swing.JTextArea
 
 @RunWith(classOf[JUnitRunner])
-class ScalariformTokenMakerTest2 extends FunSuite with ShouldMatchersForJUnit {
+class ScalariformTokenMakerTest2 extends FunSuite with Matchers {
 
   def fixture = (new ScalariformTokenMaker, new JTextArea)
 
@@ -63,7 +62,7 @@ class ScalariformTokenMakerTest2 extends FunSuite with ShouldMatchersForJUnit {
     lexer.lexDoc(line1)
 
     val doc = pane.getDocument
-    doc.insertString(0, line1+line2, null)
+    doc.insertString(0, line1 + line2, null)
 
     lexer.docListener.insertUpdate(new DocumentEvent {
       def getOffset = line1.length
@@ -96,10 +95,10 @@ class ScalariformTokenMakerTest2 extends FunSuite with ShouldMatchersForJUnit {
 abc
 def</a>.text
 
-//    lexer.lexDoc(line2)
+    //    lexer.lexDoc(line2)
 
     val doc = pane.getDocument
-    doc.insertString(0, line1+line2, null)
+    doc.insertString(0, line1 + line2, null)
 
     lexer.docListener.insertUpdate(new DocumentEvent {
       def getOffset = 0
@@ -108,10 +107,10 @@ def</a>.text
       def getChange(x$1: javax.swing.text.Element): javax.swing.event.DocumentEvent.ElementChange = ???
       def getType() = DocumentEvent.EventType.INSERT
     })
-    
+
     val segment = new Segment()
     doc.getText(0, line1.length, segment)
-    
+
     val expectedTokens = List(
       Token(VAL, "val", 0, "val"),
       Token(WS, " ", 3, " "),
@@ -135,7 +134,7 @@ def</a>.text
     lexer.lexDoc(line1)
 
     val doc = pane.getDocument
-    doc.insertString(0, line1+line23, null)
+    doc.insertString(0, line1 + line23, null)
 
     lexer.docListener.insertUpdate(new DocumentEvent {
       def getOffset = line1.length
@@ -144,14 +143,14 @@ def</a>.text
       def getChange(x$1: javax.swing.text.Element): javax.swing.event.DocumentEvent.ElementChange = ???
       def getType() = DocumentEvent.EventType.INSERT
     })
-    
+
     val segment = new Segment()
-    doc.getText(line1.length+1, 3, segment)
-    
+    doc.getText(line1.length + 1, 3, segment)
+
     val expectedTokens = List(
       Token(STRING_LITERAL, "abc", 12, "abc")
     )
 
-    lexer.tokensForLine(segment, line1.length+1) should be(expectedTokens)
+    lexer.tokensForLine(segment, line1.length + 1) should be(expectedTokens)
   }
 }

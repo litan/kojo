@@ -119,7 +119,7 @@ class WeaveImageOp(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) e
   }
 }
 
-class SomeEffectImageOp(name0: Symbol, props: Pair[Symbol, Any]*) extends ImageOp {
+class SomeEffectImageOp(name0: Symbol, props: Tuple2[Symbol, Any]*) extends ImageOp {
   val name = name0.name
   def filter(img: BufferedImage): BufferedImage = {
     val cls = Class.forName(s"com.jhlabs.image.${name.head.toUpper + name.tail}Filter")
@@ -151,7 +151,7 @@ trait EffectablePicture extends Picture {
   def lights(lights: Light*): Unit
   def noise(amount: Int, density: Double): Unit
   def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double): Unit
-  def effect(name: Symbol, props: Pair[Symbol, Any]*): Unit
+  def effect(name: Symbol, props: Tuple2[Symbol, Any]*): Unit
 }
 
 class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
@@ -216,7 +216,7 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) {
     effects = effects :+ new WeaveImageOp(xWidth, xGap, yWidth, yGap)
   }
-  def effect(name: Symbol, props: Pair[Symbol, Any]*) {
+  def effect(name: Symbol, props: Tuple2[Symbol, Any]*) {
     effects = effects :+ new SomeEffectImageOp(name, props: _*)
   }
 }
@@ -232,7 +232,7 @@ abstract class EffectableTransformer(pic: EffectablePicture) extends EffectableP
   def lights(lights: Light*) = pic.lights(lights: _*)
   def noise(amount: Int, density: Double) = pic.noise(amount, density)
   def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) = pic.weave(xWidth, xGap, yWidth, yGap)
-  def effect(name: Symbol, props: Pair[Symbol, Any]*) = pic.effect(name, props: _*)
+  def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = pic.effect(name, props: _*)
 }
 
 case class Fade(n: Int)(pic: EffectablePicture) extends EffectableTransformer(pic) {
@@ -298,7 +298,7 @@ case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic
   override def toString() = s"Weave($xWidth, $xGap, $yWidth, $yGap) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-case class SomeEffect(name: Symbol, props: Pair[Symbol, Any]*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
+case class SomeEffect(name: Symbol, props: Tuple2[Symbol, Any]*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
     pic.effect(name, props: _*)
     pic.draw()
@@ -342,6 +342,6 @@ case class Weavec(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) ex
   def apply(p: Picture) = Weave(xWidth, xGap, yWidth, yGap)(epic(p))
 }
 
-case class SomeEffectc(name: Symbol, props: Pair[Symbol, Any]*) extends ComposableImageEffect {
+case class SomeEffectc(name: Symbol, props: Tuple2[Symbol, Any]*) extends ComposableImageEffect {
   def apply(p: Picture) = SomeEffect(name, props: _*)(epic(p))
 }

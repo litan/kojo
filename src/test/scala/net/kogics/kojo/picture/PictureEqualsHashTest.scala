@@ -17,18 +17,19 @@ package net.kogics.kojo
 package picture
 
 import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
-import org.scalatest.junit.ShouldMatchersForJUnit._
+import org.scalatest.Matchers
+import org.scalatest.junit.JUnitRunner
+
 import net.kogics.kojo.lite.NoOpKojoCtx
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 
 @RunWith(classOf[JUnitRunner])
-class PictureEqualsHashTest extends FunSuite with xscala.RepeatCommands {
-  
+class PictureEqualsHashTest extends FunSuite with Matchers with xscala.RepeatCommands {
+
   val kojoCtx = new NoOpKojoCtx
   implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
-  
+
   case class Box1(p: Painter) extends Pic(p) {
     override def copy: Box1 = new Box1(p)
   }
@@ -39,7 +40,7 @@ class PictureEqualsHashTest extends FunSuite with xscala.RepeatCommands {
 
   val p: Painter = { t =>
     import t._
-    repeat (4) {
+    repeat(4) {
       forward(50)
       right()
     }
@@ -51,10 +52,10 @@ class PictureEqualsHashTest extends FunSuite with xscala.RepeatCommands {
     val b12 = Box1(p)
     val b2 = Box2(p)
     b2.translate(100, 0)
-    
+
     val others = Set(b11, b12, b2)
     others.size should be(3)
-    b11 should not be(b12)
+    b11 should not be (b12)
   }
 
   test("living in a map") {
@@ -63,7 +64,7 @@ class PictureEqualsHashTest extends FunSuite with xscala.RepeatCommands {
     val b12 = Box1(p)
     val b2 = Box2(p)
     b2.translate(100, 0)
-    
+
     val picMap = Map(
       b11 -> "b11",
       b12 -> "b12",

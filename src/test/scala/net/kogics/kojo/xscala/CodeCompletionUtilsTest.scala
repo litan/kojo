@@ -16,77 +16,76 @@
 package net.kogics.kojo.xscala
 
 import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FunSuite
 import org.scalatest.BeforeAndAfter
-import org.scalatest.matchers.ShouldMatchers
-
+import org.scalatest.FunSuite
+import org.scalatest.Matchers
+import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class CodeCompletionUtilsTest extends FunSuite with ShouldMatchers with BeforeAndAfter {
-  
+class CodeCompletionUtilsTest extends FunSuite with Matchers with BeforeAndAfter {
+
   before {
-    
+
   }
 
   after {
     CodeCompletionUtils.clearLangTemplates()
   }
-  
+
   test("lang templates miss and hit") {
-    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be (None)
+    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be(None)
     CodeCompletionUtils.addTemplates(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "fram(nsteps)"
       )
     )
-    
-    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be (Some("fram(nsteps)"))
+
+    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be(Some("fram(nsteps)"))
   }
 
   test("builtins templates hit") {
-    CodeCompletionUtils.methodTemplate("activateCanvas") should be ("activateCanvas()")
+    CodeCompletionUtils.methodTemplate("activateCanvas") should be("activateCanvas()")
   }
 
   test("builtins templates miss; Tw templates hit") {
-    CodeCompletionUtils.methodTemplate("Picture") should be ("Picture {\n    ${cursor}\n}")
+    CodeCompletionUtils.methodTemplate("Picture") should be("Picture {\n    ${cursor}\n}")
   }
 
   test("builtins templates miss; Tw templates miss; lang templates hit") {
     CodeCompletionUtils.addTemplates(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "fram(nsteps)"
       )
     )
-    CodeCompletionUtils.methodTemplate("fram") should be (null)
+    CodeCompletionUtils.methodTemplate("fram") should be(null)
     val oldLang = System.getProperty("user.language")
     System.setProperty("user.language", "sv")
-    CodeCompletionUtils.methodTemplate("fram") should be ("fram(nsteps)")
+    CodeCompletionUtils.methodTemplate("fram") should be("fram(nsteps)")
     System.setProperty("user.language", oldLang)
   }
 
   test("lang templates multiple add") {
-    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be (None)
+    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be(None)
     CodeCompletionUtils.addTemplates(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "fram(nsteps)"
       )
     )
-    
-    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be (Some("fram(nsteps)"))
-    CodeCompletionUtils.langMethodTemplate("bak", "sv") should be (None)
+
+    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be(Some("fram(nsteps)"))
+    CodeCompletionUtils.langMethodTemplate("bak", "sv") should be(None)
 
     CodeCompletionUtils.addTemplates(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "fram(nsteps2)",
         "bak" -> "bak(nsteps)"
       )
     )
-    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be (Some("fram(nsteps2)"))
-    CodeCompletionUtils.langMethodTemplate("bak", "sv") should be (Some("bak(nsteps)"))
+    CodeCompletionUtils.langMethodTemplate("fram", "sv") should be(Some("fram(nsteps2)"))
+    CodeCompletionUtils.langMethodTemplate("bak", "sv") should be(Some("bak(nsteps)"))
   }
 }

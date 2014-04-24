@@ -127,7 +127,7 @@ trait CoreBuiltins extends Rationals {
   val SpotLight = picture.SpotLight _
   val noise = picture.noise _
   val weave = picture.weave _
-  def effect(name: Symbol, props: Pair[Symbol, Any]*) = picture.effect(name, props: _*)
+  def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = picture.effect(name, props: _*)
 
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)

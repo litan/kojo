@@ -16,16 +16,15 @@
 package net.kogics.kojo.xscala
 
 import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
-import org.scalatest.matchers.ShouldMatchers
-
+import org.scalatest.Matchers
+import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class RepeatCommandsTest extends FunSuite with ShouldMatchers {
+class RepeatCommandsTest extends FunSuite with Matchers {
 
   val rcs = new RepeatCommands {}
-  
+
   test("repeat") {
     var x = 0
     rcs.repeat(4) {
@@ -33,7 +32,7 @@ class RepeatCommandsTest extends FunSuite with ShouldMatchers {
     }
     x should equal(4)
   }
-  
+
   test("repeati") {
     var x = 0
     var idxs: List[Int] = Nil
@@ -42,9 +41,9 @@ class RepeatCommandsTest extends FunSuite with ShouldMatchers {
       idxs = i :: idxs
     }
     x should equal(4)
-    idxs should equal(List(4,3,2,1))
+    idxs should equal(List(4, 3, 2, 1))
   }
-  
+
   test("repeatWhile") {
     var x = 0
     rcs.repeatWhile(x < 10) {

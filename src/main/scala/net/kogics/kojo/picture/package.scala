@@ -63,7 +63,7 @@ package object picture {
   def lights(lights: Light*) = Lightsc(lights: _*)
   def noise(amount: Int, density: Double) = Noisec(amount, density)
   def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) = Weavec(xWidth, xGap, yWidth, yGap)
-  def effect(name: Symbol, props: Pair[Symbol, Any]*) = SomeEffectc(name, props: _*)
+  def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = SomeEffectc(name, props: _*)
   
   def PointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = {
     val fltr = new LightFilter

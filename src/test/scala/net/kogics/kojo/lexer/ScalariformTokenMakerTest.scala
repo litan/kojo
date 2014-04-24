@@ -1,9 +1,12 @@
 package net.kogics.kojo.lexer
 
+import javax.swing.text.Segment
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
-import org.scalatest.junit.ShouldMatchersForJUnit
-import javax.swing.text.Segment
+import org.scalatest.Matchers
+import org.scalatest.junit.JUnitRunner
+
 import scalariform.lexer.Token
 import scalariform.lexer.Tokens.EQUALS
 import scalariform.lexer.Tokens.INTEGER_LITERAL
@@ -14,10 +17,9 @@ import scalariform.lexer.Tokens.WS
 import scalariform.lexer.Tokens.XML_NAME
 import scalariform.lexer.Tokens.XML_START_OPEN
 import scalariform.lexer.Tokens.XML_TAG_CLOSE
-import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ScalariformTokenMakerTest extends FunSuite with ShouldMatchersForJUnit {
+class ScalariformTokenMakerTest extends FunSuite with Matchers {
 
   val lexer = new ScalariformTokenMaker
 
