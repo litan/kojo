@@ -2,7 +2,11 @@ name := "Kojo"
 
 version := "2.1"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.11.0"
+
+fork in run := true
+
+javaOptions in run ++= Seq("-Xmx1024m", "-Xss1m", "-XX:PermSize=32m", "-XX:MaxPermSize=512m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled", "-XX:+CMSPermGenSweepingEnabled")
 
 fork in Test := true
 
@@ -15,11 +19,13 @@ testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-s")
 autoScalaLibrary := false
 
 libraryDependencies ++= Seq(
-    "org.scala-lang" % "scala-library" % "2.10.3",
-    "org.scala-lang" % "scala-compiler" % "2.10.3",
-    "org.scala-lang" % "scala-reflect" % "2.10.3",
-    "org.scala-lang" % "scala-actors" % "2.10.3",
-    "org.scala-lang" % "scala-swing" % "2.10.3",
+    "org.scala-lang" % "scala-library" % "2.11.0",
+    "org.scala-lang" % "scala-compiler" % "2.11.0",
+    "org.scala-lang" % "scala-reflect" % "2.11.0",
+    "org.scala-lang" % "scala-actors" % "2.11.0",
+    "org.scala-lang.modules" % "scala-swing_2.11" % "1.0.1",
+    "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.1",
+    "org.scala-lang.modules" % "scala-parser-combinators_2.11" % "1.0.1",
     "org.piccolo2d" % "piccolo2d-core" % "1.3.1",
     "org.piccolo2d" % "piccolo2d-extras" % "1.3.1",
     "com.vividsolutions" % "jts" % "1.12" intransitive(),
@@ -32,8 +38,8 @@ libraryDependencies ++= Seq(
     "org.objenesis" % "objenesis" % "1.0" % "test",
     "org.hamcrest" % "hamcrest-core" % "1.1" % "test",
     "org.hamcrest" % "hamcrest-library" % "1.1" % "test",
-    ("org.scalacheck" % "scalacheck_2.10" % "1.11.3" intransitive()) % "test",
-    ("org.scalatest" % "scalatest_2.10" % "2.1.0-RC2" intransitive()) % "test"
+    ("org.scalacheck"  % "scalacheck_2.11" % "1.11.3" intransitive()) % "test",
+    ("org.scalatest" % "scalatest_2.11" % "2.1.3" intransitive()) % "test"
 )
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
