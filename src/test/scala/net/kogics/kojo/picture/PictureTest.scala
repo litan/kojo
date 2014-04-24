@@ -16,37 +16,40 @@
 package net.kogics.kojo
 package picture
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FunSuite
-import org.scalatest.junit.ShouldMatchersForJUnit._
-import util.Utils._
 import java.util.concurrent.CountDownLatch
+
+import org.junit.runner.RunWith
+import org.scalatest.FunSuite
+import org.scalatest.Matchers
+import org.scalatest.junit.JUnitRunner
+
 import net.kogics.kojo.lite.NoOpKojoCtx
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 
+import util.Utils.doublesEqual
+
 @RunWith(classOf[JUnitRunner])
-class PictureTest extends FunSuite with xscala.RepeatCommands {
+class PictureTest extends FunSuite with Matchers with xscala.RepeatCommands {
 
   val kojoCtx = new NoOpKojoCtx
   implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
   val Staging = new staging.API(spriteCanvas) // required for the animation test
 
-  val size = 50
+  val psize = 50
   val pt = 2.0
-  val w = size + pt
-  val h = size + pt
+  val w = psize + pt
+  val h = psize + pt
   val bx = -pt / 2
   val by = -pt / 2
   val w2 = w * 2
-  val bx2 = size * 2
+  val bx2 = psize * 2
 
   def testPic = Pic { t =>
     import t._
     invisible()
     setAnimationDelay(0)
     repeat(4) {
-      forward(size)
+      forward(psize)
       right
     }
   }
@@ -72,44 +75,44 @@ class PictureTest extends FunSuite with xscala.RepeatCommands {
     val p = testPic
     p.draw()
     val b = p.bounds
-    b.x should be(bx plusOrMinus 0.01)
-    b.y should be(by plusOrMinus 0.01)
-    b.width should be(w plusOrMinus 0.01)
-    b.height should be(h plusOrMinus 0.01)
+    b.x should be(bx +- 0.01)
+    b.y should be(by +- 0.01)
+    b.width should be(w +- 0.01)
+    b.height should be(h +- 0.01)
   }
 
   test("picture translation") {
     val p = trans(50, 0) -> testPic
     p.draw()
     val b = p.bounds
-    b.x should be(50 + bx plusOrMinus 0.01)
+    b.x should be(50 + bx +- 0.01)
   }
 
   test("picture scaling") {
     val p = scale(2, 2) -> testPic
     p.draw()
     val b = p.bounds
-    b.x should be(bx * 2 plusOrMinus 0.01)
-    b.width should be(w * 2 plusOrMinus 0.01)
-    b.height should be(h * 2 plusOrMinus 0.01)
+    b.x should be(bx * 2 +- 0.01)
+    b.width should be(w * 2 +- 0.01)
+    b.height should be(h * 2 +- 0.01)
   }
 
   test("picture scaling after translation") {
     val p = trans(50, 0) * scale(2, 2) -> testPic
     p.draw()
     val b = p.bounds
-    b.x should be(50 + 2 * bx plusOrMinus 0.01)
-    b.width should be(w * 2 plusOrMinus 0.01)
-    b.height should be(h * 2 plusOrMinus 0.01)
+    b.x should be(50 + 2 * bx +- 0.01)
+    b.width should be(w * 2 +- 0.01)
+    b.height should be(h * 2 +- 0.01)
   }
 
   test("picture translation after scaling") {
     val p = scale(2, 2) * trans(50, 0) -> testPic
     p.draw()
     val b = p.bounds
-    b.x should be(50 * 2 + 2 * bx plusOrMinus 0.01)
-    b.width should be(w * 2 plusOrMinus 0.01)
-    b.height should be(h * 2 plusOrMinus 0.01)
+    b.x should be(50 * 2 + 2 * bx +- 0.01)
+    b.width should be(w * 2 +- 0.01)
+    b.height should be(h * 2 +- 0.01)
   }
 
   test("3-hpics hp3 bounds") {
@@ -146,13 +149,13 @@ class PictureTest extends FunSuite with xscala.RepeatCommands {
   test("heading 1") {
     val pic = testLine
     pic.rotate(390)
-    pic.heading should be(30.0 plusOrMinus 0.001)
+    pic.heading should be(30.0 +- 0.001)
   }
 
   test("heading 2") {
     val pic = testLine
     pic.setHeading(2 * 360 + 20)
-    pic.heading should be(20.0 plusOrMinus 0.001)
+    pic.heading should be(20.0 +- 0.001)
   }
 
   test("position 1") {
@@ -166,13 +169,13 @@ class PictureTest extends FunSuite with xscala.RepeatCommands {
     val pic = testLine
     pic.rotate(30)
     pic.translate(100, 0)
-    pic.position.x should be(100 * math.cos(30.toRadians) plusOrMinus 0.001)
-    pic.position.y should be(100 * math.sin(30.toRadians) plusOrMinus 0.001)
+    pic.position.x should be(100 * math.cos(30.toRadians) +- 0.001)
+    pic.position.y should be(100 * math.sin(30.toRadians) +- 0.001)
 
     pic.setPosition(150, 50)
     pic.position.x should be(150)
     pic.position.y should be(50)
-    pic.heading should be(30.0 plusOrMinus 0.001)
+    pic.heading should be(30.0 +- 0.001)
   }
 
   test("react provides correct me for transforms") {

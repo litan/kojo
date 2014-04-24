@@ -5,6 +5,8 @@ import java.awt.Color
 import java.awt.Font
 import java.awt.Point
 
+import scala.Vector
+
 import org.jmock.Expectations
 import org.jmock.Expectations.any
 import org.jmock.Expectations.returnValue
@@ -13,8 +15,7 @@ import org.jmock.lib.legacy.ClassImposteriser
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.scalatest.junit.AssertionsForJUnit
-import org.scalatest.junit.ShouldMatchersForJUnit
+import org.scalatest.Matchers
 
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.Turtle
@@ -27,7 +28,7 @@ import net.kogics.kojo.turtle.TurtleWorldAPI
 import edu.umd.cs.piccolo.activities.PActivity
 
 @RunWith(classOf[org.jmock.integration.junit4.JMock])
-class TraceTest extends ShouldMatchersForJUnit with AssertionsForJUnit {
+class TraceTest extends Matchers {
 
   val context: Mockery = new Mockery() {
     {
@@ -233,10 +234,10 @@ arc2(100,30)
       exactly(30).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
       exactly(30).of(mockTurtle).forward(`with`(any(classOf[Double])))
       exactly(1).of(mockTurtle).turn(`with`(any(classOf[Double])))
-      
+
       //circle
-//      exactly(360).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
-//      exactly(360).of(mockTurtle).forward(`with`(any(classOf[Double])))
+      //      exactly(360).of(mockTurtle).towards(`with`(any(classOf[Double])), `with`(any(classOf[Double])))
+      //      exactly(360).of(mockTurtle).forward(`with`(any(classOf[Double])))
 
       allowing(mockTurtle).lastLine; will(returnValue(None))
       allowing(mockTurtle).lastTurn; will(returnValue(None))

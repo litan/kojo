@@ -16,142 +16,140 @@
 package net.kogics.kojo.xscala
 
 import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FunSuite
 import org.scalatest.BeforeAndAfter
-import org.scalatest.matchers.ShouldMatchers
-
+import org.scalatest.FunSuite
+import org.scalatest.Matchers
+import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class HelpTest extends FunSuite with ShouldMatchers with BeforeAndAfter {
-  
+class HelpTest extends FunSuite with Matchers with BeforeAndAfter {
+
   after {
     Help.clearLangContent()
   }
-  
+
   test("lang help miss and hit") {
-    Help.langHelp("fram", "sv") should be (None)
+    Help.langHelp("fram", "sv") should be(None)
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "Help for fram"
       )
     )
-    
-    Help.langHelp("fram", "sv") should be (Some("Help for fram"))
+
+    Help.langHelp("fram", "sv") should be(Some("Help for fram"))
   }
 
   test("common help hit") {
-    Help("gridOn") should be ("gridOn() - Shows a grid on the turtle canvas.")
+    Help("gridOn") should be("gridOn() - Shows a grid on the turtle canvas.")
   }
 
   test("common help miss; Tw help hit") {
-    Help("towards") should be ("towards(x, y) - Turns the turtle towards the point (x, y).")
+    Help("towards") should be("towards(x, y) - Turns the turtle towards the point (x, y).")
   }
 
   test("common help miss; Tw help miss; lang help hit") {
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "Help for fram"
       )
     )
-    Help("fram") should be (null)
+    Help("fram") should be(null)
     val oldLang = System.getProperty("user.language")
     System.setProperty("user.language", "sv")
-    Help("fram") should be ("Help for fram")
+    Help("fram") should be("Help for fram")
     System.setProperty("user.language", oldLang)
   }
 
   test("lang help multiple adds") {
-    Help.langHelp("fram", "sv") should be (None)
+    Help.langHelp("fram", "sv") should be(None)
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "Help for fram"
       )
     )
-    
-    Help.langHelp("fram", "sv") should be (Some("Help for fram"))
-    Help.langHelp("bak", "sv") should be (None)
+
+    Help.langHelp("fram", "sv") should be(Some("Help for fram"))
+    Help.langHelp("bak", "sv") should be(None)
 
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "double",
         "bak" -> "Help for bak"
       )
     )
-    
-    Help.langHelp("fram", "sv") should be (Some("double"))
-    Help.langHelp("bak", "sv") should be (Some("Help for bak"))
+
+    Help.langHelp("fram", "sv") should be(Some("double"))
+    Help.langHelp("bak", "sv") should be(Some("Help for bak"))
   }
 
   test("lang help multiple adds - 2") {
-    Help.langHelp("fram", "sv") should be (None)
+    Help.langHelp("fram", "sv") should be(None)
     Help.addContent(
-      "sv", 
-      Map(
-      )
+      "sv",
+      Map()
     )
-    
+
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "Help for fram",
         "bak" -> "Help for bak"
       )
     )
-    
-    Help.langHelp("fram", "sv") should be (Some("Help for fram"))
-    Help.langHelp("bak", "sv") should be (Some("Help for bak"))
+
+    Help.langHelp("fram", "sv") should be(Some("Help for fram"))
+    Help.langHelp("bak", "sv") should be(Some("Help for bak"))
   }
 
   test("lang help multiple adds - 3") {
-    Help.langHelp("fram", "sv") should be (None)
+    Help.langHelp("fram", "sv") should be(None)
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "Help for fram",
         "bak" -> "Help for bak"
       )
     )
-    
+
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "Help for fram",
         "bak" -> "Help for bak"
       )
     )
-    
-    Help.langHelp("fram", "sv") should be (Some("Help for fram"))
-    Help.langHelp("bak", "sv") should be (Some("Help for bak"))
+
+    Help.langHelp("fram", "sv") should be(Some("Help for fram"))
+    Help.langHelp("bak", "sv") should be(Some("Help for bak"))
   }
-  
+
   test("lang help multiple adds - 4") {
-    Help.langHelp("fram", "sv") should be (None)
+    Help.langHelp("fram", "sv") should be(None)
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "Help for fram",
         "bak" -> "Help for bak",
         "sudda" -> "Help for sudda"
       )
     )
-    
+
     Help.addContent(
-      "sv", 
+      "sv",
       Map(
         "fram" -> "Help for fram",
         "bak" -> "Help for bak",
         "sudda2" -> "Help for sudda2"
       )
     )
-    
-    Help.langHelp("fram", "sv") should be (Some("Help for fram"))
-    Help.langHelp("bak", "sv") should be (Some("Help for bak"))
-    Help.langHelp("sudda", "sv") should be (Some("Help for sudda"))
-    Help.langHelp("sudda2", "sv") should be (Some("Help for sudda2"))
+
+    Help.langHelp("fram", "sv") should be(Some("Help for fram"))
+    Help.langHelp("bak", "sv") should be(Some("Help for bak"))
+    Help.langHelp("sudda", "sv") should be(Some("Help for sudda"))
+    Help.langHelp("sudda2", "sv") should be(Some("Help for sudda2"))
   }
 }
