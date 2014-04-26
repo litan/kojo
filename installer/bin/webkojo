@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# point to the version of java that you want, or leave as-is for the default java version
+JAVAWS=javaws
+
+$JAVAWS http://www.kogics.net/runwebkojo
