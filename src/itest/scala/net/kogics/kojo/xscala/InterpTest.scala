@@ -84,7 +84,8 @@ object builtins {
 
     context.interp.interpret(code)
     context.interp.interpret("""import builtins._""")
-    context.interp.interpret("""import TSCanvas._;import Tw._""")
+    context.interp.interpret("import TSCanvas._")
+    context.interp.interpret("import Tw._")
     context.interp.unqualifiedIds should contain("zoom")
   }
 
@@ -92,13 +93,14 @@ object builtins {
     val context = fixture
     val testEnv = TestEnv(new NoOpKojoCtx)
     val execSupport = testEnv.execSupport
-    
+
     println("Sending typeAt msg")
     val typeAt = execSupport.codeRunner.typeAt("", 1)
     println("typeAt msg response:" + typeAt)
     execSupport.codeRunner.runContext.initInterp(context.interp)
     println(context.interp.unqualifiedIds)
-    context.interp.interpret("""import TSCanvas._;import Tw._""")
+    context.interp.interpret("import TSCanvas._")
+    context.interp.interpret("import Tw._")
     context.interp.unqualifiedIds should contain("zoom")
   }
 }
