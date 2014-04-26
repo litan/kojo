@@ -1,8 +1,8 @@
 **Kojo Links**
 
-The [Homepage][1] provides user-level information about Kojo.
-The [Dev Board][2] gives you a high level view of what's going on with the development of Kojo. 
-The [Issue Tracker][3] let's you file bug reports.
+* The [Kojo home-page][1] provides user-level information about Kojo.
+* The [Kojo dev-board][2] gives you a high level view of what's going on with the development of Kojo. 
+* The [Kojo issue-tracker][3] let's you file bug reports.
 
 **To start hacking:**
 
