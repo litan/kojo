@@ -337,12 +337,15 @@ trait AppMenu { self: Main.type =>
     langMenu.setMnemonic('L')
 
     val langMap = Map(
-      "English" -> "en",
-      "Swedish" -> "sv",
-      "French" -> "fr",
-      "Polish" -> "pl",
-      "Hindi" -> "todo",
-      "Dutch" -> "nl"
+      "English" → "en",
+      "Svenska (Swedish)" → "sv",
+      "Français (French)" → "fr",
+      "Polski (Polish)" → "pl",
+      "Nederlands (Dutch)" → "nl"
+/*
+      "Italiano (Italian)" → "it",
+      "हिंदी (Hindi)" → "hi"
+*/
     )
     var langMenus: Seq[JCheckBoxMenuItem] = Vector()
     val langHandler = new ActionListener {
@@ -374,11 +377,14 @@ trait AppMenu { self: Main.type =>
     }
 
     langMenu.add(langMenuItem("English"))
-    langMenu.add(langMenuItem("Swedish"))
-    langMenu.add(langMenuItem("French"))
-    langMenu.add(langMenuItem("Polish"))
-    langMenu.add(langMenuItem("Dutch"))
-    //    langMenu.add(langMenuItem("Italian (coming-up)"))
+    langMenu.add(langMenuItem("Svenska (Swedish)"))
+    langMenu.add(langMenuItem("Français (French)"))
+    langMenu.add(langMenuItem("Polski (Polish)"))
+    langMenu.add(langMenuItem("Nederlands (Dutch)"))
+    /*
+       langMenu.add(langMenuItem("Italiano (Italian)"))
+       langMenu.add(langMenuItem("हिंदी (Hindi)"))
+    */
     menuBar.add(langMenu)
 
     val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
