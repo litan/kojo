@@ -344,9 +344,11 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
   def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     import interactive._
+    val augmentedCode0 =
+      "%s ;} // %s" format (code0.substring(0, offset), code0.substring(offset))
 
     classLoader.setAsContext()
-    val code = compilerCode(code0)
+    val code = compilerCode(augmentedCode0)
 
     val source = new BatchSourceFile("scripteditor", code)
     val pos = new OffsetPosition(source, offset + offsetDelta + 1)
