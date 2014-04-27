@@ -254,7 +254,7 @@ arc2(100,30)
     endEvents.size should be(4)
 
     val position = endEvents(0)
-    assert(position.pret === "Point(40.00 , 0.00)")
+    assert(position.pret === s"Point(40.00 , 0.00)" || position.pret ===  s"Point(40,00 , 0,00)")
 
     val heading = endEvents(1)
     assert(heading.pret === "180.0")
