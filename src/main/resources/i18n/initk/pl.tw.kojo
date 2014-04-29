@@ -23,7 +23,7 @@ import net.kogics.kojo.lite.i18n.PlInit
 import net.kogics.kojo.lite.i18n.PolishAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
   Żółw,żółw,czyść,czyśćWyjście,
-  niebieski,czerwony,żółty,zielony,filotetowy,różowy,brązowy,czarny,biały,przezroczysty,
+  niebieski,czerwony,żółty,zielony,fioletowy,różowy,brązowy,czarny,biały,przezroczysty,
   tło, KcPL, 
   powtarzaj, powtarzajZLicznikem, dopóki,
   wejście,
