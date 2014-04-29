@@ -26,7 +26,7 @@ import net.kogics.kojo.lite.i18n.PolishAPI.{
   niebieski,czerwony,żółty,zielony,fioletowy,różowy,brązowy,czarny,biały,przezroczysty,
   tło, KcPL, 
   powtarzaj, powtarzajZLicznikem, dopóki,
-  wejście,
+  wejście, zaokrągl,
   liczbaLosowa, liczbaLosowaRzeczywista,
   Całkowita, Rzeczywista, Napis,
   czasSystemowy}
