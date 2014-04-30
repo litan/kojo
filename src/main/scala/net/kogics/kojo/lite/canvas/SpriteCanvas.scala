@@ -774,8 +774,11 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   def onAnimationStop(fn: => Unit) {
     figure0.onStop(fn)
   }
-  def scriptRunning() {
-    figure0.scriptRunning()
+  def onRunStart() {
+    figure0.onRunStart()
+  }
+  def onRunDone() {
+    figure0.onRunDone()
   }
 
   import core.Picture
