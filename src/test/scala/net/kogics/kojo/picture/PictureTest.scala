@@ -188,7 +188,6 @@ class PictureTest extends FunSuite with Matchers with xscala.RepeatCommands {
       pic.canvas.stopAnimation()
       latch.countDown()
     }
-    spriteCanvas.scriptRunning()
     latch.await()
     pic2 should be(pic)
   }

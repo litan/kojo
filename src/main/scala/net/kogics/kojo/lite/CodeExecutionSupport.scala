@@ -316,6 +316,7 @@ class CodeExecutionSupport(
       showNormalCursor()
       enableRunButton(false)
       stopButton.setEnabled(true)
+      tCanvas.onRunStart() 
     }
 
     def onCompileStart() {
@@ -325,7 +326,7 @@ class CodeExecutionSupport(
     }
 
     def onRunError() {
-      interpreterDone()
+      runDone()
       onError()
     }
 
@@ -359,8 +360,7 @@ class CodeExecutionSupport(
     }
 
     def onRunSuccess() = {
-      tCanvas.scriptRunning() 
-      interpreterDone()
+      runDone()
       Utils.runInSwingThread {
         statusStrip.onSuccess()
       }
@@ -405,7 +405,8 @@ class CodeExecutionSupport(
       showSmartError(errText, line, column, offset)
     }
 
-    private def interpreterDone() = {
+    private def runDone() = {
+      tCanvas.onRunDone() 
       Utils.runInSwingThread {
         enableRunButton(true)
         if (!pendingCommands) {
