@@ -359,6 +359,7 @@ class CodeExecutionSupport(
     }
 
     def onRunSuccess() = {
+      tCanvas.scriptRunning() 
       interpreterDone()
       Utils.runInSwingThread {
         statusStrip.onSuccess()

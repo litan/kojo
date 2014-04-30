@@ -169,6 +169,17 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     currLayer.repaint
   }
 
+  private var pendingAnimations = Vector.empty[PActivity]
+  
+  def scriptRunning() = Utils.runLaterInSwingThread {
+    pendingAnimations foreach { figAnimation => 
+      figAnimations = figAnimation :: figAnimations
+      canvas.animateActivity(figAnimation)
+    }
+    
+    pendingAnimations = Vector.empty[PActivity]
+  }
+  
   def refresh(fn: => Unit): Future[PActivity] = {
     @volatile var figAnimation: PActivity = null
     val promise = new FutureResult[PActivity]
@@ -209,8 +220,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         startFn.get.apply()
       }
 
-      figAnimations = figAnimation :: figAnimations
-      canvas.animateActivity(figAnimation)
+      pendingAnimations = pendingAnimations :+ figAnimation
       promise.set(figAnimation)
     }
     promise
