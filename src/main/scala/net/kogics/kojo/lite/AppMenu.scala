@@ -4,21 +4,7 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 
-import javax.swing.AbstractAction
-import javax.swing.BoxLayout
-import javax.swing.JButton
-import javax.swing.JCheckBoxMenuItem
-import javax.swing.JDialog
-import javax.swing.JEditorPane
-import javax.swing.JLabel
-import javax.swing.JMenu
-import javax.swing.JMenuBar
-import javax.swing.JMenuItem
-import javax.swing.JOptionPane
-import javax.swing.JPanel
-import javax.swing.JScrollPane
-import javax.swing.JTextField
-import javax.swing.KeyStroke
+import javax.swing._
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.text.html.HTMLEditorKit
@@ -33,7 +19,8 @@ import net.kogics.kojo.lite.action.FullScreenOutputAction
 import net.kogics.kojo.lite.action.FullScreenSupport
 import net.kogics.kojo.util.Utils
 
-trait AppMenu { self: Main.type =>
+trait AppMenu {
+  self: Main.type =>
   def menuBar = {
     val menuBar = new JMenuBar
 
@@ -69,14 +56,15 @@ trait AppMenu { self: Main.type =>
             urlGetter.setVisible(false)
           }
         })
-        okCancel.add(ok); okCancel.add(cancel)
+        okCancel.add(ok)
+        okCancel.add(cancel)
         urlPanel.add(okCancel)
 
         urlGetter.setModal(true)
         urlGetter.getRootPane.setDefaultButton(ok)
         urlGetter.getContentPane.add(urlPanel)
         urlGetter.setBounds(300, 300, 450, 300)
-        urlGetter.pack
+        urlGetter.pack()
         urlGetter.setVisible(true)
       }
     })
@@ -111,8 +99,8 @@ trait AppMenu { self: Main.type =>
     newKojo.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         Utils.runAsync {
-          NewKojoInstance.main(Array("subKojo"))
-        }
+                         NewKojoInstance.main(Array("subKojo"))
+                       }
       }
     })
     fileMenu.add(newKojo)
@@ -321,11 +309,12 @@ trait AppMenu { self: Main.type =>
     val fullScreenOutputItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(fsOutputAction)
     windowMenu.add(fullScreenOutputItem)
 
-    windowMenu.getPopupMenu().addPopupMenuListener(new PopupMenuListener {
+    windowMenu.getPopupMenu.addPopupMenuListener(new PopupMenuListener {
       def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
         FullScreenSupport.updateMenuItem(fullScreenCanvasItem, fsCanvasAction)
         FullScreenSupport.updateMenuItem(fullScreenOutputItem, fsOutputAction)
       }
+
       def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
 
       def popupMenuCanceled(e: PopupMenuEvent) {}
@@ -333,51 +322,7 @@ trait AppMenu { self: Main.type =>
 
     menuBar.add(windowMenu)
 
-    val langMenu = new JMenu(Utils.loadString("S_Language"))
-    langMenu.setMnemonic('L')
-
-    val langMap = Map(
-      "English" -> "en",
-      "Swedish" -> "sv",
-      "French" -> "fr",
-      "Polish" -> "pl",
-      "Hindi" -> "todo"
-    )
-    var langMenus: Seq[JCheckBoxMenuItem] = Vector()
-    val langHandler = new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
-        val lang = e.getActionCommand
-        kojoCtx.userLanguage = lang
-        langMenus foreach { mi =>
-          if (mi.getActionCommand() != lang) {
-            mi.setSelected(false)
-          }
-        }
-        JOptionPane.showMessageDialog(kojoCtx.frame,
-          Utils.loadString("S_LangChanged") format (e.getSource.asInstanceOf[JCheckBoxMenuItem].getText()),
-          Utils.loadString("S_LangChange"),
-          JOptionPane.INFORMATION_MESSAGE)
-      }
-    }
-
-    def langMenuItem(lang: String) = {
-      val langCode = langMap(lang)
-      val mitem = new JCheckBoxMenuItem(lang)
-      mitem.addActionListener(langHandler)
-      mitem.setActionCommand(langCode)
-      if (kojoCtx.userLanguage == langCode) {
-        mitem.setSelected(true)
-      }
-      langMenus :+= mitem
-      mitem
-    }
-
-    langMenu.add(langMenuItem("English"))
-    langMenu.add(langMenuItem("Swedish"))
-    langMenu.add(langMenuItem("French"))
-    langMenu.add(langMenuItem("Polish"))
-    //    langMenu.add(langMenuItem("Italian (coming-up)"))
-    menuBar.add(langMenu)
+    menuBar.add(LangMenuFactory.createLangMenu())
 
     val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
     toolsMenu.setMnemonic('T')
@@ -401,15 +346,15 @@ trait AppMenu { self: Main.type =>
         val aboutPanel = new JPanel
         aboutPanel.setLayout(new BoxLayout(aboutPanel, BoxLayout.Y_AXIS))
 
-        val kojoIcon = new JLabel();
+        val kojoIcon = new JLabel()
         kojoIcon.setIcon(Utils.loadIcon("/images/splash.png"))
-        kojoIcon.setSize(430, 280);
+        kojoIcon.setSize(430, 280)
         aboutPanel.add(kojoIcon)
 
         val aboutText = new JEditorPane
         aboutText.setEditorKit(new HTMLEditorKit)
         aboutText.setEditable(false)
-        aboutText.setText(s"""<html><body>
+        aboutText.setText( s"""<html><body>
 <div style="font-size: 12pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> ${Versions.KojoMajorVersion}<br/>
               Version: ${Versions.KojoVersion} <br/>
@@ -478,7 +423,7 @@ trait AppMenu { self: Main.type =>
         aboutBox.getContentPane.add(aboutPanel)
         aboutBox.setSize(430, 600)
         aboutBox.setLocationRelativeTo(null)
-        aboutBox.pack
+        aboutBox.pack()
         ok.requestFocusInWindow()
         aboutBox.setVisible(true)
       }
