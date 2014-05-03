@@ -59,7 +59,7 @@ object Main extends AppMenu with ScriptLoader { main =>
   @volatile var frame: JFrame = _
   @volatile var splash: SplashScreen = _
   @volatile var execSupport: CodeExecutionSupport = _
-  @volatile var kojoCtx: KojoCtx = _
+  @volatile implicit var kojoCtx: KojoCtx = _
 
   def main(args: Array[String]): Unit = {
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
