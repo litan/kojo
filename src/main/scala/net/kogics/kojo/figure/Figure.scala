@@ -183,7 +183,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
       canvas.animateActivity(figAnimation)
     }
 
-    pendingAnimations = Vector.empty[PActivity]
+    pendingAnimations = Vector.empty
   }
 
   def refresh(fn: => Unit): Future[PActivity] = {
@@ -249,6 +249,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         stopFn.get.apply()
       }
       figAnimations = Nil
+      pendingAnimations = Vector.empty
     }
   }
 
