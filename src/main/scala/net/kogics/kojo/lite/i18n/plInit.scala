@@ -35,6 +35,8 @@ object PolishAPI {
     def pokaż() = englishTurtle.invisible() 
     def naprzód(kroki: Double) = englishTurtle.forward(kroki) 
     def naprzód() = englishTurtle.forward(25) 
+    def tył() = englishTurtle.back()
+    def tył(kroki:Double) = englishTurtle.back(kroki)
     def prawo(kąt: Double) = englishTurtle.right(kąt) 
     def prawo() = englishTurtle.right(90) 
     def lewo(kąt: Double) = englishTurtle.left(kąt) 
@@ -93,7 +95,7 @@ object PolishAPI {
   lazy val czerwony = builtins.red 
   lazy val żółty = builtins.yellow 
   lazy val zielony = builtins.green 
-  lazy val filotetowy = builtins.purple
+  lazy val fioletowy = builtins.purple
   lazy val różowy = builtins.pink 
   lazy val brązowy = builtins.brown 
   lazy val czarny = builtins.black 
@@ -114,14 +116,14 @@ object PolishAPI {
     lazy val VK_Ń = 323
   }
   
-  def powtarzaj(n: Int)(block: => Unit) {
-    for (i <- 1 to n) block
+  def powtarzaj(n: Int)(blok: => Unit) {
+    for (i <- 1 to n) blok
   }
-  def powtarzajZLicznikem(n: Int)(block: Int => Unit) {
-    for (i <- 1 to n) block(i)
+  def powtarzajZLicznikem(n: Int)(blok: Int => Unit) {
+    for (i <- 1 to n) blok(i)
   }
-  def dopóki(villkor: => Boolean)(block: => Unit) {
-    while (villkor) block
+  def dopóki(warunek: => Boolean)(blok: => Unit) {
+    while (warunek) blok
   }
   
   //simple IO
@@ -173,6 +175,7 @@ object PlInit {
   
   val codeTemplates = Map(
     "naprzód" -> "naprzód(${kroki})",
+    "tył" -> "tył(${kroki})",
     "prawo" -> "prawo(${kąt})",
     "lewo" -> "lewo(${kąt})",
     "skoczDo" -> "skoczDo(${x},${y})",
@@ -227,17 +230,18 @@ object PlInit {
   val helpContent = Map(
     "naprzód" ->
       <div>
-<strong>naprzód</strong>(kroki) - porusza żówia w kierunku głowy o zadaną ilość kroków, lub gdy nie podamy parametru o 25 kroków. (piksele)
+<strong>naprzód</strong>(kroki) - porusza żółwia w kierunku głowy o zadaną ilość kroków, lub gdy nie podamy parametru o 25 kroków. (piksele)
 <br/><em>Przykład:</em> <br/><br/>
 <pre>
 czyść()    //czyść płótno
 naprzód(100)  //przesuń żółwia do przodu o 100 kroków
 naprzód()     // przesuń żółwia o 25 kroków
-podnieśPisak   //podnieś pisak - żółw idąć nie rysuje
+podnieśPisak   //podnieś pisak - żółw idąc nie rysuje
 naprzód(200)  //przesuń żółwia o 200 kroków
 prawo(45)  //obróć żółwia w prawo o 45 stopni
 </pre>
       </div>.toString,
+    "lewo" -> <div><strong>tył</strong>(kroki)<br/>porusza żółwiem do tyłu</div>.toString,
     "lewo" -> <div><strong>lewo</strong>(kąt)<br/>obraca żółwia w lewo o zadany kąt, domyślnie 90 stopni</div>.toString,
     "prawo" -> <div><strong>prawo</strong>(kąt)<br/>obraca żółwia w prawo o zadany kąt, domyślnie 90 stopni</div>.toString,
     "skoczDo" -> <div><strong>skoczDo</strong>(x, y)<br/>umieszcza żółwia na pozycji (x,y) nie rysując po płótnie</div>.toString,
@@ -247,7 +251,7 @@ prawo(45)  //obróć żółwia w prawo o 45 stopni
     "kierunek" -> <div><strong>kierunek</strong>(x, y)<br/>ustawia żółwia w kierunku punktu o współrzędnych (x,y)</div>.toString,
     "ustawKąt" -> <div><strong>ustawKąt</strong>(kąt)<br/>ustawa kierunek żółwia o danym kącie gdzie 0 to wschód (w prawo).</div>.toString,
     "kąt" -> <div><strong>kąt</strong><br/>pobiera wartość aktualnego kąta ustawienia</div>.toString,
-    "wschód" -> <div><strong>wschód</strong>()<br/>ustawia żółwia w kieruneku wschódnim (w prawo).</div>.toString,
+    "wschód" -> <div><strong>wschód</strong>()<br/>ustawia żółwia w kierunku wschodnim (w prawo).</div>.toString,
     "zachód" -> <div><strong>zachód</strong>()<br/> ustawia żółwia w kierunku zachodnim (w lewo).</div>.toString,
     "północ" -> <div><strong>północ</strong>()<br/>ustawia żółwia w kierunku  północnym (w górę).</div>.toString,
     "południe" -> <div><strong>południe</strong>()<br/>ustawia żółwia w kierunku południowym (w dół).</div>.toString,
@@ -267,15 +271,15 @@ drukuj(położenie.y)
 
 var x = położenie.x 
 var y = położenie.y 
-x = x - 100     
+x = x - 300     
 skoczDo(x, y)
 </pre>
       </div>.toString,
-    "opuśćPisak" -> <div><strong>opuśćPisak</strong>()<br/> umożliwia rysowanie gdy zółw się porusza</div>.toString,
-    "podnieśPisak" -> <div><strong>podnieśPisak</strong>()<br/> po uruchomieniu polecenia pruszający się żółw nie zostawia śladu</div>.toString,
+    "opuśćPisak" -> <div><strong>opuśćPisak</strong>()<br/> umożliwia rysowanie gdy żółw się porusza</div>.toString,
+    "podnieśPisak" -> <div><strong>podnieśPisak</strong>()<br/> po uruchomieniu polecenia poruszający się żółw nie zostawia śladu</div>.toString,
     "czyśćStylPisaka" -> <div><strong>czyśćStylPisaka</strong><br/> anuluje ustawienia koloru i grubości linii  Zwraca prawdę lub fałsz informujący czy pisak jest opuszczony <strong>true</strong> czy nie <strong>false</strong> </div>.toString,
     "kolor" -> <div><strong>kolor</strong>(kolorpisaka)<br/>Ustawia kolor pisaka
-<br/>Zdefiniowane kolory: <br/>niebieski, czerwony, żółty, zielony, filotetowy, różowy, brązowy, czarny, biały, przezroczysty.
+<br/>Zdefiniowane kolory: <br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, przezroczysty.
 <br/>Można też ustawić kolor korzystając z obiektu Color 
 <br/><em>Przykład:</em> <br/><br/>
 <pre>
@@ -287,16 +291,16 @@ naprzód(200)
        </div>.toString,
     "grubość" -> <div><strong>grubość</strong>(grubość)<br/>Ustawia grubość pisaka</div>.toString,
     "zapiszStyl" -> <div><strong>zapiszStyl</strong>()<br/> Zapamiętuje styl (kolor, grubość pędzla, wypełnienie kolorem)<br/>>Odczyt stylu odbywa się za pomocą przywróćStyl</div>.toString,
-    "przywróćStyl" -> <div><strong>przywróćStyl</strong>()<br/>Służy do odczytu zapemiętanego stylu  funkcją przwróćStyl</div>.toString,
-    "zapamiętajKierunek" -> <div><strong>zapamiętajKierunek</strong>()<br/>zapamiętuje obecny kierunke w celu odtworzenia go funkcją odtwórzKierunek</div>.toString,
+    "przywróćStyl" -> <div><strong>przywróćStyl</strong>()<br/>Służy do odczytu zapamiętanego stylu  funkcją przwróćStyl</div>.toString,
+    "zapamiętajKierunek" -> <div><strong>zapamiętajKierunek</strong>()<br/>zapamiętuje obecny kierunek w celu odtworzenia go funkcją odtwórzKierunek</div>.toString,
     "odtwórzKierunek" -> <div><strong>odtwórzKierunek</strong>()<br/>odtwarza kierunek żółwia wcześniej zapamiętany funkcją zapamiętajKierunek</div>.toString,
     "pokażOś" -> <div><strong>pokażOś</strong>()<br/> pokazuje oś wskazującą kierunek ustawienia żółwia</div>.toString,
     "ukryjOś" -> <div><strong>ukryjOś</strong>()<br/> ukrywa oś wskazującą kierunek ustawienia żółwia</div>.toString,
-    "angielski" -> <div><strong>angielski</strong><br/>odwoałanie do poleceń dla żółwia w języku angielskim<br/> np. żółw.angielski</div>.toString,
+    "angielski" -> <div><strong>angielski</strong><br/>odwołanie do poleceń dla żółwia w języku angielskim<br/> np. żółw.angielski</div>.toString,
     "czyść" -> <div><strong>czyść</strong>()<br/>czyści zawartość płótna</div>.toString,
     "czyśćWyjście" -> <div><strong>czyśćWyjście</strong>()<br/>czyści okno wyjścia (komunikatów)</div>.toString,
-    "tło" -> <div><strong>tło</strong>(kolorTła)<br/>ustawia kolor tła, zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, filotetowy, różowy, brązowy, czarny, biały, przezroczysty.<br/>Możemy też użyć obiektu Color </div>.toString,
-    "tłoGradientPion" -> <div><strong>tło</strong>(kolor1,kolor2)<br/> ustawia gradient zmieniający się w pionie od koloru kolor1 aż do koloru kolor2 <br/>Dostępe zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, filotetowy, różowy, brązowy, czarny, biały, przezroczysty.<br/>Można też użyć obiektu Color </div>.toString,
+    "tło" -> <div><strong>tło</strong>(kolorTła)<br/>ustawia kolor tła, zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, przezroczysty.<br/>Możemy też użyć obiektu Color </div>.toString,
+    "tłoGradientPion" -> <div><strong>tło</strong>(kolor1,kolor2)<br/> ustawia gradient zmieniający się w pionie od koloru kolor1 aż do koloru kolor2 <br/>Dostępe zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, przezroczysty.<br/>Można też użyć obiektu Color </div>.toString,
     "powtarzaj" -> <div><strong>powtarzaj</strong>(ilość) {{ polecenia }} - powtarza <em>polecenia w nawiasie</em> zadaną ilość razy.
         <br/><em>Przykład:</em> <br/><br/>
         <pre>
@@ -323,14 +327,14 @@ dopóki(i{ "<" }10) {{
 }}
         </pre>
       </div>.toString,
-    "drukuj" -> <div><strong>drukuj</strong>(tekst)<br/>drukuje <em>napis</em> do okna wyścia <br/> Przykład: drukuj("hej")</div>.toString,
+    "drukuj" -> <div><strong>drukuj</strong>(tekst)<br/>drukuje <em>napis</em> do okna wyjścia <br/> Przykład: drukuj("hej")</div>.toString,
     "wejście" -> <div><strong>wejście</strong>(tekstKomunikatu)<br/> wyświetla na dole okna wyjścia pole w którym użytkownik wpisuje tekst wczytywany do zmiennej w skrypcie. tekstKomunikatu służy do inforamcji co użytkownik ma wpisać.<br/>
         <br/><em>Przykład:</em> <br/><br/>
         <pre>val x = wejście("Podaj swoje imię")
 drukuj("Hej " + x + "!")
         </pre>
       </div>.toString,
-    "zaokrągl" -> <div><strong>zaokrągl</strong>(rzeczywista, miejscPoPrzecinku)<br/>zaokrągla liczbę z przecinkiem do podanaej ilości miejsc po przecinku<br/>
+    "zaokrągl" -> <div><strong>zaokrągl</strong>(rzeczywista, miejscPoPrzecinku)<br/>zaokrągla liczbę z przecinkiem do podanej ilości miejsc po przecinku<br/>
         <br/><em>Przykład:</em> <br/><br/>
         <pre>val t1 = zaokrągl(3.991,2) 
 drukuj(t1)
@@ -349,13 +353,13 @@ val s = stop - start
 drukuj("Ułynęło " + zaokrągl(s,1) + " sekund.")
         </pre>
       </div>.toString,
-    "liczbaLosowa" -> <div><strong>liczbaLosowa</strong>(maksimum)<br/>losuje liczbę z zakresu od 0 do (maksimum - 1) <br/><em>Przykład:</em><br/><pre>  def rzut_kostką = random(5) + 1 </pre><br/> losuje liczbę od 1 do 6</div>.toString,
+    "liczbaLosowa" -> <div><strong>liczbaLosowa</strong>(maksimum)<br/>losuje liczbę z zakresu od 0 do (maksimum - 1) <br/><em>Przykład:</em><br/><pre>  def rzut_kostką = liczbaLosowa(5) + 1 </pre><br/> losuje liczbę od 1 do 6</div>.toString,
     "liczbaLosowaRzeczywista" -> <div><strong>liczbaLosowaRzeczywista</strong>(maksimum)<br/>losuje liczbę z zakresu od 0 do maksimum (przedział lewostronnie otwarty)<br/><em>Przykład:</em><br/><pre> def losowa = liczbaLosowaRzeczywista(20) + 1.0</pre><br/>losuje liczbę od  1.0 do poniżej 21.0</div>.toString,
     "kostium" -> <div><strong>kostium</strong>(Costume)<br/>ustawia obrazek żółwia, zdefiniowany w obiekcie Costume<br/><em>Przykład:</em><br/><pre>  
 czyść       
 kostium(Costume.bat1) 
 naprzód(100) 
-val nietoperz = Żółw(100,100,"ścieżka_do_pliku")
+val nietoperz = new Żółw(100,100,"ścieżka_do_pliku")
 nietoperz.naprzód(100) 
 </pre><br/></div>.toString
   )
