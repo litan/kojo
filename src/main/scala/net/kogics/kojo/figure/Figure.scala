@@ -169,12 +169,29 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     currLayer.repaint
   }
 
+  private var pendingAnimations = Vector.empty[PActivity]
+  private var inRunner = false
+
+  def onRunStart() = Utils.runLaterInSwingThread {
+    inRunner = true
+  }
+
+  def onRunDone() = Utils.runLaterInSwingThread {
+    inRunner = false
+    pendingAnimations foreach { figAnimation =>
+      figAnimations = figAnimation :: figAnimations
+      canvas.animateActivity(figAnimation)
+    }
+
+    pendingAnimations = Vector.empty
+  }
+
   def refresh(fn: => Unit): Future[PActivity] = {
     @volatile var figAnimation: PActivity = null
     val promise = new FutureResult[PActivity]
 
     Utils.runLaterInSwingThread {
-      figAnimation = new PActivity(-1, 1000/canvas.kojoCtx.fps) {
+      figAnimation = new PActivity(-1, 1000 / canvas.kojoCtx.fps) {
         override def activityStep(elapsedTime: Long) {
           currLayer = fgLayer
           try {
@@ -191,7 +208,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
               figAnimations = figAnimations filter { _ != this }
           }
           finally {
-//            repaint()
+            //            repaint()
             currLayer = bgLayer
           }
         }
@@ -209,8 +226,13 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         startFn.get.apply()
       }
 
-      figAnimations = figAnimation :: figAnimations
-      canvas.animateActivity(figAnimation)
+      if (inRunner) {
+        pendingAnimations = pendingAnimations :+ figAnimation
+      }
+      else {
+        figAnimations = figAnimation :: figAnimations
+        canvas.animateActivity(figAnimation)
+      }
       promise.set(figAnimation)
     }
     promise
@@ -227,6 +249,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         stopFn.get.apply()
       }
       figAnimations = Nil
+      pendingAnimations = Vector.empty
     }
   }
 
@@ -234,7 +257,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     Utils.runInSwingThread {
       val figAnimation = f.get
       figAnimation.terminate(PActivity.TERMINATE_AND_FINISH)
-      figAnimations = figAnimations.filterNot {_ == figAnimation}
+      figAnimations = figAnimations.filterNot { _ == figAnimation }
       if (figAnimations.isEmpty && stopFn.isDefined) {
         stopFn.get.apply()
       }
