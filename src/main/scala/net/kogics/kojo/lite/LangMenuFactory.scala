@@ -63,6 +63,7 @@ object LangMenuFactory {
     "hi" → "हिंदी (Hindi)"
   )
 
+  /** If the language code is not in this map, then the country defaults to same code as the language. */
   private val langToCountry = Map(
     "en" → "gb",
     "hi" → "in"
