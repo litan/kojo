@@ -15,13 +15,11 @@
 
 package net.kogics.kojo.codex;
 
-import java.awt.Desktop;
-import java.awt.Dimension;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.io.File;
 import java.net.URI;
 
-import javax.swing.JComboBox;
+import javax.swing.*;
 
 import net.kogics.kojo.core.KojoCtx;
 import net.kogics.kojo.core.SCanvas;
@@ -84,7 +82,7 @@ public class CodeExchangeForm extends javax.swing.JDialog {
         if (code == null || code.trim().equals("")) {
             uploadButton.setEnabled(false);
             uploadButton1.setEnabled(false);
-            talkDetails.setText("There's no code in the Script Editor, so there's nothing to Upload!");
+            talkDetails.setText(Utils.loadString("CodeExchangeForm.noCode"));
         }
     }
 
