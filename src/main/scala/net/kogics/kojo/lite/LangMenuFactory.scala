@@ -48,7 +48,7 @@ object LangMenuFactory {
 
     val langMenu = new JMenu(Utils.loadString("S_Language"))
     langMenu.setMnemonic('L')
-    langMenu.setIcon(langIcon(kojoCtx.userLanguage))
+    langMenu.setIcon(Utils.loadIcon("/images/generic-flag.png"))
     supportedLanguages.foreach {lang ⇒ langMenu.add(langMenuItem(lang))}
     langMenu
   }
@@ -65,13 +65,12 @@ object LangMenuFactory {
 
   /** If the language code is not in this map, then the country defaults to same code as the language. */
   private val langToCountry = Map(
-    "en" → "gb",
+    "en" → "us",
     "hi" → "in"
   )
 
   private def langIcon(langCode: String): ImageIcon = {
     val countryCode = langToCountry.get(langCode).getOrElse(langCode)
-    val iconUrl = getClass.getClassLoader.getResource(s"geogebra/gui/menubar/images/$countryCode.png")
-    new ImageIcon(iconUrl)
+    Utils.loadIcon(s"/geogebra/gui/menubar/images/$countryCode.png")
   }
 }
