@@ -15,11 +15,13 @@
 
 package net.kogics.kojo.codex;
 
-import java.awt.*;
+import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.io.File;
 import java.net.URI;
 
-import javax.swing.*;
+import javax.swing.JComboBox;
 
 import net.kogics.kojo.core.KojoCtx;
 import net.kogics.kojo.core.SCanvas;
