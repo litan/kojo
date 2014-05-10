@@ -550,7 +550,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       repaint()
     }
   }
-  
+
   import java.io.File
   private def exportImageHelper(filePrefix: String, width: Int, height: Int): java.io.File = {
     val outfile = File.createTempFile(filePrefix + "-", ".png")
@@ -773,6 +773,12 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
   def onAnimationStop(fn: => Unit) {
     figure0.onStop(fn)
+  }
+  def onRunStart() {
+    figure0.onRunStart()
+  }
+  def onRunDone() {
+    figure0.onRunDone()
   }
 
   import core.Picture
