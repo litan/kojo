@@ -8,13 +8,14 @@ object LangInit {
   def init(prefs: Preferences) = {
     val userLanguage = prefs.get("user.language", System.getProperty("user.language"))
     if (userLanguage != null && userLanguage.trim != "") {
-      java.util.Locale.setDefault(new java.util.Locale(userLanguage))
+      val oldLocale = java.util.Locale.getDefault
+      java.util.Locale.setDefault(new java.util.Locale(userLanguage, oldLocale.getCountry, oldLocale.getVariant))
       System.setProperty("user.language", userLanguage)
     }
 
     userLanguage
   }
-  
+
   def initPhase2(b: CoreBuiltins) {
     System.getProperty("user.language") match {
       case "sv" =>
@@ -24,7 +25,7 @@ object LangInit {
       case _ =>
     }
   }
-  
+
   def apply() {
     val prefs = Preferences.userRoot().node("Kojolite-Prefs")
     init(prefs)

@@ -31,7 +31,7 @@ class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends 
     interp.setContextClassLoader()
     interp.interpret(code)
   }
-  def completions(id: String) = completer.completer.complete(s"$id.", 1).candidates
+  def completions(id: String) = completer.completer.complete(s"$id.", id.length).candidates
   def unqualifiedIds = interp.unqualifiedIds
   def stop(interpThread: Thread) {
     interpThread.interrupt()

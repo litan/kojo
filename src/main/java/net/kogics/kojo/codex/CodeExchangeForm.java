@@ -84,7 +84,7 @@ public class CodeExchangeForm extends javax.swing.JDialog {
         if (code == null || code.trim().equals("")) {
             uploadButton.setEnabled(false);
             uploadButton1.setEnabled(false);
-            talkDetails.setText("There's no code in the Script Editor, so there's nothing to Upload!");
+            talkDetails.setText(Utils.loadString("CodeExchangeForm.noCode"));
         }
     }
 
