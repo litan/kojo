@@ -38,7 +38,7 @@ object LangMenuFactory {
       val mitem = new JCheckBoxMenuItem(langName)
       mitem.addActionListener(langHandler)
       mitem.setActionCommand(langCode)
-      mitem.setIcon(langIcon(langCode))
+//      mitem.setIcon(langIcon(langCode))
       if (kojoCtx.userLanguage == langCode) {
         mitem.setSelected(true)
       }
