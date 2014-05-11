@@ -84,7 +84,7 @@ def tPage(title:String,h:SHtm *)={
         {new xml.Unparsed(h.reduce(_ + _).s)}
     
     </p>
-    </body>	
+    </body>    
     
 }
 val codeExamples = new Array[String](1000)
@@ -99,11 +99,11 @@ class SHtm (var s:String){
     def h1=new SHtm("<h1>" + s + "</h1>")
     def p=new SHtm("<p>" + s + "</p>")
     def b=new SHtm("<b>" + s + "</b>")
-	def link(url:String)=new SHtm("<a href=\"http://" + url + " \">" + s + "</a></br>")
+    def link(url:String)=new SHtm("<a href=\"http://" + url + " \">" + s + "</a></br>")
     def c={
-	codeID+=1
-	codeExamples(codeID)=escRem(s)
-	new SHtm("""<hr/><div style=background-color:CCFFFF;"> <pre><code><a href="http://runhandler/example/""" + 
+    codeID+=1
+    codeExamples(codeID)=escRem(s)
+    new SHtm("""<hr/><div style=background-color:CCFFFF;"> <pre><code><a href="http://runhandler/example/""" + 
                  codeID.toString +
                  """ " style="text-decoration: none;font-size:x-small;">""" + s + """</a></code></pre><hr/></div>""")
     }
@@ -117,29 +117,29 @@ pages += Page(
     body =
         <body style={pageStyle}>
             <div style={pageStyle+centerStyle}>
-		<h1>A Scala Tutorial</h1>
+        <h1>A Scala Tutorial</h1>
             </div>
-		
+        
             <div style={pageStyle}>
-		<p>This tutorial was adapted for Kojo from the simplyscala.com version by Anthony Bagwell. You can move through the tutorial by clicking on the forward/next button on the bottom of this window. Or jump directly to a tutorial page through the following menu.</p>
+        <p>This tutorial was adapted for Kojo from the simplyscala.com version by Anthony Bagwell. You can move through the tutorial by clicking on the forward/next button on the bottom of this window. Or jump directly to a tutorial page through the following menu.</p>
                 <br/>
-		<a href={link("GS")}>Getting Started</a> <br/>
+        <a href={link("GS")}>Getting Started</a> <br/>
                 <a href={link("Flow")}>Flow Control If, Else and While</a> <br/>
-		<a href={link("Literals")}>Literals, Integers, Floats and Strings</a> <br/>
-		<a href={link("Functions")}>Functions</a> <br/>
-		<a href={link("OandC")}>Objects and Classes</a> <br/>
-		<a href={link("PMS")}>Pattern Matching and switch/case</a> <br/>
-		<a href={link("BTree")}>More Advanced Matching - Binary Tree</a> <br/>
-		<a href={link("STI")}>Static Typing and Inferencing</a> <br/>
-		<a href={link("FAO")}>Functions are Objects</a> <br/>	
-		<a href={link("Tup")}>Tuples</a> <br/>	
-		<a href={link("MF")}>Mathematical Functions</a> <br/>
-		<a href={link("OPA")}>Operator Precedence and Associativity</a> <br/>
-		<a href={link("US")}>Using Strings</a> <br/>
-		<a href={link("UL")}>Using Lists</a> <br/>
-		<a href={link("UT")}>Using the Turtle</a> <br/>
-		<a href={link("GAG")}>Graphics and Games</a> <br/>
-		<a href={link("LM")}>Learning More</a> <br/>
+        <a href={link("Literals")}>Literals, Integers, Floats and Strings</a> <br/>
+        <a href={link("Functions")}>Functions</a> <br/>
+        <a href={link("OandC")}>Objects and Classes</a> <br/>
+        <a href={link("PMS")}>Pattern Matching and switch/case</a> <br/>
+        <a href={link("BTree")}>More Advanced Matching - Binary Tree</a> <br/>
+        <a href={link("STI")}>Static Typing and Inferencing</a> <br/>
+        <a href={link("FAO")}>Functions are Objects</a> <br/>    
+        <a href={link("Tup")}>Tuples</a> <br/>    
+        <a href={link("MF")}>Mathematical Functions</a> <br/>
+        <a href={link("OPA")}>Operator Precedence and Associativity</a> <br/>
+        <a href={link("US")}>Using Strings</a> <br/>
+        <a href={link("UL")}>Using Lists</a> <br/>
+        <a href={link("UT")}>Using the Turtle</a> <br/>
+        <a href={link("GAG")}>Graphics and Games</a> <br/>
+        <a href={link("LM")}>Learning More</a> <br/>
             </div>
         </body>       
 )
@@ -151,7 +151,7 @@ pages += Page(
                  "Getting Started".h2,
                  "The tutorial has many examples that can be run simply by clicking on them. They will be copied to the Kojo Script Editor and run for you. There you can modify the code and run again by clicking on the green triangle in the editor toolbar. Try with this one and then try changing the message and re-running it".p,
                  """println("hello world")""".c,
-"The results of running an example will appear in the Output Pane or display on the Turtle Canvas.".p,				 
+"The results of running an example will appear in the Output Pane or display on the Turtle Canvas.".p,                 
                  "The tutorial is broken into pages which can be stepped through by clicking on the arrow buttons on the bottom of the Tutorial window. Or you can jump to a specific page through the menu link at the top of each page. The Button with a square stops the tutorial.".p,
                  "Already executed code can be recalled by using the left and right arrows in the editor toolbar. These you can then edit in the normal way. You can try an example, then call it back, make changes, try different ideas and check how the syntax works. You can save (or load) your programs that are displayed in the Editor window by using the File options or the editor context menu.".p,
                  "Kojo comes with a nice set of features that can be fun to use while learning Scala. Read the Kojo Overview Story for more details on creating music, exploring mathematics and setting up physics demos. There is also a Turtle, and you can have fun using Scala to control it. Here is an example.".p,
@@ -173,15 +173,15 @@ pages += Page(
                  "1+2".c,
                  "3+4*(2-3)".c,
                  """23%5  // Modulus or Division Remainder""".c,
-				 "6/4".c,
-				 "Notice in this last case that integer division results in a truncation to an integer value.".p, 
+                 "6/4".c,
+                 "Notice in this last case that integer division results in a truncation to an integer value.".p, 
                  "3.5*9.4+7/5".c,
                  """Scala understands different number types. 3.5 is a "double" while 6 is an "integer". Scala will coerce values to the appropriate types in a mixed expression where possible.""".p,
                  """The result of an expression may be stored in a variable for later use. Variable and other identifiers are made up of letters, numbers and symbols like * / + - : = ! < > & ^ | .  "Golf1", "helpLine" "*+" and "Res4" are all examples of identifiers or variable names.""".p, 
 """This association is signalled by a "var" or "val" keyword at the begining of the line. "val" is used when the association is to be made once and not changed. Why are there "val" and "var"? "val" defines an immutable value and as you will learn later, is essential for functional style programming. It is also good practice to use "val" to store intermediate values in a calculation to avoid accidentally corrupting a the value elsewhere in the program.""".p,
                  "val pixel=34+5".c,
-				 """You can print the result of an expression or several expressions to the Ouput Pane by using 'println(exp1,exp2,expn)'. Each expression must be separated from the others by a comma.""".p,
-				 """
+                 """You can print the result of an expression or several expressions to the Ouput Pane by using 'println(exp1,exp2,expn)'. Each expression must be separated from the others by a comma.""".p,
+                 """
 println(pixel,3+2,pixel/2,3.9/2.3)
 var height=pixel+4
 println(height)""".c,
@@ -215,11 +215,11 @@ pages += Page(
     body = tPage("Flow Control If, Else and While",
                  "Up until now you have written programs which start at the begining and execute all of the lines or expressions in order. Flow control means that you can control the order in which some or all of the code is executed based on some condition. This allows you to repeat some lines or skip over lines during the program execution.".p,
                  " You can specify a block of code by enclosing it in curly brackets {}. This block may contain any number of code lines or further sub-blocks of code. The last expression executed in a block determines the value of that block.".p, 
-                 "There are a number of different flow control structures that enable you to control your programs flow.".p,"if".h3,  	
+                 "There are a number of different flow control structures that enable you to control your programs flow.".p,"if".h3,      
                  """"if (cond) block/expression else block/expression" is the first. If the condition is true the first block or expression will be evaluated while if it is false the block or expression following the 'else' will.""".p,
                  """if(true) println("True") else println("Untrue")""".c,
-				 """A shorter version of this expression can be created.'if' returns a value which is then printed.""".p,
-				 """println(if(true) "True" else "Untrue")""".c,
+                 """A shorter version of this expression can be created.'if' returns a value which is then printed.""".p,
+                 """println(if(true) "True" else "Untrue")""".c,
                  """The condition must be an expression that yields a boolean result, namely true or false. There are a number of comparison operators that do just that. Here are some of them that are useful with numbers. Later you will learn about others that are appropriate for other types of things.""".p,
                  """1>2 // greater than""".c,
                  """1<2 // less than""".c,
@@ -309,7 +309,7 @@ pages += Page(
             row("String","a sequence of Unicode characters"),
             row("Boolean","true/false")),
                  "Integers".h2,
-                 "There are four types of integer namely Int, Long, Short, and Byte. You can use literals expressed in different bases, they are decimal, hexadecimal, and octal. You signal which form you are using by the first characters.".p,
+                 "There are four types of integer namely Int, Long, Short, and Byte. You can use literals expressed in different bases - decimal and hexadecimal. You signal which form you are using by the first characters.".p,
                  "Decimal(base 10): Any number starting with a non-zero digit.".p,
                  "17".c,
                  "298".c,
@@ -317,13 +317,8 @@ pages += Page(
                  """0x23  //hex = 35 dec""".c,
                  """0x01FF  //hex = 511 dec""".c,
                  """0xcb17 //hex = 51991 dec""".c,
-                 "Octal(base 8): starts with a 0 and is followed by the octal digits 0 to 7".p,
-                 """023 // octal = 19 dec""".c,
-                 """0777  // octal = 511 dec""".c,
-                 """0373  // octal = 251 dec""".c,
                  """By default these will be created as type Int. You can force them to type Long by adding the letter "l" or "L".""".p,
                  """0XFAF1L // hex long = 64241""".c,
-                 "035L".c,
                  "You can assign literals to Short or Byte variables. However, the value must be in the appropriate range for that type.".p,
                  "val abyte: Byte = 27".c,
                  "val ashort: Short = 1024".c,
@@ -340,12 +335,10 @@ pages += Page(
                  "Character".h3,
                  "Character literals are specified by any Unicode character in single quotes.".p,
                  "val chr = 'A'".c,
-                 "You may also specify its value in several other ways.".p,
-                 """Octal: An octal number between '\0' and '\377'.""".p,
-                 """val chr = '\101'  // code for A""".c,
-                 "Unicode:A hexidecimal number between '\134u0000' and '\134uFFFF'".p,
-                 "val chra = \'\134u0041\' // is an A ".c,
-                 "val chre = \'\134u0045\' // is an E ".c,
+                 "You may also specify its value in this way:".p,
+                 "Unicode: A hexidecimal number between '\\u0000' and '\\uFFFF'".p,
+                 "val chra = \'\\u0041\' // is an A ".c,
+                 "val chre = \'\\u0045\' // is an E ".c,
                  "Finally, there are also a few character literals represented by special escape sequences. These all start with a back slash. See reference for complete list.".p,
                  "Strings".h3,
                  "A string literal is a sequence of characters enclosed in double quotes:".p,
@@ -374,10 +367,10 @@ pages += Page(
 }
 """.c,
                  """The name of the function,"max" in this case,  follows the "def", and then come the parameters with their associated types within parentheses. A type annotation is added after each parameter name and preceded by a colon. This function has two parameters of type Int. Then the return type is defined following a colon, and it's again Int in this case. Finally there is an equal sign and the function body enclosed in curly brackets.""".p,
-				 """Once you have defined a function you can use it by calling it with the appropriate parameters.""".p,
+                 """Once you have defined a function you can use it by calling it with the appropriate parameters.""".p,
                  "max(6,7)".c,
-				 "Typically a function will return a value of some type. However, for some functions no return value is expected; they are only used to cause a side effect, printing or writing to a file for example. In this case the return will often be of type 'Unit' meaning no value or void. This type of function is called a procedure and here are some examples you may have already seen.".p,
-				 """clear
+                 "Typically a function will return a value of some type. However, for some functions no return value is expected; they are only used to cause a side effect, printing or writing to a file for example. In this case the return will often be of type 'Unit' meaning no value or void. This type of function is called a procedure and here are some examples you may have already seen.".p,
+                 """clear
 forward(100)
 println("a procedure")
 """.c,
@@ -422,8 +415,8 @@ pages += Page(
                  "Everything is an Object".h2,
                  "Scala is an Object Oriented language. The underlying premis, like other Object Oriented languages, is that there are objects that contain state and this state is manipulated or accessed by means of Methods. Kojo is in fact a collection of objects that interpret the commands or procedures that you use in the Script Editor to move the Turtle, draw lines on the Turtle Canvas or print in the Output Pane.".p, 
                  "New types of object can be defined by describing their class. The class specification details what fields an object will contain, and the Methods that it will implement. Methods are functions that run within the context of an object, and have access to all the fields of the object. You create methods by defining them within a class with 'def', just as you have done for regular functions. Methods can be commands or pure functions.".p,  
-				 "When you define a class you are also defining a new type of object. This new type and those already defined such as Int or Double are treated in a uniform way. The benefits of this uniformity, everything is an object, will soon become apparent.".p, 
-				 "You can start by defining an object that represents a point with two fields. It is conventional to start class names with an capital letter while variable names and method names start with a small one".p,
+                 "When you define a class you are also defining a new type of object. This new type and those already defined such as Int or Double are treated in a uniform way. The benefits of this uniformity, everything is an object, will soon become apparent.".p, 
+                 "You can start by defining an object that represents a point with two fields. It is conventional to start class names with an capital letter while variable names and method names start with a small one".p,
 
                  """class Point {
 var x=0
@@ -543,8 +536,8 @@ pages += Page(
 }
 """.c, 
                 """encode("Five")""".c,
-				"Pattern matching provide a safe way to take actions based on the type of an object. This ability is extremely useful for working with case classes and will be illustrated in the next section.".p,
-				"""def whatIs(a:Any):String = {a match{
+                "Pattern matching provide a safe way to take actions based on the type of an object. This ability is extremely useful for working with case classes and will be illustrated in the next section.".p,
+                """def whatIs(a:Any):String = {a match{
     case x:Int => "An Int"
     case x:String => "A String"
     case x:Double => "A Double"
@@ -567,8 +560,8 @@ pages += Page(
        [a] c,3
        / \
      a,1 b,2 
-*/	 
-""".c,				
+*/     
+""".c,                
 "The first task is to create classes that describe the node objects. Immediately we see a problem with the internal node at the top of the tree. The pointer to the sub-tree may be either an internal node type or a leaf node type. We want to say that the pointer is one of these two types but not any other. It could not be an Int for example. In Scala you can do this by creating a class hierarchy. First a general tree node class is specified and then each of the possible nodes types is derived from it using the 'extends' keyword. The sub-class is said to inherit the properties of the parent class.".p,
                 """class TreeN
 case class InterN(key:String,left:TreeN,right:TreeN) extends TreeN
@@ -577,8 +570,8 @@ case class LeafN(key:String,value:Int) extends TreeN
 "The 'extend' means that the newly defined class inherits all the fields and methods from the parent class, also called super class, as well as defining it's own. It also becomes a sub-type of that class, meaning that a sub-type object can be saved in a super-type variable as the following example illustrates.".p,
 """val tn:TreeN=LeafN("abc",13)""".c,
 "Now we can see how the internal node can be defined using the type 'TreeN' to mean either a 'InterN' or 'LeafN' type.".p,
-"Next we need to create the search function for such a tree. This is where pattern matching provides a type safe solution for finding what type of node we are dealing with and therefore take the appropriate action.".p,  				
-				"In the 'find' function that follows, see how pattern matching with the case classes defined above is used to determine the node type and bind names to the parameters, the lower case letters k,l,r and v. These are called pattern variables.".p,
+"Next we need to create the search function for such a tree. This is where pattern matching provides a type safe solution for finding what type of node we are dealing with and therefore take the appropriate action.".p,                  
+                "In the 'find' function that follows, see how pattern matching with the case classes defined above is used to determine the node type and bind names to the parameters, the lower case letters k,l,r and v. These are called pattern variables.".p,
 """
 def find(t:TreeN,key:String):Int={
      t match {
@@ -593,7 +586,7 @@ val t=InterN("b",InterN("a",LeafN("a",1),LeafN("b",2)),LeafN("c",3))
        [a] c,3
        / \
      a,1 b,2 
-*/	 
+*/     
 """.c,
                 "Note the use of the case class constructor to efficiently create a test binary tree. Now you can try the find.".p,
                 """find(t,"a")""".c,
@@ -604,7 +597,7 @@ val t=InterN("b",InterN("a",LeafN("a",1),LeafN("b",2)),LeafN("c",3))
                 """def find(t:TreeN,key:String):Int={
      t match {
          case InterN(k,l,r) => find((if(k>=key)l else r),key)
-		 case LeafN("c",_) => 0
+         case LeafN("c",_) => 0
          case LeafN(k,v) => if(k==key) v else 0
     }
 }
@@ -632,15 +625,15 @@ pages += Page(
     body = tPage("Functions are Objects",
                  "Functions are Objects too".h2,
                  "In Scala everything is an object and so are functions. They may be passed as arguments, returned from other functions or stored in variables. This feature of Scala enables some very concise and elegant solutions to common programming problems as well as allowing extremely flexible program flow control structures.  The Scala Actors make heavy use of this capability for supporting concurrent programming. However, list manipulation provides a good starting point for an introduction. ".p,
-				 "Lists are a very natural and common way people think about working with things. Scala provides a type of object called a List that allows you to represent lists of objects very easily. Lists keep things in a sequential order and provide a large number of methods or commands to enable you to create and manipulate lists. One way to create a list is to use the class constructor as we did for Point earlier. The constructor accepts any number of arguments and creates a List object containing those items. Here is an example that creates an integer list. The type will be designated by List[Int] - the [] encloses the element type information. Because each of the elements is an Int, Scala infers that the type of 'lst' is List[Int] - and you do not have to specify this explicitly.".p,  
+                 "Lists are a very natural and common way people think about working with things. Scala provides a type of object called a List that allows you to represent lists of objects very easily. Lists keep things in a sequential order and provide a large number of methods or commands to enable you to create and manipulate lists. One way to create a list is to use the class constructor as we did for Point earlier. The constructor accepts any number of arguments and creates a List object containing those items. Here is an example that creates an integer list. The type will be designated by List[Int] - the [] encloses the element type information. Because each of the elements is an Int, Scala infers that the type of 'lst' is List[Int] - and you do not have to specify this explicitly.".p,  
                  "val lst=List(1,7,2,8,5,6,3,9,14,12,4,10)".c,
                  "Let's get started by using just three List methods - 'head', 'tail' and '::'. You will find more in the section 'Using Lists'.".p,
                  "'head' returns the first or leftmost item, '1' in our list above.".p,
-				"println(lst.head)".c,
+                "println(lst.head)".c,
 "'tail' returns the list with the first item, the '1', removed.".p,
-				"println(lst.tail)".c,
+                "println(lst.tail)".c,
 "'::' returns a new list with an item added.".p,
-				"println(23::lst)".c,
+                "println(23::lst)".c,
 "Notice that the methods do not change or mutate the original list but return a new one. For this reason Lists are called immutable data structures.".p,
 "With these three basic methods, you can create other ones to do almost anything you need with lists.  For example, here is how you find all the odd integers in a list:".p,
 
@@ -717,8 +710,8 @@ filter(lsts,(v:String)=> v.length>3)""".c,
                  "By passing the appropriate function you can create a whole family of sorts without having to re-code the sort itself. This is a really neat way to vary behavior without rewriting the whole method.".p,
                  "fold".h4,
                  "foldLeft and foldRight allow you to combine adjacent list elements using an arbitrary function that you pass in. The process either starts from the left of the list or the right, and you provide a starting value. The option to start left or right allows you to choose which order you want to pass through the list.".p,
-				 "Fold takes two arguments but the Scala syntax allows these to be passed individually for clarity. See the section below on 'Creating your own flow control' for more details on the syntax.".p,
-				 "Now starting with the list.".p,
+                 "Fold takes two arguments but the Scala syntax allows these to be passed individually for clarity. See the section below on 'Creating your own flow control' for more details on the syntax.".p,
+                 "Now starting with the list.".p,
                  """val lst=List(1,7,2,8,5,6,3,9,14,12,4,10)
 lst.foldLeft(0)(_+_)""".c,
                  "With the passed '_+_' function the foldLeft function starts with 0 adds 1 to it. Next 7 is then added to this result and so on through the rest of the list.".p,
@@ -727,7 +720,7 @@ lst.foldLeft(0)(_+_)""".c,
                  """val lstw=List("Once","more","unto","the","breach")
 lstw.flatMap(_.toList).map(_.toUpperCase).removeDuplicates.sortWith(_<_)""".c,
                  "'flatMap' flattens all the words into a list of letters. 'map' converts them all to uppercase. All the duplicates are then removed and the result sorted into ascending order.".p,
-				 
+                 
 "Creating your own flow control".h4,
 "The ability to pass functions or blocks of code as arguments to functions gives you the ability to create your own flow control structures. For example, to draw a box it would be nice to be able repeat a set of Turtle commands. This could be done using 'for' ".p,
 """clear
@@ -758,7 +751,7 @@ def myrepeat(rc:Int,rb: =>Any){
 println(sumInt(1,2,3),sumInt(4,5,6,7,8))
 """.c,
 "The * after the parameter definition indicates that the function expects any number of this type of argument. The parameter n is defined as a sequence of the parameter type. This means that you can use list style methods to transform the sequence. In this case 'reduce' is used to sum the items.".p,
-"Other single parameters can preceed the repeated parameter. The repeated one must come last".p				 
+"Other single parameters can preceed the repeated parameter. The repeated one must come last".p                 
     )
 )
 
@@ -784,7 +777,7 @@ println((3,'c')._2)""".c,
                  "val ltrs=wl.flatMap(_.toList).map(_.toUpperCase).sortWith(_<_)".c,
                  "Now the fold. The initial condition is an empty output frequency table, a list of tuples. The fold will expect a function that takes a list of tuples combines with a Char, the next character in the list, and returns a list of tuples.".p,
 
-                 """	
+                 """    
 ltrs.foldLeft(List[(Char,Int)]()){
     case ((prevchr, cnt) :: tl, chr) if(prevchr==chr) => (prevchr,cnt+1) :: tl
     case (tbl, chr) => (chr, 1) :: tbl
@@ -907,11 +900,11 @@ pages += Page(
             row("""\n""", "line feed","""\b""", "backspace","""\t""",      "tab","""\f""", "form feed"),
             row("""\r""", "carriage return","""\" """, "double quote", """\'""", "single quote","""\\""", "backslash")
         ),
-		"Concatenation".h3,
-		"Strings can be concatenated using the + symbol. The original strings are left unaffected. Strings are immutable.".p,
-		"""val a = "Big"
+        "Concatenation".h3,
+        "Strings can be concatenated using the + symbol. The original strings are left unaffected. Strings are immutable.".p,
+        """val a = "Big"
 val b = "Bang"
-val c = a + " " + b		
+val c = a + " " + b        
 println( a,b,c)
 """.c,
 "Nearly all objects have a toString method to create a character representation.".p,
@@ -1088,14 +1081,14 @@ pages += Page(
         )
     )
 )
-	
+    
 pages += Page(
     name = "GAG",
     body = tPage("Graphics and Games",
                  "Peter Lewerin has contributed 'Staging' to Kojo. Staging gives you some neat graphics and the potential to make games. These Staging features originated in a Java project called Processing and were ported to Kojo by Peter. This capability is worth a whole tutorial in itself. However to give you a taste of what is possible and a starting point for experimentation, here are a couple examples.".p,
                  "The section on Staging will be expanded in a later version of the Tutorial. You can find a more complete list of Staging features and examples at:".p,
-				 "Commands or Methods".link("lewerin.se/peter/kojo/staging.html"),
-				 "Examples and Description".link("code.google.com/p/kojo/wiki/StagingModule"),
+                 "Commands or Methods".link("lewerin.se/peter/kojo/staging.html"),
+                 "Examples and Description".link("code.google.com/p/kojo/wiki/StagingModule"),
                  "The package contains commands and functions that allow you to draw sophisticated shapes and images, and a frame loop that allows you to animate the graphics.".p,
                  "In the first example you can see that a Staging environment is initialized, and the screen cleared. A ball is created, and then the ball bouncing movement is defined in the animation loop. Staging causes this loop to be executed every 20 to 32 milli-seconds giving a frame rate of around 30 to 50 frames per second depending on your computer performance. Using these principles you can create sophisticated animated graphics.".p,
   
@@ -1266,22 +1259,22 @@ def diehard=List((0,1),(1,0),(1,1),(5,0),(6,0),(7,0),(6,2))
 def acorn=List((0,0),(1,0),(1,2),(3,1),(4,0),(5,0),(6,0))
 def glider=List((-18,3),(-18,4),(-17,3),(-17,4),(-8,2),(-8,3),(-8,4),(-7,1),(-7,5),
     (-6,0),(-6,6),(-5,0),(-5,6),(-4,3),(-3,1),(-3,5),(-2,2),(-2,3),(-2,4),
-	(-1,3),(2,4),(2,5),(2,6),(3,4),(3,5),(3,6),(4,3),(4,7),
-	(6,2),(6,3),(6,7),(6,8),(16,5),(16,6),(17,5),(17,6))
+    (-1,3),(2,4),(2,5),(2,6),(3,4),(3,5),(3,6),(4,3),(4,7),
+    (6,2),(6,3),(6,7),(6,8),(16,5),(16,6),(17,5),(17,6))
 def block1=List((0,0),(2,0),(2,1),(4,2),(4,3),(4,4),(6,3),(6,4),(6,5),(7,4)) 
 def block2=List((0,0),(0,3),(0,4),(1,1),(1,4),(2,0),(2,1),(2,4),(3,2),(4,0),
             (4,1),(4,2),(4,4))
 def tiny=List((-18,0),(-17,0),(-16,0),(-15,0),(-14,0),(-13,0),(-12,0),(-11,0),(-9,0),(-8,0),
         (-7,0),(-6,0),(-5,0),(-1,0),(0,0),(1,0),(8,0),(9,0),(10,0),
-	(11,0),(12,0),(13,0),(14,0),(16,0),(17,0),(18,0),(19,0),(20,0))	
+    (11,0),(12,0),(13,0),(14,0),(16,0),(17,0),(18,0),(19,0),(20,0))    
 """.c,
-	
+    
 "Tangle".h3,
 "Here is a game that illustrates how you can use the Scala collections and mouse drag-and-drop to create a fun game to play.".p,
 "The game was based on a game called Planarity. The idea is to use the mouse to re-arrange the circles so that none of the joining lines cross one and other. Press the left mouse button on a circle to drag it. A new game is started by clicking on the red square.".p,
 "You can increase the difficulty of the game by changing the value ES in the program. Larger values make it more difficult.".p,
 "The inspiration for Tangle is Planarity".link("http://www.planarity.net/"),
-				 
+                 
 """import Staging._
 import Staging.{circle, clear, animate} // explicitly import names that clash
 import math.pow,math.random
@@ -1341,14 +1334,14 @@ def drawEdges(ev:Vector[EdgeP]){
 """.c
     )
 )
-	
+    
 pages += Page(
     name = "LM",
     body = tPage("Learning More",
 
                  "Next Steps".h2,
                  "This tutorial has covered part of what is a very deep language. By now, you are familiar with the essential Scala language features. Already you can write quite sophisticated programs in Scala and have fun with the graphical environment offered by Kojo.".p,
-				 "If you are already a Java programmer you can no doubt already see how you can use Scala with all the libraries from your existing Java environment too. Scala and Java integrate seamlessly.".p,
+                 "If you are already a Java programmer you can no doubt already see how you can use Scala with all the libraries from your existing Java environment too. Scala and Java integrate seamlessly.".p,
 
                  "To learn more a good book is invaluable. Programming in Scala by Martin Odersky, Lex Spoon and Bill Venners is one excellent place to continue.".p,
 "It can be found by clicking here.".link("www.artima.com/shop/programming_in_scala"),
@@ -1361,7 +1354,7 @@ pages += Page(
 "A small subset of the Scala library functions have been used in this tutorial".p,
 "Click here to see a complete list of all the Scala library available.".link("www.scala-lang.org/api/current/index.html"),
 "We wish you lots of fun using Scala!".p
-				 				 
+                                  
     )
 )
 
@@ -1370,7 +1363,7 @@ clearOutput()
 stClear()
 stAddLinkHandler("example", story) {idx: Int =>
     stSetScript(codeExamples(idx))
-    stClickRunButton()
+    stClickRunInterpreterButton()
     clearOutput
 }
 stPlayStory(story)
