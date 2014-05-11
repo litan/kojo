@@ -718,7 +718,7 @@ lst.foldLeft(0)(_+_)""".c,
                  "removeDuplicates".h4,
                  "Suppose you wish to know the unique letters that are in a list of words such as:-".p,
                  """val lstw=List("Once","more","unto","the","breach")
-lstw.flatMap(_.toList).map(_.toUpperCase).removeDuplicates.sortWith(_<_)""".c,
+lstw.flatMap(_.toList).map(_.toUpper).distinct.sortWith(_<_)""".c,
                  "'flatMap' flattens all the words into a list of letters. 'map' converts them all to uppercase. All the duplicates are then removed and the result sorted into ascending order.".p,
                  
 "Creating your own flow control".h4,
@@ -774,7 +774,7 @@ println((3,'c')._2)""".c,
                  "The objective is to produce a list of tuples with two entries - a letter, and a count. This is our frequency table.".p, 
                  "First create a sorted list of characters.".p, 
     
-                 "val ltrs=wl.flatMap(_.toList).map(_.toUpperCase).sortWith(_<_)".c,
+                 "val ltrs=wl.flatMap(_.toList).map(_.toUpper).sortWith(_<_)".c,
                  "Now the fold. The initial condition is an empty output frequency table, a list of tuples. The fold will expect a function that takes a list of tuples combines with a Char, the next character in the list, and returns a list of tuples.".p,
 
                  """    
@@ -992,8 +992,8 @@ pages += Page(
             row("lst.length".c,"Returns the number of items in the lst"), 
             row("""lst.map(str => str + "?")""".c,"""Returns a list created by adding "?" to each string item in lst"""),
             row("""lst.mkString(", ")""".c,"Makes a string with the elements of the list"),  
-            row("lst.remove(str => str.length == 4)".c,"Returns a list of all items in lst, in order, excepting any of length 4"),
-            row("List(1,6,2,1,6,3).removeDuplicates".c,"Removes redundant elements from the list. Uses the method == to decide. "),  
+            row("lst.filterNot(str => str.length == 4)".c,"Returns a list of all items in lst, in order, excepting any of length 4"),
+            row("List(1,6,2,1,6,3).distinct".c,"Removes redundant elements from the list. Uses the method == to decide. "),  
             row("lst.reverse".c,"Returns a list containing all elements of the lst list in reverse order"), 
             row("lst.sortWith((str, t) => str.toLowerCase < t.toLowerCase)".c,"Returns a list containing all items of lst in alphabetical order in lowercase.")
         ),
@@ -1064,7 +1064,6 @@ pages += Page(
   forward(100)""".c, "Sets the turtle's speed. The specified delay is the amount of time (in milliseconds) taken by the turtle to move through a distance of one hundred steps. The default is 1000."),
             row("animationDelay".c, "Queries the turtle's delay setting."),
 
-            row("undo()".c, "Undoes the last turtle command."),
             row("newTurtle(50, 50)".c, "Makes a new turtle located at the point (x, y)."),
             row("turtle0".c, "Gives you a handle to the default turtle."),
             row("clear()".c, "Clears the screen, and brings the turtle to the center of the window."),
