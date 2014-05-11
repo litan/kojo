@@ -72,6 +72,8 @@ class NoOpKojoCtx extends core.KojoCtx {
   def insertCodeInline(code: String): Unit = {}
   def insertCodeBlock(code: String): Unit = {}
   def clickRun(): Unit = {}
+  def clickInterpreterRun(): Unit = {}
+  def clickWorksheetRun(): Unit = {}
   def userLanguage: String = "en"
   def userLanguage_=(lang: String) {}
   def switchToDefaultPerspective() {}

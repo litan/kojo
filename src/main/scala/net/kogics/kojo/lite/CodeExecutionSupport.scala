@@ -641,6 +641,21 @@ class CodeExecutionSupport(
     runCode(codeToRun)
   }
 
+  def compileRunCode(): Unit = Utils.runInSwingThread {
+    compileRunCode(codeToRun)
+  }
+  
+  def runWorksheet(): Unit = Utils.runInSwingThread {
+    val code2run = codeToRun
+    if (invalidCode(code2run.code)) {
+      commandHistory.ensureLastEntryVisible()
+      return
+    }
+
+    stopScript()
+    runWorksheet(code2run)
+  }
+
   // code/worksheet running needs to happen on the Swing thread
   def runCode(code: String): Unit = runCode(CodeToRun(code, None))
 
@@ -666,18 +681,7 @@ class CodeExecutionSupport(
     }
   }
 
-  def _compileRunCode() {
-    val code2run = codeToRun
-    preProcessCode(code2run.code)
-    codeRunner.compileRunCode(code2run.code)
-  }
-
-  def compileRunCode(): Unit = Utils.runInSwingThread {
-    compileRunCode(codeToRun)
-  }
-
-  // code/worksheet running needs to happen on the Swing thread
-  def compileRunCode(code: String): Unit = runCode(CodeToRun(code, None))
+  def compileRunCode(code: String): Unit = compileRunCode(CodeToRun(code, None))
 
   private def compileRunCode(code2run: CodeToRun) {
     if (invalidCode(code2run.code)) {
@@ -694,17 +698,6 @@ class CodeExecutionSupport(
       preProcessCode(code)
       codeRunner.compileRunCode(code)
     }
-  }
-
-  def runWorksheet() {
-    val code2run = codeToRun
-    if (invalidCode(code2run.code)) {
-      commandHistory.ensureLastEntryVisible()
-      return
-    }
-
-    stopScript()
-    runWorksheet(code2run)
   }
 
   def runWorksheet(code2run0: CodeToRun) {

@@ -201,6 +201,12 @@ class Builtins(
   def stClickRunButton() = kojoCtx.clickRun()
   UserCommand("stClickRunButton", Nil, "Simulates a click of the run button")
 
+  def stClickRunInterpreterButton() = kojoCtx.clickInterpreterRun()
+  UserCommand("stClickRunInterpreterButton", Nil, "Simulates a click of the run button")
+
+  def stClickRunAsWorksheetButton() = kojoCtx.clickWorksheetRun()
+  UserCommand("stClickRunAsWorksheetButton", Nil, "Simulates a click of the 'run as worksheet' button")
+
   def stShowStatusError(msg: String) {
     storyTeller.showStatusError(msg)
   }
