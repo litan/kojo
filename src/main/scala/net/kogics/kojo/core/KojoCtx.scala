@@ -78,6 +78,8 @@ trait KojoCtx {
   def insertCodeInline(code: String): Unit
   def insertCodeBlock(code: String): Unit
   def clickRun(): Unit
+  def clickInterpreterRun(): Unit
+  def clickWorksheetRun(): Unit
   def userLanguage: String
   def userLanguage_=(lang: String): Unit
   def switchToDefaultPerspective(): Unit
