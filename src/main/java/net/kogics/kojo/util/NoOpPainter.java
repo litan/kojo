@@ -4,7 +4,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JComponent;
 
-import com.sun.java.swing.Painter;
+import javax.swing.Painter;
 
 public class NoOpPainter implements Painter<JComponent>{
 
