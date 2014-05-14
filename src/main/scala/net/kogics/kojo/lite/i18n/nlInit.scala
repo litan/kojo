@@ -90,7 +90,7 @@ object DutchAPI {
   class Schildpad0(t0: => Turtle) extends DutchTurtle { //by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
-  object padda extends Schildpad0(builtins.TSCanvas.turtle0)
+  object schildpad extends Schildpad0(builtins.TSCanvas.turtle0)
   def wis() = builtins.TSCanvas.clear()
   def wisOutput() = builtins.clearOutput()
   lazy val blauw = builtins.blue
@@ -102,6 +102,7 @@ object DutchAPI {
   lazy val bruin = builtins.brown
   lazy val zwart = builtins.black
   lazy val wit = builtins.white
+  lazy val cyaan = builtins.cyan
   lazy val geenKleur = builtins.noColor
   def achterGrond(kleur: Color) = builtins.setBackground(kleur)
   def achterGrondV(kleur1: Color, kleur2: Color) = builtins.TSCanvas.setBackgroundV(kleur1, kleur2)
@@ -119,7 +120,7 @@ object DutchAPI {
   }
 
   //simple IO
-  def leesLign(leidTekst: String = "") =  builtins.readln(leidTekst)
+  def input(leidTekst: String = "") =  builtins.readln(leidTekst)
 
   //math functions
   def afrond(tal: Number, aantalDecimalen: Int = 0): Double = {
@@ -161,7 +162,7 @@ object NlInit {
     net.kogics.kojo.lite.i18n.DutchAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
-        println("Wilkommen in Kojo met Nederlandse schildpad!")
+        println("welkom in Kojo met Nederlandse schildpad!")
         if (b.isScratchPad) {
           //History for work you do in the Scratchpad will not be saved.
           println("De geschiedenis wordt niet opgeslagen bij het sluiten van Kojo kladblok.")
@@ -175,7 +176,7 @@ object NlInit {
         )
         //help texts
         b.addHelpContent(
-          "sv",
+          "nl",
           helpContent
         )
 
@@ -184,9 +185,9 @@ object NlInit {
   }
 
   val codeTemplates = Map(
-    "fram" -> "fram(${steg})",
-    "höger" -> "höger(${vinkel})",
-    "vänster" -> "vänster(${vinkel})",
+    "vooruit" -> "vooruit(${stap})",
+    "rechts" -> "rechts(${hoek})",
+    "links" -> "links(${hoek})",
     "hoppaTill" -> "hoppaTill(${x},${y})",
     "gåTill" -> "gåTill(${x},${y})",
     "hoppa" -> "hoppa(${steg})",
@@ -218,15 +219,15 @@ object NlInit {
     "siktePå" -> "siktePå()",
     "sikteAv" -> "sikteAv()",
     "engelska" -> "engelska",
-    "sudda" -> "sudda()",
+    "wis" -> "wis()",
     "suddaUtdata" -> "suddaUtdata()",
     "bakgrund" -> "bakgrund(${färg})",
     "bakgrund2" -> "bakgrund2(${färg1},${färg2})",
     "upprepa" -> "upprepa (${antal}) {\n    \n}",
     "räkneslinga" -> "räkneslinga (${antal}) { i => \n    \n}",
     "sålänge" -> "sålänge (${villkor}) {\n    \n}",
-    "utdata" -> "utdata(${sträng})",
-    "indata" -> "indata(${ledtext})",
+    "output" -> "output(${snaar})",
+    "input" -> "input(${leidTekst})",
     "avrudna" -> "avrudna(${tal},${antalDecimaler})",
     "slumptal" -> "slumptal(${mindreän})",
     "slumptalMedDecimaler" -> "slumptalMedDecimaler(${mindreän})",
@@ -238,7 +239,7 @@ object NlInit {
   )
 
   val helpContent = Map(
-    "fram" ->
+    "vooruit" ->
       <div>
         <strong>fram</strong>(steg) - Paddan går frammåt det antal steg du anger i riktningen dit nosen pekar.
         <br/>Om pennan är nere så ritar paddan när den går frammåt.
