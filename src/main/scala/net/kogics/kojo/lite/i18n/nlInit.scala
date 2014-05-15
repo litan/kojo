@@ -98,7 +98,7 @@ object DutchAPI {
   lazy val geel = builtins.yellow
   lazy val groen = builtins.green
   lazy val paars = builtins.purple
-  lazy val roos = builtins.pink
+  lazy val roze = builtins.pink
   lazy val bruin = builtins.brown
   lazy val zwart = builtins.black
   lazy val wit = builtins.white

@@ -22,7 +22,7 @@ import net.kogics.kojo.lite.i18n.NlInit
 import net.kogics.kojo.lite.i18n.DutchAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
   Schildpad,schildpad,wis,wisOutput,
-  blauw,rood,geel,groen,paars,roos,bruin,zwart,wit,geenKleur,cyaan,
+  blauw,rood,geel,groen,paars,roze,bruin,zwart,wit,geenKleur,cyaan,
   achterGrond, achterGrondV,
   herhaal, herhaalIndex, zolangAls,
   input,
