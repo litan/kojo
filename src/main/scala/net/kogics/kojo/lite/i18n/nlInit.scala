@@ -162,7 +162,7 @@ object NlInit {
     net.kogics.kojo.lite.i18n.DutchAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
-        println("welkom in Kojo met Nederlandse schildpad!")
+        println("Welkom in Kojo met Nederlandse schildpad!")
         if (b.isScratchPad) {
           //History for work you do in the Scratchpad will not be saved.
           println("De geschiedenis wordt niet opgeslagen bij het sluiten van Kojo kladblok.")
