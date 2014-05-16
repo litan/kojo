@@ -44,10 +44,10 @@ import util.Math
 import util.Utils
 
 trait CorePicOps { self: Picture with RedrawStopper =>
-  val camera = canvas.getCamera
-  var axes: PNode = _
-  var _picGeom: Geometry = _
-  var pgTransform = new AffineTransformation
+  protected val camera = canvas.getCamera
+  protected var axes: PNode = _
+  protected var _picGeom: Geometry = _
+  protected var pgTransform = new AffineTransformation
 
   def realDraw(): Unit
 
@@ -59,7 +59,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     //    }
   }
 
-  def t2t(t: AffineTransform): AffineTransformation = {
+  private def t2t(t: AffineTransform): AffineTransformation = {
     val ms = Array.fill(6)(0.0)
     val ms2 = Array.fill(6)(0.0)
     t.getMatrix(ms)
@@ -77,6 +77,11 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     //    pgTransform.composeBefore(t2t(trans))
     pgTransform = t2t(tnode.getTransformReference(true))
 //    tnode.repaint()
+  }
+
+  def setTransform(trans: AffineTransform) = Utils.runInSwingThread {
+    tnode.setTransform(trans)
+    pgTransform = t2t(tnode.getTransformReference(true))
   }
 
   def rotateAboutPoint(angle: Double, x: Double, y: Double) = {
@@ -216,8 +221,8 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 
   def isVisible() = Utils.runInSwingThreadAndPause { tnode.getVisible() }
 
-  def initGeom(): Geometry
-  def picGeom: Geometry = {
+  protected def initGeom(): Geometry
+  def picGeom: Geometry = Utils.runInSwingThreadAndWait {
     if (!drawn) {
       throw new IllegalStateException("Cannot access a Picture's geometry before it is drawn.")
     }
@@ -395,7 +400,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     tnode.getFullBounds
   }
 
-  def initGeom() = {
+  protected def initGeom() = {
     val cab = new ArrayBuffer[Coordinate]
     val pp = t.penPaths
     pp.foreach { pl =>
@@ -588,7 +593,7 @@ abstract class BasePicList(val pics: List[Picture])
     this
   }
 
-  def initGeom() = {
+  protected def initGeom() = {
     var pg = pics(0).picGeom
     pics.tail.foreach { pic =>
       pg = pg union pic.picGeom
