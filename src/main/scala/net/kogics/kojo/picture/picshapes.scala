@@ -222,7 +222,7 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val pswing = new PSwing(swingComponent)
-    def handleCombo(combo: JComboBox) {
+    def handleCombo(combo: JComboBox[String]) {
       combo.addItem(" " * 10)
       combo.addPopupMenuListener(new PopupMenuListener {
         def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
@@ -237,9 +237,9 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
     }
     def handleComponent(comp: Component) {
       comp match {
-        case combo: JComboBox => handleCombo(combo)
-        case jp: JPanel       => jp.getComponents foreach { handleComponent }
-        case _                =>
+        case combo: JComboBox[String] => handleCombo(combo)
+        case jp: JPanel               => jp.getComponents foreach { handleComponent }
+        case _                        =>
       }
     }
     handleComponent(swingComponent)
@@ -266,7 +266,7 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
     ret
   }
 
-  private def getNodeBoundsInCanvas(pSwing: PSwing, combo: JComboBox) = {
+  private def getNodeBoundsInCanvas(pSwing: PSwing, combo: JComboBox[String]) = {
     val (deltax, deltay) = if (insidePanel(combo)) (combo.getX, combo.getY) else (0, 0)
     val r1c = new Rectangle2D.Double(pSwing.getX + deltax, pSwing.getY + deltay, combo.getWidth, combo.getHeight)
     pSwing.localToGlobal(r1c)
