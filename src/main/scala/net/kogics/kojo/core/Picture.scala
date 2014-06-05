@@ -35,6 +35,7 @@ trait Picture extends InputAware {
   def satMod(f: Double): Unit
   def britMod(f: Double): Unit
   def transformBy(trans: AffineTransform)
+  def setTransform(trans: AffineTransform)
   def dumpInfo(): Unit
   def copy: Picture
   def tnode: PNode
