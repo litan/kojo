@@ -24,9 +24,9 @@ import net.kogics.kojo.lite.i18n.DutchAPI.{
   Schildpad,schildpad,wis,wisOutput,
   blauw,rood,geel,groen,paars,roze,bruin,zwart,wit,geenKleur,cyaan,
   achterGrond, achterGrondV,
-  herhaal, herhaalIndex, zolangAls,
+  herhaal, herhaalTel, zolangAls,
   input,
-  afrond, toeval, toevalDubbel,
+  rondAf, toeval, toevalDubbel,
   Geheel, Dubbel, Snaar,
   systeemTijd, telTot}
 import schildpad.{wis => _, _}
