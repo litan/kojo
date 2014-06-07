@@ -29,66 +29,66 @@ object DutchAPI {
   var builtins: net.kogics.kojo.lite.CoreBuiltins = _  //unstable reference to module
 
   trait DutchTurtle {
-    def englishTurtle: Turtle
-    def wis() = englishTurtle.clear()
-    def vertoon() = englishTurtle.visible()
-    def verberg() = englishTurtle.invisible()
-    def vooruit(n: Double) = englishTurtle.forward(n)
-    def vooruit() = englishTurtle.forward()
-    def rechts(hoek: Double) = englishTurtle.right(hoek)
-    def rechts() = englishTurtle.right()
-    def links(hoek: Double) = englishTurtle.left(hoek)
-    def links() = englishTurtle.left()
-    def springNaar(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
-    def gaNaar(x: Double, y: Double) = englishTurtle.moveTo(x, y)
+    def engels: Turtle
+    def wis() = engels.clear()
+    def vertoon() = engels.visible()
+    def verberg() = engels.invisible()
+    def vooruit(n: Double) = engels.forward(n)
+    def vooruit() = engels.forward()
+    def rechts(hoek: Double) = engels.right(hoek)
+    def rechts() = engels.right()
+    def links(hoek: Double) = engels.left(hoek)
+    def links() = engels.left()
+    def springNaar(x: Double, y: Double) = engels.jumpTo(x, y)
+    def gaNaar(x: Double, y: Double) = engels.moveTo(x, y)
     def spring(n: Double) = {
-      englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop(n) //hop change state to penDown after hop
-      englishTurtle.restoreStyle()
+      engels.saveStyle() //to preserve pen state
+      engels.hop(n) //hop change state to penDown after hop
+      engels.restoreStyle()
     }
     def spring(): Unit = {
-      englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop() //hop change state to penDown after hop
-      englishTurtle.restoreStyle()
+      engels.saveStyle() //to preserve pen state
+      engels.hop() //hop change state to penDown after hop
+      engels.restoreStyle()
     }
-    def thuis() /* of naarHuis?*/= englishTurtle.home()
-    def naar(x: Double, y: Double) = englishTurtle.towards(x, y)
-    def hoek(hoek: Double) = englishTurtle.setHeading(hoek)
-    def hoek = englishTurtle.heading
-    def oost() = englishTurtle.setHeading(0)
-    def west() = englishTurtle.setHeading(180)
-    def noord() = englishTurtle.setHeading(90)
-    def zuid() = englishTurtle.setHeading(-90)
-    def vertraging(n: Long) = englishTurtle.setAnimationDelay(n)
-    def schrijf(t: Any) = englishTurtle.write(t)
-    def tekstGroote(s: Int) = englishTurtle.setPenFontSize(s)
-    def boog(radius: Double, hoek: Double) = englishTurtle.arc(radius, math.round(hoek).toInt)
-    def cirkel(radius: Double) = englishTurtle.circle(radius)
-    def positie = englishTurtle.position
-    def penNeer() = englishTurtle.penDown()
-    def penOp() = englishTurtle.penUp()
-    def penBeneden = englishTurtle.style.down
-    def penKleur(c: java.awt.Color) = englishTurtle.setPenColor(c)
-    def vullingKleur(c: java.awt.Color) = englishTurtle.setFillColor(c)
-    def penBreedte(n: Double) = englishTurtle.setPenThickness(n)
-    def bewaarStijl() = englishTurtle.saveStyle()
-    def zetStijlTerug() = englishTurtle.restoreStyle()
-    def bewaarPositieEnHoek() = englishTurtle.savePosHe()
-    def zetPositieEnHoekTerug() = englishTurtle.restorePosHe()
-    def vizierAan() = englishTurtle.beamsOn()
-    def vizierUit() = englishTurtle.beamsOff()
-    def kostuum(bestandName: String) = englishTurtle.setCostume(bestandName)
-    def kostuums(bestandName: String*) = englishTurtle.setCostumes(bestandName: _*)
-    def volgendKostuum() = englishTurtle.nextCostume()
+    def thuis() /* of naarHuis?*/= engels.home()
+    def naar(x: Double, y: Double) = engels.towards(x, y)
+    def hoek(hoek: Double) = engels.setHeading(hoek)
+    def hoek = engels.heading
+    def oost() = engels.setHeading(0)
+    def west() = engels.setHeading(180)
+    def noord() = engels.setHeading(90)
+    def zuid() = engels.setHeading(-90)
+    def vertraging(n: Long) = engels.setAnimationDelay(n)
+    def schrijf(t: Any) = engels.write(t)
+    def tekstGroote(s: Int) = engels.setPenFontSize(s)
+    def boog(radius: Double, hoek: Double) = engels.arc(radius, math.round(hoek).toInt)
+    def cirkel(radius: Double) = engels.circle(radius)
+    def positie = engels.position
+    def penOpCanvas() = engels.penDown()
+    def penVanCanvas() = engels.penUp()
+    def isPenOpCanvas = engels.style.down
+    def penKleur(c: java.awt.Color) = engels.setPenColor(c)
+    def vullingKleur(c: java.awt.Color) = engels.setFillColor(c)
+    def penBreedte(n: Double) = engels.setPenThickness(n)
+    def bewaarStijl() = engels.saveStyle()
+    def zetStijlTerug() = engels.restoreStyle()
+    def bewaarPositieEnHoek() = engels.savePosHe()
+    def zetPositieEnHoekTerug() = engels.restorePosHe()
+    def vizierAan() = engels.beamsOn()
+    def vizierUit() = engels.beamsOff()
+    def kostuum(bestandNaam: String) = engels.setCostume(bestandNaam)
+    def kostuums(bestandNaam: String*) = engels.setCostumes(bestandNaam: _*)
+    def volgendKostuum() = engels.nextCostume()
   }
-  class Schildpad(override val englishTurtle: Turtle) extends DutchTurtle {
+  class Schildpad(override val engels: Turtle) extends DutchTurtle {
     def this(startX: Double, startY: Double, kostuumBestandNaam: String) =
       this(builtins.TSCanvas.newTurtle(startX, startY, kostuumBestandNaam))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0,0)
   }
   class Schildpad0(t0: => Turtle) extends DutchTurtle { //by-name construction as turtle0 is volatile }
-    override def englishTurtle: Turtle = t0
+    override def engels: Turtle = t0
   }
   object schildpad extends Schildpad0(builtins.TSCanvas.turtle0)
   def wis() = builtins.TSCanvas.clear()
@@ -108,14 +108,14 @@ object DutchAPI {
   def achterGrondV(kleur1: Color, kleur2: Color) = builtins.TSCanvas.setBackgroundV(kleur1, kleur2)
 
   //loops in Dutch
-  def herhaal(n: Int)(bloc: => Unit) {
+  def herhaal(n: Int)(bloc: => Unit): Unit = {
     RepeatCommands.repeat(n)(bloc)
   }
-  def herhaalIndex (n: Int)(bloc: Int => Unit) {
+  def herhaalIndex (n: Int)(bloc: Int => Unit): Unit = {
     RepeatCommands.repeati(n)(bloc)
   }
 
-  def zolangAls(conditie: => Boolean)(bloc: => Unit) {
+  def zolangAls(conditie: => Boolean)(bloc: => Unit): Unit = {
     RepeatCommands.repeatWhile(conditie)(bloc)
   }
 
@@ -138,7 +138,7 @@ object DutchAPI {
   //speedTest
   def systeemTijd() = BigDecimal(System.nanoTime()) / BigDecimal("1000000000") //seconds
 
-  def telTot(n: BigInt) {
+  def telTot(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** Tel van 1 tot ... ")
     val startTime = systeemTijd()
@@ -157,7 +157,7 @@ object DutchAPI {
 }
 
 object NlInit {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     net.kogics.kojo.lite.i18n.DutchAPI.builtins = builtins
     builtins match {
@@ -188,142 +188,143 @@ object NlInit {
     "vooruit" -> "vooruit(${stap})",
     "rechts" -> "rechts(${hoek})",
     "links" -> "links(${hoek})",
-    "hoppaTill" -> "hoppaTill(${x},${y})",
-    "gåTill" -> "gåTill(${x},${y})",
-    "hoppa" -> "hoppa(${steg})",
-    "hem" -> "hem()",
-    "mot" -> "mot(${x},${y})",
-    "sättVinkel" -> "sättVinkel(${vinkel})",
-    "öster" -> "öster()",
-    "väster" -> "väster()",
-    "norr" -> "norr()",
-    "söder" -> "söder()",
-    "sakta" -> "sakta(${fördröjning})",
-    "skriv" -> "skriv(${sträng})",
-    "textstorlek" -> "textstorlek(${storlek})",
-    "båge" -> "båge(${radie},${vinkel})",
-    "cirkel" -> "cirkel(${radie})",
-    "synlig" -> "synlig()",
-    "osynlig" -> "osynlig()",
-    "läge" -> "läge",
-    "pennaNer" -> "pennaNer()",
-    "pennaUpp" -> "pennaUpp()",
-    "pennanÄrNere" -> "pennanÄrNere",
-    "färg" -> "färg(${pennfärg})",
-    "fyll" -> "fyll(${fyllfärg})",
-    "bredd" -> "bredd(${pennbredd})",
-    "sparaStil" -> "sparaStil()",
-    "laddaStil" -> "laddaStil()",
-    "sparaLägeRiktning" -> "sparaLägeRiktning()",
-    "laddaLägeRiktning" -> "laddaLägeRiktning()",
-    "siktePå" -> "siktePå()",
-    "sikteAv" -> "sikteAv()",
-    "engelska" -> "engelska",
+    "springNaar" -> "springNaar(${x},${y})",
+    "gaNaar" -> "gaNaar(${x},${y})",
+    "spring" -> "spring(${stap})",
+    "thuis" -> "thuis()",
+    "naartoe" -> "naartoe(${x},${y})",
+    "hoek" -> "hoek(${hoek})",
+    "oost" -> "oost()",
+    "west" -> "west()",
+    "noord" -> "noord()",
+    "zuid" -> "zuid()",
+    "vertraging" -> "vertraging(${vertraging})",
+    "schrijf" -> "schrijf(${snaar})",
+    "tekstGroote" -> "tekstGroote(${maat})",
+    "boog" -> "boog(${radius},${hoek})",
+    "cirkel" -> "cirkel(${radius})",
+    "vertoon" -> "vertoon()",
+    "verberg" -> "verberg()",
+    "positie" -> "positie",
+    "penOpCanvas" -> "penOpCanvas()",
+    "penVanCanvas" -> "penVanCanvas()",
+    "isPenOpCanvas" -> "isPenOpCanvas",
+    "kleur" -> "kleur(${penKleur})",
+    "vullingKleur" -> "vullingKleur(${kleur})",
+    "penBreedte" -> "penBreedte(${penBreedte})",
+    "bewaarStijl" -> "bewaarStijl()",
+    "zetStijlTerug" -> "zetStijlTerug()",
+    "bewaarPositieEnHoek" -> "bewaarPositieEnHoek()",
+    "zetPositieEnHoekTerug" -> "zetPositieEnHoekTerug()",
+    "vizierAan" -> "vizierAan()",
+    "vizierUit" -> "vizierUit()",
+    "engels" -> "engels",
     "wis" -> "wis()",
-    "suddaUtdata" -> "suddaUtdata()",
-    "bakgrund" -> "bakgrund(${färg})",
-    "bakgrund2" -> "bakgrund2(${färg1},${färg2})",
-    "upprepa" -> "upprepa (${antal}) {\n    \n}",
-    "räkneslinga" -> "räkneslinga (${antal}) { i => \n    \n}",
-    "sålänge" -> "sålänge (${villkor}) {\n    \n}",
+    "wisOutput" -> "wisOutput()",
+    "achterGrond" -> "achterGrond(${kleur})",
+    "achterGrondV" -> "achterGrondV(${kleur1},${kleur2})",
+    "herhaal" -> "herhaal (${aantal}) {\n    \n}",
+    "herhaalIndex" -> "herhaalIndex (${aantal}) { i => \n    \n}",
+    "zolangAls" -> "zolangAls (${conditie}) {\n    \n}",
     "output" -> "output(${snaar})",
     "input" -> "input(${leidTekst})",
-    "avrudna" -> "avrudna(${tal},${antalDecimaler})",
-    "slumptal" -> "slumptal(${mindreän})",
-    "slumptalMedDecimaler" -> "slumptalMedDecimaler(${mindreän})",
-    "räknaTill" -> "räknaTill(${tal})",
-    "systemtid" -> "systemtid",
-    "kostym" -> "kostym(${filnamn})",
-    "kostymer" -> "kostym(${filnamn1},${filnamn2})",
-    "nästaKostym" -> "nästaKostym()"
+    "afrond" -> "afrond(${getal},${aantalDecimalen})",
+    "toeval" -> "toeval(${bovengrens})",
+    "toevalDubbel" -> "toevalDubbel(${bovengrens})",
+    "telTot" -> "telTot(${getal})",
+    "systeemTijd" -> "systeemTijd",
+    "kostuum" -> "kostuum(${bestandNaam})",
+    "kostuums" -> "kostuums(${bestandNaam},${bestandNaam})",
+    "volgendKostuum" -> "volgendKostuum()"
   )
 
   val helpContent = Map(
     "vooruit" ->
       <div>
-        <strong>fram</strong>(steg) - Paddan går frammåt det antal steg du anger i riktningen dit nosen pekar.
-        <br/>Om pennan är nere så ritar paddan när den går frammåt.
-        <br/><em>Exempel:</em> <br/><br/>
+        <strong>vooruit</strong>(stap) - De schildpad gaat naar voren het aantal stappen die u opgeeft in de richting die zijn neus wijst.
+        <br/>Als de pen neer is, tekent de schildpad terwijl hij naar voren gaat.
+        <br/><em>Voorbeeld:</em> <br/><br/>
         <pre>
-          sudda()    //ritfönstret suddas och paddan ställs i mitten
-          fram(100)  //paddan går 100 steg
-          fram()     //inget värde: paddan går 25 steg
-          pennaUpp   //paddan lyfter pennan
-          fram(200)  //paddan går 200 steg utan att rita
-          höger(45)  //paddan vrider sig 45 grader åt höger
+          wis()           //tekencanvas wordt gewist en de schildpad gaat naar het midden
+          vooruit(100)    //de schildpad gaat rechtdoor 100 stappen
+          vooruit()       //de schildpad gaat rechtdoor 25 stappen
+          penVanCanvas()  //de schildpad tilt de pen van de canvas
+          vooruit(200)    //de schildpad gaat 200 stappen zonder tekenen
+          rechts(45)      //de schildpad roteert 45 graden naar rechts
         </pre>
       </div>.toString,
-    "vänster" -> <div><strong>vänster</strong>(vinkel)<br/>Paddan vrider åt vänster.</div>.toString,
-    "höger" -> <div><strong>höger</strong>(vinkel)<br/>Paddan vrider sig åt höger.</div>.toString,
-    "hoppaTill" -> <div><strong>hoppaTill</strong>(x, y)<br/>Paddan hoppar till läge (x,y) utan att rita och utan att ändra riktning.</div>.toString,
-    "gåTill" -> <div><strong>gåTill</strong>(x, y)<br/>Paddan vrider sig mot läge (x,y) och går dit.<br/>Om pennan är nere så ritar paddan när den går.</div>.toString,
-    "hoppa" -> <div><strong>hoppa</strong>(steg)<br/>Paddan hoppar i riktningen dit nosen pekar det antal steg som anges utan att rita även om pennan är nere.</div>.toString,
-    "hem" -> <div><strong>hem</strong>()<br/>Paddan går tillbaka till läge origo (0,0) och vrider sig så att nosen pekar norr.<br/>Om pennan är nere så ritar paddan när den går.</div>.toString,
-    "mot" -> <div><strong>mot</strong>(x, y)<br/>Paddan vrider sig så att nosen pekar mot läge (x,y)</div>.toString,
-    "sättVinkel" -> <div><strong>sättVinkel</strong>(vinkel)<br/>Paddan vrider sig så att nosen får den vinkel som anges.</div>.toString,
-    "vinkel" -> <div><strong>vinkel</strong>(vinkel)<br/>Ger värdet på vinkeln dit paddans nos pekar.</div>.toString,
-    "öster" -> <div><strong>öster</strong>()<br/>Paddan vrider sig så att nosen pekar mot öster (höger).</div>.toString,
-    "väster" -> <div><strong>väster</strong>()<br/>Paddan vrider sig så att nosen pekar mot väster (vänster).</div>.toString,
-    "norr" -> <div><strong>norr</strong>()<br/>Paddan vrider sig så att nosen pekar mot norr (upp).</div>.toString,
-    "söder" -> <div><strong>söder</strong>()<br/>Paddan vrider sig så att nosen pekar mot söder (ner).</div>.toString,
-    "sakta" -> <div><strong>sakta</strong>(fördröjning)<br/>Ju mer fördröjning desto långsammare padda.<br/>Minsta fördröjning är 0<br/>dröj(1000) är ganska långsamt.</div>.toString,
-    "skriv" -> <div><strong>skriv</strong>(sträng)<br/>Paddan skriver en sträng i ritfönstret<br/>En sträng måste ha dubbelfnuttar i början och slutet. Exempel: skriv("hej")</div>.toString,
-    "textstorlek" -> <div><strong>textstorlek</strong>(storlek)<br/>Ändrar storleken på texten som paddan skriver.</div>.toString,
-    "båge" -> <div><strong>båge</strong>(radie, vinkel)<br/>Paddan ritar ett cirkelsegment med angiven radie och vinkel.</div>.toString,
-    "cirkel" -> <div><strong>cirkel</strong>(radie)<br/>Paddan ritar en cirkel med angiven radie.</div>.toString,
-    "synlig" -> <div><strong>synlig</strong>()<br/> Gör så att paddan syns igen om den är osynlig.</div>.toString,
-    "osynlig" -> <div><strong>osynlig</strong>()<br/>Gör paddan osynlig.</div>.toString,
-    "läge" -> <div><strong>läge</strong><br/>Ger paddans läge som ett punktvärde Point(x,y)
-      <br/><em>Exempel:</em> <br/><br/>
+    "links" -> <div><strong>links</strong>(hoek)<br/>De schildpad roteert 90 graden naar links.</div>.toString,
+    "rechts" -> <div><strong>rechts</strong>(hoek)<br/>De schildpad roteert 90 graden naar rechts.</div>.toString,
+    "springNaar" -> <div><strong>springNaar</strong>(x, y)<br/>De schildpad springt naar positie (x, y) zonder tekenen, en zonder wijziging van de richting.</div>.toString,
+    "gaNaar" -> <div><strong>gaNaar</strong>(x, y)<br/>De schildpad roteert naar de positie (x,y) en gaat daar.<br/>Als de pen beneden zit, tekent de schildpad terwijl hij loopt.</div>.toString,
+    "spring" -> <div><strong>spring</strong>(stap)<br/>De schildpad springt in de richting waarin zijn neus wijst naar het aantal stappen zonder tekenen, zelfs als de pen op canvas zit.</div>.toString,
+    "thuis" -> <div><strong>thuis</strong>()<br/>De schildpad gaat terug naar positie (0,0) en roteert zodat zijn neus naar het noorden wijst. <br/>Als de pen op canvas zit, tekent de schildpad terwijl hij loopt.</div>.toString,
+    "naartoe" -> <div><strong>naartoe</strong>(x, y)<br/>De schildpad roteert zodat zijn neus naar de locatie (x, y) wijst.</div>.toString,
+    "hoek" -> <div><strong>hoek</strong>(hoek)<br/>De schildpad roteert zodat zijn neus in de gespecificeerde hoek wijst.</div>.toString,
+    "hoek" -> <div><strong>hoek</strong><br/>Geeft de waarde van de hoek waarin zijn neus van de schildpad wijst.</div>.toString,
+    "oost" -> <div><strong>oost</strong>()<br/>De schildpad roteert zodat zijn neus naar het oosten wijst (rechts).</div>.toString,
+    "west" -> <div><strong>west</strong>()<br/>De schildpad roteert zodat zijn neus naar het westen wijst (links).</div>.toString,
+    "noord" -> <div><strong>noord</strong>()<br/>De schildpad roteert zodat zijn neus naar het noorden wijst (naar boven).</div>.toString,
+    "zuid" -> <div><strong>zuid</strong>()<br/>De schildpad roteert zodat zijn neus naar het zuiden wijst (naar beneden).</div>.toString,
+    "vertraging" -> <div><strong>vertraging</strong>(vertraging)<br/>Hoe meer de vertraging de langzamer de schildpad. <br/> Minimale vertraging is 0 <br/> vertraging (1000) is vrij langsaam.</div>.toString,
+    "schrijf" -> <div><strong>schrijf</strong>(snaar)<br/>De schildpad schrijft een snaar in het tekencanvas bij de huidige positie.<br/>Een snaar begint en eindigt met dubbele aanhalingstekens. Voorbeeld: schrijf("hallo")</div>.toString,
+    "tekstGroote" -> <div><strong>tekstGroote</strong>(maat)<br/>Hiermee wijzigt u de grootte van de tekst die de schildpad schrijft.</div>.toString,
+    "boog" -> <div><strong>boog</strong>(radius, hoek)<br/>De schildpad tekent een boog met de opgegeven radius en hoek.</div>.toString,
+    "cirkel" -> <div><strong>cirkel</strong>(radius)<br/>De schildpad tekent een cirkel met de gegeven radius.</div>.toString,
+    "vertoon" -> <div><strong>vertoon</strong>()<br/> Hiermee wordt de schildpad weer zichtbaar als hij onzichtbaar was.</div>.toString,
+    "verberg" -> <div><strong>verberg</strong>()<br/>Heermee wordt de schildbaar onzichtbaar als hij zichtbaar was</div>.toString,
+    "positie" -> <div><strong>positie</strong><br/>Geeft de schildpad een positie als een puntenwaarde (x, y)
+      <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
-        utdata(läge)     //skriver ut paddans läge i utdatafönstret
-        utdata(läge.x)     //skriver ut paddans x-läge i utdatafönstret
-        utdata(läge.y)     //skriver ut paddans y-läge i utdatafönstret
+        output(positie)     //schrijf de positie van de schildpad in de output venster
+        output(positie.x)   //schrijf de x-positie van de shildpad in de output venster
+        output(positie.y)   //schrijf de y-positie van de schildpad in de output venster
 
-        var x = läge.x   //lagrar paddans x-läge i variablen x
-        var y = läge.y   //lagrar paddans y-läge i variablen y
-        x = x - 100      //ändrar variabeln x till gamla värdet minus 100
-        hoppaTill(x, y)  //hoppar till nytt läge med ändrat x
+        var x = positie.x   //slaat de x-positie van de schildpad op in de variabele x
+        var y = positie.y   //slaat de y-positie van de schildpad op in de variabele y
+        x = x - 100         //wijzigt de variabele x naar de oude waarde min 100
+        springNaar(x, y)    //springt naar een nieuwe positie met bijgewerkte x
       </pre>
     </div>.toString,
-    "pennaNer" -> <div><strong>pennaNer</strong>()<br/>Sätter ner paddans penna så att den ritar när paddan går.</div>.toString,
-    "pennaUpp" -> <div><strong>pennaUpp</strong>()<br/>Lyfter upp paddans penna så att den inte ritar när paddan går.</div>.toString,
-    "pennanÄrNere" -> <div><strong>pennanÄrNere</strong><br/>Kollar om paddans penna är nere. Ger <strong>true</strong> om pennan är nere och <strong>false</strong> om pennan är uppe.</div>.toString,
-    "färg" -> <div><strong>färg</strong>(pennfärg)<br/>Gör så att paddans penna ritar med angiven pennfärg.
-      <br/>Du kan anväda dessa färdigblandade färger:<br/>blå, röd, gul, grön, lila, rosa, brun, svart, vit, genomskinlig.
-      <br/>Du kan blanda egna färger med Color
-      <br/><em>Exempel:</em> <br/><br/>
+    "penOpCanvas" -> <div><strong>penOpCanvas</strong>()<br/>Zet de pen op de canvas, zodat de schildpad tekent als hij loopt.</div>.toString,
+    "penVanCanvas" -> <div><strong>penVanCanvas</strong>()<br/>Tillt de pen op van de canvas, zodat de schildpad niet tekent als hij loopt.</div>.toString,
+    "isPenOpCanvas" -> <div><strong>isPenOpCanvas</strong><br/>Controleert of de pen op de canvas zit. Geeft <strong>true</ strong>(waar) als de pen op canvas zit en<strong>false</ strong>(fout) als hij van canvas is.</div>.toString,
+    "penKleur" -> <div><strong>penKleur</strong>(penKleur)<br/>Maakt de schildpad tekenen met de opgegeven pen kleur.
+      <br/>Je kunt deze pre-gemengde kleuren gebruiken:
+      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
+      <br/>Je kunt je eigen kleur mixen met Color
+      <br/><em>Voorbeeld::</em> <br/><br/>
       <pre>
-        färg(blå)                  //sätter pennans färg till blå
-        fram()                     //paddan går frammåt
-        färg(Color(220,30,40,250)) //blandar ny färg (ljuslila)
-        //rödvärde=220, grönvärde=30, blåvärde=40, genomskinlighet=250
-        //färgvärden till Color mellan 0 och 255
-        fram(200)
+        kleur(blauw)                //zet de pen kleur naar blauw
+        vooruit()                   //de schildpad loopt vooruit
+        kleur(Color(220,30,40,250)) //mengt nieuwe kleur (licht paars)
+        //roodwaarde=220, groenwaarde=30, blauwwarde=40, dekking=250
+        //kleurwaarden kunnen tussen 0 en 255 variëren
+        vooruit(200)
       </pre>
     </div>.toString,
-    "fyll" -> <div><strong>fyll</strong>(fyllfärg)<br/>Gör så att paddan fyller i med angiven fyllfärg när den ritar.
-      <br/>Du kan anväda dessa färdigblandade färger:
-      <br/>blå, röd, gul, grön, lila, rosa, brun, svart, vit, genomskinlig.
-      <br/>Du kan blanda egna färger med Color
-      <br/><em>Exempel:</em> <br/><br/>
+    "vullingKleur" -> <div><strong>vullingKleur</strong>(vullingKleur)<br/>Hiermee gebruikt de schildpad de opgegeven vulkleur als het tekent.
+      <br/>Je kunt deze pre-gemengde kleuren gebruiken:
+      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
+      <br/>Je kunt je eigen kleur mixen met Color
+      <br/><em>Voorbeeld::</em> <br/><br/>
       <pre>
-        sudda();sakta(0)
-        fyll(blå)          //sätter fyllfärg till blå
-        cirkel(100)        //paddan ritar blå cirkel med radie 100
-        hoppa(100)         //paddan hoppar fram 100 steg
-        fyll(genomskinlig) //sätter fyllfärg till genomskinlig
-        cirkel(100)        //paddan ritar genomskinlig cirkel
+        wis(); vertraging(0)
+        vullingKleur(blauw)     //zet de vulling kleur naar blauw
+        cirkel(100)             //de schildpad tekent een blauwe cirkel met radius 100
+        spring(100)             //de schildpad springt vooruit 100 stappen
+        vullingKleur(geenKleur) //zet de vulling kleur
+        cirkel(100)             //de schildpad tekent een cirkel met geen vulling kleur
       </pre>
     </div>.toString,
-    "bredd" -> <div><strong>bredd</strong>(pennbredd)<br/>Ändrar pennbredden på paddans penna.<br/>Ju högre pennbredd desto tjockare streck.</div>.toString,
-    "sparaStil" -> <div><strong>sparaStil</strong>()<br/>Sparar undan pennans färg, fyllfärg, bredd och textstorlek.<br/>Du kan få tillbaka den sparade stilen med laddaStil</div>.toString,
-    "laddaStil" -> <div><strong>laddaStil</strong>()<br/>Hämtar sparad pennstil och sätter tillbaka pennans färg, fyllfärg, bredd och textstorlek.<br/>Du spara en pennstil med sparaStil</div>.toString,
-    "sparaLägeRiktning" -> <div><strong>sparaLägeRiktning</strong>()<br/>Sparar undan pennans läge och riktning.<br/>Du kan få tillbaka den sparade pennans position och riktning med laddaLägeRiktning</div>.toString,
-    "laddaLägeRiktning" -> <div><strong>laddaLägeRiktning</strong>()<br/>Hämtar sparad riktning och läge.<br/>Du sparar en pennstil med sparaLägeRiktning</div>.toString,
-    "siktePå" -> <div><strong>siktePå</strong>()<br/>Visar vilket håll paddan siktar mot med ett hårkors-sikte.</div>.toString,
-    "sikteAv" -> <div><strong>sikteAv</strong>()<br/>Gömmer paddans hårkors-sikte.</div>.toString,
-    "engelska" -> <div><strong>engelska</strong><br/>Ger den engelska paddan.<br/>Om du skriver:<br/>padda.eneglska.<br/>kan du se allt som en padda kan göra på engelska.</div>.toString,
+    "penBreedte" -> <div><strong>penBreedte</strong>(penBreedte)<br/>Wijzigt de pen breedte. <br/> Hoe hoger de pen breedte, hoe dikker de strepen.</div>.toString,
+    "bewaarStijl" -> <div><strong>bewaarStijl</strong>()<br/>Slaat de pen kleur, vulling kleur, breedte en de lettergrootte op. <br/> Je herstelt de opgeslagen stijl met zetStijlTerug().</div>.toString,
+    "zetStijlTerug" -> <div><strong>zetStijlTerug</strong>()<br/>Zet de opgeslagen pen kleur, vulling kleur, breedte en de lettergrootte terug. Je kunt de stijl opslaan met bewaarStijl().</div>.toString,
+    "bewaarPositieEnHoek" -> <div><strong>bewaarPositieEnHoek</strong>()<br/>Slaat de huidige positie en hoek.<br/>Je kunt weer de opgeslagen positie en hoek van zetPositieEnHoekTerug().</div>.toString,
+    "zetPositieEnHoekTerug" -> <div><strong>zetPositieEnHoekTerug</strong>()<br/>Zet the opgeslagen positie en hoek terug.<br/>Je kunt de positie en hoek opslaan met bewaarPositieEnHoek().</div>.toString,
+    "vizierAan" -> <div><strong>vizierAan</strong>()<br/>Laat zien welke weg de schildpad wijst met een vizier.</div>.toString,
+    "vizierUit" -> <div><strong>vizierUit</strong>()<br/>Verberg de vizier van de schildpad.</div>.toString,
+    "engels" -> <div><strong>engelska</strong><br/>Geeft de Engelse schildpad<br/>Als je typt:<br/>schildpad.engels.<br/>kun je zien alles wat een schildpad in Engels kan doen.</div>.toString,
     "sudda" -> <div><strong>sudda</strong>()<br/>Suddar allt som ritats i ritfönstret.</div>.toString,
     "suddaUtdata" -> <div><strong>suddaUtdata</strong>()<br/>Suddar allt som skrivits i utdatafönstret.</div>.toString,
     "bakgrund" -> <div><strong>bakgrund</strong>(bakgrundsfärg)<br/>Gör så att bakgrundsfärgen ändras.<br/>Du kan anväda dessa färdigblandade färger:<br/>blå, röd, gul, grön, lila, rosa, brun, svart, vit, genomskinlig.<br/>Du kan blanda egna färger med Color </div>.toString,
