@@ -318,7 +318,7 @@ object NlInit {
       </pre>
     </div>.toString,
     "penBreedte" -> <div><strong>penBreedte</strong>(penBreedte)<br/>Wijzigt de pen breedte. <br/> Hoe hoger de pen breedte, hoe dikker de strepen.</div>.toString,
-    "bewaarStijl" -> <div><strong>bewaarStijl</strong>()<br/>Slaat de pen kleur, vulling kleur, breedte en de lettergrootte op. <br/> Je herstelt de opgeslagen stijl met zetStijlTerug().</div>.toString,
+    "bewaarStijl" -> <div><strong>bewaarStijl</strong>()<br/>Slaat de pen kleur, vulling kleur, breedte en de lettergrootte op.<br/>Je herstelt de opgeslagen stijl met zetStijlTerug().</div>.toString,
     "zetStijlTerug" -> <div><strong>zetStijlTerug</strong>()<br/>Zet de opgeslagen pen kleur, vulling kleur, breedte en de lettergrootte terug. Je kunt de stijl opslaan met bewaarStijl().</div>.toString,
     "bewaarPositieEnHoek" -> <div><strong>bewaarPositieEnHoek</strong>()<br/>Slaat de huidige positie en hoek.<br/>Je kunt weer de opgeslagen positie en hoek van zetPositieEnHoekTerug().</div>.toString,
     "zetPositieEnHoekTerug" -> <div><strong>zetPositieEnHoekTerug</strong>()<br/>Zet the opgeslagen positie en hoek terug.<br/>Je kunt de positie en hoek opslaan met bewaarPositieEnHoek().</div>.toString,
@@ -406,7 +406,7 @@ object NlInit {
       <br/><em>Voorbeeld:</em>
       <br/><pre>
       wis()
-      kostuum("achtergrond.jpg") //de gewoone schildpad wordt achtergrond.jpg
+      kostuum("achtergrond.jpg") //de uiterlijk van de gewoone schildpad wordt achtergrond.jpg
       vooruit(100) //de achtergrond loopt
       val aardbei = new Schildpad(100,100,"aardbei.jpg") //Een nieuwe schildpad wordt gecreërt op de positie (100,100) met de afbeelding aardbei.jpg
       aardbei.vooruit(100)
