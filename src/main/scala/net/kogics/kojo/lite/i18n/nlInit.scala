@@ -111,7 +111,7 @@ object DutchAPI {
   def herhaal(n: Int)(bloc: => Unit): Unit = {
     RepeatCommands.repeat(n)(bloc)
   }
-  def herhaalIndex (n: Int)(bloc: Int => Unit): Unit = {
+  def herhaalTel (n: Int)(bloc: Int => Unit): Unit = {
     RepeatCommands.repeati(n)(bloc)
   }
 
@@ -123,9 +123,9 @@ object DutchAPI {
   def input(leidTekst: String = "") =  builtins.readln(leidTekst)
 
   //math functions
-  def afrond(tal: Number, aantalDecimalen: Int = 0): Double = {
+  def afrond(getal: Number, aantalDecimalen: Int = 0): Double = {
     val factor = math.pow(10, aantalDecimalen)
-    math.round(tal.doubleValue * factor) / factor
+    math.round(getal.doubleValue * factor) / factor
   }
   def toeval(n: Int) = builtins.random(n)
   def toevalDubbel(n: Int) = builtins.randomDouble(n)
@@ -224,11 +224,11 @@ object NlInit {
     "achterGrond" -> "achterGrond(${kleur})",
     "achterGrondV" -> "achterGrondV(${kleur1},${kleur2})",
     "herhaal" -> "herhaal (${aantal}) {\n    \n}",
-    "herhaalIndex" -> "herhaalIndex (${aantal}) { i => \n    \n}",
+    "herhaalTel" -> "herhaalTel (${aantal}) { i => \n    \n}",
     "zolangAls" -> "zolangAls (${conditie}) {\n    \n}",
     "output" -> "output(${snaar})",
     "input" -> "input(${leidTekst})",
-    "afrond" -> "afrond(${getal},${aantalDecimalen})",
+    "rondAf" -> "rondAf(${getal},${aantalDecimalen})",
     "toeval" -> "toeval(${bovengrens})",
     "toevalDubbel" -> "toevalDubbel(${bovengrens})",
     "telTot" -> "telTot(${getal})",
@@ -276,9 +276,9 @@ object NlInit {
     "positie" -> <div><strong>positie</strong><br/>Geeft de schildpad een positie als een puntenwaarde (x, y)
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
-        output(positie)     //schrijf de positie van de schildpad in de output venster
-        output(positie.x)   //schrijf de x-positie van de shildpad in de output venster
-        output(positie.y)   //schrijf de y-positie van de schildpad in de output venster
+        output(positie)     //schrijf de positie van de schildpad in het output venster
+        output(positie.x)   //schrijf de x-positie van de shildpad in het output venster
+        output(positie.y)   //schrijf de y-positie van de schildpad in het output venster
 
         var x = positie.x   //slaat de x-positie van de schildpad op in de variabele x
         var y = positie.y   //slaat de y-positie van de schildpad op in de variabele y
@@ -288,7 +288,7 @@ object NlInit {
     </div>.toString,
     "penOpCanvas" -> <div><strong>penOpCanvas</strong>()<br/>Zet de pen op de canvas, zodat de schildpad tekent als hij loopt.</div>.toString,
     "penVanCanvas" -> <div><strong>penVanCanvas</strong>()<br/>Tillt de pen op van de canvas, zodat de schildpad niet tekent als hij loopt.</div>.toString,
-    "isPenOpCanvas" -> <div><strong>isPenOpCanvas</strong><br/>Controleert of de pen op de canvas zit. Geeft <strong>true</ strong>(waar) als de pen op canvas zit en<strong>false</ strong>(fout) als hij van canvas is.</div>.toString,
+    "isPenOpCanvas" -> <div><strong>isPenOpCanvas</strong><br/>Controleert of de pen op de canvas zit. Geeft <strong>true</strong>(waar) als de pen op canvas zit en<strong>false</strong>(fout) als hij van canvas is.</div>.toString,
     "penKleur" -> <div><strong>penKleur</strong>(penKleur)<br/>Maakt de schildpad tekenen met de opgegeven pen kleur.
       <br/>Je kunt deze pre-gemengde kleuren gebruiken:
       <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
@@ -324,77 +324,92 @@ object NlInit {
     "zetPositieEnHoekTerug" -> <div><strong>zetPositieEnHoekTerug</strong>()<br/>Zet the opgeslagen positie en hoek terug.<br/>Je kunt de positie en hoek opslaan met bewaarPositieEnHoek().</div>.toString,
     "vizierAan" -> <div><strong>vizierAan</strong>()<br/>Laat zien welke weg de schildpad wijst met een vizier.</div>.toString,
     "vizierUit" -> <div><strong>vizierUit</strong>()<br/>Verberg de vizier van de schildpad.</div>.toString,
-    "engels" -> <div><strong>engelska</strong><br/>Geeft de Engelse schildpad<br/>Als je typt:<br/>schildpad.engels.<br/>kun je zien alles wat een schildpad in Engels kan doen.</div>.toString,
-    "sudda" -> <div><strong>sudda</strong>()<br/>Suddar allt som ritats i ritfönstret.</div>.toString,
-    "suddaUtdata" -> <div><strong>suddaUtdata</strong>()<br/>Suddar allt som skrivits i utdatafönstret.</div>.toString,
-    "bakgrund" -> <div><strong>bakgrund</strong>(bakgrundsfärg)<br/>Gör så att bakgrundsfärgen ändras.<br/>Du kan anväda dessa färdigblandade färger:<br/>blå, röd, gul, grön, lila, rosa, brun, svart, vit, genomskinlig.<br/>Du kan blanda egna färger med Color </div>.toString,
-    "bakgrund2" -> <div><strong>bakgrund</strong>(färg1,färg2)<br/>Gör så att bakgrundsfärgen blir en övergång från färg1 till färg2.<br/>Du kan anväda dessa färdigblandade färger:<br/>blå, röd, gul, grön, lila, rosa, brun, svart, vit, genomskinlig.<br/>Du kan blanda egna färger med Color </div>.toString,
-    "upprepa" -> <div><strong>upprepa</strong>(antal) {{ satser }} - upprepar <em>satser</em> det antal gånger som anges.
-      <br/><em>Exempel:</em> <br/><br/>
+    "engels" -> <div><strong>engelska</strong><br/>Geeft de Engelse schildpad.<br/>Als je typt:<br/><tt>schildpad.engels.</tt><br/>kun je zien alles wat een schildpad in Engels kan doen.</div>.toString,
+    "wis" -> <div><strong>wis</strong>()<br/>Wist alles in het tekencanvas, en brengt de schildpad naar het midden van het canvas</div>.toString,
+    "wisOutput" -> <div><strong>wisOutput</strong>()<br/>Wist alles in het output venster.</div>.toString,
+    "achtergrond" -> <div><strong>achtergrond</strong>(achtergrondKleur)<br/>Wijzig de achtergrond kleur.
+      <br/>Je kunt deze pre-gemengde kleuren gebruiken:
+      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
+      <br/>Je kunt je eigen kleur mixen met Color.</div>.toString,
+    "achtergrondV" -> <div><strong>achtergrondV</strong>(kleur1,kleur2)<br/>Zet de achtergrond kleur naar een overgang van kleur 1 tot kleur2.
+      <br/>Je kunt deze pre-gemengde kleuren gebruiken:
+      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
+      <br/>Je kunt je eigen kleur mixen met Color.</div>.toString,
+    "herhaal" -> <div><strong>herhaal</strong>(aantal) {{ statements }} - herhaal <em> statements</em> het opgegeven aantal keren.
+      <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
-        upprepa(4) {{
-        fram
-        vänster
+        herhaal(4) {{
+          vooruit()
+          links()
         }}
       </pre>
     </div>.toString,
-    "räkneslinga" -> <div><strong>räkneslinga</strong>(antal) {{ i => satser }} - upprepar <em>satser</em> det antal gånger som anges och räknar varje runda i slingan. Räknarens värde finns i värdet <strong>i</strong>
-      <br/><em>Exempel:</em> <br/><br/>
+    "herhaalTel" -> <div><strong>herhaalTel</strong>(antal) {{ i => statements }} - herhaal <em>statements</em> het opgegeven aantal keren en tel elke ronde van de herhaling. De teller is de waarde in <strong>i</strong>.
+      <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
-        räkneslinga(10) {{ i =>
-        utdata(i)
+        herhaalTel(10) {{ i =>
+        output(i)
         }}
       </pre>
     </div>.toString,
-    "sålänge" -> <div><strong>sålänge</strong>(villkor) {{  satser }} - upprepar <em>satser</em> så länge <em>villkor</em> är sant.
-      <br/><em>Exempel:</em> <br/><br/>
+    "zolangAls" -> <div><strong>zolangAls</strong>(conditie) {{  statements }} - herhaal <em>statements</em> zolang als <em>conditie</em> waar is.
+      <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>var i = 0
-        sålänge(i{ "<" }10) {{
-        utdata(i)
+        zolangAls(i{ "<" }10) {{
+        output(i)
         i = i + 1
         }}
       </pre>
     </div>.toString,
-    "utdata" -> <div><strong>utdata</strong>(textsträng)<br/>Skriver texten i <em>textsträng</em> i utdatafönstret<br/>En textsträng måste ha dubbelfnuttar i början och slutet. Exempel: utdata("hej")</div>.toString,
-    "indata" -> <div><strong>indata</strong>(ledtext)<br/>Skriver ut ledtext i utdatafönstret och väntar på inmatning av text tills du trycker Enter.<br/>
-      <br/><em>Exempel:</em> <br/><br/>
-      <pre>val x = indata("Skriv ditt namn ")
-        utdata("Hej " + x + "!")
+    "output" -> <div><strong>output</strong>(tekstSnaar)<br/>Schrijft tekst in <em>tekstSnaar</em> in het output venster <br/> Een snaar moet dubbele aanhalingstekens hebben aan het begin en einde. Voorbeeld: output("hallo")</div>.toString,
+    "input" -> <div><strong>input</strong>(leidTekst)<br/>Schrijft de leidtekst in het output venster en wacht op input van tekst totdat je op Enter toetst.<br/>
+      <br/><em>Voorbeeld:</em> <br/><br/>
+      <pre>val x = input("Typ je naam ")
+        output("Hallo " + x + "!")
       </pre>
     </div>.toString,
-    "avrunda" -> <div><strong>avrunda</strong>(decimaltal, antalDecimaler)<br/>Avrundar decimaltal till angivet antal decimaler<br/>
-      <br/><em>Exempel:</em> <br/><br/>
-      <pre>val t1 = avrunda(3.991,2) //Avrundar till 2 decimaler
-        utdata(t1)
-        val t2 = avrunda(3.999) //Avrundar till 0 decimaler
-        utdata(t2)
+    "rondAf" -> <div><strong>rondAf</strong>(getal, aantalDecimalen)<br/>Rondt een getal af op een opgegeven aantal decimalen<br/>
+      <br/><em>Voorbeeld:</em> <br/><br/>
+      <pre>val t1 = rondAf(3.991,2) //op 2 decimalen afronden
+        output(t1)
+        val t2 = rondAf(3.999) //op 0 decimalen afronden
+        output(t2)
       </pre>
     </div>.toString,
-    "systemtid" -> <div><strong>systemtid</strong><br/>Ger systemklockans tid i sekunder. Du kan använda systemtid för att mäta hur lång tid något tar.<br/>
-      <br/><em>Exempel:</em> <br/><br/>
+    "systeemtijd" -> <div><strong>systeemtijd</strong><br/>Geeft de systeemklok in seconden. Je kunt de systeemtijd gebruiken om te meten hoe lang iets duurt.<br/>
+      <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
-        val start = systemtid
-        utdata("Ha tålamod!")
-        räknaTill(100000000)
-        val stopp = systemtid
-        val s = stopp - start
-        utdata("Du hade tålamod i " + avrunda(s,1) + " sekunder.")
+        val start = systeemtijd
+        output("Even geduld!")
+        telTot(100000000)
+        val stop = systeemtijd
+        val s = stop - start
+        output("Je had " + rondAf(s,1) + " seconden geduld.")
       </pre>
     </div>.toString,
-    "räknaTill" -> <div><strong>räknaTill</strong>(tal)<br/>Kollar hur lång tid det tar för datorn att räkna till ett visst tal. DU kan prova med ganska stora tal<br/>
-      <br/><em>Exempel:</em> <br/><br/>
+    "telTot" -> <div><strong>telTot</strong>(getal)<br/>Bekijkt hoe lang het duurt voordat de computer tot een gegeven getal telt. Jij kunt met een vrij groot getal proberen.<br/>
+      <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
-        räknaTill(5000)
+        telTot(5000)
       </pre>
     </div>.toString,
-    "slumptal" -> <div><strong>slumptal</strong>(mindreÄn)<br/>Ger ett slumptal mellan 0 och mindreÄn.<br/><em>Exempel:</em><br/><pre>  def slump = slumptal(20) + 1 </pre><br/>Ger slumptal från 1 till och med 20</div>.toString,
-    "slumptalMedDecimaler" -> <div><strong>slumptalMedDecimaler</strong>(mindreÄn)<br/>Ger ett slumptal med decimaler mellan 0 och mindreÄn.<br/><em>Exempel:</em><br/><pre> def slump = slumptalMedDecimaler(20) + 1.0</pre><br/>Ger slumptal med decimaler från 1.0 till och med 20.0</div>.toString,
-    "kostym" -> <div><strong>kostym</strong>(filNamn)<br/>Ändrar paddans utseende efter bild i fil.<br/><em>Exempel:</em><br/><pre>
-      sudda
-      kostym("bakgrund.jpg") //den vanliga paddan blir bakgrund.jpg
-      fram(100) //bakgrunden flyttas
-      val gubbe = new Padda(100,100,"gubbe.jpg") //ny padda skapas på plats (100, 100) med bilden gubbe.jpg
-      gubbe.fram(100)
+    "toeval" -> <div><strong>toeval</strong>(bovengrens)<br/>Geeft een willekeurig getal tussen 0 en bovengrens.
+      <br/><em>Voorbeeld:</em>
+      <br/><pre>  def toeval = toeval(20) + 1 </pre>
+      <br/>Geeft een willekeurig getal van 1 tot en met 20</div>.toString,
+    "toevalDubbel" -> <div><strong>toevalDubbel</strong>(bovengrens)<br/>Geeft een willekeurig decimaal getal tussen 0 en bovengrens.
+      <br/><em>Voorbeeld:</em>
+      <br/><pre> def toeval = toevalDubbel(20) + 1.0</pre>
+      <br/>Geeft een willekeurig getal van 1.0 tot en met 20.0</div>.toString,
+    "kostuum" -> <div><strong>kostuum</strong>(bestandNaam)
+      <br/>Gebruik de afbeelding in het bestand om de uiterlijk van de schildpad te wijzigen.
+      <br/><em>Voorbeeld:</em>
+      <br/><pre>
+      wis()
+      kostuum("achtergrond.jpg") //de gewoone schildpad wordt achtergrond.jpg
+      vooruit(100) //de achtergrond loopt
+      val aardbei = new Schildpad(100,100,"aardbei.jpg") //Een nieuwe schildpad wordt gecreërt op de positie (100,100) met de afbeelding aardbei.jpg
+      aardbei.vooruit(100)
     </pre><br/></div>.toString
   )
 }
