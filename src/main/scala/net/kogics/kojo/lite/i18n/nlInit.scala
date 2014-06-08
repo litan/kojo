@@ -52,8 +52,8 @@ object DutchAPI {
       engels.restoreStyle()
     }
     def thuis() /* of naarHuis?*/= engels.home()
-    def naar(x: Double, y: Double) = engels.towards(x, y)
-    def hoek(hoek: Double) = engels.setHeading(hoek)
+    def naartoe(x: Double, y: Double) = engels.towards(x, y)
+    def zetHoek(hoek: Double) = engels.setHeading(hoek)
     def hoek = engels.heading
     def oost() = engels.setHeading(0)
     def west() = engels.setHeading(180)
@@ -69,7 +69,7 @@ object DutchAPI {
     def penVanCanvas() = engels.penUp()
     def isPenOpCanvas = engels.style.down
     def penKleur(c: java.awt.Color) = engels.setPenColor(c)
-    def vullingKleur(c: java.awt.Color) = engels.setFillColor(c)
+    def vulkleur(c: java.awt.Color) = engels.setFillColor(c)
     def penBreedte(n: Double) = engels.setPenThickness(n)
     def bewaarStijl() = engels.saveStyle()
     def zetStijlTerug() = engels.restoreStyle()
@@ -193,7 +193,8 @@ object NlInit {
     "spring" -> "spring(${stap})",
     "thuis" -> "thuis()",
     "naartoe" -> "naartoe(${x},${y})",
-    "hoek" -> "hoek(${hoek})",
+    "hoek" -> "hoek",
+    "zetHoek" -> "zetHoek(${hoek})",
     "oost" -> "oost()",
     "west" -> "west()",
     "noord" -> "noord()",
@@ -210,7 +211,7 @@ object NlInit {
     "penVanCanvas" -> "penVanCanvas()",
     "isPenOpCanvas" -> "isPenOpCanvas",
     "kleur" -> "kleur(${penKleur})",
-    "vullingKleur" -> "vullingKleur(${kleur})",
+    "vulkleur" -> "vulkleur(${kleur})",
     "penBreedte" -> "penBreedte(${penBreedte})",
     "bewaarStijl" -> "bewaarStijl()",
     "zetStijlTerug" -> "zetStijlTerug()",
@@ -260,7 +261,7 @@ object NlInit {
     "spring" -> <div><strong>spring</strong>(stap)<br/>De schildpad springt in de richting waarin zijn neus wijst naar het aantal stappen, zonder tekenen, zelfs als de pen op canvas zit.</div>.toString,
     "thuis" -> <div><strong>thuis</strong>()<br/>De schildpad loopt terug naar positie (0,0) en roteert zodat zijn neus naar het noorden wijst. <br/>Als de pen op canvas zit, tekent de schildpad terwijl hij loopt.</div>.toString,
     "naartoe" -> <div><strong>naartoe</strong>(x, y)<br/>De schildpad roteert zodat zijn neus naar de locatie (x, y) wijst.</div>.toString,
-    "hoek" -> <div><strong>hoek</strong>(hoek)<br/>De schildpad roteert zodat zijn neus in de gespecificeerde hoek wijst.</div>.toString,
+    "zetHoek" -> <div><strong>zetHoek</strong>(hoek)<br/>De schildpad roteert zodat zijn neus in de gespecificeerde hoek wijst.</div>.toString,
     "hoek" -> <div><strong>hoek</strong><br/>Geeft de waarde van de hoek waarin zijn neus van de schildpad wijst.</div>.toString,
     "oost" -> <div><strong>oost</strong>()<br/>De schildpad roteert zodat zijn neus naar het oosten wijst (rechts).</div>.toString,
     "west" -> <div><strong>west</strong>()<br/>De schildpad roteert zodat zijn neus naar het westen wijst (links).</div>.toString,
@@ -287,13 +288,13 @@ object NlInit {
       </pre>
     </div>.toString,
     "penOpCanvas" -> <div><strong>penOpCanvas</strong>()<br/>Zet de pen op de canvas, zodat de schildpad tekent als hij loopt.</div>.toString,
-    "penVanCanvas" -> <div><strong>penVanCanvas</strong>()<br/>Tillt de pen op van de canvas, zodat de schildpad niet tekent als hij loopt.</div>.toString,
+    "penVanCanvas" -> <div><strong>penVanCanvas</strong>()<br/>Tilt de pen op van de canvas, zodat de schildpad niet tekent als hij loopt.</div>.toString,
     "isPenOpCanvas" -> <div><strong>isPenOpCanvas</strong><br/>Controleert of de pen op de canvas zit. Geeft <strong>true</strong> (waar) als de pen op canvas zit en <strong>false</strong> (fout) als hij van canvas is.</div>.toString,
     "penKleur" -> <div><strong>penKleur</strong>(penKleur)<br/>Maakt de schildpad tekenen met de gegeven pen kleur.
       <br/>Je kunt deze pre-gemengde kleuren gebruiken:
       <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
       <br/>Je kunt je eigen kleur mixen met Color
-      <br/><em>Voorbeeld::</em> <br/><br/>
+      <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         kleur(blauw)                //zet de pen kleur naar blauw
         vooruit()                   //de schildpad loopt vooruit
@@ -303,24 +304,24 @@ object NlInit {
         vooruit(200)
       </pre>
     </div>.toString,
-    "vullingKleur" -> <div><strong>vullingKleur</strong>(vullingKleur)<br/>Hiermee gebruikt de schildpad de gegeven vulkleur als het tekent.
+    "vulkleur" -> <div><strong>vulkleur</strong>(vulkleur)<br/>Hiermee gebruikt de schildpad de gegeven vulkleur als het tekent.
       <br/>Je kunt deze pre-gemengde kleuren gebruiken:
       <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
       <br/>Je kunt je eigen kleur mixen met Color
-      <br/><em>Voorbeeld::</em> <br/><br/>
+      <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         wis(); vertraging(0)
-        vullingKleur(blauw)     //zet de vulling kleur naar blauw
+        vulkleur(blauw)         //zet de vulkleur naar blauw
         cirkel(100)             //de schildpad tekent een blauwe cirkel met radius 100
         spring(100)             //de schildpad springt vooruit 100 stappen
-        vullingKleur(geenKleur) //zet de vulling kleur
-        cirkel(100)             //de schildpad tekent een cirkel met geen vulling kleur
+        vulkleur(geenKleur)     //zet de vulkleur
+        cirkel(100)             //de schildpad tekent een cirkel met geen vulkleur
       </pre>
     </div>.toString,
     "penBreedte" -> <div><strong>penBreedte</strong>(penBreedte)<br/>Wijzigt de pen breedte. <br/> Hoe hoger de pen breedte, hoe dikker de strepen.</div>.toString,
-    "bewaarStijl" -> <div><strong>bewaarStijl</strong>()<br/>Slaat de pen kleur, vulling kleur, breedte en de lettergrootte op.<br/>Je herstelt de opgeslagen stijl met zetStijlTerug().</div>.toString,
-    "zetStijlTerug" -> <div><strong>zetStijlTerug</strong>()<br/>Zet de opgeslagen pen kleur, vulling kleur, breedte en de lettergrootte terug. Je kunt de stijl opslaan met bewaarStijl().</div>.toString,
-    "bewaarPositieEnHoek" -> <div><strong>bewaarPositieEnHoek</strong>()<br/>Slaat de huidige positie en hoek.<br/>Je kunt weer de opgeslagen positie en hoek van zetPositieEnHoekTerug().</div>.toString,
+    "bewaarStijl" -> <div><strong>bewaarStijl</strong>()<br/>Slaat de pen kleur, vulkleur, breedte en de lettergrootte op.<br/>Je herstelt de opgeslagen stijl met zetStijlTerug().</div>.toString,
+    "zetStijlTerug" -> <div><strong>zetStijlTerug</strong>()<br/>Zet de opgeslagen pen kleur, vulkleur, breedte en de lettergrootte terug. Je kunt de stijl opslaan met bewaarStijl().</div>.toString,
+    "bewaarPositieEnHoek" -> <div><strong>bewaarPositieEnHoek</strong>()<br/>Slaat de huidige positie en hoek op.<br/>Je kunt weer de opgeslagen positie en hoek van zetPositieEnHoekTerug().</div>.toString,
     "zetPositieEnHoekTerug" -> <div><strong>zetPositieEnHoekTerug</strong>()<br/>Zet the opgeslagen positie en hoek terug.<br/>Je kunt de positie en hoek opslaan met bewaarPositieEnHoek().</div>.toString,
     "vizierAan" -> <div><strong>vizierAan</strong>()<br/>Laat zien welke weg de schildpad wijst met een vizier.</div>.toString,
     "vizierUit" -> <div><strong>vizierUit</strong>()<br/>Verberg de vizier van de schildpad.</div>.toString,
@@ -376,13 +377,13 @@ object NlInit {
         output(t2)
       </pre>
     </div>.toString,
-    "systeemtijd" -> <div><strong>systeemtijd</strong><br/>Geeft de systeemklok in seconden. Je kunt de systeemtijd gebruiken om te meten hoe lang iets duurt.<br/>
+    "systeemTijd" -> <div><strong>systeemTijd</strong><br/>Geeft de systeemklok in seconden. Je kunt de systeemTijd gebruiken om te meten hoe lang iets duurt.<br/>
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
-        val start = systeemtijd
+        val start = systeemTijd
         output("Even geduld!")
         telTot(100000000)
-        val stop = systeemtijd
+        val stop = systeemTijd
         val s = stop - start
         output("Je had " + rondAf(s,1) + " seconden geduld.")
       </pre>
@@ -407,7 +408,7 @@ object NlInit {
       <br/><pre>
       wis()
       kostuum("achtergrond.jpg") //de uiterlijk van de gewoone schildpad wordt achtergrond.jpg
-      vooruit(100) //de achtergrond loopt
+      vooruit(100)               //de achtergrond loopt
       val aardbei = new Schildpad(100,100,"aardbei.jpg") //Een nieuwe schildpad wordt gecreërt op de positie (100,100) met de afbeelding aardbei.jpg
       aardbei.vooruit(100)
     </pre><br/></div>.toString
