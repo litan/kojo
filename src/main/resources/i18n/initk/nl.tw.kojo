@@ -18,9 +18,8 @@
 //Dutch Turtle wrapper init for Kojo
 
 //make Dutch names visible
-import net.kogics.kojo.lite.i18n.NlInit
-import net.kogics.kojo.lite.i18n.DutchAPI.{
-  //explicit imports needed due to problems with multiple wildcard imports
+val DutchAPI = net.kogics.kojo.lite.i18n.DutchAPI
+import DutchAPI.{  //explicit imports needed due to problems with multiple wildcard imports
   Schildpad,schildpad,wis,wisOutput,
   blauw,rood,geel,groen,paars,roze,bruin,zwart,wit,geenKleur,cyaan,
   achterGrond, achterGrondV,
