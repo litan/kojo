@@ -362,28 +362,27 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     astStopPhase = phase
   }
 
-  def outputPane = topcs.owh.outputPane
-  def setOutputBackground(color: Color) {
-    outputPane.setOutputBackground(color)
+  def setOutputBackground(color: Color) = Utils.runInSwingThread {
+    topcs.owh.outputPane.setOutputBackground(color)
   }
 
-  def setOutputForeground(color: Color) {
-    outputPane.setOutputForeground(color)
+  def setOutputForeground(color: Color) = Utils.runInSwingThread {
+    topcs.owh.outputPane.setOutputForeground(color)
   }
 
-  def setOutputFontSize(size: Int) {
-    outputPane.setOutputFontSize(size)
+  def setOutputFontSize(size: Int) = Utils.runInSwingThread {
+    topcs.owh.outputPane.setOutputFontSize(size)
   }
 
-  def formatSource() {
+  def formatSource() = Utils.runInSwingThread {
     topcs.seh.se.formatAction.actionPerformed(null)
   }
 
-  def setEditorTabSize(ts: Int) {
+  def setEditorTabSize(ts: Int) = Utils.runInSwingThread {
     topcs.seh.se.setTabSize(ts)
   }
 
-  def setEditorFont(name: String) {
+  def setEditorFont(name: String) = Utils.runInSwingThread {
     topcs.seh.se.setFont(name)
   }
 
