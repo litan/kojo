@@ -652,13 +652,8 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       (c2s, pfx.length)
     }
 
-    def memberCompletions(code0: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
+    def memberCompletions(code: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
       val pfx = prefix.getOrElse("")
-      val code = if (pfx.length == 0 || objid == null)
-        code0
-      else
-        "%s %s" format (code0.substring(0, caretOffset - pfx.length), code0.substring(caretOffset, code0.length))
-
       compilerAndRunner.completions(code, caretOffset - pfx.length, objid != null) match {
         case Nil =>
           val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
