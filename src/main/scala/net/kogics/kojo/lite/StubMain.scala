@@ -69,11 +69,10 @@ trait StubMain {
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
       "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
-    val libPath = System.getProperty("java.library.path").replaceAllLiterally("\"", "")
     val commandSeq =
       Seq(javaExec,
         "-cp", classpath,
-        s"-Djava.library.path=${libPath}${File.pathSeparator}${Utils.libDir}"
+        s"-Djava.library.path=${Utils.libDir}"
       ) ++ cmdPart.split(' ')
 
     commandSeq!
