@@ -19,8 +19,8 @@
 //Polish Turtle wrapper init for Kojo
 
 //make polish names visible
-import net.kogics.kojo.lite.i18n.PlInit
-import net.kogics.kojo.lite.i18n.PolishAPI.{
+val PolishAPI = net.kogics.kojo.lite.i18n.PolishAPI
+import PolishAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
   Żółw,żółw,czyść,czyśćWyjście,
   niebieski,czerwony,żółty,zielony,fioletowy,różowy,brązowy,czarny,biały,przezroczysty,
