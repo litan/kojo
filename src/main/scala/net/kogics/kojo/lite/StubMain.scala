@@ -16,7 +16,6 @@ package net.kogics.kojo.lite
 
 import java.io.File
 
-import scala.language.postfixOps
 import scala.sys.process.stringSeqToProcess
 
 import net.kogics.kojo.util.Utils
@@ -66,11 +65,15 @@ trait StubMain {
         javaHome + "/bin/java"
       }
     }
-    val cmdPart = "-Djava.library.path=%s -client -Xms32m -Xmx768m " +
+    val cmdPart = "-client -Xms32m -Xmx768m " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
-      "net.kogics.kojo.lite.Main %s" format (Utils.libDir, args.mkString(" "))
-    val commandSeq = Seq(javaExec, "-cp", classpath) ++ cmdPart.split(' ')
+      "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
+    val commandSeq =
+      Seq(javaExec,
+        "-cp", classpath,
+        s"-Djava.library.path=${Utils.libDir}"
+      ) ++ cmdPart.split(' ')
 
     commandSeq!
   }

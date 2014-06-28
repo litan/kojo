@@ -62,7 +62,7 @@ object Main extends AppMenu with ScriptLoader { main =>
   @volatile implicit var kojoCtx: KojoCtx = _
 
   def main(args: Array[String]): Unit = {
-    System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%n")
+    System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%6$s%n")
     System.setSecurityManager(null)
     kojoCtx = new KojoCtx(args.length == 1 && args(0) == "subKojo") // context needs to be created right up front to set user language
     Utils.runInSwingThreadAndWait {
