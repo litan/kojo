@@ -186,7 +186,7 @@ trait AppMenu {
     samplesMenu.add(multiMenu)
 
     val fractalsMenu = new JMenu(Utils.loadString("S_Fractals"))
-    fractalsMenu.add(menuItemFor(Utils.loadString("S_Tree"), "tree0.kojo"))
+    fractalsMenu.add(menuItemFor(Utils.loadString("S_Tree"), Utils.loadString("tree0.kojo")))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_AnotherTree"), "tree1.kojo"))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_FibonacciTree"), "fib-tree.kojo"))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_Snowflake"), "snowflake.kojo"))

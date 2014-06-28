@@ -129,6 +129,7 @@ object DutchAPI {
   }
   def toeval(n: Int) = builtins.random(n)
   def toevalDubbel(n: Int) = builtins.randomDouble(n)
+  def kleur(r: Int, g: Int, b: Int) = builtins.color(r, g, b)
 
   //some type aliases in Dutch
   type Geheel = Int
@@ -296,9 +297,9 @@ object NlInit {
       <br/>Je kunt je eigen kleur mixen met Color
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
-        kleur(blauw)                //zet de pen kleur naar blauw
-        vooruit()                   //de schildpad loopt vooruit
-        kleur(Color(220,30,40,250)) //mengt nieuwe kleur (licht paars)
+        penKleur(blauw)                //zet de pen kleur naar blauw
+        vooruit()                      //de schildpad loopt vooruit
+        penKleur(Color(220,30,40,250)) //mengt nieuwe kleur (licht paars)
         //roodwaarde=220, groenwaarde=30, blauwwarde=40, dekking=250
         //kleurwaarden kunnen tussen 0 en 255 variëren
         vooruit(200)
@@ -373,7 +374,7 @@ object NlInit {
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>val t1 = rondAf(3.991,2) //op 2 decimalen afronden
         output(t1)
-        val t2 = rondAf(3.999) //op 0 decimalen afronden
+        val t2 = rondAf(3.999)   //op 0 decimalen afronden
         output(t2)
       </pre>
     </div>.toString,

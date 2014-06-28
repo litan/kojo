@@ -25,7 +25,7 @@ import DutchAPI.{  //explicit imports needed due to problems with multiple wildc
   achterGrond, achterGrondV,
   herhaal, herhaalTel, zolangAls,
   input,
-  rondAf, toeval, toevalDubbel,
+  rondAf, toeval, toevalDubbel, kleur,
   Geheel, Dubbel, Snaar,
   systeemTijd, telTot}
 import schildpad.{wis => _, _}
