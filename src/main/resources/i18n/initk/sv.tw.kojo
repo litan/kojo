@@ -18,8 +18,8 @@
 //Swedish Turtle wrapper init for Kojo
 
 //make swedish names visible
-import net.kogics.kojo.lite.i18n.SvInit
-import net.kogics.kojo.lite.i18n.SwedishAPI.{
+val SwedishAPI = net.kogics.kojo.lite.i18n.SwedishAPI
+import SwedishAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
   Padda,padda,sudda,suddaUtdata,
   blå,röd,gul,grön,lila,rosa,brun,svart,vit,genomskinlig,

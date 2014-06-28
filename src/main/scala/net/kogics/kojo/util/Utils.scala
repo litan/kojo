@@ -40,6 +40,8 @@ import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
+import java.util.logging.Level
+import java.util.logging.Logger
 
 import javax.swing.ImageIcon
 import javax.swing.Timer
@@ -66,6 +68,7 @@ import edu.umd.cs.piccolo.event.PInputEvent
 import edu.umd.cs.piccolo.nodes.PText
 
 object Utils {
+  lazy val Log = Logger.getLogger("Utils")
   lazy val imageCache = new HashMap[String, Image]
   lazy val iconCache = new HashMap[String, ImageIcon]
 
@@ -506,6 +509,7 @@ object Utils {
 
   def reportException(t: Throwable) {
     println("Problem - " + t.getMessage)
+    Log.log(Level.SEVERE, "Problem", t)
   }
 
   def safeProcess(fn: => Unit) {
