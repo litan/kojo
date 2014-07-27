@@ -129,7 +129,7 @@ object DutchAPI {
     math.round(getal.doubleValue * factor) / factor
   }
   def willekeurig(n: Int) = builtins.random(n)
-  def willikeurigDecimaal(n: Int) = builtins.randomDouble(n)
+  def willekeurigDecimaal(n: Int) = builtins.randomDouble(n)
   def kleur(r: Int, g: Int, b: Int) = builtins.color(r, g, b)
 
   //some type aliases in Dutch
