@@ -1,6 +1,6 @@
-def boom(afstand: Double) {
+def boom(afstand: Decimaal) {
    if (afstand > 4) {
-        penBreedte(afstand/7)
+        lijnDikte(afstand/7)
         penKleur(kleur(afstand.toInt, math.abs(255-afstand*3).toInt, 125))
         vooruit(afstand)
         rechts(25)

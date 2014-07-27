@@ -78,13 +78,13 @@ object DutchAPI {
     def zetPositieEnRichtingTerug() = engels.restorePosHe()
     def vizierAan() = engels.beamsOn()
     def vizierUit() = engels.beamsOff()
-    def kostuum(bestandNaam: String) = engels.setCostume(bestandNaam)
-    def kostuums(bestandNaam: String*) = engels.setCostumes(bestandNaam: _*)
+    def kostuum(bestandsNaam: String) = engels.setCostume(bestandsNaam)
+    def kostuums(bestandsNaam: String*) = engels.setCostumes(bestandsNaam: _*)
     def volgendKostuum() = engels.nextCostume()
   }
   class Schildpad(override val engels: Turtle) extends DutchTurtle {
-    def this(startX: Double, startY: Double, kostuumBestandNaam: String) =
-      this(builtins.TSCanvas.newTurtle(startX, startY, kostuumBestandNaam))
+    def this(startX: Double, startY: Double, kostuumBestandsNaam: String) =
+      this(builtins.TSCanvas.newTurtle(startX, startY, kostuumBestandsNaam))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0,0)
   }
@@ -188,8 +188,8 @@ object NlInit {
 
   val codeTemplates = Map(
     "vooruit" -> "vooruit(${stap})",
-    "rechts" -> "rechts(${richting})",
-    "links" -> "links(${richting})",
+    "rechts" -> "rechts(${hoek})",
+    "links" -> "links(${hoek})",
     "springNaar" -> "springNaar(${x},${y})",
     "gaNaar" -> "gaNaar(${x},${y})",
     "spring" -> "spring(${stap})",
@@ -204,7 +204,7 @@ object NlInit {
     "vertraging" -> "vertraging(${vertraging})",
     "schrijf" -> "schrijf(${snaar})",
     "tekstGrootte" -> "tekstGrootte(${maat})",
-    "boog" -> "boog(${radius},${richting})",
+    "boog" -> "boog(${radius},${hoek})",
     "cirkel" -> "cirkel(${radius})",
     "vertoon" -> "vertoon()",
     "verberg" -> "verberg()",
@@ -212,7 +212,7 @@ object NlInit {
     "penOpCanvas" -> "penOpCanvas()",
     "penVanCanvas" -> "penVanCanvas()",
     "isPenOpCanvas" -> "isPenOpCanvas",
-    "kleur" -> "kleur(${penKleur})",
+    "penKleur" -> "penKleur(${penKleur})",
     "vulkleur" -> "vulkleur(${kleur})",
     "lijnDikte" -> "lijnDikte(${lijnDikte})",
     "bewaarStijl" -> "bewaarStijl()",
@@ -236,8 +236,8 @@ object NlInit {
     "willikeurigDecimaal" -> "willikeurigDecimaal(${bovengrens})",
     "telTot" -> "telTot(${getal})",
     "systeemTijd" -> "systeemTijd",
-    "kostuum" -> "kostuum(${bestandNaam})",
-    "kostuums" -> "kostuums(${bestandNaam},${bestandNaam})",
+    "kostuum" -> "kostuum(${bestandsNaam})",
+    "kostuums" -> "kostuums(${bestandsNaam},${bestandsNaam})",
     "volgendKostuum" -> "volgendKostuum()"
   )
 
@@ -295,12 +295,12 @@ object NlInit {
     "penKleur" -> <div><strong>penKleur</strong>(penKleur)<br/>Laat de schildpad tekenen met de gekozen kleur.
       <br/>Je kunt deze pre-gemengde kleuren gebruiken:
       <br/>blauw, rood, geel, groen, paars, roze, bruin, zwart, wit, geenKleur.
-      <br/>Je kunt je eigen kleur mixen met Color
+      <br/>Je kunt je eigen kleur mixen met kleur
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         penKleur(blauw)                //zet de pen kleur naar blauw
         vooruit()                      //de schildpad loopt vooruit
-        penKleur(Color(220,30,40,250)) //mengt nieuwe kleur (licht paars)
+        penKleur(kleur(220,30,40,250)) //mengt nieuwe kleur (licht paars)
         //roodwaarde=220, groenwaarde=30, blauwwarde=40, dekking=250
         //kleurwaarden kunnen tussen 0 en 255 variëren
         vooruit(200)
@@ -309,7 +309,7 @@ object NlInit {
     "vulkleur" -> <div><strong>vulkleur</strong>(vulkleur)<br/>De schildpad gebruikt de gekozen kleur om te vullen.
       <br/>Je kunt deze vooraf gemengde kleuren gebruiken:
       <br/>blauw, rood, geel, groen, paars, roze, bruin, zwart, wit, geenKleur.
-      <br/>Je kunt je eigen kleur mixen met Color
+      <br/>Je kunt je eigen kleur mixen met kleur
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         wis(); vertraging(0)
@@ -333,11 +333,11 @@ object NlInit {
     "achtergrond" -> <div><strong>achtergrond</strong>(achtergrondKleur)<br/>Wijzig de achtergrond kleur.
       <br/>Je kunt deze vooraf gemengde kleuren gebruiken:
       <br/>blauw, rood, geel, groen, paars, roze, bruin, zwart, wit, geenKleur.
-      <br/>Je kunt je eigen kleur mixen met Color.</div>.toString,
+      <br/>Je kunt je eigen kleur mixen met kleur.</div>.toString,
     "achtergrondV" -> <div><strong>achtergrondV</strong>(kleur1,kleur2)<br/>Stel de achtergrond in op een overgang van kleur1 naar kleur2.
       <br/>Je kunt deze vooraf gemengde kleuren gebruiken:
       <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
-      <br/>Je kunt je eigen kleur mixen met Color.</div>.toString,
+      <br/>Je kunt je eigen kleur mixen met kleur.</div>.toString,
     "herhaal" -> <div><strong>herhaal</strong>(aantal) {{ opdrachten }} - herhaal <em>opdrachten</em> het gegeven aantal keren.
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
