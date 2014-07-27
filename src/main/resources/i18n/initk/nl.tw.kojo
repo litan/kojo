@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2013 
- *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
+ * Copyright (C) 2014
  *   Lalit Pant <pant.lalit@gmail.com>
+ *   Eric Zoerner <eric.zoerner@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -25,8 +25,8 @@ import DutchAPI.{  //explicit imports needed due to problems with multiple wildc
   achterGrond, achterGrondV,
   herhaal, herhaalTel, zolangAls,
   input,
-  rondAf, toeval, toevalDubbel, kleur,
-  Geheel, Dubbel, Snaar,
+  rondAf, willekeurig, willekeurigDecimaal, kleur,
+  Nummer, Decimaal, Tekst,
   systeemTijd, telTot}
 import schildpad.{wis => _, _}
 

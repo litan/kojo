@@ -2,6 +2,7 @@
  * Copyright (C) 2013 
  *   Lalit Pant <pant.lalit@gmail.com>,
  *   Eric Zoerner <eric.zoerner@gmail.com>
+ *   Jacco Huysmans <jhuysmans@rhinofly.nl>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -51,17 +52,17 @@ object DutchAPI {
       engels.hop() //hop change state to penDown after hop
       engels.restoreStyle()
     }
-    def thuis() /* of naarHuis?*/= engels.home()
+    def start() = engels.home()
     def naartoe(x: Double, y: Double) = engels.towards(x, y)
-    def zetHoek(hoek: Double) = engels.setHeading(hoek)
-    def hoek = engels.heading
+    def zetRichting(hoek: Double) = engels.setHeading(hoek)
+    def richting = engels.heading
     def oost() = engels.setHeading(0)
     def west() = engels.setHeading(180)
     def noord() = engels.setHeading(90)
     def zuid() = engels.setHeading(-90)
     def vertraging(n: Long) = engels.setAnimationDelay(n)
     def schrijf(t: Any) = engels.write(t)
-    def tekstGroote(s: Int) = engels.setPenFontSize(s)
+    def tekstGrootte(s: Int) = engels.setPenFontSize(s)
     def boog(radius: Double, hoek: Double) = engels.arc(radius, math.round(hoek).toInt)
     def cirkel(radius: Double) = engels.circle(radius)
     def positie = engels.position
@@ -70,11 +71,11 @@ object DutchAPI {
     def isPenOpCanvas = engels.style.down
     def penKleur(c: java.awt.Color) = engels.setPenColor(c)
     def vulkleur(c: java.awt.Color) = engels.setFillColor(c)
-    def penBreedte(n: Double) = engels.setPenThickness(n)
+    def lijnDikte(n: Double) = engels.setPenThickness(n)
     def bewaarStijl() = engels.saveStyle()
     def zetStijlTerug() = engels.restoreStyle()
-    def bewaarPositieEnHoek() = engels.savePosHe()
-    def zetPositieEnHoekTerug() = engels.restorePosHe()
+    def bewaarPositieEnRichting() = engels.savePosHe()
+    def zetPositieEnRichtingTerug() = engels.restorePosHe()
     def vizierAan() = engels.beamsOn()
     def vizierUit() = engels.beamsOff()
     def kostuum(bestandNaam: String) = engels.setCostume(bestandNaam)
@@ -127,14 +128,14 @@ object DutchAPI {
     val factor = math.pow(10, aantalDecimalen)
     math.round(getal.doubleValue * factor) / factor
   }
-  def toeval(n: Int) = builtins.random(n)
-  def toevalDubbel(n: Int) = builtins.randomDouble(n)
+  def willekeurig(n: Int) = builtins.random(n)
+  def willikeurigDecimaal(n: Int) = builtins.randomDouble(n)
   def kleur(r: Int, g: Int, b: Int) = builtins.color(r, g, b)
 
   //some type aliases in Dutch
-  type Geheel = Int
-  type Dubbel = Double
-  type Snaar = String
+  type Nummer = Int
+  type Decimaal = Double
+  type Tekst = String
 
   //speedTest
   def systeemTijd() = BigDecimal(System.nanoTime()) / BigDecimal("1000000000") //seconds
@@ -187,23 +188,23 @@ object NlInit {
 
   val codeTemplates = Map(
     "vooruit" -> "vooruit(${stap})",
-    "rechts" -> "rechts(${hoek})",
-    "links" -> "links(${hoek})",
+    "rechts" -> "rechts(${richting})",
+    "links" -> "links(${richting})",
     "springNaar" -> "springNaar(${x},${y})",
     "gaNaar" -> "gaNaar(${x},${y})",
     "spring" -> "spring(${stap})",
-    "thuis" -> "thuis()",
+    "start" -> "start()",
     "naartoe" -> "naartoe(${x},${y})",
-    "hoek" -> "hoek",
-    "zetHoek" -> "zetHoek(${hoek})",
+    "richting" -> "richting",
+    "zetRichting" -> "zetRichting(${hoek})",
     "oost" -> "oost()",
     "west" -> "west()",
     "noord" -> "noord()",
     "zuid" -> "zuid()",
     "vertraging" -> "vertraging(${vertraging})",
     "schrijf" -> "schrijf(${snaar})",
-    "tekstGroote" -> "tekstGroote(${maat})",
-    "boog" -> "boog(${radius},${hoek})",
+    "tekstGrootte" -> "tekstGrootte(${maat})",
+    "boog" -> "boog(${radius},${richting})",
     "cirkel" -> "cirkel(${radius})",
     "vertoon" -> "vertoon()",
     "verberg" -> "verberg()",
@@ -213,11 +214,11 @@ object NlInit {
     "isPenOpCanvas" -> "isPenOpCanvas",
     "kleur" -> "kleur(${penKleur})",
     "vulkleur" -> "vulkleur(${kleur})",
-    "penBreedte" -> "penBreedte(${penBreedte})",
+    "lijnDikte" -> "lijnDikte(${lijnDikte})",
     "bewaarStijl" -> "bewaarStijl()",
     "zetStijlTerug" -> "zetStijlTerug()",
-    "bewaarPositieEnHoek" -> "bewaarPositieEnHoek()",
-    "zetPositieEnHoekTerug" -> "zetPositieEnHoekTerug()",
+    "bewaarPositieEnRichting" -> "bewaarPositieEnRichting()",
+    "zetPositieEnRichtingTerug" -> "zetPositieEnRichtingTerug()",
     "vizierAan" -> "vizierAan()",
     "vizierUit" -> "vizierUit()",
     "engels" -> "engels",
@@ -231,8 +232,8 @@ object NlInit {
     "output" -> "output(${snaar})",
     "input" -> "input(${leidTekst})",
     "rondAf" -> "rondAf(${getal},${aantalDecimalen})",
-    "toeval" -> "toeval(${bovengrens})",
-    "toevalDubbel" -> "toevalDubbel(${bovengrens})",
+    "willekeurig" -> "willekeurig(${bovengrens})",
+    "willikeurigDecimaal" -> "willikeurigDecimaal(${bovengrens})",
     "telTot" -> "telTot(${getal})",
     "systeemTijd" -> "systeemTijd",
     "kostuum" -> "kostuum(${bestandNaam})",
@@ -243,43 +244,43 @@ object NlInit {
   val helpContent = Map(
     "vooruit" ->
       <div>
-        <strong>vooruit</strong>(stap) - De schildpad gaat naar voren het aantal stappen die je opgeeft in de richting die zijn neus wijst.
-        <br/>Als de pen op canvas is, tekent de schildpad terwijl hij naar voren loopt.
+        <strong>vooruit</strong>(stap) - De schildpad gaat het aantal stappen naar voren die je opgeeft, in de richting waarheen zijn neus wijst.
+        <br/>Als de pen op het canvas is, tekent de schildpad terwijl hij naar voren loopt.
         <br/><em>Voorbeeld:</em> <br/><br/>
         <pre>
           wis()           //tekencanvas wordt gewist en de schildpad is naar het midden verplaatst
-          vooruit(100)    //de schildpad gaat rechtdoor 100 stappen
-          vooruit()       //de schildpad gaat rechtdoor 25 stappen
-          penVanCanvas()  //de schildpad tilt de pen van de canvas
-          vooruit(200)    //de schildpad gaat 200 stappen zonder tekenen
-          rechts(45)      //de schildpad roteert 45 graden naar rechts
+          vooruit(100)    //de schildpad gaat 100 stappen rechtdoor
+          vooruit()       //de schildpad gaat 25 stappen rechtdoor
+          penVanCanvas()  //de schildpad tilt de pen van het canvas
+          vooruit(200)    //de schildpad gaat 200 stappen vooruit zonder te tekenen
+          rechts(45)      //de schildpad draait 45 graden naar rechts
         </pre>
       </div>.toString,
-    "links" -> <div><strong>links</strong>(hoek)<br/>De schildpad roteert 90 graden naar links.</div>.toString,
-    "rechts" -> <div><strong>rechts</strong>(hoek)<br/>De schildpad roteert 90 graden naar rechts.</div>.toString,
-    "springNaar" -> <div><strong>springNaar</strong>(x, y)<br/>De schildpad springt naar positie (x, y) zonder tekenen, en zonder wijziging van de hoek.</div>.toString,
-    "gaNaar" -> <div><strong>gaNaar</strong>(x, y)<br/>De schildpad roteert naar de positie (x,y) en daarheen loopt.<br/>Als de pen beneden zit, tekent de schildpad terwijl hij loopt.</div>.toString,
-    "spring" -> <div><strong>spring</strong>(stap)<br/>De schildpad springt in de richting waarin zijn neus wijst naar het aantal stappen, zonder tekenen, zelfs als de pen op canvas zit.</div>.toString,
-    "thuis" -> <div><strong>thuis</strong>()<br/>De schildpad loopt terug naar positie (0,0) en roteert zodat zijn neus naar het noorden wijst. <br/>Als de pen op canvas zit, tekent de schildpad terwijl hij loopt.</div>.toString,
-    "naartoe" -> <div><strong>naartoe</strong>(x, y)<br/>De schildpad roteert zodat zijn neus naar de locatie (x, y) wijst.</div>.toString,
-    "zetHoek" -> <div><strong>zetHoek</strong>(hoek)<br/>De schildpad roteert zodat zijn neus in de gespecificeerde hoek wijst.</div>.toString,
-    "hoek" -> <div><strong>hoek</strong><br/>Geeft de waarde van de hoek waarin zijn neus van de schildpad wijst.</div>.toString,
-    "oost" -> <div><strong>oost</strong>()<br/>De schildpad roteert zodat zijn neus naar het oosten wijst (rechts).</div>.toString,
-    "west" -> <div><strong>west</strong>()<br/>De schildpad roteert zodat zijn neus naar het westen wijst (links).</div>.toString,
-    "noord" -> <div><strong>noord</strong>()<br/>De schildpad roteert zodat zijn neus naar het noorden wijst (naar boven).</div>.toString,
-    "zuid" -> <div><strong>zuid</strong>()<br/>De schildpad roteert zodat zijn neus naar het zuiden wijst (naar beneden).</div>.toString,
-    "vertraging" -> <div><strong>vertraging</strong>(vertraging)<br/>Hoe meer de vertraging hoe langzamer de schildpad. <br/> Minimale vertraging is 0 <br/> vertraging (1000) is vrij langsaam.</div>.toString,
-    "schrijf" -> <div><strong>schrijf</strong>(snaar)<br/>De schildpad schrijft een snaar in het tekencanvas bij de huidige positie.<br/>Een snaar begint en eindigt met dubbele aanhalingstekens. Voorbeeld: schrijf("hallo")</div>.toString,
-    "tekstGroote" -> <div><strong>tekstGroote</strong>(maat)<br/>Hiermee wijzigt je de grootte van de tekst die de schildpad schrijft.</div>.toString,
+    "links" -> <div><strong>links</strong>(hoek)<br/>De schildpad draait 90 graden naar links.</div>.toString,
+    "rechts" -> <div><strong>rechts</strong>(hoek)<br/>De schildpad draait 90 graden naar rechts.</div>.toString,
+    "springNaar" -> <div><strong>springNaar</strong>(x, y)<br/>De schildpad springt naar positie (x, y) zonder te tekenen, en zonder van richting te veranderen.</div>.toString,
+    "gaNaar" -> <div><strong>gaNaar</strong>(x, y)<br/>De schildpad draait in de richting van de positie (x,y) en loopt er heen.<br/>Als de pen op het canvas is, tekent de schildpad terwijl hij loopt.</div>.toString,
+    "spring" -> <div><strong>spring</strong>(stap)<br/>De schildpad springt het aantal stappen en er wordt niets getekend, zelfs niet als de pen op het canvas zit.</div>.toString,
+    "start" -> <div><strong>start</strong>()<br/>De schildpad gaat terug naar start positie (0,0) en draait zodat zijn neus naar het noorden wijst. <br/>Als de pen op het canvas is, tekent de schildpad terwijl hij loopt.</div>.toString,
+    "naartoe" -> <div><strong>naartoe</strong>(x, y)<br/>De schildpad draait zodat zijn neus naar de locatie (x, y) wijst.</div>.toString,
+    "zetRichting" -> <div><strong>zetRichting</strong>(hoek)<br/>De schildpad draait zodat zijn neus in de gespecificeerde hoek komt te staan.</div>.toString,
+    "richting" -> <div><strong>richting</strong><br/>Geeft de waarde van de hoek waarin de neus van de schildpad staat.</div>.toString,
+    "oost" -> <div><strong>oost</strong>()<br/>De schildpad draait zodat zijn neus naar het oosten wijst (rechts).</div>.toString,
+    "west" -> <div><strong>west</strong>()<br/>De schildpad draait zodat zijn neus naar het westen wijst (links).</div>.toString,
+    "noord" -> <div><strong>noord</strong>()<br/>De schildpad draait zodat zijn neus naar het noorden wijst (naar boven).</div>.toString,
+    "zuid" -> <div><strong>zuid</strong>()<br/>De schildpad draait zodat zijn neus naar het zuiden wijst (naar beneden).</div>.toString,
+    "vertraging" -> <div><strong>vertraging</strong>(vertraging)<br/>Hoe groter de vertraging hoe langzamer de schildpad gaat. <br/> De minimale vertraging is 0 (geen vertraging)<br/>En een vertraging van 1000 betekent vrij langsaam.</div>.toString,
+    "schrijf" -> <div><strong>schrijf</strong>(tekst)<br/>De schildpad schrijft een tekst op het canvas bij de huidige positie.<br/>Een tekst begint en eindigt met dubbele aanhalingstekens. Voorbeeld: schrijf("hallo")</div>.toString,
+    "tekstGrootte" -> <div><strong>tekstGrootte</strong>(maat)<br/>Hiermee wijzigt je de grootte van de tekst die de schildpad schrijft.</div>.toString,
     "boog" -> <div><strong>boog</strong>(radius, hoek)<br/>De schildpad tekent een boog met de gegeven radius en hoek.</div>.toString,
     "cirkel" -> <div><strong>cirkel</strong>(radius)<br/>De schildpad tekent een cirkel met de gegeven radius.</div>.toString,
     "vertoon" -> <div><strong>vertoon</strong>()<br/> Hiermee wordt de schildpad weer zichtbaar als hij onzichtbaar was.</div>.toString,
-    "verberg" -> <div><strong>verberg</strong>()<br/>Heermee wordt de schildbaar onzichtbaar als hij zichtbaar was</div>.toString,
-    "positie" -> <div><strong>positie</strong><br/>Geeft de schildpad een positie als een puntenwaarde (x, y)
+    "verberg" -> <div><strong>verberg</strong>()<br/>Heermee wordt de schildbaar onzichtbaar als hij zichtbaar was.</div>.toString,
+    "positie" -> <div><strong>positie</strong><br/>Geeft de positie als een waarde (x, y)
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         output(positie)     //schrijf de positie van de schildpad in het output venster
-        output(positie.x)   //schrijf de x-positie van de shildpad in het output venster
+        output(positie.x)   //schrijf de x-positie van de schildpad in het output venster
         output(positie.y)   //schrijf de y-positie van de schildpad in het output venster
 
         var x = positie.x   //slaat de x-positie van de schildpad op in de variabele x
@@ -288,12 +289,12 @@ object NlInit {
         springNaar(x, y)    //springt naar een nieuwe positie met bijgewerkte x
       </pre>
     </div>.toString,
-    "penOpCanvas" -> <div><strong>penOpCanvas</strong>()<br/>Zet de pen op de canvas, zodat de schildpad tekent als hij loopt.</div>.toString,
-    "penVanCanvas" -> <div><strong>penVanCanvas</strong>()<br/>Tilt de pen op van de canvas, zodat de schildpad niet tekent als hij loopt.</div>.toString,
-    "isPenOpCanvas" -> <div><strong>isPenOpCanvas</strong><br/>Controleert of de pen op de canvas zit. Geeft <strong>true</strong> (waar) als de pen op canvas zit en <strong>false</strong> (fout) als hij van canvas is.</div>.toString,
-    "penKleur" -> <div><strong>penKleur</strong>(penKleur)<br/>Maakt de schildpad tekenen met de gegeven pen kleur.
+    "penOpCanvas" -> <div><strong>penOpCanvas</strong>()<br/>Zet de pen op het canvas, zodat de schildpad tekent als hij loopt.</div>.toString,
+    "penVanCanvas" -> <div><strong>penVanCanvas</strong>()<br/>Tilt de pen op van het canvas, zodat de schildpad niet meer tekent als hij loopt.</div>.toString,
+    "isPenOpCanvas" -> <div><strong>isPenOpCanvas</strong><br/>Controleert of de pen op het canvas is. Geeft <strong>true</strong> (waar) als de pen op het canvas is en <strong>false</strong> (fout) als hij van canvas is.</div>.toString,
+    "penKleur" -> <div><strong>penKleur</strong>(penKleur)<br/>Laat de schildpad tekenen met de gekozen kleur.
       <br/>Je kunt deze pre-gemengde kleuren gebruiken:
-      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
+      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwart, wit, geenKleur.
       <br/>Je kunt je eigen kleur mixen met Color
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
@@ -305,39 +306,39 @@ object NlInit {
         vooruit(200)
       </pre>
     </div>.toString,
-    "vulkleur" -> <div><strong>vulkleur</strong>(vulkleur)<br/>Hiermee gebruikt de schildpad de gegeven vulkleur als het tekent.
-      <br/>Je kunt deze pre-gemengde kleuren gebruiken:
-      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
+    "vulkleur" -> <div><strong>vulkleur</strong>(vulkleur)<br/>De schildpad gebruikt de gekozen kleur om te vullen.
+      <br/>Je kunt deze vooraf gemengde kleuren gebruiken:
+      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwart, wit, geenKleur.
       <br/>Je kunt je eigen kleur mixen met Color
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         wis(); vertraging(0)
         vulkleur(blauw)         //zet de vulkleur naar blauw
         cirkel(100)             //de schildpad tekent een blauwe cirkel met radius 100
-        spring(100)             //de schildpad springt vooruit 100 stappen
+        spring(100)             //de schildpad springt 100 stappen vooruit
         vulkleur(geenKleur)     //zet de vulkleur
         cirkel(100)             //de schildpad tekent een cirkel met geen vulkleur
       </pre>
     </div>.toString,
-    "penBreedte" -> <div><strong>penBreedte</strong>(penBreedte)<br/>Wijzigt de pen breedte. <br/> Hoe hoger de pen breedte, hoe dikker de strepen.</div>.toString,
-    "bewaarStijl" -> <div><strong>bewaarStijl</strong>()<br/>Slaat de pen kleur, vulkleur, breedte en de lettergrootte op.<br/>Je herstelt de opgeslagen stijl met zetStijlTerug().</div>.toString,
-    "zetStijlTerug" -> <div><strong>zetStijlTerug</strong>()<br/>Zet de opgeslagen pen kleur, vulkleur, breedte en de lettergrootte terug. Je kunt de stijl opslaan met bewaarStijl().</div>.toString,
-    "bewaarPositieEnHoek" -> <div><strong>bewaarPositieEnHoek</strong>()<br/>Slaat de huidige positie en hoek op.<br/>Je kunt weer de opgeslagen positie en hoek van zetPositieEnHoekTerug().</div>.toString,
-    "zetPositieEnHoekTerug" -> <div><strong>zetPositieEnHoekTerug</strong>()<br/>Zet the opgeslagen positie en hoek terug.<br/>Je kunt de positie en hoek opslaan met bewaarPositieEnHoek().</div>.toString,
-    "vizierAan" -> <div><strong>vizierAan</strong>()<br/>Laat zien welke weg de schildpad wijst met een vizier.</div>.toString,
-    "vizierUit" -> <div><strong>vizierUit</strong>()<br/>Verberg de vizier van de schildpad.</div>.toString,
-    "engels" -> <div><strong>engelska</strong><br/>Geeft de Engelse schildpad.<br/>Als je typt:<br/><tt>schildpad.engels.</tt><br/>kun je zien alles wat een schildpad in Engels kan doen.</div>.toString,
-    "wis" -> <div><strong>wis</strong>()<br/>Wist alles in het tekencanvas, en brengt de schildpad naar het midden van het canvas</div>.toString,
+    "lijnDikte" -> <div><strong>lijnDikte</strong>(lijnDikte)<br/>Wijzigt de breedte van de pennenstreep. <br/> Hoe hoger het getal, hoe dikker hij schrijft.</div>.toString,
+    "bewaarStijl" -> <div><strong>bewaarStijl</strong>()<br/>Slaat de pen kleur, vulkleur, lijnDikte en de lettergrootte op.<br/>Je herstelt de opgeslagen stijl met zetStijlTerug().</div>.toString,
+    "zetStijlTerug" -> <div><strong>zetStijlTerug</strong>()<br/>Zet de opgeslagen pen kleur, vulkleur, lijnDikte en de lettergrootte terug. Je kunt de stijl opslaan met bewaarStijl().</div>.toString,
+    "bewaarPositieEnRichting" -> <div><strong>bewaarPositieEnRichting</strong>()<br/>Slaat de huidige positie en richting op.<br/>Je kunt de opgeslagen positie en richting van zetPositieEnRichtingTerug().</div>.toString,
+    "zetPositieEnRichtingTerug" -> <div><strong>zetPositieEnRichtingTerug</strong>()<br/>Zet the opgeslagen positie en hoek terug.<br/>Je kunt de positie en hoek opslaan met bewaarPositieEnRichting().</div>.toString,
+    "vizierAan" -> <div><strong>vizierAan</strong>()<br/>Laat zien welke weg de schildpad op gaat met behulp van een vizier.</div>.toString,
+    "vizierUit" -> <div><strong>vizierUit</strong>()<br/>Verberg het vizier van de schildpad.</div>.toString,
+    "engels" -> <div><strong>engels</strong><br/>Geeft een Engelse schildpad.<br/>Als je typt:<br/><tt>schildpad.engels.</tt><br/>wordt alles in de Engelse tekst weer gegeven.</div>.toString,
+    "wis" -> <div><strong>wis</strong>()<br/>Wist alles op het canvas, en brengt de schildpad naar het midden van het canvas</div>.toString,
     "wisOutput" -> <div><strong>wisOutput</strong>()<br/>Wist alles in het output venster.</div>.toString,
     "achtergrond" -> <div><strong>achtergrond</strong>(achtergrondKleur)<br/>Wijzig de achtergrond kleur.
-      <br/>Je kunt deze pre-gemengde kleuren gebruiken:
+      <br/>Je kunt deze vooraf gemengde kleuren gebruiken:
+      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwart, wit, geenKleur.
+      <br/>Je kunt je eigen kleur mixen met Color.</div>.toString,
+    "achtergrondV" -> <div><strong>achtergrondV</strong>(kleur1,kleur2)<br/>Stel de achtergrond in op een overgang van kleur1 naar kleur2.
+      <br/>Je kunt deze vooraf gemengde kleuren gebruiken:
       <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
       <br/>Je kunt je eigen kleur mixen met Color.</div>.toString,
-    "achtergrondV" -> <div><strong>achtergrondV</strong>(kleur1,kleur2)<br/>Zet de achtergrond kleur naar een overgang van kleur 1 tot kleur2.
-      <br/>Je kunt deze pre-gemengde kleuren gebruiken:
-      <br/>blauw, rood, geel, groen, paars, roze, bruin, zwaart, wit, geenKleur.
-      <br/>Je kunt je eigen kleur mixen met Color.</div>.toString,
-    "herhaal" -> <div><strong>herhaal</strong>(aantal) {{ statements }} - herhaal <em> statements</em> het gegeven aantal keren.
+    "herhaal" -> <div><strong>herhaal</strong>(aantal) {{ opdrachten }} - herhaal <em>opdrachten</em> het gegeven aantal keren.
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         herhaal(4) {{
@@ -346,7 +347,7 @@ object NlInit {
         }}
       </pre>
     </div>.toString,
-    "herhaalTel" -> <div><strong>herhaalTel</strong>(antal) {{ i => statements }} - herhaal <em>statements</em> het gegeven aantal keren en tel elke ronde van de herhaling. De teller is de waarde in <strong>i</strong>.
+    "herhaalTel" -> <div><strong>herhaalTel</strong>(antal) {{ i => opdrachten }} - herhaal <em>opdrachten</em> het gegeven aantal keren en tel elke ronde van de herhaling. De teller is de waarde in <strong>i</strong>.
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         herhaalTel(10) {{ i =>
@@ -354,7 +355,7 @@ object NlInit {
         }}
       </pre>
     </div>.toString,
-    "zolangAls" -> <div><strong>zolangAls</strong>(conditie) {{  statements }} - herhaal <em>statements</em> zolang als <em>conditie</em> waar is.
+    "zolangAls" -> <div><strong>zolangAls</strong>(voorwaarde) {{  opdrachten }} - herhaal <em>opdrachten</em> zolang als <em>voorwaarde</em> waar is.
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>var i = 0
         zolangAls(i{ "<" }10) {{
@@ -363,22 +364,22 @@ object NlInit {
         }}
       </pre>
     </div>.toString,
-    "output" -> <div><strong>output</strong>(tekstSnaar)<br/>Schrijft tekst in <em>tekstSnaar</em> in het output venster <br/> Een snaar moet dubbele aanhalingstekens hebben aan het begin en einde. Voorbeeld: output("hallo")</div>.toString,
-    "input" -> <div><strong>input</strong>(leidTekst)<br/>Schrijft de leidtekst in het output venster en wacht op input van tekst totdat je op Enter toetst.<br/>
+    "output" -> <div><strong>output</strong>(tekst)<br/>Schrijft tekst in <em>tekst</em> in het output venster <br/> Een tekst moet dubbele aanhalingstekens hebben aan het begin en het einde. Voorbeeld: output("hallo")</div>.toString,
+    "input" -> <div><strong>input</strong>(tekst)<br/>Schrijft de tekst in het output venster en wacht op input van tekst totdat je op Enter toetst.<br/>
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>val x = input("Typ je naam ")
         output("Hallo " + x + "!")
       </pre>
     </div>.toString,
-    "rondAf" -> <div><strong>rondAf</strong>(getal, aantalDecimalen)<br/>Rondt een getal af op een gegeven aantal decimalen<br/>
+    "rondAf" -> <div><strong>rondAf</strong>(getal, aantalDecimalen)<br/>Rondt een getal af op het aantal cijfers achter de komma (decimalen)<br/>
       <br/><em>Voorbeeld:</em> <br/><br/>
-      <pre>val t1 = rondAf(3.991,2) //op 2 decimalen afronden
+      <pre>val t1 = rondAf(3.991,2) //op 2 decimalen afronden, geeft 3.99
         output(t1)
-        val t2 = rondAf(3.999)   //op 0 decimalen afronden
+        val t2 = rondAf(3.999)   //op 0 decimalen afronden, geeft 4
         output(t2)
       </pre>
     </div>.toString,
-    "systeemTijd" -> <div><strong>systeemTijd</strong><br/>Geeft de systeemklok in seconden. Je kunt de systeemTijd gebruiken om te meten hoe lang iets duurt.<br/>
+    "systeemTijd" -> <div><strong>systeemTijd</strong><br/>Geeft de systeemtijd (van de computer) in seconden. Je kunt de systeemTijd gebruiken om te meten hoe lang iets duurt.<br/>
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         val start = systeemTijd
@@ -389,27 +390,27 @@ object NlInit {
         output("Je had " + rondAf(s,1) + " seconden geduld.")
       </pre>
     </div>.toString,
-    "telTot" -> <div><strong>telTot</strong>(getal)<br/>Bekijkt hoe lang het duurt voordat de computer tot een gegeven getal telt. Jij kunt met een vrij groot getal proberen.<br/>
+    "telTot" -> <div><strong>telTot</strong>(getal)<br/>Laat zien hoe lang het duurt om de computer tot het getal te laten tellen. Probeer het maar eens met een heel groot getal, bijvoorbeeld 1000000<br/>
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>
         telTot(5000)
       </pre>
     </div>.toString,
-    "toeval" -> <div><strong>toeval</strong>(bovengrens)<br/>Geeft een willekeurig getal tussen 0 en bovengrens.
+    "willekeurig" -> <div><strong>willekeurig</strong>(bovengrens)<br/>Geeft een willekeurig getal tussen 0 en de bovengrens.
       <br/><em>Voorbeeld:</em>
-      <br/><pre>  def toeval = toeval(20) + 1 </pre>
-      <br/>Geeft een willekeurig getal van 1 tot en met 20</div>.toString,
-    "toevalDubbel" -> <div><strong>toevalDubbel</strong>(bovengrens)<br/>Geeft een willekeurig decimaal getal tussen 0 en bovengrens.
+      <br/><pre>  def w = willekeurig(20) + 1 </pre>
+      <br/>Geeft een willekeurig getal tussen de 1 en 20</div>.toString,
+    "willikeurigDecimaal" -> <div><strong>willikeurigDecimaal</strong>(bovengrens)<br/>Geeft een willekeurig decimaal getal tussen 0 en de bovengrens.
       <br/><em>Voorbeeld:</em>
-      <br/><pre> def toeval = toevalDubbel(20) + 1.0</pre>
-      <br/>Geeft een willekeurig getal van 1.0 tot en met 20.0</div>.toString,
-    "kostuum" -> <div><strong>kostuum</strong>(bestandNaam)
-      <br/>Gebruik de afbeelding in het bestand om de uiterlijk van de schildpad te wijzigen.
+      <br/><pre> def w = willikeurigDecimaal(20) + 1.0</pre>
+      <br/>Geeft een willekeurig getal tussen 1.0 en 20.0</div>.toString,
+    "kostuum" -> <div><strong>kostuum</strong>(bestandsNaam)
+      <br/>Gebruik de afbeelding in het bestand om het uiterlijk van de schildpad te wijzigen.
       <br/><em>Voorbeeld:</em>
       <br/><pre>
       wis()
-      kostuum("achtergrond.jpg") //de uiterlijk van de gewoone schildpad wordt achtergrond.jpg
-      vooruit(100)               //de achtergrond loopt
+      kostuum("achtergrond.jpg") //het uiterlijk van de schildpad wordt achtergrond.jpg
+      vooruit(100)               //de schildpad loopt
       val aardbei = new Schildpad(100,100,"aardbei.jpg") //Een nieuwe schildpad wordt gecreërt op de positie (100,100) met de afbeelding aardbei.jpg
       aardbei.vooruit(100)
     </pre><br/></div>.toString
