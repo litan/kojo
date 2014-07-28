@@ -133,7 +133,7 @@ object DutchAPI {
   def kleur(r: Int, g: Int, b: Int) = builtins.color(r, g, b)
 
   //some type aliases in Dutch
-  type Nummer = Int
+  type GeheelGetal = Int
   type Decimaal = Double
   type Tekst = String
 
