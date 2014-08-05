@@ -43,6 +43,7 @@ import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.DecreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.Style
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants
 import org.fife.ui.rsyntaxtextarea.TokenMakerFactory
 import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.folding.CurlyFoldParser
@@ -165,6 +166,37 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
   d3Cb.setActionCommand("D3")
   modeMenu.add(d3Cb)
+
+  val syntaxColoringAction = new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      e.getActionCommand match {
+        case "Fast" =>
+          codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+          fastColoringCb.setSelected(true)
+          richColoringCb.setSelected(false)
+        case "Rich" =>
+          codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
+          val doc = codePane.getDocument
+          doc.insertString(doc.getLength - 1, " ", null)
+          doc.remove(doc.getLength - 2, 1)
+          fastColoringCb.setSelected(false)
+          richColoringCb.setSelected(true)
+      }
+    }
+  }
+
+  val syntaxColoringMenu = new JMenu(Utils.loadString("S_SyntaxColoring"))
+
+  val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
+  richColoringCb.setText(Utils.loadString("S_ColoringRich"))
+  richColoringCb.setActionCommand("Rich")
+  richColoringCb.setSelected(true)
+  syntaxColoringMenu.add(richColoringCb)
+
+  val fastColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
+  fastColoringCb.setText(Utils.loadString("S_ColoringFast"))
+  fastColoringCb.setActionCommand("Fast")
+  syntaxColoringMenu.add(fastColoringCb)
 
   var tabSize = 4
 
@@ -345,6 +377,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   inputMap.put(ctrlL, "clear-editor")
   am.put("clear-editor", clearAction)
   popup.add(clearItem, idx)
+  idx += 1
+
+  popup.add(syntaxColoringMenu, idx)
   idx += 1
 
   val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
