@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# point to the version of java that you want, or leave as-is for the default java version
+JAVA=java
+
+BIN_DIR=`dirname $0`
+FILES=$BIN_DIR/../lib/*
+CLASSPATH=
+for f in $FILES
+do
+  CLASSPATH=${CLASSPATH}:$f
+done
+
+$JAVA -cp ${CLASSPATH} net.kogics.kojo.lite.DesktopMain $*

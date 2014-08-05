@@ -1,0 +1,38 @@
+../target/scala-2.11/kojo_2.11-2.1.jar -> kojo2.jar
+../lib/AppleJavaExtensions.jar
+../lib/rsyntaxtextarea.jar
+../lib/rstaui.jar
+../lib/autocomplete.jar
+../lib/scalariform.jar
+../lib/js-1.6R5.jar
+../lib/geogebra_main.jar
+../lib/geogebra.jar
+../lib/geogebra_algos.jar
+../lib/jtidy-4aug2000r7-dev.jar
+../lib/docking-frames-common.jar
+../lib/jl1.0.1.jar
+../lib/jlatexmath.jar
+../lib/geogebra_cas.jar
+../lib/group-panel.jar
+../lib/jfugue-4.1.jar -> jfugue.jar
+../lib/httpunit.jar
+../lib/geogebra_properties.jar
+../lib/geogebra_export.jar
+../lib/geogebra_gui.jar
+../lib/geogebra_javascript.jar
+../lib/docking-frames-core.jar
+../lib/rithica.jar
+../lib/table-layout.jar
+../lib/jdi.jar
+../lib/image-filters.jar
+/home/lalit/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.1.jar -> scala-reflect.jar
+/home/lalit/.ivy2/cache/org.scala-lang/scala-actors/jars/scala-actors-2.11.1.jar -> scala-actors.jar 
+/home/lalit/.ivy2/cache/org.scala-lang.modules/scala-swing_2.11/bundles/scala-swing_2.11-1.0.1.jar -> scala-swing.jar
+/home/lalit/.ivy2/cache/org.scala-lang.modules/scala-xml_2.11/bundles/scala-xml_2.11-1.0.2.jar -> scala-xml.jar
+/home/lalit/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.11/bundles/scala-parser-combinators_2.11-1.0.1.jar -> scala-parser-combinators.jar
+/home/lalit/.ivy2/cache/org.piccolo2d/piccolo2d-core/bundles/piccolo2d-core-1.3.1.jar -> piccolo2d-core.jar 
+/home/lalit/.ivy2/cache/org.piccolo2d/piccolo2d-extras/bundles/piccolo2d-extras-1.3.1.jar -> piccolo2d-extras.jar 
+/home/lalit/.ivy2/cache/com.vividsolutions/jts/jars/jts-1.12.jar -> jts.jar
+/home/lalit/.ivy2/cache/com.h2database/h2/jars/h2-1.3.168.jar -> h2.jar
+/home/lalit/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.1.jar -> scala-library.jar 
+/home/lalit/.ivy2/cache/org.scala-lang/scala-compiler/jars/scala-compiler-2.11.1.jar -> scala-compiler.jar
