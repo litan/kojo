@@ -22,6 +22,7 @@ import javax.swing.JButton
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
 import javax.swing.JMenu
+import javax.swing.JMenuBar
 import javax.swing.JMenuItem
 import javax.swing.JPanel
 import javax.swing.JPopupMenu
@@ -377,6 +378,28 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   inputMap.put(ctrlL, "clear-editor")
   am.put("clear-editor", clearAction)
   popup.add(clearItem, idx)
+  idx += 1
+
+  var savedMenu: Option[JMenuBar] = None
+  val toggleMenuAction = new AbstractAction(Utils.loadString("S_ToggleMenubar")) {
+    def actionPerformed(ev: ActionEvent) {
+      if (savedMenu.isEmpty) {
+        savedMenu = Some(frame.getJMenuBar)
+        frame.setJMenuBar(null)
+        frame.getRootPane.revalidate()
+        toggleMenuItem.setSelected(false)
+      }
+      else {
+        frame.setJMenuBar(savedMenu.get)
+        frame.getRootPane.revalidate()
+        savedMenu = None
+        toggleMenuItem.setSelected(true)
+      }
+    }
+  }
+  val toggleMenuItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(toggleMenuAction)
+  toggleMenuItem.setSelected(true)
+  popup.add(toggleMenuItem, idx)
   idx += 1
 
   popup.add(syntaxColoringMenu, idx)
