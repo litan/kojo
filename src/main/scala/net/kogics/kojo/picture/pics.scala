@@ -367,7 +367,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
   val ErrMsg = "Unable to create picture turtle. This could be because you have a draw() call after an animate{ } or morph{ } call"
 
   def t = {
-    if (_t == null) Utils.runInSwingThreadAndWait(3000, ErrMsg) {
+    if (_t == null) Utils.runInSwingThreadAndWait(10000, ErrMsg) {
       if (_t == null) {
         val tt = canvas.newInvisibleTurtle(0, 0)
         tt.setAnimationDelay(0)
