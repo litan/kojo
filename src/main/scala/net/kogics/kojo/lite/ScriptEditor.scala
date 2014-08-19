@@ -178,8 +178,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         case "Rich" =>
           codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
           val doc = codePane.getDocument
-          doc.insertString(doc.getLength - 1, " ", null)
-          doc.remove(doc.getLength - 2, 1)
+          doc.insertString(doc.getLength, " ", null)
+          doc.remove(doc.getLength - 1, 1)
           fastColoringCb.setSelected(false)
           richColoringCb.setSelected(true)
       }
