@@ -89,6 +89,7 @@ trait AppMenu {
     val openFile = new JMenuItem(Utils.loadString("S_Open"))
     openFile.addActionListener(new LoadFrom(scriptEditor))
     openFile.setIcon(Utils.loadIcon("/images/extra/open.gif"))
+    openFile.setAccelerator(KeyStroke.getKeyStroke("control O"))
     fileMenu.add(openFile)
 
     val saveFile = new JMenuItem(Utils.loadString("S_Save"))
@@ -113,10 +114,11 @@ trait AppMenu {
     newKojo.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         Utils.runAsync {
-                         NewKojoInstance.main(Array("subKojo"))
-                       }
+          NewKojoInstance.main(Array("subKojo"))
+        }
       }
     })
+    newKojo.setAccelerator(KeyStroke.getKeyStroke("control N"))
     fileMenu.add(newKojo)
 
     fileMenu.addSeparator()
@@ -368,7 +370,7 @@ trait AppMenu {
         val aboutText = new JEditorPane
         aboutText.setEditorKit(new HTMLEditorKit)
         aboutText.setEditable(false)
-        aboutText.setText( s"""<html><body>
+        aboutText.setText(s"""<html><body>
 <div style="font-size: 12pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> ${Versions.KojoMajorVersion}<br/>
               Version: ${Versions.KojoVersion}  <em>${Versions.KojoRevision}</em><br/>
