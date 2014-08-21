@@ -180,6 +180,7 @@ object Help {
     "epochTimeMillis" -> "epochTimeMillis - The difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.",
     "canvasBounds" -> "canvasBounds - Returns the bounds of the canvas: the x and y coordinates of its bottom left point, and its width and height.",
     "dot" -> "dot(diameter) - Makes a dot with the given diameter.",
+    "TexturePaint" -> "TexturePaint(fileName, x, y) - Creates a paint from the texture image in the given file. The bottom left of the image is anchored at (x, y). This paint can be used to set the pen and fill colors of shapes.",
     "ColorLinearG" ->
     <div>
       <strong>ColorLinearG</strong><tt>(x1, y1, x2, y2, distribution, colors, cyclic)</tt> - creates a linear color gradient.

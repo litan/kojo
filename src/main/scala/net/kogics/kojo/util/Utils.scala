@@ -22,6 +22,7 @@ import java.awt.Image
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.image.BufferedImage
 import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.File
@@ -43,6 +44,7 @@ import java.util.concurrent.locks.ReentrantLock
 import java.util.logging.Level
 import java.util.logging.Logger
 
+import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import javax.swing.Timer
 import javax.swing.text.JTextComponent
@@ -80,6 +82,19 @@ object Utils {
     val f = new java.io.File(fname)
     val path = if (f.isAbsolute) f.getAbsolutePath else kojoCtx.baseDir + fname
     path.replaceAllLiterally("\\", "/")
+  }
+
+  def loadBufImage(fname: String): BufferedImage = {
+    val url = getClass.getResource(fname)
+    if (url != null) {
+      ImageIO.read(url)
+    }
+    else {
+      val pfname = absolutePath(fname)
+      val imageFile = new File(pfname)
+      require(imageFile.exists, "Image file should exist: " + imageFile.getAbsolutePath)
+      ImageIO.read(imageFile)
+    }
   }
 
   def loadImage(fname: String): Image = {

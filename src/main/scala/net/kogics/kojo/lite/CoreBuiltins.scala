@@ -1,13 +1,15 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.{Color => JColor}
-import java.awt.{Font => JFont}
+import java.awt.{ Color => JColor }
+import java.awt.{ Font => JFont }
 import java.awt.GradientPaint
 import java.awt.LinearGradientPaint
 import java.awt.MultipleGradientPaint
 import java.awt.Paint
 import java.awt.RadialGradientPaint
+import java.awt.TexturePaint
+import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import java.util.concurrent.CountDownLatch
 
@@ -89,6 +91,10 @@ trait CoreBuiltins extends Rationals {
     new LinearGradientPaint(x1.toFloat, y1.toFloat, x2.toFloat, y2.toFloat, floatD, colors.toArray, cycleMode)
   }
   def ColorHSB(h: Double, s: Double, b: Double) = java.awt.Color.getHSBColor((h / 360).toFloat, (s / 100).toFloat, (b / 100).toFloat)
+  def TexturePaint(file: String, x: Double, y: Double) = {
+    val img = Utils.loadBufImage(file)
+    new TexturePaint(img, new Rectangle2D.Double(x, y, img.getWidth, -img.getHeight))
+  }
   def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
 
   def clearOutput()
