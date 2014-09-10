@@ -734,7 +734,12 @@ that is not supported under Tracing.
         }
       }
 
-      makeArc()
+      if (turtle.animationDelay < 11) Utils.runInSwingThread {
+        makeArc()
+      }
+      else {
+        makeArc()
+      }
     }
 
     name match {
