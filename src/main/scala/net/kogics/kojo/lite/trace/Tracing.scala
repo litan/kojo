@@ -19,8 +19,11 @@ package trace
 
 import java.awt.Color
 import java.awt.Font
+import java.awt.geom.AffineTransform
+import java.awt.geom.Point2D
 import java.io.File
 
+import scala.Vector
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaIterator
 import scala.collection.mutable.ArrayBuffer
@@ -659,10 +662,10 @@ that is not supported under Tracing.
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Canvas command - $c")
     }
-
   }
 
   def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], me: MethodEvent) {
+    
     import builtins.Tw
     val caller = stkfrm.thisObject.uniqueID
     val turtle = if (currPicture.isDefined)
@@ -670,6 +673,69 @@ that is not supported under Tracing.
     else
       turtles.getOrElse(caller, builtins.TSCanvas.turtle0)
     val createdTurtle = turtles.contains(caller)
+    
+    def traceForward(me2: MethodEvent, step: Double) {
+      turtle.forward(step)
+      me2.turtlePoints = turtle.lastLine
+    }
+
+    def traceMoveTo(me2: MethodEvent,x: Double, y: Double) {
+      val t2 = turtle.asInstanceOf[net.kogics.kojo.turtle.Turtle]
+      val d = Utils.runInSwingThreadAndWait {
+        val newTheta = t2.towardsHelper(x, y)
+        t2.changeHeading(newTheta)
+        t2.distanceTo(x, y)
+      }
+      traceForward(me2, d)
+    }
+
+    def traceArc2(r: Double, a: Double) {
+      if (a == 0) {
+        return
+      }
+
+      def x(t: Double) = r * math.cos(t.toRadians)
+      def y(t: Double) = r * math.sin(t.toRadians)
+      def makeArc() {
+        val head = turtle.heading
+        if (r != 0) {
+          val pos = turtle.position
+          var currAngle = 0.0
+          val trans = new AffineTransform()
+          trans.translate(pos.x, pos.y)
+          trans.rotate((head - 90).toRadians)
+          trans.translate(-r, 0)
+          val step = if (a > 0) 1 else -1
+          val pt = new Point2D.Double(0, 0)
+          val aabs = a.abs
+          val aabsFloor = aabs.floor
+          while (currAngle.abs < aabsFloor) {
+            currAngle += step
+            pt.setLocation(x(currAngle), y(currAngle))
+            trans.transform(pt, pt)
+            val falseMe = new MethodEvent()
+            falseMe.setParent(Some(me))
+            traceMoveTo(falseMe, pt.x, pt.y)
+          }
+          if (a.floor != a) {
+            currAngle += (aabs - aabs.floor) * step
+            pt.setLocation(x(currAngle), y(currAngle))
+            trans.transform(pt, pt)
+            val falseMe = new MethodEvent()
+            falseMe.setParent(Some(me))
+            traceMoveTo(falseMe, pt.x, pt.y)
+          }
+        }
+        if (a > 0) {
+          turtle.setHeading(head + a)
+        }
+        else {
+          turtle.setHeading(head + 180 + a)
+        }
+      }
+
+      makeArc()
+    }
 
     name match {
       case "clear" =>
@@ -681,8 +747,7 @@ that is not supported under Tracing.
       case "forward" =>
         if (localArgs.length == 1) {
           val step = stkfrm.getValue(localArgs(0)).toString.toDouble
-          turtle.forward(step)
-          me.turtlePoints = turtle.lastLine
+          traceForward(me, step)
         }
       case "turn" =>
         val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
@@ -781,6 +846,9 @@ that is not supported under Tracing.
           val text = stringValue(arg)
           turtle.write(text)
         }
+      case "arc2" =>
+        val (r, a) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
+        traceArc2(r, a)
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Turtle command - $c")
     }
