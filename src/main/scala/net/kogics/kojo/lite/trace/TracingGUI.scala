@@ -171,7 +171,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
             else {
               val subLines = meSubLines(me)
               if (subLines.size > 0) {
-                if (subLines.size < 50) {
+                if (subLines.size < 375) {
                   val picCol = new ArrayBuffer[Picture]
                   subLines foreach { ll =>
                     val pic1 = picture.stroke(Color.black) * picture.strokeWidth(10) -> kojoCtx.picLine(ll._1, ll._2)
