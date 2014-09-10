@@ -105,17 +105,17 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     new Point(_positionX, _positionY)
   }
 
-  private def changeHeading(newTheta: Double) {
+  private [kojo] def changeHeading(newTheta: Double) {
     _oldTheta = theta
     theta = newTheta
     turtle.setRotation(theta)
   }
 
-  def distanceTo(x: Double, y: Double): Double = {
+  private [kojo] def distanceTo(x: Double, y: Double): Double = {
     distance(_positionX, _positionY, x, y)
   }
 
-  private def towardsHelper(x: Double, y: Double): Double = {
+  private [kojo] def towardsHelper(x: Double, y: Double): Double = {
     thetaTowards(_positionX, _positionY, x, y, theta)
   }
 
@@ -543,11 +543,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       }
     }
     
-    arcHelper(makeArc)
-  }
-  
-  // hook for tracing turtle
-  protected def arcHelper(makeArc: () => Unit) {
     if (_animationDelay < 11) Utils.runInSwingThread {
       makeArc()
     }
@@ -555,7 +550,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       makeArc()
     }
   }
-
+  
   def setCostume(costumeFile: String) = {
     Throttler.throttle()
     Utils.runInSwingThread {

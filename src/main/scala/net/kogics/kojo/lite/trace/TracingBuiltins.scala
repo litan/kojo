@@ -117,9 +117,10 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
       forward(d)
     }
 
-    override protected def arcHelper(makeArc: () => Unit) {
-      makeArc()
+    override def arc2(r: Double, a: Double) {
+    	// gets intercepted in the Kojo VM
     }
+   
     override def toString() = s"Turtle with Id: ${System.identityHashCode(this)}"
   }
 
