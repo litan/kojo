@@ -665,7 +665,7 @@ that is not supported under Tracing.
   }
 
   def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], me: MethodEvent) {
-    
+
     import builtins.Tw
     val caller = stkfrm.thisObject.uniqueID
     val turtle = if (currPicture.isDefined)
@@ -673,13 +673,13 @@ that is not supported under Tracing.
     else
       turtles.getOrElse(caller, builtins.TSCanvas.turtle0)
     val createdTurtle = turtles.contains(caller)
-    
+
     def traceForward(me2: MethodEvent, step: Double) {
       turtle.forward(step)
       me2.turtlePoints = turtle.lastLine
     }
 
-    def traceMoveTo(me2: MethodEvent,x: Double, y: Double) {
+    def traceMoveTo(me2: MethodEvent, x: Double, y: Double) {
       val t2 = turtle.asInstanceOf[net.kogics.kojo.turtle.Turtle]
       val d = Utils.runInSwingThreadAndWait {
         val newTheta = t2.towardsHelper(x, y)
@@ -855,9 +855,9 @@ that is not supported under Tracing.
   }
 
   def targetList(list: ObjectReference): List[ObjectReference] = {
-    val listType = list.referenceType
-    val hdf = listType.fieldByName("scala$collection$immutable$$colon$colon$$hd")
-    val tlf = listType.fieldByName("tl")
+    val listFields = list.referenceType.fields
+    val hdf = listFields.filter { _.name.endsWith("head") }(0)
+    val tlf = listFields.filter { _.name.endsWith("tl") }(0)
     val lpics = new ArrayBuffer[ObjectReference]
     var hd = list.getValue(hdf).asInstanceOf[ObjectReference]
     lpics += hd
