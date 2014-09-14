@@ -17,6 +17,7 @@ package lite
 
 import java.awt.BorderLayout
 import java.awt.Frame
+import java.awt.Toolkit
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
@@ -156,9 +157,11 @@ object Main extends AppMenu with ScriptLoader { main =>
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
       frame.pack()
 
-      //      The following (basically setBounds) triggers the menu offset bug on Gnome 3 
-      //      val screenSize = Toolkit.getDefaultToolkit.getScreenSize
-      //      frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
+      if (System.getProperty("os.name") != "Linux") {
+        val screenSize = Toolkit.getDefaultToolkit.getScreenSize
+        // The following triggers the menu offset bug on Gnome 3
+        frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
+      }
 
       frame.setVisible(true)
 
