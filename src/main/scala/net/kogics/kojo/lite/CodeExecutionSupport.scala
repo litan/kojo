@@ -196,7 +196,7 @@ class CodeExecutionSupport(
       showOutput("History for work you do in the Scratchpad will not be saved.\n", Color.red)
     }
     else {
-      val msg = """Welcome to Kojo 2.1!
+      val msg = """Welcome to Kojo 2.x!
     |* To program with the aid of a Visual Palette ->  Use the 'Tools -> Instruction Palette' menu item
     |* To use Code-Completion and see online help  ->  Press Ctrl+Space or Ctrl+Alt+Space within the Script Editor
     |* To Interactively Manipulate program output  ->  Click on numbers and colors within the Script Editor
