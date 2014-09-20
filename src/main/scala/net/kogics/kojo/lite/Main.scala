@@ -154,14 +154,14 @@ object Main extends AppMenu with ScriptLoader { main =>
           appExit()
         }
       })
-      frame.setExtendedState(Frame.MAXIMIZED_BOTH)
-      frame.pack()
 
       if (System.getProperty("os.name") != "Linux") {
         val screenSize = Toolkit.getDefaultToolkit.getScreenSize
         // The following triggers the menu offset bug on Gnome 3
         frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
       }
+      frame.setExtendedState(Frame.MAXIMIZED_BOTH)
+      frame.pack()
 
       frame.setVisible(true)
 
