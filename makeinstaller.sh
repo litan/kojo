@@ -14,5 +14,5 @@ cd ..
 cp -var installer/* installerbuild/
 cd installerbuild
 /home/lalit/IzPack/bin/compile install.xml
-mv install.jar kojo2install.jar
-echo installerbuild/kojo2install.jar is the Kojo installer.
+mv install.jar kojoInstall.jar
+echo installerbuild/kojoInstall.jar is the Kojo installer.
