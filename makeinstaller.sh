@@ -15,4 +15,7 @@ cp -var installer/* installerbuild/
 cd installerbuild
 /home/lalit/IzPack/bin/compile install.xml
 mv install.jar kojoInstall.jar
-echo installerbuild/kojoInstall.jar is the Kojo installer.
+echo jar installer generated -- installerbuild/kojoInstall.jar
+~/work/launch4j/launch4j winInstaller.xml
+
+
