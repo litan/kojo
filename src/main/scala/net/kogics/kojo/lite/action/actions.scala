@@ -91,7 +91,7 @@ class FullScreenBaseAction(key: String, fsComp: => JComponent, fsCompHolder: => 
   }
 
   // can also be called from the interp thread via the API
-  def actionPerformed(e: ActionEvent) = Utils.runInSwingThread { 
+  def actionPerformed(e: ActionEvent) = Utils.runInSwingThreadAndWait { 
     if (!isFullScreen) {
       if (!FullScreenSupport.isFullScreenOn) {
         enterFullScreen()
