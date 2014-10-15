@@ -49,7 +49,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   protected var _picGeom: Geometry = _
   protected var pgTransform = new AffineTransformation
 
-  def realDraw(): Unit
+  protected def realDraw(): Unit
 
   def draw() {
     realDraw()
@@ -245,7 +245,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     picGeom.distance(other.picGeom)
   }
 
-  def toPolygon(g: Geometry) = {
+  private def toPolygon(g: Geometry) = {
     val gc = g.getCoordinates
     val ab = new ArrayBuffer[Coordinate]
     ab ++= gc
