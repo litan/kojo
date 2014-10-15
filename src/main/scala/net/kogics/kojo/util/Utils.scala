@@ -199,6 +199,8 @@ object Utils {
     threads.foreach { t => t.interrupt() }
     threads.clear()
   }
+  
+  def noMonitoredThreads = threads.isEmpty
 
   def runLaterInSwingThread(fn: => Unit) {
     javax.swing.SwingUtilities.invokeLater(new Runnable {
