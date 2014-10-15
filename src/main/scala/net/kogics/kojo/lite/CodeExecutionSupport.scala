@@ -455,7 +455,7 @@ class CodeExecutionSupport(
       }
       override def pendingCommandsDone {
         pendingCommands = false
-        if (interpreterDone) stopButton.setEnabled(false)
+        if (interpreterDone && Utils.noMonitoredThreads) stopButton.setEnabled(false)
       }
     })
   }
