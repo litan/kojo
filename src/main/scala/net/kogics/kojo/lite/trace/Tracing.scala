@@ -148,18 +148,21 @@ def main(args: Array[String]) {
   }
 
   def compile(code00: String): Boolean = {
-    val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
-    includedLines = inclLines
-    offsetDelta = prefix.length + includedChars
-    val code = codeTemplate format (prefix, code0)
-
-    //    println(s"Tracing Code:\n$code\n---")
-
-    val codeFile = new BatchSourceFile("scripteditor", code)
-    val run = new compiler.Run
-    reporter.reset
-    run.compileSources(List(codeFile))
-    !reporter.hasErrors
+    try {
+      val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
+      includedLines = inclLines
+      offsetDelta = prefix.length + includedChars
+      val code = codeTemplate format (prefix, code0)
+      val codeFile = new BatchSourceFile("scripteditor", code)
+      val run = new compiler.Run
+      reporter.reset
+      run.compileSources(List(codeFile))
+      !reporter.hasErrors
+    }
+    catch {
+      case iae: IllegalArgumentException => runCtx.reportError(s"${Utils.exceptionMessage(iae)}\n"); false
+      case e: Throwable => throw e
+    }
   }
 
   def makeSettings() = {

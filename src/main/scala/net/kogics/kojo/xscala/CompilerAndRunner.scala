@@ -132,30 +132,36 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
   def pfxWithCounter = "%s%d%s" format (prefixHeader, counter, prefix)
 
-  def compilerCode(code00: String) = {
-    val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
-    val pfx = pfxWithCounter
-    includedLines = inclLines
-    offsetDelta = pfx.length + includedChars
-    codeTemplate format (pfx, code0)
+  def compilerCode(code00: String): Option[String] = {
+    try {
+      val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
+      val pfx = pfxWithCounter
+      includedLines = inclLines
+      offsetDelta = pfx.length + includedChars
+      Some(codeTemplate format (pfx, code0))
+    }
+    catch {
+      case t: Throwable =>
+        listener.message(Utils.exceptionMessage(t)); None
+    }
   }
 
   def compile(code0: String, stopPhase: List[String] = List("cleanup")) = {
-    val code = compilerCode(code0)
+    compilerCode(code0) map { code =>
+      if (compiler.settings.stopAfter.value != stopPhase) {
+        // There seems to be a bug in the PhasesSetting contains method
+        // which makes the compiler not see the new stopAfter value
+        // So we make a new Settings
+        compiler.currentSettings = makeSettings2()
+        compiler.settings.stopAfter.value = stopPhase
+      }
 
-    if (compiler.settings.stopAfter.value != stopPhase) {
-      // There seems to be a bug in the PhasesSetting contains method
-      // which makes the compiler not see the new stopAfter value
-      // So we make a new Settings
-      compiler.currentSettings = makeSettings2()
-      compiler.settings.stopAfter.value = stopPhase
-    }
-
-    val run = new compiler.Run
-    reporter.reset
-    run.compileSources(List(new BatchSourceFile("scripteditor", code)))
-    //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
-    if (reporter.hasErrors) IR.Error else IR.Success
+      val run = new compiler.Run
+      reporter.reset
+      run.compileSources(List(new BatchSourceFile("scripteditor", code)))
+      //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
+      if (reporter.hasErrors) IR.Error else IR.Success
+    } getOrElse (IR.Error)
   }
 
   def compileAndRun(code0: String) = {
@@ -205,24 +211,24 @@ class CompilerAndRunner(makeSettings: () => Settings,
   }
 
   def parse(code0: String, browseAst: Boolean) = {
-    compiler.currentSettings = makeSettings2()
-    val code = compilerCode(code0)
+    compilerCode(code0) map { code =>
+      compiler.currentSettings = makeSettings2()
+      compiler.settings.stopAfter.value = stopPhase()
+      if (browseAst) {
+        compiler.settings.browse.value = stopPhase()
+      }
+      val run = new compiler.Run
+      reporter.reset
+      run.compileSources(List(new BatchSourceFile("scripteditor", code)))
 
-    compiler.settings.stopAfter.value = stopPhase()
-    if (browseAst) {
-      compiler.settings.browse.value = stopPhase()
-    }
-    val run = new compiler.Run
-    reporter.reset
-    run.compileSources(List(new BatchSourceFile("scripteditor", code)))
-
-    if (reporter.hasErrors) {
-      IR.Error
-    }
-    else {
-      compiler.printAllUnits()
-      IR.Success
-    }
+      if (reporter.hasErrors) {
+        IR.Error
+      }
+      else {
+        compiler.printAllUnits()
+        IR.Success
+      }
+    } getOrElse (IR.Error)
   }
 
   // phase after which you want to stop
@@ -314,30 +320,30 @@ class CompilerAndRunner(makeSettings: () => Settings,
     import interactive._
     import scala.reflect.internal.Trees
 
-    classLoader.setAsContext()
-    val code = compilerCode(code0)
+    compilerCode(code0) map { code =>
+      classLoader.setAsContext()
+      val source = new BatchSourceFile("scripteditor", code)
+      val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
-    val source = new BatchSourceFile("scripteditor", code)
-    val pos = new OffsetPosition(source, offset + offsetDelta + 1)
+      var r1 = new Response[Unit]
+      pcompiler.askReload(List(source), r1)
 
-    var r1 = new Response[Unit]
-    pcompiler.askReload(List(source), r1)
+      var resp = new Response[pcompiler.Tree]
+      pcompiler.askTypeAt(pos, resp)
+      resp.get match {
+        case Left(x) =>
+          x match {
+            case t: pcompiler.ValOrDefDef => t.tpt.toString
+            case t: pcompiler.TypeDef     => t.name.toString
+            case t: pcompiler.ClassDef    => t.name.toString
+            case _                        => x.tpe.toString
+          }
 
-    var resp = new Response[pcompiler.Tree]
-    pcompiler.askTypeAt(pos, resp)
-    resp.get match {
-      case Left(x) =>
-        x match {
-          case t: pcompiler.ValOrDefDef => t.tpt.toString
-          case t: pcompiler.TypeDef     => t.name.toString
-          case t: pcompiler.ClassDef    => t.name.toString
-          case _                        => x.tpe.toString
-        }
-
-      case Right(y) =>
-        // println("Right:" + y)
-        ""
-    }
+        case Right(y) =>
+          // println("Right:" + y)
+          ""
+      }
+    } getOrElse ("")
   }
 
   import core.CompletionInfo
@@ -347,47 +353,48 @@ class CompilerAndRunner(makeSettings: () => Settings,
     val augmentedCode0 =
       "%s ;} // %s" format (code0.substring(0, offset), code0.substring(offset))
 
-    classLoader.setAsContext()
-    val code = compilerCode(augmentedCode0)
+    compilerCode(augmentedCode0) map { code =>
+      classLoader.setAsContext()
 
-    val source = new BatchSourceFile("scripteditor", code)
-    val pos = new OffsetPosition(source, offset + offsetDelta + 1)
+      val source = new BatchSourceFile("scripteditor", code)
+      val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
-    var r1 = new Response[Unit]
-    pcompiler.askReload(List(source), r1)
+      var r1 = new Response[Unit]
+      pcompiler.askReload(List(source), r1)
 
-    var resp = new Response[List[pcompiler.Member]]
-    if (selection) {
-      pcompiler.askTypeCompletion(pos, resp)
-    }
-    else {
-      pcompiler.askScopeCompletion(pos, resp)
-    }
+      var resp = new Response[List[pcompiler.Member]]
+      if (selection) {
+        pcompiler.askTypeCompletion(pos, resp)
+      }
+      else {
+        pcompiler.askScopeCompletion(pos, resp)
+      }
 
-    val elb = new ListBuffer[CompletionInfo]
-    var response: pcompiler.Response[Unit] = null
-    for (completions <- resp.get.left.toOption) {
-      response = pcompiler.askForResponse { () =>
-        for (completion <- completions) {
-          try {
-            completion match {
-              case pcompiler.TypeMember(sym, tpe, true, inherited, viaView) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
-              case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
-              case _ =>
+      val elb = new ListBuffer[CompletionInfo]
+      var response: pcompiler.Response[Unit] = null
+      for (completions <- resp.get.left.toOption) {
+        response = pcompiler.askForResponse { () =>
+          for (completion <- completions) {
+            try {
+              completion match {
+                case pcompiler.TypeMember(sym, tpe, true, inherited, viaView) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                  elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
+                case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                  elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
+                case _ =>
+              }
             }
-          }
-          catch {
-            case t: Throwable =>
-              println("Completion Problem 0: " + t.getMessage())
-            // ignore, and move on to the next one
+            catch {
+              case t: Throwable =>
+                println("Completion Problem 0: " + t.getMessage())
+              // ignore, and move on to the next one
+            }
           }
         }
       }
-    }
-    // block till the last response is available
-    response.get(2000)
-    elb.toList
+      // block till the last response is available
+      response.get(2000)
+      elb.toList
+    } getOrElse (Nil)
   }
 }
