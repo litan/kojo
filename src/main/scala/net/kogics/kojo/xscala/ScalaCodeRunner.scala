@@ -264,7 +264,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       }
       realResetInterp()
     }
-    
+
     private def realResetInterp() = Utils.safeProcess {
       interp.reset()
       initInterp()
@@ -467,7 +467,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
             safeProcessResponse("") {
               typeAt(code, caretOffset)
             }
-            
+
           case ResetInterp =>
             realResetInterp()
         }
@@ -601,11 +601,18 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     def interpretAllLines(code: String): IR.Result = interp.interpret(code)
 
     def interpret(code0: String, asWorksheet: Boolean): IR.Result = {
-      val (code, includedLines, _) = Utils.preProcessInclude(code0)
-      if (asWorksheet)
-        interpretAsWorksheet(code, includedLines)
-      else
-        interpretAllLines(code)
+      try {
+        val (code, includedLines, _) = Utils.preProcessInclude(code0)
+        if (asWorksheet)
+          interpretAsWorksheet(code, includedLines)
+        else
+          interpretAllLines(code)
+      }
+      catch {
+        case iae: IllegalArgumentException =>
+          runContext.reportError(Utils.exceptionMessage(iae)); IR.Error
+        case e: Throwable                  => throw e
+      }
     }
 
     def compileAndRun(code: String): IR.Result = {

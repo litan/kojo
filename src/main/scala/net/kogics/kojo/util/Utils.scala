@@ -658,7 +658,7 @@ object Utils {
             result
           }
         }
-        catch { case e: Throwable => System.err.println(s"Error $e when including file: $fileName"); "" }
+        catch { case e: Throwable => throw new IllegalArgumentException(s"Error when including file: $fileName", e)}
       }
 
       val addedCode = (for (i <- includes) yield load(expand(getFileName(i)))).mkString
@@ -671,6 +671,10 @@ object Utils {
 
   def scrollToOffset(offset: Int, comp: JTextComponent) {
     comp.scrollRectToVisible(comp.modelToView(offset))
+  }
+  
+  def exceptionMessage(t: Throwable): String = {
+    if (t == null) "" else s"${t.getMessage()}; ${exceptionMessage(t.getCause)}"
   }
 
   case class RunCode(code: () => Unit)
