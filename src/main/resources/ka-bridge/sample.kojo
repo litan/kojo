@@ -1,4 +1,4 @@
-// #include ../ka-bridge.kojo
+// #include ~/kojo-includes/ka-bridge.kojo
 
 def setup() {
     pinMode(2, INPUT)
