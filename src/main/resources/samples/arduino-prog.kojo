@@ -69,10 +69,10 @@ pages :+= Page(
             { pgHeader("Uploading ka_bridge.ino to your Arduino board") }
             To upload <tt>ka_bridge.ino</tt> to your Arduino board, do the following:
             <ol>
-                <li>Fire up the Arduino IDE.</li>
+                <li>Fire up the Arduino IDE, and make sure the Arduino board is connected to your computer.</li>
                 <li>Click on the code below to copy it into the script editor.</li>
-                <li>Select all the code in the script editor (via Ctrl+A) and paste it into the Arduino IDE (via Ctrl+C).</li>
-                <li>Click the Upload button in the Arduino IDE to get the Kojo bridge code running on your Arduino board.</li>
+                <li>Select all the code in the script editor (<em>Ctrl+A</em>), copy it (<em>Ctrl+C</em>), and then paste it into the Arduino IDE (<em>Ctrl+V</em>).</li>
+                <li>Click the Upload button in the Arduino IDE -- to get the Kojo bridge code running on your Arduino board.</li>
             </ol>
             <br/> 
             <tt>ka_bridge.ino</tt>:
@@ -90,7 +90,7 @@ pages :+= Page(
             <ol>
                 <li>Click on the code below to copy it into the script editor.</li>
                 <li>Click on <em>'File -> Save As'</em> to save the code in the script editor into a file.</li>
-                <li>Navigate to your home folder ({homeDir}), and create a new folder under this folder called <tt>kojo-includes</tt>.</li>
+                <li>Navigate to your home folder ({homeDir}), and create a new folder (if it does not already exist) under this folder called <tt>kojo-includes</tt>.</li>
                 <li>Go inside the <tt>kojo-includes</tt> folder, enter ka-bridge.kojo in the <em>File Name</em> field, and click the <em>Save</em> button.</li>
             </ol>
             <br/> 
