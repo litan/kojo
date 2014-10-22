@@ -344,7 +344,7 @@ trait AppMenu {
     toolsMenu.setMnemonic('T')
     toolsMenu.add(menuItemNELFor(Utils.loadString("S_InstructionPalette"), "instruction-palette.kojo"))
     toolsMenu.add(menuItemFor(Utils.loadString("S_TurtleController"), "turtle-controller.kojo"))
-    toolsMenu.add(menuItemFor(Utils.loadString("S_ArduinoProg"), "arduino-prog.kojo"))
+    toolsMenu.add(menuItemFor(Utils.loadString("S_ArduinoProgramming"), "arduino-prog.kojo"))
     menuBar.add(toolsMenu)
 
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
