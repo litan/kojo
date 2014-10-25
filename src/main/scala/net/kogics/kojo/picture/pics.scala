@@ -76,7 +76,6 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     tnode.transformBy(trans)
     //    pgTransform.composeBefore(t2t(trans))
     pgTransform = t2t(tnode.getTransformReference(true))
-//    tnode.repaint()
   }
 
   def setTransform(trans: AffineTransform) = Utils.runInSwingThread {
@@ -113,7 +112,6 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def offset(x: Double, y: Double) = Utils.runInSwingThread {
     tnode.offset(x, y)
     pgTransform = t2t(tnode.getTransformReference(true))
-    tnode.repaint()
   }
 
   def opacityMod(f: Double) = Utils.runInSwingThread {
@@ -129,7 +127,6 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def setPosition(x: Double, y: Double) = Utils.runInSwingThread {
     tnode.setOffset(x, y)
     pgTransform = t2t(tnode.getTransformReference(true))
-//    tnode.repaint()
   }
 
   def heading = Utils.runInSwingThreadAndPause {
@@ -139,7 +136,31 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def setHeading(angle: Double) = Utils.runInSwingThread {
     rotate(angle - heading)
     pgTransform = t2t(tnode.getTransformReference(true))
-//    tnode.repaint()
+  }
+
+  def scaleFactor = Utils.runInSwingThreadAndPause {
+    val tr = tnode.getTransformReference(true)
+    (tr.getScaleX, tr.getScaleY)
+  }
+
+  def setScaleFactor(x: Double, y: Double) = Utils.runInSwingThread {
+    val tr = tnode.getTransformReference(true)
+    tr.scale(x / tr.getScaleX, y / tr.getScaleY)
+    pgTransform = t2t(tr)
+    tnode.invalidatePaint();
+    tnode.invalidateFullBounds();
+  }
+
+  def transform = Utils.runInSwingThreadAndPause {
+    tnode.getTransform
+  }
+
+  def opacity: Double = Utils.runInSwingThreadAndPause {
+    tnode.getTransparency
+  }
+
+  def setOpacity(o: Double) = Utils.runInSwingThread {
+    tnode.setTransparency(o.toFloat)
   }
 
   def flipX() = {

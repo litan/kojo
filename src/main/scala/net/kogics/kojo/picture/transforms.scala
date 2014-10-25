@@ -42,6 +42,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def flipX() = tpic.flipX()
   def flipY() = tpic.flipY()
   def transformBy(trans: AffineTransform) = tpic.transformBy(trans)
+  def transform = tpic.transform
   def setTransform(trans: AffineTransform) = tpic.setTransform(trans)
   def decorateWith(painter: Painter) = tpic.decorateWith(painter)
   def tnode = tpic.tnode
@@ -52,9 +53,13 @@ trait Transformer extends Picture with CorePicOps2 {
   def setPosition(x: Double, y: Double) = tpic.setPosition(x, y)
   def heading = tpic.heading
   def setHeading(angle: Double) = tpic.setHeading(angle)
+  def scaleFactor = tpic.scaleFactor
+  def setScaleFactor(x: Double, y: Double) = tpic.setScaleFactor(x, y)
   def setPenColor(color: Paint) = tpic.setPenColor(color)
   def setPenThickness(th: Double) = tpic.setPenThickness(th)
   def setFillColor(color: Paint) = tpic.setFillColor(color)
+  def opacity = tpic.opacity
+  def setOpacity(o: Double) = tpic.setOpacity(o)
   def morph(fn: Seq[PolyLine] => Seq[PolyLine]) = tpic.morph(fn)
   def foreachPolyLine(fn: PolyLine => Unit) = tpic.foreachPolyLine(fn)
   def distanceTo(other: Picture) = tpic.distanceTo(other)
