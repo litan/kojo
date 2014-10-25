@@ -64,9 +64,14 @@ trait Picture extends InputAware {
   def setPosition(p: Point): Unit = setPosition(p.x, p.y)
   def heading: Double
   def setHeading(angle: Double)
+  def scaleFactor: (Double, Double)
+  def setScaleFactor(x: Double, y: Double): Unit
+  def transform: AffineTransform
   def setPenColor(color: Paint)
   def setPenThickness(th: Double)
   def setFillColor(color: Paint)
+  def opacity: Double
+  def setOpacity(o: Double)
   @deprecated("Use picture.react instead", "2.1")
   def act(fn: Picture => Unit) = react(fn)
   def react(fn: Picture => Unit): Unit
