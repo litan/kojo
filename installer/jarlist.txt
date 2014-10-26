@@ -25,6 +25,7 @@
 ../lib/table-layout.jar
 ../lib/jdi.jar
 ../lib/image-filters.jar
+../lib/jssc.jar
 /home/lalit/.ivy2/cache/org.scala-lang/scala-reflect/jars/scala-reflect-2.11.2.jar -> scala-reflect.jar
 /home/lalit/.ivy2/cache/org.scala-lang/scala-actors/jars/scala-actors-2.11.2.jar -> scala-actors.jar 
 /home/lalit/.ivy2/cache/org.scala-lang.modules/scala-swing_2.11/bundles/scala-swing_2.11-1.0.1.jar -> scala-swing.jar
