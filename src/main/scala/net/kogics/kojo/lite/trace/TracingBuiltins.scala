@@ -85,6 +85,8 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
   def print(obj: Any) {}
   def println(obj: Any): Unit = print("%s\n" format (obj))
 
+  def TexturePaint(file: String, x: Double, y: Double) = Color(247, 247, 247)
+
   implicit val picCanvas = TSCanvas
   def Picture(fn: => Unit) = new picture.Pic(t => fn)
   def PictureT(fn: Turtle => Unit) = new picture.Pic(fn)
@@ -118,9 +120,9 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
     }
 
     override def arc2(r: Double, a: Double) {
-    	// gets intercepted in the Kojo VM
+      // gets intercepted in the Kojo VM
     }
-   
+
     override def toString() = s"Turtle with Id: ${System.identityHashCode(this)}"
   }
 

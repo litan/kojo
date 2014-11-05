@@ -16,9 +16,10 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.Image
 import java.awt.Paint
+import java.awt.TexturePaint
 import java.awt.Toolkit
+import java.awt.geom.Rectangle2D
 
 import javax.swing.JComponent
 
@@ -438,8 +439,13 @@ Here's a partial list of the available commands:
   def isScratchPad = kojoCtx.subKojo
   def isTracing = false
 
+  def TexturePaint(file: String, x: Double, y: Double) = {
+    val img = Utils.loadBufImage(file)
+    new TexturePaint(img, new Rectangle2D.Double(x, y, img.getWidth, -img.getHeight))
+  }
+
   val PShapes = PicShape
-//  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
+  //  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
   object PicShape {
     def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
     def rect(h: Double, w: Double) = picture.rect(h, w)
