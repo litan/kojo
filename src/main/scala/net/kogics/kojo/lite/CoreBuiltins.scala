@@ -4,6 +4,7 @@ package lite
 import java.awt.{ Color => JColor }
 import java.awt.{ Font => JFont }
 import java.awt.GradientPaint
+import java.awt.GraphicsEnvironment
 import java.awt.LinearGradientPaint
 import java.awt.MultipleGradientPaint
 import java.awt.Paint
@@ -105,6 +106,7 @@ trait CoreBuiltins extends Rationals {
   def homeDir = Utils.homeDir
   def currentDir = Utils.currentDir
   def installDir = Utils.installDir
+  def availableFonts = GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames.toList
 
   type Picture = core.Picture
   type HPics = picture.HPics
