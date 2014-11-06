@@ -106,7 +106,7 @@ trait CoreBuiltins extends Rationals {
   def homeDir = Utils.homeDir
   def currentDir = Utils.currentDir
   def installDir = Utils.installDir
-  def availableFonts = GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames.toList
+  def availableFontNames = GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames.toList
 
   type Picture = core.Picture
   type HPics = picture.HPics
