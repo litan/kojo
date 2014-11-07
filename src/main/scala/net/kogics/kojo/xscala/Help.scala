@@ -42,6 +42,8 @@ object Help {
             <li>Condition - value comparison functions. These are needed for the if-else flow element</li>
         </ul>
     </div>
+    
+  val exportImageHelpTemplate = "Saves the contents of the drawing canvas as an image%s, in a file located in the temporary directory on your machine. The name of the file starts with filePrefix. Kojo prints out the full path of the exported image file in the output pane so that you can easily locate the file."
   val CommonContent = Map[String, String](
     "TurtlePalette" ->
     <div>
@@ -181,6 +183,9 @@ object Help {
     "canvasBounds" -> "canvasBounds - Returns the bounds of the canvas: the x and y coordinates of its bottom left point, and its width and height.",
     "dot" -> "dot(diameter) - Makes a dot with the given diameter.",
     "TexturePaint" -> "TexturePaint(fileName, x, y) - Creates a paint from the texture image in the given file. The bottom left of the image is anchored at (x, y). This paint can be used to set the pen and fill colors of shapes.",
+    "exportImage" -> "exportImage(filePrefix) - ".concat(exportImageHelpTemplate format ""),
+    "exportImageH" -> "exportImageH(filePrefix, h) - ".concat(exportImageHelpTemplate format " with the given height"),
+    "exportImageW" -> "exportImageW(filePrefix, w) - ".concat(exportImageHelpTemplate format " with the given width"),
     "ColorLinearG" ->
     <div>
       <strong>ColorLinearG</strong><tt>(x1, y1, x2, y2, distribution, colors, cyclic)</tt> - creates a linear color gradient.

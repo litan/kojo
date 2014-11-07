@@ -33,6 +33,8 @@ class NoOpSCanvas extends SCanvas {
   def scroll(x: Double, y: Double) {}
   def exportImage(filePrefix: String): java.io.File = null
   def exportImage(filePrefix: String, width: Int, height: Int): java.io.File = null
+  def exportImageH(filePrefix: String, height: Int): java.io.File = null
+  def exportImageW(filePrefix: String, width: Int): java.io.File = null
   def exportThumbnail(filePrefix: String, height: Int): java.io.File = null
   def onKeyPress(fn: Int => Unit) {}
   def onKeyRelease(fn: Int => Unit) {}

@@ -53,6 +53,8 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
 
   def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
   def exportImage(filePrefix: String, width: Int, height: Int) = tCanvas.exportImage(filePrefix, width, height)
+  def exportImageH(filePrefix: String, height: Int) = tCanvas.exportImageH(filePrefix, height)
+  def exportImageW(filePrefix: String, width: Int) = tCanvas.exportImageW(filePrefix, width)
   def exportThumbnail(filePrefix: String, height: Int) = tCanvas.exportThumbnail(filePrefix, height)
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) =
     tCanvas.zoomXY(xfactor, yfactor, cx, cy)
