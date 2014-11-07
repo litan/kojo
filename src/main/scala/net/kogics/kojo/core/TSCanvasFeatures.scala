@@ -44,6 +44,8 @@ trait TSCanvasFeatures {
   def scroll(x: Double, y: Double): Unit
   def exportImage(filePrefix: String): java.io.File
   def exportImage(filePrefix: String, width: Int, height: Int): java.io.File
+  def exportImageH(filePrefix: String, height: Int): java.io.File
+  def exportImageW(filePrefix: String, width: Int): java.io.File
   def exportThumbnail(filePrefix: String, height: Int): java.io.File
   def onKeyPress(fn: Int => Unit): Unit
   def onKeyRelease(fn: Int => Unit): Unit

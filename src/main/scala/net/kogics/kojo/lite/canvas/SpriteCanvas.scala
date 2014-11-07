@@ -555,6 +555,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   private def exportImageHelper(filePrefix: String, width: Int, height: Int): java.io.File = {
     val outfile = File.createTempFile(filePrefix + "-", ".png")
     exportImageToFile(outfile, width, height)
+    println(s"Image saved in: $outfile")
     outfile
   }
 
@@ -573,6 +574,12 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
   def exportThumbnail(filePrefix: String, height: Int): File = {
     exportImageHelper(filePrefix, (getWidth.toFloat / getHeight * height).toInt, height)
+  }
+
+  def exportImageH(filePrefix: String, height: Int): File = exportThumbnail(filePrefix, height)
+  
+  def exportImageW(filePrefix: String, width: Int): File = {
+    exportImageHelper(filePrefix, width, (getHeight.toFloat / getWidth * width).toInt)
   }
 
   def forceClear() {
