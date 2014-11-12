@@ -231,7 +231,6 @@ object Utils {
           javax.swing.SwingUtilities.invokeLater(new Runnable {
             override def run {
               batchLock.lock()
-              val reachedFull = batchQ.size > Max_Q_Size
               while (!batchQ.isEmpty) {
                 try {
                   batchQ.remove.apply()
@@ -243,9 +242,7 @@ object Utils {
                     }
                 }
               }
-              if (reachedFull) {
-                notFull.signal()
-              }
+              notFull.signal()
               batchLock.unlock()
             }
           })
