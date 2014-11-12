@@ -199,7 +199,7 @@ object Utils {
     threads.foreach { t => t.interrupt() }
     threads.clear()
   }
-  
+
   def noMonitoredThreads = threads.isEmpty
 
   def runLaterInSwingThread(fn: => Unit) {
@@ -211,6 +211,8 @@ object Utils {
   }
 
   val batchLock = new ReentrantLock
+  val notFull = batchLock.newCondition
+  val Max_Q_Size = 9000
   val batchQ = new LinkedList[() => Unit]
   // this is the core of Kojo UI performance - so the code is a little low-level 
   def runInSwingThread(fn: => Unit) {
@@ -220,12 +222,16 @@ object Utils {
     else {
       batchLock.lock()
       try {
+        while (batchQ.size > Max_Q_Size) {
+          notFull.await()
+        }
         val needDrainer = batchQ.isEmpty
         batchQ.add(fn _)
         if (needDrainer) {
           javax.swing.SwingUtilities.invokeLater(new Runnable {
             override def run {
               batchLock.lock()
+              val reachedFull = batchQ.size > Max_Q_Size
               while (!batchQ.isEmpty) {
                 try {
                   batchQ.remove.apply()
@@ -236,6 +242,9 @@ object Utils {
                       reportException(t)
                     }
                 }
+              }
+              if (reachedFull) {
+                notFull.signal()
               }
               batchLock.unlock()
             }
@@ -658,7 +667,7 @@ object Utils {
             result
           }
         }
-        catch { case e: Throwable => throw new IllegalArgumentException(s"Error when including file: $fileName", e)}
+        catch { case e: Throwable => throw new IllegalArgumentException(s"Error when including file: $fileName", e) }
       }
 
       val addedCode = (for (i <- includes) yield load(expand(getFileName(i)))).mkString
@@ -672,7 +681,7 @@ object Utils {
   def scrollToOffset(offset: Int, comp: JTextComponent) {
     comp.scrollRectToVisible(comp.modelToView(offset))
   }
-  
+
   def exceptionMessage(t: Throwable): String = {
     if (t == null) "" else s"${t.getMessage()}; ${exceptionMessage(t.getCause)}"
   }
