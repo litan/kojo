@@ -101,8 +101,13 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
         var template = methodTemplate(qualifiedName)
         if (template == "") None
         else if (template != null) Some(template) else {
-          template = methodTemplate(completion.name)
-          if (template != null) Some(template) else None
+          if (ownerName startsWith "Turtle") {
+            template = methodTemplate(completion.name)
+            if (template != null) Some(template) else None
+          }
+          else {
+            None
+          }
         }
       }
       else {
@@ -117,8 +122,13 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       if (knownCompletion) {
         var help = Help(qualifiedName)
         if (help != null) Some(help) else {
-          help = Help(completion.name)
-          if (help != null) Some(help) else None
+          if (ownerName startsWith "Turtle") {
+            help = Help(completion.name)
+            if (help != null) Some(help) else None
+          }
+          else {
+            None
+          }
         }
       }
       else {

@@ -339,7 +339,7 @@ sq(100)
     ,
     "setPosition" -> 
     <div>
-      <strong>setPosition</strong>() - (x, y) - Places the turtle at the point (x, y) without drawing a line. The turtle's heading is not changed. <br/>
+      <strong>setPosition</strong>(x, y) - Places the turtle at the point (x, y) without drawing a line. The turtle's heading is not changed. <br/>
       <br/>
       <em>Examples:</em> <br/><br/>
       <pre>
