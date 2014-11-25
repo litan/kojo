@@ -116,7 +116,6 @@ trait CorePicOps { self: Picture with RedrawStopper =>
 
   def opacityMod(f: Double) = Utils.runInSwingThread {
     tnode.setTransparency(Math.constrain(tnode.getTransparency * (1 + f), 0, 1).toFloat)
-    tnode.repaint()
   }
 
   def position = Utils.runInSwingThreadAndPause {
@@ -219,14 +218,12 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def visible() = Utils.runInSwingThread {
     if (!tnode.getVisible) {
       tnode.setVisible(true)
-      tnode.repaint()
     }
   }
 
   def invisible() = Utils.runInSwingThread {
     if (tnode.getVisible) {
       tnode.setVisible(false)
-      tnode.repaint()
     }
   }
 
@@ -237,7 +234,6 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     else {
       tnode.setVisible(true)
     }
-    tnode.repaint()
   }
 
   def isVisible() = Utils.runInSwingThreadAndPause { tnode.getVisible() }
@@ -413,7 +409,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
       val tl = tnode
       tl.invalidateFullBounds()
       tl.repaint()
-      picLayer.repaint
+      picLayer.repaint()
     }
   }
 
@@ -439,7 +435,6 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     val pp = t.penPaths
     pp.foreach { pl =>
       pl.setPaint(Utils.hueMod(fillColor(pl.getPaint), f))
-      pl.repaint()
     }
   }
 
@@ -447,7 +442,6 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     val pp = t.penPaths
     pp.foreach { pl =>
       pl.setPaint(Utils.satMod(fillColor(pl.getPaint), f))
-      pl.repaint()
     }
   }
 
@@ -455,7 +449,6 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     val pp = t.penPaths
     pp.foreach { pl =>
       pl.setPaint(Utils.britMod(fillColor(pl.getPaint), f))
-      pl.repaint()
     }
   }
 
@@ -480,7 +473,6 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     val pp = t.penPaths
     pp.foreach { pl =>
       pl.setPaint(color)
-      pl.repaint()
     }
   }
 
