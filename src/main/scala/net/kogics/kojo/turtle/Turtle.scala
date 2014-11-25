@@ -34,7 +34,6 @@ import net.kogics.kojo.core.Point
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.Style
 import net.kogics.kojo.kgeom.PolyLine
-import net.kogics.kojo.util.Throttler
 import net.kogics.kojo.util.Utils
 
 import TurtleHelper.distance
@@ -228,9 +227,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       if (aDelay > 1) {
         Thread.sleep(aDelay)
       }
-      else {
-        Throttler.throttle()
-      }
       Utils.runInSwingThread {
         forwardNoAnim(n)
       }
@@ -324,7 +320,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def towards(x: Double, y: Double) = {
-    Throttler.throttle()
     Utils.runInSwingThread {
       val newTheta = towardsHelper(x, y)
       changeHeading(newTheta)
@@ -333,7 +328,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def jumpTo(x: Double, y: Double) = {
-    Throttler.throttle()
     Utils.runInSwingThread {
       jumpToHelper(x, y)
     }
@@ -347,7 +341,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   def moveTo(x: Double, y: Double) {
     if (_animationDelay < 5) {
-      Throttler.throttle()
       Utils.runInSwingThread {
         val newTheta = towardsHelper(x, y)
         changeHeading(newTheta)
@@ -552,14 +545,12 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
   
   def setCostume(costumeFile: String) = {
-    Throttler.throttle()
     Utils.runInSwingThread {
       setCostumeHelper(costumeFile)
     }
   }
 
   def setCostumeImage(image: Image) = {
-    Throttler.throttle()
     Utils.runInSwingThread {
       setCostumeHelper(image)
     }
@@ -594,7 +585,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   def setCostumes(costumeFiles: Vector[String]) = {
     require(costumeFiles.length > 1, "You need to specify at least two costumes")
-    Throttler.throttle()
     Utils.runInSwingThread {
       costumes = Some(costumeFiles map Utils.loadImageC)
       setCostumeHelper(costumes.get(0))
@@ -604,7 +594,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   def setCostumeImages(images: Vector[Image]) = {
     require(images.length > 1, "You need to specify at least two costumes")
-    Throttler.throttle()
     Utils.runInSwingThread {
       costumes = Some(images)
       setCostumeHelper(costumes.get(0))
@@ -613,7 +602,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def nextCostume() = {
-    Throttler.throttle()
     Utils.runInSwingThread {
       costumes foreach { cseq =>
         currCostume = if (currCostume == cseq.length - 1) 0 else currCostume + 1
@@ -628,7 +616,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def changePosition(x: Double, y: Double) = {
-    Throttler.throttle()
     Utils.runInSwingThread {
       jumpToHelper(_positionX + x, _positionY + y)
     }
