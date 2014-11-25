@@ -154,7 +154,7 @@ object CodeCompletionUtils {
     "isKeyPressed" -> "isKeyPressed(Kc.VK_${cursor})",
     "activateCanvas" -> "activateCanvas()",
     "activateEditor" -> "activateEditor()",
-    "setBackground" -> "setBackground(${paint})",
+    "setBackground" -> "setBackground(${color})",
     "setBackgroundH" -> "setBackgroundH(${color1}, ${color2})",
     "setBackgroundV" -> "setBackgroundV(${color1}, ${color2})",
     "Color" -> "Color(${red}, ${green}, ${blue}, ${opacity})",
