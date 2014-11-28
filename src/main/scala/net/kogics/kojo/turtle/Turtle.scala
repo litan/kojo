@@ -104,17 +104,17 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     new Point(_positionX, _positionY)
   }
 
-  private [kojo] def changeHeading(newTheta: Double) {
+  private[kojo] def changeHeading(newTheta: Double) {
     _oldTheta = theta
     theta = newTheta
     turtle.setRotation(theta)
   }
 
-  private [kojo] def distanceTo(x: Double, y: Double): Double = {
+  private[kojo] def distanceTo(x: Double, y: Double): Double = {
     distance(_positionX, _positionY, x, y)
   }
 
-  private [kojo] def towardsHelper(x: Double, y: Double): Double = {
+  private[kojo] def towardsHelper(x: Double, y: Double): Double = {
     thetaTowards(_positionX, _positionY, x, y, theta)
   }
 
@@ -149,7 +149,6 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   private[turtle] def init() {
-    _animationDelay = 1000l
     changePos(initX, initY)
     initTImage(costumeFile)
     layer.addChild(turtle)
@@ -167,6 +166,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     beamsOffWorker()
   }
 
+  _animationDelay = 1000l
   init()
 
   private def thetaDegrees = Utils.rad2degrees(theta)
@@ -284,14 +284,17 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     turtle.repaint()
   }
 
-  def clear() = Utils.runInSwingThread {
-    pen.clear()
-    layer.removeAllChildren() // get rid of stuff not written by pen, like text nodes
-    turtle.getTransformReference(true).setToIdentity()
-    costumes = None
-    currCostume = 0
-    init()
-    turtle.repaint()
+  def clear() = {
+    _animationDelay = 1000l
+    Utils.runInSwingThread {
+      pen.clear()
+      layer.removeAllChildren() // get rid of stuff not written by pen, like text nodes
+      turtle.getTransformReference(true).setToIdentity()
+      costumes = None
+      currCostume = 0
+      init()
+      turtle.repaint()
+    }
   }
 
   // called for non-default turtles 
@@ -535,7 +538,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
         setHeading(head + 180 + a)
       }
     }
-    
+
     if (_animationDelay < 11) Utils.runInSwingThread {
       makeArc()
     }
@@ -543,7 +546,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       makeArc()
     }
   }
-  
+
   def setCostume(costumeFile: String) = {
     Utils.runInSwingThread {
       setCostumeHelper(costumeFile)
