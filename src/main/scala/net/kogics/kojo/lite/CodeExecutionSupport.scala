@@ -316,7 +316,7 @@ class CodeExecutionSupport(
       showNormalCursor()
       enableRunButton(false)
       stopButton.setEnabled(true)
-      tCanvas.onRunStart() 
+      tCanvas.onRunStart()
     }
 
     def onCompileStart() {
@@ -406,7 +406,7 @@ class CodeExecutionSupport(
     }
 
     private def runDone() = {
-      tCanvas.onRunDone() 
+      tCanvas.onRunDone()
       Utils.runInSwingThread {
         enableRunButton(true)
         if (!pendingCommands) {
@@ -435,7 +435,7 @@ class CodeExecutionSupport(
         }
       }
     }
-    
+
     def isStoryRunning = storyTeller.currStory.isDefined
   }
 
@@ -644,7 +644,7 @@ class CodeExecutionSupport(
   def compileRunCode(): Unit = Utils.runInSwingThread {
     compileRunCode(codeToRun)
   }
-  
+
   def runWorksheet(): Unit = Utils.runInSwingThread {
     val code2run = codeToRun
     if (invalidCode(code2run.code)) {
@@ -696,7 +696,12 @@ class CodeExecutionSupport(
     else {
       val code = cleanWsOutput(code2run)
       preProcessCode(code)
-      codeRunner.compileRunCode(code)
+      if (code2run.selection.isEmpty) {
+        codeRunner.compileRunCode(code)
+      }
+      else {
+        codeRunner.runCode(code)
+      }
     }
   }
 
