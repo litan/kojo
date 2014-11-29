@@ -222,6 +222,8 @@ class Builtins(
   def stFrame = kojoCtx.frame
   def stSetUserControlsBg(color: Color) = storyTeller.setUserControlsBg(color)
   def stCanvasLocation = kojoCtx.canvasLocation
+  def stDisableNextButton() = storyTeller.disableNextButton()
+  def stEnableNextButton() = storyTeller.enableNextButton()
 
   UserCommand.addSynopsisSeparator()
 
