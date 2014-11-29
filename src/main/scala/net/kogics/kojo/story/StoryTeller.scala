@@ -215,6 +215,14 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       stop()
     }
   }
+  
+  def disableNextButton() = Utils.runInSwingThread {
+    nextButton.setEnabled(false)
+  }
+
+  def enableNextButton() = Utils.runInSwingThread {
+    nextButton.setEnabled(true)
+  }
 
   def viewPage(page: Int, view: Int) {
     // needs to run on GUI thread. Currently called only from link handler (in GUI thread)
