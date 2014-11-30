@@ -462,6 +462,13 @@ Here's a partial list of the available commands:
     def effectablePic(pic: Picture) = picture.effectablePic(pic)
   }
   type Widget = JComponent
+  type TextField[A] = widget.TextField[A]
+  type Label = widget.Label
+  type Button = widget.Button
+  type DropDown[A] = widget.DropDown[A]
+  type Slider = widget.Slider
+  type RowPanel = widget.RowPanel
+  type ColPanel = widget.ColPanel
   val TextField = widget.TextField
   val Label = widget.Label
   val Button = widget.Button
