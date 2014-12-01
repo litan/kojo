@@ -310,6 +310,10 @@ Here's a partial list of the available commands:
     storyTeller.addUiComponent(c)
   }
 
+  def stAddUiBigComponent(c: JComponent) {
+    storyTeller.addUiBigComponent(c)
+  }
+
   private val urlHandler = new story.LinkListener(storyTeller)
   def stGotoUrl(url: String) = urlHandler.gotoUrl(new java.net.URL(url))
 
