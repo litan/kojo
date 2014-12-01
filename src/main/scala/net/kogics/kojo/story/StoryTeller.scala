@@ -82,7 +82,15 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   ep.setBorder(BorderFactory.createEmptyBorder())
   val sp = new JScrollPane(ep)
   sp.setBorder(BorderFactory.createEmptyBorder())
-  add(sp, BorderLayout.CENTER)
+
+  val mainPane = new JPanel
+  mainPane.setBorder(BorderFactory.createEmptyBorder())
+  mainPane.setBackground(Color.white)
+  mainPane.setLayout(new BoxLayout(mainPane, BoxLayout.Y_AXIS))
+  mainPane.add(sp)
+  //  mainPane.add(sp2)
+
+  add(mainPane, BorderLayout.CENTER)
 
   val holder = new JPanel()
   holder.setBackground(Color.white)
@@ -93,12 +101,28 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   def removeOldUc() {
     holder.remove(uc)
+    if (mainPane.getComponentCount == 2) {
+      mainPane.remove(1)
+    }
   }
 
   def addNewUc() {
     uc = new JPanel
     uc.setBackground(Color.white)
     holder.add(uc, 0)
+  }
+
+  var _ucBig: JPanel = _
+  def ucBig: JPanel = {
+    if (mainPane.getComponentCount == 1) {
+      _ucBig = new JPanel()
+      _ucBig.setBackground(Color.white)
+      _ucBig.setLayout(new BoxLayout(_ucBig, BoxLayout.Y_AXIS))
+      val sp2 = new JScrollPane(_ucBig)
+      sp2.setBorder(BorderFactory.createEmptyBorder())
+      mainPane.add(sp2)
+    }
+    _ucBig
   }
 
   val (cp, prevButton, nextButton) = makeControlPanel()
@@ -215,7 +239,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       stop()
     }
   }
-  
+
   def disableNextButton() = Utils.runInSwingThread {
     nextButton.setEnabled(false)
   }
@@ -392,8 +416,17 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     scrollEp()
   }
 
+  def addUiBigComponent(c: JComponent) = Utils.runInSwingThread {
+    ucBig.add(c)
+    ucBig.setBorder(BorderFactory.createEtchedBorder())
+    mainPane.revalidate()
+    mainPane.repaint()
+    scrollToEnd()
+  }
+
   def setUserControlsBg(color: Color) = Utils.runInSwingThread {
     uc.setBackground(color)
+    ucBig.setBackground(color)
   }
 
   addComponentListener(new ComponentAdapter {
