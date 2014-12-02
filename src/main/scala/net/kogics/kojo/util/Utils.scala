@@ -458,7 +458,7 @@ object Utils {
 
   lazy val scalaTestHelperCode = """
   import org.scalatest.FunSuite
-  import org.scalatest.matchers.ShouldMatchers
+  import org.scalatest.Matchers
 
   class TestRun extends FunSuite {
       override def suiteName = "test-run"
@@ -478,7 +478,7 @@ object Utils {
       suite.execute()
   }
 
-  import ShouldMatchers._
+  import Matchers._
 """
 
   def codeFromScripts(scripts: List[String], scriptDir: String): Option[String] = scripts match {
