@@ -1,57 +1,24 @@
 // This is a Story that runs the code below in 'challenge' mode for young kids
 // Feel free to modify the challenge code to suit your needs.
-val challengeLevels = Seq("""forward(50)
-right(90)
-forward(100)
-left(90)
-forward(50)
-right(90)
-forward(100)
-right(90)
-forward(100)
-right(90)
-forward(200)
+val challengeLevels = Seq("""repeat(3) {
+    right(90)
+    forward(40)
+    repeat(4) {
+        forward(100)
+        right(90)
+    }
+    right(90)
+    hop(100)
+    left(90)
+    hop(50)
+}
 """,
-    """forward(50)
-right(20)
-forward(50)
-right(30)
-forward(50)
-right(40)
-forward(50)
-right(50)
-forward(50)
-left(50)
-forward(50)
-left(40)
-forward(50)
-left(30)
-forward(50)
-left(20)
-forward(50)
-""",
-    """left(90)
-forward(200)
-right(45)
-forward(50)
-right(135)
-forward(272)
-right(135)
-forward(50)
-""",
-    """forward(100)
-left(90)
-forward(30)
-right(135)
+    """right(30)
 forward(100)
+right(150)
+forward(87)
 right(90)
-forward(100)
-right(135)
-forward(30)
-left(90)
-forward(100)
-right(90)
-forward(81)
+forward(50)
 """
 )
 
@@ -128,36 +95,71 @@ def challengePage(challengeCode: String, nm: String, last: Boolean) = Page(
 
             val expectedCode = challengeCode.lines.toVector
             val runButton = new Button("Run")({
-                interpret("t1.clear(); t1.setAnimationDelay(100); t1.setPenColor(black); t1.beamsOn(); t2.clear(); t2.invisible()")
                 tfs.foreach { tf => tf.setText("  ") }
                 uiPanel.revalidate(); uiPanel.repaint()
                 val dropDowns = findDropDowns(uiPanel)
                 val codeLines = dropDowns.map { _.asInstanceOf[net.kogics.kojo.widget.DropDown[String]].value }
                 val firstError = codeLines.zip(expectedCode).indexWhere { e => e._1 != e._2 }
+                def repeatsBefore(n: Int, lines: Seq[String]) = {
+                    def repeatsIn(lines: Seq[String]) = {
+                        val reps = lines.zipWithIndex.filter { case (line, idx) => line.contains("repeat") || line.contains("}") }
+                        reps.take(reps.size / 2).zipWithIndex.map { case ((line,idx), ridx) => (idx, reps(reps.size - ridx - 1)._2) } 
+                    }
+                    repeatsIn(lines).filter { case (start, end) => end < n }
+                }
+                val successfulRepeats = repeatsBefore(firstError, codeLines)
+                def successfulRepeat(idx: Int) = {
+                    successfulRepeats.find { case (start, end) => idx == start || idx == end }.isDefined
+                }
                 interpret("""
           var idx = 0
+          val repStack = new collection.mutable.Stack[Int]
         """)
                 def runCode(code: String, status: ProgramStatus.Value) {
-                    if (code.trim != "") {
-                        interpret(s"t1.$code")
+                    code match {
+                        case c if c.trim == "" =>
+                        case c if c.contains("repeat") =>
+                            queueInterpret("repStack.push(idx)"); queueInterpret(code); queueInterpret("idx = repStack.top")
+                        case c if c.trim == "}" =>
+                            queueInterpret(code); queueInterpret("repStack.pop")
+                        case _ => queueInterpret(s"t1.$code")
                     }
+
                     val marker = if (status == ProgramStatus.good) "\u2714" else if (status == ProgramStatus.bad) "x" else "?"
                     val color = if (status == ProgramStatus.good) "Color(0, 190, 65)" else if (status == ProgramStatus.bad) "red" else "blue"
-                    interpret(s"""tfsm("$nm")(idx).setText("$marker"); tfsm("$nm")(idx).setForeground($color)""")
-                    interpret("idx += 1")
-                    interpret(s"""t2.clear(); ; t2.invisible(); t2.setPenFontSize(35); t2.setPosition(-200, -100); t2.setPenColor($color); t2.write("$marker")""")
+                    queueInterpret(s"""tfsm("$nm")(idx).setText("$marker"); tfsm("$nm")(idx).setForeground($color)""")
+                    queueInterpret("idx += 1")
+                    queueInterpret(s"""t2.clear(); ; t2.invisible(); t2.setPenFontSize(35); t2.setPosition(-200, -100); t2.setPenColor($color); t2.write("$marker")""")
                 }
+                def firstErrorBlank = codeLines(firstError).trim == ""
+                queueInterpret("t1.clear(); t1.invisible(); t1.setPenColor(black); t1.beamsOn(); t2.clear(); t2.invisible()")
                 if (firstError != -1) {
-                    codeLines.take(firstError).foreach { runCode(_, ProgramStatus.good) }
-                    if (codeLines(firstError).trim == "") {
+                    queueInterpret("t1.setAnimationDelay(0)")
+                    codeLines.take(firstError).zipWithIndex.foreach {
+                        case (codeLine, idx) =>
+                            if (idx == firstError - 1 && firstErrorBlank) {
+                                queueInterpret("t1.visible(); t1.setAnimationDelay(500)")
+                            }
+                            if ((codeLine.contains("repeat") || codeLine.trim.contains("}")) && !successfulRepeat(idx)) {
+                                queueInterpret("idx += 1")
+                            }
+                            else {
+                                runCode(codeLine, ProgramStatus.good)
+                            }
+                    }
+                    if (firstErrorBlank) {
                         runCode(codeLines(firstError), ProgramStatus.incomplete)
                     }
                     else {
+                        queueInterpret("t1.visible(); t1.setAnimationDelay(500)")
                         runCode(codeLines(firstError), ProgramStatus.bad)
                     }
+                    flushInterpretQ()
                 }
                 else {
+                    queueInterpret("t1.visible(); t1.setAnimationDelay(300)")
                     codeLines.foreach { runCode(_, ProgramStatus.good) }
+                    flushInterpretQ()
                     interpret("""t2.clear(); ; t2.invisible(); t2.setPosition(-200, -100); t2.setPenColor(Color(0, 160, 65)); t2.write("Well Done! You have finished this Level.")""")
                     if (!last) {
                         interpret("""t2.setPosition(-200, -130); t2.write("Click the 'Next' button to move to the next Level.")""")
@@ -174,11 +176,23 @@ def challengePage(challengeCode: String, nm: String, last: Boolean) = Page(
 
             stSetUserControlsBg(codePanelColor)
             stAddUiBigComponent(uiPanel)
-            val cb = canvasBounds
-            draw(trans(cb.x, cb.y + cb.height / 2) -> PicShape.widget(runButton))
+            stAddUiComponent(runButton)
         }
     }
 )
+
+val sb = new StringBuilder
+def queueInterpret(code: String) {
+    sb.append(code)
+    sb.append("\n")
+}
+
+def flushInterpretQ() {
+    val code = sb.toString
+//    println(s"Running code:\n$code")
+    interpret(code)
+    sb.clear()
+}
 
 val inverse = Map(
     "left" -> "right",
@@ -212,9 +226,13 @@ def altLine(line: String, n: Int) = {
     instruction + altArgs.mkString("(", ", ", ")")
 }
 
-def alternativesFor(line: String) = {
-    if (line.trim == "") Seq("")
-    else Seq("") ++ util.Random.shuffle(line +: { for (i <- 1 to 3) yield (altLine(line, i)) })
+def alternativesFor(line: String) = line match {
+    case l if l.trim == ""         => Seq("")
+    case l if l.contains("repeat") => Seq(line)
+    case l if l.trim == "}"        => Seq(l)
+    case _ =>
+        val spaces = line.takeWhile(_ == ' ')
+        Seq("") ++ util.Random.shuffle(line +: { for (i <- 1 to 3) yield (spaces + altLine(line, i)) })
 }
 
 def findDropDowns(w: Widget): Seq[DropDown[String]] = {
@@ -240,4 +258,4 @@ cleari()
 stClear()
 stPlayStory(story)
 switchToStoryViewingPerspective()
-stSetStorytellerWidth(250)
+stSetStorytellerWidth(350)
