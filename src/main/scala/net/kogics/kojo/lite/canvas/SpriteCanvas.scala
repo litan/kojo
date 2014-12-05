@@ -787,6 +787,9 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   def onRunDone() {
     figure0.onRunDone()
   }
+  def resetPanAndZoom() {
+    initCamera()
+  }
 
   import core.Picture
   val noPic = picture.Pic { t =>

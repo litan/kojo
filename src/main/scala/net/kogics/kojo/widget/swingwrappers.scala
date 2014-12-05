@@ -13,6 +13,7 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JSlider
 import javax.swing.JTextField
+import javax.swing.JToggleButton
 
 import net.kogics.kojo.util.Read
 
@@ -49,6 +50,13 @@ case class Button(label: String)(al: => Unit) extends JButton(label) {
   addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
       al
+    }
+  })
+}
+case class ToggleButton(label: String)(al: Boolean => Unit) extends JToggleButton(label) {
+  addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent) {
+      al(isSelected)
     }
   })
 }

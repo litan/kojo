@@ -46,7 +46,6 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   val Log = Logger.getLogger(getClass.getName);
   val NoText = <span/>
   @volatile var currStory: Option[Story] = None
-  @volatile var savedStory: Option[Story] = None
 
   def running = currStory.isDefined
   def story = currStory.get
@@ -303,18 +302,12 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   private def done() = {
     // call in gui thread
     currStory foreach { _.stop }
-    if (savedStory.isDefined) {
-      currStory = savedStory
-      savedStory = None
-      showCurrStory()
-    }
-    else {
-      currStory = None
-      clearHelper()
-      stopMp3Loop()
-      cp.setVisible(false)
-      displayContent(defaultMsg)
-    }
+    currStory = None
+    clearHelper()
+    stopMp3Loop()
+    cp.setVisible(false)
+    displayContent(defaultMsg)
+    kojoCtx.switchToDefaultPerspective()
   }
 
   private def scrollEp() {
@@ -443,13 +436,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   def storyLocation = {
     if (currStory.isDefined) {
-      if (savedStory.isDefined) {
-        "St 2, Pg %d#%d" format (story.location._1, story.location._2)
-
-      }
-      else {
-        "Pg %d#%d" format (story.location._1, story.location._2)
-      }
+      "Pg %d#%d" format (story.location._1, story.location._2)
     }
     else {
       ""

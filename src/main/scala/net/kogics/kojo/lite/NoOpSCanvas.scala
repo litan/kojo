@@ -72,6 +72,7 @@ class NoOpSCanvas extends SCanvas {
   private[kojo] def newInvisibleTurtle(x: Double, y: Double) = null.asInstanceOf[TurtleLike]
   private[kojo] def setDefTurtle(t: TurtleLike) {}
   private[kojo] def restoreDefTurtle() {}
+  def resetPanAndZoom() {}
 }
 
 

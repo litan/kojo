@@ -469,6 +469,7 @@ Here's a partial list of the available commands:
   type TextField[A] = widget.TextField[A]
   type Label = widget.Label
   type Button = widget.Button
+  type ToggleButton = widget.ToggleButton
   type DropDown[A] = widget.DropDown[A]
   type Slider = widget.Slider
   type RowPanel = widget.RowPanel
@@ -476,6 +477,7 @@ Here's a partial list of the available commands:
   val TextField = widget.TextField
   val Label = widget.Label
   val Button = widget.Button
+  val ToggleButton = widget.ToggleButton
   val DropDown = widget.DropDown
   val Slider = widget.Slider
   val RowPanel = widget.RowPanel
