@@ -1,6 +1,7 @@
 // This is a Story that runs the code shown below in 'challenge' mode for young kids
 
 // Config params
+val ChallengePenWidth = 6
 val BlockNextLevel = false
 
 // The challenge code -- you can modify it to suit your needs.
@@ -143,8 +144,8 @@ def challengePage(challengeCode: String, nm: String, last: Boolean) = Page(
     code = {
         cleari()
         setAnimationDelay(0)
-        setPenColor(Color(255, 109, 44))
-        setPenThickness(10)
+        setPenColor(Color(255, 109, 44, 220))
+        setPenThickness(ChallengePenWidth)
         interpret(challengeCode)
         interpret("""
           val t1 = newTurtle(0, 0)
