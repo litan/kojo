@@ -651,14 +651,28 @@ object Utils {
         absolutePath(fileName + suffix)
       }
       def load(fileName: String): String = {
+        def readFileContent = {
+          val file = new File(fileName)
+          if (file.exists) {
+            stripCR(file.readAsString)
+          }
+          else {
+            val res = loadResource(fileName)
+            if (res == null) {
+              file.readAsString // trigger exception
+            }
+            else {
+              stripCR(res)
+            }
+          }
+        }
         try {
           if (included.contains(fileName)) {
             ""
           }
           else {
             included.add(fileName)
-            import RichFile._
-            val fileContent = stripCR(new File(fileName).readAsString)
+            val fileContent = readFileContent
             val codeToInclude = s"// #begin-include: $fileName\n$fileContent\n// #end-include: $fileName\n"
             val (result, _, _) = _preProcessInclude(codeToInclude) //non-tail-recursive call
             result
