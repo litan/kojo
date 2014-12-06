@@ -28,13 +28,14 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
         setAnimationDelay(0)
         setPenColor(Color(255, 109, 44, 220))
         setPenThickness(ChallengePenWidth)
-        interpret(challengeCode)
-        interpret("""
+        queueInterpret(challengeCode)
+        queueInterpret("""
           val t1 = newTurtle(0, 0)
           t1.beamsOn()
           val t2 = newTurtle(0, 0)
           t2.invisible()
         """)
+        flushInterpretQ()
 
         if (BlockNextLevel) {
             stDisableNextButton()
