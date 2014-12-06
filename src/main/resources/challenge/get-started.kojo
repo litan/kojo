@@ -118,3 +118,9 @@ right(90)
 }
 """
 )
+
+lazy val levelsHelp = Map(
+    6 -> <div>
+    </div>
+)
+

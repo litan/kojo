@@ -16,12 +16,12 @@ kojoInterp.bind("tfsm", "scala.collection.mutable.Map[String,scala.collection.mu
 
 val panelm = collection.mutable.Map.empty[String, JPanel]
 
-def challengePage(challengeCode: String, nm: String, last: Boolean) = Page(
+def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, last: Boolean) = Page(
     name = nm,
     body =
-        <body style="font-size:medium; text-align:center; background-color:#b4deff; color:#1a1a1a">
-            Learning to Program<br/><br/> 
-            Challenge { nm }
+        <body style="font-size:small; text-align:center; background-color:#b4deff; color:#1a1a1a">
+            Challenge { nm } <br/><br/> 
+            { help.getOrElse("") } 
         </body>,
     code = {
         cleari()
@@ -226,7 +226,7 @@ def findDropDowns(w: Widget): Seq[DropDown[String]] = {
 val levelPages = challengeLevels.zipWithIndex.map {
     case (code, idx) =>
         val last = if (idx == challengeLevels.size - 1) true else false
-        challengePage(code, s"Level ${idx + 1}", last)
+        challengePage(code, levelsHelp.get(idx + 1), s"Level ${idx + 1}", last)
 }
 val story = Story(levelPages: _*)
 
