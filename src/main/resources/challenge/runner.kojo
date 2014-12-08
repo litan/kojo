@@ -11,10 +11,64 @@ object ProgramStatus extends Enumeration {
     val good, bad, incomplete = Value
 }
 
+val sb = new StringBuilder
+def queueInterpret(code: String) {
+    sb.append(code)
+    sb.append("\n")
+}
+
+def flushInterpretQ() {
+    val code = sb.toString
+    //    println(s"Running code:\n$code")
+    interpret(code)
+    sb.clear()
+}
+
 val tfsm = collection.mutable.Map.empty[String, collection.mutable.ArrayBuffer[Label]]
 kojoInterp.bind("tfsm", "scala.collection.mutable.Map[String,scala.collection.mutable.ArrayBuffer[net.kogics.kojo.widget.Label]]", tfsm)
 
 val panelm = collection.mutable.Map.empty[String, JPanel]
+kojoInterp.bind("panelm", "scala.collection.mutable.Map[String,javax.swing.JPanel]", panelm)
+
+val initCode = s"""
+def updateProgStatus(nm: String, idx: Int, marker: String, color: Color) = runInGuiThread { 
+    val tf = tfsm(nm)(idx)
+    val panel = panelm(nm)
+    tf.setText(marker)
+    tf.setForeground(color)
+    panel.revalidate()
+    panel.repaint() 
+}
+
+def updateCanvasMarker(t2: Turtle, x: Double, y: Double, marker: String, color: Color) {
+    t2.clear()
+    t2.invisible()
+    t2.setPenFontSize(35)
+    t2.setPosition(x, y)
+    t2.setPenColor(color)
+    t2.write(marker)
+}
+
+def initTurtles(t1: Turtle, t2: Turtle) {
+    t1.clear()
+    t1.invisible()
+    t1.setPenColor(black)
+    t1.beamsOn()
+    t2.clear()
+    t2.invisible()
+}
+
+def updateMistakes(t2: Turtle, x: Double, y: Double, mistakes: Int) {
+    t2.setPenFontSize(17)
+    t2.setPenColor(darkGray)
+    t2.setPosition(x, y)
+    t2.write("Mistakes: %d" format mistakes)
+}
+"""
+queueInterpret(initCode)
+
+@volatile var mistakes = 0
+val mbox = textExtent("Mistakes: 1000", 17)
 
 def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, last: Boolean) = Page(
     name = nm,
@@ -60,7 +114,7 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                     },
                     ColPanel(
                         challengeCode.lines.toVector.map { line =>
-                            val tf = Label("  ")
+                            val tf = Label(" ")
                             tf.setFont(tfFont)
                             tfs += tf
                             val dd = DropDown[String](alternativesFor(line): _*)
@@ -79,7 +133,8 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
 
             val expectedCode = challengeCode.lines.toVector
             val runButton = new Button("Run")({
-                tfs.foreach { tf => tf.setText("  ") }
+                val cb = canvasBounds
+                tfs.foreach { tf => tf.setText(" ") }
                 uiPanel.revalidate(); uiPanel.repaint()
                 val dropDowns = findDropDowns(uiPanel)
                 val codeLines = dropDowns.map { _.asInstanceOf[net.kogics.kojo.widget.DropDown[String]].value }
@@ -108,11 +163,11 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
 
                     val marker = if (status == ProgramStatus.good) "\u2714" else if (status == ProgramStatus.bad) "x" else "?"
                     val color = if (status == ProgramStatus.good) "Color(0, 190, 65)" else if (status == ProgramStatus.bad) "red" else "blue"
-                    queueInterpret(s"""tfsm("$nm")($idx).setText("$marker"); tfsm("$nm")($idx).setForeground($color)""")
-                    queueInterpret(s"""t2.clear(); ; t2.invisible(); t2.setPenFontSize(35); t2.setPosition(-200, -100); t2.setPenColor($color); t2.write("$marker")""")
+                    queueInterpret(s"""updateProgStatus("$nm", $idx, "$marker", $color)""")
+                    queueInterpret(s"""updateCanvasMarker(t2, ${cb.x + cb.width / 4}, ${cb.y + cb.height / 4}, "$marker", $color)""")
                 }
                 def firstErrorBlank = codeLines(firstError).trim == ""
-                queueInterpret("t1.clear(); t1.invisible(); t1.setPenColor(black); t1.beamsOn(); t2.clear(); t2.invisible()")
+                queueInterpret("initTurtles(t1, t2)")
                 if (firstError != -1) {
                     queueInterpret("t1.setAnimationDelay(0)")
                     codeLinesWithIdx.take(firstError).foreach {
@@ -133,22 +188,24 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                     else {
                         queueInterpret("t1.visible(); t1.setAnimationDelay(500)")
                         runCode(codeLines(firstError), codeLinesWithIdx(firstError)._2, ProgramStatus.bad)
+                        mistakes += 1
                     }
-                    flushInterpretQ()
                 }
                 else {
                     queueInterpret("t1.visible(); t1.setAnimationDelay(300)")
                     codeLinesWithIdx.foreach { case (codeLine, idx) => runCode(codeLine, idx, ProgramStatus.good) }
-                    flushInterpretQ()
-                    interpret("""t2.clear(); ; t2.invisible(); t2.setPosition(-200, -100); t2.setPenColor(Color(0, 160, 65)); t2.write("Well Done! You have finished this Level.")""")
+                    queueInterpret(s"""t2.clear(); ; t2.invisible(); t2.setPosition(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8}); t2.setPenColor(Color(0, 160, 65)); t2.write("Well Done! You have finished this Level.")""")
                     if (!last) {
-                        interpret("""t2.setPosition(-200, -130); t2.write("Click the 'Next' button to move to the next Level.")""")
-                        interpret("""stEnableNextButton()""")
+                        queueInterpret(s"""t2.setPosition(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.write("Click the 'Next' button to move to the next Level.")""")
+                        queueInterpret("""stEnableNextButton()""")
                     }
                     else {
-                        interpret("""t2.setPosition(-200, -130); t2.write("Congratulations on finishing the challenge!")""")
+                        queueInterpret(s"""t2.setPosition(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.write("Congratulations on finishing the challenge!")""")
                     }
                 }
+                queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""")
+                flushInterpretQ()
+
             }) {
                 setFont(tFont)
                 setForeground(Color(0, 160, 65))
@@ -163,19 +220,6 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
         }
     }
 )
-
-val sb = new StringBuilder
-def queueInterpret(code: String) {
-    sb.append(code)
-    sb.append("\n")
-}
-
-def flushInterpretQ() {
-    val code = sb.toString
-    //    println(s"Running code:\n$code")
-    interpret(code)
-    sb.clear()
-}
 
 val inverse = Map(
     "left" -> "right",
@@ -215,7 +259,7 @@ def alternativesFor(line: String) = line match {
     case l if l.trim == "}"        => Seq(l)
     case _ =>
         val spaces = line.takeWhile(_ == ' ')
-        Seq("") ++ util.Random.shuffle(line +: { for (i <- 1 to 3) yield (spaces + altLine(line, i)) })
+        Seq("") ++ util.Random.shuffle(line +: { for (i <- 1 to NumCmdChoices - 1) yield (spaces + altLine(line, i)) })
 }
 
 def findDropDowns(w: Widget): Seq[DropDown[String]] = {
