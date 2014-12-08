@@ -650,14 +650,15 @@ object Utils {
         val suffix = if (!fileName.contains(".")) ".kojo" else ""
         absolutePath(fileName + suffix)
       }
-      def load(fileName: String): String = {
+      def load(fileName0: String): String = {
+        val fileName = expand(fileName0)
         def readFileContent = {
           val file = new File(fileName)
           if (file.exists) {
             stripCR(file.readAsString)
           }
           else {
-            val res = loadResource(fileName)
+            val res = loadResource(fileName0)
             if (res == null) {
               file.readAsString // trigger exception
             }
@@ -681,7 +682,7 @@ object Utils {
         catch { case e: Throwable => throw new IllegalArgumentException(s"Error when including file: $fileName", e) }
       }
 
-      val addedCode = (for (i <- includes) yield load(expand(getFileName(i)))).mkString
+      val addedCode = (for (i <- includes) yield load(getFileName(i))).mkString
       val baseCode = """//(\s)*#include(.*)""".r.replaceAllIn(code, "//$1#Include$2")
       (addedCode + baseCode, countLines(addedCode), addedCode.length)
     }
