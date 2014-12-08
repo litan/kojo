@@ -190,6 +190,9 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                         runCode(codeLines(firstError), codeLinesWithIdx(firstError)._2, ProgramStatus.bad)
                         mistakes += 1
                     }
+                    if (firstError == 0) {
+                        queueInterpret("t1.visible()")
+                    }
                 }
                 else {
                     queueInterpret("t1.visible(); t1.setAnimationDelay(300)")
