@@ -19,9 +19,15 @@ val panelm = collection.mutable.Map.empty[String, JPanel]
 def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, last: Boolean) = Page(
     name = nm,
     body =
-        <body style="font-size:small; text-align:center; background-color:#b4deff; color:#1a1a1a">
-            Challenge { nm } <br/><br/> 
+        <body style="font-size:small; background-color:#b4deff; color:#1a1a1a">
+          <div style="text-align:center; ">
+            Challenge { nm } 
+          </div>
+          <br/> 
+          <div style="font-size:x-small; ">
             { help.getOrElse("") } 
+          </div>
+          
         </body>,
     code = {
         cleari()

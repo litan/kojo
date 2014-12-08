@@ -120,7 +120,52 @@ right(90)
 )
 
 lazy val levelsHelp = Map(
+    1 -> <div>
+    Learning Opportunities:
+        <ul>
+            <li>The idea of unit length and distances</li>
+            <li>Length measurement</li>
+            <li>Right angles</li>
+            <li>Angle measurement</li>
+            <li><tt>forward</tt>, <tt>right</tt>, and <tt>left</tt> commands</li>
+            <li>Logical thinking</li>
+            <li>Efficient search among options (without measurement)</li>
+            <li>Sequencing of commands</li>
+        </ul>
+    </div>,
+    2 -> <div>
+    Learning Opportunities:
+        <ul>
+            <li>Length measurement</li>
+            <li>Right angles</li>
+            <li>Angle measurement</li>
+            <li>Logical thinking</li>
+            <li>Efficient search among options (without measurement)</li>
+            <li>Practice of learnt ideas</li>
+        </ul>
+    </div>,
+    3 -> <div>
+    Learning Opportunities:
+        <ul>
+            <li>Length measurement</li>
+            <li>45 degree angles</li>
+            <li>Angle measurement</li>
+            <li>Logical thinking</li>
+            <li>Efficient search among options (without measurement)</li>
+            <li>Practice of learnt ideas</li>
+        </ul>
+    </div>,
     6 -> <div>
+    Learning Opportunities:
+        <ul>
+            <li>Practice of learnt ideas with a larger program</li>
+            <li>Length measurement</li>
+            <li>Angle measurement</li>
+            <li>Logical thinking</li>
+            <li>Efficient search among options (without measurement)</li>
+            <li>Arithmetic for size determination (without guessing or measurement)</li>
+        </ul>
     </div>
+    
 )
 
