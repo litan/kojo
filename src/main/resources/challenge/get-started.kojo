@@ -144,6 +144,16 @@ lazy val levelsHelp = Map(
             <li>Mental Sequencing of commands</li>
             <li>Logical thinking</li>
         </ul>
+      Control Buttons:
+      <ul>
+          <li><em>Grid</em> – Turns grid on/off. Useful for approximate measurement.</li>
+          <li><em>Tools</em> – Turns scale and protractor on/off. 
+            Either tool can be moved by dragging and rotated by Shift-Dragging.
+            Useful for precise measurement.</li>
+          <li><em>Reset Zoom</em> – Resets pan and zoom in the Canvas. 
+          Useful for resetting the canvas after panning/zooming during measurement.</li>
+      </ul>
+      
     </div>,
     2 -> <div>
     Learning Opportunities:
