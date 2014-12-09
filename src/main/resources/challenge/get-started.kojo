@@ -106,6 +106,16 @@ right(90)
     right(90)
 }
 """,
+    """repeat(3) {
+    forward(100)
+    right(120)
+}
+""",
+    """repeat(5) {
+    forward(100)
+    right(72)
+}
+""",
     """repeat(6) {
     repeat(2) {
         forward(40)
@@ -141,6 +151,7 @@ lazy val levelsHelp = Map(
             <li>Length measurement</li>
             <li>Right angles</li>
             <li>Angle measurement</li>
+            <li>Rectangles</li>
             <li>Efficient search among options (without measurement)</li>
             <li>Mental Sequencing of commands</li>
             <li>Logical thinking</li>
@@ -183,6 +194,7 @@ lazy val levelsHelp = Map(
     Learning Opportunities:
         <ul>
             <li>Starting to identify patterns</li>
+            <li>Squares</li>
             <li>Practice of learnt ideas</li>
         </ul>
     </div>,
@@ -196,6 +208,22 @@ lazy val levelsHelp = Map(
         </ul>
     </div>,
     9 -> <div>
+    Learning Opportunities:
+        <ul>
+            <li>Using the <tt>repeat</tt> command</li>
+            <li>Triangles</li>
+            <li>Practice of learnt ideas</li>
+        </ul>
+    </div>,
+    10 -> <div>
+    Learning Opportunities:
+        <ul>
+            <li>Using the <tt>repeat</tt> command</li>
+            <li>Pentagons</li>
+            <li>Practice of learnt ideas</li>
+        </ul>
+    </div>,
+    11 -> <div>
     Learning Opportunities:
         <ul>
             <li>Identifying a two-level pattern</li>
