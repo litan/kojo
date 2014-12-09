@@ -6,6 +6,7 @@ import net.kogics.kojo.lite.Main
 
 trait ScriptLoader { self: Main.type =>
   def _loadUrl(url: String)(postfn: => Unit = {}) {
+    kojoCtx.switchToDefaultPerspective()
     codePane.setText("// Loading code from URL: %s ...\n" format (url))
     Utils.runAsyncMonitored {
       try {
@@ -19,7 +20,6 @@ trait ScriptLoader { self: Main.type =>
       catch {
         case t: Throwable => codePane.append("// Problem loading code: %s" format (t.getMessage))
       }
-      scriptEditorHolder.activate()
     }
   }
 
