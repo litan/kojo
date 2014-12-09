@@ -30,6 +30,8 @@ kojoInterp.bind("tfsm", "scala.collection.mutable.Map[String,scala.collection.mu
 val panelm = collection.mutable.Map.empty[String, JPanel]
 kojoInterp.bind("panelm", "scala.collection.mutable.Map[String,javax.swing.JPanel]", panelm)
 
+val mistakesm = collection.mutable.Map.empty[String, Int]
+
 val initCode = s"""
 def updateProgStatus(nm: String, idx: Int, marker: String, color: Color) = runInGuiThread { 
     val tf = tfsm(nm)(idx)
@@ -58,16 +60,17 @@ def initTurtles(t1: Turtle, t2: Turtle) {
     t2.invisible()
 }
 
-def updateMistakes(t2: Turtle, x: Double, y: Double, mistakes: Int) {
+def updateMistakes(t2: Turtle, x: Double, y: Double, mistakes: Int, total: Boolean = false) {
     t2.setPenFontSize(17)
     t2.setPenColor(darkGray)
     t2.setPosition(x, y)
-    t2.write("Mistakes: %d" format mistakes)
+    val msg = if (total) "Total Mistakes" else "Mistakes"
+    t2.write("%s: %d" format (msg, mistakes))
 }
 """
 queueInterpret(initCode)
 
-@volatile var mistakes = 0
+@volatile var totalMistakes = 0
 val mbox = textExtent("Mistakes: 1000", 17)
 
 def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, last: Boolean) = Page(
@@ -134,6 +137,7 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
             val expectedCode = challengeCode.lines.toVector
             val runButton = new Button("Run")({
                 val cb = canvasBounds
+                var mistakes = mistakesm.getOrElseUpdate(nm, 0)
                 tfs.foreach { tf => tf.setText(" ") }
                 uiPanel.revalidate(); uiPanel.repaint()
                 val dropDowns = findDropDowns(uiPanel)
@@ -189,10 +193,13 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                         queueInterpret("t1.visible(); t1.setAnimationDelay(500)")
                         runCode(codeLines(firstError), codeLinesWithIdx(firstError)._2, ProgramStatus.bad)
                         mistakes += 1
+                        mistakesm(nm) = mistakes
+                        totalMistakes += 1
                     }
                     if (firstError == 0) {
                         queueInterpret("t1.visible()")
                     }
+                    queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""")
                 }
                 else {
                     queueInterpret("t1.visible(); t1.setAnimationDelay(300)")
@@ -201,12 +208,13 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                     if (!last) {
                         queueInterpret(s"""t2.setPosition(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.write("Click the 'Next' button to move to the next Level.")""")
                         queueInterpret("""stEnableNextButton()""")
+                        queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""")
                     }
                     else {
                         queueInterpret(s"""t2.setPosition(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.write("Congratulations on finishing the challenge!")""")
+                        queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width * 3 / 2}, ${cb.y + mbox.height}, $totalMistakes, true)""")
                     }
                 }
-                queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""")
                 flushInterpretQ()
 
             }) {
