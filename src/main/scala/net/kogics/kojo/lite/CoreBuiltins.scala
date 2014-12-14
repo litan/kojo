@@ -20,6 +20,7 @@ import com.jhlabs.image.LightFilter.Light
 import net.kogics.kojo.core.Rectangle
 import net.kogics.kojo.core.TSCanvasFeatures
 import net.kogics.kojo.kmath.Rationals
+import net.kogics.kojo.turtle.LoTurtle
 import net.kogics.kojo.util.Utils
 
 trait CoreBuiltins extends Rationals {
@@ -134,4 +135,11 @@ trait CoreBuiltins extends Rationals {
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
   def setImagePixel(image: BufferedImage, x: Int, y: Int, c: Color) = image.setRGB(x, image.getHeight - 1 - y, c.getRGB)
+
+  // For younger kids
+  def clr() = { TSCanvas.clear(); TSCanvas.turtle0.invisible() }
+  def nt: LoTurtle = nt(0, 0)
+  def nt(x: Double = 0, y: Double = 0) = {
+    new LoTurtle(TSCanvas.newTurtle(x, y, "/images/blue-turtle32.png"))
+  }
 }
