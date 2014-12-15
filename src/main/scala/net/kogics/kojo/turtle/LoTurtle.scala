@@ -1,15 +1,18 @@
 package net.kogics.kojo
 package turtle
 
+import java.awt.Color
+
 import scala.language.dynamics
 import scala.language.postfixOps
-import java.awt.Color
+
 import net.kogics.kojo.kmath.Kmath
 
 class LoTurtle(val t: core.Turtle) extends Dynamic {
-  lazy val cmds = collection.mutable.HashMap.empty[Symbol, Unit => Unit]
-  lazy val cmdsd = collection.mutable.HashMap.empty[Symbol, Double => Unit]
-  lazy val cmdsdd = collection.mutable.HashMap.empty[Symbol, (Double, Double) => Unit]
+  lazy val cmdsu = collection.mutable.HashMap.empty[Symbol, Unit => LoTurtle]
+  lazy val cmdsd = collection.mutable.HashMap.empty[Symbol, Double => LoTurtle]
+  lazy val cmdsdd = collection.mutable.HashMap.empty[Symbol, (Double, Double) => LoTurtle]
+  lazy val cmdsddd = collection.mutable.HashMap.empty[Symbol, (Double, Double, Double) => LoTurtle]
   var lastCmd = Symbol("")
 
   def fd(n: Double) = { t.forward(n); this }
@@ -25,14 +28,18 @@ class LoTurtle(val t: core.Turtle) extends Dynamic {
   def delay(n: Int) = { t.setAnimationDelay(n); this }
   def speed(n: Double) = { t.setAnimationDelay(Kmath.map(n, 1, 10, 1000, 0).toInt); this }
 
-  def cmds(code: => Unit) {
-    cmds.put(lastCmd, { x: Unit => code })
+  def cmds(code: => LoTurtle) {
+    cmdsu.put(lastCmd, { x: Unit => code })
   }
-  def cmds(code: Double => Unit) {
+  def cmds(code: Double => LoTurtle) {
     cmdsd.put(lastCmd, code)
   }
-  def cmds(code: (Double, Double) => Unit) {
+  def cmds(code: (Double, Double) => LoTurtle) {
     cmdsdd.put(lastCmd, code)
+  }
+
+  def cmds(code: (Double, Double, Double) => LoTurtle) {
+    cmdsddd.put(lastCmd, code)
   }
 
   def teach(name: Symbol) = {
@@ -40,16 +47,23 @@ class LoTurtle(val t: core.Turtle) extends Dynamic {
     this
   }
 
-  def selectDynamic(name: String) {
-    cmds(Symbol(name)).apply(())
-  }
+  //  def selectDynamic(name: String) = {
+  //    cmdsu(Symbol(name)).apply(())
+  //  }
 
-  def applyDynamic(name: String)(arg1: Double, arg2: Double = Double.NaN) {
-    if (arg2.isNaN) {
-      cmdsd(Symbol(name))(arg1)
+  def applyDynamic(name: String)(args: Double*): LoTurtle = {
+    try {
+      args.size match {
+        case 0 => cmdsu(Symbol(name)).apply(())
+        case 1 => cmdsd(Symbol(name))(args(0))
+        case 2 => cmdsdd(Symbol(name))(args(0), args(1))
+        case 3 => cmdsddd(Symbol(name))(args(0), args(1), args(2))
+        case _ => this
+      }
     }
-    else {
-      cmdsdd(Symbol(name))(arg1, arg2)
+    catch {
+      case t: NoSuchElementException =>
+        throw new RuntimeException(s"Invalid command $name with ${args.length} input(s). Check command name and input(s).")
     }
   }
 }
