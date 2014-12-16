@@ -18,7 +18,9 @@ class LoTurtle(val t: core.Turtle) extends Dynamic {
   def fd(n: Double) = { t.forward(n); this }
   def bk(n: Double) = { t.back(n); this }
   def rt(a: Double) = { t.right(a); this }
+  def rt(a: Double, r: Double) = { t.right(a, r); this }
   def lt(a: Double) = { t.left(a); this }
+  def lt(a: Double, r: Double) = { t.left(a, r); this }
   def hp(n: Double) = { t.hop(n); this }
   def pc(c: Color) = { t.setPenColor(c); this }
   def fc(c: Color) = { t.setFillColor(c); this }
@@ -26,7 +28,9 @@ class LoTurtle(val t: core.Turtle) extends Dynamic {
   def jb(x: Double, y: Double) = { this hp x rt 90 hp y lt 90; this }
   def jt(x: Double, y: Double) = { t.setPosition(x, y); this }
   def delay(n: Int) = { t.setAnimationDelay(n); this }
-  def speed(n: Double) = { t.setAnimationDelay(Kmath.map(n, 1, 10, 1000, 0).toInt); this }
+  def speed(n: Double) = {
+    delay(math.max(math.min(Kmath.map(n, 1, 10, 1000, 0), 1000), 0).toInt)
+  }
 
   def cmds(code: => LoTurtle) {
     cmdsu.put(lastCmd, { x: Unit => code })
