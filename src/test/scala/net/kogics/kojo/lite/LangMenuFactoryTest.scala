@@ -14,7 +14,7 @@ import javax.swing.JMenuItem
 class LangMenuFactoryTest extends FunSuite with Matchers {
 
   test("supported languages should contain known supported languages") {
-    LangMenuFactory.supportedLanguages.toSet.intersect(Set("en", "sv", "fr", "pl")).size should be(4)
+    LangMenuFactory.supportedLanguages.toSet.intersect(Set("en", "sv", "fr", "pl", "eo")).size should be(5)
   }
 
   test("langMenu has icon for supported languages") {
@@ -27,12 +27,13 @@ class LangMenuFactoryTest extends FunSuite with Matchers {
     }
   }
 
-  test("each menu item in langMenu has no icon") {
+  test("each menu item in langMenu has an icon") {
     implicit val kojoCtx = new KojoCtx(false)
     kojoCtx.userLanguage = "en"
     val menu = LangMenuFactory.createLangMenu()
     menu.getMenuComponents.foreach {menu ⇒
-      menu.asInstanceOf[JMenuItem].getIcon should be (null)
+      //Changed from "should be (null)" to "should not be (null)" as now we provide language menu items with their flag. Christoph Knabe 2014-12-16
+      menu.asInstanceOf[JMenuItem].getIcon should not be (null)
     }
   }
 }
