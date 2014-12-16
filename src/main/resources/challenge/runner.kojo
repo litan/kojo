@@ -147,7 +147,9 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                 def repeatsBefore(n: Int, lines: Seq[String]) = {
                     def repeatsIn(lines: Seq[String]) = {
                         val reps = lines.zipWithIndex.filter { case (line, idx) => line.contains("repeat") || line.contains("}") }
-                        reps.take(reps.size / 2).zipWithIndex.map { case ((line, idx), ridx) => (idx, reps(reps.size - ridx - 1)._2) }
+                        val st = collection.mutable.Stack.empty[Int]; val rps = collection.mutable.ArrayBuffer.empty[(Int, Int)]
+                        reps.foreach { case (line, idx) => if (line.contains("repeat")) { st.push(idx) } else { rps += (st.pop -> idx) } }
+                        rps
                     }
                     repeatsIn(lines).filter { case (start, end) => end < n }
                 }
