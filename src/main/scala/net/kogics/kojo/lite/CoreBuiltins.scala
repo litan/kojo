@@ -142,4 +142,13 @@ trait CoreBuiltins extends Rationals {
   def nt(x: Double = 0, y: Double = 0) = {
     new LoTurtle(TSCanvas.newTurtle(x, y, "/images/blue-turtle32.png"))
   }
+  def rpt(n: Int)(code: => LoTurtle): LoTurtle = {
+    var i = 0
+    var ret: LoTurtle = null
+    while(i < n) {
+      ret = code
+      i += 1
+    }
+    ret
+  }
 }

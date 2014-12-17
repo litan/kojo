@@ -147,7 +147,9 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                 def repeatsBefore(n: Int, lines: Seq[String]) = {
                     def repeatsIn(lines: Seq[String]) = {
                         val reps = lines.zipWithIndex.filter { case (line, idx) => line.contains("repeat") || line.contains("}") }
-                        reps.take(reps.size / 2).zipWithIndex.map { case ((line, idx), ridx) => (idx, reps(reps.size - ridx - 1)._2) }
+                        val st = collection.mutable.Stack.empty[Int]; val rps = collection.mutable.ArrayBuffer.empty[(Int, Int)]
+                        reps.foreach { case (line, idx) => if (line.contains("repeat")) { st.push(idx) } else { rps += (st.pop -> idx) } }
+                        rps
                     }
                     repeatsIn(lines).filter { case (start, end) => end < n }
                 }
@@ -199,7 +201,7 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                     if (firstError == 0) {
                         queueInterpret("t1.visible()")
                     }
-                    queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""")
+                    if (ShowMistakes) { queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""") }
                 }
                 else {
                     queueInterpret("t1.visible(); t1.setAnimationDelay(300)")
@@ -208,11 +210,11 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                     if (!last) {
                         queueInterpret(s"""t2.setPosition(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.write("Click the 'Next' button to move to the next Level.")""")
                         queueInterpret("""stEnableNextButton()""")
-                        queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""")
+                        if (ShowMistakes) { queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""") }
                     }
                     else {
                         queueInterpret(s"""t2.setPosition(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.write("Congratulations on finishing the challenge!")""")
-                        queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width * 3 / 2}, ${cb.y + mbox.height}, $totalMistakes, true)""")
+                        if (ShowMistakes) { queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width * 3 / 2}, ${cb.y + mbox.height}, $totalMistakes, true)""") }
                     }
                 }
                 flushInterpretQ()
