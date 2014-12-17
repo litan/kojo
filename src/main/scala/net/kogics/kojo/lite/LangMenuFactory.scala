@@ -24,8 +24,8 @@ import net.kogics.kojo.util.Utils
  * Creates the Language menu.
  *
  * @author Eric Zoerner <a href="mailto:eric.zoerner@gmail.com">eric.zoerner@gmail.com</a>
+ * @author Christoph Knabe http://public.beuth-hochschule.de/~knabe/ 
  */
-//Addition of Esperanto, Showing the flag icon of the country. 2014-12-16 Christoph Knabe http://public.beuth-hochschule.de/~knabe/
 object LangMenuFactory {
 
   val supportedLanguages = List("en", "sv", "fr", "pl" , "nl", "eo"/*, "hi","it"*/)
@@ -54,7 +54,7 @@ object LangMenuFactory {
       val mitem = new JCheckBoxMenuItem(langName)
       mitem.addActionListener(langHandler)
       mitem.setActionCommand(langCode)
-      mitem.setIcon(langIcon(langCode))
+      // mitem.setIcon(langIcon(langCode))
       if (kojoCtx.userLanguage == langCode) {
         mitem.setSelected(true)
       }
@@ -65,8 +65,8 @@ object LangMenuFactory {
     val langMenu = new JMenu(Utils.loadString("S_Language"))
     langMenu.setMnemonic('L')
     langMenu.setIcon(
-      //Utils.loadIcon("/images/generic-flag.png")
-      langIcon(kojoCtx.userLanguage)
+      Utils.loadIcon("/images/generic-flag.png")
+      // langIcon(kojoCtx.userLanguage)
     )
     supportedLanguages.foreach {lang ⇒ langMenu.add(langMenuItem(lang))}
     langMenu
