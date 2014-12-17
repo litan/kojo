@@ -6,6 +6,7 @@ import java.awt.Color
 import java.awt.Component
 import java.awt.Font
 import java.awt.Insets
+import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusAdapter
@@ -33,6 +34,7 @@ import javax.swing.event.HyperlinkEvent
 import javax.swing.event.HyperlinkListener
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
+import javax.swing.text.DefaultEditorKit
 import javax.swing.text.StyleConstants
 import javax.swing.text.StyleContext
 
@@ -155,6 +157,8 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     am.put("decrease-font-size", decreaseFontSizeAction)
     decrFontSizeItem.setAccelerator(controlMinus)
     add(decrFontSizeItem)
+
+    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit.getMenuShortcutKeyMask), DefaultEditorKit.copyAction);
 
     errorWindow.addFocusListener(new FocusAdapter {
       override def focusGained(e: FocusEvent) {
