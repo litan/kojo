@@ -27,13 +27,12 @@ class LangMenuFactoryTest extends FunSuite with Matchers {
     }
   }
 
-  test("each menu item in langMenu has an icon") {
+  test("each menu item in langMenu has no icon (for now)") {
     implicit val kojoCtx = new KojoCtx(false)
     kojoCtx.userLanguage = "en"
     val menu = LangMenuFactory.createLangMenu()
     menu.getMenuComponents.foreach {menu ⇒
-      //Changed from "should be (null)" to "should not be (null)" as now we provide language menu items with their flag. Christoph Knabe 2014-12-16
-      menu.asInstanceOf[JMenuItem].getIcon should not be (null)
+      menu.asInstanceOf[JMenuItem].getIcon should be (null)
     }
   }
 }
