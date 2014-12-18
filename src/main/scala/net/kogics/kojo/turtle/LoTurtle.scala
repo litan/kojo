@@ -34,6 +34,10 @@ class LoTurtle(val t: core.Turtle) extends Dynamic {
   def pt(n: Any) = { t.setPenThickness(n.asInstanceOf[Int]); this }
   def jb(x: Any, y: Any) = { this hp x rt 90 hp y lt 90; this }
   def jt(x: Any, y: Any) = { t.setPosition(toD(x), toD(y)); this }
+  def bon() = { t.beamsOn(); this }
+  def boff() = { t.beamsOff(); this }
+  def show() = { t.visible(); this }
+  def hide() = { t.invisible(); this }
   def speed(n: Any) = {
     delay(math.max(math.min(Kmath.map(toD(n), 1, 10, 1000, 0), 1000), 0).toInt)
   }

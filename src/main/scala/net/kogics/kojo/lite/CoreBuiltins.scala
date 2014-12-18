@@ -139,13 +139,14 @@ trait CoreBuiltins extends Rationals {
   // For younger kids
   def clr() = { TSCanvas.clear(); TSCanvas.turtle0.invisible() }
   def nt: LoTurtle = nt(0, 0)
-  def nt(x: Double = 0, y: Double = 0) = {
-    new LoTurtle(TSCanvas.newTurtle(x, y, "/images/blue-turtle32.png"))
+  def nt(x: Double = 0, y: Double = 0): LoTurtle = {
+    nt(TSCanvas.newTurtle(x, y, "/images/blue-turtle32.png"))
   }
+  def nt(t: core.Turtle): LoTurtle = new LoTurtle(t)
   def rpt(n: Int)(code: => LoTurtle): LoTurtle = {
     var i = 0
     var ret: LoTurtle = null
-    while(i < n) {
+    while (i < n) {
       ret = code
       i += 1
     }
