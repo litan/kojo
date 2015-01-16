@@ -416,7 +416,7 @@ class CodeExecutionSupport(
     }
 
     def reportWorksheetOutput(result: String, lineNum: Int) {
-      appendToCodePaneLine(lineNum, result.trim.replaceAllLiterally("\n", " | "))
+      appendToCodePaneLine(lineNum, result.trim.replaceAll("\r?\n", " | "))
     }
 
     private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
