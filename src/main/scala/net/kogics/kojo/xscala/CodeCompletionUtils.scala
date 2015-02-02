@@ -204,7 +204,7 @@ object CodeCompletionUtils {
     "Slider" -> "Slider(${min}, ${max}, ${current}, ${tickSpacing})",
     "RowPanel" -> "RowPanel(\n      ${widget},\n      w\n)",
     "ColPanel" -> "ColPanel(\n      ${widget},\n      w\n)",
-    "repeatFor" -> "repeatFor(${seq}) { e =>\n    ${cursor}\n}",
+    "repeatFor" -> "repeatFor(${seq}) { ${e} =>\n    ${cursor}\n}",
     "randomFrom" -> "randomFrom(${seq})",
     "image" -> "image(${height}, ${width})",
     "PicShape.image" -> "", // use default via reflection
