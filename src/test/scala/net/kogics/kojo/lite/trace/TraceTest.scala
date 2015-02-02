@@ -158,8 +158,7 @@ area
     startEvents.size should be(10)
     endEvents.size should be(1)
 
-    assert(endEvents(0).pret === "625.0")
-
+    endEvents(0).pret.toDouble should be(625.0 +- 0.01)
   }
 
   @Test
