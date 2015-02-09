@@ -83,13 +83,6 @@ object CodeCompletionUtils {
     "setOutputTextFontSize" -> "setOutputTextFontSize(${size})",
     "onKeyPress" -> "onKeyPress { k =>\n    k match {\n        case Kc.VK_RIGHT => ${cursor}\n        case _ => \n    }\n}",
     "onKeyRelease" -> "onKeyRelease { k =>\n    k match {\n        case Kc.VK_RIGHT => ${cursor}\n        case _ => \n    }\n}",
-    "onMousePress" -> "onMousePress { (x, y) =>\n    ${cursor}\n}",
-    "onMouseRelease" -> "onMouseRelease { (x, y) =>\n    ${cursor}\n}",
-    "onMouseClick" -> "onMouseClick { (x, y) =>\n    ${cursor}\n}",
-    "onMouseDrag" -> "onMouseDrag { (x, y) =>\n    ${cursor}\n}",
-    "onMouseMove" -> "onMouseMove { (x, y) =>\n    ${cursor}\n}",
-    "onMouseEnter" -> "onMouseEnter { (x, y) =>\n    ${cursor}\n}",
-    "onMouseExit" -> "onMouseExit { (x, y) =>\n    ${cursor}\n}",
     "stAddLinkHandler" -> "stAddLinkHandler(${handlerName}, ${story}) {d: ${argType} =>\n    ${cursor}\n}",
     "stAddLinkEnterHandler" -> "stAddLinkHandler(${handlerName}, ${story}) {d: ${argType} =>\n    ${cursor}\n}",
     "stAddLinkExitHandler" -> "stAddLinkHandler(${handlerName}, ${story}) {d: ${argType} =>\n    ${cursor}\n}",
@@ -223,7 +216,18 @@ object CodeCompletionUtils {
     "wipe" -> "wipe()",
     "morph" -> "morph { polyLines =>\n    ${cursor}\n}",
     "PolyLine" -> "PolyLine(List(Point2D(${x1}, ${y1}), Point2D(${x2}, ${y2})))",
-    "dot" -> "dot(${diameter})"
+    "dot" -> "dot(${diameter})",
+    
+    // Picture Completions
+    "InputAware.onMousePress" -> "onMousePress { (x, y) =>\n    ${cursor}\n}",
+    "InputAware.onMouseRelease" -> "onMouseRelease { (x, y) =>\n    ${cursor}\n}",
+    "InputAware.onMouseClick" -> "onMouseClick { (x, y) =>\n    ${cursor}\n}",
+    "InputAware.onMouseDrag" -> "onMouseDrag { (x, y) =>\n    ${cursor}\n}",
+    "InputAware.onMouseMove" -> "onMouseMove { (x, y) =>\n    ${cursor}\n}",
+    "InputAware.onMouseEnter" -> "onMouseEnter { (x, y) =>\n    ${cursor}\n}",
+    "InputAware.onMouseExit" -> "onMouseExit { (x, y) =>\n    ${cursor}\n}",
+    "Picture.act" -> "act { self => \n    ${cursor}\n}",
+    "CorePicOps2.react" -> "react { self => \n    ${cursor}\n}"
   ) 
 
   val MwMethodTemplates = Map(
