@@ -160,8 +160,9 @@ def main(args: Array[String]) {
       !reporter.hasErrors
     }
     catch {
-      case iae: IllegalArgumentException => runCtx.reportError(s"${Utils.exceptionMessage(iae)}\n"); false
-      case e: Throwable => throw e
+      case iae: IllegalArgumentException =>
+        runCtx.reportError(s"${Utils.exceptionMessage(iae)}\n"); false
+      case e: Throwable                  => throw e
     }
   }
 
@@ -758,9 +759,11 @@ that is not supported under Tracing.
           traceForward(me, step)
         }
       case "turn" =>
-        val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
-        turtle.turn(angle)
-        me.turtleTurn = turtle.lastTurn
+        if (localArgs.length == 1) {
+          val angle = stkfrm.getValue(localArgs(0)).toString.toDouble
+          turtle.turn(angle)
+          me.turtleTurn = turtle.lastTurn
+        }
       case "towards" =>
         if (localArgs.length == 2) {
           val x = stkfrm.getValue(localArgs(0)).asInstanceOf[DoubleValue].value
