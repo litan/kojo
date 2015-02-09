@@ -639,9 +639,10 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private def coords(pl: PolyLine) = pl.points.map { pt => new Coordinate(pt.x, pt.y) }
 
   def perimeter = Utils.runInSwingThreadAndWait {
-    penPaths.foldLeft(0.0) { (peri, pl) =>
+    val p = penPaths.foldLeft(0.0) { (peri, pl) =>
       peri + { if (pl.size < 2) 0 else Gf.createLineString(coords(pl).toArray).getLength }
     }
+    Utils.roundDouble(p, 2)
   }
 
   def area = Utils.runInSwingThreadAndWait {
@@ -657,9 +658,10 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       }
     }
 
-    penPaths.foldLeft(0.0) { (area, pl) =>
+    val a = penPaths.foldLeft(0.0) { (area, pl) =>
       area + polyArea(pl)
     }
+    Utils.roundDouble(a, 2)
   }
 
   def dumpState() {
