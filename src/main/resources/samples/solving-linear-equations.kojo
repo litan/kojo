@@ -210,7 +210,7 @@ val story = Story(pages: _*)
 stClear()
 stPlayStory(story)
 
-import swing._
+import swing.{ TextField => STextField, Button => SButton, _ }
 import eu.flierl.grouppanel._
 
 trait Question {
@@ -234,8 +234,7 @@ class EqnQuestion extends Question {
     def genc: Int = {
         val nc = numstart + random(numLimit)
         def eql2a = {
-            if (fracs) nc == a/ad else nc == a
-            
+            if (fracs) nc == a / ad else nc == a
         }
         if (nc == -1 || nc == 1 || eql2a) genc else nc
     }
@@ -447,7 +446,7 @@ lazy val ui = new GroupPanel {
         editable = false
     }
 
-    val answerf = new TextField(30) {
+    val answerf = new STextField(30) {
         border = borderWithMargin(10)
         editable = true
         horizontalAlignment = Alignment.Center
@@ -455,14 +454,14 @@ lazy val ui = new GroupPanel {
         background = white
     }
 
-    val nextb = new Button() {
+    val nextb = new SButton() {
         font = kfont
         action = Action("Next Question") {
             nextQuestion()
         }
     }
 
-    val explainb = new Button() {
+    val explainb = new SButton() {
         font = kfont
         action = Action("Explain") {
             explainAnswer()
@@ -470,14 +469,14 @@ lazy val ui = new GroupPanel {
         enabled = false
     }
 
-    val checkb = new Button() {
+    val checkb = new SButton() {
         font = kfont
         action = Action("Check Answer") {
             checkAnswer()
         }
     }
 
-    val resultf = new TextField(30) {
+    val resultf = new STextField(30) {
         border = Swing.LineBorder(color(255, 255, 255))
         editable = false
         horizontalAlignment = Alignment.Center
@@ -509,4 +508,3 @@ lazy val ui = new GroupPanel {
         Parallel(checkb, explainb, nextb)
     )
 }
-
