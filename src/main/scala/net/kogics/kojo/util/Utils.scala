@@ -697,6 +697,10 @@ object Utils {
   def exceptionMessage(t: Throwable): String = {
     if (t == null) "" else s"${t.getMessage()}; ${exceptionMessage(t.getCause)}"
   }
+  
+  def roundDouble(d: Double, n: Int) = {
+    s"%.${n}f".format(d).toDouble
+  }
 
   case class RunCode(code: () => Unit)
   import scala.actors._
