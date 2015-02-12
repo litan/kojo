@@ -191,6 +191,7 @@ object CodeCompletionUtils {
     "filter" -> "filter { n => \n    ${cursor}\n}",
     "Label" -> "Label(${label})",
     "TextField" -> "TextField(${default})",
+    "TextArea" -> "TextArea(${initialContent})",
     "DropDown" -> "DropDown(${elems})",
     "Button" -> "Button(${label}) {\n    ${cursor}\n}",
     "ToggleButton" -> "ToggleButton(${label}) { on =>\n    ${cursor}\n}",

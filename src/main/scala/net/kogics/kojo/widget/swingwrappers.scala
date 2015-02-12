@@ -12,6 +12,7 @@ import javax.swing.JComponent
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JSlider
+import javax.swing.JTextArea
 import javax.swing.JTextField
 import javax.swing.JToggleButton
 
@@ -44,6 +45,10 @@ case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
 case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField(6) {
   setText(default.toString)
   def value = reader.read(getText)
+}
+case class TextArea(default: String) extends JTextArea {
+  setText(default)
+  def value = getText
 }
 case class Label(label: String) extends JLabel(label)
 case class Button(label: String)(al: => Unit) extends JButton(label) {
