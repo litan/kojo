@@ -129,7 +129,7 @@ trait AppMenu {
       }
     }))
 
-    menuBar.add(fileMenu)
+    add(menuBar, fileMenu)
 
     def menuItemFor(label: String, file: String) = {
       val item = new JMenuItem(label)
@@ -240,7 +240,7 @@ trait AppMenu {
     mgeomMenu.add(menuItemFor(Utils.loadString("S_AnglesAnimation"), "angles.kojo"))
     samplesMenu.add(mgeomMenu)
 
-    menuBar.add(samplesMenu)
+    add(menuBar, samplesMenu)
 
     val showcaseMenu = new JMenu(Utils.loadString("S_Showcase"))
     showcaseMenu.setMnemonic('c')
@@ -254,7 +254,7 @@ trait AppMenu {
     showcaseMenu.add(menuItemFor(Utils.loadString("S_LightedStar"), "lighted-star.kojo"))
     showcaseMenu.add(menuItemFor(Utils.loadString("S_Mandel"), "mandelbrot.kojo"))
 
-    menuBar.add(showcaseMenu)
+    add(menuBar, showcaseMenu)
 
     val windowMenu = new JMenu(Utils.loadString("S_Window"))
     windowMenu.setMnemonic('W')
@@ -336,16 +336,16 @@ trait AppMenu {
       def popupMenuCanceled(e: PopupMenuEvent) {}
     })
 
-    menuBar.add(windowMenu)
+    add(menuBar, windowMenu)
 
-    menuBar.add(LangMenuFactory.createLangMenu())
+    add(menuBar, LangMenuFactory.createLangMenu())
 
     val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
     toolsMenu.setMnemonic('T')
     toolsMenu.add(menuItemNELFor(Utils.loadString("S_InstructionPalette"), "instruction-palette.kojo"))
     toolsMenu.add(menuItemFor(Utils.loadString("S_TurtleController"), "turtle-controller.kojo"))
     toolsMenu.add(menuItemFor(Utils.loadString("S_ArduinoProgramming"), "arduino-prog.kojo"))
-    menuBar.add(toolsMenu)
+    add(menuBar, toolsMenu)
 
     val helpMenu = new JMenu(Utils.loadString("S_Help"))
     helpMenu.setMnemonic('H')
@@ -399,6 +399,7 @@ trait AppMenu {
                <li>Eric Zoerner</li>
                <li>Jacco Huysmans</li>
                <li>Christoph Knabe</li>
+               <li>Vipul Pandey</li>
               </ul>
               <strong>Kojo</strong> is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
               Kojo runs on the Java Platform.<br/><br/>
@@ -453,7 +454,12 @@ trait AppMenu {
     about.setIcon(Utils.loadIcon("/images/extra/about.gif"))
     helpMenu.add(about)
 
-    menuBar.add(helpMenu)
+    add(menuBar, helpMenu)
     menuBar
+  }
+
+  def add(menuBar: JMenuBar, m: JMenu) {
+    kojoCtx.menuReady(m)
+    menuBar.add(m)
   }
 }

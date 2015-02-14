@@ -1,7 +1,11 @@
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.util.Utils
+import java.awt.Font
 import java.util.prefs.Preferences
+
+import javax.swing.JMenu
+import javax.swing.UIManager
+
 import net.kogics.kojo.lite.CoreBuiltins
 
 object LangInit {
@@ -14,6 +18,28 @@ object LangInit {
     }
 
     userLanguage
+  }
+
+  //   lazy val fontForHindi = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/i18n/mangal.ttf")).deriveFont(18f)
+  lazy val fontForHindi = new Font(Font.SANS_SERIF, Font.PLAIN, 15)
+  def lookAndFeelReady() {
+    System.getProperty("user.language") match {
+      case "hi" =>
+        val defaults = UIManager.getLookAndFeelDefaults
+        val keys = Seq("defaultFont", "Button.font", "Label.font", "MenuBar.font", "Menu.font", "MenuItem.font")
+        keys.foreach { key =>
+          defaults.put(key, fontForHindi);
+        }
+      case _ =>
+    }
+  }
+
+  def menuReady(m: JMenu) {
+    System.getProperty("user.language") match {
+      case "hi" =>
+        m.setFont(fontForHindi)
+      case _ =>
+    }
   }
 
   def initPhase2(b: CoreBuiltins) {
