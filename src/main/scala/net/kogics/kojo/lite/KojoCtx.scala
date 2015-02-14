@@ -26,6 +26,7 @@ import java.util.prefs.Preferences
 
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
+import javax.swing.JMenu
 
 import net.kogics.kojo.action.CloseFile
 import net.kogics.kojo.core.DelegatingSpriteListener
@@ -63,6 +64,9 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def setActivityListener(l: SpriteListener) {
     activityListener.setRealListener(l)
   }
+
+  def lookAndFeelReady() = LangInit.lookAndFeelReady()
+  def menuReady(m: JMenu) = LangInit.menuReady(m)
 
   type ActionLike = FullScreenBaseAction
   def fullScreenCanvasAction(): ActionLike = FullScreenCanvasAction(topcs.dch, this)

@@ -81,6 +81,8 @@ object Main extends AppMenu with ScriptLoader { main =>
         UIManager.setLookAndFeel(nim.getClassName)
       }
 
+      kojoCtx.lookAndFeelReady()
+
       val spriteCanvas = new SpriteCanvas(kojoCtx)
       val Tw = new TurtleWorldAPI(spriteCanvas.turtle0)
       val TSCanvas = new DrawingCanvasAPI(spriteCanvas)
