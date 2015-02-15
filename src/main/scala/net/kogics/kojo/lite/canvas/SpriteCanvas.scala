@@ -199,7 +199,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
         else if (prec0 > 18) 18
         else prec0
       }
-      val statusStr = "Mouse Position: (%%.%df, %%.%df)" format (prec, prec)
+      val statusStr = s"Mouse Position: (%.${prec}f, %.${prec}f)"
       kojoCtx.showStatusText(statusStr format (pos.getX, pos.getY));
     }
 

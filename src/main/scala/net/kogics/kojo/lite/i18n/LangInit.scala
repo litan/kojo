@@ -5,6 +5,7 @@ import java.util.prefs.Preferences
 
 import javax.swing.JMenu
 import javax.swing.UIManager
+import javax.swing.plaf.FontUIResource
 
 import net.kogics.kojo.lite.CoreBuiltins
 
@@ -20,16 +21,14 @@ object LangInit {
     userLanguage
   }
 
-  //   lazy val fontForHindi = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/i18n/mangal.ttf")).deriveFont(18f)
-  lazy val fontForHindi = new Font(Font.SANS_SERIF, Font.PLAIN, 15)
+  lazy val fontForHindi = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/i18n/gargi.ttf")).deriveFont(Font.PLAIN, 16f)
+  //  lazy val fontForHindi = new Font(Font.SANS_SERIF, Font.PLAIN, 18)
   def lookAndFeelReady() {
     System.getProperty("user.language") match {
       case "hi" =>
         val defaults = UIManager.getLookAndFeelDefaults
-        val keys = Seq("defaultFont", "Button.font", "Label.font", "MenuBar.font", "Menu.font", "MenuItem.font")
-        keys.foreach { key =>
-          defaults.put(key, fontForHindi);
-        }
+        val keys = Seq("defaultFont")
+        keys.foreach { defaults.put(_, new FontUIResource(fontForHindi)) }
       case _ =>
     }
   }
