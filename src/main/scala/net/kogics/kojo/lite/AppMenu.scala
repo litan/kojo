@@ -38,7 +38,7 @@ trait AppMenu {
   def menuBar = {
     val menuBar = new JMenuBar
 
-    val fileMenu = new JMenu(Utils.loadString("S_File"))
+    val fileMenu = newJMenu(Utils.loadString("S_File"))
     fileMenu.setMnemonic('F')
 
     val openWeb = new JMenuItem(Utils.loadString("S_OpenFromWeb"))
@@ -129,7 +129,7 @@ trait AppMenu {
       }
     }))
 
-    add(menuBar, fileMenu)
+    menuBar.add(fileMenu)
 
     def menuItemFor(label: String, file: String) = {
       val item = new JMenuItem(label)
@@ -160,23 +160,23 @@ trait AppMenu {
       })
       item
     }
-    val samplesMenu = new JMenu(Utils.loadString("S_Samples"))
+    val samplesMenu = newJMenu(Utils.loadString("S_Samples"))
     samplesMenu.setMnemonic('S')
 
-    val simpleMenu = new JMenu(Utils.loadString("S_GetStart"))
+    val simpleMenu = newJMenu(Utils.loadString("S_GetStart"))
     simpleMenu.add(menuItemFor(Utils.loadString("S_Square"), "square.kojo"))
     simpleMenu.add(menuItemFor(Utils.loadString("S_ColorsShapes"), "shapes-cols.kojo"))
     simpleMenu.add(menuItemFor(Utils.loadString("S_SquarePattern"), "square-pattern.kojo"))
     samplesMenu.add(simpleMenu)
 
-    val drawingsMenu = new JMenu(Utils.loadString("S_Intermediate"))
+    val drawingsMenu = newJMenu(Utils.loadString("S_Intermediate"))
     drawingsMenu.add(menuItemFor(Utils.loadString("S_PentagonPattern"), "penta-pattern.kojo"))
     drawingsMenu.add(menuItemFor(Utils.loadString("S_Circles"), "circles.kojo"))
     drawingsMenu.add(menuItemFor(Utils.loadString("S_SpiralSquareTiles"), "spiral-square-tiles.kojo"))
     drawingsMenu.add(menuItemFor(Utils.loadString("S_SpiralHexagonalTiles"), "spiral-hexagon-tiles.kojo"))
     samplesMenu.add(drawingsMenu)
 
-    val multiMenu = new JMenu(Utils.loadString("S_MultipleTurtles"))
+    val multiMenu = newJMenu(Utils.loadString("S_MultipleTurtles"))
     multiMenu.add(menuItemFor(Utils.loadString("S_SyncSquares"), "synchronized-squares.kojo"))
     multiMenu.add(menuItemFor(Utils.loadString("S_SyncSquares2"), "synchronized-squares2.kojo"))
     multiMenu.add(menuItemFor(Utils.loadString("S_Face"), "face-multi.kojo"))
@@ -187,7 +187,7 @@ trait AppMenu {
     multiMenu.add(menuItemFor(Utils.loadString("S_Rangoli"), "rangoli.kojo"))
     samplesMenu.add(multiMenu)
 
-    val fractalsMenu = new JMenu(Utils.loadString("S_Fractals"))
+    val fractalsMenu = newJMenu(Utils.loadString("S_Fractals"))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_Tree"), Utils.loadString("tree0.kojo")))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_AnotherTree"), "tree1.kojo"))
     fractalsMenu.add(menuItemFor(Utils.loadString("S_FibonacciTree"), "fib-tree.kojo"))
@@ -196,53 +196,53 @@ trait AppMenu {
     fractalsMenu.add(menuItemFor(Utils.loadString("S_LSystems"), "l-systems.kojo"))
     samplesMenu.add(fractalsMenu)
 
-    val imageMenu = new JMenu(Utils.loadString("S_ImageLayout"))
+    val imageMenu = newJMenu(Utils.loadString("S_ImageLayout"))
     imageMenu.add(menuItemFor(Utils.loadString("S_ImageCollage"), "image-collage.kojo"))
     imageMenu.add(menuItemFor(Utils.loadString("S_ImageRightSplit"), "image-right-split.kojo"))
     samplesMenu.add(imageMenu)
 
-    val numProgMenu = new JMenu(Utils.loadString("S_Numbers"))
+    val numProgMenu = newJMenu(Utils.loadString("S_Numbers"))
     numProgMenu.add(menuItemFor(Utils.loadString("S_Primes"), "primes.kojo"))
     numProgMenu.add(menuItemFor(Utils.loadString("S_PrimeFactors"), "prime-factors.kojo"))
     samplesMenu.add(numProgMenu)
 
-    val physicsMenu = new JMenu(Utils.loadString("S_Physics"))
+    val physicsMenu = newJMenu(Utils.loadString("S_Physics"))
     physicsMenu.add(menuItemFor(Utils.loadString("S_Kinematics"), "physics-uvats.kojo"))
     physicsMenu.add(menuItemFor(Utils.loadString("S_NewtonsSecond"), "physics-fma.kojo"))
     samplesMenu.add(physicsMenu)
 
-    val animGameMenu = new JMenu(Utils.loadString("S_AnimationsGames"))
+    val animGameMenu = newJMenu(Utils.loadString("S_AnimationsGames"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_TangramSkier"), "tangram-skier.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_Pong"), "pong.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_MemoryCards"), "memory-cards.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_Hunted"), "hunted.kojo"))
     samplesMenu.add(animGameMenu)
 
-    val widgetsMenu = new JMenu(Utils.loadString("S_Widgets"))
+    val widgetsMenu = newJMenu(Utils.loadString("S_Widgets"))
     widgetsMenu.add(menuItemFor(Utils.loadString("S_WidgetsInCanvas"), "widgets-canvas.kojo"))
     samplesMenu.add(widgetsMenu)
 
-    val musicMenu = new JMenu(Utils.loadString("S_Music"))
+    val musicMenu = newJMenu(Utils.loadString("S_Music"))
     musicMenu.add(menuItemFor(Utils.loadString("S_SomeNotes"), "some-notes.kojo"))
     musicMenu.add(menuItemFor(Utils.loadString("S_Tune1"), "tune1.kojo"))
     musicMenu.add(menuItemFor(Utils.loadString("S_Tune2"), "tune2.kojo"))
     samplesMenu.add(musicMenu)
 
-    val genProgMenu = new JMenu(Utils.loadString("S_GeneralProgramming"))
+    val genProgMenu = newJMenu(Utils.loadString("S_GeneralProgramming"))
     genProgMenu.add(menuItemFor(Utils.loadString("S_InputOutput"), "read-vector-mean.kojo"))
     genProgMenu.add(menuItemFor(Utils.loadString("S_InputGraphics"), "read-vector-bargraph.kojo"))
     samplesMenu.add(genProgMenu)
 
     samplesMenu.addSeparator()
 
-    val mgeomMenu = new JMenu(Utils.loadString("S_MathActivities"))
+    val mgeomMenu = newJMenu(Utils.loadString("S_MathActivities"))
     mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
     mgeomMenu.add(menuItemFor(Utils.loadString("S_AnglesAnimation"), "angles.kojo"))
     samplesMenu.add(mgeomMenu)
 
-    add(menuBar, samplesMenu)
+    menuBar.add(samplesMenu)
 
-    val showcaseMenu = new JMenu(Utils.loadString("S_Showcase"))
+    val showcaseMenu = newJMenu(Utils.loadString("S_Showcase"))
     showcaseMenu.setMnemonic('c')
     showcaseMenu.add(menuItemFor(Utils.loadString("S_Eye"), "eye.kojo"))
     showcaseMenu.add(menuItemFor(Utils.loadString("S_EyeEffects"), "eye-effects.kojo"))
@@ -254,9 +254,9 @@ trait AppMenu {
     showcaseMenu.add(menuItemFor(Utils.loadString("S_LightedStar"), "lighted-star.kojo"))
     showcaseMenu.add(menuItemFor(Utils.loadString("S_Mandel"), "mandelbrot.kojo"))
 
-    add(menuBar, showcaseMenu)
+    menuBar.add(showcaseMenu)
 
-    val windowMenu = new JMenu(Utils.loadString("S_Window"))
+    val windowMenu = newJMenu(Utils.loadString("S_Window"))
     windowMenu.setMnemonic('W')
 
     val resetWindows = new JMenuItem(Utils.loadString("S_DefaultPerspective"))
@@ -336,18 +336,20 @@ trait AppMenu {
       def popupMenuCanceled(e: PopupMenuEvent) {}
     })
 
-    add(menuBar, windowMenu)
+    menuBar.add(windowMenu)
 
-    add(menuBar, LangMenuFactory.createLangMenu())
+    val langMenu = LangMenuFactory.createLangMenu()
+    kojoCtx.menuReady(langMenu)
+    menuBar.add(langMenu)
 
-    val toolsMenu = new JMenu(Utils.loadString("S_Tools"))
+    val toolsMenu = newJMenu(Utils.loadString("S_Tools"))
     toolsMenu.setMnemonic('T')
     toolsMenu.add(menuItemNELFor(Utils.loadString("S_InstructionPalette"), "instruction-palette.kojo"))
     toolsMenu.add(menuItemFor(Utils.loadString("S_TurtleController"), "turtle-controller.kojo"))
     toolsMenu.add(menuItemFor(Utils.loadString("S_ArduinoProgramming"), "arduino-prog.kojo"))
-    add(menuBar, toolsMenu)
+    menuBar.add(toolsMenu)
 
-    val helpMenu = new JMenu(Utils.loadString("S_Help"))
+    val helpMenu = newJMenu(Utils.loadString("S_Help"))
     helpMenu.setMnemonic('H')
 
     helpMenu.add(menuItemFor(Utils.loadString("S_KojoOverview"), "kojo-overview.kojo"))
@@ -454,12 +456,14 @@ trait AppMenu {
     about.setIcon(Utils.loadIcon("/images/extra/about.gif"))
     helpMenu.add(about)
 
-    add(menuBar, helpMenu)
+    menuBar.add(helpMenu)
     menuBar
   }
 
-  def add(menuBar: JMenuBar, m: JMenu) {
+  def newJMenu(s: String ) = {
+    val m = new JMenu(s)
     kojoCtx.menuReady(m)
-    menuBar.add(m)
+    m
   }
+  
 }
