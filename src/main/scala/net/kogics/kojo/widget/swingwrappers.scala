@@ -5,6 +5,7 @@ import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 
+import javax.swing.BorderFactory
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JComboBox
@@ -45,12 +46,27 @@ case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
 case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField(6) {
   setText(default.toString)
   def value = reader.read(getText)
+  def value_=(t: T) { setText(t.toString) }
+  def onEnter(oe: T => Unit) {
+    addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        oe(value)
+      }
+    })
+  }
 }
 case class TextArea(default: String) extends JTextArea {
   setText(default)
   def value = getText
 }
 case class Label(label: String) extends JLabel(label)
+case class DynamicLabel(cols: Int) extends JTextArea {
+  setText("")
+  setColumns(cols)
+  setRows(1)
+  setBorder(BorderFactory.createEmptyBorder)
+  def value = getText
+}
 case class Button(label: String)(al: => Unit) extends JButton(label) {
   addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
