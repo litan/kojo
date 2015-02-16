@@ -469,6 +469,7 @@ Here's a partial list of the available commands:
   type TextField[A] = widget.TextField[A]
   type TextArea = widget.TextArea
   type Label = widget.Label
+  type DynamicLabel = widget.DynamicLabel
   type Button = widget.Button
   type ToggleButton = widget.ToggleButton
   type DropDown[A] = widget.DropDown[A]
@@ -478,6 +479,7 @@ Here's a partial list of the available commands:
   val TextField = widget.TextField
   val TextArea = widget.TextArea
   val Label = widget.Label
+  val DynamicLabel = widget.DynamicLabel
   val Button = widget.Button
   val ToggleButton = widget.ToggleButton
   val DropDown = widget.DropDown
