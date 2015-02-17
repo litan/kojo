@@ -7,6 +7,7 @@ import java.awt.event.ActionListener
 
 import javax.swing.BorderFactory
 import javax.swing.BoxLayout
+import javax.swing.DefaultComboBoxModel
 import javax.swing.JButton
 import javax.swing.JComboBox
 import javax.swing.JComponent
@@ -18,6 +19,7 @@ import javax.swing.JTextField
 import javax.swing.JToggleButton
 
 import net.kogics.kojo.util.Read
+import net.kogics.kojo.util.Utils
 
 //def borderWithMargin(m: Int) = {
 //    import javax.swing.border._
@@ -54,6 +56,9 @@ case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField
       }
     })
   }
+  def getFocus() = Utils.runInSwingThread {
+    requestFocusInWindow()
+  }
 }
 case class TextArea(default: String) extends JTextArea {
   setText(default)
@@ -82,9 +87,20 @@ case class ToggleButton(label: String)(al: Boolean => Unit) extends JToggleButto
   })
 }
 
-case class DropDown[T](options: T*)(implicit reader: Read[T]) extends JComboBox(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]) {
+case class DropDown[T](options: T*)(implicit reader: Read[T]) extends JComboBox {
   setEditable(false)
+  setOptions(options: _*)
   def value: T = reader.read(getSelectedItem.asInstanceOf[String])
+  def onSelection(os: T => Unit) {
+    addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        os(value)
+      }
+    })
+  }
+  def setOptions(options: T*) {
+    setModel(new DefaultComboBoxModel(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]))
+  }
 }
 
 case class Slider(min: Int, max: Int, curr: Int, spacing: Int) extends JSlider {
