@@ -531,7 +531,7 @@ object Utils {
   }
 
   def reportException(t: Throwable) {
-    println("Problem - " + t.getMessage)
+    println(s"Problem - ${t.toString} (see log for details)")
     Log.log(Level.SEVERE, "Problem", t)
   }
 
