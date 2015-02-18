@@ -22,6 +22,8 @@ import java.awt.Dimension
 import java.awt.Toolkit
 import java.awt.geom.Point2D
 import java.io.File
+import java.io.FileInputStream
+import java.util.Properties
 import java.util.prefs.Preferences
 
 import javax.swing.JCheckBoxMenuItem
@@ -59,6 +61,26 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   @volatile var screenDPI = Toolkit.getDefaultToolkit.getScreenResolution
   var statusBar: StatusBar = _
   Utils.kojoCtx = this
+
+  val kojoProps = new Properties
+  val propsFile = new File(Utils.userDir + File.separatorChar + ".kojo/lite/kojo.properties")
+  if (propsFile.exists()) {
+    val is = new FileInputStream(propsFile)
+    try {
+      kojoProps.load(is)
+    }
+    catch {
+      case t: Throwable =>
+    }
+    finally {
+      is.close()
+    }
+  }
+
+  def appProperty(key: String) = {
+    val ret = kojoProps.getProperty(key)
+    if (ret != null) Some(ret) else None
+  }
 
   val activityListener = new DelegatingSpriteListener
   def setActivityListener(l: SpriteListener) {

@@ -396,14 +396,21 @@ object Utils {
   def stripCR(str: String) = str.replaceAll("\r\n", "\n")
 
   lazy val messages = ResourceBundle.getBundle("net.kogics.kojo.lite.Bundle")
+  lazy val keyWithStrings = kojoCtx.appProperty("i18n.string.showkey") match {
+    case Some(value) => java.lang.Boolean.valueOf(value).booleanValue()
+    case None => false
+  }
+  def stringSuffix(key: String) = {
+    if (keyWithStrings) s"[$key]" else ""
+  }
   def loadString(key: String) = {
-    messages.getString(key)
+    messages.getString(key) concat stringSuffix(key)
   }
   def loadString(klass: Class[_], key: String) = {
-    messages.getString(key)
+    messages.getString(key) concat stringSuffix(key)
   }
   def loadString(klass: Class[_], key: String, args: AnyRef*) = {
-    messages.getString(key) format (args: _*)
+    (messages.getString(key) format (args: _*)) concat stringSuffix(key)
   }
 
   def filesInDir(dir: String, ext: String): List[String] = {
