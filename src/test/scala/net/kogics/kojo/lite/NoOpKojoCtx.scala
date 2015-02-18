@@ -95,6 +95,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def hideAppWaitCursor(): Unit = {}
   def picLine(p1: Point2D.Double, p2: Point2D.Double): Picture = null
   def repaintCanvas() {}
+  def appProperty(key: String): Option[String] = None
 
   var fps = 50
   var screenDPI = 72
