@@ -80,7 +80,7 @@ object LangMenuFactory {
     "nl" → "Nederlands (Dutch)",
     "eo" → "Esperanto (international)",
     "it" → "Italiano (Italian)",
-    "hi" → "हिंदी (Hindi) [Beta]"
+    "hi" → "हिंदी (Hindi)"
   )
 
   /** If the language code is not in this map, then the country defaults to same code as the language. */

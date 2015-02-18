@@ -402,6 +402,7 @@ trait AppMenu {
                <li>Jacco Huysmans</li>
                <li>Christoph Knabe</li>
                <li>Vipul Pandey</li>
+               <li>C. V. Krishna Kumar</li>
               </ul>
               <strong>Kojo</strong> is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
               Kojo runs on the Java Platform.<br/><br/>
@@ -425,6 +426,7 @@ trait AppMenu {
               <li>The OpenJDK Project (http://openjdk.java.net/) for Tracing support</li>
               <li>JHLabs image filters (http://www.jhlabs.com/ip/filters/) for Picture effects</li>
               <li>jSSC (http://code.google.com/p/java-simple-serial-connector/) for serial port communication</li>
+              <li>The Gargi font (http://savannah.nongnu.org/projects/gargi) for Devanagari support</li>
               </ul>
               </div>
               </body></html>
