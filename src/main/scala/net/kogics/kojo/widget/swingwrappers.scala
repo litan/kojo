@@ -48,7 +48,8 @@ case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
 case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField(6) {
   setText(default.toString)
   def value = reader.read(getText)
-  def value_=(t: T) { setText(t.toString) }
+  def value_=(t: T) { setValue(t) }
+  def setValue(t: T) { setText(t.toString) }
   def onEnter(oe: T => Unit) {
     addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
@@ -56,7 +57,7 @@ case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField
       }
     })
   }
-  def getFocus() = Utils.runInSwingThread {
+  def takeFocus() = Utils.runInSwingThread {
     requestFocusInWindow()
   }
 }
@@ -64,7 +65,18 @@ case class TextArea(default: String) extends JTextArea {
   setText(default)
   def value = getText
 }
-case class Label(label: String) extends JLabel(label)
+case class Label(label: String) extends JLabel(label) {
+  override def setText(t: String) {
+    super.setText(t)
+    getParent match {
+      case parent: JComponent =>
+        if (isShowing) {
+          parent.revalidate()
+        }
+      case _ =>
+    }
+  }
+}
 case class DynamicLabel(cols: Int) extends JTextArea {
   setText("")
   setColumns(cols)
@@ -87,9 +99,10 @@ case class ToggleButton(label: String)(al: Boolean => Unit) extends JToggleButto
   })
 }
 
-case class DropDown[T](options: T*)(implicit reader: Read[T]) extends JComboBox {
+case class DropDown[T](origOptions: T*)(implicit reader: Read[T]) extends JComboBox {
   setEditable(false)
-  setOptions(options: _*)
+  setOptions(origOptions: _*)
+  var options = origOptions
   def value: T = reader.read(getSelectedItem.asInstanceOf[String])
   def onSelection(os: T => Unit) {
     addActionListener(new ActionListener {
@@ -98,7 +111,8 @@ case class DropDown[T](options: T*)(implicit reader: Read[T]) extends JComboBox 
       }
     })
   }
-  def setOptions(options: T*) {
+  def setOptions(noptions: T*) {
+    options = noptions
     setModel(new DefaultComboBoxModel(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]))
   }
 }
