@@ -173,7 +173,6 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
     if (result == IR.Success) {
       if (Thread.interrupted) {
-        listener.message("Thread interrupted")
         IR.Error
       }
       else {
@@ -195,7 +194,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
             }
             else {
               //              listener.message(Utils.stackTraceAsString(realT))
-              listener.message(realT.getMessage)
+              Utils.reportException(realT)
             }
             IR.Error
         }
