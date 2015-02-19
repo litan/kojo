@@ -398,7 +398,7 @@ object Utils {
   lazy val messages = ResourceBundle.getBundle("net.kogics.kojo.lite.Bundle")
   lazy val keyWithStrings = kojoCtx.appProperty("i18n.string.showkey") match {
     case Some(value) => java.lang.Boolean.valueOf(value).booleanValue()
-    case None => false
+    case None        => false
   }
   def stringSuffix(key: String) = {
     if (keyWithStrings) s"[$key]" else ""
@@ -704,9 +704,12 @@ object Utils {
   def exceptionMessage(t: Throwable): String = {
     if (t == null) "" else s"${t.getMessage()}; ${exceptionMessage(t.getCause)}"
   }
-  
+
   def roundDouble(d: Double, n: Int) = {
-    s"%.${n}f".format(d).toDouble
+    if (needsSanitizing)
+      s"%.${n}f".format(d).replaceAllLiterally(decimalSep, ".").toDouble
+    else
+      s"%.${n}f".format(d).toDouble
   }
 
   case class RunCode(code: () => Unit)
