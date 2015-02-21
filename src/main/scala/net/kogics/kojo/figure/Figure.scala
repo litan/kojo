@@ -176,8 +176,17 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     inRunner = true
   }
 
+  def handleStartFn() {
+    if (figAnimations.isEmpty && startFn.isDefined) {
+      startFn.get.apply()
+    }
+  }
+
   def onRunDone() = Utils.runLaterInSwingThread {
     inRunner = false
+    if (!pendingAnimations.isEmpty) {
+      handleStartFn()
+    }
     pendingAnimations foreach { figAnimation =>
       figAnimations = figAnimation :: figAnimations
       canvas.animateActivity(figAnimation)
@@ -222,14 +231,11 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         }
       })
 
-      if (figAnimations.isEmpty && startFn.isDefined) {
-        startFn.get.apply()
-      }
-
       if (inRunner) {
         pendingAnimations = pendingAnimations :+ figAnimation
       }
       else {
+        handleStartFn()
         figAnimations = figAnimation :: figAnimations
         canvas.animateActivity(figAnimation)
       }
