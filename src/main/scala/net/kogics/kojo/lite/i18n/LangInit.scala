@@ -49,6 +49,8 @@ object LangInit {
         val ct = PlInit.init(b)
       case "nl" =>
         val nl = NlInit.init(b)
+      case "de" =>
+        val de = DeInit.init(b)
       case _ =>
     }
   }
