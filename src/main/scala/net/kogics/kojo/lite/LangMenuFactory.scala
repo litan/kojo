@@ -80,7 +80,7 @@ object LangMenuFactory {
     "nl" → "Nederlands (Dutch)",
     "eo" → "Esperanto (international)",
     "it" → "Italiano (Italian)",
-    "hi" → "हिंदी (Hindi) [Beta]",
+    "hi" → "हिंदी (Hindi)",
     "de" → "Deutsch (German)"
   )
 

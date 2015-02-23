@@ -49,8 +49,16 @@ case class CompletionInfo(
   }
 
   def templateParams: String = {
+    def isFunc(s: String) = {
+      s.contains("=>")
+    }
     if (paramNames.size == 0 && returnType == "Unit") {
       "()"
+    }
+    else if (paramNames.size == 1 && paramNames(0).size == 1 && isFunc(paramTypes(0)(0))) {
+      """ { ${x} =>
+    ${???}    
+}"""
     }
     else {
       val contextInfo = for {
