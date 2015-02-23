@@ -31,3 +31,4 @@ security/
 lib/javaws.jar
 lib/deploy.jar
 .tmpBin
+knabe/
