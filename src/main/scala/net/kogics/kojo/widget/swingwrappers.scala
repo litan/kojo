@@ -4,6 +4,8 @@ import java.awt.Color
 import java.awt.FlowLayout
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.HierarchyEvent
+import java.awt.event.HierarchyListener
 
 import javax.swing.BorderFactory
 import javax.swing.BoxLayout
@@ -33,6 +35,26 @@ trait PreferredMax { self: JComponent =>
   override def getMaximumSize = getPreferredSize
 }
 
+trait Focusable { self: JComponent =>
+  def takeFocus() = {
+    if (isShowing) Utils.runLaterInSwingThread {
+      requestFocusInWindow()
+    }
+    else {
+      lazy val hl: HierarchyListener = new HierarchyListener {
+        def hierarchyChanged(e: HierarchyEvent) {
+          if ((e.getChangeFlags & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing) {
+            Utils.schedule(0.1) { requestFocusInWindow() }
+            Utils.schedule(0.9) { requestFocusInWindow() }
+            removeHierarchyListener(hl)
+          }
+        }
+      }
+      addHierarchyListener(hl)
+    }
+  }
+}
+
 case class RowPanel(comps: JComponent*) extends JPanel {
   setBackground(Color.white)
   setLayout(new FlowLayout(FlowLayout.LEFT))
@@ -45,7 +67,7 @@ case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
   comps.foreach { add(_) }
 }
 
-case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField(6) {
+case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField(6) with Focusable {
   setText(default.toString)
   def value = reader.read(getText)
   def value_=(t: T) { setValue(t) }
@@ -57,11 +79,8 @@ case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField
       }
     })
   }
-  def takeFocus() = Utils.runInSwingThread {
-    requestFocusInWindow()
-  }
 }
-case class TextArea(default: String) extends JTextArea {
+case class TextArea(default: String) extends JTextArea with Focusable {
   setText(default)
   def value = getText
 }
