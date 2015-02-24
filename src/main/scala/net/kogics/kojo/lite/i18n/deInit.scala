@@ -22,6 +22,7 @@ package net.kogics.kojo.lite.i18n
 
 import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.xscala.RepeatCommands
 
 object GermanAPI {
   import net.kogics.kojo.core.Turtle
@@ -63,7 +64,7 @@ object GermanAPI {
     //hem()
     def heim() = englishTurtle.home()
     //mot(x,y)
-    def richtung(x: Double, y: Double) = englishTurtle.towards(x, y)
+    def schauen(x: Double, y: Double) = englishTurtle.towards(x, y)
     //sättVinkel(vinkel)
     def winkel(grad: Double) = englishTurtle.setHeading(grad)
     //vinkel
@@ -157,8 +158,8 @@ object GermanAPI {
   //bakgrund(färg)
   def grundfarbe(farbe: Color) = builtins.setBackground(farbe)
   //bakgrund2(färg1, färg2)
-  def grundfarbeSN(südfarbe: Color, nordfarbe: Color) = builtins.TSCanvas.setBackgroundV(südfarbe, nordfarbe)
-  def grundfarbeWO(westfarbe: Color, ostfarbe: Color) = builtins.TSCanvas.setBackgroundV(westfarbe, ostfarbe)
+  def grundfarbeUO(farbeUnten: Color, farbeOben: Color) = builtins.TSCanvas.setBackgroundV(farbeUnten, farbeOben)
+  def grundfarbeLR(farbeLinks: Color, farbeRechts: Color) = builtins.TSCanvas.setBackgroundV(farbeLinks, farbeRechts)
   object KcGer { //Key codes for German keys as in Unicode
     lazy val VK_Ä = 196
     lazy val VK_Ö = 214
@@ -169,35 +170,42 @@ object GermanAPI {
   //Loops in German:
   //upprepa(n)
   def mehrmals(n: Int)(block: => Unit) {
-    for (i <- 1 to n) block
+    //for (i <- 1 to n) block
+    RepeatCommands.repeatFor(1 to n){i => block}
   }
   //I mean too limited by fixing the start value. Christoph:
   //def räkneslinga(n: Int)(block: Int => Unit) {
   //  for (i <- 1 to n) block(i)
   //}
   def fürBereich(start: Int, ende: Int)(verarbeiten: Int => Unit){
-    (start to ende) foreach verarbeiten
+    //(start to ende) foreach verarbeiten
+    RepeatCommands.repeatFor(start to ende){verarbeiten}
   }
+  //The new Kojo loops from RepeatCommands regularly call the Throttler to enable interruption of busy loops.
   //New in Kojo with name repeatFor at 2015-02-23, thus not yet in swedish API:
   //Allows:
   //fürAlle(1 to 5){}
   //fürAlle(0 until 5)[}
   //fürAlle(Seq(red, green, blue)){}
   def fürAlle[T](elemente: Iterable[T])(verarbeiten: T => Unit){
-    elemente foreach verarbeiten
+    //elemente foreach verarbeiten
+    RepeatCommands.repeatFor(elemente){verarbeiten}
   }
   //sålänge(villkor: => Boolean)(block: => Unit)
   def solange(bedingung: => Boolean)(block: => Unit) {
-    while (bedingung) block
+    //while (bedingung) block
+    RepeatCommands.repeatWhile(bedingung){block}
   }
   
   //simple IO
   //indata(ledtext)
-  def einlesen(aufforderung: String = "") =  builtins.readln(aufforderung)
+  def einlesen(aufforderung: String): String =  builtins.readln(aufforderung)
+  
   //Not in swedish API:
   //def ausgeben(daten: Any) = print(daten)
   //utdata(data)
   def ausgeben(daten: Any) = println(daten) //Transferred here from sv.tw.kojo. Seems to work in german API.
+  def ausgeben() = println()
   
   //math functions
   //avrunda(tal, antalDecimaler)
@@ -222,7 +230,7 @@ object GermanAPI {
   def systemzeit = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
   
   //räknaTill
-  def zählenBis(n: BigInt) {
+  def zählzeitStoppen(n: BigInt) {
     var c: BigInt = 1
     print("*** Zählen von 1 bis ... ")
     val startZeit = systemzeit
@@ -267,12 +275,14 @@ object DeInit {
   }
   
   val codeTemplates = Map(
-    "fram" -> "fram(${steg})",
-    "höger" -> "höger(${vinkel})",
-    "vänster" -> "vänster(${vinkel})",
-    "hoppaTill" -> "hoppaTill(${x},${y})",
-    "gåTill" -> "gåTill(${x},${y})",
-    "hoppa" -> "hoppa(${steg})",
+    "vor" -> "vor(${schritte})",
+    "rechts" -> "rechts(${grad})",
+    "links" -> "links(${grad})",
+    "springen" -> "springen(${x},${y})",
+    "gehen" -> "gehen(${x},${y})",
+    "springen" -> "springen(${schritte})",
+    "fürBereich" -> "fürBereich(${start}, ${ende}){ i => \n    \n}",
+    //TODO from here still swedish
     "hem" -> "hem()",
     "mot" -> "mot(${x},${y})",
     "sättVinkel" -> "sättVinkel(${vinkel})",
@@ -321,20 +331,29 @@ object DeInit {
   )
 
   val helpContent = Map(
-    "fram" ->
+    "vor" ->
       <div>
-<strong>fram</strong>(steg) - Paddan går frammåt det antal steg du anger i riktningen dit nosen pekar.
-<br/>Om pennan är nere så ritar paddan när den går frammåt.
-<br/><em>Exempel:</em> <br/><br/>
+<strong>vor</strong>(schritte) - Die Schildkröte geht die angegebene Anzahl Schritte vorwärts in die Richtung, wohin ihr Kopf zeigt.
+<br/>Wenn der Stift unten ist, zeichnet sie dabei.
+<br/><em>Beispiel:</em> <br/><br/>
 <pre>
-sudda()    //ritfönstret suddas och paddan ställs i mitten     
-fram(100)  //paddan går 100 steg
-fram()     //inget värde: paddan går 25 steg
-pennaUpp   //paddan lyfter pennan
-fram(200)  //paddan går 200 steg utan att rita
-höger(45)  //paddan vrider sig 45 grader åt höger
+leeren     //Der Inhalt des Zeichenbereichs wird gelöscht und die Schildkröte ist in der Mitte.    
+vor(100)   //Die Schildkröte geht 100 Schritte vorwärts.
+vor        //ohne Wert: Die Schildkröte geht 25 Schritte.
+stiftRauf  //Die Schildkröte hebt den Stift an.
+vor(200)   //Die Schildkröte geht 200 Schritte ohne zu zeichnen.
+rechts(45) //Die Schildkröte dreht sich um 45 Grad nach rechts.
 </pre>
       </div>.toString,
+    "fürBereich" -> <div><strong>fürBereich</strong>(start, ende) {{ i => anweisungen }} - Zählschleife, die alle Ganzzahlen von <em>start</em> bis <em>ende</em> durchläuft und für jede Zahl die <em>anweisungen</em> ausführt. Den Anweisungen steht dabei die Zählvariable <strong>i</strong> zur Verfügung.
+        <br/><em>Beispiel:</em> <br/><br/>
+        <pre>
+fürBereich(1,10) {{ i =>
+    ausgeben(i)
+}}
+        </pre>
+      </div>.toString,
+    //TODO from here still swedish
     "vänster" -> <div><strong>vänster</strong>(vinkel)<br/>Paddan vrider åt vänster.</div>.toString,
     "höger" -> <div><strong>höger</strong>(vinkel)<br/>Paddan vrider sig åt höger.</div>.toString,
     "hoppaTill" -> <div><strong>hoppaTill</strong>(x, y)<br/>Paddan hoppar till läge (x,y) utan att rita och utan att ändra riktning.</div>.toString,

@@ -24,12 +24,12 @@ import GermanAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
   Kröte,kröte,leeren,ausgabeLeeren,
   blau,rot,gelb,grün,lila,rosa,braun,schwarz,weiß,durchsichtig,
-  grundfarbe, grundfarbeSN, grundfarbeWO, KcGer, 
+  grundfarbe, grundfarbeUO, grundfarbeLR, KcGer, 
   mehrmals, fürBereich, fürAlle, solange,
   einlesen, ausgeben,
   aufrunden, zufall, zufallBruch,
   Ganzzahl, Bruchzahl, Text,
-  systemzeit, zählenBis
+  systemzeit, zählzeitStoppen
 }
 import kröte.{leeren => _, _}
 
