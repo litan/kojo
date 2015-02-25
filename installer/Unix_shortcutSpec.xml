@@ -1,0 +1,39 @@
+<shortcuts>
+    <skipIfNotSupported/>
+    <programGroup defaultName="Kojo v2" 
+	    location="applications"/>
+      <shortcut
+         name="Kojo-Desktop"
+         target="$INSTALL_PATH/bin/kojo"
+         iconFile="$INSTALL_PATH/icons/kojo64.png"
+         programGroup="yes"
+         desktop="yes"
+         applications="no"
+         startMenu="no"
+         startup="no"
+         commandLine=""
+         initialState="normal"
+         type="Application"
+         encoding="UTF-8"
+         createForAll="false"
+         Categories="Application;Development;"
+         description="The Kojo Learning Environment">
+     </shortcut>
+      <shortcut
+         name="Kojo-Web"
+         target="$INSTALL_PATH/bin/webkojo"
+         iconFile="$INSTALL_PATH/icons/kojo64.png"
+         programGroup="yes"
+         desktop="yes"
+         applications="no"
+         startMenu="no"
+         startup="no"
+         commandLine=""
+         initialState="normal"
+         type="Application"
+         encoding="UTF-8"
+         createForAll="false"
+         Categories="Application;Development;"
+         description="The Kojo Learning Environment via Webstart">
+     </shortcut>
+</shortcuts>

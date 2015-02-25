@@ -1,0 +1,43 @@
+<shortcuts>
+    <skipIfNotSupported/>
+    <programGroup defaultName="Kojo v2" 
+	    location="startMenu"/>
+      <shortcut
+         name="Kojo-Desktop"
+         target="$INSTALL_PATH\bin\kojo.exe"
+         iconFile="$INSTALL_PATH\icons\kojo48.ico"
+         programGroup="yes"
+         desktop="yes"
+         applications="no"
+         startMenu="no"
+         startup="no"
+         commandLine=""
+         description="The Kojo Learning Environment"
+         initialState="normal">
+      </shortcut>
+      <shortcut
+         name="Kojo-Web"
+         target="$INSTALL_PATH\bin\webkojo.cmd"
+         iconFile="$INSTALL_PATH\icons\kojo48.ico"
+         programGroup="yes"
+         desktop="yes"
+         applications="no"
+         startMenu="no"
+         startup="no"
+         commandLine=""
+         description="The Kojo Learning Environment via Webstart"
+         initialState="normal">
+      </shortcut>
+      <shortcut
+         name="Uninstall Kojo"
+         target="$INSTALL_PATH\Uninstaller\uninstall-kojo.exe"
+         programGroup="yes"
+         desktop="no"
+         applications="no"
+         startMenu="no"
+         startup="no"
+         commandLine=""
+         description="Uninstall The Kojo Learning Environment"
+         initialState="normal">
+      </shortcut>
+</shortcuts>

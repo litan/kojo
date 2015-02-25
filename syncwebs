@@ -1,0 +1,2 @@
+./sbt.sh clean test package
+cp target/scala-2.11/kojo_2.11-2.4.jar ~/work/kogics-web/public/kojolite/kojo.jar
