@@ -23,11 +23,11 @@ val GermanAPI = net.kogics.kojo.lite.i18n.GermanAPI
 import GermanAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
   Kröte,kröte,leeren,ausgabeLeeren,
-  blau,rot,gelb,grün,lila,rosa,braun,schwarz,weiß,durchsichtig,
+  blau,rot,gelb,grün,lila,rosa,braun,schwarz,grau,weiß,durchsichtig,
   grundfarbe, grundfarbeUO, grundfarbeLR, KcGer, 
   mehrmals, fürBereich, fürAlle, solange,
   einlesen, ausgeben,
-  aufrunden, zufall, zufallBruch,
+  runden, zufall, zufallBruch,
   Ganzzahl, Bruchzahl, Text,
   systemzeit, zählzeitStoppen
 }

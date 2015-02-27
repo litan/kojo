@@ -33,7 +33,7 @@ Also make sure that the *JRE System Library* used by the project is at the JDK 1
 There are two levels of localization. 1st level means translation of all user interface texts. 2nd level means translation of the most important turtle commands.
 
 1. **UI localization**: Translate file [Bundle.properties][5] to your local language giving it the name Bundle_xx.properties with xx being your language code. In file [LangMenuFactory.scala][8] add your language code to `val supportedLanguages` in line 31 and your language name to `private val langNames` in line 75.
-2. **Turtle command localization**: Create translations of the swedish files [svInit.scala][6] as well as [sv.tw.kojo][7] using your language code instead of "sv".
+2. **Turtle command localization**: Create translations of the swedish files [svInit.scala][6] as well as [sv.tw.kojo][7] using your language code instead of "sv". Add a call to your xxInit.init in file [LangInit.scala][9]
 
 If you want to know the key of a UI text item (english or translation), create in your home directory a  file called `.kojo/lite/kojo.properties` and put the following entry in there:
  
@@ -50,5 +50,6 @@ Then (re)start Kojo. All UI texts will be shown in the format *localText[key]*.
   [6]: http://code.google.com/p/kojolite/source/browse/src/main/scala/net/kogics/kojo/lite/i18n/svInit.scala
   [7]: http://code.google.com/p/kojolite/source/browse/src/main/resources/i18n/initk/sv.tw.kojo
   [8]: http://code.google.com/p/kojolite/source/browse/src/main/scala/net/kogics/kojo/lite/LangMenuFactory.scala
+  [9]: http://code.google.com/p/kojolite/source/browse/src/main/scala/net/kogics/kojo/lite/i18n/LangInit.scala
   
   
