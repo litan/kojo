@@ -189,22 +189,51 @@ class CodeExecutionSupport(
     traceButton.setEnabled(enable)
     compileButton.setEnabled(enable)
   }
-
+  
   def doWelcome() {
     if (kojoCtx.subKojo) {
-      showOutput("Welcome to the Kojo Scratchpad!\n")
-      showOutput("History for work you do in the Scratchpad will not be saved.\n", Color.red)
+      showOutput(Utils.loadString("S_OutputScratchpadWelcome") + "\n")
+      showOutput(Utils.loadString("S_OutputScratchpadHistoryNotSave") + "\n", Color.red)
     }
-    else {
-      val msg = """Welcome to Kojo 2.x!
-    |* To program with the aid of a Visual Palette ->  Use the 'Tools -> Instruction Palette' menu item
-    |* To use Code-Completion and see online help  ->  Press Ctrl+Space or Ctrl+Alt+Space within the Script Editor
-    |* To Interactively Manipulate program output  ->  Click on numbers and colors within the Script Editor
-    |* To access the Context Actions for a window  ->  Right-Click on the window to bring up its context menu
-    |* To Pan or Zoom the Drawing Canvas           ->  Drag the left mouse button or Roll the mouse wheel
-    |""".stripMargin
-      showOutput(msg)
+    else {      
+      val head = Utils.loadString("S_OutputWelcome") format Versions.KojoMajorVersion
+      val instructions = Seq(
+        Utils.loadString("S_OutputVisualPalette"),
+        Utils.loadString("S_OutputHelp"),
+        Utils.loadString("S_OutputManipulate"),
+        Utils.loadString("S_OutputContext"),
+        Utils.loadString("S_OutputCanvasZoom")
+      )
+      showOutput(makeTabulatedWelcomeMessage(head, instructions))
     }
+  }
+  
+  /**Contains the goal a user wants to reach, and the action he has to take for this.*/
+  private case class Line(goal: String, action: String)
+  
+  /**Composes a welcome message from the head and a tabulated arrangement of the instructions.
+   * Each instruction should have the format "goal -> action".
+   * The instructions are splitted at the first occurrence of "->" and then tabulated, 
+   * so that all "->" are one below another when using a monospace font.
+   */
+  private def makeTabulatedWelcomeMessage(head: String, instructions: Seq[String]): String = {
+      val instructionsSplitted = instructions.map(_.split("->", 2))
+      val instructionsTrimmed = for(instr <- instructionsSplitted) yield {
+        Line(instr(0).trim, instr(1).trim)
+      }
+      val maxGoalLine = instructionsTrimmed.maxBy(line => line.goal.length)
+      val maxGoalLen = maxGoalLine.goal.length
+      val sb = new StringBuilder(head)
+      sb append '\n'
+      for(instr <- instructionsTrimmed){
+          sb append "* "
+          sb append instr.goal
+          sb append " "*(maxGoalLen-instr.goal.length)
+          sb append " ->  "
+          sb append instr.action
+          sb append '\n'
+      }   
+      sb.toString
   }
 
   def isSingleLine(code: String): Boolean = {
