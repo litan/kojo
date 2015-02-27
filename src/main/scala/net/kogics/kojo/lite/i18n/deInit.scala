@@ -41,6 +41,9 @@ object GermanAPI {
     def vor(schritte: Double) = englishTurtle.forward(schritte)
     //fram()
     def vor() = englishTurtle.forward(25)
+    //Not in swedish API
+    def rück(schritte: Double) = englishTurtle.back(schritte)
+    def rück() = englishTurtle.back(25)
     //höger(vinkel)
     def rechts(grad: Double) = englishTurtle.right(grad)
     //höger()
