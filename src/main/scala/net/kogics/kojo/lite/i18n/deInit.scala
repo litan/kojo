@@ -54,8 +54,6 @@ object GermanAPI {
     def links() = englishTurtle.left(90)
     //hoppaTill(x, y)
     def springen(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
-    //gåTill(x,y)
-    def gehen(x: Double, y: Double) = englishTurtle.moveTo(x, y)
     //hoppa(steg)
     def springen(schritte: Double) = {
       englishTurtle.saveStyle() //to preserve pen state
@@ -64,6 +62,8 @@ object GermanAPI {
     }
     //hoppa()
     def springen(): Unit = springen(25)
+    //gåTill(x,y)
+    def gehen(x: Double, y: Double) = englishTurtle.moveTo(x, y)
     //hem()
     def heim() = englishTurtle.home()
     //mot(x,y)
@@ -164,7 +164,7 @@ object GermanAPI {
   def grundfarbe(farbe: Color) = builtins.setBackground(farbe)
   //bakgrund2(färg1, färg2)
   def grundfarbeUO(farbeUnten: Color, farbeOben: Color) = builtins.TSCanvas.setBackgroundV(farbeUnten, farbeOben)
-  def grundfarbeLR(farbeLinks: Color, farbeRechts: Color) = builtins.TSCanvas.setBackgroundV(farbeLinks, farbeRechts)
+  def grundfarbeLR(farbeLinks: Color, farbeRechts: Color) = builtins.TSCanvas.setBackgroundH(farbeLinks, farbeRechts)
   object KcGer { //Key codes for German keys as in Unicode
     lazy val VK_Ä = 196
     lazy val VK_Ö = 214
@@ -174,28 +174,32 @@ object GermanAPI {
   
   //Loops in German:
   //upprepa(n)
-  def mehrmals(anzahl: Int)(block: => Unit) {
+  def schleife(anzahl: Int)(block: => Unit) {
     RepeatCommands.repeatFor(1 to anzahl){i => block}
+  }
+  //sålänge(villkor: => Boolean)(block: => Unit)
+  def schleifeSolange(bedingung: => Boolean)(block: => Unit) {
+    RepeatCommands.repeatWhile(bedingung){block}
+  }
+  //Not in swedish API
+  def schleifeBis(bedingung: => Boolean)(block: => Unit) {
+    RepeatCommands.repeatUntil(bedingung){block}
   }
   //I mean too limited by fixing the start value. Christoph:
   //def räkneslinga(n: Int)(block: Int => Unit) {
   //  for (i <- 1 to n) block(i)
   //}
-  def fürBereich(start: Int, ende: Int)(verarbeiten: Int => Unit){
+  def schleifeBereich(start: Int, ende: Int)(verarbeiten: Int => Unit){
     RepeatCommands.repeatFor(start to ende){verarbeiten}
   }
   //The new Kojo loops from RepeatCommands regularly call the Throttler to enable interruption of busy loops.
   //New in Kojo with name repeatFor at 2015-02-23, thus not yet in swedish API:
   //Allows:
-  //fürAlle(1 to 5){}
-  //fürAlle(0 until 5)[}
-  //fürAlle(Seq(red, green, blue)){}
-  def fürAlle[T](elemente: Iterable[T])(verarbeiten: T => Unit){
+  //schleifeFür(1 to 5){}
+  //schleifeFür(0 until 5)[}
+  //schleifeFür(Seq(red, green, blue)){}
+  def schleifeFür[T](elemente: Iterable[T])(verarbeiten: T => Unit){
     RepeatCommands.repeatFor(elemente){verarbeiten}
-  }
-  //sålänge(villkor: => Boolean)(block: => Unit)
-  def solange(bedingung: => Boolean)(block: => Unit) {
-    RepeatCommands.repeatWhile(bedingung){block}
   }
   
   //simple IO
@@ -315,9 +319,11 @@ object DeInit {
     "grundfarbe" -> "grundfarbe(${farbe})",
     "grundfarbeUO" -> "grundfarbeUO(${farbeUnten},${farbeOben})",
     "grundfarbeLR" -> "grundfarbeLR(${farbeLinks},${farbeRechts})",
-    "mehrmals" -> "mehrmals(${anzahl}){\n    \n}",
-    "fürBereich" -> "fürBereich (${start},${ende}) { i => \n    \n}",
-    "solange" -> "solange(${bedingung}){\n    \n}",
+    "schleife" -> "schleife(${anzahl}){\n    \n}",
+    "schleifeSolange" -> "schleifeSolange(${bedingung}){\n    \n}",
+    "schleifeBis" -> "schleifeBis(${bedingung}){\n    \n}",
+    "schleifeBereich" -> "schleifeBereich (${start},${ende}) { i => \n    \n}",
+    "schleifeFür" -> "schleifeFür (${elemente}) { e => \n    \n}",
     "ausgeben" -> "ausgeben(${daten})",
     "einlesen" -> "einlesen(${aufforderung})",
     "runden" -> "runden(${zahl},${nachkommastellen})",
@@ -359,6 +365,7 @@ stiftRauf  //Die Schildkröte hebt den Stift an.
 vor(200)   //Die Schildkröte geht 200 Schritte ohne zu zeichnen.
 rechts(45) //Die Schildkröte dreht sich um 45 Grad nach rechts.
         </pre>
+        Englisch: <tt>forward</tt>
       </div>.toString,
     "rück" -> 
     <div>
@@ -377,6 +384,7 @@ stiftfarbe(blau)
 //100 Schritte vorwärts blau übermalen bzw. zeichnen
 vor(100) 
       </pre>
+      Englisch: <tt>back</tt>
     </div>.toString,
     "links" -> 
       <div>
@@ -387,6 +395,7 @@ vor(100)
 links(45)  //Dreht die Schildkröte um 45 Grad nach links.     
 links()  //Dreht die Schildkröte um 90 Grad nach links.
         </pre>
+        Englisch: <tt>left</tt>
       </div>.toString,
     "rechts" -> 
       <div>
@@ -397,42 +406,72 @@ links()  //Dreht die Schildkröte um 90 Grad nach links.
 rechts(45)  //Dreht die Schildkröte um 45 Grad nach rechts.     
 rechts()  //Dreht die Schildkröte um 90 Grad nach rechts.
         </pre>
+        Englisch: <tt>right</tt>
       </div>.toString,
     "springen" -> 
       <div>
-        <strong>springen</strong>(x, y)<br/>Die Schildkröte springt zum Ort (x,y) ohne zu zeichnen und ohne ihren Winkel (Kopfrichtung) zu ändern.<br/><br/>
+        <strong>springen</strong>(x, y)<br/>Die Schildkröte springt zum Ort (x,y) ohne zu zeichnen und ohne ihren Winkel (Kopfrichtung) zu ändern.
+        <br/>Englisch: <tt>jumpTo</tt>
+        <br/><br/>
         <strong>springen</strong>(schritte)<br/>Die Schildkröte springt in Kopfrichtung die angegebene Anzahl Schritte ohne zu zeichnen.<br/><br/>
         <strong>springen</strong>()<br/>Die Schildkröte springt in Kopfrichtung 25 Schritte ohne zu zeichnen.
+        <br/>Englisch: <tt>hop</tt>
       </div>.toString,
     "gehen" -> 
       <div>
         <strong>gehen</strong>(x, y)<br/><br/>
         Die Schildkröte dreht sich zum Ort (x,y) und geht dorthin.<br/>
         Wenn der Stift unten ist, zeichnet sie dabei eine gerade Linie.
+        <br/>Englisch: <tt>moveTo</tt>
       </div>.toString,
     "heim" -> 
       <div>
         <strong>heim</strong>()<br/><br/>
-        Moves the turtle to its original location, and makes it point north. <br/>
+        Die Schildkröte bewegt sich zeichnend zum Ursprung und zeigt danach in Richtung Norden.<br/>
         <br/>
         <em>Beispiel:</em> <br/><br/>
         <pre>
 leeren()
 //Bewegt die Schildkröte weg vom Heim-Ort (0,0).
-mehrmals(2){{
+schleife(2){{
 vor(100)
 rechts()
 }}
 //Bewegt die Schildkröte vom Ort (100,100) zurück zu (0,0) und dreht sie nach Norden.
 heim()
         </pre>
+        Englisch: <tt>home</tt>
       </div>.toString,
-    "schauen" -> <div><strong>schauen</strong>(x, y)<br/><br/>Dreht die Schildkröte so, dass sie zum Ort (x,y) schaut.</div>.toString,
-    "winkel" -> <div><strong>winkel</strong>(grad)<br/><br/>Dreht die Schildkröte so, dass ihre Kopfrichtung den angegebenen Winkel zur x-Achse hat. 90=Nord, 180=West.</div>.toString,
-    "ost" -> <div><strong>ost</strong>()<br/><br/>Dreht die Schildkröte in Richtung Osten (rechte Seite).</div>.toString,
-    "west" -> <div><strong>west</strong>()<br/><br/>Dreht die Schildkröte in Richtung Westen (linke Seite).</div>.toString,
-    "nord" -> <div><strong>nord</strong>()<br/><br/>Dreht die Schildkröte in Richtung Norden (oben).</div>.toString,
-    "süd" -> <div><strong>süd</strong>()<br/><br/>Dreht die Schildkröte in Richtung Süden (unten).</div>.toString,
+    "schauen" -> 
+      <div>
+        <strong>schauen</strong>(x, y)<br/><br/>Dreht die Schildkröte so, dass sie zum Ort (x,y) schaut.
+        <br/>Endlisch: <tt>towards</tt>
+      </div>.toString,
+    "winkel" -> 
+      <div>
+        <strong>winkel</strong>(grad)<br/><br/>Dreht die Schildkröte so, dass ihre Kopfrichtung den angegebenen Winkel zur positiven x-Achse hat. 90=Nord, 180=West, 270=Süd.
+        <br/>Englisch: <tt>setHeading</tt>
+        <br/><br/>
+        <strong>winkel</strong><br/><br/>Liefert den Winkel der Kopfrichtung der Schildkröte zur positiven x-Achse hat. 0=Ost, 90=Nord, 180=West, 270=Süd.
+        <br/>Englisch: <tt>heading</tt>
+      </div>.toString,
+    "ost" -> 
+      <div>
+        <strong>ost</strong>()<br/><br/>Dreht die Schildkröte in Richtung Osten (rechte Seite).
+        <br/>Englisch: <tt>setHeading(0)</tt>
+      </div>.toString,
+    "nord" -> 
+      <div><strong>nord</strong>()<br/><br/>Dreht die Schildkröte in Richtung Norden (oben).
+        <br/>Englisch: <tt>setHeading(90)</tt>
+      </div>.toString,
+    "west" -> 
+      <div><strong>west</strong>()<br/><br/>Dreht die Schildkröte in Richtung Westen (linke Seite).
+        <br/>Englisch: <tt>setHeading(180)</tt>
+      </div>.toString,
+    "süd" -> 
+      <div><strong>süd</strong>()<br/><br/>Dreht die Schildkröte in Richtung Süden (unten).
+        <br/>Englisch: <tt>setHeading(270)</tt>
+      </div>.toString,
     "langsam" -> 
       <div><strong>langsam</strong>(verzögerung)<br/><br/>
         Legt die Langsamkeit der Schildkröte fest. Die angegebene <tt>verzögerung</tt>  
@@ -454,25 +493,41 @@ setAnimationDelay(100)
 // Die Linie zu zeichnen benötigt 1/10 Sekunde.
 forward(100)
         </pre>
+        Englisch: <tt>setAnimationDelay</tt>
       </div>.toString,
     "schreiben" -> 
       <div>
         <strong>schreiben</strong>(text)<br/><br/>
         Die Schildkröte schreibt rechts von sich den <tt>text</tt> in den Zeichenbereich. <br/>
-        Ein Text muss in Anführungszeichen eingeschlossen werden. Beispiel: schreiben("Hallo")
+        Ein Text muss in Anführungszeichen eingeschlossen werden. Beispiel: <tt>schreiben("Hallo")</tt>
+        <br/>Englisch: <tt>write</tt>
       </div>.toString,
-    "schriftgröße" -> <div><strong>schriftgröße</strong>(größe)<br/>Legt die Schriftgröße fürs Textschreiben fest.</div>.toString,
+    "schriftgröße" -> 
+      <div>
+        <strong>schriftgröße</strong>(größe)<br/>Legt die Schriftgröße fürs Textschreiben fest.
+        <br/>Englisch: <tt>setPenFontSize</tt>
+      </div>.toString,
     "bogen" -> 
       <div>
         <strong>bogen</strong>(radius, winkel)<br/><br/>
-        Zeichnet einen Kreisbogen mit dem <tt>radius</tt> und <tt>winkel</tt>. Positive Winkel bewegen die Schildkröte gegen, negative mit dem Uhrzeigersinn.
+        Zeichnet einen Kreisbogen mit dem <tt>radius</tt> und <tt>winkel</tt>. 
+        Positive Winkel bewegen die Schildkröte gegen, negative mit dem Uhrzeigersinn.
+        <br/>Englisch: <tt>arc</tt>
       </div>.toString,
-    "kreis" -> <div><strong>kreis</strong>(radius)<br/><br/>Zeichnet einen kompletten Kreis mit dem <tt>radius</tt> gegen den Uhrzeigersinn.</div>.toString,
-    "sichtbar" -> <div><strong>sichtbar</strong>()<br/><br/>Macht die Schildkröte sichtbar.</div>.toString,
+    "kreis" -> 
+      <div>
+        <strong>kreis</strong>(radius)<br/><br/>Zeichnet einen kompletten Kreis mit dem <tt>radius</tt> gegen den Uhrzeigersinn.
+        <br/>Englisch: <tt>circle</tt>
+      </div>.toString,
+    "sichtbar" -> 
+      <div><strong>sichtbar</strong>()<br/><br/>Macht die Schildkröte sichtbar.
+        <br/>Englisch: <tt>visible</tt>
+      </div>.toString,
     "unsichtbar" -> 
       <div>
         <strong>unsichtbar</strong>()<br/><br/>
         Macht die Schildkröte unsichtbar. Sie kann wieder sichtbar gemacht werden mit dem Befehl <tt>sichtbar()</tt>.
+        <br/>Englisch: <tt>invisible</tt>
       </div>.toString,
     "ort" -> 
       <div>
@@ -489,18 +544,29 @@ var y = ort.y    //Speichert die y-Koordinate der Schildkröte in der Variablen 
 x = x - 100      //Zieht 100 von der Variablen x ab.
 hoppaTill(x, y)  //Springt zum neuen Ort mit der geänderten x-Koordinate. 
         </pre>
+        Englisch: <tt>position</tt>
       </div>.toString,
-    "stiftRunter" -> <div><strong>stiftRunter</strong>()<br/>Senkt den Stift der Schildkröte, so dass sie bei folgenden Bewegungen zeichnet.</div>.toString,
-    "stiftRauf" -> <div><strong>stiftRauf</strong>()<br/>Hebt den Stift der Schildkröte an, so dass sie bei folgenden Bewegungen nicht zeichnet.</div>.toString,
+    "stiftRunter" -> 
+      <div>
+        <strong>stiftRunter</strong>()<br/>Senkt den Stift der Schildkröte, so dass sie bei folgenden Bewegungen zeichnet.
+        <br/>Englisch: <tt>penDown</tt>
+      </div>.toString,
+    "stiftRauf" -> 
+      <div>
+        <strong>stiftRauf</strong>()<br/>Hebt den Stift der Schildkröte an, so dass sie bei folgenden Bewegungen nicht zeichnet.
+        <br/>Englisch: <tt>penUp</tt>
+      </div>.toString,
     "stiftUnten" -> 
       <div>
         <strong>stiftUnten</strong><br/><br/>
         Zeigt an, ob der Stift der Schildkröte unten ist. Liefert <tt>true</tt>, wenn der Stift unten ist bzw. <tt>false</tt>, wenn er oben ist.
+        <br/>Englisch: <tt>style.down</tt>
       </div>.toString,
     "stiftOben" -> 
       <div>
         <strong>stiftOben</strong><br/><br/>
         Zeigt an, ob der Stift der Schildkröte oben ist. Liefert <tt>true</tt>, wenn der Stift oben ist bzw. <tt>false</tt>, wenn er unten ist.
+        <br/>Englisch: <tt>!style.down</tt>
       </div>.toString,
     "stiftfarbe" -> 
       <div>
@@ -518,6 +584,7 @@ stiftfarbe(Color(217, 125, 245, 250)) //mische eine neue Farbe (helllila)
 //Farbwerte von Color können von 0 bis 255 sein.
 vor(200)
          </pre>
+         Englisch: <tt>setPenColor</tt>
        </div>.toString,
     "füllfarbe" -> 
        <div>
@@ -534,6 +601,7 @@ springen(100)         //Die Schildkröte springt 100 Schritte nach vorne.
 füllfarbe(durchsichtig) //Setzt die Füllfabre auf durchsichtig.
 kreis(100)        //Die Schidkröte zeichnet einen roten Kreis, dessen Fläche durchsichtig ist.
         </pre>
+        Englisch: <tt>setFillColor</tt>
       </div>.toString,
     "stiftbreite" -> 
       <div><tt>stiftbreite</tt>(breite)<br/>
@@ -550,6 +618,7 @@ stiftbreite(15)
 // Zeichne eine Linie, die 15 Einheiten breit ist:
 vor(100)
         </pre>
+        Englisch: <tt>setPenThickness</tt>
       </div>.toString
     ,
     "stilSpeichern" -> 
@@ -593,6 +662,7 @@ querstrich(10)
 // grüne Linie:
 vor(100)
         </pre>
+        Englisch: <tt>saveStyle</tt>
       </div>.toString,
     "stilHolen" -> 
       <div>
@@ -636,6 +706,7 @@ querstrich(10)
 // grüne Linie:
 vor(100)
         </pre>
+        Englisch: <tt>restoreStyle</tt>
       </div>.toString,
     "lageSpeichern" -> 
       <div>
@@ -661,6 +732,7 @@ vor(60)
 // wo und wie sie gestartet ist.
 lageHolen()
         </pre>
+        Englisch: <tt>savePosHe</tt>
       </div>.toString,
     "lageHolen" -> 
       <div>
@@ -685,98 +757,141 @@ vor(60)
 // wo und wie sie gestartet ist.
 lageHolen()
         </pre>
+        Englisch: <tt>restorePosHe</tt>
       </div>.toString,
-    "kreuzAn" -> <div><strong>kreuzAn</strong>()<br/><br/>Zeigt die exakte Richtung der Schildkröte durch ein Kreuz an.</div>.toString,
-    "kreuzAus" -> <div><strong>kreuzAus</strong>()<br/><br/>Schaltet das Richtungskreuz der Schildkröte aus.</div>.toString,
+    "kreuzAn" -> 
+      <div>
+        <strong>kreuzAn</strong>()<br/><br/>Zeigt die exakte Richtung der Schildkröte durch ein Kreuz an.
+        <br/>Englisch: <tt>beamsOn</tt>
+      </div>.toString,
+    "kreuzAus" -> 
+      <div>
+        <strong>kreuzAus</strong>()<br/><br/>Schaltet das Richtungskreuz der Schildkröte aus.
+        <br/>Englisch: <tt>beamsOff</tt>
+      </div>.toString,
     "leeren" -> 
       <div>
         <strong>leeren</strong>()<br/><br/>Löscht alles im Zeichenbereich und setzt die Schildkröte in Heim-Lage (x=0, y=0 und winkel=90).
         Wenn man diese Methode bei einer speziellen Schildkröte anwendet wie <tt>meineKröte.leeren()</tt>, 
         wird nur das von dieser Schildkröte Gezeichnete gelöscht.
+        <br/>Englisch: <tt>clear</tt>
       </div>.toString,
-    "ausgabeLeeren" -> <div><strong>ausgabeLeeren</strong>()<br/><br/>Löscht den ganzen Inhalt des Ausgabebereichs.</div>.toString,
+    "ausgabeLeeren" -> 
+      <div>
+        <strong>ausgabeLeeren</strong>()<br/><br/>Löscht den ganzen Inhalt des Ausgabebereichs.
+        <br/>Englisch: <tt>clearOutput</tt>
+      </div>.toString,
     "grundfarbe" -> 
-      <div><strong>grundfarbe</strong>(farbe)<br/><br/>Legt die Hintergrundfarbe für den Zeichenbereich fest auf <tt>farbe</tt>.
+      <div>
+        <strong>grundfarbe</strong>(farbe)<br/><br/>Legt die Hintergrundfarbe für den Zeichenbereich fest auf <tt>farbe</tt>.
         <br/>Du kannst diese vorgemischten Farben verwenden:<br/>blau, rot, gelb, grün, lila, rosa, braun, schwarz, grau, weiß, durchsichtig.
         <br/>Du kannst eigene Farben mit <tt>Color</tt> mischen. Siehe bei <tt>stiftfarbe</tt>.
+        <br/>Englisch: <tt>setBackground</tt>
       </div>.toString,
-    "grundfarbeUO" -> <div><strong>grundfarbeUO</strong>(farbeUnten, farbeOben)<br/><br/>
+    "grundfarbeUO" -> 
+      <div>
+        <strong>grundfarbeUO</strong>(farbeUnten, farbeOben)<br/><br/>
         Legt einen Hintergrund-Farbverlauf fest mit <tt>farbeUnten</tt> unten und <tt>farbeOben</tt> oben.
         <br/>Du kannst diese vorgemischten Farben verwenden:<br/>blau, rot, gelb, grün, lila, rosa, braun, schwarz, grau, weiß, durchsichtig.
         <br/>Du kannst eigene Farben mit <tt>Color</tt> mischen. Siehe bei <tt>stiftfarbe</tt>.
+        <br/>Englisch: <tt>setBackgroundV</tt>
       </div>.toString,
     "grundfarbeLR" -> 
-      <div><strong>grundfarbeLR</strong>(farbeLinks, farbeRechts)<br/><br/>
+      <div>
+        <strong>grundfarbeLR</strong>(farbeLinks, farbeRechts)<br/><br/>
         Legt einen Hintergrund-Farbverlauf fest mit <tt>farbeLinks</tt> links und <tt>farbeRechts</tt> rechts.
         <br/>Du kannst diese vorgemischten Farben verwenden:<br/>blau, rot, gelb, grün, lila, rosa, braun, schwarz, grau, weiß, durchsichtig.
         <br/>Du kannst eigene Farben mit <tt>Color</tt> mischen. Siehe bei <tt>stiftfarbe</tt>.
+        <br/>Englisch: <tt>setBackgroundH</tt>
       </div>.toString,
-    "mehrmals" -> 
+    "schleife" -> 
       <div>
-        <strong>mehrmals</strong>(anzahl) {{ anweisungen }}<br/><br/>
-        Schleife: Wiederholt den Block von {{<em>anweisungen</em>}} in geschweiften Klammern. 
+        <strong>schleife</strong>(anzahl) {{ anweisungen }}<br/><br/>
+        Wiederholt den Block von <tt>anweisungen</tt> in geschweiften Klammern. 
         Er wird so oft ausgeführt, wie durch <tt>anzahl</tt> angegeben ist.
-        <br/><em>Beispiel:</em> (zeichnet ein Quadrat)<br/><br/>
+        <br/><em>Beispiel:</em><br/><br/>
         <pre>
-mehrmals(4) {{ 
+schleife(4) {{ 
   vor
   rechts
 }}
-        </pre>
+        </pre>Dieses Beispiel zeichnet ein Quadrat.
+        <br/>Englisch: <tt>repeat</tt>
       </div>.toString,
-    "fürBereich" -> 
+    "schleifeSolange" -> 
       <div>
-        <strong>fürBereich</strong>(start,ende) {{ i => anweisungen }}<br/><br/>
-        Schleife: Wiederholt den Block von {{<em>anweisungen</em>}} in geschweiften Klammern.
-        Er wird für jede Ganzzahl im Bereich <tt>start</tt> bis <tt>ende</tt> einschließlich je einmal ausgeführt.
-        Die jeweilige Zahl ist unter dem Namen <tt>i</tt> (frei wählbar) ansprechbar.
-        <br/><em>Beispiel:</em> (gibt die ersten 10 Quadratzahlen aus)<br/><br/>
+        <strong>schleifeSolange</strong>(bedingung) {{ anweisungen }}<br/><br/>
+        Wiederholt den Block von {{<em>anweisungen</em>}} in geschweiften Klammern. 
+        Er wird solange ausgeführt, wie die angegebene <tt>bedingung</tt> wahr bleibt.
+        <br/><em>Beispiel:</em><br/><br/>
         <pre>
-fürBereich(1,10){{
+var i = 0
+schleifeSolange(i{ "<" }10) {{ 
+      ausgeben(i)
+      i = i + 1
+}}
+        </pre>Dieses Beispiel gibt die Ganzzahlen von 0 bis 9 aus.
+        <br/>Englisch: <tt>repeatWhile</tt>
+      </div>.toString,
+    "schleifeBis" -> 
+      <div>
+        <strong>schleifeBis</strong>(bedingung) {{ anweisungen }}<br/><br/>
+        Wiederholt den Block von <tt>anweisungen</tt> in geschweiften Klammern. 
+        Er wird solange ausgeführt, wie die angegebene <tt>bedingung</tt> noch nicht wahr ist.
+        <br/><em>Beispiel:</em><br/><br/>
+        <pre>
+var i = 1
+schleifeBis(i {">"} 5){{ 
+    ausgeben(i)
+    i += 1
+}}
+        </pre>Dieses Beispiel gibt die Ganzzahlen von 1 bis 5 aus.
+        <br/>Englisch: <tt>repeatUntil</tt>
+      </div>.toString,
+    "schleifeBereich" -> 
+      <div>
+        <strong>schleifeBereich</strong>(start,ende) {{ i => anweisungen }}<br/><br/>
+        Wiederholt die Folge von <tt>anweisungen</tt>.
+        Sie wird für jede Ganzzahl im Bereich <tt>start</tt> bis <tt>ende</tt> einschließlich je einmal ausgeführt.
+        Die jeweilige Zahl ist unter dem Namen <tt>i</tt> (frei wählbar) ansprechbar.
+        <br/><em>Beispiel:</em><br/><br/>
+        <pre>
+schleifeBereich(1,10){{
   i =>
   val q = i*i
   ausgeben(s"quadrat($i) = $q")
 }}
-        </pre>
+        </pre>Dieses Beispiel gibt die ersten 10 Quadratzahlen aus.
+        <br/>Englisch: <tt>repeatFor(<i>start</i> to <i>ende</i>)</tt>
       </div>.toString,
-    "fürAlle" -> 
+    "schleifeFür" -> 
     <div>
-      <strong>fürAlle</strong>(folge){{ e => anweisungen}}<br/><br/>
-      Schleife: Wiederholt den Block von {{<em>anweisungen</em>}} in geschweiften Klammern.
-      Er wird für jedes Element der angegebenen <tt>folge</tt> einmal ausgeführt.
+      <strong>schleifeFür</strong>(elemente){{ e => anweisungen}}<br/><br/>
+      Wiederholt die Folge von <tt>anweisungen</tt>.
+      Sie wird für jedes der <tt>elemente</tt> einmal ausgeführt.
       Das jeweilige Element ist unter dem Namen <tt>e</tt> (frei wählbar) ansprechbar.
       <br/>
       <em>Beispiel:</em> <br/><br/>
       <pre>
 leeren()
-fürAlle (40 to 60 by 5) {{ e =>
+schleifeFür (20 to 60 by 5) {{ e =>
   vor(e)
   rechts()
 }}
-      </pre>
+      </pre>Dieses Beispiel zeichnet eine Spirale aus 9 Strecken, die jeweils 5 Schritte größer sind als die vorige.
+      <br/><br/>
       <em>Beispiel 2:</em> <br/>
       <br/>
       <pre>
 leeren
-fürAlle (Seq(blau, grün, gelb)) {{ e =>
+schleifeFür (Seq(blau, grün, gelb, rot)) {{ e =>
   stiftfarbe(e)
   vor(100)
   rechts
 }}
-      </pre>
+      </pre>Dieses Beispiel zeichnet ein Quadrat, dessen Seiten blau, grün, gelb und rot sind.
+      <br/>Englisch: <tt>repeatFor</tt>
     </div>.toString,
-    "solange" -> <div><strong>solange</strong>(bedingung) {{ anweisungen }}<br/><br/>
-        Schleife: Wiederholt den Block von {{<em>anweisungen</em>}} in geschweiften Klammern. 
-        Er wird solange ausgeführt, wie die angegebene <tt>bedingung</tt> wahr bleibt.
-        <br/><em>Beispiel:</em> (gibt die Ganzzahlen von 0 bis 9 aus)<br/><br/>
-        <pre>
-var i = 0
-solange(i{ "<" }10) {{ 
-      ausgeben(i)
-      i = i + 1
-}}
-        </pre>
-      </div>.toString,
     "ausgeben" -> 
       <div>
         <strong>ausgeben</strong>(daten)<br/><br/>
@@ -784,6 +899,7 @@ solange(i{ "<" }10) {{
         Wenn der übergebene Wert <tt>daten</tt> kein Text ist, wird seine Textdarstellung ausgegeben (Methode <tt>toString</tt>).
         Wenn man <tt>ausgeben()</tt> leer aufruft, wird nur ein Zeilenwechsel ausgegeben.
         <em>Beispiel:</em> <tt>ausgeben("Hallo")</tt>.
+        <br/>Englisch: <tt>println</tt>
       </div>.toString,
     "einlesen" -> 
       <div>
@@ -795,6 +911,7 @@ solange(i{ "<" }10) {{
 val x = einlesen("Schreibe Deinen Namen ")
 ausgeben("Hallo, " + x + "!")
         </pre>
+        Englisch: <tt>readln</tt>
       </div>.toString,
     "runden" -> 
       <div>
@@ -807,6 +924,7 @@ ausgeben(z1)
 val z2 = runden(3.981) //Runden mit 0 Nachkommastellen ergibt 4.0
 ausgeben(z2)
         </pre>
+        Englisch: <tt>math.round</tt>
       </div>.toString,
     "systemzeit" -> 
       <div>
@@ -817,7 +935,7 @@ ausgeben(z2)
 val start = systemzeit
 ausgeben("Geduld haben...")
 var i = 0
-mehrmals(100000000){{
+schleife(100000000){{
   i += 1
 }}
 val stopp = systemzeit
@@ -843,10 +961,11 @@ zählzeitStoppen(5000)
         Liefert eine zufällige Ganzzahl zwischen 0 (einschließlich) und <tt>wenigerAls</tt> (ausschließlich).<br/>
         <em>Beispiel:</em><br/>
         <pre>
-mehrmals(10){{
+schleife(10){{
   ausgeben(zufall(20) + 1)
 }}
-</pre><br/>Gibt 10 zufällige Ganzzahlen im Bereich 1...20 aus.
+        </pre>Gibt 10 zufällige Ganzzahlen im Bereich 1...20 aus.
+        <br/>Englisch: <tt>random</tt>
       </div>.toString,
     "zufallBruch(wenigerAls)" -> 
       <div>
@@ -854,14 +973,17 @@ mehrmals(10){{
         Liefert eine zufällige Bruchzahl zwischen 0 (einschließlich) und <tt>wenigerAls</tt> (ausschließlich).<br/>
         <em>Beispiel:</em><br/>
         <pre>
-mehrmals(4){{
+schleife(4){{
   ausgeben(zufallBruch(10))
-}}</pre>
-        <br/>Gibt 4 zufällige Bruchzahlen im Bereich 0.0 bis 9.999999999999999 aus, zum Beispiel 7.944168334647333 1.5762542354581088 3.078541034787967 0.7535865933723174
+}}
+        </pre>
+        Gibt 4 zufällige Bruchzahlen im Bereich 0.0 bis 9.999999999999999 aus, zum Beispiel 7.944168334647333 1.5762542354581088 3.078541034787967 0.7535865933723174
+        <br/>Englisch: <tt>randomDouble</tt>
       </div>.toString,
-    "kostüm" -> <div>
-      <strong>kostüm</strong>(dateiname)<br/>Nimmt das Bild in der angegebenen Datei als Kostüm, d.h. für das Aussehen der Schildkröte.<br/>
-      <em>Beispiel:</em><br/><pre>  
+    "kostüm" -> 
+      <div>
+        <strong>kostüm</strong>(dateiname)<br/>Nimmt das Bild in der angegebenen Datei als Kostüm, d.h. für das Aussehen der Schildkröte.<br/>
+        <em>Beispiel:</em><br/><pre>  
 leeren
 //Für eine blaue Schildkröte nehmen wir ein vordefiniertes Bild:
 kostüm("/images/blue-turtle32.png")
@@ -869,15 +991,21 @@ vor(100) //Die blaue Kröte bewegt sich.
 //neue Kröte am Ort (100, 100) erzeugen mit dem vordefinierten Bild car.png:
 val auto = new Kröte(100,100,"/media/costumes/car.png")
 auto.vor(100)
-</pre><br/></div>.toString,
-    "kostüme" -> <div>
-      <strong>kostüme</strong>(dateiname1, dateiname2, ...)<br/>Nimmt die Bilder in den Dateien als mögliche Kostüme, 
-      d.h. für das Aussehen der Schildkröte und legt das erste Bild als jetziges Kostüm fest. 
-      Man kann die Kostüme durchlaufen mit Aufruf von <tt>kostümWechseln()</tt>.
-    </div>.toString,
-    "kostümWechseln" -> <div>
-      <strong>kostümWechseln</strong>()<br/><br/>
+        </pre>
+        Englisch: <tt>setCostume</tt>
+      </div>.toString,
+    "kostüme" -> 
+      <div>
+        <strong>kostüme</strong>(dateiname1, dateiname2, ...)<br/>Nimmt die Bilder in den Dateien als mögliche Kostüme, 
+        d.h. für das Aussehen der Schildkröte und legt das erste Bild als jetziges Kostüm fest. 
+        Man kann die Kostüme durchlaufen mit Aufruf von <tt>kostümWechseln()</tt>.
+        <br/>Englisch: <tt>setCostumes</tt>
+      </div>.toString,
+    "kostümWechseln" -> 
+      <div>
+        <strong>kostümWechseln</strong>()<br/><br/>
         Ändert das Schildkrötenkostüm zu dem nächsten in der Reihe der Kostüme, die durch <tt>kostüme(...)</tt> festgelegt wurden.
+        <br/>Englisch: <tt>nextCostume</tt>
       </div>.toString
   )
 }
