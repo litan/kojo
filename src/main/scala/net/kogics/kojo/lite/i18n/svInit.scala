@@ -223,7 +223,7 @@ object SvInit {
     "sålänge" -> "sålänge (${villkor}) {\n    \n}",
     "utdata" -> "utdata(${sträng})",
     "indata" -> "indata(${ledtext})",
-    "avrudna" -> "avrudna(${tal},${antalDecimaler})",
+    "avrunda" -> "avrunda(${tal},${antalDecimaler})",
     "slumptal" -> "slumptal(${mindreän})",
     "slumptalMedDecimaler" -> "slumptalMedDecimaler(${mindreän})",
     "räknaTill" -> "räknaTill(${tal})",
