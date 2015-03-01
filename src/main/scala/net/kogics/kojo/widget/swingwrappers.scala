@@ -96,13 +96,6 @@ case class Label(label: String) extends JLabel(label) {
     }
   }
 }
-case class DynamicLabel(cols: Int) extends JTextArea {
-  setText("")
-  setColumns(cols)
-  setRows(1)
-  setBorder(BorderFactory.createEmptyBorder)
-  def value = getText
-}
 case class Button(label: String)(al: => Unit) extends JButton(label) {
   addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) {
