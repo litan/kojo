@@ -196,7 +196,7 @@ class CodeExecutionSupport(
       showOutput(Utils.loadString("S_OutputScratchpadHistoryNotSave") + "\n", Color.red)
     }
     else {      
-      val head = Utils.loadString("S_OutputWelcome") format Versions.KojoMajorVersion
+      val head = Utils.loadString("S_OutputWelcome") format Versions.KojoVersion
       val instructions = Seq(
         Utils.loadString("S_OutputVisualPalette"),
         Utils.loadString("S_OutputHelp"),

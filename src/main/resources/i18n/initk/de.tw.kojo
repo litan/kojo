@@ -25,7 +25,7 @@ import GermanAPI.{
   Kröte,kröte,leeren,ausgabeLeeren,
   blau,rot,gelb,grün,lila,rosa,braun,schwarz,grau,weiß,durchsichtig,
   grundfarbe, grundfarbeUO, grundfarbeLR, KcGer, 
-  mehrmals, fürBereich, fürAlle, solange,
+  schleife, schleifeSolange, schleifeBis, schleifeBereich, schleifeFür,
   einlesen, ausgeben,
   runden, zufall, zufallBruch,
   Ganzzahl, Bruchzahl, Text,
