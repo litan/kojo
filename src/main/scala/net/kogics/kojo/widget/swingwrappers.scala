@@ -7,7 +7,6 @@ import java.awt.event.ActionListener
 import java.awt.event.HierarchyEvent
 import java.awt.event.HierarchyListener
 
-import javax.swing.BorderFactory
 import javax.swing.BoxLayout
 import javax.swing.DefaultComboBoxModel
 import javax.swing.JButton
@@ -20,6 +19,7 @@ import javax.swing.JTextArea
 import javax.swing.JTextField
 import javax.swing.JToggleButton
 
+import net.kogics.kojo.util.Constants
 import net.kogics.kojo.util.Read
 import net.kogics.kojo.util.Utils
 
@@ -119,13 +119,22 @@ case class DropDown[T](origOptions: T*)(implicit reader: Read[T]) extends JCombo
   def onSelection(os: T => Unit) {
     addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
-        os(value)
+        if (Constants.DropDownCanvasPadding != getSelectedItem) {
+          os(value)
+        }
       }
     })
   }
   def setOptions(noptions: T*) {
+    var inCanvas = false
+    if (getItemAt(getItemCount - 1) == Constants.DropDownCanvasPadding) {
+      inCanvas = true
+    }
     options = noptions
     setModel(new DefaultComboBoxModel(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]))
+    if (inCanvas) {
+      addItem(Constants.DropDownCanvasPadding)
+    }
   }
 }
 
