@@ -33,6 +33,7 @@ import com.vividsolutions.jts.geom.Coordinate
 
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.util.Constants
 import net.kogics.kojo.util.Utils
 
 import edu.umd.cs.piccolo.PNode
@@ -42,7 +43,7 @@ import edu.umd.cs.piccolo.util.PPaintContext
 import edu.umd.cs.piccolox.pswing.PSwing
 
 trait UnsupportedOps {
-  def notSupported(name: String) = throw new UnsupportedOperationException(s"$name - operation not available for non-vector picture:\n${toString}") 
+  def notSupported(name: String) = throw new UnsupportedOperationException(s"$name - operation not available for non-vector picture:\n${toString}")
 }
 
 trait PicShapeOps extends UnsupportedOps { self: Picture with CorePicOps =>
@@ -89,7 +90,7 @@ trait PicShapeOps extends UnsupportedOps { self: Picture with CorePicOps =>
     node.asInstanceOf[PPath].setStroke(stroke)
   }
 
-  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine])  = notSupported("morph")
+  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph")
   def dumpInfo() {}
   def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine")
 }
@@ -102,7 +103,7 @@ trait NonVectorPicOps extends UnsupportedOps { self: Picture with CorePicOps =>
   def bounds = Utils.runInSwingThreadAndPause {
     tnode.getFullBounds
   }
-  
+
   def decorateWith(painter: Painter) = notSupported("decorateWith")
 
   def britMod(f: Double) = notSupported("britMod")
@@ -118,8 +119,8 @@ trait NonVectorPicOps extends UnsupportedOps { self: Picture with CorePicOps =>
   def setPenThickness(th: Double) = notSupported("setPenThickness")
 
   def initGeom(): com.vividsolutions.jts.geom.Geometry = notSupported("initGeometry")
-  
-  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine])  = notSupported("morph")
+
+  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph")
   def dumpInfo() {}
   def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine")
 }
@@ -215,7 +216,7 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val pswing = new PSwing(swingComponent)
     def handleCombo(combo: JComboBox) {
-      combo.addItem(" " * 10)
+      combo.addItem(Constants.DropDownCanvasPadding)
       combo.addPopupMenuListener(new PopupMenuListener {
         def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
           combo.setBounds(getNodeBoundsInCanvas(pswing, combo))
