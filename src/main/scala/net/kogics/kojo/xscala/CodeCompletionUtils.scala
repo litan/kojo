@@ -207,6 +207,10 @@ object CodeCompletionUtils {
 )
   
   val TwMethodTemplates = Map(
+    "turnNorth" -> "turnNorth()",
+    "turnSouth" -> "turnSouth()",
+    "turnEast" -> "turnEast()",
+    "turnWest" -> "turnWest()",
     "newTurtle" -> "newTurtle(${x}, ${y})",
     "pict" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "PictureT" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",

@@ -47,6 +47,10 @@ trait TurtleMover extends RichTurtleCommands {
   def moveTo(x: Double, y: Double): Unit
   def moveTo(p: Point): Unit = moveTo(p.x, p.y)
   def setHeading(angle: Double) = turn(angle - heading)
+  def turnNorth(): Unit = setHeading(90)
+  def turnSouth(): Unit = setHeading(270)
+  def turnEast(): Unit = setHeading(0)
+  def turnWest(): Unit = setHeading(180)
   def home() = {
     moveTo(0, 0)
     setHeading(90)
