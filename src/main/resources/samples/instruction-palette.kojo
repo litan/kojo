@@ -47,43 +47,43 @@ def footer =
 import scala.collection.mutable.LinkedHashMap
 
 val tTemplates = LinkedHashMap(
-    "clear()" -> "clear()",
-    "invisible()" -> "invisible()",
-    "cleari()" -> "cleari()",
+    "clear()             " -> "clear()",
+    "forward(n)          " -> "forward(${c}50)",
+    "hop(n)              " -> "hop(${c}50)",
+    "right(a)            " -> "right(${c}90)",
+    "left(a)             " -> "left(${c}90)",
+    "repeat(n) {...}     " -> """repeat(${c}4) {
+}""",
     "setAnimationDelay(d)" -> "setAnimationDelay(${c}100)",
-    "forward(n)" -> "forward(${c}50)",
-    "back(n)" -> "back(${c}50)",
-    "right(a)" -> "right(${c}90)",
-    "left(a)" -> "left(${c}90)",
-    "setPenColor(c)" -> "setPenColor(${c}blue)",
-    "setFillColor(c)" -> "setFillColor(${c}blue)",
-    "setBackground(c)" -> "setBackground(${c}yellow)",
-    "setPenThickness(t)" -> "setPenThickness(${c}4)",
-    "penUp()" -> "penUp()",
-    "penDown()" -> "penDown()",
-    "write(t)" -> """write(${c}"Hi There")""",
-    "setPenFontSize(n)" -> "setPenFontSize(${c}18)"
+    "setPenColor(c)      " -> "setPenColor(${c}blue)",
+    "setFillColor(c)     " -> "setFillColor(${c}blue)",
+    "setBackground(c)    " -> "setBackground(${c}yellow)",
+    "setPenThickness(t)  " -> "setPenThickness(${c}4)",
+    "back(n)             " -> "back(${c}50)",
+    "invisible()         " -> "invisible()",
+    "write(t)            " -> """write(${c}"Hi There")""",
+    "setPenFontSize(n)   " -> "setPenFontSize(${c}18)"
 )
 
 val cfTemplates = LinkedHashMap(
-    "repeat    [command]" -> """repeat(${c}4) {
+    "repeat    [command]  " -> """repeat(${c}4) {
     forward(50)
 }""",
-    "if        [command]" -> """if (${c}true) {
+    "if        [command]  " -> """if (${c}true) {
     setPenColor(blue)
 }""",
-    "if-else   [command]" -> """if (${c}true) {
+    "if-else   [command]  " -> """if (${c}true) {
     setPenColor(blue)
 }
 else {
     setPenColor(green)
 }""",
-    "if-else   [expr]" -> """if (${c}true) 5 else 9""",
-    "for       [command]" -> """for (i <- ${c}1 to 4) {
+    "if-else   [expr]     " -> """if (${c}true) 5 else 9""",
+    "for       [command]  " -> """for (i <- ${c}1 to 4) {
     println(i)
 }""",
-    "for       [expr]" -> """for (${c}i <- 1 to 4) yield (2 * i)""",
-    "recursion [command]" -> """def ${c}pattern(n: Int) {
+    "for       [expr]     " -> """for (${c}i <- 1 to 4) yield (2 * i)""",
+    "recursion [command]  " -> """def ${c}pattern(n: Int) {
     if (n <= 10) {
         forward(n)
     }
@@ -93,61 +93,61 @@ else {
         pattern(n-5)
     }
 }""",
-    "recursion [function]" -> """def ${c}factorial(n: Int): Int = 
+    "recursion [function] " -> """def ${c}factorial(n: Int): Int = 
     if (n == 0) 1 else n * factorial(n-1)"""
 )
 
 val aTemplates = LinkedHashMap(
-    "val       [expr]" -> "val x = ${c}10",
-    "def       [command]" -> """def ${c}newcmd(n: Int) {
+    "val       [expr]     " -> "val x = ${c}10",
+    "def       [command]  " -> """def ${c}newcmd(n: Int) {
     forward(50)
 } """,
-    "def       [function]" -> """def ${c}max(n1: Int, n2: Int) = 
+    "def       [function] " -> """def ${c}max(n1: Int, n2: Int) = 
         if (n1 > n2) n1 else n2"""
 )
 
 val pTemplates = LinkedHashMap(
-    "Picture" -> """Picture {
+    "Picture              " -> """Picture {
     ${c}forward(50)    
 }""",
-    "picRow(pics)" -> "picRow(${c}p, p)",
-    "picCol(pics)" -> "picCol(${c}p, p)",
-    "picStack(pics)" -> "picStack(${c}p, p)",
-    "draw(pics)" -> "draw(${c}pic)",
+    "picRow(pics)         " -> "picRow(${c}p, p)",
+    "picCol(pics)         " -> "picCol(${c}p, p)",
+    "picStack(pics)       " -> "picStack(${c}p, p)",
+    "draw(pics)           " -> "draw(${c}pic)",
     "" -> "",
-    "PicShape.hline(len)" -> "PicShape.hline(${c}50)",
-    "PicShape.vline(len)" -> "PicShape.vline(${c}50)",
-    "PicShape.rect(h, w)" -> "PicShape.rect(${c}50, 100)",
-    "PicShape.circle(r)" -> "PicShape.circle(${c}50)",
-    "PicShape.arc(r, a)" -> "PicShape.arc(${c}50, 45)",
-    "PicShape.text(s, n)" -> """PicShape.text(${c}"Hello", 18)""",
-    "PicShape.image(f)" -> "PicShape.image(${c}Costume.womanWaving)",
-    "PicShape.widget(c)" -> """PicShape.widget(${c}Label("Hi there"))"""
+    "PicShape.hline(len)  " -> "PicShape.hline(${c}50)",
+    "PicShape.vline(len)  " -> "PicShape.vline(${c}50)",
+    "PicShape.rect(h, w)  " -> "PicShape.rect(${c}50, 100)",
+    "PicShape.circle(r)   " -> "PicShape.circle(${c}50)",
+    "PicShape.arc(r, a)   " -> "PicShape.arc(${c}50, 45)",
+    "PicShape.text(s, n)  " -> """PicShape.text(${c}"Hello", 18)""",
+    "PicShape.image(f)    " -> "PicShape.image(${c}Costume.womanWaving)",
+    "PicShape.widget(c)   " -> """PicShape.widget(${c}Label("Hi there"))"""
 )
 
 val ptTemplates = LinkedHashMap(
-    "rot(a)" -> "rot(${c}45)",
-    "scale(f)" -> "scale(${c}2)",
-    "trans(x,y)" -> "trans(${c}10, 10)",
-    "penColor(c)" -> "penColor(${c}blue)",
-    "fillColor(c)" -> "fillColor(${c}blue)",
-    "penWidth(w)" -> "penWidth(${c}4)",
-    "hue(f)" -> "hue(${c}0.1)",
-    "sat(f)" -> "sat(${c}0.1)",
-    "brit(f)" -> "brit(${c}0.1)",
-    "opac(f)" -> "opac(${c}0.1)",
-    "flipX" -> "flipX",
-    "flipY" -> "flipY",
-    "axes" -> "axes"
+    "rot(a)               " -> "rot(${c}45)",
+    "scale(f)             " -> "scale(${c}2)",
+    "trans(x,y)           " -> "trans(${c}10, 10)",
+    "penColor(c)          " -> "penColor(${c}blue)",
+    "fillColor(c)         " -> "fillColor(${c}blue)",
+    "penWidth(w)          " -> "penWidth(${c}4)",
+    "hue(f)               " -> "hue(${c}0.1)",
+    "sat(f)               " -> "sat(${c}0.1)",
+    "brit(f)              " -> "brit(${c}0.1)",
+    "opac(f)              " -> "opac(${c}0.1)",
+    "flipX                " -> "flipX",
+    "flipY                " -> "flipY",
+    "axes                 " -> "axes"
 )
 
 val cTemplates = LinkedHashMap(
-    "==   [equal to]" -> "${c}2 == 2",
-    "!=   [not equal to]" -> "${c}1 != 2",
-    ">    [greater than]" -> "${c}2 > 1",
-    "<    [less than]" -> "${c}1 < 2",
-    ">=   [greater/equal]" -> "${c}2 >= 1",
-    "<=   [less/equal than]" -> "${c}1 <= 2"
+    "==   [equal to]        " -> "${c}2 == 2",
+    "!=   [not equal to]    " -> "${c}1 != 2",
+    ">    [greater than]    " -> "${c}2 > 1",
+    "<    [less than]       " -> "${c}1 < 2",
+    ">=   [greater/equal]   " -> "${c}2 >= 1",
+    "<=   [less/equal than] " -> "${c}1 <= 2"
 )
 
 val instructions = Map(
@@ -207,7 +207,7 @@ import java.awt.event._
 @volatile var helpFrame: JWindow = _
 @volatile var helpPane: JEditorPane = _
 @volatile var footerPanel: JPanel = _
-@volatile var helpOn = true
+@volatile var helpOn = false
 
 def insertCodeInline(cat: String, idx: Int) {
     stInsertCodeInline(templates(cat)(instructions(cat)(idx)))
@@ -293,9 +293,9 @@ runInGuiThread {
     val helpLabel = new JLabel("Live Help"); helpLabel.setForeground(color(0xfafafa))
     footerPanel.add(helpLabel)
     val onButton = new JRadioButton("On"); onButton.setForeground(color(0xfafafa))
-    onButton.setSelected(true)
+    onButton.setSelected(false)
     val offButton = new JRadioButton("Off"); offButton.setForeground(color(0xfafafa))
-    offButton.setSelected(false)
+    offButton.setSelected(true)
     val onOff = new ButtonGroup; onOff.add(onButton); onOff.add(offButton)
     footerPanel.add(onButton)
     footerPanel.add(offButton)
