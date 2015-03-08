@@ -56,15 +56,15 @@ package object picture {
   def deco(painter: Painter) = Decoc(painter)
   def fade(n: Int) = Fadec(n)
   def blur(n: Int) = Blurc(n)
-  def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = 
+  def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) =
     PointLightc(x, y, direction, elevation, distance)
-  def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = 
+  def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) =
     SpotLightc(x, y, direction, elevation, distance)
   def lights(lights: Light*) = Lightsc(lights: _*)
   def noise(amount: Int, density: Double) = Noisec(amount, density)
   def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) = Weavec(xWidth, xGap, yWidth, yGap)
   def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = SomeEffectc(name, props: _*)
-  
+
   def PointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = {
     val fltr = new LightFilter
     val light = new fltr.PointLight
@@ -138,7 +138,7 @@ package object picture {
   def image(img: Image)(implicit canvas: SCanvas) = new ImagePic(img)
 
   def widget(swingComponent: JComponent)(implicit canvas: SCanvas) = new SwingPic(swingComponent)
-  
+
   def effectablePic(pic: Picture)(implicit canvas: SCanvas) = new EffectableImagePic(pic)
 
   def protractor(camScale: Double)(implicit canvas: SCanvas) = {
@@ -147,29 +147,30 @@ package object picture {
     def line = Pic { t =>
       import t._
       right()
+      forward(r)
+    }
+
+    def line2 = Pic { t =>
+      import t._
+      right()
       penUp()
-      forward(r / 4)
+      forward(r)
       penDown()
-      forward(3 * r / 4)
+      forward(0.6 * r)
     }
 
     def slice = Pic { t =>
       import t._
       right()
-      penUp()
-      forward(r / 4)
-      penDown()
-      forward(3 * r / 4)
+      forward(r)
       left()
     }
 
     def prot(n: Int): Picture = {
-      def angletext(n: Int) = if (n >= 90) {
-        trans(1.05 * r, 8 * r / 100) -> text(180 - n, 10)
-      }
-      else {
-        trans(1.25 * r, -8 * r / 100) * rot(180) -> text(180 - n, 10)
-      }
+      def angletext(n: Int) = stroke(Color.black) -> GPics(
+        trans(1.25 * r, -6 * r / 100) * rot(180) -> text(180 - n, 10),
+        trans(1.35 * r, 6 * r / 100) -> text(n, 10)
+      )
 
       if (n == 0) {
         GPics(
@@ -187,9 +188,13 @@ package object picture {
       }
     }
     val p = opac(-0.5) -> GPics(
-      stroke(Color.black) -> prot(180),
+      stroke(Color.gray) -> prot(180),
       fill(new Color(0, 0, 0, 0)) * stroke(Color.black) -> arc(r, 180),
-      opac(-0.5) * stroke(Color.blue) -> arc(r / 4, 180)
+      fill(new Color(0, 0, 0, 0)) * stroke(Color.gray) -> arc(1.3 * r, 180),
+      fill(new Color(0, 0, 0, 0)) * stroke(Color.black) -> arc(1.6 * r, 180),
+      opac(-0.5) * stroke(Color.blue) -> arc(r / 4, 180),
+      fill(new Color(0, 0, 0, 0)) * stroke(Color.lightGray) -> line2,
+      fill(new Color(0, 0, 0, 0)) * stroke(Color.lightGray) * rot(180) -> line2
     )
     addMouseHandlers(p)
     p
