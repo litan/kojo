@@ -189,13 +189,13 @@ class CodeExecutionSupport(
     traceButton.setEnabled(enable)
     compileButton.setEnabled(enable)
   }
-  
+
   def doWelcome() {
     if (kojoCtx.subKojo) {
       showOutput(Utils.loadString("S_OutputScratchpadWelcome") + "\n")
       showOutput(Utils.loadString("S_OutputScratchpadHistoryNotSave") + "\n", Color.red)
     }
-    else {      
+    else {
       val head = Utils.loadString("S_OutputWelcome") format Versions.KojoVersion
       val instructions = Seq(
         Utils.loadString("S_OutputVisualPalette"),
@@ -207,33 +207,34 @@ class CodeExecutionSupport(
       showOutput(makeTabulatedWelcomeMessage(head, instructions))
     }
   }
-  
+
   /**Contains the goal a user wants to reach, and the action he has to take for this.*/
   private case class Line(goal: String, action: String)
-  
-  /**Composes a welcome message from the head and a tabulated arrangement of the instructions.
+
+  /**
+   * Composes a welcome message from the head and a tabulated arrangement of the instructions.
    * Each instruction should have the format "goal -> action".
-   * The instructions are splitted at the first occurrence of "->" and then tabulated, 
+   * The instructions are splitted at the first occurrence of "->" and then tabulated,
    * so that all "->" are one below another when using a monospace font.
    */
   private def makeTabulatedWelcomeMessage(head: String, instructions: Seq[String]): String = {
-      val instructionsSplitted = instructions.map(_.split("->", 2))
-      val instructionsTrimmed = for(instr <- instructionsSplitted) yield {
-        Line(instr(0).trim, instr(1).trim)
-      }
-      val maxGoalLine = instructionsTrimmed.maxBy(line => line.goal.length)
-      val maxGoalLen = maxGoalLine.goal.length
-      val sb = new StringBuilder(head)
+    val instructionsSplitted = instructions.map(_.split("->", 2))
+    val instructionsTrimmed = for (instr <- instructionsSplitted) yield {
+      Line(instr(0).trim, instr(1).trim)
+    }
+    val maxGoalLine = instructionsTrimmed.maxBy(line => line.goal.length)
+    val maxGoalLen = maxGoalLine.goal.length
+    val sb = new StringBuilder(head)
+    sb append '\n'
+    for (instr <- instructionsTrimmed) {
+      sb append "* "
+      sb append instr.goal
+      sb append " " * (maxGoalLen - instr.goal.length)
+      sb append " ->  "
+      sb append instr.action
       sb append '\n'
-      for(instr <- instructionsTrimmed){
-          sb append "* "
-          sb append instr.goal
-          sb append " "*(maxGoalLen-instr.goal.length)
-          sb append " ->  "
-          sb append instr.action
-          sb append '\n'
-      }   
-      sb.toString
+    }
+    sb.toString
   }
 
   def isSingleLine(code: String): Boolean = {
@@ -277,14 +278,29 @@ class CodeExecutionSupport(
   def insertCodeBlock(code: String) = smartInsertCode(code, true)
 
   private def smartInsertCode(code: String, block: Boolean) = Utils.runInSwingThread {
-    val dot = codePane.getCaretPosition
+    def lineAt(offset: Int) = {
+      val lineStart = Utilities.getRowStart(codePane, offset)
+      val lineEnd = Utilities.getRowEnd(codePane, offset)
+      codePane.getDocument.getText(lineStart, lineEnd - lineStart)
+    }
+
+    def blankLine(offset: Int) = lineAt(offset).trim == ""
+
+    var dot = codePane.getCaretPosition
     val cOffset = code.indexOf("${c}")
     if (cOffset == -1) {
       if (block) {
-        val leadingSpaces = dot - Utilities.getRowStart(codePane, dot)
-        codePane.insert("%s\n".format(code).
-          replaceAllLiterally("\n", "\n%s".format(" " * leadingSpaces)), dot)
-        // move to next line. Assumes that a block insert without a ${c} is on a single line - like clear() etc  
+        if (blankLine(dot)) {
+          codePane.insert("%s\n".format(code), dot)
+        }
+        else {
+          codePane.insert("\n", Utilities.getRowEnd(codePane, dot))
+          dot = Utilities.getRowEnd(codePane, dot) + 1
+          codePane.insert("%s".format(code), dot)
+        }
+        scriptEditor.formatAction.actionPerformed(null)
+        val currLine = lineAt(dot)
+        val leadingSpaces = currLine.prefixLength { _ == ' ' }
         codePane.setCaretPosition(Utilities.getRowEnd(codePane, dot) + 1 + leadingSpaces)
       }
       else {
@@ -293,10 +309,18 @@ class CodeExecutionSupport(
     }
     else {
       if (block) {
-        val leadingSpaces = dot - Utilities.getRowStart(codePane, dot)
-        codePane.insert("%s\n".format(code.replaceAllLiterally("${c}", "")).
-          replaceAllLiterally("\n", "\n%s".format(" " * leadingSpaces)), dot)
-        codePane.setCaretPosition(dot + cOffset)
+        if (blankLine(dot)) {
+          codePane.insert("%s\n".format(code.replaceAllLiterally("${c}", "")), dot)
+        }
+        else {
+          codePane.insert("\n", Utilities.getRowEnd(codePane, dot))
+          dot = Utilities.getRowEnd(codePane, dot) + 1
+          codePane.insert("%s".format(code.replaceAllLiterally("${c}", "")), dot)
+        }
+        scriptEditor.formatAction.actionPerformed(null)
+        val currLine = lineAt(dot)
+        val leadingSpaces = currLine.prefixLength { _ == ' ' }
+        codePane.setCaretPosition(Utilities.getRowStart(codePane, dot) + leadingSpaces + cOffset)
       }
       else {
         codePane.insert("%s ".format(code.replaceAllLiterally("${c}", "")), dot)
