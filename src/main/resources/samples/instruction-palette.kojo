@@ -47,22 +47,21 @@ def footer =
 import scala.collection.mutable.LinkedHashMap
 
 val tTemplates = LinkedHashMap(
-    "clear()             " -> "clear()",
-    "forward(n)          " -> "forward(${c}50)",
-    "hop(n)              " -> "hop(${c}50)",
-    "right(a)            " -> "right(${c}90)",
-    "left(a)             " -> "left(${c}90)",
-    "repeat(n) {...}     " -> """repeat(${c}4) {
+    "clear()              " -> "clear()",
+    "forward(n)           " -> "forward(${c}50)",
+    "hop(n)               " -> "hop(${c}50)",
+    "right(a)             " -> "right(${c}90)",
+    "left(a)              " -> "left(${c}90)",
+    "repeat(n) {...}      " -> """repeat(${c}4) {
 }""",
-    "setAnimationDelay(d)" -> "setAnimationDelay(${c}100)",
-    "setPenColor(c)      " -> "setPenColor(${c}blue)",
-    "setFillColor(c)     " -> "setFillColor(${c}blue)",
-    "setBackground(c)    " -> "setBackground(${c}yellow)",
-    "setPenThickness(t)  " -> "setPenThickness(${c}4)",
-    "back(n)             " -> "back(${c}50)",
-    "invisible()         " -> "invisible()",
-    "write(t)            " -> """write(${c}"Hi There")""",
-    "setPenFontSize(n)   " -> "setPenFontSize(${c}18)"
+    "savePosHe()          " -> "savePosHe()",
+    "restorePosHe()       " -> "restorePosHe()",
+    "setAnimationDelay(d) " -> "setAnimationDelay(${c}100)",
+    "setPenColor(c)       " -> "setPenColor(${c}blue)",
+    "setFillColor(c)      " -> "setFillColor(${c}blue)",
+    "setPenThickness(t)   " -> "setPenThickness(${c}4)",
+    "setBackground(c)     " -> "setBackground(${c}yellow)",
+    "invisible()          " -> "invisible()"
 )
 
 val cfTemplates = LinkedHashMap(
