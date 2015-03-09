@@ -297,6 +297,8 @@ class CodeExecutionSupport(
           codePane.insert("\n", Utilities.getRowEnd(codePane, dot))
           dot = Utilities.getRowEnd(codePane, dot) + 1
           codePane.insert("%s".format(code), dot)
+          // minimize chance of dot moving to previous line because of upcoming format action
+          dot = Utilities.getRowEnd(codePane, dot) 
         }
         scriptEditor.formatAction.actionPerformed(null)
         val currLine = lineAt(dot)
@@ -316,6 +318,8 @@ class CodeExecutionSupport(
           codePane.insert("\n", Utilities.getRowEnd(codePane, dot))
           dot = Utilities.getRowEnd(codePane, dot) + 1
           codePane.insert("%s".format(code.replaceAllLiterally("${c}", "")), dot)
+          // minimize chance of dot moving to previous line because of upcoming format action
+          dot = Utilities.getRowEnd(codePane, dot) 
         }
         scriptEditor.formatAction.actionPerformed(null)
         val currLine = lineAt(dot)
