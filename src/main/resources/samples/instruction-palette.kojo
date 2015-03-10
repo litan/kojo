@@ -39,9 +39,7 @@ def navLinks =
 
 def footer =
     <div style={ footerStyle }>
-        Click on any instruction to insert it into the Script Editor at the current Caret location.<br/>
-        <br/>
-        If you don't like an insertion, press Ctrl+Z in the Script Editor to undo it.<br/>
+        Click on any instruction to insert it into the Script Editor at the current Caret location (if that's on a blank line) or on the next line (otherwise).<br/>
     </div>
 
 import scala.collection.mutable.LinkedHashMap
