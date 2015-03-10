@@ -275,7 +275,12 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def makeTraceWindowVisible(tw: DefaultSingleCDockable) = Utils.runInSwingThread {
     if (!tw.isShowing) {
       control.addDockable(tw)
-      tw.setLocation(CLocation.base.normalWest(0.3))
+      if (topcs.sth.isShowing) {
+        tw.setLocation(CLocation.base.normalEast(0.3))
+      }
+      else {
+        tw.setLocation(CLocation.base.normalWest(0.3))
+      }
       tw.setVisible(true)
     }
     tw.toFront()
