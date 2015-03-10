@@ -52,16 +52,17 @@ val tTemplates = LinkedHashMap(
     "hop(n)               " -> "hop(${c}50)",
     "right(a)             " -> "right(${c}90)",
     "left(a)              " -> "left(${c}90)",
-    "repeat(n) {...}      " -> """repeat(${c}4) {
-}""",
-    "savePosHe()          " -> "savePosHe()",
-    "restorePosHe()       " -> "restorePosHe()",
     "setAnimationDelay(d) " -> "setAnimationDelay(${c}100)",
-    "setPenColor(c)       " -> "setPenColor(${c}blue)",
+    "setPenColor(c)       " -> "setPenColor(${c}randomColor)",
     "setFillColor(c)      " -> "setFillColor(${c}blue)",
     "setPenThickness(t)   " -> "setPenThickness(${c}4)",
-    "setBackground(c)     " -> "setBackground(${c}yellow)",
-    "invisible()          " -> "invisible()"
+    "setBackground(c)     " -> "setBackground(${c}black)",
+    "savePosHe()          " -> "savePosHe()",
+    "restorePosHe()       " -> "restorePosHe()",
+    "repeat(n) {...}      " -> """repeat(${c}4) {
+}""",
+    "def       [command]  " -> """def ${c}newcmd() {
+}"""
 )
 
 val cfTemplates = LinkedHashMap(
@@ -100,7 +101,7 @@ val aTemplates = LinkedHashMap(
     "val       [expr]     " -> "val x = ${c}10",
     "def       [command]  " -> """def ${c}newcmd(n: Int) {
     forward(50)
-} """,
+}""",
     "def       [function] " -> """def ${c}max(n1: Int, n2: Int) = 
         if (n1 > n2) n1 else n2"""
 )
