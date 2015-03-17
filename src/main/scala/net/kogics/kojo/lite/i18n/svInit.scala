@@ -21,6 +21,7 @@ package net.kogics.kojo.lite.i18n
 
 import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.xscala.RepeatCommands
 
 object SwedishAPI {
   import net.kogics.kojo.core.Turtle
@@ -107,15 +108,17 @@ object SwedishAPI {
   
   //loops in Swedish
   def upprepa(n: Int)(block: => Unit) {
-    for (i <- 1 to n) block
+    RepeatCommands.repeat(n){ block }
   }
+
   def räkneslinga(n: Int)(block: Int => Unit) {
-    for (i <- 1 to n) block(i)
+    RepeatCommands.repeati(n) { i => block(i) }
   }
+
   def sålänge(villkor: => Boolean)(block: => Unit) {
-    while (villkor) block
-  }
-  
+    RepeatCommands.repeatWhile (villkor) { block }
+  }  
+
   //simple IO
   def indata(ledtext: String = "") =  builtins.readln(ledtext)
   
