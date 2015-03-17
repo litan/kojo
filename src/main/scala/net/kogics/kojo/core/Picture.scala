@@ -90,6 +90,15 @@ trait Picture extends InputAware {
   def morph(fn: Seq[PolyLine] => Seq[PolyLine])
   def foreachPolyLine(fn: PolyLine => Unit)
   def toImage: BufferedImage
+  def forwardInputTo(p: Picture) {
+    p.tnode.getInputEventListeners.foreach { tnode.addInputEventListener(_) }
+  }
+  def moveToFront {
+    tnode.moveToFront()
+  }
+  def moveToBack {
+    tnode.moveToBack()
+  }
 
   // Todo
   // def bounceOff(other: Picture, vec: Vector2D)
