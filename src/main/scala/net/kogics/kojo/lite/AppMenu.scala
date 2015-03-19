@@ -131,11 +131,11 @@ trait AppMenu {
 
     menuBar.add(fileMenu)
 
-    def menuItemFor(label: String, file: String) = {
+    def menuItemFor(label: String, file: String, root: String = "/samples/") = {
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
         def actionPerformed(ev: ActionEvent) {
-          loadAndRunResource("/samples/" + file)
+          loadAndRunResource(root + file)
         }
       })
       item
@@ -216,6 +216,7 @@ trait AppMenu {
     animGameMenu.add(menuItemFor(Utils.loadString("S_Pong"), "pong.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_MemoryCards"), "memory-cards.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_Hunted"), "hunted.kojo"))
+    animGameMenu.add(menuItemFor(Utils.loadString("S_FlappyBall"), "flappy-ball.kojo"))
     samplesMenu.add(animGameMenu)
 
     val widgetsMenu = newJMenu(Utils.loadString("S_Widgets"))
@@ -347,6 +348,7 @@ trait AppMenu {
     toolsMenu.add(menuItemNELFor(Utils.loadString("S_InstructionPalette"), "instruction-palette.kojo"))
     toolsMenu.add(menuItemFor(Utils.loadString("S_TurtleController"), "turtle-controller.kojo"))
     toolsMenu.add(menuItemFor(Utils.loadString("S_ArduinoProgramming"), "arduino-prog.kojo"))
+    toolsMenu.add(menuItemFor(Utils.loadString("S_StartingChallenges"), "get-started.kojo", "/challenge/"))
     menuBar.add(toolsMenu)
 
     val helpMenu = newJMenu(Utils.loadString("S_Help"))
