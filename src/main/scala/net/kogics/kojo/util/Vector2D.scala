@@ -15,7 +15,7 @@
 
 package net.kogics.kojo.util
 
-import com.vividsolutions.jts.math.{Vector2D => Vec2D}
+import com.vividsolutions.jts.math.{ Vector2D => Vec2D }
 
 case class Vector2D(x: Double, y: Double) {
   import language.implicitConversions
@@ -23,7 +23,7 @@ case class Vector2D(x: Double, y: Double) {
   implicit def unwrap(v: Vector2D): Vec2D = new Vec2D(v.x, v.y)
 
   val vec = new Vec2D(x, y)
-  
+
   def rotate(angle: Double): Vector2D = {
     vec.rotate(angle.toRadians)
   }
@@ -37,11 +37,11 @@ case class Vector2D(x: Double, y: Double) {
     if (magnitude < m) this
     else normalize * m
   }
-  def + (other: Vector2D): Vector2D = vec.add(other)
-  def - (other: Vector2D): Vector2D = vec.subtract(other)
-  def * (factor: Double): Vector2D = vec.multiply(factor)
-  def / (factor: Double): Vector2D = vec.divide(factor)
-  
+  def +(other: Vector2D): Vector2D = vec.add(other)
+  def -(other: Vector2D): Vector2D = vec.subtract(other)
+  def *(factor: Double): Vector2D = vec.multiply(factor)
+  def /(factor: Double): Vector2D = vec.divide(factor)
+
   def dot(other: Vector2D): Double = vec.dot(other)
   def lerp(other: Vector2D, frac: Double): Vector2D = vec.weightedSum(other, frac)
   def distance(other: Vector2D): Double = vec.distance(other)
@@ -49,5 +49,6 @@ case class Vector2D(x: Double, y: Double) {
   def heading = vec.angle.toDegrees
   def angle(v: Vector2D) = vec.angle(v).toDegrees
   def angleTo(v: Vector2D) = vec.angleTo(v).toDegrees
-  override def toString = "Vector2D(%.2f , %.2f)" format(x, y)
+  def unary_- : Vector2D = vec.negate()
+  override def toString = "Vector2D(%.2f , %.2f)" format (x, y)
 }
