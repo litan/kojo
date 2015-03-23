@@ -179,7 +179,7 @@ pages += Page(
             <p>
                 Much more detailed reference information is available in the following
                 (JFugue) document: <br/>
-                <a href="http://www.jfugue.org/jfugue-chapter2.pdf">Chapter 2 of <em>The Complete Guide to JFugue</em></a>
+                <a href="http://www.jfugue.org/4/jfugue-chapter2.pdf">Chapter 2 of <em>The Complete Guide to JFugue</em></a>
             </p>
         </body>
 )
