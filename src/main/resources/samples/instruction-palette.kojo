@@ -46,10 +46,10 @@ import scala.collection.mutable.LinkedHashMap
 
 val tTemplates = LinkedHashMap(
     "clear()              " -> "clear()",
-    "forward(n)           " -> "forward(${c}50)",
-    "hop(n)               " -> "hop(${c}50)",
-    "right(a)             " -> "right(${c}90)",
-    "left(a)              " -> "left(${c}90)",
+    "forward(n)           " -> "forward(${c})",
+    "hop(n)               " -> "hop(${c})",
+    "right(a)             " -> "right(${c})",
+    "left(a)              " -> "left(${c})",
     "setAnimationDelay(d) " -> "setAnimationDelay(${c}100)",
     "setPenColor(c)       " -> "setPenColor(${c}randomColor)",
     "setFillColor(c)      " -> "setFillColor(${c}blue)",
