@@ -1,6 +1,7 @@
 package net.kogics.kojo.lite.i18n
 
 import java.awt.Font
+import java.awt.GraphicsEnvironment
 import java.util.prefs.Preferences
 
 import javax.swing.JMenu
@@ -21,7 +22,11 @@ object LangInit {
     userLanguage
   }
 
-  lazy val fontForHindi = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/i18n/gargi.ttf")).deriveFont(Font.PLAIN, 16f)
+  lazy val fontForHindi = {
+    val font = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/i18n/gargi.ttf"))
+    GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(font)
+    font.deriveFont(Font.PLAIN, 16f)
+  }
   //  lazy val fontForHindi = new Font(Font.SANS_SERIF, Font.PLAIN, 18)
   def lookAndFeelReady() {
     System.getProperty("user.language") match {
