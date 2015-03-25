@@ -130,7 +130,7 @@ class CirclePic(r: Double)(implicit val canvas: SCanvas) extends Picture with Co
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {
     def x(t: Double) = r * math.cos(t.toRadians)
     def y(t: Double) = r * math.sin(t.toRadians)
-    def cPoints = for (i <- 1 to 360) yield new Coordinate(x(i), y(i))
+    def cPoints = for (i <- 1 to 360) yield newCoordinate(x(i), y(i))
     Gf.createLineString(cPoints.toArray)
   }
 
@@ -155,9 +155,9 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
     def x(t: Double) = r * math.cos(t.toRadians)
     def y(t: Double) = r * math.sin(t.toRadians)
     val step = if (angle > 0) 1 else -1
-    var cPoints = for (i <- 0 to angle.toInt by step) yield new Coordinate(x(i), y(i))
+    var cPoints = for (i <- 0 to angle.toInt by step) yield newCoordinate(x(i), y(i))
     if (angle.floor != angle) {
-      cPoints = cPoints :+ new Coordinate(x(angle), y(angle))
+      cPoints = cPoints :+ newCoordinate(x(angle), y(angle))
     }
     Gf.createLineString(cPoints.toArray)
   }

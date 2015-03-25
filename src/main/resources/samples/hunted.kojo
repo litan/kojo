@@ -90,9 +90,9 @@ val badguy5 = fillColor(black) * trans(2 * xmax / 3, ymax / 2) * scale(0.3) -> g
 
 playMp3Loop("/media/music-loops/Cave.mp3")
 invisible()
+drawStage(Color(150, 150, 255))
 draw(goodguy, badguy, badguy2, badguy3, badguy4, badguy5)
 drawAndHide(lostMsg, wonMsg)
-drawStage(Color(150, 150, 255))
 
 val bf = 2
 val sf = 1.5
