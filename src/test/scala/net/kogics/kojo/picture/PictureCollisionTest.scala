@@ -31,7 +31,7 @@ class PictureCollisionTest extends FunSuite with Matchers with xscala.RepeatComm
   implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
 
   val psize = 50.0
-  val delta = 1e-7
+  val delta = 0.01
   val blue = java.awt.Color.blue
 
   def testBox0(n: Double) = Pic { t =>
@@ -59,16 +59,16 @@ class PictureCollisionTest extends FunSuite with Matchers with xscala.RepeatComm
   )
 
   test("box-box non collision") {
-    val p1 = trans(-psize / 2, 0) -> testBox
-    val p2 = trans(psize / 2, 0) -> testBox
+    val p1 = trans(-psize / 2 - delta, 0) -> testBox
+    val p2 = trans(psize / 2 + delta, 0) -> testBox
     p1.draw()
     p2.draw()
     p1.collidesWith(p2) should be(false)
   }
 
   test("box-box collision") {
-    val p1 = trans(-psize / 2 + delta, 0) -> testBox
-    val p2 = trans(psize / 2 - delta, 0) -> testBox
+    val p1 = trans(-psize / 2, 0) -> testBox
+    val p2 = trans(psize / 2, 0) -> testBox
     p1.draw()
     p2.draw()
     p1.collidesWith(p2) should be(true)
