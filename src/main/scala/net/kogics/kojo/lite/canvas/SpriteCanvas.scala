@@ -577,7 +577,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   def exportImageH(filePrefix: String, height: Int): File = exportThumbnail(filePrefix, height)
-  
+
   def exportImageW(filePrefix: String, width: Int): File = {
     exportImageHelper(filePrefix, width, (getHeight.toFloat / getWidth * width).toInt)
   }
@@ -799,6 +799,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   @volatile var stageTop: Picture = _
   @volatile var stageRight: Picture = _
   @volatile var stageBot: Picture = _
+  @volatile var stageArea: Picture = _
 
   def clearStage() {
     stage = noPic
@@ -820,6 +821,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     stageTop = picture.trans(-xmax, ymax) * picture.rot(-90) -> border(cb.width)
     stageRight = picture.trans(xmax, -ymax) -> border(cb.height)
     stageBot = picture.trans(-xmax, -ymax) * picture.rot(-90) -> border(cb.width)
+    stageArea = picture.trans(-xmax, -ymax) * picture.fill(fillc) *
+      picture.stroke(Color.darkGray) -> picture.rect(cb.height, cb.width)
 
     stage = picture.GPics(
       stageLeft,
@@ -828,7 +831,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       stageBot)
 
     stage.draw()
-    setCanvasBackground(fillc)
+    stageArea.draw()
+//    setCanvasBackground(fillc)
   }
 
   class Popup() extends JPopupMenu {

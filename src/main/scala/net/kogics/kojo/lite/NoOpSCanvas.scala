@@ -51,6 +51,7 @@ class NoOpSCanvas extends SCanvas {
   def stageTop: Picture = null
   def stageRight: Picture = null
   def stageBot: Picture = null
+  def stageArea: Picture = null
 
   def turtle0: Turtle = null
   def activate() {}

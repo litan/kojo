@@ -50,5 +50,9 @@ case class Vector2D(x: Double, y: Double) {
   def angle(v: Vector2D) = vec.angle(v).toDegrees
   def angleTo(v: Vector2D) = vec.angleTo(v).toDegrees
   def unary_- : Vector2D = vec.negate()
+  def bounceOff(other: Vector2D) = {
+    val a = angleTo(other)
+    rotate(-2 * (180 - a))
+  }
   override def toString = "Vector2D(%.2f , %.2f)" format (x, y)
 }

@@ -23,7 +23,9 @@ import javax.swing.JComponent
 
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
+import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.GeometryFactory
+import com.vividsolutions.jts.geom.PrecisionModel
 
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
@@ -311,6 +313,11 @@ package object picture {
       val pos = p.position
       pressDelta = (x - pos.x, y - pos.y)
     }
-
+  }
+  lazy val pmodel = new PrecisionModel(14)
+  def newCoordinate(x: Double, y: Double) = {
+    val coord = new Coordinate(x, y)
+    pmodel.makePrecise(coord)
+    coord
   }
 }
