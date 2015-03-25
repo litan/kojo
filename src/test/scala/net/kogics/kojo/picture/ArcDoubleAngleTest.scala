@@ -24,7 +24,7 @@ class ArcDoubleAngleTest extends FunSuite with Matchers {
   }
 
   test("not touching") {
-    val arc1 = arc(100, 45.59)
+    val arc1 = arc(100, 45.55)
     val line = Pic { t =>
       import t._
       moveTo(100 * math.cos(45.6.toRadians), 100 * math.sin(45.6.toRadians))
@@ -34,7 +34,7 @@ class ArcDoubleAngleTest extends FunSuite with Matchers {
   }
 
   test("overlapping") {
-    val arc1 = arc(100, 45.7)
+    val arc1 = arc(100, 45.79)
     val line = Pic { t =>
       import t._
       moveTo(100 * math.cos(45.6.toRadians), 100 * math.sin(45.6.toRadians))
