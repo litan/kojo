@@ -416,12 +416,12 @@ Here's a partial list of the available commands:
     }.get
   }
 
-  def bouncePicOffStage(p: Picture, v: Vector2D): Vector2D = {
+  def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = {
     import TSCanvas._
-    bouncePicOffPic(p, v, stageArea)
+    bouncePicVectorOffPic(p, v, stageArea)
   }
 
-  def bouncePicOffPic(pic: Picture, v: Vector2D, obj: Picture): Vector2D = {
+  def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obj: Picture): Vector2D = {
     def collisionVector(p: Picture, p2: Picture) = {
       val pt = p.intersection(p2)
       p.picGeom.getCoordinates.sliding(2).find { cs =>
@@ -439,9 +439,10 @@ Here's a partial list of the available commands:
         }.isDefined
       } match {
         case Some(cs) =>
-          Vector2D(cs(0).x - cs(1).x, cs(0).y - cs(1).y).normalize * v.magnitude
+          Vector2D(cs(0).x - cs(1).x, cs(0).y - cs(1).y).normalize
         case None =>
-          Vector2D(randomDouble(1), randomDouble(1)).normalize * v.magnitude
+          println("Warning: unable to determine collision vector; generating random vector")
+          Vector2D(randomDouble(1), randomDouble(1)).normalize
       }
     }
     val cv = collisionVector(obj, pic)
