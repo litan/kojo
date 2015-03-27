@@ -17,7 +17,7 @@ def pgHeader(hdr: String) =
     </p>
 
 val scripts = Vector(
-    net.kogics.kojo.util.Utils.loadResource("/ka-bridge/ka_bridge.ino"),
+    net.kogics.kojo.util.Utils.loadResource("/ka-bridge/ka_bridge/ka_bridge.ino"),
     net.kogics.kojo.util.Utils.loadResource("/ka-bridge/ka-bridge.kojo"),
     net.kogics.kojo.util.Utils.loadResource("/ka-bridge/sample.kojo")
 )
@@ -69,7 +69,7 @@ pages :+= Page(
             { pgHeader("Uploading ka_bridge.ino to your Arduino board") }
             To upload <tt>ka_bridge.ino</tt> to your Arduino board, do the following:
             <ol>
-                <li>Fire up the <a href="http://arduino.cc/en/Guide/Environment">Arduino Programming Environment</a>, and make sure the Arduino board is connected to your computer.</li>
+                <li>Fire up the <a href="http://arduino.cc/en/Guide/Environment">Arduino Programming Environment</a> (<a href="http://arduino.cc/en/Main/OldSoftwareReleases">version 1.0.5</a> is recommended), and make sure the Arduino board is connected to your computer.</li>
                 <li>Click on the code below to copy it into the script editor.</li>
                 <li>Select all the code in the script editor (<em>Ctrl+A</em>), copy it (<em>Ctrl+C</em>), and then paste it into the Arduino IDE (<em>Ctrl+V</em>).</li>
                 <li>Click the Upload button in the Arduino IDE -- to get the Kojo bridge code running on your Arduino board.</li>
