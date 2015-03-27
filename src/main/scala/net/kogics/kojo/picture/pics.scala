@@ -421,8 +421,10 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     val cab = new ArrayBuffer[Coordinate]
     val pp = t.penPaths
     pp.foreach { pl =>
-      pl.points.foreach { pt =>
-        cab += newCoordinate(pt.x, pt.y)
+      if (pl.points.size > 1) {
+        pl.points.foreach { pt =>
+          cab += newCoordinate(pt.x, pt.y)
+        }
       }
     }
     if (cab.size == 1) {
