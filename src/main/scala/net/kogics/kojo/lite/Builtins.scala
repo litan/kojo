@@ -415,41 +415,10 @@ Here's a partial list of the available commands:
       }
     }.get
   }
-
-  def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = {
-    import TSCanvas._
-    bouncePicVectorOffPic(p, v, stageArea)
-  }
-
-  def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obj: Picture): Vector2D = {
-    def collisionVector(p: Picture, p2: Picture) = {
-      val pt = p.intersection(p2)
-      p.picGeom.getCoordinates.sliding(2).find { cs =>
-        pt.getCoordinates.find { c =>
-          val xcheck = if (cs(0).x > cs(1).x)
-            cs(0).x >= c.x && c.x >= cs(1).x
-          else
-            cs(0).x <= c.x && c.x <= cs(1).x
-
-          val ycheck = if (cs(0).y > cs(1).y)
-            cs(0).y >= c.y && c.y >= cs(1).y
-          else
-            cs(0).y <= c.y && c.y <= cs(1).y
-          xcheck && ycheck
-        }.isDefined
-      } match {
-        case Some(cs) =>
-          Vector2D(cs(0).x - cs(1).x, cs(0).y - cs(1).y).normalize
-        case None =>
-          println("Warning: unable to determine collision vector; generating random vector")
-          Vector2D(randomDouble(1), randomDouble(1)).normalize
-      }
-    }
-    val cv = collisionVector(obj, pic)
-    val ret = v.bounceOff(cv)
-    ret
-  }
-
+  def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bounceVecOffStage(v, p)
+  def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obj: Picture): Vector2D = 
+    picture.bouncePicVectorOffPic(pic, v, obj, Random)
+    
   def switchToDefaultPerspective() = kojoCtx.switchToDefaultPerspective()
   def switchToDefault2Perspective() = kojoCtx.switchToDefault2Perspective()
   def switchToScriptEditingPerspective() = kojoCtx.switchToScriptEditingPerspective()
