@@ -142,7 +142,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   val panHandler = new PPanEventHandler() {
-    //    setAutopan(false)
+    setAutopan(false)
     override def pan(event: PInputEvent) {
       super.pan(event)
       Utils.schedule(0.05) {
@@ -832,7 +832,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     stage.draw()
     stageArea.draw()
-//    setCanvasBackground(fillc)
+    //    setCanvasBackground(fillc)
   }
 
   class Popup() extends JPopupMenu {
