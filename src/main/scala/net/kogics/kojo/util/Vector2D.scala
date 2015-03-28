@@ -55,4 +55,9 @@ case class Vector2D(x: Double, y: Double) {
     rotate(-2 * (180 - a))
   }
   override def toString = "Vector2D(%.2f , %.2f)" format (x, y)
+  override def equals(other: Any) = other match {
+    case v: Vector2D =>
+      Utils.doublesEqual(x, v.x, 1e-6) && Utils.doublesEqual(y, v.y, 1e-6) 
+    case _ => false
+  }
 }
