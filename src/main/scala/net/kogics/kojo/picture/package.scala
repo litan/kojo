@@ -346,9 +346,8 @@ package object picture {
     def collisionVector = {
       val pt = obstacle.intersection(pic)
       val iCoords = pt.getCoordinates
-      //      println(s"Intersection coordinates: ${icoords.toList}")
       if (iCoords.length == 0) {
-        throw new RuntimeException("Bounce a picture off another only when they collide")
+        Vector2D(rg.nextDouble, rg.nextDouble).normalize
       }
       else {
         val cv1 = colVec(iCoords(0))
@@ -361,10 +360,16 @@ package object picture {
         }
       }
     }
+    def pullbackCollision() = {
+      val v2 = vel.rotate(180).normalize
+      while (pic.collidesWith(obstacle)) {
+        pic.transv(v2)
+      }
+      pic.transv(v2.rotate(180))
+    }
+
+    pullbackCollision()
     val cv = collisionVector
-    //    println(s"Vel. vector: $vel, Collision vector: $cv")
-    val ret = vel.bounceOff(cv)
-    //    println(s"Bounce vector: $ret")
-    ret
+    vel.bounceOff(cv)
   }
 }
