@@ -415,9 +415,9 @@ Here's a partial list of the available commands:
       }
     }.get
   }
-  def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bounceVecOffStage(v, p)
-  def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obj: Picture): Vector2D = 
-    picture.bouncePicVectorOffPic(pic, v, obj, Random)
+  def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, TSCanvas.stageArea)
+  def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D = 
+    picture.bouncePicVectorOffPic(pic, v, obstacle, Random)
     
   def switchToDefaultPerspective() = kojoCtx.switchToDefaultPerspective()
   def switchToDefault2Perspective() = kojoCtx.switchToDefault2Perspective()
