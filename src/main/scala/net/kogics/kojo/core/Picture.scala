@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage
 import com.vividsolutions.jts.geom.Geometry
 
 import net.kogics.kojo.kgeom.PolyLine
+import net.kogics.kojo.util.Utils
 import net.kogics.kojo.util.Vector2D
 
 import edu.umd.cs.piccolo.PNode
@@ -90,7 +91,7 @@ trait Picture extends InputAware {
   def morph(fn: Seq[PolyLine] => Seq[PolyLine])
   def foreachPolyLine(fn: PolyLine => Unit)
   def toImage: BufferedImage
-  def forwardInputTo(p: Picture) {
+  def forwardInputTo(p: Picture) = Utils.runInSwingThread {
     p.tnode.getInputEventListeners.foreach { tnode.addInputEventListener(_) }
   }
   def moveToFront {
