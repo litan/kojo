@@ -92,6 +92,7 @@ trait Picture extends InputAware {
   def foreachPolyLine(fn: PolyLine => Unit)
   def toImage: BufferedImage
   def forwardInputTo(p: Picture) = Utils.runInSwingThread {
+    tnode.getInputEventListeners.foreach { tnode.removeInputEventListener(_) }
     p.tnode.getInputEventListeners.foreach { tnode.addInputEventListener(_) }
   }
   def moveToFront {
