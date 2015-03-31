@@ -362,8 +362,11 @@ package object picture {
     }
     def pullbackCollision() = {
       val v2 = vel.rotate(180).normalize
-      while (pic.collidesWith(obstacle)) {
+      val velMag = vel.magnitude
+      var pulled = 0
+      while (pic.collidesWith(obstacle) && pulled < velMag) {
         pic.transv(v2)
+        pulled += 1
       }
       pic.transv(v2.rotate(180))
     }

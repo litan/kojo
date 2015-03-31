@@ -28,6 +28,13 @@ class PictureBounceTest extends FunSuite with Matchers {
     forward(200)
   }
 
+  def stageCorner2 = Pic { t =>
+    import t._
+    forward(200)
+    right(90)
+    forward(200)
+  }
+
   test("bounce 1") {
     val obj = picline(0, 0, 100, 0)
     val pic = trans(50, -20) -> circle(20)
@@ -42,6 +49,14 @@ class PictureBounceTest extends FunSuite with Matchers {
     obj.draw(); ball.draw();
     val v = Vector2D(100, -100)
     bouncePicVectorOffPic(ball, v, obj, rg) shouldBe Vector2D(-100, 100)
+  }
+
+  test("bounce ball off stage corner2") {
+    val obj = stageCorner2
+    val ball = trans(18, 182) -> circle(20)
+    obj.draw(); ball.draw();
+    val v = Vector2D(-100, 100)
+    bouncePicVectorOffPic(ball, v, obj, rg) shouldBe Vector2D(100, -100)
   }
 
   test("bounce rectangle off circle") {

@@ -44,7 +44,10 @@ ball.onMouseDrag { (x, y) =>
 ball.onMouseRelease { (x, y) =>
     sling.erase()
     ball.forwardInputTo(stageArea)
-    var vel = Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(ballSize)
+    var vel = if (slingPts.size == 1)
+        Vector2D(1, 1)
+    else
+        Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(ballSize)
     animate {
         ball.transv(vel)
         if (ball.collidesWith(stageBorder)) {
