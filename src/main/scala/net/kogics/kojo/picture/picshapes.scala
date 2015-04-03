@@ -178,7 +178,7 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
   def copy: net.kogics.kojo.core.Picture = new ArcPic(r, angle)
 }
 
-class ImagePic(img: Image)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with NonVectorPicOps {
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
@@ -200,12 +200,18 @@ class ImagePic(img: Image)(implicit val canvas: SCanvas) extends Picture with Co
     node
   }
 
-  def copy: net.kogics.kojo.core.Picture = new ImagePic(img)
+  override def initGeom(): com.vividsolutions.jts.geom.Geometry = envelope match {
+    case None    => super.initGeom()
+    case Some(p) => p.picGeom
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new ImagePic(img, envelope)
   override def toString() = s"ImagePic (Id: ${System.identityHashCode(this)})"
 }
 
-class FileImagePic(file: String)(implicit canvas: SCanvas) extends ImagePic(Utils.loadImageC(file)) {
-  override def copy: net.kogics.kojo.core.Picture = new FileImagePic(file)
+class FileImagePic(file: String, envelope: Option[Picture])(implicit canvas: SCanvas)
+  extends ImagePic(Utils.loadImageC(file), envelope) {
+  override def copy: net.kogics.kojo.core.Picture = new FileImagePic(file, envelope)
 }
 
 class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2

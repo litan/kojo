@@ -136,9 +136,9 @@ package object picture {
 
   def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
-  def image(file: String)(implicit canvas: SCanvas) = new FileImagePic(file)
+  def image(file: String, envelope: Option[Picture])(implicit canvas: SCanvas) = new FileImagePic(file, envelope)
 
-  def image(img: Image)(implicit canvas: SCanvas) = new ImagePic(img)
+  def image(img: Image, envelope: Option[Picture])(implicit canvas: SCanvas) = new ImagePic(img, envelope)
 
   def widget(swingComponent: JComponent)(implicit canvas: SCanvas) = new SwingPic(swingComponent)
 
