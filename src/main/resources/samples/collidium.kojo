@@ -12,7 +12,7 @@ val target = trans(-cb.x - 60 - random(50), -cb.y - 60 - random(50)) *
 
 val obstacles = (1 to 3).map { n =>
     val delta = cb.width / 4
-    trans(cb.x + n * delta, cb.y + cb.height / 4) * penColor(blue) -> PicShape.vline(cb.height / 2)
+    trans(cb.x + n * delta, cb.y + cb.height / 4) * penColor(white) * penWidth(8) -> PicShape.vline(cb.height / 2)
 }
 
 draw(ball, target)
