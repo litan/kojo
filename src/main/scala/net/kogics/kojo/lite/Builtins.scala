@@ -329,6 +329,7 @@ Here's a partial list of the available commands:
   val picRow = HPics
   val picCol = VPics
   val picStack = GPics
+  val picBatch = BatchPics
 
   val rotp = picture.rotp _
   val opac = picture.opac _

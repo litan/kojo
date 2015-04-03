@@ -29,6 +29,8 @@ import javax.swing.JPanel
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
+import scala.collection.mutable.ArrayBuffer
+
 import com.vividsolutions.jts.geom.Coordinate
 
 import net.kogics.kojo.core.Picture
@@ -201,7 +203,14 @@ class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanv
   }
 
   override def initGeom(): com.vividsolutions.jts.geom.Geometry = envelope match {
-    case None    => super.initGeom()
+    case None =>
+      val cab = new ArrayBuffer[Coordinate]
+      val b = tnode.getFullBounds
+      cab += newCoordinate(b.x, b.y)
+      cab += newCoordinate(b.x, b.y + b.height)
+      cab += newCoordinate(b.x + b.width, b.y + b.height)
+      cab += newCoordinate(b.x + b.width, 0)
+      Gf.createLineString(cab.toArray)
     case Some(p) => p.picGeom
   }
 
