@@ -709,3 +709,48 @@ class GPics(pics: List[Picture]) extends BasePicList(pics) {
 
   override def toString() = s"Picture Stack (Id: ${System.identityHashCode(this)})"
 }
+
+object BatchPics {
+  def apply(pics: Picture*): BatchPics = new BatchPics(pics.toList)
+  def apply(pics: List[Picture]): BatchPics = new BatchPics(pics)
+  def apply(pics: Vector[Picture]): BatchPics = new BatchPics(pics.toList)
+}
+
+class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
+  def realDraw() {
+    pics.head.draw()
+    pics.tail.foreach { pic =>
+      pic.draw()
+      pic.invisible()
+    }
+  }
+
+  var currPic = 0
+  var lastDraw = System.currentTimeMillis
+  def showNext() = Utils.runInSwingThread {
+    val currTime = System.currentTimeMillis
+    if (currTime - lastDraw > 100) {
+      pics(currPic).invisible()
+      currPic += 1
+      if (currPic == pics.size) {
+        currPic = 0
+      }
+      pics(currPic).visible()
+      lastDraw = currTime
+    }
+  }
+
+  override def picGeom: Geometry = Utils.runInSwingThreadAndWait {
+    pgTransform.transform(pics(currPic).picGeom)
+  }
+  
+  def copy = BatchPics(picsCopy).withGap(padding)
+
+  override def dumpInfo() {
+    println(">>> BatchPics Start - " + System.identityHashCode(this))
+    super.dumpInfo()
+    println("<<< BatchPics End\n\n")
+  }
+
+  override def toString() = s"Picture Batch (Id: ${System.identityHashCode(this)})"
+}
