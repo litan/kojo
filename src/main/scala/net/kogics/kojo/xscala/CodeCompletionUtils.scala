@@ -169,6 +169,8 @@ object CodeCompletionUtils {
     "Point2D" -> "Point2D(${x}, ${y})",
     "drawStage" -> "drawStage(${background})",
     "bounceVecOffStage" -> "bounceVecOffStage(${vec}, ${forPic})",
+    "bouncePicVectorOffStage" -> "bouncePicVectorOffStage(${pic}, ${vec})",
+    "bouncePicVectorOffPic" -> "bouncePicVectorOffPic(${pic}, ${vec}, ${obstacle})",
     "countDownLatch" -> "countDownLatch(${count})",
     "setEditorTabSize" -> "setEditorTabSize(${tabSize})",
     "setCostumes" -> "setCostumes(${costume1}, ${etc})",
