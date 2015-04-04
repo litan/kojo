@@ -186,8 +186,10 @@ class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanv
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val inode = new PImage(img) {
       override def paint(paintContext: PPaintContext) {
-        val g2 = paintContext.getGraphics()
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+        if (paintContext.getScale == 1.0) {
+          val g2 = paintContext.getGraphics()
+          g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+        }
         super.paint(paintContext)
       }
     }
