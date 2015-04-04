@@ -209,7 +209,8 @@ class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanv
       cab += newCoordinate(b.x, b.y)
       cab += newCoordinate(b.x, b.y + b.height)
       cab += newCoordinate(b.x + b.width, b.y + b.height)
-      cab += newCoordinate(b.x + b.width, 0)
+      cab += newCoordinate(b.x + b.width, b.y)
+      cab += newCoordinate(b.x, b.y)
       pgTransform.getInverse.transform(Gf.createLineString(cab.toArray))
     case Some(p) =>
       pgTransform.getInverse.transform(p.picGeom)
