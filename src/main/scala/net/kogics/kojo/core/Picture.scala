@@ -102,7 +102,7 @@ trait Picture extends InputAware {
   def moveToBack {
     tnode.moveToBack()
   }
-
+  def showNext()
   // Todo
   // def bounceOff(other: Picture, vec: Vector2D)
 }
