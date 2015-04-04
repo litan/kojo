@@ -291,6 +291,8 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   override def toImage = Utils.runInSwingThreadAndWait {
     tnode.toImage.asInstanceOf[BufferedImage]
   }
+
+  def showNext() {}
 }
 
 trait CorePicOps2 { self: Picture =>
@@ -727,7 +729,7 @@ class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
 
   var currPic = 0
   var lastDraw = System.currentTimeMillis
-  def showNext() = Utils.runInSwingThread {
+  override def showNext() = Utils.runInSwingThread {
     val currTime = System.currentTimeMillis
     if (currTime - lastDraw > 100) {
       pics(currPic).invisible()

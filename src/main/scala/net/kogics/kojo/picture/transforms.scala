@@ -72,6 +72,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def isVisible() = tpic.isVisible()
   def myCanvas = tpic.myCanvas
   override def toImage = tpic.toImage 
+  def showNext() = tpic.showNext()
 }
 
 abstract class Transform(pic: Picture) extends Transformer {
