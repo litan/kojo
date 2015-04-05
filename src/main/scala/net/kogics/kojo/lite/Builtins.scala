@@ -383,6 +383,11 @@ Here's a partial list of the available commands:
   }
   UserCommand("playMp3", List("fileName"), "Plays the specified MP3 file.")
 
+  def playMp3Sound(mp3File: String) {
+    mp3player.playMp3Sound(mp3File)
+  }
+  UserCommand("playMp3Sound", List("fileName"), "Plays the specified MP3 sound.")
+
   def playMp3Loop(mp3File: String) {
     mp3player.playMp3Loop(mp3File)
   }

@@ -1,5 +1,8 @@
+// Use the up/down keys to prevent the ball from colliding with the
+// oncoming obstacles or the stage border. 
+// You win if you keep the ball in play for a minute
 cleari()
-setBackground(black)
+drawStage(black)
 def obstacle(h: Int, w: Int) = PicShape.rect(h, w)
 def player = PicShape.circle(30)
 
@@ -74,7 +77,7 @@ player1.react { self =>
         fallSpeed = fallSpeed + gravity
         player1.translate(0, -fallSpeed)
     }
-    if (player1.position.y < cb.y) {
+    if (player1.collidesWith(stageBorder)) {
         player1.setFillColor(red)
         stopAnimation()
     }

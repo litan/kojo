@@ -119,6 +119,36 @@ trait Mp3Player {
     }
   }
 
+  def playMp3Sound(mp3File: String) {
+    def done() {
+      stopFg = false
+      mp3Player = None
+      stopped.signal()
+    }
+    withLock(playLock) {
+      stopMp3()
+      playHelper(mp3File) { is =>
+        mp3Player = Some(new Player(is))
+      }
+      if (mp3Player.isDefined) {
+        Utils.runAsyncQueued {
+          withLock(playLock) {
+            if (stopFg) {
+              done()
+            }
+            else {
+              val music = mp3Player.get
+              giveupLock(playLock) {
+                music.play()
+              }
+              done()
+            }
+          }
+        }
+      }
+    }
+  }
+
   def playMp3Loop(mp3File: String) {
 
     def playLoop0() {
