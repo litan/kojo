@@ -810,7 +810,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   def drawStage(fillc: Paint) {
-    def border(size: Double) = picture.stroke(Color.darkGray) -> picture.Pic { t =>
+    def border(size: Double) = picture.strokeWidth(0) -> picture.Pic { t =>
       t.forward(size)
     }
     val cb = cbounds
@@ -824,7 +824,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     stageArea = picture.trans(-xmax, -ymax) * picture.fill(fillc) *
       picture.stroke(Color.darkGray) -> picture.rect(cb.height, cb.width)
 
-    stage = picture.GPics(
+    // trans(0, 0) to force stage tnode realization up front, so that stage stays below stageArea
+    stage = picture.trans(0, 0) -> picture.GPics(
       stageLeft,
       stageTop,
       stageRight,
