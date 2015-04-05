@@ -20,9 +20,10 @@ val target = trans(-cb.x - 60 - random(50), -cb.y - 60 - random(50)) *
     penColor(red) *
     fillColor(red) -> PicShape.circle(ballSize / 2)
 
+val wallTexture = TexturePaint("/media/collidium/bwall.png", 0, 0)
 val obstacles = (1 to 3).map { n =>
     val delta = cb.width / 4
-    trans(cb.x + n * delta, cb.y + cb.height / 4) * penColor(white) * penWidth(8) -> PicShape.vline(cb.height / 2)
+    trans(cb.x + n * delta, cb.y + cb.height / 4) * fillColor(wallTexture) * penColor(noColor) -> PicShape.rect(cb.height / 2, 12)
 }
 
 draw(ball, target)
@@ -31,12 +32,20 @@ obstacles.foreach { o => draw(o) }
 
 import collection.mutable.ArrayBuffer
 def line(ps: ArrayBuffer[Point]) = Picture {
+    setPenColor(yellow)
+    setFillColor(yellow)
     jumpTo(ps(0).x, ps(0).y)
     moveTo(ps(1).x, ps(1).y)
+    right(90)
+    left(360, 4)
+    left(90)
+    jumpTo(ps(0).x, ps(0).y)
+    right(90)
+    left(360, 4)
 }
 val slingPts = ArrayBuffer.empty[Point]
 var sling = PicShape.hline(1)
-var paddle = rot(10) -> PicShape.hline(300)
+var paddle = PicShape.hline(1)
 drawAndHide(paddle)
 ball.onMousePress { (x, y) =>
     slingPts += Point(ball.position.x + ballSize, ball.position.y + ballSize)
@@ -76,9 +85,7 @@ ball.onMouseRelease { (x, y) =>
         else if (ball.collidesWith(paddle)) {
             playMp3Sound("/media/collidium/hit.mp3")
             vel = bouncePicVectorOffPic(ball, vel, paddle)
-            while (ball.collidesWith(paddle)) {
-                ball.transv(vel)
-            }
+            ball.transv(vel)
         }
         else if (ball.collidesWith(target)) {
             target.setFillColor(green)
@@ -90,9 +97,7 @@ ball.onMouseRelease { (x, y) =>
             case Some(obstacle) =>
                 playMp3Sound("/media/collidium/hit.mp3")
                 vel = bouncePicVectorOffPic(ball, vel, obstacle)
-                while (ball.collidesWith(obstacle)) {
-                    ball.transv(vel)
-                }
+                ball.transv(vel)
             case None =>
         }
 
