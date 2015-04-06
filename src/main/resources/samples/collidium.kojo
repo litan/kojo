@@ -101,7 +101,9 @@ ball.onMouseRelease { (x, y) =>
             case Some(obstacle) =>
                 playMp3Sound("/media/collidium/hit.mp3")
                 vel = bouncePicVectorOffPic(ball, vel, obstacle)
-                ball.transv(vel)
+                while (ball.collidesWith(obstacle)) {
+                    ball.transv(vel)
+                }
             case None =>
         }
 
