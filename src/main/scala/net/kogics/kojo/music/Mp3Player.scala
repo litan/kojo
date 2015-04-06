@@ -16,15 +16,21 @@
 package net.kogics.kojo
 package music
 
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStream
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
+
 import javax.swing.Timer
-import javazoom.jl.player.Player
-import java.io._
-import util.Utils
-import Utils.withLock
-import Utils.giveupLock
+
 import net.kogics.kojo.core.KojoCtx
+
+import javazoom.jl.player.Player
+import util.AsyncQueuedRunner
+import util.Utils
+import util.Utils.giveupLock
+import util.Utils.withLock
 
 trait Mp3Player {
   val pumpEvents: Boolean
@@ -119,6 +125,7 @@ trait Mp3Player {
     }
   }
 
+  lazy val queuedRunner = new AsyncQueuedRunner {}
   def playMp3Sound(mp3File: String) {
     def done() {
       stopFg = false
@@ -131,7 +138,7 @@ trait Mp3Player {
         mp3Player = Some(new Player(is))
       }
       if (mp3Player.isDefined) {
-        Utils.runAsyncQueued {
+        Utils.runAsyncQueued(queuedRunner) {
           withLock(playLock) {
             if (stopFg) {
               done()

@@ -506,8 +506,12 @@ object Utils {
     }
   }
 
+  lazy val queuedRunner = new AsyncQueuedRunner {}
   def runAsyncQueued(fn: => Unit) {
-    asyncRunner ! RunCode { () =>
+    runAsyncQueued(queuedRunner)(fn)
+  }
+  def runAsyncQueued(aqr: AsyncQueuedRunner)(fn: => Unit) {
+    aqr.asyncRunner ! aqr.RunCode { () =>
       fn
     }
   }
@@ -710,19 +714,5 @@ object Utils {
       s"%.${n}f".format(d).replaceAllLiterally(decimalSep, ".").toDouble
     else
       s"%.${n}f".format(d).toDouble
-  }
-
-  case class RunCode(code: () => Unit)
-  import scala.actors._
-  import scala.actors.Actor._
-  lazy val asyncRunner = actor {
-    loop {
-      react {
-        case RunCode(code) =>
-          safeProcess {
-            code()
-          }
-      }
-    }
   }
 }
