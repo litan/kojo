@@ -70,7 +70,7 @@ ball.onMouseRelease { (x, y) =>
     var vel = if (slingPts.size == 1)
         Vector2D(1, 1)
     else
-        Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(5)
+        Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(7)
 
     val startTime = epochTime
     def timeLabelp(t: Double) = trans(cb.x + 10, cb.y + 50) -> PicShape.text(f"$t%.0f", 20)
