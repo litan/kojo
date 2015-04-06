@@ -356,7 +356,7 @@ package object picture {
         }
         else {
           val cv2 = colVec(iCoords(iCoords.length - 1))
-          (cv1 + cv2).normalize
+          cv1.normalize + cv2.normalize
         }
       }
     }
