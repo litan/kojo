@@ -31,9 +31,9 @@ drawAndHide(ballE)
 obstacles.foreach { o => draw(o) }
 
 import collection.mutable.ArrayBuffer
-def line(ps: ArrayBuffer[Point]) = Picture {
-    setPenColor(yellow)
-    setFillColor(yellow)
+def line(ps: ArrayBuffer[Point], c: Color) = Picture {
+    setPenColor(c)
+    setFillColor(c)
     jumpTo(ps(0).x, ps(0).y)
     moveTo(ps(1).x, ps(1).y)
     right(90)
@@ -46,6 +46,7 @@ def line(ps: ArrayBuffer[Point]) = Picture {
 val slingPts = ArrayBuffer.empty[Point]
 var sling = PicShape.hline(1)
 var paddle = PicShape.hline(1)
+var tempPaddle = paddle
 drawAndHide(paddle)
 ball.onMousePress { (x, y) =>
     slingPts += Point(ball.position.x + ballSize, ball.position.y + ballSize)
@@ -57,9 +58,11 @@ ball.onMouseDrag { (x, y) =>
     }
     slingPts += Point(x, y)
     sling.erase()
-    sling = line(slingPts)
+    sling = line(slingPts, green)
     sling.draw()
 }
+
+playMp3Sound("/media/collidium/hit.mp3")
 
 ball.onMouseRelease { (x, y) =>
     sling.erase()
@@ -88,6 +91,7 @@ ball.onMouseRelease { (x, y) =>
             ball.transv(vel)
         }
         else if (ball.collidesWith(target)) {
+            target.setPenColor(green)
             target.setFillColor(green)
             stopAnimation()
             playMp3Sound("/media/collidium/win.mp3")
@@ -104,6 +108,8 @@ ball.onMouseRelease { (x, y) =>
         timeLabel.erase()
         timeLabel = timeLabelp(gameTime)
         draw(timeLabel)
+        timeLabel.forwardInputTo(stageArea)
+
 
         if (gameTime > 60) {
             draw(PicShape.text("Time up! You Lose", 30))
@@ -124,13 +130,21 @@ stageArea.onMouseDrag { (x, y) =>
         paddlePts.remove(1)
     }
     paddlePts += Point(x, y)
-    paddle.erase()
-    paddle = line(paddlePts)
-    paddle.draw()
+    tempPaddle.erase()
+    tempPaddle = line(paddlePts, black)
+    tempPaddle.draw()
 }
 
 stageArea.onMouseRelease { (x, y) =>
-    paddle.forwardInputTo(stageArea)
+    if (tempPaddle.collidesWith(ball)) {
+        tempPaddle.erase()
+    }
+    else {
+        paddle = tempPaddle
+        paddle.setPenColor(yellow)
+        paddle.setFillColor(yellow)
+        paddle.forwardInputTo(stageArea)
+    }
 }
 
 target.forwardInputTo(stageArea)
