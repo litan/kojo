@@ -316,6 +316,7 @@ trait CorePicOps2 { self: Picture =>
 
   def erase() = Utils.runInSwingThread {
     stopReactions()
+    invisible()
     picLayer.removeChild(tnode)
     //    picLayer.repaint()
   }
