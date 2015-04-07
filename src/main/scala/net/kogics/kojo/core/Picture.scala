@@ -56,6 +56,7 @@ trait Picture extends InputAware {
     others.find { this intersects _ }
   }
   def intersection(other: Picture): Geometry
+  def contains(other: Picture): Boolean
   def distanceTo(other: Picture): Double
   def area: Double
   def perimeter: Double

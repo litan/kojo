@@ -43,7 +43,17 @@ import kgeom.PolyLine
 import util.Math
 import util.Utils
 
-trait CorePicOps { self: Picture with RedrawStopper =>
+trait GeomPolygon { self: Picture =>
+  lazy val geomPoly = {
+    val gc = picGeom.getCoordinates
+    val ab = new ArrayBuffer[Coordinate]
+    ab ++= gc
+    ab += gc(0)
+    Gf.createPolygon(ab.toArray)
+  }
+}
+
+trait CorePicOps extends GeomPolygon { self: Picture with RedrawStopper =>
   protected val camera = canvas.getCamera
   protected var axes: PNode = _
   protected var _picGeom: Geometry = _
@@ -262,20 +272,12 @@ trait CorePicOps { self: Picture with RedrawStopper =>
     picGeom.distance(other.picGeom)
   }
 
-  private def toPolygon(g: Geometry) = {
-    val gc = g.getCoordinates
-    val ab = new ArrayBuffer[Coordinate]
-    ab ++= gc
-    ab += gc(0)
-    Gf.createPolygon(Gf.createLinearRing(ab.toArray), null)
+  def perimeter = Utils.runInSwingThreadAndPause {
+    picGeom.getLength
   }
 
   def area = Utils.runInSwingThreadAndPause {
-    toPolygon(picGeom).getArea
-  }
-
-  def perimeter = Utils.runInSwingThreadAndPause {
-    picGeom.getLength
+    geomPoly.getArea
   }
 
   override def toString() = s"Picture with Id: ${System.identityHashCode(this)}"
@@ -295,7 +297,7 @@ trait CorePicOps { self: Picture with RedrawStopper =>
   def showNext() {}
 }
 
-trait CorePicOps2 { self: Picture =>
+trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def picLayer = canvas.pictures
   var reactions = Vector.empty[Future[PActivity]]
 
@@ -349,6 +351,18 @@ trait CorePicOps2 { self: Picture =>
     }
     else {
       Gf.createGeometryCollection(null)
+    }
+  }
+
+  def contains(other: Picture) = Utils.runInSwingThreadAndPause {
+    if (this == other) {
+      false
+    }
+    else if (tnode.getVisible && other.tnode.getVisible) {
+      geomPoly.covers(other.picGeom)
+    }
+    else {
+      false
     }
   }
 }
@@ -746,7 +760,7 @@ class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
   override def picGeom: Geometry = Utils.runInSwingThreadAndWait {
     pgTransform.transform(pics(currPic).picGeom)
   }
-  
+
   def copy = BatchPics(picsCopy).withGap(padding)
 
   override def dumpInfo() {
