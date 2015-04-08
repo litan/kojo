@@ -195,12 +195,13 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     pendingAnimations = Vector.empty
   }
 
-  def refresh(fn: => Unit): Future[PActivity] = {
+  def refresh(fn: => Unit): Future[PActivity]  = refresh(1000 / canvas.kojoCtx.fps, 0)(fn)
+  def refresh(rate: Long, delay: Long)(fn: => Unit): Future[PActivity] = {
     @volatile var figAnimation: PActivity = null
     val promise = new FutureResult[PActivity]
 
     Utils.runLaterInSwingThread {
-      figAnimation = new PActivity(-1, 1000 / canvas.kojoCtx.fps) {
+      figAnimation = new PActivity(-1, rate, System.currentTimeMillis + delay) {
         override def activityStep(elapsedTime: Long) {
           currLayer = fgLayer
           try {

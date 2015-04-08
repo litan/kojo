@@ -18,7 +18,7 @@ val ball =
 
 val target = trans(-cb.x - 60 - random(50), -cb.y - 60 - random(50)) *
     penColor(red) *
-    fillColor(red) -> PicShape.circle(ballSize / 2)
+    fillColor(red) -> PicShape.circle(ballSize / 4)
 
 val wallTexture = TexturePaint("/media/collidium/bwall.png", 0, 0)
 val obstacles = (1 to 3).map { n =>
@@ -29,19 +29,31 @@ val obstacles = (1 to 3).map { n =>
 draw(ball, target)
 drawAndHide(ballE)
 obstacles.foreach { o => draw(o) }
+playMp3Sound("/media/collidium/hit.mp3")
 
 import collection.mutable.ArrayBuffer
 def line(ps: ArrayBuffer[Point], c: Color) = Picture {
+    val sqsz = 4
+    def sq() {
+        hop(-sqsz / 2)
+        repeat(4) {
+            forward(sqsz)
+            right(90)
+        }
+        hop(sqsz / 2)
+    }
     setPenColor(c)
     setFillColor(c)
     jumpTo(ps(0).x, ps(0).y)
     moveTo(ps(1).x, ps(1).y)
-    right(90)
-    left(360, 4)
+    hop(-sqsz / 2)
     left(90)
-    jumpTo(ps(0).x, ps(0).y)
+    sq()
     right(90)
-    left(360, 4)
+    jumpTo(ps(0).x, ps(0).y)
+    hop(-sqsz / 2)
+    left(90)
+    sq()
 }
 val slingPts = ArrayBuffer.empty[Point]
 var sling = PicShape.hline(1)
@@ -62,8 +74,6 @@ ball.onMouseDrag { (x, y) =>
     sling.draw()
 }
 
-playMp3Sound("/media/collidium/hit.mp3")
-
 ball.onMouseRelease { (x, y) =>
     sling.erase()
     ball.forwardInputTo(stageArea)
@@ -72,13 +82,7 @@ ball.onMouseRelease { (x, y) =>
     else
         Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(7)
 
-    val startTime = epochTime
-    def timeLabelp(t: Double) = trans(cb.x + 10, cb.y + 50) -> PicShape.text(f"$t%.0f", 20)
-    var timeLabel = timeLabelp(0)
-    draw(timeLabel)
-
     animate {
-        val gameTime = epochTime - startTime
         ball.transv(vel)
         ball.showNext()
         if (ball.collidesWith(stageBorder)) {
@@ -107,17 +111,8 @@ ball.onMouseRelease { (x, y) =>
             case None =>
         }
 
-        timeLabel.erase()
-        timeLabel = timeLabelp(gameTime)
-        draw(timeLabel)
-        timeLabel.forwardInputTo(stageArea)
-
-
-        if (gameTime > 60) {
-            draw(PicShape.text("Time up! You Lose", 30))
-            stopAnimation()
-        }
     }
+    manageGameTime()
 }
 
 val paddlePts = ArrayBuffer.empty[Point]
@@ -151,3 +146,20 @@ stageArea.onMouseRelease { (x, y) =>
 
 target.forwardInputTo(stageArea)
 obstacles.foreach { o => o.forwardInputTo(stageArea) }
+
+def manageGameTime() {
+    var gameTime = 0
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, blue)
+    draw(timeLabel)
+    timeLabel.forwardInputTo(stageArea)
+
+    timer(1000) {
+        gameTime += 1
+        timeLabel.update(gameTime)
+
+        if (gameTime > 60) {
+            draw(PicShape.text("Time up! You Lose", 30))
+            stopAnimation()
+        }
+    }
+}
