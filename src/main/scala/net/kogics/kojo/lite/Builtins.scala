@@ -265,7 +265,7 @@ Here's a partial list of the available commands:
   def runInGuiThread(code: => Unit) = Utils.runInSwingThread(code)
   UserCommand.addSynopsis("runInGuiThread", List("code"), "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command.")
 
-  def schedule(s: Double)(code: => Unit) = Utils.schedule(s)(code)
+  def schedule(seconds: Double)(code: => Unit) = Utils.schedule(seconds)(code)
 
   // undocumented
   def color(rgbHex: Int) = new Color(rgbHex)
@@ -422,9 +422,9 @@ Here's a partial list of the available commands:
     }.get
   }
   def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, TSCanvas.stageArea)
-  def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D = 
+  def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D =
     picture.bouncePicVectorOffPic(pic, v, obstacle, Random)
-    
+
   def switchToDefaultPerspective() = kojoCtx.switchToDefaultPerspective()
   def switchToDefault2Perspective() = kojoCtx.switchToDefault2Perspective()
   def switchToScriptEditingPerspective() = kojoCtx.switchToScriptEditingPerspective()
@@ -463,6 +463,7 @@ Here's a partial list of the available commands:
   //  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
   object PicShape {
     def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
+    def textu(s0: Any, fontSize: Int = 15, color: Color = red) = picture.textu(s0, fontSize, color)
     def rect(h: Double, w: Double) = picture.rect(h, w)
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)

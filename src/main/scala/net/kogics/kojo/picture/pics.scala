@@ -53,7 +53,11 @@ trait GeomPolygon { self: Picture =>
   }
 }
 
-trait CorePicOps extends GeomPolygon { self: Picture with RedrawStopper =>
+trait UnsupportedOps {
+  def notSupported(name: String, reason: String) = throw new UnsupportedOperationException(s"$name - operation not available $reason:\n${toString}")
+}
+
+trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with RedrawStopper =>
   protected val camera = canvas.getCamera
   protected var axes: PNode = _
   protected var _picGeom: Geometry = _
@@ -294,7 +298,8 @@ trait CorePicOps extends GeomPolygon { self: Picture with RedrawStopper =>
     tnode.toImage.asInstanceOf[BufferedImage]
   }
 
-  def showNext() {}
+  def showNext(): Unit = notSupported("showNext", "for non-batch picture")
+  def update(newData: Any): Unit = notSupported("update", "for immutable picture")
 }
 
 trait CorePicOps2 extends GeomPolygon { self: Picture =>

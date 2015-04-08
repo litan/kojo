@@ -32,6 +32,7 @@ import javax.swing.event.PopupMenuListener
 import scala.collection.mutable.ArrayBuffer
 
 import com.vividsolutions.jts.geom.Coordinate
+import com.vividsolutions.jts.geom.Geometry
 
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
@@ -41,14 +42,11 @@ import net.kogics.kojo.util.Utils
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.nodes.PImage
 import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolo.nodes.PText
 import edu.umd.cs.piccolo.util.PPaintContext
 import edu.umd.cs.piccolox.pswing.PSwing
 
-trait UnsupportedOps {
-  def notSupported(name: String) = throw new UnsupportedOperationException(s"$name - operation not available for non-vector picture:\n${toString}")
-}
-
-trait PicShapeOps extends UnsupportedOps { self: Picture with CorePicOps =>
+trait PicShapeOps { self: Picture with CorePicOps =>
   def realDraw() = Utils.runInSwingThread {
     tnode.setVisible(true)
   }
@@ -92,12 +90,12 @@ trait PicShapeOps extends UnsupportedOps { self: Picture with CorePicOps =>
     node.asInstanceOf[PPath].setStroke(stroke)
   }
 
-  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph")
+  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph", "for non-turtle picture")
   def dumpInfo() {}
-  def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine")
+  def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine", "for non-turtle picture")
 }
 
-trait NonVectorPicOps extends UnsupportedOps { self: Picture with CorePicOps =>
+trait NonVectorPicOps { self: Picture with CorePicOps =>
   def realDraw() = Utils.runInSwingThread {
     tnode.setVisible(true)
   }
@@ -106,25 +104,25 @@ trait NonVectorPicOps extends UnsupportedOps { self: Picture with CorePicOps =>
     tnode.getFullBounds
   }
 
-  def decorateWith(painter: Painter) = notSupported("decorateWith")
+  def decorateWith(painter: Painter) = notSupported("decorateWith", "for non-vector picture")
 
-  def britMod(f: Double) = notSupported("britMod")
+  def britMod(f: Double) = notSupported("britMod", "for non-vector picture")
 
-  def hueMod(f: Double) = notSupported("hueMod")
+  def hueMod(f: Double) = notSupported("hueMod", "for non-vector picture")
 
-  def satMod(f: Double) = notSupported("satMod")
+  def satMod(f: Double) = notSupported("satMod", "for non-vector picture")
 
-  def setFillColor(color: java.awt.Paint) = notSupported("setFillColor")
+  def setFillColor(color: java.awt.Paint) = notSupported("setFillColor", "for non-vector picture")
 
-  def setPenColor(color: java.awt.Paint) = notSupported("setPenColor")
+  def setPenColor(color: java.awt.Paint) = notSupported("setPenColor", "for non-vector picture")
 
-  def setPenThickness(th: Double) = notSupported("setPenThickness")
+  def setPenThickness(th: Double) = notSupported("setPenThickness", "for non-vector picture")
 
-  def initGeom(): com.vividsolutions.jts.geom.Geometry = notSupported("initGeometry")
+  def initGeom(): Geometry = notSupported("initGeometry", "for non-vector picture")
 
-  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph")
+  def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph", "for non-vector picture")
   def dumpInfo() {}
-  def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine")
+  def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine", "for non-vector picture")
 }
 
 class CirclePic(r: Double)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
@@ -286,6 +284,37 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
     r1c.getBounds
   }
 
-  def copy = notSupported("copy")
+  def copy = notSupported("copy", "for Swing picture")
   override def toString() = s"SwingPic (Id: ${System.identityHashCode(this)})"
+}
+
+class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with PicShapeOps {
+
+  def initGeom(): Geometry = notSupported("initGeometry", "for text picture")
+  var ptext: PText = _
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    ptext = Utils.textNode(text, 0, 0, canvas.camScale, size)
+    ptext.setTextPaint(color)
+    ptext.setPaint(null)
+
+    val node = new PNode
+    node.setVisible(false)
+    node.addChild(ptext)
+    picLayer.addChild(node)
+    node
+  }
+
+  override def setPenColor(color: java.awt.Paint) = Utils.runInSwingThread {
+    ptext.setTextPaint(color)
+  }
+
+  override def setPenThickness(th: Double) = notSupported("setPenThickness", "for text picture")
+
+  override def update(newData: Any) = Utils.runInSwingThread {
+    ptext.setText(newData.toString)
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new TextPic(text, size, color)
 }

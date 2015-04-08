@@ -24,6 +24,7 @@ import javax.swing.JComponent
 
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
+
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.geom.PrecisionModel
@@ -116,6 +117,8 @@ package object picture {
     setPenFontSize(fontSize)
     write(s)
   }
+
+  def textu(s0: Any, fontSize: Int, color: Color)(implicit canvas: SCanvas) = new TextPic(s0.toString, fontSize, color)
 
   def rect(h: Double, w: Double)(implicit canvas: SCanvas) = Pic { t =>
     Utils.trect(h, w, t)
