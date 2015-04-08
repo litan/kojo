@@ -533,11 +533,13 @@ object Utils {
 
   def trect(h: Double, w: Double, t: core.Turtle) {
     import t._
-    for (i <- 1 to 2) {
+    var i = 0
+    while (i < 2) {
       forward(h)
       right()
       forward(w)
       right()
+      i += 1
     }
   }
 

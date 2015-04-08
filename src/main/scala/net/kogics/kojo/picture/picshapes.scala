@@ -317,4 +317,5 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
   }
 
   def copy: net.kogics.kojo.core.Picture = new TextPic(text, size, color)
+  override def toString() = s"TextPic (Id: ${System.identityHashCode(this)})"
 }
