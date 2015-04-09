@@ -7,7 +7,7 @@ drawStage(darkGray)
 val ballSize = 20
 val cb = canvasBounds
 
-val ballE = penColor(red) -> PicShape.circle2(ballSize)
+val ballE = penColor(red) * trans(ballSize, ballSize) -> PicShape.circle(ballSize)
 val ball1 = PicShape.image("/media/collidium/ball1.png", ballE)
 val ball2 = PicShape.image("/media/collidium/ball2.png", ballE)
 val ball3 = PicShape.image("/media/collidium/ball3.png", ballE)
