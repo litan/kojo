@@ -326,7 +326,8 @@ package object picture {
   }
 
   def bouncePicVectorOffPic(pic: Picture, vel: Vector2D, obstacle: Picture, rg: Random): Vector2D = {
-    def colVec(c: Coordinate) = {
+    // returns points on the obstacle that contain the given collision coordinate 
+    def obstacleCollPoints(c: Coordinate): Option[Array[Coordinate]] = {
       obstacle.picGeom.getCoordinates.sliding(2).find { cs =>
         val xcheck = if (cs(0).x > cs(1).x)
           cs(0).x >= c.x && c.x >= cs(1).x
@@ -338,14 +339,20 @@ package object picture {
         else
           cs(0).y <= c.y && c.y <= cs(1).y
         xcheck && ycheck
-      } match {
-        case Some(cs) =>
-          Vector2D(cs(0).x - cs(1).x, cs(0).y - cs(1).y)
-        case None =>
-          println("Warning: unable to determine collision vector; generating random vector")
-          Vector2D(rg.nextDouble, rg.nextDouble)
       }
     }
+    // returns vector for obstacle boundary segment that contains the collision point
+    def obstacleCollVector(c: Coordinate) = makeVectorFromCollPoints(obstacleCollPoints(c))
+
+    // creates a vector out of two (collision) points
+    def makeVectorFromCollPoints(cps: Option[Array[Coordinate]]) = cps match {
+      case Some(cs) =>
+        Vector2D(cs(0).x - cs(1).x, cs(0).y - cs(1).y)
+      case None =>
+        println("Warning: unable to determine collision vector; generating random vector")
+        Vector2D(rg.nextDouble, rg.nextDouble)
+    }
+
     def collisionVector = {
       val pt = obstacle.intersection(pic)
       val iCoords = pt.getCoordinates
@@ -353,29 +360,64 @@ package object picture {
         Vector2D(rg.nextDouble, rg.nextDouble).normalize
       }
       else {
-        val cv1 = colVec(iCoords(0))
         if (iCoords.length == 1) {
+          val cv1 = obstacleCollVector(iCoords(0))
           cv1.normalize
         }
         else {
-          val cv2 = colVec(iCoords(iCoords.length - 1))
-          cv1.normalize + cv2.normalize
+          val c1 = iCoords(0)
+          val c2 = iCoords(iCoords.length - 1)
+          val obsPts1 = obstacleCollPoints(c1)
+          val obsPts2 = obstacleCollPoints(c2)
+          if (obsPts1.isDefined && obsPts2.isDefined) {
+            //            println(s"Obstacle points #1: ${obsPts1.get.toVector}")
+            //            println(s"Obstacle points #2: ${obsPts2.get.toVector}")
+            val s1 = collection.mutable.HashSet.empty[Coordinate]
+            s1 += obsPts1.get(0); s1 += obsPts1.get(1)
+            val s2 = collection.mutable.HashSet.empty[Coordinate]
+            s2 += obsPts2.get(0); s2 += obsPts2.get(1)
+            val s1s2 = s1.intersect(s2)
+            if (s1s2.isEmpty) {
+              //              println("No common points in obstacle points #1 and #2")
+              val cv1 = makeVectorFromCollPoints(obsPts1)
+              val cv2 = makeVectorFromCollPoints(obsPts2)
+              //              println(s"cv1: $cv1")
+              //              println(s"cv2: $cv2")
+              cv1.normalize + cv2.normalize
+            }
+            else {
+              val obsCommonPt = s1s2.head
+              //              println(s"Common point in obstacle points #1 and #2: ${obsCommonPt}")
+              s1 -= obsCommonPt
+              s2 -= obsCommonPt
+              val cv1 = makeVectorFromCollPoints(Some(Array(c1, obsCommonPt)))
+              val cv2 = makeVectorFromCollPoints(Some(Array(obsCommonPt, c2)))
+              //              println(s"cv1: $cv1")
+              //              println(s"cv2: $cv2")
+              (cv1 + cv2).normalize
+            }
+          }
+          else {
+            Vector2D(rg.nextDouble, rg.nextDouble).normalize
+          }
         }
       }
     }
     def pullbackCollision() = {
-      val v2 = vel.rotate(180).normalize
+      val velNorm = vel.normalize
+      val v2 = velNorm.rotate(180)
       val velMag = vel.magnitude
       var pulled = 0
       while (pic.collidesWith(obstacle) && pulled < velMag) {
-        pic.transv(v2)
+        pic.offsetv(v2)
         pulled += 1
       }
-      pic.transv(v2.rotate(180))
+      pic.offsetv(velNorm)
     }
 
     pullbackCollision()
     val cv = collisionVector
+    //    println(s"cv: $cv\n***")
     vel.bounceOff(cv)
   }
 }
