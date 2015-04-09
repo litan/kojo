@@ -44,7 +44,7 @@ Then (re)start Kojo. All UI texts will be shown in the format *localText[key]*.
 
   [1]: http://www.kogics.net/kojo
   [2]: https://trello.com/b/hxgeMSOj/kojo-development
-  [3]: http://code.google.com/p/kojo/issues/list
+  [3]: https://bitbucket.org/lalit_pant/kojo/issues?status=new&status=open
   [4]: http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase6-419409.html
   [5]: http://code.google.com/p/kojolite/source/browse/src/main/resources/net/kogics/kojo/lite/Bundle.properties
   [6]: http://code.google.com/p/kojolite/source/browse/src/main/scala/net/kogics/kojo/lite/i18n/svInit.scala
