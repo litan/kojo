@@ -356,6 +356,8 @@ package object picture {
     def collisionVector = {
       val pt = obstacle.intersection(pic)
       val iCoords = pt.getCoordinates
+      //      println(s"***\nIntersection shape: ${pt}")
+      //      println(s"Intersection shape coords: ${iCoords.toVector}")
       if (iCoords.length == 0) {
         Vector2D(rg.nextDouble, rg.nextDouble).normalize
       }

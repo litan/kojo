@@ -213,7 +213,20 @@ class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanv
       cab += newCoordinate(b.x, b.y)
       pgTransform.getInverse.transform(Gf.createLineString(cab.toArray))
     case Some(p) =>
-      pgTransform.getInverse.transform(p.picGeom)
+      val pg = p.picGeom
+      //      val cp = Pic { t =>
+      //        val coords = pg.getCoordinates
+      //        if (!coords.isEmpty) {
+      //          val h = coords.head
+      //          t.jumpTo(h.x, h.y)
+      //          coords.tail.foreach { c =>
+      //            t.moveTo(c.x, c.y)
+      //          }
+      //        }
+      //      }
+      //      cp.draw()
+      //      tnode.addChild(cp.tnode)
+      pg
   }
 
   def copy: net.kogics.kojo.core.Picture = new ImagePic(img, envelope)
