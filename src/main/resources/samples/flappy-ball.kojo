@@ -25,32 +25,17 @@ var fallSpeed = 0.0
 val player1 = fillColor(Color(238, 106, 2)) * penColor(gray) -> player
 draw(player1)
 createObstacle()
-val startTime = epochTime
-var lastObsCreateTime = startTime
-def timeLabelp(t: Double) = trans(cb.x + 10, cb.y + 50) -> PicShape.text(f"$t%.0f", 20)
-var timeLabel = timeLabelp(0)
-draw(timeLabel)
+var lastObsCreateTime = epochTime
 
 animate {
     val currTime = epochTime
-    val gameTime = currTime - startTime
-    timeLabel.erase()
-    timeLabel = timeLabelp(gameTime)
-    draw(timeLabel)
-
-    if (gameTime > 60) {
-        player1.setFillColor(yellow)
-        draw(PicShape.text("You Win", 30))
-        stopAnimation()
-    }
-
     if (currTime - lastObsCreateTime > 1) {
         createObstacle()
         lastObsCreateTime = currTime
     }
 
     obstacles foreach { obs =>
-        if (obs.position.x < cb.x) {
+        if (obs.position.x + 60 < cb.x) {
             obs.erase()
             obstacles -= obs
         }
@@ -58,6 +43,7 @@ animate {
             obs.translate(speed, 0)
             if (player1.collidesWith(obs)) {
                 player1.setFillColor(red)
+                drawMessage("You Lose", Color(255, 24, 27))
                 stopAnimation()
             }
         }
@@ -79,8 +65,33 @@ player1.react { self =>
     }
     if (player1.collidesWith(stageBorder)) {
         player1.setFillColor(red)
+        drawMessage("You Lose", red)
         stopAnimation()
     }
 }
 
+def drawMessage(m: String, c: Color) {
+    val te = textExtent(m, 30)
+    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, 30)
+    draw(pic)
+}
+
+def manageGameTime() {
+    var gameTime = 0
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, blue)
+    draw(timeLabel)
+    timeLabel.forwardInputTo(stageArea)
+
+    timer(1000) {
+        gameTime += 1
+        timeLabel.update(gameTime)
+
+        if (gameTime == 60) {
+            drawMessage("You Win", green)
+            stopAnimation()
+        }
+    }
+}
+
+manageGameTime()
 activateCanvas()

@@ -97,6 +97,7 @@ ball.onMouseRelease { (x, y) =>
         else if (ball.collidesWith(target)) {
             target.setPenColor(green)
             target.setFillColor(green)
+            drawMessage("Yaay! You Win", green)
             stopAnimation()
             playMp3Sound("/media/collidium/win.mp3")
         }
@@ -147,6 +148,12 @@ stageArea.onMouseRelease { (x, y) =>
 target.forwardInputTo(stageArea)
 obstacles.foreach { o => o.forwardInputTo(stageArea) }
 
+def drawMessage(m: String, c: Color) {
+    val te = textExtent(m, 30)
+    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, 30)
+    draw(pic)
+}
+
 def manageGameTime() {
     var gameTime = 0
     val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, blue)
@@ -157,8 +164,8 @@ def manageGameTime() {
         gameTime += 1
         timeLabel.update(gameTime)
 
-        if (gameTime > 60) {
-            draw(PicShape.text("Time up! You Lose", 30))
+        if (gameTime == 60) {
+            drawMessage("Time up! You Lose", red)
             stopAnimation()
         }
     }
