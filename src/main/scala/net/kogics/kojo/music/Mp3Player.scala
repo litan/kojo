@@ -87,7 +87,7 @@ trait Mp3Player {
     }
   }
 
-  def isMusicPlaying: Boolean = {
+  def isMp3Playing: Boolean = {
     withLock(playLock) {
       mp3Player.isDefined
     }

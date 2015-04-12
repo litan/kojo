@@ -218,6 +218,7 @@ trait AppMenu {
     animGameMenu.add(menuItemFor(Utils.loadString("S_Hunted"), "hunted.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_FlappyBall"), "flappy-ball.kojo"))
     animGameMenu.add(menuItemFor(Utils.loadString("S_Collidium"), "collidium.kojo"))
+    animGameMenu.add(menuItemFor(Utils.loadString("S_CarRide"), "car-ride.kojo"))
     samplesMenu.add(animGameMenu)
 
     val widgetsMenu = newJMenu(Utils.loadString("S_Widgets"))
