@@ -396,9 +396,10 @@ Here's a partial list of the available commands:
   def canvasBounds = tCanvas.cbounds
   def setBackground(c: Paint) = tCanvas.setCanvasBackground(c)
 
-  def isMp3Playing = mp3player.isMusicPlaying
+  def isMp3Playing = mp3player.isMp3Playing
   def isMusicPlaying = fuguePlayer.isMusicPlaying
   def stopMp3() = mp3player.stopMp3()
+  def stopMp3Loop() = mp3player.stopMp3Loop()
   def stopMusic() = fuguePlayer.stopMusic()
   def newMp3Player = new music.KMp3(kojoCtx)
   def addCodeTemplates(lang: String, templates: Map[String, String]) {
