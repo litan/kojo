@@ -536,25 +536,37 @@ lazy val ui = new GroupPanel {
     )
 }
 
-val qregex = """\s*(\d+)?x\s*\+?\s*(\d+)?\s*=\s*((\d+)?x)?\s*\+?\s*(\d+)?\s*""".r
 class UserEnteredQ extends Question {
+    import scala.util.parsing.combinator._
+    class EqnParser extends JavaTokenParsers {
+        def eqn: Parser[(Int, Int, Int, Int)] = lhs ~ "=" ~ rhs ^^ {
+            case lh ~ _ ~ rh => (lh._1, lh._2, rh._1, rh._2)
+        }
+        def lhs: Parser[(Int, Int)] = xterm ~ opt(("+" | "-") ~ wholeNumber) ^^ {
+            case xt ~ opmwn => opmwn match {
+                case Some(pm ~ wn) => if (pm == "+") (xt, wn.toInt) else (xt, -wn.toInt)
+                case None          => (xt, 0)
+            }
+        }
+        def rhs: Parser[(Int, Int)] = opt(xterm ~ ("+" | "-")) ~ wholeNumber ^^ {
+            case oxtpm ~ wn => oxtpm match {
+                case Some(xt ~ pm) => if (pm == "+") (xt, wn.toInt) else (xt, -wn.toInt)
+                case None          => (0, wn.toInt)
+            }
+        }
+        def xterm: Parser[Int] = opt(wholeNumber) ~ "x" ^^ { case on ~ x => on.map { _.toInt }.getOrElse(1) }
+    }
+
     def text = ""
     def next = new UserEnteredQ
     var a, b, c, d: Int = 0
+    val eqnParser = new EqnParser
     def setEqn(eqnStr: String) {
-        eqnStr match {
-            case qregex(na, nb, iscx, nc, nd) =>
-                a = if (na == null) 1 else na.toInt
-                b = if (nb == null) 0 else nb.toInt
-                c = if (iscx != null) { // cx term is there
-                    if (nc == null) 1 else nc.toInt
-                }
-                else {
-                    if (nc == null) 0 else nc.toInt
-                }
-                d = if (nd == null) 0 else nd.toInt
-            case _ =>
-                throw new RuntimeException("Invalid equation format")
+        eqnParser.parseAll(eqnParser.eqn, eqnStr) match {
+            case eqnParser.Success(result, _) =>
+                a = result._1; b = result._2; c = result._3; d = result._4;
+            case eqnParser.Failure(m, _) => throw new RuntimeException(m.toString)
+            case eqnParser.Error(m, _)   => throw new RuntimeException(m.toString)
         }
     }
 }
