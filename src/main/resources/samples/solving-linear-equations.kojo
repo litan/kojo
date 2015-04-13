@@ -30,6 +30,7 @@ pg = Page(
             <ul>
                 <li><a href="http://localpage/intro1">Introduction</a></li>
                 <li><a href="http://localpage/practice">Practice</a></li>
+                <li><a href="http://localpage/practice2">Open Practice</a></li>
             </ul>
         </body>,
     code = {}
@@ -203,6 +204,32 @@ pg = Page(
         )
     }
 )
+pages = pages :+ pg
+
+pg = Page(
+    name = "practice2",
+    body =
+        <body style={ pageStyle }>
+            { pgHeader("Equation solving practice") }
+            This practice screen is similar to the previous screen, except that you can enter your
+            own equations and then either check your answer or have Kojo explain the answer to you.
+            <br/><br/>  
+            The equations you input need to be in the form { stFormula("ax + b = cx + d", 20, "black") } where 
+            a, b, c, and d are optional integers, the x term on the LHS is mandatory, while the x term 
+            on the RHS is optional.
+        </body>,
+    code = {
+        Mw.clear()
+        Mw.hideAlgebraView()
+        Mw.showCASView()
+        runInGuiThread(
+            stAddUiComponent(ui2.peer)
+        )
+        runInGuiThread(
+            ui2.onReady()
+        )
+    }
+)
 
 pages = pages :+ pg
 
@@ -296,6 +323,17 @@ def borderWithMargin(m: Int) = {
     new CompoundBorder(outsideBorder, insideBorder)
 }
 
+val xregex = """\s*x?\s*=?\s*(.*)""".r
+def xval(s: String) = s match {
+    case xregex(x) => x
+}
+
+val xsolregex = """\{\s*x\s*=\s*(.*?)}""".r
+
+def xsolval(s: String) = s match {
+    case xsolregex(x) => x
+}
+
 lazy val ui = new GroupPanel {
     import java.awt.Font
     val kfont = Font.decode("Serif-PLAIN-20")
@@ -367,17 +405,6 @@ lazy val ui = new GroupPanel {
                 Mw.casView.evaluate("(%s) / %d" format (Mw.asString(ires), question.a - question.c))
             }
         }
-    }
-
-    val xregex = """\s*x?\s*=?\s*(.*)""".r
-    def xval(s: String) = s match {
-        case xregex(x) => x
-    }
-
-    val xsolregex = """\{\s*x\s*=\s*(.*?)}""".r
-
-    def xsolval(s: String) = s match {
-        case xsolregex(x) => x
     }
 
     def checkAnswer() {
@@ -499,6 +526,191 @@ lazy val ui = new GroupPanel {
     theVerticalLayout is Sequential(
         levelPanel,
         Gap(25),
+        questionf,
+        Gap(25),
+        answerf,
+        Gap(25),
+        resultf,
+        Gap(25),
+        Parallel(checkb, explainb, nextb)
+    )
+}
+
+val qregex = """\s*(\d+)?x\s*\+?\s*(\d+)?\s*=\s*((\d+)?x)?\s*\+?\s*(\d+)?\s*""".r
+class UserEnteredQ extends Question {
+    def text = ""
+    def next = new UserEnteredQ
+    var a, b, c, d: Int = 0
+    def setEqn(eqnStr: String) {
+        eqnStr match {
+            case qregex(na, nb, iscx, nc, nd) =>
+                a = if (na == null) 1 else na.toInt
+                b = if (nb == null) 0 else nb.toInt
+                c = if (iscx != null) { // cx term is there
+                    if (nc == null) 1 else nc.toInt
+                }
+                else {
+                    if (nc == null) 0 else nc.toInt
+                }
+                d = if (nd == null) 0 else nd.toInt
+            case _ =>
+                throw new RuntimeException("Invalid equation format")
+        }
+    }
+}
+
+lazy val ui2 = new GroupPanel {
+    import java.awt.Font
+    val kfont = Font.decode("Serif-PLAIN-20")
+    var question = new UserEnteredQ
+
+    def onReady() {
+        questionf.requestFocusInWindow
+    }
+
+    def correctResult(suffix: String = "") {
+        resultf.text = "Your answer is CORRECT" + suffix
+        resultf.foreground = green
+    }
+
+    def wrongResult() {
+        resultf.text = "Your answer is WRONG"
+        resultf.foreground = red
+    }
+
+    def errMessage(m: String) = runInGuiThread {
+        resultf.text = m
+        resultf.foreground = red
+    }
+
+    def checkingProblem() {
+        resultf.text = "Unable to process answer. Try again."
+        resultf.foreground = C.purple
+    }
+
+    def nextQuestion() {
+        Mw.clear()
+        resultf.text = ""
+        answerf.text = "x = ?"
+        question = question.next
+        questionf.text = question.text
+        questionf.requestFocusInWindow
+    }
+
+    def explainAnswer() = runInBackground {
+        Mw.clear()
+        try {
+            question.setEqn(questionf.text)
+            var ires = Mw.casView.keep(questionf.text).get
+            val (qa, qb, qc, qd) = (question.a, question.b, question.c, question.d)
+            if (qc != 0) {
+                if (qc > 0) {
+                    ires = Mw.casView.evaluate("(%s) - %dx" format (questionf.text, qc)).get
+                }
+                else {
+                    ires = Mw.casView.evaluate("(%s) + %dx" format (questionf.text, qc.abs)).get
+                }
+            }
+            if (qb > 0) {
+                ires = Mw.casView.evaluate("(%s) - %d" format (Mw.asString(ires), qb)).get
+            }
+            else {
+                ires = Mw.casView.evaluate("(%s) + %d" format (Mw.asString(ires), qb.abs)).get
+            }
+            if (qa - qc != 1) {
+                Mw.casView.evaluate("(%s) / %d" format (Mw.asString(ires), qa - qc))
+            }
+        }
+        catch {
+            case t: Throwable =>
+                errMessage(t.getMessage)
+
+        }
+    }
+
+    def checkAnswer() {
+        try {
+            val uanswer = xval(answerf.text)
+            val answer = xsolval(Mw.casEval("Solve[%s]" format (questionf.text)))
+            if (Mw.isEqualExpr(uanswer, answer)) {
+                correctResult()
+            }
+            else {
+                val uanswer2 = Mw.casEval("Simplify[%s]" format (uanswer))
+                if (Mw.isEqualExpr(uanswer2, answer)) {
+                    correctResult(", but needs Simplification")
+                }
+                else {
+                    wrongResult()
+                }
+            }
+        }
+        catch {
+            case t: Throwable =>
+                println(t.getMessage)
+                checkingProblem()
+        }
+    }
+
+    // UI Controls
+    val questionf = new STextField(30) {
+        border = borderWithMargin(10)
+        editable = true
+        horizontalAlignment = Alignment.Center
+        font = kfont
+        background = white
+    }
+
+    val answerf = new STextField(30) {
+        border = borderWithMargin(10)
+        editable = true
+        horizontalAlignment = Alignment.Center
+        font = kfont
+        background = white
+    }
+
+    val nextb = new SButton() {
+        font = kfont
+        action = Action("Next Question") {
+            nextQuestion()
+        }
+    }
+
+    val explainb = new SButton() {
+        font = kfont
+        action = Action("Explain") {
+            explainAnswer()
+        }
+        enabled = true
+    }
+
+    val checkb = new SButton() {
+        font = kfont
+        action = Action("Check Answer") {
+            checkAnswer()
+        }
+    }
+
+    val resultf = new STextField(30) {
+        border = Swing.LineBorder(color(255, 255, 255))
+        editable = false
+        horizontalAlignment = Alignment.Center
+        font = kfont
+        background = white
+    }
+
+    nextQuestion()
+
+    // UI Layout
+    background = white
+    border = Swing.LineBorder(color(240, 240, 240))
+    theHorizontalLayout is Parallel(Center)(
+        questionf,
+        answerf,
+        resultf,
+        Sequential(checkb, explainb, nextb)
+    )
+    theVerticalLayout is Sequential(
         questionf,
         Gap(25),
         answerf,
