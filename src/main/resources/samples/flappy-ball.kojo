@@ -5,7 +5,7 @@ cleari()
 drawStage(black)
 val cb = canvasBounds
 def obstacle(h: Int, w: Int) = PicShape.rect(h, w)
-def player = PicShape.circle(30)
+val playerE = trans(49, 31) -> PicShape.circle(30)
 
 var obstacles = Set.empty[Picture]
 def createObstacle() {
@@ -22,8 +22,11 @@ val speed = -5
 val pspeed = 5
 val gravity = 0.1
 var fallSpeed = 0.0
-val player1 = fillColor(Color(238, 106, 2)) * penColor(gray) -> player
-draw(player1)
+val pl1 = PicShape.image("/media/flappy-ball/ballwing1.png", playerE)
+val pl2 = PicShape.image("/media/flappy-ball/ballwing2.png", playerE)
+val player = picBatch(pl1, pl2)
+draw(player)
+drawAndHide(playerE)
 createObstacle()
 var lastObsCreateTime = epochTime
 
@@ -41,8 +44,8 @@ animate {
         }
         else {
             obs.translate(speed, 0)
-            if (player1.collidesWith(obs)) {
-                player1.setFillColor(red)
+            if (player.collidesWith(obs)) {
+                player.setOpacity(0.3)
                 drawMessage("You Lose", Color(255, 24, 27))
                 stopAnimation()
             }
@@ -50,21 +53,22 @@ animate {
     }
 }
 
-player1.react { self =>
+player.react { self =>
+    player.showNext()
     if (isKeyPressed(Kc.VK_UP)) {
         fallSpeed = 0
-        player1.translate(0, pspeed)
+        player.translate(0, pspeed)
     }
     else if (isKeyPressed(Kc.VK_DOWN)) {
         fallSpeed = 0
-        player1.translate(0, -pspeed)
+        player.translate(0, -pspeed)
     }
     else {
         fallSpeed = fallSpeed + gravity
-        player1.translate(0, -fallSpeed)
+        player.translate(0, -fallSpeed)
     }
-    if (player1.collidesWith(stageBorder)) {
-        player1.setFillColor(red)
+    if (player.collidesWith(stageBorder)) {
+        player.setOpacity(0.3)
         drawMessage("You Lose", red)
         stopAnimation()
     }
