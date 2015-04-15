@@ -298,7 +298,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     tnode.toImage.asInstanceOf[BufferedImage]
   }
 
-  def showNext(): Unit = notSupported("showNext", "for non-batch picture")
+  def showNext(gap: Long): Unit = notSupported("showNext", "for non-batch picture")
   def update(newData: Any): Unit = notSupported("update", "for immutable picture")
 }
 
@@ -749,9 +749,9 @@ class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
 
   var currPic = 0
   var lastDraw = System.currentTimeMillis
-  override def showNext() = Utils.runInSwingThread {
+  override def showNext(gap: Long) = Utils.runInSwingThread {
     val currTime = System.currentTimeMillis
-    if (currTime - lastDraw > 100) {
+    if (currTime - lastDraw > gap) {
       pics(currPic).invisible()
       currPic += 1
       if (currPic == pics.size) {
