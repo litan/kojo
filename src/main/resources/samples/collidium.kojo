@@ -2,10 +2,11 @@
 // Then draw paddles on the canvas (with the mouse) to guide the ball 
 // away from the obstacles and towards the target.
 // You win if you hit the target within a minute
+switchToDefault2Perspective()
 cleari()
 drawStage(darkGray)
-val ballSize = 20
 val cb = canvasBounds
+val ballSize = 20
 
 val ballE = penColor(red) * trans(ballSize, ballSize) -> PicShape.circle(ballSize)
 val ball1 = PicShape.image("/media/collidium/ball1.png", ballE)

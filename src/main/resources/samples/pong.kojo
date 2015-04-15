@@ -3,6 +3,8 @@
 // Player on left uses A/Z keys to control paddle
 // Press 'Esc' to quit
 toggleFullScreenCanvas()
+cleari()
+drawStage(Color(0, 0, 250, 20))
 
 val glevel = 1
 val PaddleH = 100
@@ -10,8 +12,8 @@ val PaddleW = 25
 val BallR = 15
 val Height = canvasBounds.height
 val Width = canvasBounds.width
-val PaddleSpeed = 9
-val BallSpeed = 9
+val PaddleSpeed = 5
+val BallSpeed = 5
 
 def paddle = penColor(darkGray) * fillColor(red) -> PicShape.rect(PaddleH, PaddleW)
 def vline = penColor(darkGray) -> PicShape.vline(Height)
@@ -38,10 +40,6 @@ case class World(
     level: Level,
     paddleInfo: Map[Picture, PaddleS],
     scores: Map[Picture, Score])
-
-cleari()
-setRefreshRate(40)
-drawStage(Color(0, 0, 250, 20))
 
 var world: World = _
 
@@ -91,25 +89,25 @@ gameBall.react { self =>
     }
     else if (self.collidesWith(leftGutter)) {
         self.setPosition(0, 0)
-        world.scores(paddle1).pScore.erase()
-        world = world.copy(
-            ballVel = Vector2D(-world.level.vel.x.abs, world.level.vel.y),
-            scores = world.scores + (paddle1 -> world.scores(paddle1).incrScore)
-        )
-        draw(world.scores(paddle1).pScore)
-    }
-    else if (self.collidesWith(rightGutter)) {
-        self.setPosition(0, 0)
         world.scores(paddle2).pScore.erase()
         world = world.copy(
-            ballVel = Vector2D(world.level.vel.x.abs, world.level.vel.y),
+            ballVel = Vector2D(-world.level.vel.x.abs, world.level.vel.y),
             scores = world.scores + (paddle2 -> world.scores(paddle2).incrScore)
         )
         draw(world.scores(paddle2).pScore)
     }
+    else if (self.collidesWith(rightGutter)) {
+        self.setPosition(0, 0)
+        world.scores(paddle1).pScore.erase()
+        world = world.copy(
+            ballVel = Vector2D(world.level.vel.x.abs, world.level.vel.y),
+            scores = world.scores + (paddle1 -> world.scores(paddle1).incrScore)
+        )
+        draw(world.scores(paddle1).pScore)
+    }
     else {
         world = world.copy(
-            ballVel = world.ballVel * 1.001
+            ballVel = (world.ballVel * 1.001).limit(10)
         )
     }
 }

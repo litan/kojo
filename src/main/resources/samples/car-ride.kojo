@@ -2,10 +2,12 @@
 // You gain energy every second, and lose energy for every collision
 // You lose if your energy drops below zero, or you hit the edges of the screen
 // You win if you stay alive for a minute
-val carE = PicShape.rect(100, 50)
+switchToDefault2Perspective()
+val carHeight = 100
+val markerHeight = 80
+val carE = PicShape.rect(carHeight, 50)
 def car(img: String) = PicShape.image(img, carE)
 
-val cb = canvasBounds
 val cars = collection.mutable.Set.empty[Picture]
 val carVels = collection.mutable.Map.empty[Picture, Vector2D]
 val carSpeed = 3
@@ -24,15 +26,17 @@ def createCar() {
 }
 val markers = collection.mutable.Set.empty[Picture]
 def createMarker() {
+    val mwidth = 20
     val m = fillColor(white) * penColor(white) *
-        trans(cb.x + cb.width / 2, cb.y + cb.height) -> PicShape.rect(80, 20)
+        trans(cb.x + cb.width / 2 - mwidth / 2, cb.y + cb.height) -> PicShape.rect(markerHeight, mwidth)
     draw(m)
     markers += m
 }
 
 cleari()
-val player = car("/media/car-ride/car1.png")
 drawStage(darkGray)
+val cb = canvasBounds
+val player = car("/media/car-ride/car1.png")
 draw(player)
 drawAndHide(carE)
 
@@ -111,14 +115,14 @@ animate {
             carVels += c -> newVel
             c.transv(newVel)
         }
-        if (c.position.y + 100 < cb.y) {
+        if (c.position.y + carHeight < cb.y) {
             c.erase()
             cars -= c
         }
     }
     markers.foreach { m =>
         m.translate(0, -carSpeed * 2)
-        if (m.position.y + 50 < cb.y) {
+        if (m.position.y + markerHeight < cb.y) {
             m.erase()
             markers -= m
         }
