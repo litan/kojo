@@ -103,6 +103,7 @@ trait Picture extends InputAware {
   def moveToBack {
     tnode.moveToBack()
   }
-  def showNext(): Unit
+  def showNext(): Unit = showNext(100)
+  def showNext(gap: Long): Unit
   def update(newData: Any): Unit
 }
