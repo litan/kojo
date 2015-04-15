@@ -3,11 +3,11 @@
 // You win if you keep the ball in play for a minute
 cleari()
 drawStage(black)
+val cb = canvasBounds
 def obstacle(h: Int, w: Int) = PicShape.rect(h, w)
 def player = PicShape.circle(30)
 
 var obstacles = Set.empty[Picture]
-val cb = canvasBounds
 def createObstacle() {
     val height = random((0.5 * cb.height).toInt) + 50
     val trxy = if (randomBoolean) (cb.width / 2, cb.height / 2 - height)
