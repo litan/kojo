@@ -2,7 +2,7 @@
 // Player on right uses Up/Down Arrow keys to control paddle
 // Player on left uses A/Z keys to control paddle
 // Press 'Esc' to quit
-toggleFullScreenCanvas()
+switchToDefault2Perspective()
 cleari()
 drawStage(Color(0, 0, 250, 20))
 
