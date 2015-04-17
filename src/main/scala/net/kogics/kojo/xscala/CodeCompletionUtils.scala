@@ -95,6 +95,7 @@ object CodeCompletionUtils {
     "picCol" -> "picCol(\n      p,\n      p\n)",
     "GPics" -> "GPics(\n      p,\n      p\n)",
     "picStack" -> "picStack(\n      p,\n      p\n)",
+    "picBatch" -> "picBatch(\n      p,\n      p\n)",
     // Todo - is there any commonality here with the staging templates
     "trans" -> "trans(${x}, ${y})",
     "rot" -> "rot(${angle})",
