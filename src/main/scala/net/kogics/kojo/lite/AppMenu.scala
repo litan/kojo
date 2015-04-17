@@ -256,6 +256,8 @@ trait AppMenu {
     showcaseMenu.add(menuItemFor(Utils.loadString("S_Fern"), "fern.kojo"))
     showcaseMenu.add(menuItemFor(Utils.loadString("S_LightedStar"), "lighted-star.kojo"))
     showcaseMenu.add(menuItemFor(Utils.loadString("S_Mandel"), "mandelbrot.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_Collidium"), "collidium.kojo"))
+    showcaseMenu.add(menuItemFor(Utils.loadString("S_CarRide"), "car-ride.kojo"))
 
     menuBar.add(showcaseMenu)
 
