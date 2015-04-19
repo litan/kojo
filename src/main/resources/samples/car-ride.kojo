@@ -8,8 +8,7 @@ val markerHeight = 80
 val carE = PicShape.rect(carHeight, 50)
 def car(img: String) = PicShape.image(img, carE)
 
-val cars = collection.mutable.Set.empty[Picture]
-val carVels = collection.mutable.Map.empty[Picture, Vector2D]
+val cars = collection.mutable.Map.empty[Picture, Vector2D]
 val carSpeed = 3
 val pResponse = 3
 var pVel = Vector2D(0, 0)
@@ -21,8 +20,7 @@ val cplayer = newMp3Player
 def createCar() {
     val c = trans(cb.x + random(cb.width.toInt), cb.y + cb.height) -> car("/media/car-ride/car2.png")
     draw(c)
-    cars += c
-    carVels += c -> Vector2D(0, -carSpeed)
+    cars += c -> Vector2D(0, -carSpeed)
 }
 val markers = collection.mutable.Set.empty[Picture]
 def createMarker() {
@@ -46,7 +44,7 @@ timer(1200) {
 }
 
 animate {
-    player.moveToFront
+    player.moveToFront()
     val enabled = epochTimeMillis - disabledTime > 300
     if (enabled) {
         if (isKeyPressed(Kc.VK_LEFT)) {
@@ -99,9 +97,9 @@ animate {
         disabledTime = epochTimeMillis
     }
 
-    cars.foreach { c =>
-        c.moveToFront
-        val vel = carVels(c)
+    cars.foreach { cv =>
+        val (c, vel) = cv
+        c.moveToFront()
         if (player.collidesWith(c)) {
             cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
             pVel = bouncePicVectorOffPic(player, pVel - vel, c) / 2
@@ -112,7 +110,7 @@ animate {
         }
         else {
             val newVel = Vector2D(vel.x + randomDouble(1) / 2 - 0.25, vel.y)
-            carVels += c -> newVel
+            cars += c -> newVel
             c.transv(newVel)
         }
         if (c.position.y + carHeight < cb.y) {
