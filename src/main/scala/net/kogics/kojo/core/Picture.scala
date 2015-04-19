@@ -97,10 +97,10 @@ trait Picture extends InputAware {
     tnode.getInputEventListeners.foreach { tnode.removeInputEventListener(_) }
     p.tnode.getInputEventListeners.foreach { tnode.addInputEventListener(_) }
   }
-  def moveToFront {
+  def moveToFront() {
     tnode.moveToFront()
   }
-  def moveToBack {
+  def moveToBack() {
     tnode.moveToBack()
   }
   def showNext(): Unit = showNext(100)
