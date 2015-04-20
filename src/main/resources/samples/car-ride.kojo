@@ -5,7 +5,13 @@
 switchToDefault2Perspective()
 val carHeight = 100
 val markerHeight = 80
-val carE = PicShape.rect(carHeight, 50)
+// The collision polygon for the (very similarly sized) car images car1.png and car2.png
+val carE = trans(2, 14) -> Picture {
+    repeat(2) {
+        forward(70); right(45); forward(20); right(45)
+        forward(18); right(45); forward(20); right(45)
+    }
+}
 def car(img: String) = PicShape.image(img, carE)
 
 val cars = collection.mutable.Map.empty[Picture, Vector2D]
