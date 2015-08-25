@@ -238,10 +238,12 @@ trait AppMenu {
 
     samplesMenu.addSeparator()
 
-    val mgeomMenu = newJMenu(Utils.loadString("S_MathActivities"))
-    mgeomMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
-    mgeomMenu.add(menuItemFor(Utils.loadString("S_AnglesAnimation"), "angles.kojo"))
-    samplesMenu.add(mgeomMenu)
+    val mathActivityMenu = newJMenu(Utils.loadString("S_MathActivities"))
+    mathActivityMenu.add(menuItemFor(Utils.loadString("S_AdditionGame"), "addition-game.kojo"))
+    mathActivityMenu.add(menuItemFor(Utils.loadString("S_MultiplicationGame"), "multiplication-game.kojo"))
+    mathActivityMenu.add(menuItemFor(Utils.loadString("S_AnglesAnimation"), "angles.kojo"))
+    mathActivityMenu.add(menuItemFor(Utils.loadString("S_SolvingLinearEquations"), "solving-linear-equations.kojo"))
+    samplesMenu.add(mathActivityMenu)
 
     menuBar.add(samplesMenu)
 
