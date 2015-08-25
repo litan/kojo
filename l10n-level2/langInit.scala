@@ -23,33 +23,33 @@ import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.xscala.RepeatCommands
 
-object SwedishAPI {
+object $$lang$API {
   import net.kogics.kojo.core.Turtle
   import java.awt.Color
-  var builtins: net.kogics.kojo.lite.CoreBuiltins = _  //unstable reference to module
-  
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
+
   trait $$lang$Turtle {
     def englishTurtle: Turtle
     def $$clear$() = englishTurtle.clear()
     def $$visible$() = englishTurtle.visible()
     def $$invisible$() = englishTurtle.invisible()
-    def $$forward$(steg: Double) = englishTurtle.forward(steg)
+    def $$forward$(n: Double) = englishTurtle.forward(n)
     def $$forward$() = englishTurtle.forward(25)
-    def $$right$(vinkel: Double) = englishTurtle.right(vinkel)
+    def $$right$(angle: Double) = englishTurtle.right(angle)
     def $$right$() = englishTurtle.right(90)
-    def $$left$(vinkel: Double) = englishTurtle.left(vinkel)
+    def $$left$(angle: Double) = englishTurtle.left(angle)
     def $$left$() = englishTurtle.left(90)
     def $$jumpTo$(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
     def $$moveTo$(x: Double, y: Double) = englishTurtle.moveTo(x, y)
-    def $$hop$(steg: Double) = {
+    def $$hop$(n: Double) = {
       englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop(steg) //hop change state to penDown after hop
+      englishTurtle.hop(n) //hop change state to penDown after hop
       englishTurtle.restoreStyle()
     }
     def $$hop$(): Unit = $$hop$(25)
     def $$home$() = englishTurtle.home()
     def $$towards$(x: Double, y: Double) = englishTurtle.towards(x, y)
-    def $$setHeading$(vinkel: Double) = englishTurtle.setHeading(vinkel)
+    def $$setHeading$(angle: Double) = englishTurtle.setHeading(angle)
     def $$heading$ = englishTurtle.heading
     def $$east$() = englishTurtle.setHeading(0)
     def $$west$() = englishTurtle.setHeading(180)
@@ -57,71 +57,76 @@ object SwedishAPI {
     def $$south$() = englishTurtle.setHeading(-90)
     def $$delay$(n: Long) = englishTurtle.setAnimationDelay(n)
     def $$write$(t: Any) = englishTurtle.write(t)
-    def $$textStroke$(s: Int) = englishTurtle.setPenFontSize(s)
-    def $$arc$(radie: Double, vinkel: Double) = englishTurtle.arc(radie, math.round(vinkel).toInt)
-    def $$circle$(radie: Double) = englishTurtle.circle(radie)
+    def $$setPenFontSize$(s: Int) = englishTurtle.setPenFontSize(s)
+    def $$arc$(radius: Double, angle: Double) = englishTurtle.arc(radius, math.round(angle).toInt)
+    def $$circle$(radius: Double) = englishTurtle.circle(radius)
     def $$position$ = englishTurtle.position
     def $$penDown$() = englishTurtle.penDown()
     def $$penUp$() = englishTurtle.penUp()
     def $$isPenDown$ = englishTurtle.style.down
-    def $$color$(c: java.awt.Color) = englishTurtle.setPenColor(c)
-    def $$fill$(c: java.awt.Color) = englishTurtle.setFillColor(c)
-    def $$width$(n: Double) = englishTurtle.setPenThickness(n)
+    def $$setPenColor$(c: java.awt.Color) = englishTurtle.setPenColor(c)
+    def $$setFillColor$(c: java.awt.Color) = englishTurtle.setFillColor(c)
+    def $$setPenThickness$(n: Double) = englishTurtle.setPenThickness(n)
     def $$saveStyle$() = englishTurtle.saveStyle()
     def $$restoreStyle$() = englishTurtle.restoreStyle()
     def $$savePositionHeading$() = englishTurtle.savePosHe()
     def $$restorePositionHeading$() = englishTurtle.restorePosHe()
     def $$beamsOn$() = englishTurtle.beamsOn()
     def $$beamsOff$() = englishTurtle.beamsOff()
-    def $$costume$(filNamn: String) = englishTurtle.setCostume(filNamn)
-    def $$costumes$(filNamn: String*) = englishTurtle.setCostumes(filNamn: _*)
+    def $$setCostume$(fileName: String) = englishTurtle.setCostume(fileName)
+    def $$setCostumes$(fileName: String*) = englishTurtle.setCostumes(filName: _*)
     def $$nextCostume$() = englishTurtle.nextCostume()
   }
-  class Padda(override val englishTurtle: Turtle) extends $$lang$Turtle {
-    def this(startX: Double, startY: Double, kostymFilNamn: String) = this(builtins.TSCanvas.newTurtle(startX, startY, kostymFilNamn))
+  class $$Turtle$(override val englishTurtle: Turtle) extends $$lang$Turtle {
+    def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
-    def this() = this(0,0)
+    def this() = this(0, 0)
   }
-  class Padda0(t0: => Turtle) extends SwedishTurtle { //by-name construction as turtle0 is volatile }
+  class $$Turtle$0(t0: => Turtle) extends $$lang$Turtle { //by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
-  object padda extends Padda0(builtins.TSCanvas.turtle0)
-  def sudda() = builtins.TSCanvas.clear()
-  def suddaUtdata() = builtins.clearOutput()
-  lazy val blå = builtins.blue 
-  lazy val röd = builtins.red 
-  lazy val gul = builtins.yellow 
-  lazy val grön = builtins.green 
-  lazy val lila = builtins.purple
-  lazy val rosa = builtins.pink 
-  lazy val brun = builtins.brown 
-  lazy val svart = builtins.black 
-  lazy val vit = builtins.white
-  lazy val genomskinlig = builtins.noColor
-  def bakgrund(färg: Color) = builtins.setBackground(färg)
-  def bakgrund2(färg1: Color, färg2: Color) = builtins.TSCanvas.setBackgroundV(färg1, färg2)
-  object KcSwe { //Key codes for Swedish keys
-    lazy val VK_Å = 197
-    lazy val VK_Ä = 196
-    lazy val VK_Ö = 214
-  }
-  
-  //loops in Swedish
-  def upprepa(n: Int)(block: => Unit) {
-    RepeatCommands.repeat(n){ block }
+  object $$turtle$ extends $$Turtle$0(builtins.TSCanvas.turtle0)
+  def $$clear$() = builtins.TSCanvas.clear()
+  def $$clearOutput$() = builtins.clearOutput()
+  lazy val $$blue$ = builtins.blue
+  lazy val $$red$ = builtins.red
+  lazy val $$yellow$ = builtins.yellow
+  lazy val $$green$ = builtins.green
+  lazy val $$purple$ = builtins.purple
+  lazy val $$pink$ = builtins.pink
+  lazy val $$brown$ = builtins.brown
+  lazy val $$black$ = builtins.black
+  lazy val $$white$ = builtins.white
+  lazy val $$noColor$ = builtins.noColor
+  def $$setBackground$(c: Color) = builtins.setBackground(c)
+  def $$setBackgroundV$(c1: Color, c2: Color) = builtins.TSCanvas.setBackgroundV(c1, c2)
+
+  //  object KcSwe { //Key codes for Swedish keys
+  //    lazy val VK_Å = 197
+  //    lazy val VK_Ä = 196
+  //    lazy val VK_Ö = 214
+  //  }
+
+  //loops 
+  def $$repeat$(n: Int)(block: => Unit) {
+    RepeatCommands.repeat(n) { block }
   }
 
-  def räkneslinga(n: Int)(block: Int => Unit) {
+  def $$repeati$(n: Int)(block: Int => Unit) {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def sålänge(villkor: => Boolean)(block: => Unit) {
-    RepeatCommands.repeatWhile (villkor) { block }
-  }  
+  def $$repeatWhile$(cond: => Boolean)(block: => Unit) {
+    RepeatCommands.repeatWhile(cond) { block }
+  }
+
+  def $$repeatFor$[T](seq: Iterable[T])(block: T => Unit) {
+    RepeatCommands.repeatFor(seq) { block }
+  }
 
   //simple IO
-  def indata(ledtext: String = "") =  builtins.readln(ledtext)
-  
+  def $$readln$(prompt: String = "") = builtins.readln(prompt)
+
   //math functions
   def avrunda(tal: Number, antalDecimaler: Int = 0): Double = {
     val faktor = math.pow(10, antalDecimaler).toDouble
@@ -129,15 +134,15 @@ object SwedishAPI {
   }
   def slumptal(n: Int) = builtins.random(n)
   def slumptalMedDecimaler(n: Int) = builtins.randomDouble(n)
-  
+
   //some type aliases in Swedish
   type Heltal = Int
   type Decimaltal = Double
   type Sträng = String
-  
+
   //speedTest
   def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
-  
+
   def räknaTill(n: BigInt) {
     var c: BigInt = 1
     print("*** Räknar från 1 till ... ")
@@ -152,7 +157,7 @@ object SwedishAPI {
         " millisekunder.")
     else println((tid * 10).toLong / 10.0 + " sekunder.")
   }
-  
+
 }
 
 object SvInit {
@@ -181,7 +186,7 @@ object SvInit {
       case _ =>
     }
   }
-  
+
   val codeTemplates = Map(
     "fram" -> "fram(${steg})",
     "höger" -> "höger(${vinkel})",
