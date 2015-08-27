@@ -69,6 +69,11 @@ trait CoreBuiltins extends Rationals {
   def epochTimeMillis = System.currentTimeMillis()
   def epochTime = System.currentTimeMillis() / 1000.0
 
+  def round(n: Number, digits: Int = 0): Double = {
+    val factor = math.pow(10, digits).toDouble
+    math.round(n.doubleValue * factor).toLong / factor
+  }
+
   def random(upperBound: Int) = Random.nextInt(upperBound)
   def randomDouble(upperBound: Int) = Random.nextDouble * upperBound
   def randomBoolean = Random.nextBoolean
