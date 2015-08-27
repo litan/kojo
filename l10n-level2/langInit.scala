@@ -127,50 +127,36 @@ object $$lang$API {
   //simple IO
   def $$readln$(prompt: String = "") = builtins.readln(prompt)
 
+  def $$println$(data: Any) = println(data) //Transferred here from sv.tw.kojo.
+  def $$println$() = println()
+
   //math functions
-  def avrunda(tal: Number, antalDecimaler: Int = 0): Double = {
-    val faktor = math.pow(10, antalDecimaler).toDouble
-    math.round(tal.doubleValue * faktor).toLong / faktor
+  def $$round(n: Number, digits: Int = 0): Double = {
+    val faktor = math.pow(10, digits).toDouble
+    math.round(n.doubleValue * faktor).toLong / faktor
   }
-  def slumptal(n: Int) = builtins.random(n)
-  def slumptalMedDecimaler(n: Int) = builtins.randomDouble(n)
+  def $$random$(n: Int) = builtins.random(n)
+  def $$randomDouble$(n: Int) = builtins.randomDouble(n)
 
   //some type aliases in Swedish
-  type Heltal = Int
-  type Decimaltal = Double
-  type Sträng = String
-
-  //speedTest
-  def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
-
-  def räknaTill(n: BigInt) {
-    var c: BigInt = 1
-    print("*** Räknar från 1 till ... ")
-    val startTid = systemtid
-    while (c < n) { c = c + 1 } //tar tid om n är stort
-    val stoppTid = systemtid
-    println("" + n + " *** KLAR!")
-    val tid = stoppTid - startTid
-    print("Det tog ")
-    if (tid < 0.1)
-      println((tid * 1000).round(new java.math.MathContext(2)) +
-        " millisekunder.")
-    else println((tid * 10).toLong / 10.0 + " sekunder.")
-  }
-
+  type $$Int$ = Int
+  type $$Double$ = Double
+  type $$String$ = String
 }
 
-object SvInit {
+object $$langCode$Init {
   def init(builtins: CoreBuiltins) {
     //initialize unstable value
-    net.kogics.kojo.lite.i18n.SwedishAPI.builtins = builtins
+    $$lan$API.builtins = builtins
     builtins match {
       case b: Builtins =>
         println("Välkommen till Kojo med svensk padda!")
+        println("$$welcome$")
         if (b.isScratchPad) {
-          println("Historiken kommer inte att sparas när du stänger Kojo Scratchpad.")
+          println("$$welcomeScratchpad$")
         }
-        b.setEditorTabSize(2)
+        
+//        b.setEditorTabSize(2)
 
         //code completion
         b.addCodeTemplates(
