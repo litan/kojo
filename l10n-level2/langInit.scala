@@ -147,7 +147,7 @@ object $$lang$API {
 object $$langCode$Init {
   def init(builtins: CoreBuiltins) {
     //initialize unstable value
-    $$lan$API.builtins = builtins
+    $$lang$API.builtins = builtins
     builtins match {
       case b: Builtins =>
         println("Välkommen till Kojo med svensk padda!")
