@@ -33,11 +33,11 @@ object $$lang$API {
     def $$clear$() = englishTurtle.clear()
     def $$visible$() = englishTurtle.visible()
     def $$invisible$() = englishTurtle.invisible()
-    def $$forward$(n: Double) = englishTurtle.forward(n)
+    def $$forward$($$steps$: Double) = englishTurtle.forward($$steps$)
     def $$forward$() = englishTurtle.forward(25)
-    def $$right$(angle: Double) = englishTurtle.right(angle)
+    def $$right$($$angle$: Double) = englishTurtle.right($$angle$)
     def $$right$() = englishTurtle.right(90)
-    def $$left$(angle: Double) = englishTurtle.left(angle)
+    def $$left$($$angle$: Double) = englishTurtle.left($$angle$)
     def $$left$() = englishTurtle.left(90)
     def $$jumpTo$(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
     def $$moveTo$(x: Double, y: Double) = englishTurtle.moveTo(x, y)
@@ -49,7 +49,7 @@ object $$lang$API {
     def $$hop$(): Unit = $$hop$(25)
     def $$home$() = englishTurtle.home()
     def $$towards$(x: Double, y: Double) = englishTurtle.towards(x, y)
-    def $$setHeading$(angle: Double) = englishTurtle.setHeading(angle)
+    def $$setHeading$($$angle$: Double) = englishTurtle.setHeading($$angle$)
     def $$heading$ = englishTurtle.heading
     def $$east$() = englishTurtle.setHeading(0)
     def $$west$() = englishTurtle.setHeading(180)
@@ -57,15 +57,15 @@ object $$lang$API {
     def $$south$() = englishTurtle.setHeading(-90)
     def $$delay$(n: Long) = englishTurtle.setAnimationDelay(n)
     def $$write$(t: Any) = englishTurtle.write(t)
-    def $$setPenFontSize$(s: Int) = englishTurtle.setPenFontSize(s)
-    def $$arc$(radius: Double, angle: Double) = englishTurtle.arc(radius, math.round(angle).toInt)
-    def $$circle$(radius: Double) = englishTurtle.circle(radius)
+    def $$setPenFontSize$($$size$: Int) = englishTurtle.setPenFontSize($$size$)
+    def $$arc$($$radius$: Double, $$angle$: Double) = englishTurtle.arc($$radius$, math.round($$angle$).toInt)
+    def $$circle$($$radius$: Double) = englishTurtle.circle($$radius$)
     def $$position$ = englishTurtle.position
     def $$penDown$() = englishTurtle.penDown()
     def $$penUp$() = englishTurtle.penUp()
     def $$isPenDown$ = englishTurtle.style.down
-    def $$setPenColor$(c: java.awt.Color) = englishTurtle.setPenColor(c)
-    def $$setFillColor$(c: java.awt.Color) = englishTurtle.setFillColor(c)
+    def $$setPenColor$($$color$: java.awt.Color) = englishTurtle.setPenColor($$color$)
+    def $$setFillColor$($$color$: java.awt.Color) = englishTurtle.setFillColor($$color$)
     def $$setPenThickness$(n: Double) = englishTurtle.setPenThickness(n)
     def $$saveStyle$() = englishTurtle.saveStyle()
     def $$restoreStyle$() = englishTurtle.restoreStyle()
@@ -73,8 +73,8 @@ object $$lang$API {
     def $$restorePositionHeading$() = englishTurtle.restorePosHe()
     def $$beamsOn$() = englishTurtle.beamsOn()
     def $$beamsOff$() = englishTurtle.beamsOff()
-    def $$setCostume$(fileName: String) = englishTurtle.setCostume(fileName)
-    def $$setCostumes$(fileName: String*) = englishTurtle.setCostumes(filName: _*)
+    def $$setCostume$($$fileName$: String) = englishTurtle.setCostume($$fileName$)
+    def $$setCostumes$($$fileName$: String*) = englishTurtle.setCostumes($$fileName$: _*)
     def $$nextCostume$() = englishTurtle.nextCostume()
   }
   class $$Turtle$(override val englishTurtle: Turtle) extends $$lang$Turtle {
@@ -116,27 +116,27 @@ object $$lang$API {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def $$repeatWhile$(cond: => Boolean)(block: => Unit) {
-    RepeatCommands.repeatWhile(cond) { block }
+  def $$repeatWhile$($$condition$: => Boolean)(block: => Unit) {
+    RepeatCommands.repeatWhile($$condition$) { block }
   }
 
-  def $$repeatFor$[T](seq: Iterable[T])(block: T => Unit) {
-    RepeatCommands.repeatFor(seq) { block }
+  def $$repeatFor$[T]($$sequence$: Iterable[T])(block: T => Unit) {
+    RepeatCommands.repeatFor($$sequence$) { block }
   }
 
   //simple IO
-  def $$readln$(prompt: String = "") = builtins.readln(prompt)
+  def $$readln$($$prompt$: String = "") = builtins.readln($$prompt$)
 
   def $$println$(data: Any) = println(data) //Transferred here from sv.tw.kojo.
   def $$println$() = println()
 
   //math functions
-  def $$round(n: Number, digits: Int = 0): Double = {
-    val faktor = math.pow(10, digits).toDouble
-    math.round(n.doubleValue * faktor).toLong / faktor
+  def $$round($$number$: Number, $$digits$: Int = 0): Double = {
+    val faktor = math.pow(10, $$digits$).toDouble
+    math.round($$number$.doubleValue * faktor).toLong / faktor
   }
-  def $$random$(n: Int) = builtins.random(n)
-  def $$randomDouble$(n: Int) = builtins.randomDouble(n)
+  def $$random$($$upperBound$: Int) = builtins.random($$upperBound$)
+  def $$randomDouble$($$upperBound$: Int) = builtins.randomDouble($$upperBound$)
 
   //some type aliases in Swedish
   type $$Int$ = Int
@@ -174,57 +174,53 @@ object $$langCode$Init {
   }
 
   val codeTemplates = Map(
-    "fram" -> "fram(${steg})",
-    "höger" -> "höger(${vinkel})",
-    "vänster" -> "vänster(${vinkel})",
-    "hoppaTill" -> "hoppaTill(${x},${y})",
-    "gåTill" -> "gåTill(${x},${y})",
-    "hoppa" -> "hoppa(${steg})",
-    "hem" -> "hem()",
-    "mot" -> "mot(${x},${y})",
-    "sättVinkel" -> "sättVinkel(${vinkel})",
-    "öster" -> "öster()",
-    "väster" -> "väster()",
-    "norr" -> "norr()",
-    "söder" -> "söder()",
-    "sakta" -> "sakta(${fördröjning})",
-    "skriv" -> "skriv(${sträng})",
-    "textstorlek" -> "textstorlek(${storlek})",
-    "båge" -> "båge(${radie},${vinkel})",
-    "cirkel" -> "cirkel(${radie})",
-    "synlig" -> "synlig()",
-    "osynlig" -> "osynlig()",
-    "läge" -> "läge",
-    "pennaNer" -> "pennaNer()",
-    "pennaUpp" -> "pennaUpp()",
-    "pennanÄrNere" -> "pennanÄrNere",
-    "färg" -> "färg(${pennfärg})",
-    "fyll" -> "fyll(${fyllfärg})",
-    "bredd" -> "bredd(${pennbredd})",
-    "sparaStil" -> "sparaStil()",
-    "laddaStil" -> "laddaStil()",
-    "sparaLägeRiktning" -> "sparaLägeRiktning()",
-    "laddaLägeRiktning" -> "laddaLägeRiktning()",
-    "siktePå" -> "siktePå()",
-    "sikteAv" -> "sikteAv()",
-    "engelska" -> "engelska",
-    "sudda" -> "sudda()",
-    "suddaUtdata" -> "suddaUtdata()",
-    "bakgrund" -> "bakgrund(${färg})",
-    "bakgrund2" -> "bakgrund2(${färg1},${färg2})",
-    "upprepa" -> "upprepa (${antal}) {\n    \n}",
-    "räkneslinga" -> "räkneslinga (${antal}) { i => \n    \n}",
-    "sålänge" -> "sålänge (${villkor}) {\n    \n}",
-    "utdata" -> "utdata(${sträng})",
-    "indata" -> "indata(${ledtext})",
-    "avrunda" -> "avrunda(${tal},${antalDecimaler})",
-    "slumptal" -> "slumptal(${mindreän})",
-    "slumptalMedDecimaler" -> "slumptalMedDecimaler(${mindreän})",
-    "räknaTill" -> "räknaTill(${tal})",
-    "systemtid" -> "systemtid",
-    "kostym" -> "kostym(${filnamn})",
-    "kostymer" -> "kostym(${filnamn1},${filnamn2})",
-    "nästaKostym" -> "nästaKostym()"
+    "$$forward$" -> "$$forward$(${$$steps$})",
+    "$$right$" -> "$$right$(${$$angle$})",
+    "$$left$" -> "$$left$(${$$angle$})",
+    "$$jumpTo$" -> "$$jumpTo$(${x},${y})",
+    "$$moveTo$" -> "$$moveTo$(${x},${y})",
+    "$$hop$" -> "$$hop$(${$$steps$})",
+    "$$home$" -> "$$home$()",
+    "$$towards$" -> "$$towards$(${x},${y})",
+    "$$setHeading$" -> "$$setHeading$(${$$angle$})",
+    "$$east$" -> "$$east$()",
+    "$$west$" -> "$$west$()",
+    "$$north$" -> "$$north$()",
+    "$$south$" -> "$$south$()",
+    "$$delay$" -> "$$delay$(${$$milliSeconds$})",
+    "$$write$" -> "$$write$(${$$text$})",
+    "$$setPenFontSize$" -> "$$setPenFontSize$(${$$size$})",
+    "$$arc$" -> "$$arc$(${$$radius$},${$$angle$})",
+    "$$circle$" -> "$$cirkel$(${$$radius$})",
+    "$$visible$" -> "$$visible$()",
+    "$$invisible$" -> "$$invisible$()",
+    "$$penDown$" -> "$$penDown$()",
+    "$$penUp$" -> "$$penUp$()",
+    "$$setPenColor$" -> "$$setPenColor$(${$$color$})",
+    "$$setFillColor$" -> "$$setFillColor$(${$$color$})",
+    "$$setPenThickness$" -> "$$bredd$(${$$width$})",
+    "$$saveStyle$" -> "$$saveStyle$()",
+    "$$restoreStyle$" -> "$$restoreStyle$()",
+    "$$savePositionHeading$" -> "$$savePositionHeading$()",
+    "$$restorePositionHeading$" -> "$$restorePositionHeading$()",
+    "$$beamsOn$" -> "$$beamsOn$()",
+    "$$beamsOff$" -> "$$beamsOff$()",
+    "$$clear$" -> "$$clear$()",
+    "$$clearOutput$" -> "$$clearOutput$()",
+    "$$setBackground$" -> "$$setBackground$(${$$color$})",
+    "$$setBackgroundV$" -> "$$setBackgroundV$(${$$color$1},${$$color$2})",
+    "$$repeat$" -> "$$repeat$(${$$count$}) {\n    ${cursor}\n}",
+    "$$repeati$" -> "$$repeati$(${$$count$}) { i =>\n    ${cursor}\n}",
+    "$$repeatWhile$" -> "$$repeatWhile$(${$$condition$}) {\n    ${cursor}\n}",
+    "$$repeatFor$" -> "$$repeatFor$(${$$sequence$}) { ${e} =>\n    ${cursor}\n}",
+    "$$println$" -> "$$println$(${$$text$})",
+    "$$readln$" -> "$$readln$(${$$prompt$})",
+    "$$round$" -> "$$round$(${$$number$},${$$digits$})",
+    "$$random$" -> "$$random$(${$$upperBound$})",
+    "$$randomDouble$" -> "$$randomDouble$(${$$upperBound$})",
+    "$$setCostume$" -> "$$setCostume$(${$$fileName$})",
+    "$$setCostumes$" -> "$$setCostumes$(${$$fileName$1},${$$fileName$2})",
+    "$$nextCostume$" -> "$$nextCostume$()"
   )
 
   val helpContent = Map(

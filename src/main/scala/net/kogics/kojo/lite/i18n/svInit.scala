@@ -232,7 +232,7 @@ object SvInit {
     "räknaTill" -> "räknaTill(${tal})",
     "systemtid" -> "systemtid",
     "kostym" -> "kostym(${filnamn})",
-    "kostymer" -> "kostym(${filnamn1},${filnamn2})",
+    "kostymer" -> "kostymer(${filnamn1},${filnamn2})",
     "nästaKostym" -> "nästaKostym()"
   )
 
