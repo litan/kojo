@@ -49,13 +49,15 @@ object LangInit {
   def initPhase2(b: CoreBuiltins) {
     System.getProperty("user.language") match {
       case "sv" =>
-        val ct = SvInit.init(b)
+        SvInit.init(b)
       case "pl" =>
-        val ct = PlInit.init(b)
+        PlInit.init(b)
       case "nl" =>
-        val nl = NlInit.init(b)
+        NlInit.init(b)
       case "de" =>
-        val de = DeInit.init(b)
+        DeInit.init(b)
+      case "ru" =>
+        RussianInit.init(b)
       case _ =>
     }
   }
