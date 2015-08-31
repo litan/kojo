@@ -15,7 +15,7 @@
  *
  */
 
-//Swedish Turtle wrapper for Kojo
+// $$lang$ Turtle wrapper for Kojo
 
 package net.kogics.kojo.lite.i18n
 
@@ -131,7 +131,7 @@ object $$lang$API {
   def $$println$() = println()
 
   //math functions
-  def $$round($$number$: Number, $$digits$: Int = 0): Double = {
+  def $$round$($$number$: Number, $$digits$: Int = 0): Double = {
     val faktor = math.pow(10, $$digits$).toDouble
     math.round($$number$.doubleValue * faktor).toLong / faktor
   }
@@ -144,13 +144,12 @@ object $$lang$API {
   type $$String$ = String
 }
 
-object $$langCode$Init {
+object $$lang$Init {
   def init(builtins: CoreBuiltins) {
     //initialize unstable value
     $$lang$API.builtins = builtins
     builtins match {
       case b: Builtins =>
-        println("Välkommen till Kojo med svensk padda!")
         println("$$welcome$")
         if (b.isScratchPad) {
           println("$$welcomeScratchpad$")
@@ -160,12 +159,12 @@ object $$langCode$Init {
 
         //code completion
         b.addCodeTemplates(
-          "sv",
+          "$$langCode$",
           codeTemplates
         )
         //help texts
         b.addHelpContent(
-          "sv",
+          "$$langCode$",
           helpContent
         )
 
@@ -191,14 +190,14 @@ object $$langCode$Init {
     "$$write$" -> "$$write$(${$$text$})",
     "$$setPenFontSize$" -> "$$setPenFontSize$(${$$size$})",
     "$$arc$" -> "$$arc$(${$$radius$},${$$angle$})",
-    "$$circle$" -> "$$cirkel$(${$$radius$})",
+    "$$circle$" -> "$$circle$(${$$radius$})",
     "$$visible$" -> "$$visible$()",
     "$$invisible$" -> "$$invisible$()",
     "$$penDown$" -> "$$penDown$()",
     "$$penUp$" -> "$$penUp$()",
     "$$setPenColor$" -> "$$setPenColor$(${$$color$})",
     "$$setFillColor$" -> "$$setFillColor$(${$$color$})",
-    "$$setPenThickness$" -> "$$bredd$(${$$width$})",
+    "$$setPenThickness$" -> "$$setPenThickness$(${$$width$})",
     "$$saveStyle$" -> "$$saveStyle$()",
     "$$restoreStyle$" -> "$$restoreStyle$()",
     "$$savePositionHeading$" -> "$$savePositionHeading$()",
