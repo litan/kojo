@@ -1,0 +1,277 @@
+/*
+ * Copyright (C) 2013 
+ *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
+ *   Lalit Pant <pant.lalit@gmail.com> 
+ *
+ * The contents of this file are subject to the GNU General Public License
+ * Version 3 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.gnu.org/copyleft/gpl.html
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ */
+
+// $$lang$ Turtle wrapper for Kojo
+
+package net.kogics.kojo.lite.i18n
+
+import net.kogics.kojo.lite.CoreBuiltins
+import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.xscala.RepeatCommands
+
+object $$lang$API {
+  import net.kogics.kojo.core.Turtle
+  import java.awt.Color
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
+
+  trait $$lang$Turtle {
+    def englishTurtle: Turtle
+    def $$clear$() = englishTurtle.clear()
+    def $$visible$() = englishTurtle.visible()
+    def $$invisible$() = englishTurtle.invisible()
+    def $$forward$($$steps$: Double) = englishTurtle.forward($$steps$)
+    def $$forward$() = englishTurtle.forward(25)
+    def $$right$($$angle$: Double) = englishTurtle.right($$angle$)
+    def $$right$() = englishTurtle.right(90)
+    def $$left$($$angle$: Double) = englishTurtle.left($$angle$)
+    def $$left$() = englishTurtle.left(90)
+    def $$jumpTo$(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
+    def $$moveTo$(x: Double, y: Double) = englishTurtle.moveTo(x, y)
+    def $$hop$(n: Double) = {
+      englishTurtle.saveStyle() //to preserve pen state
+      englishTurtle.hop(n) //hop change state to penDown after hop
+      englishTurtle.restoreStyle()
+    }
+    def $$hop$(): Unit = $$hop$(25)
+    def $$home$() = englishTurtle.home()
+    def $$towards$(x: Double, y: Double) = englishTurtle.towards(x, y)
+    def $$setHeading$($$angle$: Double) = englishTurtle.setHeading($$angle$)
+    def $$heading$ = englishTurtle.heading
+    def $$east$() = englishTurtle.setHeading(0)
+    def $$west$() = englishTurtle.setHeading(180)
+    def $$north$() = englishTurtle.setHeading(90)
+    def $$south$() = englishTurtle.setHeading(-90)
+    def $$delay$(n: Long) = englishTurtle.setAnimationDelay(n)
+    def $$write$(t: Any) = englishTurtle.write(t)
+    def $$setPenFontSize$($$size$: Int) = englishTurtle.setPenFontSize($$size$)
+    def $$arc$($$radius$: Double, $$angle$: Double) = englishTurtle.arc($$radius$, math.round($$angle$).toInt)
+    def $$circle$($$radius$: Double) = englishTurtle.circle($$radius$)
+    def $$position$ = englishTurtle.position
+    def $$penDown$() = englishTurtle.penDown()
+    def $$penUp$() = englishTurtle.penUp()
+    def $$isPenDown$ = englishTurtle.style.down
+    def $$setPenColor$($$color$: java.awt.Color) = englishTurtle.setPenColor($$color$)
+    def $$setFillColor$($$color$: java.awt.Color) = englishTurtle.setFillColor($$color$)
+    def $$setPenThickness$(n: Double) = englishTurtle.setPenThickness(n)
+    def $$saveStyle$() = englishTurtle.saveStyle()
+    def $$restoreStyle$() = englishTurtle.restoreStyle()
+    def $$savePositionHeading$() = englishTurtle.savePosHe()
+    def $$restorePositionHeading$() = englishTurtle.restorePosHe()
+    def $$beamsOn$() = englishTurtle.beamsOn()
+    def $$beamsOff$() = englishTurtle.beamsOff()
+    def $$setCostume$($$fileName$: String) = englishTurtle.setCostume($$fileName$)
+    def $$setCostumes$($$fileName$: String*) = englishTurtle.setCostumes($$fileName$: _*)
+    def $$nextCostume$() = englishTurtle.nextCostume()
+  }
+  class $$Turtle$(override val englishTurtle: Turtle) extends $$lang$Turtle {
+    def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
+    def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
+    def this() = this(0, 0)
+  }
+  class $$Turtle$0(t0: => Turtle) extends $$lang$Turtle { //by-name construction as turtle0 is volatile }
+    override def englishTurtle: Turtle = t0
+  }
+  object $$turtle$ extends $$Turtle$0(builtins.TSCanvas.turtle0)
+  def $$clear$() = builtins.TSCanvas.clear()
+  def $$clearOutput$() = builtins.clearOutput()
+  lazy val $$blue$ = builtins.blue
+  lazy val $$red$ = builtins.red
+  lazy val $$yellow$ = builtins.yellow
+  lazy val $$green$ = builtins.green
+  lazy val $$purple$ = builtins.purple
+  lazy val $$pink$ = builtins.pink
+  lazy val $$brown$ = builtins.brown
+  lazy val $$black$ = builtins.black
+  lazy val $$white$ = builtins.white
+  lazy val $$noColor$ = builtins.noColor
+  def $$setBackground$(c: Color) = builtins.setBackground(c)
+  def $$setBackgroundV$(c1: Color, c2: Color) = builtins.TSCanvas.setBackgroundV(c1, c2)
+
+  //  object KcSwe { //Key codes for Swedish keys
+  //    lazy val VK_Å = 197
+  //    lazy val VK_Ä = 196
+  //    lazy val VK_Ö = 214
+  //  }
+
+  //loops 
+  def $$repeat$(n: Int)(block: => Unit) {
+    RepeatCommands.repeat(n) { block }
+  }
+
+  def $$repeati$(n: Int)(block: Int => Unit) {
+    RepeatCommands.repeati(n) { i => block(i) }
+  }
+
+  def $$repeatWhile$($$condition$: => Boolean)(block: => Unit) {
+    RepeatCommands.repeatWhile($$condition$) { block }
+  }
+
+  def $$repeatFor$[T]($$sequence$: Iterable[T])(block: T => Unit) {
+    RepeatCommands.repeatFor($$sequence$) { block }
+  }
+
+  //simple IO
+  def $$readln$($$prompt$: String = "") = builtins.readln($$prompt$)
+
+  def $$println$(data: Any) = println(data) //Transferred here from sv.tw.kojo.
+  def $$println$() = println()
+
+  //math functions
+  def $$round$($$number$: Number, $$digits$: Int = 0): Double = {
+    val faktor = math.pow(10, $$digits$).toDouble
+    math.round($$number$.doubleValue * faktor).toLong / faktor
+  }
+  def $$random$($$upperBound$: Int) = builtins.random($$upperBound$)
+  def $$randomDouble$($$upperBound$: Int) = builtins.randomDouble($$upperBound$)
+
+  //some type aliases in Swedish
+  type $$Int$ = Int
+  type $$Double$ = Double
+  type $$String$ = String
+}
+
+object $$lang$Init {
+  def init(builtins: CoreBuiltins) {
+    //initialize unstable value
+    $$lang$API.builtins = builtins
+    builtins match {
+      case b: Builtins =>
+        println("$$welcome$")
+        if (b.isScratchPad) {
+          println("$$welcomeScratchpad$")
+        }
+        
+//        b.setEditorTabSize(2)
+
+        //code completion
+        b.addCodeTemplates(
+          "$$langCode$",
+          codeTemplates
+        )
+        //help texts
+        b.addHelpContent(
+          "$$langCode$",
+          helpContent
+        )
+
+      case _ =>
+    }
+  }
+
+  val codeTemplates = Map(
+    "$$forward$" -> "$$forward$(${$$steps$})",
+    "$$right$" -> "$$right$(${$$angle$})",
+    "$$left$" -> "$$left$(${$$angle$})",
+    "$$jumpTo$" -> "$$jumpTo$(${x},${y})",
+    "$$moveTo$" -> "$$moveTo$(${x},${y})",
+    "$$hop$" -> "$$hop$(${$$steps$})",
+    "$$home$" -> "$$home$()",
+    "$$towards$" -> "$$towards$(${x},${y})",
+    "$$setHeading$" -> "$$setHeading$(${$$angle$})",
+    "$$east$" -> "$$east$()",
+    "$$west$" -> "$$west$()",
+    "$$north$" -> "$$north$()",
+    "$$south$" -> "$$south$()",
+    "$$delay$" -> "$$delay$(${$$milliSeconds$})",
+    "$$write$" -> "$$write$(${$$text$})",
+    "$$setPenFontSize$" -> "$$setPenFontSize$(${$$size$})",
+    "$$arc$" -> "$$arc$(${$$radius$},${$$angle$})",
+    "$$circle$" -> "$$circle$(${$$radius$})",
+    "$$visible$" -> "$$visible$()",
+    "$$invisible$" -> "$$invisible$()",
+    "$$penDown$" -> "$$penDown$()",
+    "$$penUp$" -> "$$penUp$()",
+    "$$isPenDown$" -> "$$isPenDown$",
+    "$$setPenColor$" -> "$$setPenColor$(${$$color$})",
+    "$$setFillColor$" -> "$$setFillColor$(${$$color$})",
+    "$$setPenThickness$" -> "$$setPenThickness$(${$$width$})",
+    "$$saveStyle$" -> "$$saveStyle$()",
+    "$$restoreStyle$" -> "$$restoreStyle$()",
+    "$$savePositionHeading$" -> "$$savePositionHeading$()",
+    "$$restorePositionHeading$" -> "$$restorePositionHeading$()",
+    "$$beamsOn$" -> "$$beamsOn$()",
+    "$$beamsOff$" -> "$$beamsOff$()",
+    "$$clear$" -> "$$clear$()",
+    "$$clearOutput$" -> "$$clearOutput$()",
+    "$$setBackground$" -> "$$setBackground$(${$$color$})",
+    "$$setBackgroundV$" -> "$$setBackgroundV$(${$$color$1},${$$color$2})",
+    "$$repeat$" -> "$$repeat$(${$$count$}) {\n    ${cursor}\n}",
+    "$$repeati$" -> "$$repeati$(${$$count$}) { i =>\n    ${cursor}\n}",
+    "$$repeatWhile$" -> "$$repeatWhile$(${$$condition$}) {\n    ${cursor}\n}",
+    "$$repeatFor$" -> "$$repeatFor$(${$$sequence$}) { ${e} =>\n    ${cursor}\n}",
+    "$$println$" -> "$$println$(${$$text$})",
+    "$$readln$" -> "$$readln$(${$$prompt$})",
+    "$$round$" -> "$$round$(${$$number$},${$$digits$})",
+    "$$random$" -> "$$random$(${$$upperBound$})",
+    "$$randomDouble$" -> "$$randomDouble$(${$$upperBound$})",
+    "$$setCostume$" -> "$$setCostume$(${$$fileName$})",
+    "$$setCostumes$" -> "$$setCostumes$(${$$fileName$1},${$$fileName$2})",
+    "$$nextCostume$" -> "$$nextCostume$()"
+  )
+
+  val helpContent = Map(
+    "$$forward$" -> $$forwardHelp$.toString,
+    "$$left$" -> $$leftHelp$.toString,
+    "$$right$" -> $$rightHelp$.toString,
+    "$$jumpTo$" -> $$jumpToHelp$.toString,
+    "$$moveTo$" -> $$moveToHelp$.toString,
+    "$$hop$" -> $$hopHelp$.toString,
+    "$$home$" -> $$homeHelp$.toString,
+    "$$towards$" -> $$towardsHelp$.toString,
+    "$$setHeading$" -> $$setHeadingHelp$.toString,
+    "$$heading$" -> $$headingHelp$.toString,
+    "$$east$" -> $$eastHelp$.toString,
+    "$$west$" -> $$westHelp$.toString,
+    "$$north$" -> $$northHelp$.toString,
+    "$$south$" -> $$southHelp$.toString,
+    "$$delay$" -> $$delayHelp$.toString,
+    "$$write$" -> $$writeHelp$.toString,
+    "$$setPenFontSize$" -> $$setPenFontSizeHelp$.toString,
+    "$$arc$" -> $$arcHelp$.toString,
+    "$$circle$" -> $$circleHelp$.toString,
+    "$$visible$" -> $$visibleHelp$.toString,
+    "$$invisible$" -> $$invisibleHelp$.toString,
+    "$$penDown$" -> $$penDownHelp$.toString,
+    "$$penUp$" -> $$penUpHelp$.toString,
+    "$$isPenDown$" -> $$isPenDownHelp$.toString,
+    "$$setPenColor$" -> $$setPenColorHelp$.toString,
+    "$$setFillColor$" -> $$setFillColorHelp$.toString,
+    "$$setPenThickness$" -> $$setPenThicknessHelp$.toString,
+    "$$saveStyle$" -> $$saveStyleHelp$.toString,
+    "$$restoreStyle$" -> $$restoreStyleHelp$.toString,
+    "$$savePositionHeading$" -> $$savePositionHeadingHelp$.toString,
+    "$$restorePositionHeading$" -> $$restorePositionHeadingHelp$.toString,
+    "$$beamsOn$" -> $$beamsOnHelp$.toString,
+    "$$beamsOff$" -> $$beamsOffHelp$.toString,
+    "$$clear$" -> $$clearHelp$.toString,
+    "$$clearOutput$" -> $$clearOutputHelp$.toString,
+    "$$setBackground$" -> $$setBackgroundHelp$.toString,
+    "$$setBackgroundV$" -> $$setBackgroundVHelp$.toString,
+    "$$repeat$" -> $$repeatHelp$.toString,
+    "$$repeati$" -> $$repeatiHelp$.toString,
+    "$$repeatWhile$" -> $$repeatWhileHelp$.toString,
+    "$$repeatFor$" -> $$repeatForHelp$.toString,
+    "$$println$" -> $$printlnHelp$.toString,
+    "$$readln$" -> $$readlnHelp$.toString,
+    "$$round$" -> $$roundHelp$.toString,
+    "$$random$" -> $$randomHelp$.toString,
+    "$$randomDouble$" -> $$randomDoubleHelp$.toString,
+    "$$setCostume$" -> $$setCostumeHelp$.toString,
+    "$$setCostumes$" -> $$setCostumesHelp$.toString,
+    "$$nextCostume$" -> $$nextCostumeHelp$.toString
+  )
+}

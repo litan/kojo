@@ -6,7 +6,7 @@ import net.kogics.kojo.util.RichFile.enrichFile
 clearOutput()
 
 val kojoDir = "/home/lalit/kojo-2.11"
-val templateFile = s"$kojoDir/l10n-level2/langInit.scala"
+val templateFile = s"$kojoDir/l10n-level2/langInit.scala.template"
 val replacementsFile = s"$kojoDir/l10n-level2/level2_ru.properties"
 
 val varPattern = """\$\$(.*?)\$"""
