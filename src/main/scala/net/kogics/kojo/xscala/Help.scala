@@ -291,7 +291,7 @@ sq(100)
     "hop" -> 
     <div>
       <strong>hop</strong>(numSteps) - Moves the turtle forward by the given number of steps <em>with the pen up</em>, 
-      so that no line is drawn. The pen is put down after the hop<br/>.
+      so that no line is drawn. The pen is put down after the hop.<br/>
       <br/>
       <em>Example:</em> <br/><br/>
       <pre>
@@ -322,7 +322,7 @@ sq(100)
     ,
     "home" -> 
     <div>
-      <strong>home</strong>() - Moves the turtle to its original location, and makes it point north. <br/>
+      <strong>home</strong>() - Moves the turtle to its original location at the center of the screen, and makes it point north. <br/>
       <br/>
       <em>Example:</em> <br/><br/>
       <pre>
@@ -367,7 +367,7 @@ sq(100)
     </div>
     ,
     "style" -> "style - Tells you the turtle's current style. See the help for saveStyle() for more information on styles.",
-    "moveTo" -> "moveTo(x, y) - Turns the turtle towards (x, y) and moves the turtle to that point. ",
+    "moveTo" -> <div><strong>moveTo</strong>(x, y) - Turns the turtle towards (x, y) and moves the turtle to that point.</div>.toString,
     "turn" -> 
     <div>
       <strong>turn</strong>(angle) - Turns the turtle through the specified angle.<br/>
@@ -410,9 +410,9 @@ sq(100)
       </pre>
     </div>
     ,
-    "towards" -> "towards(x, y) - Turns the turtle towards the point (x, y).",
-    "setHeading" -> "setHeading(angle) - Sets the turtle's heading to angle (0 is towards the right side of the screen ('east'), 90 is up ('north')).",
-    "heading" -> "heading - Queries the turtle's heading (0 is towards the right side of the screen ('east'), 90 is up ('north')).",
+    "towards" -> <div><strong>towards</strong>(x, y) - Turns the turtle towards the point (x, y).</div>.toString,
+    "setHeading" -> <div><strong>setHeading</strong>(angle) - Sets the turtle's heading to the given angle (0 is towards the right side of the screen (<em>east</em>), 90 is up (<em>north</em>)).</div>.toString,
+    "heading" -> <div><strong>heading</strong> - Queries the turtle's heading (0 is towards the right side of the screen (<em>east</em>), 90 is up (<em>north</em>)).</div>.toString,
     "penDown" -> 
     <div>
       <strong>penDown</strong>() - Pushes the turtle's pen down, and makes it draw lines as it moves. <br/>
