@@ -186,6 +186,10 @@ object Help {
     "exportImage" -> "exportImage(filePrefix) - ".concat(exportImageHelpTemplate format ""),
     "exportImageH" -> "exportImageH(filePrefix, h) - ".concat(exportImageHelpTemplate format " with the given height"),
     "exportImageW" -> "exportImageW(filePrefix, w) - ".concat(exportImageHelpTemplate format " with the given width"),
+    "east" -> <div><strong>east</strong>() - Turns the turtle east.</div>.toString, 
+    "west" -> <div><strong>west</strong>() - Turns the turtle west.</div>.toString,
+    "north" -> <div><strong>north</strong>() - Turns the turtle north.</div>.toString,
+    "south" -> <div><strong>south</strong>() - Turns the turtle south.</div>.toString,
     "ColorLinearG" ->
     <div>
       <strong>ColorLinearG</strong><tt>(x1, y1, x2, y2, distribution, colors, cyclic)</tt> - creates a linear color gradient.
@@ -681,9 +685,9 @@ sq(100)
     ,
     "beamsOn" -> "beamsOn() - Shows crossbeams centered on the turtle - to help with thinking about the turtle's heading/orientation.",
     "beamsOff" -> "beamsOff() - Hides the turtle crossbeams that are turned on by beamsOn().",
-    "invisible" -> "invisible() - Hides the turtle.",
-    "visible" -> "visible() - Makes the hidden turtle visible again.",
-    "write" -> "write(obj) - Makes the turtle write the specified object as a string at its current location.",
+    "invisible" -> <div><strong>invisible</strong>() - Makes the turtle invisible. Use the visible() command to make it visible again.</div>.toString,
+    "visible" -> <div><strong>visible</strong>() - Makes the turtle visible after it was made invisible with the invisible() command.</div>.toString,
+    "write" -> <div><strong>write</strong>(obj) - Makes the turtle write, at its current location, the specified object as a string.</div>.toString,
     "setAnimationDelay" -> 
     <div>
       <strong>setAnimationDelay</strong>(delay) - Sets the turtle's speed. The specified delay 
