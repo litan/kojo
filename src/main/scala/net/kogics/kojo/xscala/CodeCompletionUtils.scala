@@ -204,6 +204,7 @@ object CodeCompletionUtils {
     "ColPanel" -> "ColPanel(\n      ${widget},\n      w\n)",
     "repeatFor" -> "repeatFor(${seq}) { ${e} =>\n    ${cursor}\n}",
     "randomFrom" -> "randomFrom(${seq})",
+    "round" -> "round(${n}, ${digits})",
     "image" -> "image(${height}, ${width})",
     "PicShape.image" -> "", // use default via reflection
     "setImagePixel" -> "setImagePixel(${img}, ${x}, ${y}, ${color})",
