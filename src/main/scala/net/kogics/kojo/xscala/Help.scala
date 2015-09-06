@@ -96,12 +96,13 @@ object Help {
     ,
     "repeat" -> 
     <div>
-      <strong>repeat</strong>(n){{ }} - Repeats a block of commands (within braces) n number of times.<br/>
+      <strong>repeat</strong>(n){{ }} - Repeats the specified block of commands (within braces) n number of times.<br/>
       <br/>
       <em>Example:</em> <br/><br/>
       <pre>
         clear()
-        // make a square with the help of the repeat command
+        // make a square with the help 
+        // of the repeat command
         repeat (4) {{
           forward(100)
           right()
@@ -111,7 +112,7 @@ object Help {
     ,
     "repeatFor" -> 
     <div>
-      <strong>repeatFor</strong>(seq){{ }} - For each element in the given sequence, repeats the given block of commands (within braces).<br/>
+      <strong>repeatFor</strong>(seq){{ }} - Repeats the specified block of commands (within braces) for each element in the given sequence.<br/>
       <br/>
       <em>Example:</em> <br/><br/>
       <pre>
@@ -133,9 +134,9 @@ object Help {
       </pre>
     </div>
     ,
-    "repeati" -> "repeati(n) {i => } - Repeats the commands within braces n number of times. The current repeat index is available within the braces.",
-    "repeatWhile" -> "repeatWhile(cond) {} - Repeats the commands within braces while the given condition is true.",
-    "repeatUntil" -> "repeatUntil(cond) {} - Repeats the commands within braces until the given condition is true.",
+    "repeati" -> <div><strong>repeati</strong>(n) {{i => }} - Repeats the specified block of commands (within braces) n number of times. The current repeat index is available as <tt>i</tt> within the braces.</div>.toString,
+    "repeatWhile" -> <div><strong>repeatWhile</strong>(cond) {{ }} - Repeats the specified block of commands (within braces) while the given condition is true.</div>.toString,
+    "repeatUntil" -> <div><strong>repeatUntil</strong>(cond) {{ }} - Repeats the specified block of commands (within braces) until the given condition is true.</div>.toString,
     "zoom" -> 
     """zoom(factor) - Zooms in by the given factor, leaving the center point unchanged.<br/>
        <br/>
@@ -153,15 +154,16 @@ object Help {
     "retainSingleLineCode" -> "retainSingleLineCode() - A Kojo 1.0 command. Does nothing now.",
     "clearSingleLineCode" -> "clearSingleLineCode() - A Kojo 1.0 command. Does nothing now.",
     "version" -> "version - Displays the version of Scala being used.",
-    "println" -> "println(obj) - Displays the given object as a string in the output window, with a newline at the end.",
+    "println" -> <div><strong>println</strong>(obj) - Displays the given object as a string in the output window, with a newline at the end.</div>.toString,
     "print" -> "print(obj) - Displays the given object as a string in the output window, without a newline at the end.",
-    "readln" -> "readln(promptString) - Displays the given prompt in the output window and reads a line that the user enters.",
+    "readln" -> <div><strong>readln</strong>(promptString) - Displays the given prompt in the output window and reads a line that the user enters.</div>.toString,
     "readInt" -> "readInt(promptString) - Displays the given prompt in the output window and reads an Integer value that the user enters.",
     "readDouble" -> "readDouble(promptString) - Displays the given prompt in the output window and reads a Double-precision Real value that the user enters.",
-    "random" -> "random(upperBound) - Returns a random Integer between 0 (inclusive) and upperBound (exclusive).",
-    "randomDouble" -> "randomDouble(upperBound) - Returns a random Double-precision Real between 0 (inclusive) and upperBound (exclusive).",
+    "random" -> <div><strong>random</strong>(upperBound) - Returns a random integer between 0 (inclusive) and upperBound (exclusive).</div>.toString,
+    "randomDouble" -> <div><strong>randomDouble</strong>(upperBound) - Returns a random double-precision decimal number between 0 (inclusive) and upperBound (exclusive).</div>.toString,
     "randomBoolean" -> "randomBoolean - Returns a random boolean value. This is like a coin toss.",
     "randomFrom" -> "randomFrom(sequence) - Returns a random value from the given sequence.",
+    "round" -> <div><strong>round</strong>(n, digits) - Rounds the given number n to the specified number of digits after the decimal point.</div>.toString,
     "inspect" -> "inspect(obj) - Opens up a window showing the internal fields of the given object",
     "playMusic" -> "playMusic(score) - Plays the specified melody, rhythm, or score.",
     "playMusicUntilDone" -> "playMusicUntilDone(score) - Plays the specified melody, rhythm, or score, and waits till the music finishes.",
@@ -787,13 +789,13 @@ sq(100)
     "image" -> """image(height, width) - Creates an image with the given height and width. 
     This image is blank to begin with. You can set the individual pixels in the image by using the setImagePixel() command.""",
     "setImagePixel" -> "setImagePixel(img, x, y, color) - Sets the pixel at the given (x, y) location in the given image to the given color.",
-    "setCostume" -> "setCostume(costumeFile) - Changes the costume (i.e. image) associated with the turtle to the image in the specified file.",
+    "setCostume" -> <div><strong>setCostume</strong>(costumeFile) - Changes the costume (i.e. image) associated with the turtle to the image in the specified file.</div>.toString,
     "setCostumeImage" -> "setCostumeImage(image) - Changes the costume (i.e. image) associated with the turtle to the specified image. The image can be created with the image(height, width) function.",
-    "setCostumes" -> """setCostumes(costumeFile1, costumeFile2, ...) - Specifies multiple costumes for the turtle, 
-and sets the turtle's costume to the first one in the sequence. You can cycle through the costumes by calling nextCostume().""",
+    "setCostumes" -> <div><strong>setCostumes</strong>(costumeFile1, costumeFile2, ...) - Specifies multiple costumes for the turtle,
+         and sets the turtle's costume to the first one in the sequence. You can cycle through the costumes by calling <tt>nextCostume()</tt>.</div>.toString,
     "setCostumeImages" -> """setCostumeImages(image1, image2, ...) - Specifies multiple costumes for the turtle, 
 and sets the turtle's costume to the first one in the sequence. You can cycle through the costumes by calling nextCostume().""",
-    "nextCostume" -> "nextCostume() - Changes the turtle's costume to the next one in the sequence of costumes specified by setCostumes(...).",
+    "nextCostume" -> <div><strong>nextCostume</strong>() - Changes the turtle's costume to the next one in the sequence of costumes specified by <tt>setCostumes(...)</tt>.</div>.toString,
     "scaleCostume" -> "scaleCostume(factor) - Scales the turtle's costume, to make it bigger or smaller, by the given factor.",
     "changePosition" -> "changePosition(x, y) - Changes the turtle's position by the given x and y without drawing a line.",
     "Turtle.act" -> """act { self => yourCode } - Allows this turtle to run concurrently with other turtles, 
