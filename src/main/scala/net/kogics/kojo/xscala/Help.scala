@@ -175,9 +175,13 @@ object Help {
     "Color" -> "Color(r, g, b, opac) - Creates a color with the given red, green, blue, and opacity (optional) values.",
     "ColorG" -> "ColorG(x1, y1, color1, x2, y2, color2, cyclic) - Creates a color gradient for filling shapes. The cyclic value is optional.",
     "Font" -> "Font(name, size) - Creates a font with the given name and size",
-    "setBackground" -> "setBackground(color) - Sets the canvas background to the specified color. You can use predefined colors for setting the background, or you can create your own colors using the Color, ColorHSB, and ColorG functions.",
-    "setBackgroundH" -> "setBackgroundH(color1, color2) - Sets the canvas background to a horizontal color gradient defined by the two specified colors.",
-    "setBackgroundV" -> "setBackgroundV(color1, color2) - Sets the canvas background to a vertical color gradient defined by the two specified colors.",
+    "setBackground" -> <div><strong>setBackground</strong>(color) - Sets the canvas background to the specified color. 
+                       You can use predefined colors for setting the background, or you can create your own colors using the 
+                       <tt>Color</tt>, <tt>ColorHSB</tt>, and <tt>ColorG</tt> functions.</div>.toString,
+    "setBackgroundH" -> <div><strong>setBackgroundH</strong>(color1, color2) - Sets the canvas background to a horizontal color gradient defined by the two  
+                         specified colors.</div>.toString,
+    "setBackgroundV" -> <div><strong>setBackgroundV</strong>(color1, color2) - Sets the canvas background to a vertical color gradient defined by the two 
+                         specified colors.</div>.toString,
     "epochTime" -> "epochTime - The difference, measured in seconds, between the current time and midnight, January 1, 1970 UTC.",
     "epochTimeMillis" -> "epochTimeMillis - The difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.",
     "canvasBounds" -> "canvasBounds - Returns the bounds of the canvas: the x and y coordinates of its bottom left point, and its width and height.",
@@ -419,7 +423,7 @@ sq(100)
     "heading" -> <div><strong>heading</strong> - Queries the turtle's heading (0 is towards the right side of the screen (<em>east</em>), 90 is up (<em>north</em>)).</div>.toString,
     "penDown" -> 
     <div>
-      <strong>penDown</strong>() - Pushes the turtle's pen down, and makes it draw lines as it moves. <br/>
+      <strong>penDown</strong>() - Puts the turtle's pen down, so that it draws lines as the turtle moves.<br/>
       The turtle's pen is down by default. <br/>
       <br/>
       <em>Example:</em> <br/>
@@ -428,19 +432,21 @@ sq(100)
         clear()
         // pull the turtle's pen up
         penUp()
-        // the turtle moves forward without drawing a line
+        // the turtle moves forward 
+        // without drawing a line
         forward(100) 
                     
         // push the turtle's pen down
         penDown()
-        // now the turtle draws a line as it moves forward
+        // now the turtle draws a line 
+        // as it moves forward
         forward(100) 
       </pre>
     </div>
     ,
     "penUp" -> 
     <div>
-      <strong>penUp</strong>() - Pulls the turtle's pen up, and prevents it from drawing lines as it moves. <br/>
+      <strong>penUp</strong>() - Pulls the turtle's pen up, so that it does not draw lines as the turtle moves. <br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
@@ -448,12 +454,14 @@ sq(100)
         clear()
         // pull the turtle's pen up
         penUp()
-        // the turtle moves forward without drawing a line
+        // the turtle moves forward 
+        // without drawing a line
         forward(100) 
                     
         // push the turtle's pen down
         penDown()
-        // now the turtle draws a line as it moves forward
+        // now the turtle draws a line 
+        // as it moves forward
         forward(100) 
       </pre>
     </div>
@@ -557,17 +565,17 @@ sq(100)
       <br/>
       <pre>
         clear()
-        // save the turtle's position and heading
+// save the turtle's position and heading
         savePosHe()
                     
-        // move wherever
+// move wherever
         forward(100)
         right(45)
         forward(60)
                     
-        // now restore the saved position and heading, 
-        // so that the turtles gets back to 
-        // exactly where it started out from 
+// now restore the saved position and heading, 
+// so that the turtles gets back to 
+// exactly where it started out from 
         restorePosHe()
       </pre>
     </div>
@@ -581,17 +589,17 @@ sq(100)
       <br/>
       <pre>
         clear()
-        // save the turtle's position and heading
+// save the turtle's position and heading
         savePosHe()
                     
-        // move wherever
+// move wherever
         forward(100)
         right(45)
         forward(60)
                     
-        // now restore the saved position and heading, 
-        // so that the turtles gets back to 
-        // exactly where it started out from 
+// now restore the saved position and heading, 
+// so that the turtles gets back to 
+// exactly where it started out from 
         restorePosHe()
       </pre>
     </div>
@@ -599,7 +607,7 @@ sq(100)
     "saveStyle" -> 
     <div>
       <strong>saveStyle</strong>() - Saves the turtle's current style, so that it can 
-      easily be restored later with <tt>restoreStyle()</tt> .<br/>
+      easily be restored later with a <tt>restoreStyle()</tt>. <br/>
       <p>
         The turtle's style includes:
         <ul>
@@ -615,7 +623,7 @@ sq(100)
       <br/>
       <pre>
         def tick(n: Int) {{
-            // save current style, position and heading
+// save current style, position and heading
             saveStyle()
             savePosHe()
             setPenColor(gray)
@@ -624,7 +632,7 @@ sq(100)
             back(n * 2)
             restorePosHe()
             restoreStyle()
-            // restore caller's style, position and heading
+// restore caller's style, position and heading
         }}
 
         clear()
@@ -659,7 +667,7 @@ sq(100)
       <br/>
       <pre>
         def tick(n: Int) {{
-            // save current style, position and heading
+// save current style, position and heading
             saveStyle()
             savePosHe()
             setPenColor(gray)
@@ -668,7 +676,7 @@ sq(100)
             back(n * 2)
             restorePosHe()
             restoreStyle()
-            // restore caller's style, position and heading
+// restore caller's style, position and heading
         }}
 
         clear()
@@ -683,8 +691,8 @@ sq(100)
       </pre>
     </div>
     ,
-    "beamsOn" -> "beamsOn() - Shows crossbeams centered on the turtle - to help with thinking about the turtle's heading/orientation.",
-    "beamsOff" -> "beamsOff() - Hides the turtle crossbeams that are turned on by beamsOn().",
+    "beamsOn" -> <div><strong>beamsOn</strong>() - Shows crossbeams centered on the turtle - to help with thinking about the turtle's heading/orientation.</div>.toString,
+    "beamsOff" -> <div><strong>beamsOff</strong>() - Hides the turtle crossbeams that are turned on by a <tt>beamsOn()</tt>.</div>.toString,
     "invisible" -> <div><strong>invisible</strong>() - Makes the turtle invisible. Use the visible() command to make it visible again.</div>.toString,
     "visible" -> <div><strong>visible</strong>() - Makes the turtle visible after it was made invisible with the invisible() command.</div>.toString,
     "write" -> <div><strong>write</strong>(obj) - Makes the turtle write, at its current location, the specified object as a string.</div>.toString,
@@ -712,10 +720,10 @@ sq(100)
     </div>
     ,
     "animationDelay" -> "animationDelay - Queries the turtle's delay setting.",
-    "clear" -> "clear() - Clears the turtle canvas, and brings the turtle to the center of the canvas.",
+    "clear" -> <div><strong>clear</strong>() - Clears the turtle canvas, and brings the turtle to the center of the canvas.</div>.toString,
     "cleari" -> "cleari() - Clears the turtle canvas and makes the turtle invisible.",
     "wipe" -> "wipe() - Wipes the turtle canvas by erasing all pictures. Meant to be used during an animation.",
-    "clearOutput" -> "clearOutput() - Clears the output window.",
+    "clearOutput" -> <div><strong>clearOutput</strong>() - Clears the output window.</div>.toString,
     "clearWithUL" -> "clearWithUL(unit) - Clears the turtle canvas, sets the given unit length (Pixel, Cm, or Inch), and brings the turtle to the center of the canvas.",
     "arc" ->
     <div>
