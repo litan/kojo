@@ -45,7 +45,7 @@ class HelpTest extends FunSuite with Matchers with BeforeAndAfter {
   }
 
   test("common help miss; Tw help hit") {
-    Help("towards") should be("towards(x, y) - Turns the turtle towards the point (x, y).")
+    Help("towards") should be("<div><strong>towards</strong>(x, y) - Turns the turtle towards the point (x, y).</div>")
   }
 
   test("common help miss; Tw help miss; lang help hit") {
