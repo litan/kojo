@@ -20,4 +20,4 @@
 // make Russian names visible
 val RussianAPI = net.kogics.kojo.lite.i18n.RussianAPI
 import RussianAPI._
-import черепашка.{очистить => _, _}
+import черепашка.{очисти => _, _}
