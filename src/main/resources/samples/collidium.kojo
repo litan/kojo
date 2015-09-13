@@ -6,6 +6,9 @@ switchToDefault2Perspective()
 cleari()
 drawStage(darkGray)
 val cb = canvasBounds
+val obsDelta = cb.width / 4
+val ballDeltaBase = (obsDelta / 4).toInt
+def ballDelta = ballDeltaBase + random(ballDeltaBase)
 val ballSize = 20
 
 val ballE = penColor(red) * trans(ballSize, ballSize) -> PicShape.circle(ballSize)
@@ -15,16 +18,15 @@ val ball3 = PicShape.image("/media/collidium/ball3.png", ballE)
 val ball4 = PicShape.image("/media/collidium/ball4.png", ballE)
 
 val ball =
-    trans(cb.x + 60 + random(50), cb.y + 60 + random(50)) -> picBatch(ball1, ball2, ball3, ball4)
+    trans(cb.x + ballDelta, cb.y + ballDelta) -> picBatch(ball1, ball2, ball3, ball4)
 
-val target = trans(-cb.x - 60 - random(50), -cb.y - 60 - random(50)) *
+val target = trans(-cb.x - ballDelta, -cb.y - ballDelta) *
     penColor(red) *
     fillColor(red) -> PicShape.circle(ballSize / 4)
 
 val wallTexture = TexturePaint("/media/collidium/bwall.png", 0, 0)
 val obstacles = (1 to 3).map { n =>
-    val delta = cb.width / 4
-    trans(cb.x + n * delta, cb.y + cb.height / 4) * fillColor(wallTexture) * penColor(noColor) -> PicShape.rect(cb.height / 2, 12)
+    trans(cb.x + n * obsDelta, cb.y + cb.height / 4) * fillColor(wallTexture) * penColor(noColor) -> PicShape.rect(cb.height / 2, 12)
 }
 
 draw(ball, target)
