@@ -3,7 +3,7 @@
 * The [Kojo home-page][1] provides user-level information about Kojo.
 * The [Kojo dev-board][2] gives you a high level view of what's going on with the development of Kojo. 
 * The [Kojo issue-tracker][3] let's you file bug reports.
-* Kojo [Localization][5]
+* Kojo [Localization][5].
 
 **To start hacking:**
 
