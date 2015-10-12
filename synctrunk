@@ -3,4 +3,4 @@ hg push ../KojoLite
 cd ../KojoLite
 hg -v up
 hg -v log --limit 6
-hg push
+# hg push
