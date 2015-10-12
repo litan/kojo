@@ -33,8 +33,8 @@ object ItalianAPI {
   trait ItalianTurtle {
     def englishTurtle: Turtle
     def pulisci() = englishTurtle.clear()
-    def invisibile() = englishTurtle.visible()
-    def invisible() = englishTurtle.invisible()
+    def visibile() = englishTurtle.visible()
+    def invisibile() = englishTurtle.invisible()
     def avanti(passi: Double) = englishTurtle.forward(passi)
     def avanti() = englishTurtle.forward(25)
     def destra(angolo: Double) = englishTurtle.right(angolo)
@@ -80,7 +80,7 @@ object ItalianAPI {
     def prossimoCostume() = englishTurtle.nextCostume()
     def suona(voce: Voice) = englishTurtle.playSound(voce)
 
-    def area = englishTurtle.area
+    def area2 = englishTurtle.area
     def perimetro = englishTurtle.perimeter
   }
   class Tartaruga(override val englishTurtle: Turtle) extends ItalianTurtle {
