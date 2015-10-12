@@ -16,9 +16,9 @@
  *
  */
 
-//Swedish Turtle wrapper init for Kojo
+//Italian Turtle wrapper init for Kojo
 
-//make italian names visible
+//make Italian names visible
 val ItalianAPI = net.kogics.kojo.lite.i18n.ItalianAPI
 import ItalianAPI.{
   Tartaruga,
@@ -49,6 +49,3 @@ import ItalianAPI.{
 }
 
 import tartaruga.{pulisci => _, _}
-
-//simple IO
-def output(data: Any) = println(data)

@@ -30,7 +30,7 @@ object ItalianAPI {
   import java.awt.Color
   var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
 
-  trait LanguageTurtle {
+  trait ItalianTurtle {
     def englishTurtle: Turtle
     def pulisci() = englishTurtle.clear()
     def invisibile() = englishTurtle.visible()
@@ -80,15 +80,15 @@ object ItalianAPI {
     def prossimoCostume() = englishTurtle.nextCostume()
     def suona(voce: Voice) = englishTurtle.playSound(voce)
 
-    val area = englishTurtle.area
-    val perimetro = englishTurtle.perimeter
+    def area = englishTurtle.area
+    def perimetro = englishTurtle.perimeter
   }
-  class Tartaruga(override val englishTurtle: Turtle) extends LanguageTurtle {
+  class Tartaruga(override val englishTurtle: Turtle) extends ItalianTurtle {
     def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
   }
-  class Tartaruga0(t0: => Turtle) extends LanguageTurtle { //by-name construction as turtle0 is volatile }
+  class Tartaruga0(t0: => Turtle) extends ItalianTurtle { //by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
   object tartaruga extends Tartaruga0(builtins.TSCanvas.turtle0)
