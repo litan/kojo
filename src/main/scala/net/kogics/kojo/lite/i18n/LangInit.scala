@@ -58,6 +58,8 @@ object LangInit {
         DeInit.init(b)
       case "ru" =>
         RussianInit.init(b)
+      case "it" =>
+        ItInit.init(b)
       case _ =>
     }
   }
