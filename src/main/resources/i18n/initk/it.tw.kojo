@@ -20,6 +20,7 @@
 
 //make Italian names visible
 val ItalianAPI = net.kogics.kojo.lite.i18n.ItalianAPI
+import net.kogics.kojo.lite.i18n.ItalianCustomStatements._
 import ItalianAPI.{
   Tartaruga,
   tartaruga,

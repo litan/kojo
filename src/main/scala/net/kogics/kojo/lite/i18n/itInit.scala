@@ -25,10 +25,71 @@ import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.xscala.RepeatCommands
 import net.kogics.kojo.core.Voice
 
+object ItalianCustomStatements {
+
+  import scala.language.implicitConversions
+
+  class IfClauseExpression[T1, T2](fn1: => T1, fn2: => T2){
+    lazy val pred = fn1
+    lazy val compl = fn2
+  }
+  
+  implicit class TernaryAssocExpression(cond: => Boolean){
+    def ??[T](thenFn: => T) = new IfClauseExpression(cond, thenFn)
+  }
+
+  implicit class TernaryElseClauseExpression[T](falseFn: => T){
+    def ::(clause: IfClauseExpression[Boolean, T]) =
+      if(clause.pred) clause.compl else falseFn
+  }
+
+  def isNotEmpty[T](value: T): Boolean = {
+    Option(value) match {
+      case None => false
+      case Some(v) => v match {
+        case false => false
+        case 0 => false
+        case s: String if s.isEmpty => false
+        case _ => true
+      }
+    }
+  }
+
+  implicit class ElvisOperator[T](thatFn: => T) {
+    def ?:[A >: T](thisFn: A) = {
+      if (thisFn == null) thatFn else thisFn
+    }
+  }
+  
+  implicit class OrOperator[T](thatFn: => T) {
+    def oppure[A >: T](thisFn: A) = {
+      if(isNotEmpty(thatFn)) thatFn else thisFn
+    }
+  }
+  
+  class IfThenClauseExpression[T](cond: => Boolean, thenFn: => T)
+      extends IfClauseExpression(cond, thenFn) {
+    def altrimenti[T](elseFn: => T) = {
+      if(cond) thenFn else elseFn
+    }
+  }
+
+  implicit def se[T](cond: => Boolean)(thenFn: => T) = {
+    new IfThenClauseExpression(cond, thenFn)
+  }
+
+  implicit def seVero[T](cond: Boolean)(thenFn: => T) = {
+    if (cond) thenFn else Unit
+  }
+
+}
+
 object ItalianAPI {
   import net.kogics.kojo.core.Turtle
   import java.awt.Color
   var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
+
+  import ItalianCustomStatements._
 
   trait ItalianTurtle {
     def englishTurtle: Turtle
@@ -217,7 +278,8 @@ object ItInit {
     "numeroDecimaleCasuale" -> "numeroDecimaleCasuale(${limitiSuperiori})",
     "indossaCostume" -> "indossaCostume(${nomeDelFile})",
     "indossaCostumi" -> "indossaCostumi(${nomeDelFile1},${nomeDelFile2})",
-    "prossimoCostume" -> "prossimoCostume()"
+    "prossimoCostume" -> "prossimoCostume()",
+    "se" -> "se (condizione) {blocco} altrimenti {blocco}"
   )
 
   val helpContent = Map(
@@ -267,9 +329,14 @@ object ItInit {
     "arrotonda" -> (<div> <strong> arrotonda </strong> (n, cifre). Arrotonda il numero specificato n per il numero specificato di cifre dopo la virgola </div>).toString,
     "numeroCasuale" -> (<div> <strong> numeroCasuale </strong> (upper bound). Restituisce un numero intero casuale compreso tra 0 (incluso) e upper bound (esclusiva) </div>).toString,
     "numeroDecimaleCasuale" -> (<div> <strong> numeroDecimaleCasuale </strong> (upper bound). Restituisce un numero casuale a doppia precisione decimale compreso tra 0 (incluso) e upper bound (esclusiva) </div>).toString,
-    "indossaCostume" -> (<div> <strong> indossaCostume </strong> (costumeFile). Cambia il costume (cioè immagine) associata con la tartaruga per l'immagine nel file specificato </div>).toString,
-    "indossaCostumi" -> (<div> <strong> indossaCostumi </strong> (costumeFile1, costumeFile2,...). Specifica multiple costumi per la tartaruga, e imposta costume della tartaruga al primo nella sequenza. È possibile scorrere i costumi chiamando <tt> nextCostume() </tt>. </div>).toString,
-    "prossimoCostume" -> (<div> <strong> prossimoCostume </strong> prossimoCostume(). cambi di costume della tartaruga a quella successiva nella sequenza dei costumi specificato da <tt> setCostumes (..) </tt> </div>).toString
+    "indossaCostume" -> (<div> <strong> indossaCostume </strong> indossaCostume(costumeFile). Cambia il costume (cioè immagine) associata con la tartaruga per l'immagine nel file specificato </div>).toString,
+    "indossaCostumi" -> (<div> <strong> indossaCostumi </strong> indossaCostumi(costumeFile1, costumeFile2,...). Specifica multiple costumi per la tartaruga, e imposta costume della tartaruga al primo nella sequenza. È possibile scorrere i costumi chiamando <tt> nextCostume() </tt>. </div>).toString,
+    "prossimoCostume" -> (<div> <strong> prossimoCostume </strong> prossimoCostume(). cambi di costume della tartaruga a quella successiva nella sequenza dei costumi specificato da <tt> setCostumes (..) </tt> </div>).toString,
+
+    "se" -> (<div><strong>se-altrimenti</strong> se (condizione) (se condizione vera) altrimenti (se condizione falsa). <br /> Espressione di controllo </div>).toString,
+    "seVero" -> (<div><strong> seVero </strong> seVero (condizione) (blocco). <br /> Espressione di controllo </div>).toString,
+    "oppure" -> (<div><strong> oppure </strong> valore1 oppure valore2. <br /> Se il valore1 è valutato come vuoto verrà restituito il valore2.</div>).toString,
+    "?:" -> (<div><strong> ?: </strong> Groovy Elvis Operator, simile a oppure ma lavora su valori nulli.</div>).toString,
+    "?:" -> (<div><strong> (condizione) ?: (se condizione vera) :: (se condizione falsa) </strong></div>).toString
   )
 }
-
