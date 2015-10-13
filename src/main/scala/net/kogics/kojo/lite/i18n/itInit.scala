@@ -80,7 +80,7 @@ object ItalianAPI {
     def prossimoCostume() = englishTurtle.nextCostume()
     def suona(voce: Voice) = englishTurtle.playSound(voce)
 
-    def area2 = englishTurtle.area
+    def superficie = englishTurtle.area
     def perimetro = englishTurtle.perimeter
   }
   class Tartaruga(override val englishTurtle: Turtle) extends ItalianTurtle {
@@ -188,8 +188,8 @@ object ItInit {
     "impostaGrandezzaCarattere" -> "impostaGrandezzaCarattere(${dimensione})",
     "arco" -> "arco(${raggio},${angolo})",
     "cerchio" -> "cerchio(${raggio})",
+    "visibile" -> "visibile()",
     "invisibile" -> "invisibile()",
-    "invisible" -> "invisible()",
     "abbassaPenna" -> "abbassaPenna()",
     "alzaPenna" -> "alzaPenna()",
     "èLaPennaAbbassata" -> "èLaPennaAbbassata",
@@ -240,8 +240,8 @@ object ItInit {
     "impostaGrandezzaCarattere" -> (<div> <strong> impostaGrandezzaPenna </strong> (n). Specifica la dimensione del carattere con cui scrive la tartaruga</div>).toString,
     "arco" -> (<div> <strong> arco </strong> arco(raggio, angolo). Fa fare alla tartaruga un arco con il raggio ed angolo dato <br/> per angoli positivi il giro è anti-orario. <br/> </div>).toString,
     "cerchio" -> (<div> <strong> cerchio </strong> cerchio(raggio). La tartaruga si muove in cerchio dato il raggio. <br/> Il comando cerchio(50) è equivalente al comando arco(50, 360). <br/> </div>).toString,
-    "invisibile" -> (<div> <strong> visibile </strong> visibile(). Rende la tartaruga visibile dopo che è stato resa invisibile con il comando invisibile() </div>).toString,
-    "invisible" -> (<div> <strong> invisibile </strong> invisibile(). rende la tartaruga invisibile. Utilizzare il comando visibile() per renderla di nuovo visibile. </div>).toString,
+    "visibile" -> (<div> <strong> visibile </strong> visibile(). Rende la tartaruga visibile dopo che è stato resa invisibile con il comando invisibile() </div>).toString,
+    "invisibile" -> (<div> <strong> invisibile </strong> invisibile(). rende la tartaruga invisibile. Utilizzare il comando visibile() per renderla di nuovo visibile. </div>).toString,
     "abbassaPenna" -> (<div> <strong> abbassaPenna </strong> abbassaPenna(). Fa disegnare una linea alla Tartaruga <br/> Per impostazione predefinita la penna è abbassata. <br/> </div>).toString,
     "alzaPenna" -> (<div> <strong> abbassaPenna </strong> abbassaPenna(). Alza la penna della tartaruga, in modo che essa non tracci linee al movimento. <br/> </div>).toString,
     "èLaPennaAbbassata" -> (<div> <strong> èLaPennaAbbassata </strong>. Indica se la penna della tartaruga è giù </div>).toString,
