@@ -25,6 +25,23 @@ import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.xscala.RepeatCommands
 import net.kogics.kojo.core.Voice
 
+object ItalianDirectionCases {
+
+  trait Direction
+  case object Right extends Direction
+  case object Left extends Direction
+  case object Top extends Direction
+  case object Bottom extends Direction
+
+  trait Direzione extends Direction
+  case object Destra extends Direzione
+  case object Sinistra extends Direzione
+  case object Alto extends Direzione
+  case object Basso extends Direzione
+
+}
+ 
+
 object ItalianCustomStatements {
 
   import scala.language.implicitConversions
@@ -85,6 +102,7 @@ object ItalianCustomStatements {
 }
 
 object ItalianAPI {
+  import ItalianDirectionCases._
   import net.kogics.kojo.core.Turtle
   import java.awt.Color
   var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
@@ -143,15 +161,61 @@ object ItalianAPI {
 
     def superficie = englishTurtle.area
     def perimetro = englishTurtle.perimeter
+
+    def square(steps: Double = 100, direction: Direction = Right) {
+      RepeatCommands.repeat(4) {
+        englishTurtle.forward(steps)
+        direction match {
+          case Right => englishTurtle.right()
+          case Left  => englishTurtle.left()
+        }
+      }
+    }
+
+    def quadrato(passi: Double = 100, direzione: Direzione = Destra) {
+      square(passi, direzione match {
+        case Destra   => Right
+        case Sinistra => Left
+
+      })
+    }
+
+    def triangle(steps: Double, direction: Direction) {
+      val angles = direction match {
+        case Right => (180.0, 60.0)
+        case Left  => (0.0, -240.0)
+      }
+      englishTurtle.setHeading(angles._1)
+      englishTurtle.forward(steps)
+      englishTurtle.setHeading(angles._2)
+      englishTurtle.forward(steps)
+      englishTurtle.setHeading(-angles._2)
+      englishTurtle.forward(steps)
+    }
+
+    def triangolo(lato: Double, direzione: Direzione = Destra) = {
+      triangle(lato, direzione match {
+        case Destra   => Right
+        case Sinistra => Left
+
+      })
+    }
+
   }
+
   class Tartaruga(override val englishTurtle: Turtle) extends ItalianTurtle {
     def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
   }
+
+  def nuovaTartaruga(): Tartaruga = new Tartaruga(0, 0)
+  def nuovaTartaruga(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = new Tartaruga(x, y, costume)
+
   class Tartaruga0(t0: => Turtle) extends ItalianTurtle { //by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
+
   object tartaruga extends Tartaruga0(builtins.TSCanvas.turtle0)
   def pulisci() = builtins.TSCanvas.clear()
   def pulisciOutput() = builtins.clearOutput()
@@ -203,7 +267,27 @@ object ItalianAPI {
   type Intero = Int
   type Decimale = Double
   type Stringa = String
+
+  //speedTest
+  def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
+
+  def conta(n: BigInt) {
+    var c: BigInt = 1
+    print("*** conta da 1 fino a ... ")
+    val startTid = systemtid
+    while (c < n) { c = c + 1 } //tar tid om n är stort
+    val stoppTid = systemtid
+    println("" + n + " *** PRONTO!")
+    val tid = stoppTid - startTid
+    print("Ci sono voluti ")
+    if (tid < 0.1)
+      println((tid * 1000).round(new java.math.MathContext(2)) +
+        " millisecondi.")
+    else println((tid * 10).toLong / 10.0 + " secondi.")
+  }
 }
+
+
 
 object ItInit {
   def init(builtins: CoreBuiltins) {

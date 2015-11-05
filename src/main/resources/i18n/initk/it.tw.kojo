@@ -21,6 +21,7 @@
 //make Italian names visible
 val ItalianAPI = net.kogics.kojo.lite.i18n.ItalianAPI
 import net.kogics.kojo.lite.i18n.ItalianCustomStatements._
+import net.kogics.kojo.lite.i18n.ItalianDirectionCases._
 import ItalianAPI.{
   Tartaruga,
   tartaruga,
@@ -46,7 +47,10 @@ import ItalianAPI.{
   scriviLinea,
   arrotonda,
   numeroCasuale,
-  numeroDecimaleCasuale
+  numeroDecimaleCasuale,
+  nuovaTartaruga,
+  conta,
+  systemtid
 }
 
 import tartaruga.{pulisci => _, _}
