@@ -40,7 +40,7 @@ object ItalianDirectionCases {
   case object Basso extends Direzione
 
 }
- 
+
 
 object ItalianCustomStatements {
 
@@ -105,6 +105,8 @@ object ItalianAPI {
   import ItalianDirectionCases._
   import net.kogics.kojo.core.Turtle
   import java.awt.Color
+  import net.kogics.kojo.util.Utils
+
   var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
 
   import ItalianCustomStatements._
@@ -112,10 +114,12 @@ object ItalianAPI {
   trait ItalianTurtle {
     def englishTurtle: Turtle
     def pulisci() = englishTurtle.clear()
+    def rimuovi() = englishTurtle.remove()
     def visibile() = englishTurtle.visible()
     def invisibile() = englishTurtle.invisible()
     def avanti(passi: Double) = englishTurtle.forward(passi)
     def avanti() = englishTurtle.forward(25)
+    def indietro(passi: Double) = englishTurtle.back(passi)
     def destra(angolo: Double) = englishTurtle.right(angolo)
     def destra() = englishTurtle.right(90)
     def sinistra(angolo: Double) = englishTurtle.left(angolo)
@@ -207,6 +211,14 @@ object ItalianAPI {
     def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
+
+    def fai(fn: Tartaruga => Unit) = Utils.runAsyncMonitored(fn(this))
+    def rifai(fn: Tartaruga => Unit) {
+      builtins.TSCanvas.animate {
+        fn(this)
+      }
+    }
+
   }
 
   def nuovaTartaruga(): Tartaruga = new Tartaruga(0, 0)
@@ -217,6 +229,7 @@ object ItalianAPI {
   }
 
   object tartaruga extends Tartaruga0(builtins.TSCanvas.turtle0)
+
   def pulisci() = builtins.TSCanvas.clear()
   def pulisciOutput() = builtins.clearOutput()
   lazy val blu = builtins.blue
@@ -363,11 +376,18 @@ object ItInit {
     "indossaCostume" -> "indossaCostume(${nomeDelFile})",
     "indossaCostumi" -> "indossaCostumi(${nomeDelFile1},${nomeDelFile2})",
     "prossimoCostume" -> "prossimoCostume()",
-    "se" -> "se (condizione) {blocco} altrimenti {blocco}"
+    "se" -> "se (condizione) {blocco} altrimenti {blocco}",
+    "rimuovi" -> "rimuovi()",
+    "fai" -> "fai { self => codice }",
+    "rifai" -> "rifai { self => codice }",
+    "indietro" -> "indietro(${passi})"
   )
 
   val helpContent = Map(
+    "fai" -> (<div> <strong> fai </strong> - Permette di definire un blocco di codice da eseguire in una unità di esecuzione separata (thread). Il blocco di codice è eseguito una volta. <strong> self </strong> è la tartaruga a cui si riferisce.</div>).toString,
+    "rifai" -> (<div> <strong> rifai </strong> - Permette di definire un blocco di codice da eseguire in una unità di esecuzione separata (thread). Il blocco di codice è eseguito trenta volte al secondo. <strong> self </strong> è la tartaruga a cui si riferisce.</div>).toString,
     "avanti" -> (<div> <strong> Avanti </strong> (passi). Sposta la tartaruga in avanti per il numero di passi dati </div>).toString,
+    "indietro" -> (<div> <strong> Indietro </strong> (passi). Sposta la tartaruga indietro per il numero di passi dati </div>).toString,
     "sinistra" -> (<div> <strong> sinistra </strong> sinistra(). Gira la tartaruga di 90 gradi a sinistra (anti-orario). <br/> <strong> sinistra </strong> sinistra(angolo). Gira la Tartaruga sinistra (anti-orario) per il date angolo in gradi <br/> <strong> sinistra </strong> sinistra(angolo, Raggio). Gira la Tartaruga a sinistra (anti-orario) per il date angolo in gradi, Intorno al Raggio <br/> </div>).toString,
     "destra" -> (<div> <strong> destra </strong> destra(). Gira La Tartaruga 90 gradi a destra (orario). <br/> <strong> destra </strong> destra(angolo). Gira la Tartaruga a destra (orario) per il date angolo in gradi <br/> <strong> destra </strong> destra(angolo, Raggio). Gira La Tartaruga destra (orario) per il date angolo in gradi, Intorno al Raggio <br/></div>).toString,
     "saltaVerso" -> (<div> <strong> saltaVerso </strong> saltaVerso(x, y). posiziona la Tartaruga alle coordinate (x, y) senza disegnare Una linea. La direzione della Tartaruga non è cambiata. <br/> </div>).toString,
