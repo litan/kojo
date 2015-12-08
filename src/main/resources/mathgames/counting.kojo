@@ -106,8 +106,7 @@ def newQuestion() {
 def hutPanel = picCol(
      trans(-cb.x - 300, cb.y + 60) ->  PicShape.widget(answerF),
      trans(cb.x + 50, -cb.y ) -> drawhut(number1, number2, number3),
-     trans(cb.x + 20, -cb.y - 240) * penColor(black) -> PicShape.text("How
-many huts are there?")
+     trans(cb.x + 20, -cb.y - 240) * penColor(black) -> PicShape.text("How many huts are there?")
 )
 
 var corrects = 0
