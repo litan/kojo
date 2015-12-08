@@ -20,6 +20,11 @@ import java.awt.geom.Point2D
 import java.awt.Image
 
 case class Style(val penColor: Paint, val penThickness: Double, val fillColor: Paint, val font: Font, down: Boolean)
+trait Speed
+case object Slow extends Speed
+case object Medium extends Speed
+case object Fast extends Speed
+case object SuperFast extends Speed
 
 trait TurtleMover extends RichTurtleCommands {
   def forward(n: Double): Unit
@@ -57,6 +62,13 @@ trait TurtleMover extends RichTurtleCommands {
   }
   def animationDelay: Long
   def setAnimationDelay(d: Long)
+  def setSpeed(speed: Speed) = speed match {
+    case Slow => setAnimationDelay(1000)
+    case Medium => setAnimationDelay(100)
+    case Fast => setAnimationDelay(10)
+    case SuperFast => setAnimationDelay(0)
+  }
+  def setSlowness(d: Long) = setAnimationDelay(d)
   def beamsOn(): Unit
   def beamsOff(): Unit
   def write(text: String): Unit

@@ -721,7 +721,9 @@ sq(100)
       </pre>
     </div>
     ,
-    "animationDelay" -> "animationDelay - Queries the turtle's delay setting.",
+    "setSpeed" -> <div><strong>setSpeed</strong>(speed) - sets the turtle's speed to the given speed. Possible values are <strong>slow</strong>, <strong>medium</strong>, <strong>fast</strong>, and <strong>superFast</strong>.</div>,
+    "setSlowness" -> <div><strong>setSlowness</strong>(delay) - sets the inverse of the turtle's speed based on the given delay. This behaves in exactly the same way as <strong>setAnimationDelay</strong>.</div>,
+    "animationDelay" -> <div><strong>animationDelay</strong> - Queries the turtle's delay setting.</div>,
     "clear" -> <div><strong>clear</strong>() - Clears the turtle canvas, and brings the turtle to the center of the canvas.</div>.toString,
     "cleari" -> "cleari() - Clears the turtle canvas and makes the turtle invisible.",
     "wipe" -> "wipe() - Wipes the turtle canvas by erasing all pictures. Meant to be used during an animation.",

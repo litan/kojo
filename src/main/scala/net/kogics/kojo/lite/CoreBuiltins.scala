@@ -66,6 +66,11 @@ trait CoreBuiltins extends Rationals {
 
   val kmath = net.kogics.kojo.kmath.Kmath
 
+  val slow = core.Slow
+  val medium = core.Medium
+  val fast = core.Fast
+  val superFast = core.SuperFast
+
   def epochTimeMillis = System.currentTimeMillis()
   def epochTime = System.currentTimeMillis() / 1000.0
 
