@@ -237,8 +237,10 @@ object CodeCompletionUtils {
     "InputAware.onMouseEnter" -> "onMouseEnter { (x, y) =>\n    ${cursor}\n}",
     "InputAware.onMouseExit" -> "onMouseExit { (x, y) =>\n    ${cursor}\n}",
     "Picture.act" -> "act { self => \n    ${cursor}\n}",
-    "CorePicOps2.react" -> "react { self => \n    ${cursor}\n}"
-  ) 
+    "CorePicOps2.react" -> "react { self => \n    ${cursor}\n}",
+    "setSpeed" -> "setSpeed(${speed})",
+    "setSlowness" -> "setSlowness(${delay})"
+  )
 
   val MwMethodTemplates = Map(
     "figure" -> "figure(${name})",
