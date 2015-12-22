@@ -70,7 +70,6 @@ def differentNumber(n: Int, m: Int) = {
     var n2 = 0
     do {
         n2 = number(m)
-        println(n2)
     } while (n2 == n)
     n2
 }
@@ -205,3 +204,6 @@ var ui: Picture = PicShape.hline(1)
 newQuestion()
 newUi()
 manageGameTime()
+schedule(1) {
+    answerF.takeFocus()
+}
