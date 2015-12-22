@@ -4,7 +4,10 @@
 
 toggleFullScreenCanvas()
 
-val hutsize = 50
+val max1 = 9
+val max2 = 9
+
+val hutsize = (50 / max1) * 4
 def hut() {
     setPenColor(black)
     setFillColor(Color(204, 102, 0))
@@ -32,27 +35,23 @@ def drawhut(h: Int, v: Int, e: Int) = Picture {
         repeat(v) {
             hut()
             right()
-            hop(75)
+            hop(hutsize + 25)
             left()
         }
         left()
-        hop(v * 75)
+        hop(v * (hutsize + 25))
         left()
-        hop(120)
+        hop(2.6 * hutsize)
         left(180)
     }
     repeat(e) {
         hut()
         right()
-        hop(75)
+        hop(hutsize + 25)
         left()
     }
 }
 
-
-val max1 = 4
-
-val max2 = 5
 val bgColor = Color(208, 144, 73)
 
 def number(max: Int) = 2 + random(max - 1)
@@ -104,9 +103,9 @@ def newQuestion() {
 }
 
 def hutPanel = picCol(
-     trans(-cb.x - 300, cb.y + 60) ->  PicShape.widget(answerF),
-     trans(cb.x + 50, -cb.y ) -> drawhut(number1, number2, number3),
-     trans(cb.x + 20, -cb.y - 240) * penColor(black) -> PicShape.text("How many huts are there?")
+    trans(-cb.x - 300, cb.y + 60) -> PicShape.widget(answerF),
+    trans(cb.x + 50, -cb.y) -> drawhut(number1, number2, number3),
+    trans(cb.x + 20, -cb.y - 240) * penColor(black) -> PicShape.text("How many huts are there?")
 )
 
 var corrects = 0
@@ -169,7 +168,7 @@ answerF.addKeyListener(new KeyAdapter {
 def drawMessage(m: String, c: Color) {
     val te = textExtent(m, 30)
     val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) ->
-PicShape.text(m, 30)
+        PicShape.text(m, 30)
     draw(pic)
 }
 
@@ -177,7 +176,7 @@ def manageGameTime() {
     def score(c: Int, w: Int) = c - w
     var gameTime = 0
     val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime,
-20, blue)
+        20, blue)
     draw(timeLabel)
     timeLabel.forwardInputTo(stageArea)
 
@@ -185,7 +184,7 @@ def manageGameTime() {
         gameTime += 1
         timeLabel.update(gameTime)
 
-        if (gameTime == 60) {
+        if (gameTime == 60 * 2) {
             done = true
             val msg = s"""      Game over!
             |Correct answers: $corrects
