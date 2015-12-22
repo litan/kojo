@@ -41,6 +41,15 @@ object ItalianDirectionCases {
 
 }
 
+object ItalianSpeedCases {
+  trait Velocità
+  case object Lentissima extends Velocità
+  case object Lenta extends Velocità
+  case object Media extends Velocità
+  case object Veloce extends Velocità
+  case object Velocissima extends Velocità
+}
+
 
 object ItalianCustomStatements {
 
@@ -103,6 +112,7 @@ object ItalianCustomStatements {
 
 object ItalianAPI {
   import ItalianDirectionCases._
+  import ItalianSpeedCases._
   import net.kogics.kojo.core.Turtle
   import java.awt.Color
   import net.kogics.kojo.util.Utils
@@ -141,6 +151,14 @@ object ItalianAPI {
     def nord() = englishTurtle.setHeading(90)
     def sud() = englishTurtle.setHeading(-90)
     def ritardo(n: Long) = englishTurtle.setAnimationDelay(n)
+    def velocità(v: Velocità) = v match {
+      case Lentissima => englishTurtle.setAnimationDelay(2000)
+      case Lenta => englishTurtle.setAnimationDelay(1000)
+      case Media => englishTurtle.setAnimationDelay(100)
+      case Veloce => englishTurtle.setAnimationDelay(10)
+      case Velocissima => englishTurtle.setAnimationDelay(0)
+    }
+    def lentezza(v: Long) = englishTurtle.setAnimationDelay(v)    
     def scrivi(t: Any) = englishTurtle.write(t)
     def impostaGrandezzaCarattere(dimensione: Int) = englishTurtle.setPenFontSize(dimensione)
     def arco(raggio: Double, angolo: Double) = englishTurtle.arc(raggio, math.round(angolo).toInt)
@@ -380,7 +398,9 @@ object ItInit {
     "rimuovi" -> "rimuovi()",
     "fai" -> "fai { self => codice }",
     "rifai" -> "rifai { self => codice }",
-    "indietro" -> "indietro(${passi})"
+    "indietro" -> "indietro(${passi})",
+    "velocità" -> "velocità(${Velocità})",
+    "lentezza" -> "lentezza(${milliSecondi})"
   )
 
   val helpContent = Map(
@@ -441,6 +461,8 @@ object ItInit {
     "seVero" -> (<div><strong> seVero </strong> seVero (condizione) (blocco). <br /> Espressione di controllo </div>).toString,
     "oppure" -> (<div><strong> oppure </strong> valore1 oppure valore2. <br /> Se il valore1 è valutato come vuoto verrà restituito il valore2.</div>).toString,
     "?:" -> (<div><strong> ?: </strong> Groovy Elvis Operator, simile a oppure ma lavora su valori nulli.</div>).toString,
-    "?:" -> (<div><strong> (condizione) ?: (se condizione vera) :: (se condizione falsa) </strong></div>).toString
+    "?:" -> (<div><strong> (condizione) ?: (se condizione vera) :: (se condizione falsa) </strong></div>).toString,
+      "lentezza" -> (<div> <strong> lentezza </strong> (millisecondi). Imposta la velocità della tartaruga. La lentezza  specificata</div>).toString,
+     "velocità" -> (<div> <strong> velocità </strong> (velocità). Imposta la velocità della tartaruga. La velocità  specificata può essere: Lentissima, Lenta, Media, Veloce, Velocissima</div>).toString
   )
 }
