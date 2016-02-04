@@ -1,0 +1,8 @@
+/ecbuild/
+.cache-main
+.cache-tests
+.classpath
+.project
+.settings/
+lib/deploy.jar
+lib/javaws.jar
