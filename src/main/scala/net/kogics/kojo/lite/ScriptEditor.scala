@@ -103,8 +103,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val increaseFontSizeAction = new IncreaseFontSizeAction()
   Utils.safeProcessSilent {
     for (i <- 1 to 2) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
-    if (kojoCtx.isScreenHD) {
-      increaseFontSizeAction.actionPerformedImpl(null, codePane)
+    if (kojoCtx.screenDpiFontDelta > 0) {
+      for (i <- 1 to kojoCtx.screenDpiFontDelta) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
     }
   }
 

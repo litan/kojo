@@ -47,7 +47,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   val kojoCtx = execSupport.kojoCtx
 
   val DefaultOutputColor = new Color(32, 32, 32)
-  val DefaultOutputFontSize = if (execSupport.kojoCtx.isScreenHD) 15 else 13
+  val DefaultOutputFontSize = 13 + kojoCtx.screenDpiFontDelta
   var outputColor = DefaultOutputColor
   var fontSize = DefaultOutputFontSize
   val baseStyle = StyleContext.getDefaultStyleContext.getStyle(StyleContext.DEFAULT_STYLE)
@@ -267,7 +267,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
         { if (errCount > 1) { <a href={ errorLink }>Locate first error in script</a> } else if (errCount == 1) { <a href={ errorLink }>Locate error in script</a> } else { <span style="color:blue;">Use the 'Check Script' button for better error recovery.</span> } }
       </div>
 
-    val fontSize = if (execSupport.kojoCtx.isScreenHD) "font-size:106%;" else "font-size:large;"
+    val fontSize = if (kojoCtx.screenDpiFontDelta > 0) "font-size:%d%%;".format(104 + kojoCtx.screenDpiFontDelta * 2) else "font-size:large;"
     val errMsg =
       <body style={ fontSize }>
         <div style="margin:5px;">

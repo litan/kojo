@@ -96,7 +96,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def picLine(p1: Point2D.Double, p2: Point2D.Double): Picture = null
   def repaintCanvas() {}
   def appProperty(key: String): Option[String] = None
-  def isScreenHD = false
+  def screenDpiFontDelta = 0
 
   var fps = 50
   var screenDPI = 72

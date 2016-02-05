@@ -63,7 +63,6 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   @volatile var fps = 50
   @volatile var screenDPI = Toolkit.getDefaultToolkit.getScreenResolution
   var statusBar: StatusBar = _
-  val screenSize = Toolkit.getDefaultToolkit.getScreenSize
   Utils.kojoCtx = this
 
   val kojoProps = new Properties
@@ -91,25 +90,32 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     activityListener.setRealListener(l)
   }
 
-  def isScreenHD = screenSize.getWidth > 1919
+  lazy val screenDpiFontDelta = screenDPI match {
+    case n if n < 100 => 0
+    case n if n < 120 => 1
+    case n if n < 140 => 2
+    case n if n < 160 => 3
+    case n if n < 200 => 4
+    case _            => 5
+  }
 
   def lookAndFeelReady() = {
-    if (isScreenHD) {
+    if (screenDpiFontDelta > 0) {
       val defaults = UIManager.getLookAndFeelDefaults
-        def changeFontSize(key: String, delta: Int) {
-          val f = defaults.get(key).asInstanceOf[FontUIResource]
-          // if we use f.getName below, the 'Hindi' Language menu item does not show up right
-          val f2 = new FontUIResource(Font.SANS_SERIF, f.getStyle, f.getSize + delta)
-          defaults.put(key, f2)
-        }
-      changeFontSize("defaultFont", 2)
+      def changeFontSize(key: String, delta: Int) {
+        val f = defaults.get(key).asInstanceOf[FontUIResource]
+        // if we use f.getName below, the 'Hindi' Language menu item does not show up right
+        val f2 = new FontUIResource(Font.SANS_SERIF, f.getStyle, f.getSize + delta)
+        defaults.put(key, f2)
+      }
+      changeFontSize("defaultFont", screenDpiFontDelta)
     }
     LangInit.lookAndFeelReady()
   }
   def menuReady(m: JMenu) = {
-    if (isScreenHD) {
+    if (screenDpiFontDelta > 0) {
       val f = m.getFont
-      val f2 = new Font(f.getName, f.getStyle, f.getSize + 2)
+      val f2 = new Font(f.getName, f.getStyle, f.getSize + screenDpiFontDelta)
       m.setFont(f2)
     }
     LangInit.menuReady(m)
