@@ -19,6 +19,7 @@ package lite
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
+import java.awt.Font
 import java.awt.Toolkit
 import java.awt.geom.Point2D
 import java.io.File
@@ -29,6 +30,8 @@ import java.util.prefs.Preferences
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
 import javax.swing.JMenu
+import javax.swing.UIManager
+import javax.swing.plaf.FontUIResource
 
 import net.kogics.kojo.action.CloseFile
 import net.kogics.kojo.core.DelegatingSpriteListener
@@ -60,6 +63,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   @volatile var fps = 50
   @volatile var screenDPI = Toolkit.getDefaultToolkit.getScreenResolution
   var statusBar: StatusBar = _
+  val screenSize = Toolkit.getDefaultToolkit.getScreenSize
   Utils.kojoCtx = this
 
   val kojoProps = new Properties
@@ -87,8 +91,29 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     activityListener.setRealListener(l)
   }
 
-  def lookAndFeelReady() = LangInit.lookAndFeelReady()
-  def menuReady(m: JMenu) = LangInit.menuReady(m)
+  def isScreenHD = screenSize.getWidth > 1919
+
+  def lookAndFeelReady() = {
+    if (isScreenHD) {
+      val defaults = UIManager.getLookAndFeelDefaults
+        def changeFontSize(key: String, delta: Int) {
+          val f = defaults.get(key).asInstanceOf[FontUIResource]
+          // if we use f.getName below, the 'Hindi' Language menu item does not show up right
+          val f2 = new FontUIResource(Font.SANS_SERIF, f.getStyle, f.getSize + delta)
+          defaults.put(key, f2)
+        }
+      changeFontSize("defaultFont", 2)
+    }
+    LangInit.lookAndFeelReady()
+  }
+  def menuReady(m: JMenu) = {
+    if (isScreenHD) {
+      val f = m.getFont
+      val f2 = new Font(f.getName, f.getStyle, f.getSize + 2)
+      m.setFont(f2)
+    }
+    LangInit.menuReady(m)
+  }
 
   type ActionLike = FullScreenBaseAction
   def fullScreenCanvasAction(): ActionLike = FullScreenCanvasAction(topcs.dch, this)

@@ -102,6 +102,7 @@ trait KojoCtx {
   def picLine(p1: Point2D.Double, p2: Point2D.Double): Picture
   def repaintCanvas(): Unit
   def appProperty(key: String): Option[String]
+  def isScreenHD: Boolean
   
   var fps: Int
   var screenDPI: Int

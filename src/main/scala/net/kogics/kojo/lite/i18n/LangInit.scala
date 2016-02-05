@@ -18,16 +18,16 @@ object LangInit {
       java.util.Locale.setDefault(new java.util.Locale(userLanguage, oldLocale.getCountry, oldLocale.getVariant))
       System.setProperty("user.language", userLanguage)
     }
-
     userLanguage
   }
 
   lazy val fontForHindi = {
     val font = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/i18n/gargi.ttf"))
     GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(font)
-    font.deriveFont(Font.PLAIN, 16f)
+    val defaultSize = UIManager.getLookAndFeelDefaults.get("defaultFont").asInstanceOf[Font].getSize
+    font.deriveFont(Font.PLAIN, defaultSize + 4)
   }
-  //  lazy val fontForHindi = new Font(Font.SANS_SERIF, Font.PLAIN, 18)
+
   def lookAndFeelReady() {
     System.getProperty("user.language") match {
       case "hi" =>

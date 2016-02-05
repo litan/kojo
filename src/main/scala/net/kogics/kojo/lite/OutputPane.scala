@@ -47,7 +47,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   val kojoCtx = execSupport.kojoCtx
 
   val DefaultOutputColor = new Color(32, 32, 32)
-  val DefaultOutputFontSize = 13
+  val DefaultOutputFontSize = if (execSupport.kojoCtx.isScreenHD) 15 else 13
   var outputColor = DefaultOutputColor
   var fontSize = DefaultOutputFontSize
   val baseStyle = StyleContext.getDefaultStyleContext.getStyle(StyleContext.DEFAULT_STYLE)
