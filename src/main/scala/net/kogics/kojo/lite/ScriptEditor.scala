@@ -62,13 +62,6 @@ import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
 
 import scalariform.formatter.ScalaFormatter
-import scalariform.formatter.preferences.AlignParameters
-import scalariform.formatter.preferences.AlignSingleLineCaseStatements
-import scalariform.formatter.preferences.CompactControlReadability
-import scalariform.formatter.preferences.FormatXml
-import scalariform.formatter.preferences.FormattingPreferences
-import scalariform.formatter.preferences.IndentSpaces
-import scalariform.formatter.preferences.PreserveDanglingCloseParenthesis
 
 class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
 
@@ -110,9 +103,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val increaseFontSizeAction = new IncreaseFontSizeAction()
   Utils.safeProcessSilent {
     for (i <- 1 to 2) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
-//    if (kojoCtx.isScreenHD) {
-//      increaseFontSizeAction.actionPerformedImpl(null, codePane)
-//    }
+    if (kojoCtx.isScreenHD) {
+      increaseFontSizeAction.actionPerformedImpl(null, codePane)
+    }
   }
 
   RSyntaxTextArea.setTemplatesEnabled(true)

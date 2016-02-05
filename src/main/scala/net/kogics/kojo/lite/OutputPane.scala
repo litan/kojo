@@ -263,15 +263,18 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     def errorLink = "http://error/" + errOffset
 
     def errorLocation =
-      <div style="margin:5px;font-size:large;">
-      { if (errCount > 1) { <a href={ errorLink }>Locate first error in script</a> } else if (errCount == 1) { <a href={ errorLink }>Locate error in script</a> } else { <span style="color:blue;">Use the 'Check Script' button for better error recovery.</span> } }
+      <div style="margin:5px;">
+        { if (errCount > 1) { <a href={ errorLink }>Locate first error in script</a> } else if (errCount == 1) { <a href={ errorLink }>Locate error in script</a> } else { <span style="color:blue;">Use the 'Check Script' button for better error recovery.</span> } }
       </div>
 
+    val fontSize = if (execSupport.kojoCtx.isScreenHD) "font-size:106%;" else "font-size:large;"
     val errMsg =
-      <body style="">
-        <h2>There's a problem in your script!</h2> 
+      <body style={ fontSize }>
+        <div style="margin:5px;">
+          <strong>There's a problem in your script!</strong>
+        </div>
         { errorLocation }
-        <div style="color:red;margin:5px;font-size:large;">
+        <div style="color:red;margin:5px;">
           <pre>{ errText }</pre>
         </div>
         { if (errCount > 2) errorLocation }
