@@ -1,5 +1,5 @@
-+source ~/bin/activate-java-16.sh
-+java -version
+source ~/bin/activate-java-16.sh
+java -version
 set -x 
 # Build Kojo
 # ./sbt.sh clean package
