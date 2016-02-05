@@ -6,3 +6,7 @@
 .settings/
 lib/deploy.jar
 lib/javaws.jar
+installerbuild/
+project/
+security/
+target/

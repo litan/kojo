@@ -2,8 +2,8 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>gui</headerType>
-  <jar>/home/lalit/work/KojoDev/KojoLite/installerbuild/kojoInstall.jar</jar>
-  <outfile>/home/lalit/work/KojoDev/KojoLite/installerbuild/KojoInstall.exe</outfile>
+  <jar>kojoInstall.jar</jar>
+  <outfile>KojoInstall.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -11,8 +11,8 @@
   <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl></supportUrl>
   <stayAlive>false</stayAlive>
-  <manifest>/home/lalit/work/KojoDev/KojoLite/installer/run-privileged.manifest</manifest>
-  <icon>/home/lalit/work/KojoDev/KojoLite/installer/icons/kojo48.ico</icon>
+  <manifest>run-privileged.manifest</manifest>
+  <icon>icons/kojo48.ico</icon>
   <jre>
     <path></path>
     <bundledJre64Bit>false</bundledJre64Bit>
