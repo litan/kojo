@@ -28,7 +28,7 @@ import net.kogics.kojo.util.Utils
 class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) {
   // support a max of 12 digits after decimal point
   // formatting precision does not seem to work after 16 digits, so there has to be an upper limit 
-  val FloatPattern = Pattern.compile("""\d*\.\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?""")  
+  val FloatPattern = Pattern.compile("""\d+\.\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?""")  
 
   def matcher(possibleNumber: String) = FloatPattern.matcher(possibleNumber)
 
