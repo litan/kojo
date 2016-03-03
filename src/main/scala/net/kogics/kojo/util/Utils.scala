@@ -269,7 +269,7 @@ object Utils {
     }
   }
 
-  def runInSwingThreadAndPause[T](fn: => T): T = runInSwingThreadAndWait(3000, "Potential Deadlock. Bailing out!")(fn)
+  def runInSwingThreadAndPause[T](fn: => T): T = runInSwingThreadAndWait(10000, "Potential Deadlock. Bailing out!")(fn)
 
   def runInSwingThreadAndWait[T](timeout: Long, msg: String)(fn: => T): T = {
     if (inSwingThread) {
