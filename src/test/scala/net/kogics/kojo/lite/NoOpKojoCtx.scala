@@ -15,6 +15,7 @@ import net.kogics.kojo.util.Utils
 
 import bibliothek.gui.dock.common.DefaultSingleCDockable
 
+/**A Kojo context, which does nothing. Useful for test drivers.*/
 class NoOpKojoCtx extends core.KojoCtx {
   Utils.kojoCtx = this
   def activityListener = NoopSpriteListener

@@ -403,6 +403,10 @@ object Utils {
   def stringSuffix(key: String) = {
     if (keyWithStrings) s"[$key]" else ""
   }
+  
+  /**Returns the localized String for the given key   * 
+  * @throws NullPointerException if <code>key</code> is <code>null</code>
+  * @throws MissingResourceException if no object for the given key can be found*/
   def loadString(key: String) = {
     messages.getString(key) concat stringSuffix(key)
   }

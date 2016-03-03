@@ -49,6 +49,48 @@ import net.kogics.kojo.util.FutureResult
 
 import util.Utils
 
+
+object CodeExecutionSupport {
+
+  /**Contains the goal a user wants to reach, and the action he has to take for this.*/
+  private case class Line(goal: String, action: Option[String])
+
+  /**The End-of-Line String used to separate lines of the welcome message*/
+  val EOL = "\n"
+  
+  /**
+   * Composes a welcome message from the head and a tabulated arrangement of the instructions.
+   * Each instruction should have the format "goal -> action".
+   * The instructions are splitted at the first occurrence of "->" and then tabulated,
+   * so that all "->" are one below another when using a monospace font.
+   */
+  def makeTabulatedWelcomeMessage(head: String, instructions: List[String]): String = {
+    val instructionsSplitted = instructions.map(_.split("->", 2))
+    val instructionsTrimmed: List[Line] = for (instr <- instructionsSplitted) yield {
+      val action = if(instr.length>1) Some(instr(1).trim) else None
+      Line(instr(0).trim, action)
+    }
+    val maxGoalLine = (Line("", None) :: instructionsTrimmed).maxBy(line => line.goal.length)
+    val maxGoalLen = maxGoalLine.goal.length
+    val sb = new StringBuilder(head)
+    sb append EOL
+    for (instr <- instructionsTrimmed) {
+      sb append "* "
+      sb append instr.goal
+      instr.action match {
+        case Some(a) => 
+          sb append " " * (maxGoalLen - instr.goal.length)
+          sb append " -> "
+          sb append a
+        case None => //Nothing to append
+      }
+      sb append EOL
+    }
+    sb.toString
+  }
+  
+}
+
 class CodeExecutionSupport(
   TSCanvas: DrawingCanvasAPI,
   Tw: TurtleWorldAPI,
@@ -67,6 +109,8 @@ class CodeExecutionSupport(
   // which we could not do if we used a regular var that was inited in phase 2
   lazy val scriptEditor = scriptEditor0
   import scriptEditor._
+  import CodeExecutionSupport._
+  
   var clearButton = new JButton
 
   val Log = Logger.getLogger("CodeExecutionSupport")
@@ -197,7 +241,7 @@ class CodeExecutionSupport(
     }
     else {
       val head = Utils.loadString("S_OutputWelcome") format Versions.KojoVersion
-      val instructions = Seq(
+      val instructions = List(
         Utils.loadString("S_OutputVisualPalette"),
         Utils.loadString("S_OutputHelp"),
         Utils.loadString("S_OutputManipulate"),
@@ -207,36 +251,6 @@ class CodeExecutionSupport(
       showOutput(makeTabulatedWelcomeMessage(head, instructions))
     }
   }
-
-  /**Contains the goal a user wants to reach, and the action he has to take for this.*/
-  private case class Line(goal: String, action: String)
-
-  /**
-   * Composes a welcome message from the head and a tabulated arrangement of the instructions.
-   * Each instruction should have the format "goal -> action".
-   * The instructions are splitted at the first occurrence of "->" and then tabulated,
-   * so that all "->" are one below another when using a monospace font.
-   */
-  private def makeTabulatedWelcomeMessage(head: String, instructions: Seq[String]): String = {
-    val instructionsSplitted = instructions.map(_.split("->", 2))
-    val instructionsTrimmed = for (instr <- instructionsSplitted) yield {
-      Line(instr(0).trim, instr(1).trim)
-    }
-    val maxGoalLine = instructionsTrimmed.maxBy(line => line.goal.length)
-    val maxGoalLen = maxGoalLine.goal.length
-    val sb = new StringBuilder(head)
-    sb append '\n'
-    for (instr <- instructionsTrimmed) {
-      sb append "* "
-      sb append instr.goal
-      sb append " " * (maxGoalLen - instr.goal.length)
-      sb append " ->  "
-      sb append instr.action
-      sb append '\n'
-    }
-    sb.toString
-  }
-
   def isSingleLine(code: String): Boolean = {
     //    val n = code.count {c => c == '\n'}
     //    if (n > 1) false else true
