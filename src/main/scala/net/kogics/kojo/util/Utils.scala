@@ -43,6 +43,7 @@ import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import java.util.logging.Level
 import java.util.logging.Logger
+import java.util.Locale
 
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
@@ -124,6 +125,32 @@ object Utils {
 
   def loadResource(res: String): String = {
     readStream(getClass.getResourceAsStream(res))
+  }
+
+  /**Returns the content of the given file in the local variant selected by Locale.getDefault().
+   * At first tries to find a resource of the given file name in the subdirectory LL of the given root directory,
+   * if the current default Locale has language LL selected.
+   * If this resource is not found, then tries to find the given file directly in the named root directory.
+   * @param root   directory path inside the classpath. Should begin and end in '/', as "/samples".
+   * @param file   file name with extension in the given root directory, as "tree0.kojo".
+   * @throws IllegalArgumentException  the named file is found neither in the local variant for the default Locale, nor in the base variant.
+   */
+  def loadLocalizedResource(root: String, file: String): String = {
+    val locale = Locale.getDefault
+    val langCode = locale.getLanguage
+    val myClass = getClass
+    val localName = root+langCode+"/"+file
+    val localStream = myClass.getResourceAsStream(localName)
+    val baseName = root+file
+    val stream = if(localStream == null){
+      myClass.getResourceAsStream(baseName)
+    }else{
+      localStream
+    }
+    if(stream == null){
+      throw new IllegalArgumentException(s"Resource $localName or $baseName should exist.")
+    }
+    readStream(stream)
   }
 
   def loadResource2(res: String): Option[String] = {

@@ -38,6 +38,7 @@ trait ScriptLoader { self: Main.type =>
     }
   }
 
+  @deprecated("Replaced by loadAndRunLocalizedResource(root,file)", since="2016-04-03")
   def loadAndRunResource(res: String) = {
     try {
       codePane.setText("")
@@ -47,6 +48,22 @@ trait ScriptLoader { self: Main.type =>
       execSupport.compileRunCode()
     }
     catch {
+      case t: Throwable => codePane.append("// Problem loading/running code: %s" format (t.getMessage))
+    }
+    scriptEditorHolder.activate()
+  }
+  
+  //@since 2016-04-03
+  def loadAndRunLocalizedResource(root: String, file: String) = {
+    try {
+      codePane.setText("")
+      val code = Utils.loadLocalizedResource(root, file)
+      codePane.setText(Utils.stripCR(code))
+      codePane.setCaretPosition(0)
+      execSupport.compileRunCode()
+    }
+    catch {
+      case ex: IllegalArgumentException => codePane.append(s"// Problem loading code from ${ex.getMessage}")
       case t: Throwable => codePane.append("// Problem loading/running code: %s" format (t.getMessage))
     }
     scriptEditorHolder.activate()
