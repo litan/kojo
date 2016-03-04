@@ -46,5 +46,8 @@ libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
 
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
+//Download source jars for dependencies:
+EclipseKeys.withSource := true
+
 packageOptions in (Compile, packageBin) +=
     Package.ManifestAttributes("Permissions" -> "all-permissions", "Application-Name" -> "Kojo")
