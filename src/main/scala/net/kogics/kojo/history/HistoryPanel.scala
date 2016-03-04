@@ -8,7 +8,6 @@ import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.text.DateFormat
-
 import javax.swing.BorderFactory
 import javax.swing.DefaultCellEditor
 import javax.swing.JButton
@@ -26,15 +25,16 @@ import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
-
 import net.kogics.kojo.core.CodeExecutionSupport
 import net.kogics.kojo.core.HistoryListener
-
 import sun.swing.table.DefaultTableCellHeaderRenderer
+import net.kogics.kojo.util.Utils
 
 class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   val cmdh = execSupport.commandHistory
-  val colNames = List("\u263c", "Code", "Tags", "File", "At")
+  val commaSeparatedColNames = Utils.loadString("S_HistoryColumnNames")
+  val splitted: List[String] = commaSeparatedColNames.split(',').toList.map(_.trim)
+  val colNames = "\u263c" :: splitted
   val colWidths = List(1, 200, 40, 30, 40)
   val df = DateFormat.getDateTimeInstance
   val tableModel = new AbstractTableModel {
@@ -136,7 +136,8 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
 
   val searchField = new JTextField(20)
   searchPane.add(searchField)
-  val searchBut = new JButton("Search")
+  val searchButtonName = Utils.loadString("S_HistorySearch")
+  val searchBut = new JButton(searchButtonName)
   searchPane.add(searchBut)
 
   var allowSearch = true
@@ -160,7 +161,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
         tableModel.fireTableDataChanged()
         table.setRowSelectionInterval(cmdh.size, cmdh.size)
         allowSearch = true
-        searchBut.setText("Search")
+        searchBut.setText(searchButtonName)
         searchField.setText("")
         searchField.requestFocusInWindow()
       }
@@ -175,7 +176,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
       }
       else {
         allowSearch = true
-        searchBut.setText("Search")
+        searchBut.setText(searchButtonName)
       }
     }
   })

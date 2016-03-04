@@ -546,7 +546,10 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
     def loadInitScripts(mode: CodingMode) {
       Utils.initCode(mode).foreach { code =>
-        println("\nRunning initk code...")
+        //println("\nRunning initk code...")
+        println()
+        print(Utils.loadString("S_OutputInitkRunning"))
+        println("...")
         runCode(code, false)
       }
     }
