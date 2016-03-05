@@ -85,7 +85,7 @@ def fracirc(n: Int, d: Int) = Picture {
         forward(110)
     }
     if (n > d) {
-        setPosition(-350, 0)
+        setPosition(cb.x + 50, 0)
         write("The numerator should be less than the denominator")
     }
     else {
@@ -101,32 +101,33 @@ def fracirc(n: Int, d: Int) = Picture {
         makeN()
         restorePosHe()
         makeD()
-    }
-    setFillColor(noColor)
-    hop(-110)
-    right()
-    hop(160)
-    left()
-    repeat(2) {
-        forward(220)
+
+        setFillColor(noColor)
+        hop(-110)
         right()
-        forward(50)
-        right()
-    }
-    setFillColor(Color(90, 199, 255))
-    repeat(2) {
-        forward(220.0 * n / d)
-        right()
-        forward(50)
-        right()
-    }
-    setFillColor(noColor)
-    repeat(d - 1) {
-        forward(220.0 / d)
-        right()
-        forward(50)
-        hop(-50)
+        hop(160)
         left()
+        repeat(2) {
+            forward(220)
+            right()
+            forward(50)
+            right()
+        }
+        setFillColor(Color(90, 199, 255))
+        repeat(2) {
+            forward(220.0 * n / d)
+            right()
+            forward(50)
+            right()
+        }
+        setFillColor(noColor)
+        repeat(d - 1) {
+            forward(220.0 / d)
+            right()
+            forward(50)
+            hop(-50)
+            left()
+        }
     }
 }
 
