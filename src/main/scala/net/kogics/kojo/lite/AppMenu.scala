@@ -217,6 +217,7 @@ trait AppMenu {
     animGameMenu.add(menuItemFor("S_TangramSkier", "tangram-skier.kojo"))
     animGameMenu.add(menuItemFor("S_Pong", "pong.kojo"))
     animGameMenu.add(menuItemFor("S_MemoryCards", "memory-cards.kojo"))
+    animGameMenu.add(menuItemFor("S_CrazySquare", "crazy-square.kojo"))
     animGameMenu.add(menuItemFor("S_Hunted", "hunted.kojo"))
     animGameMenu.add(menuItemFor("S_FlappyBall", "flappy-ball.kojo"))
     animGameMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
