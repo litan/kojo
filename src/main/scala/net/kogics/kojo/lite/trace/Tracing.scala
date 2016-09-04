@@ -74,10 +74,10 @@ import net.kogics.kojo.xscala.CompilerOutputHandler
 
 class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
   @volatile var currThread: ThreadReference = _
-  val tmpdir = "%s/%s" format (System.getProperty("java.io.tmpdir"), System.getProperty("user.name"))
+  val tmpdir = "%s/kojo_%s" format (System.getProperty("java.io.tmpdir"), System.getProperty("user.name"))
   val tmpDirOnDisk = new File(tmpdir)
   if (!tmpDirOnDisk.exists()) {
-    tmpDirOnDisk.mkdir()
+    tmpDirOnDisk.mkdirs()
   }
   val settings = makeSettings()
   val turtles = new HashMap[Long, Turtle]
