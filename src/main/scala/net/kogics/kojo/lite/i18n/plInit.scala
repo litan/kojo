@@ -31,8 +31,8 @@ object PolishAPI {
   trait PolishTurtle {
     def englishTurtle: Turtle
     def czyść() = englishTurtle.clear() 
-    def ukryj() = englishTurtle.visible() 
-    def pokaż() = englishTurtle.invisible() 
+    def pokaż() = englishTurtle.visible() 
+    def ukryj() = englishTurtle.invisible() 
     def naprzód(kroki: Double) = englishTurtle.forward(kroki) 
     def naprzód() = englishTurtle.forward(25) 
     def tył() = englishTurtle.back()
@@ -67,7 +67,7 @@ object PolishAPI {
     def podnieśPisak() = englishTurtle.penUp()
     def czyśćStylPisaka = englishTurtle.style.down
     def kolor(c: java.awt.Color) = englishTurtle.setPenColor(c)
-    def ustawWypełnieKolorem(c: java.awt.Color) = englishTurtle.setFillColor(c)
+    def ustawWypełnienieKolorem(c: java.awt.Color) = englishTurtle.setFillColor(c)
     def grubość(n: Double) = englishTurtle.setPenThickness(n)
     def zapiszStyl() = englishTurtle.saveStyle()
     def przywróćStyl() = englishTurtle.restoreStyle()
@@ -200,7 +200,7 @@ object PlInit {
     "podnieśPisak" -> "podnieśPisak()",
     "czyśćStylPisaka" -> "czyśćStylPisaka",
     "kolor" -> "kolor(${kolorPisaka})",
-    "ustawWypełnieKolorem" -> "ustawWypełnieKolorem(${kolorWypełnienia})",
+    "ustawWypełnienieKolorem" -> "ustawWypełnienieKolorem(${kolorWypełnienia})",
     "grubość" -> "grubość(${grubośćPisaka})",
     "zapiszStyl" -> "zapiszStyl()",
     "przywróćStyl" -> "przywróćStyl()",
@@ -262,7 +262,7 @@ prawo(45)  //obróć żółwia w prawo o 45 stopni
     "okrąg" -> <div><strong>okrąg</strong>(promień)<br/>rysuje okrąg o zadanym promieniu</div>.toString,
     "pokaż" -> <div><strong>pokaż</strong>()<br/> pokazuje postać żółwia</div>.toString,
     "ukryj" -> <div><strong>ukryj</strong>()<br/> ukrywa postać żółwia</div>.toString,
-    "położenie" -> <div><strong>położenie</strong><br/>pobiera położenie żółwia w danym momencie jak punkt Point(x,y)
+    "położenie" -> <div><strong>położenie</strong><br/>pobiera położenie żółwia w danym momencie jako punkt Point(x,y)
 <br/><em>Przykład:</em> <br/><br/>
 <pre>
 drukuj(położenie)
@@ -289,6 +289,7 @@ kolor(Color(220,30,40,250)) //(fioletowy) maksymalna wartość to 255, czerwony,
 naprzód(200)
 </pre>
        </div>.toString,
+"ustawWypełnienieKolorem" -> <div><strong>ustawWypełnieKolorem</strong>(kolor)<br/> Ustawia kolor wypełnienia. Aby wypełnić musimy wykonać figurę zamkniętą</div>.toString,
     "grubość" -> <div><strong>grubość</strong>(grubość)<br/>Ustawia grubość pisaka</div>.toString,
     "zapiszStyl" -> <div><strong>zapiszStyl</strong>()<br/> Zapamiętuje styl (kolor, grubość pędzla, wypełnienie kolorem)<br/>>Odczyt stylu odbywa się za pomocą przywróćStyl</div>.toString,
     "przywróćStyl" -> <div><strong>przywróćStyl</strong>()<br/>Służy do odczytu zapamiętanego stylu  funkcją przwróćStyl</div>.toString,
