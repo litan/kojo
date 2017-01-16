@@ -3,10 +3,11 @@
 * The [Kojo home-page][1] provides user-level information about Kojo.
 * The [Kojo issue-tracker][3] let's you file bug reports.
 * The [Kojo Localization][5] page tells you how to translate Kojo to your language.
+* The [Kojo source repo][6] on Bitbucket is where development happens. This repo is [mirrored][7] on Github.
 
 **To start hacking:**
 
-* Fork the repo (i.e. create a server-clone), and then clone your fork (using the `hg clone` command) to create a local Kojo workspace.
+* Fork the repo (i.e. create a server-clone), and then clone your fork (using the `git clone` command) to create a local Kojo workspace.
 * Make sure you have Java 6 on your path. You need Java 6 to build Kojo.  You can run Kojo with Java 6, Java 7, or Java 8.
     * [Download JDK 1.6][4] (if you don't already have it).
 * Copy `javaws.jar` and `deploy.jar` from your `jre/lib` directory into the `lib` directory in your Kojo workspace. These jar files are required to compile the Kojo Webstart launcher.
@@ -32,3 +33,5 @@ Also make sure that the *JRE System Library* used by the project is at the JDK 1
   [3]: https://bitbucket.org/lalit_pant/kojo/issues?status=new&status=open
   [4]: http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase6-419409.html
   [5]: https://bitbucket.org/lalit_pant/kojo/wiki/Kojo%20Localization
+  [6]: https://bitbucket.org/lalit_pant/kojo-g
+  [7]: https://github.com/litan/kojo
