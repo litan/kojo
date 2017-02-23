@@ -10,3 +10,4 @@ installerbuild/
 project/
 security/
 target/
+*.*~

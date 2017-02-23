@@ -101,48 +101,96 @@ var fracpic = fracirc(n, d)
 var label = Label("")
 var lab = PicShape.widget(label)
 draw(lab)
+var label2 = Label("")
+var lab2 = PicShape.widget(label)
+draw(lab2)
 var pc = black
 
 def drawMessage(m: String, c: Color) {
     val te = textExtent(m, 30)
     val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) ->
-PicShape.text(m, 30)
+        PicShape.text(m, 30)
     draw(pic)
 }
 
+def sform(n: Int, d: Int): Int = {
+    val factor = kmath.hcf(n, d)
+    factor
+}
+
 val button = Button("Check The Answer") {
-    lab.erase()
-    if (n > d) {
-        if (text1.value.toInt == d && text2.value.toInt == n) {
-            label = Label("Your answer is correct.")
-            pc = Color(0, 143, 0)
-        }
-        else {
-            label = Label("Your answer is wrong.")
-            pc = red
-        }
+    if (text1.value == "" || text2.value == "") {
+        lab.erase()
+        lab2.erase()
     }
     else {
-        if (text1.value.toInt == n && text2.value.toInt == d) {
-            label = Label("Your answer is correct.")
-            pc = Color(0, 143, 0)
+        lab.erase()
+        lab2.erase()
+        val fac = sform(n, d)
+        if (n > d) {
+            val sn = d / fac
+            val sd = n / fac
+            if (text1.value.toInt == d && text2.value.toInt == n ||
+                text1.value.toInt == sn && text2.value.toInt == sd) {
+                label = Label("Your answer is correct.")
+                pc = Color(0, 143, 0)
+            }
+            else {
+                label = Label("Your answer is wrong.")
+                pc = red
+            }
+            if (text1.value.toInt == d && text2.value.toInt == n) {
+                if (text1.value.toInt == sn && text2.value.toInt == sd) {
+                    label2 = Label(" ")
+                }
+                else {
+                    label2 = Label(s"This fraction can also be written as $sn / $sd ")
+                }
+            }
+            else {
+                label2 = Label(" ")
+            }
         }
         else {
-            label = Label("Your answer is wrong.")
-            pc = red
+            val sn = n / fac
+            val sd = d / fac
+            if (text1.value.toInt == n && text2.value.toInt == d ||
+                text1.value.toInt == sn && text2.value.toInt == sd) {
+                label = Label("Your answer is correct.")
+                pc = Color(0, 143, 0)
+            }
+            else {
+                label = Label("Your answer is wrong.")
+                pc = red
+            }
+            if (text1.value.toInt == n && text2.value.toInt == d) {
+                if (text1.value.toInt == sn && text2.value.toInt == sd) {
+                    label2 = Label(" ")
+                }
+                else {
+                    label2 = Label(s"This fraction can also be written as $sn / $sd ")
+                }
+            }
+            else {
+                label2 = Label(" ")
+            }
         }
+
+        label.setFont(Font("Serif", 20))
+        label.setForeground(pc)
+        lab = PicShape.widget(label)
+        lab2 = PicShape.widget(label2)
+        draw(trans(cb.x + 20, -cb.y - 40) -> lab)
+        draw(trans(cb.x + 20, -cb.y - 80) -> lab2)
     }
-    label.setFont(Font("Serif", 20))
-    label.setForeground(pc)
-    lab = PicShape.widget(label)
-    draw(trans(cb.x, -cb.y - 40) -> lab)
 }
 
 val button2 = Button("Next") {
     fracpic.erase()
     text1.value = ""
     text2.value = ""
-    lab.erase
+    lab.erase()
+    lab2.erase()
     n = random(4) + 2
     d = random(8) + 2
     if (n == d) {

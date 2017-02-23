@@ -20,6 +20,11 @@
 
 package net.kogics.kojo.lite.i18n
 
+import java.awt.Font
+import java.awt.Paint
+import java.awt.geom.Point2D
+import java.awt.Image
+
 import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.xscala.RepeatCommands
@@ -136,6 +141,7 @@ object ItalianAPI {
     def sinistra() = englishTurtle.left(90)
     def saltaVerso(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
     def muoviVerso(x: Double, y: Double) = englishTurtle.moveTo(x, y)
+    def cambiaPosizione(x: Double, y: Double) = englishTurtle.changePosition(x, y)
     def salta(n: Double) = {
       englishTurtle.saveStyle() //to preserve pen state
       englishTurtle.hop(n) //hop change state to penDown after hop
@@ -150,6 +156,7 @@ object ItalianAPI {
     def ovest() = englishTurtle.setHeading(180)
     def nord() = englishTurtle.setHeading(90)
     def sud() = englishTurtle.setHeading(-90)
+    def valoreRitardo = englishTurtle.animationDelay
     def ritardo(n: Long) = englishTurtle.setAnimationDelay(n)
     def velocità(v: Velocità) = v match {
       case Lentissima => englishTurtle.setAnimationDelay(2000)
@@ -158,11 +165,14 @@ object ItalianAPI {
       case Veloce => englishTurtle.setAnimationDelay(10)
       case Velocissima => englishTurtle.setAnimationDelay(0)
     }
-    def lentezza(v: Long) = englishTurtle.setAnimationDelay(v)    
+    def lentezza(v: Long) = englishTurtle.setAnimationDelay(v)
     def scrivi(t: Any) = englishTurtle.write(t)
+    def impostaCarattere(font: Font) = englishTurtle.setPenFont(font)
     def impostaGrandezzaCarattere(dimensione: Int) = englishTurtle.setPenFontSize(dimensione)
     def arco(raggio: Double, angolo: Double) = englishTurtle.arc(raggio, math.round(angolo).toInt)
+    def arco2(raggio: Double, angolo: Double) = englishTurtle.arc2(raggio, angolo)
     def cerchio(raggio: Double) = englishTurtle.circle(raggio)
+    def punto(diametro: Int) = englishTurtle.dot(diametro)
     def posizione = englishTurtle.position
     def abbassaPenna() = englishTurtle.penDown()
     def alzaPenna() = englishTurtle.penUp()
@@ -176,13 +186,25 @@ object ItalianAPI {
     def ripristinaPosizioneDirezione() = englishTurtle.restorePosHe()
     def assi() = englishTurtle.beamsOn()
     def rimuoviAssi() = englishTurtle.beamsOff()
-    def indossaCostume(nomeDelFile: String) = englishTurtle.setCostume(nomeDelFile)
-    def indossaCostumi(nomeDelFile: String*) = englishTurtle.setCostumes(nomeDelFile: _*)
+
+    def indossaCostume(nomeFile: String) = englishTurtle.setCostume(nomeFile)
+    def indossaImmagine(immagine: Image) = englishTurtle.setCostumeImage(immagine)
+
+    def indossaCostumi(nomiFile: Vector[String]) = englishTurtle.setCostumes(nomiFile)
+    def indossaCostumi(nomiFile: String*) = englishTurtle.setCostumes(nomiFile.toVector)
+
+    def indossaImmagini(immagini: Vector[Image]) = englishTurtle.setCostumeImages(immagini)
+    def indossaImmagini(immagini: Image*) = englishTurtle.setCostumeImages(immagini.toVector)
+
     def prossimoCostume() = englishTurtle.nextCostume()
+    def scalaCostume(fattore: Double) = englishTurtle.scaleCostume(fattore)
     def suona(voce: Voice) = englishTurtle.playSound(voce)
 
     def superficie = englishTurtle.area
     def perimetro = englishTurtle.perimeter
+
+    def ultimaLinea = englishTurtle.lastLine
+    def ultimaSvolta = englishTurtle.lastTurn
 
     def square(steps: Double = 100, direction: Direction = Right) {
       RepeatCommands.repeat(4) {
@@ -214,6 +236,17 @@ object ItalianAPI {
       englishTurtle.setHeading(-angles._2)
       englishTurtle.forward(steps)
     }
+
+    def polygon(side: Double, sides: Int) = {
+      val a = 180 / (sides.toDouble / 2)
+      if(sides % 2 >= 0) englishTurtle.left(90 - a)
+      RepeatCommands.repeat(sides) {
+        englishTurtle.forward(side)
+        englishTurtle.right(a)
+      }
+    }
+
+    def poligono(lato: Double, lati: Int) = polygon(lato, lati)
 
     def triangolo(lato: Double, direzione: Direzione = Destra) = {
       triangle(lato, direzione match {
@@ -351,6 +384,7 @@ object ItInit {
     "sinistra" -> "sinistra(${angolo})",
     "saltaVerso" -> "saltaVerso(${x},${y})",
     "muoviVerso" -> "muoviVerso(${x},${y})",
+    "cambiaPosizione" -> "cambiaPosizione(${x},${y})",
     "salta" -> "salta(${passi})",
     "casa" -> "casa()",
     "verso" -> "verso(${x},${y})",
@@ -361,9 +395,13 @@ object ItInit {
     "sud" -> "sud()",
     "ritardo" -> "ritardo(${milliSecondi})",
     "scrivi" -> "scrivi(${testo})",
+    "impostaCarattere" -> "impostaCarattere(${font})",
     "impostaGrandezzaCarattere" -> "impostaGrandezzaCarattere(${dimensione})",
+    "arco2" -> "arco2(${raggio},${angolo})",
     "arco" -> "arco(${raggio},${angolo})",
     "cerchio" -> "cerchio(${raggio})",
+    "poligono" -> "poligono(${lato},${lati})",
+    "punto" -> "cerchio(${diametro})",
     "visibile" -> "visibile()",
     "invisibile" -> "invisibile()",
     "abbassaPenna" -> "abbassaPenna()",
@@ -393,7 +431,11 @@ object ItInit {
     "numeroDecimaleCasuale" -> "numeroDecimaleCasuale(${limitiSuperiori})",
     "indossaCostume" -> "indossaCostume(${nomeDelFile})",
     "indossaCostumi" -> "indossaCostumi(${nomeDelFile1},${nomeDelFile2})",
+    "indossaImmagine" -> "indossaImmagine(${immagine})",
+    "indossaImmagini" -> "indossaImmagini(${immagine},${immagine})",
+    "indossaImmagini" -> "indossaImmagini(${listaImmagini})",
     "prossimoCostume" -> "prossimoCostume()",
+    "scalaCostume" -> "scalaCostume(fattore)",
     "se" -> "se (condizione) {blocco} altrimenti {blocco}",
     "rimuovi" -> "rimuovi()",
     "fai" -> "fai { self => codice }",
@@ -412,6 +454,7 @@ object ItInit {
     "destra" -> (<div> <strong> destra </strong> destra(). Gira La Tartaruga 90 gradi a destra (orario). <br/> <strong> destra </strong> destra(angolo). Gira la Tartaruga a destra (orario) per il date angolo in gradi <br/> <strong> destra </strong> destra(angolo, Raggio). Gira La Tartaruga destra (orario) per il date angolo in gradi, Intorno al Raggio <br/></div>).toString,
     "saltaVerso" -> (<div> <strong> saltaVerso </strong> saltaVerso(x, y). posiziona la Tartaruga alle coordinate (x, y) senza disegnare Una linea. La direzione della Tartaruga non è cambiata. <br/> </div>).toString,
     "muoviVerso" -> (<div> <strong> muoviVerso </strong> muoviVerso(x, y). Gira la Tartaruga verso (x, y) e si muove la tartaruga a quel punto </div>).toString,
+    "cambiaPosizione" -> (<div> <strong> cambiaPosizione </strong> cambiaPosizione(x, y). Cambia la posizione della Tartaruga ai valori forniti </div>).toString,
     "salta" -> (<div> <strong> salta </strong> salta(passi). Sposta la tartaruga in avanti per il numero determinato di passi <em> con la penna </em>, senza che che nessuna linea sia disegnata. La penna viene messo giù dopo il salto. <br/> </div>).toString,
     "casa" -> (<div> <strong> casa </strong> casa(). Sposta la tartaruga nella sua posizione originale al centro dello schermo e fa puntare a nord </div>).toString,
     "verso" -> (<div> <strong> verso </strong> verso(x, y). Gira la Tartaruga verso il punto (x, y) </div>).toString,
@@ -422,10 +465,15 @@ object ItInit {
     "nord" -> (<div> <strong> nord </strong> nord(). Gira la Tartaruga verso nord </div>).toString,
     "sud" -> (<div> <strong> sud </strong> sud(). Gira la Tartaruga verso sud </div>).toString,
     "ritardo" -> (<div> <strong> ritardo </strong> (ritardo). Imposta la velocità della tartaruga. Il ritardo  specificato</div>).toString,
+    "valoreRitardo" -> (<div> <strong> valoreRitardo </strong>. Legge la velocità della tartaruga. Il ritardo  specificato</div>).toString,
     "scrivi" -> (<div> <strong> scrivi </strong> scrivi(oggetto). Scrive alla posizione della tartaruga, se l'oggetto non è una stringa lo converte. </div>).toString,
-    "impostaGrandezzaCarattere" -> (<div> <strong> impostaGrandezzaPenna </strong> (n). Specifica la dimensione del carattere con cui scrive la tartaruga</div>).toString,
+    "impostaCarattere" -> (<div> <strong> impostaCarattere </strong> (n). Imposta il carattere con cui scrive la tartaruga</div>).toString,
+    "impostaGrandezzaCarattere" -> (<div> <strong> impostaGrandezzaCarattere </strong> (n). Specifica la dimensione del carattere con cui scrive la tartaruga</div>).toString,
+    "arco2" -> (<div> <strong> arco2 </strong> arco2(raggio, angolo). Fa fare alla tartaruga un arco con il raggio ed angolo dato <br/> per angoli positivi il giro è anti-orario. <br/> </div>).toString,
     "arco" -> (<div> <strong> arco </strong> arco(raggio, angolo). Fa fare alla tartaruga un arco con il raggio ed angolo dato <br/> per angoli positivi il giro è anti-orario. <br/> </div>).toString,
     "cerchio" -> (<div> <strong> cerchio </strong> cerchio(raggio). La tartaruga si muove in cerchio dato il raggio. <br/> Il comando cerchio(50) è equivalente al comando arco(50, 360). <br/> </div>).toString,
+    "poligono" -> (<div> <strong> poligono </strong> poligono(lato, lati). La tartaruga disegna un poligono </div>).toString,
+    "punto" -> (<div> <strong> punto </strong> punto(diametro). Disegna un punto dato il diametro.</div>).toString,
     "visibile" -> (<div> <strong> visibile </strong> visibile(). Rende la tartaruga visibile dopo che è stato resa invisibile con il comando invisibile() </div>).toString,
     "invisibile" -> (<div> <strong> invisibile </strong> invisibile(). rende la tartaruga invisibile. Utilizzare il comando visibile() per renderla di nuovo visibile. </div>).toString,
     "abbassaPenna" -> (<div> <strong> abbassaPenna </strong> abbassaPenna(). Fa disegnare una linea alla Tartaruga <br/> Per impostazione predefinita la penna è abbassata. <br/> </div>).toString,
@@ -454,15 +502,17 @@ object ItInit {
     "numeroCasuale" -> (<div> <strong> numeroCasuale </strong> (upper bound). Restituisce un numero intero casuale compreso tra 0 (incluso) e upper bound (esclusiva) </div>).toString,
     "numeroDecimaleCasuale" -> (<div> <strong> numeroDecimaleCasuale </strong> (upper bound). Restituisce un numero casuale a doppia precisione decimale compreso tra 0 (incluso) e upper bound (esclusiva) </div>).toString,
     "indossaCostume" -> (<div> <strong> indossaCostume </strong> indossaCostume(costumeFile). Cambia il costume (cioè immagine) associata con la tartaruga per l'immagine nel file specificato </div>).toString,
-    "indossaCostumi" -> (<div> <strong> indossaCostumi </strong> indossaCostumi(costumeFile1, costumeFile2,...). Specifica multiple costumi per la tartaruga, e imposta costume della tartaruga al primo nella sequenza. È possibile scorrere i costumi chiamando <tt> nextCostume() </tt>. </div>).toString,
+    "indossaCostumi" -> (<div> <strong> indossaCostumi </strong> indossaCostumi(costumeFile1, costumeFile2,...). Specifica più costumi per la tartaruga, e imposta il costume della tartaruga al primo nella sequenza. È possibile scorrere i costumi chiamando <tt> nextCostume() </tt>. </div>).toString,
+    "indossaImmagine" -> (<div> <strong> indossaCostume </strong> indossaImmagine(immagine). Cambia il costume (cioè immagine) associata con la tartaruga con l'immagine nell'oggetto specificato </div>).toString,
+    "indossaImmagini" -> (<div> <strong> indossaCostumi </strong> indossaImmagini(immagine, immagine,...). Specifica più immagini per la tartaruga e imposta il costume della tartaruga al primo nella sequenza. È possibile scorrere i costumi chiamando <tt> nextCostume() </tt>. </div>).toString,
     "prossimoCostume" -> (<div> <strong> prossimoCostume </strong> prossimoCostume(). cambi di costume della tartaruga a quella successiva nella sequenza dei costumi specificato da <tt> setCostumes (..) </tt> </div>).toString,
-
+    "scalaCostume" -> (<div> <strong> scalaCostume </strong> scalaCostume(fattore). Scala il costume della tartaruga </div>).toString,
     "se" -> (<div><strong>se-altrimenti</strong> se (condizione) (se condizione vera) altrimenti (se condizione falsa). <br /> Espressione di controllo </div>).toString,
     "seVero" -> (<div><strong> seVero </strong> seVero (condizione) (blocco). <br /> Espressione di controllo </div>).toString,
     "oppure" -> (<div><strong> oppure </strong> valore1 oppure valore2. <br /> Se il valore1 è valutato come vuoto verrà restituito il valore2.</div>).toString,
     "?:" -> (<div><strong> ?: </strong> Groovy Elvis Operator, simile a oppure ma lavora su valori nulli.</div>).toString,
     "?:" -> (<div><strong> (condizione) ?: (se condizione vera) :: (se condizione falsa) </strong></div>).toString,
-      "lentezza" -> (<div> <strong> lentezza </strong> (millisecondi). Imposta la velocità della tartaruga. La lentezza  specificata</div>).toString,
-     "velocità" -> (<div> <strong> velocità </strong> (velocità). Imposta la velocità della tartaruga. La velocità  specificata può essere: Lentissima, Lenta, Media, Veloce, Velocissima</div>).toString
+    "lentezza" -> (<div> <strong> lentezza </strong> (millisecondi). Imposta la velocità della tartaruga. La lentezza  specificata</div>).toString,
+    "velocità" -> (<div> <strong> velocità </strong> (velocità). Imposta la velocità della tartaruga. La velocità  specificata può essere: Lentissima, Lenta, Media, Veloce, Velocissima</div>).toString
   )
 }
