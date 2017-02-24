@@ -205,7 +205,7 @@ object Main extends AppMenu with ScriptLoader { main =>
     if (!logDir.exists()) {
       logDir.mkdirs()
     }
-    val logPath = List(userHome, ".kojo", "lite", "log", "kojo0.log").mkString(File.separator)
+    val logPath = new File(logDir, "kojo0.log").getPath
     if (kojoCtx.subKojo) {
       System.err.println(s"[INFO] Kojo Scratchpad logging has been redirected to: $logPath.n")
     }
