@@ -443,7 +443,8 @@ class CodeExecutionSupport(
 
     private def showInternalErrorMsg() {
       showError(Utils.loadString("S_ErrorProcessScript") + "\n")
-      showOutput(Utils.loadString("S_OutputLogFileHint") + "\n")
+      val logDir = Utils.locateLogDir().getPath
+      showOutput(Utils.loadString(getClass, "S_OutputLogFileHint", logDir) + "\n")
     }
 
     def onRunInterpError() = {
