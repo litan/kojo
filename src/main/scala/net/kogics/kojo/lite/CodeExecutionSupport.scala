@@ -442,9 +442,8 @@ class CodeExecutionSupport(
     }
 
     private def showInternalErrorMsg() {
-      showError("Kojo is unable to process your script. Please modify your code and try again.\n")
-      showOutput("The Kojo log file is likely to contain more information about the problem.\n")
-
+      showError(Utils.loadString("S_ErrorProcessScript") + "\n")
+      showOutput(Utils.loadString("S_OutputLogFileHint") + "\n")
     }
 
     def onRunInterpError() = {
