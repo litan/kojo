@@ -466,6 +466,15 @@ object Utils {
   lazy val initScripts: List[String] = filesInDir(initScriptDir, "kojo")
   lazy val installLibJars: List[String] = Nil
   lazy val installInitScripts: List[String] = Nil
+  
+  /**Locates where the log directory should be, creates it if necessary, and returns its File object.*/
+  def locateLogDir(): File = {    
+    val logDir = new File(s"$userDir/.kojo/lite/log/")
+    if (!logDir.exists()) {
+      logDir.mkdirs()
+    }
+    logDir
+  }
 
   def modeFilter(scripts: List[String], mode: CodingMode): List[String] = mode match {
     case TwMode =>
