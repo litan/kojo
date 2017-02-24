@@ -26,8 +26,8 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
     //Then
     assertNotNull(result, result)
     result shouldBe "Welcome to Kojo" + EOL +
-      "* Press mouse right -> Show context menu" + EOL + //"* " + 18 chars left of "->"
-      "* Type key          -> Insert it into the script editor" + EOL //"* " + 18 chars left of "->"
+      "* Press mouse right " + goalActionSeparator + " Show context menu" + EOL + //"* " + 18 chars left of "→"
+      "* Type key          " + goalActionSeparator + " Insert it into the script editor" + EOL //"* " + 18 chars left of "→"
   }
   
   @Test def tabulateExtraneousWhiteSpace(){
@@ -42,8 +42,8 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
     //Then
     assertNotNull(result, result)
     result shouldBe "Welcome to Kojo" + EOL +
-      "* Press mouse right -> Show context menu" + EOL + //17 chars left of " -> "
-      "* Type key          -> Insert it into the script editor" + EOL
+      "* Press mouse right " + goalActionSeparator + " Show context menu" + EOL + //17 chars left of " -> "
+      "* Type key          " + goalActionSeparator + " Insert it into the script editor" + EOL
   }
   
   @Test def tabulateWithoutArrow(){
@@ -63,8 +63,7 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
   @Test def tabulateEmpties(){
     //Given
     val head = ""
-    val instructions = List(
-    )
+    val instructions = List()
     //When
     val result = makeTabulatedWelcomeMessage(head, instructions)
     //Then
@@ -72,9 +71,23 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
     result shouldBe EOL
   }
   
-  @Test def tabulateNulls(){
-    intercept[NullPointerException]{
-      makeTabulatedWelcomeMessage(null, null)
+  @Test def tabulateNullHead(){
+    //Given
+    val head = null
+    val instructions = List()
+    //When Then
+    intercept[IllegalArgumentException]{
+      makeTabulatedWelcomeMessage(head, instructions)
+    }
+  }
+  
+  @Test def tabulateNullInstructions(){
+    //Given
+    val head = ""
+    val instructions = null
+    //When Then
+    intercept[IllegalArgumentException]{
+      makeTabulatedWelcomeMessage(head, instructions)
     }
   }
 

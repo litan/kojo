@@ -57,6 +57,7 @@ object CodeExecutionSupport {
 
   /**The End-of-Line String used to separate lines of the welcome message*/
   val EOL = "\n"
+  val goalActionSeparator = "→" //instead of -> in order to save one position. Christoph 2017-02-24
   
   /**
    * Composes a welcome message from the head and a tabulated arrangement of the instructions.
@@ -66,6 +67,8 @@ object CodeExecutionSupport {
    * In the end all "→" are one below another when using a monospace font.
    */
   def makeTabulatedWelcomeMessage(head: String, instructions: List[String]): String = {
+    require(head!=null, "head != null")
+    require(instructions!=null, "instructions != null")
     val instructionsSplitted = instructions.map(_.split("->", 2))
     val instructionsTrimmed: List[Line] = for (instr <- instructionsSplitted) yield {
       val action = if(instr.length>1) Some(instr(1).trim) else None
@@ -81,7 +84,9 @@ object CodeExecutionSupport {
       instr.action match {
         case Some(a) => 
           sb append " " * (maxGoalLen - instr.goal.length)
-          sb append " → " //instead of -> in order to save one position. Christoph 2017-02-24
+          sb append " "
+          sb append goalActionSeparator
+          sb append " "
           sb append a
         case None => //Nothing to append
       }
