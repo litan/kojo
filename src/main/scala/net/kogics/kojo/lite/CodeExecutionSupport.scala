@@ -61,8 +61,9 @@ object CodeExecutionSupport {
   /**
    * Composes a welcome message from the head and a tabulated arrangement of the instructions.
    * Each instruction should have the format "goal -> action".
-   * The instructions are splitted at the first occurrence of "->" and then tabulated,
-   * so that all "->" are one below another when using a monospace font.
+   * The instructions are splitted at the first occurrence of "->" and then tabulated.
+   * The "->" are replaced by the unicode arrow \u2192 "→" in order to save one character position.
+   * In the end all "→" are one below another when using a monospace font.
    */
   def makeTabulatedWelcomeMessage(head: String, instructions: List[String]): String = {
     val instructionsSplitted = instructions.map(_.split("->", 2))
@@ -80,7 +81,7 @@ object CodeExecutionSupport {
       instr.action match {
         case Some(a) => 
           sb append " " * (maxGoalLen - instr.goal.length)
-          sb append " -> "
+          sb append " → " //instead of -> in order to save one position. Christoph 2017-02-24
           sb append a
         case None => //Nothing to append
       }
