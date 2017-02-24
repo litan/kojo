@@ -2,6 +2,8 @@
 // The contents of this file are subject to 
 // the GNU General Public License Version 3 (http://www.gnu.org/copyleft/gpl.html)
 
+/**Prevent the square from escaping the canvas by arrow keys!*/
+
 toggleFullScreenCanvas()
 cleari()
 drawStage(yellow)
