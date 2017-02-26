@@ -57,14 +57,18 @@ object CodeExecutionSupport {
 
   /**The End-of-Line String used to separate lines of the welcome message*/
   val EOL = "\n"
+  val goalActionSeparator = "→" //instead of -> in order to save one position. Christoph 2017-02-24
   
   /**
    * Composes a welcome message from the head and a tabulated arrangement of the instructions.
    * Each instruction should have the format "goal -> action".
-   * The instructions are splitted at the first occurrence of "->" and then tabulated,
-   * so that all "->" are one below another when using a monospace font.
+   * The instructions are splitted at the first occurrence of "->" and then tabulated.
+   * The "->" are replaced by the unicode arrow \u2192 "→" in order to save one character position.
+   * In the end all "→" are one below another when using a monospace font.
    */
   def makeTabulatedWelcomeMessage(head: String, instructions: List[String]): String = {
+    require(head!=null, "head != null")
+    require(instructions!=null, "instructions != null")
     val instructionsSplitted = instructions.map(_.split("->", 2))
     val instructionsTrimmed: List[Line] = for (instr <- instructionsSplitted) yield {
       val action = if(instr.length>1) Some(instr(1).trim) else None
@@ -80,7 +84,9 @@ object CodeExecutionSupport {
       instr.action match {
         case Some(a) => 
           sb append " " * (maxGoalLen - instr.goal.length)
-          sb append " -> "
+          sb append " "
+          sb append goalActionSeparator
+          sb append " "
           sb append a
         case None => //Nothing to append
       }
@@ -441,9 +447,9 @@ class CodeExecutionSupport(
     }
 
     private def showInternalErrorMsg() {
-      showError("Kojo is unable to process your script. Please modify your code and try again.\n")
-      showOutput("The Kojo log file is likely to contain more information about the problem.\n")
-
+      showError(Utils.loadString("S_ErrorProcessScript") + "\n")
+      val logDir = Utils.locateLogDir().getPath
+      showOutput(Utils.loadString(getClass, "S_OutputLogFileHint", logDir) + "\n")
     }
 
     def onRunInterpError() = {
