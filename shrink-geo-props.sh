@@ -11,6 +11,7 @@ zip geogebra_properties.jar geogebra/properties/colors_hi.properties
 zip geogebra_properties.jar geogebra/properties/colors_de.properties
 zip geogebra_properties.jar geogebra/properties/colors_ru.properties
 zip geogebra_properties.jar geogebra/properties/colors_it.properties
+zip geogebra_properties.jar geogebra/properties/colors_hr.properties
 zip geogebra_properties.jar geogebra/properties/command.properties
 zip geogebra_properties.jar geogebra/properties/command_sv.properties
 zip geogebra_properties.jar geogebra/properties/command_fr.properties
@@ -21,6 +22,7 @@ zip geogebra_properties.jar geogebra/properties/command_hi.properties
 zip geogebra_properties.jar geogebra/properties/command_de.properties
 zip geogebra_properties.jar geogebra/properties/command_ru.properties
 zip geogebra_properties.jar geogebra/properties/command_it.properties
+zip geogebra_properties.jar geogebra/properties/command_hr.properties
 zip geogebra_properties.jar geogebra/properties/error.properties
 zip geogebra_properties.jar geogebra/properties/error_sv.properties
 zip geogebra_properties.jar geogebra/properties/error_fr.properties
@@ -31,6 +33,7 @@ zip geogebra_properties.jar geogebra/properties/error_hi.properties
 zip geogebra_properties.jar geogebra/properties/error_de.properties
 zip geogebra_properties.jar geogebra/properties/error_ru.properties
 zip geogebra_properties.jar geogebra/properties/error_it.properties
+zip geogebra_properties.jar geogebra/properties/error_hr.properties
 zip geogebra_properties.jar geogebra/properties/javaui.properties
 zip geogebra_properties.jar geogebra/properties/javaui_sv.properties
 zip geogebra_properties.jar geogebra/properties/javaui_fr.properties
@@ -41,6 +44,7 @@ zip geogebra_properties.jar geogebra/properties/javaui_hi.properties
 zip geogebra_properties.jar geogebra/properties/javaui_de.properties
 zip geogebra_properties.jar geogebra/properties/javaui_ru.properties
 zip geogebra_properties.jar geogebra/properties/javaui_it.properties
+zip geogebra_properties.jar geogebra/properties/javaui_hr.properties
 zip geogebra_properties.jar geogebra/properties/menu.properties
 zip geogebra_properties.jar geogebra/properties/menu_sv.properties
 zip geogebra_properties.jar geogebra/properties/menu_fr.properties
@@ -51,6 +55,7 @@ zip geogebra_properties.jar geogebra/properties/menu_hi.properties
 zip geogebra_properties.jar geogebra/properties/menu_de.properties
 zip geogebra_properties.jar geogebra/properties/menu_ru.properties
 zip geogebra_properties.jar geogebra/properties/menu_it.properties
+zip geogebra_properties.jar geogebra/properties/menu_hr.properties
 zip geogebra_properties.jar geogebra/properties/plain.properties
 zip geogebra_properties.jar geogebra/properties/plain_sv.properties
 zip geogebra_properties.jar geogebra/properties/plain_fr.properties
@@ -61,6 +66,7 @@ zip geogebra_properties.jar geogebra/properties/plain_hi.properties
 zip geogebra_properties.jar geogebra/properties/plain_de.properties
 zip geogebra_properties.jar geogebra/properties/plain_ru.properties
 zip geogebra_properties.jar geogebra/properties/plain_it.properties
+zip geogebra_properties.jar geogebra/properties/plain_hr.properties
 zip geogebra_properties.jar geogebra/properties/symbols.properties
 zip geogebra_properties.jar geogebra/properties/symbols_sv.properties
 zip geogebra_properties.jar geogebra/properties/symbols_fr.properties
@@ -70,6 +76,7 @@ zip geogebra_properties.jar geogebra/properties/symbols_nl_BE.properties
 zip geogebra_properties.jar geogebra/properties/symbols_de.properties
 zip geogebra_properties.jar geogebra/properties/symbols_ru.properties
 zip geogebra_properties.jar geogebra/properties/symbols_it.properties
+zip geogebra_properties.jar geogebra/properties/symbols_hr.properties
 rm xgeogebra_properties.jar
 rm -rf geogebra
 rm -rf META-INF
