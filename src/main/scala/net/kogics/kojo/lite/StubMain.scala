@@ -73,7 +73,10 @@ trait StubMain {
         ""
       }
     }
-    val cmdPart = "-client -Xms32m -Xmx768m " +
+    def maxMem =
+      if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "1536m"
+    
+    val cmdPart = s"-client -Xms32m -Xmx${maxMem} " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
       extraCmds +
