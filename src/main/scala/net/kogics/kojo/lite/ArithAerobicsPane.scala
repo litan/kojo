@@ -12,8 +12,11 @@ import net.kogics.rithica.subtraction.{ TopContainer => Subtractor }
 import javax.swing.event.ChangeListener
 import javax.swing.event.ChangeEvent
 import net.kogics.kojo.util.Utils
+import javax.swing.plaf.FontUIResource
+import java.awt.Font
+import net.kogics.kojo.core.KojoCtx
 
-class ArithAerobicsPane(frame: JFrame) extends JTabbedPane {
+class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
 
   lazy val adder = new Adder(this)
   lazy val subtractor = new Subtractor(this)
@@ -21,6 +24,8 @@ class ArithAerobicsPane(frame: JFrame) extends JTabbedPane {
   lazy val divider = new Divider(this)
 
   lazy val init = {
+    val f = getFont
+    setFont(new FontUIResource(Font.SANS_SERIF, f.getStyle, f.getSize + kojoCtx.screenDpiFontDelta))
     setFocusCycleRoot(true)
     setTabPlacement(SwingConstants.LEFT)
     setBackground(Color.white)

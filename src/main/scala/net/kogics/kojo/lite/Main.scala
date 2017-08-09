@@ -142,7 +142,7 @@ object Main extends AppMenu with ScriptLoader { main =>
       val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
       val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
       val historyHolder = new HistoryHolder(new HistoryPanel(execSupport))
-      val arithAerobicsHolder = new ArithAerobicsHolder(new ArithAerobicsPane(frame))
+      val arithAerobicsHolder = new ArithAerobicsHolder(new ArithAerobicsPane(frame, kojoCtx))
 
       kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder, arithAerobicsHolder)
       kojoCtx.switchToDefaultPerspective()
