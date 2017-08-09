@@ -78,6 +78,7 @@ trait StubMain {
 
     val cmdPart = s"-client -Xms32m -Xmx${maxMem} " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
+      "-Dawt.useSystemAAFontSettings=lcd -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
       extraCmds +
       "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))

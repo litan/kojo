@@ -111,7 +111,8 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
         val f2 = new FontUIResource(Font.SANS_SERIF, f.getStyle, f.getSize + delta)
         defaults.put(key, f2)
       }
-      changeFontSize("defaultFont", screenDpiFontDelta)
+      val fontsToChange = List("defaultFont")
+      fontsToChange.foreach(changeFontSize(_, screenDpiFontDelta))
     }
     LangInit.lookAndFeelReady()
   }

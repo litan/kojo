@@ -138,6 +138,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val popup = codePane.getPopupMenu
 
   val modeMenu = new JMenu(Utils.loadString("S_Mode"))
+  kojoCtx.menuReady(modeMenu)
 
   val switcher = new SwitchMode(execSupport)
   val twCb = new JCheckBoxMenuItem(switcher)
@@ -183,6 +184,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
 
   val syntaxColoringMenu = new JMenu(Utils.loadString("S_SyntaxColoring"))
+  kojoCtx.menuReady(syntaxColoringMenu)
 
   val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
   richColoringCb.setText(Utils.loadString("S_ColoringRich"))

@@ -23,6 +23,7 @@ import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
 
 import bibliothek.gui.dock.common.DefaultSingleCDockable
+import javax.swing.JMenu
 
 trait KojoCtx {
   def activityListener: SpriteListener
@@ -103,6 +104,7 @@ trait KojoCtx {
   def repaintCanvas(): Unit
   def appProperty(key: String): Option[String]
   def screenDpiFontDelta: Int
+  def menuReady(m: JMenu)
   
   var fps: Int
   var screenDPI: Int

@@ -7,6 +7,7 @@ import java.awt.geom.Point2D
 import javax.swing.Action
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
+import javax.swing.JMenu
 
 import net.kogics.kojo.core.NoopSpriteListener
 import net.kogics.kojo.core.Picture
@@ -98,6 +99,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def repaintCanvas() {}
   def appProperty(key: String): Option[String] = None
   def screenDpiFontDelta = 0
+  def menuReady(m: JMenu): Unit = {}
 
   var fps = 50
   var screenDPI = 72
