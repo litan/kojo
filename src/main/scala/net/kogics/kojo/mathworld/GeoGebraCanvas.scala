@@ -33,6 +33,6 @@ class GeoGebraCanvas(kojoCtx: KojoCtx) extends GeoGebraPanel {
   buildGUI()
 
   val ggbApi = getGeoGebraAPI
-//  ggbApi.getApplication.setFontSize(12 + kojoCtx.screenDpiFontDelta)
+  ggbApi.getApplication.setFontSize(12 + kojoCtx.screenDpiFontDelta)
   val Mw = new MathWorld(kojoCtx, ggbApi, this, new Algo(ggbApi))
 }

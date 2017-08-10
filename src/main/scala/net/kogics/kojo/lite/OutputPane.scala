@@ -360,7 +360,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     val inputField = new JTextField
     inputField.setAlignmentX(Component.LEFT_ALIGNMENT)
     val ifont = inputField.getFont()
-    inputField.setFont(new Font(ifont.getName, Font.BOLD, ifont.getSize + 2))
+    inputField.setFont(new Font(ifont.getName, ifont.getStyle, ifont.getSize + 2))
     inputField.setMargin(new Insets(3, 1, 3, 1))
     readInputPanel.add(label)
     readInputPanel.add(inputField)

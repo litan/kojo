@@ -2,12 +2,13 @@ package net.kogics.kojo.history
 
 import java.awt.BorderLayout
 import java.awt.Color
-import java.awt.Cursor
+import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import java.text.DateFormat
+
 import javax.swing.BorderFactory
 import javax.swing.DefaultCellEditor
 import javax.swing.JButton
@@ -25,10 +26,12 @@ import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 import javax.swing.table.AbstractTableModel
 import javax.swing.table.DefaultTableCellRenderer
+
 import net.kogics.kojo.core.CodeExecutionSupport
 import net.kogics.kojo.core.HistoryListener
-import sun.swing.table.DefaultTableCellHeaderRenderer
 import net.kogics.kojo.util.Utils
+
+import sun.swing.table.DefaultTableCellHeaderRenderer
 
 class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   val cmdh = execSupport.commandHistory
@@ -96,8 +99,10 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   val table = new JTable(tableModel)
 
   table.setBackground(Color.white)
+  val f = table.getFont
+  table.setFont(new Font(f.getName, f.getStyle, f.getSize + execSupport.kojoCtx.screenDpiFontDelta))
   //  table.setShowGrid(true)
-  table.setRowHeight(table.getRowHeight + 4)
+  table.setRowHeight(table.getRowHeight + 8)
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   table.setRowSelectionInterval(cmdh.size, cmdh.size)
   table.getTableHeader.getDefaultRenderer.asInstanceOf[DefaultTableCellHeaderRenderer].setHorizontalAlignment(SwingConstants.CENTER)
