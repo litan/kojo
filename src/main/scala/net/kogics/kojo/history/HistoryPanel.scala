@@ -2,7 +2,6 @@ package net.kogics.kojo.history
 
 import java.awt.BorderLayout
 import java.awt.Color
-import java.awt.Font
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
@@ -99,8 +98,6 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   val table = new JTable(tableModel)
 
   table.setBackground(Color.white)
-  val f = table.getFont
-  table.setFont(new Font(f.getName, f.getStyle, f.getSize + execSupport.kojoCtx.screenDpiFontDelta))
   //  table.setShowGrid(true)
   table.setRowHeight(table.getRowHeight + 8)
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)

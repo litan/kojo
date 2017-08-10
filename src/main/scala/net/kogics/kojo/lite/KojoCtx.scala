@@ -117,11 +117,11 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     LangInit.lookAndFeelReady()
   }
   def menuReady(m: JMenu) = {
-    if (screenDpiFontDelta > 0) {
-      val f = m.getFont
-      val f2 = new Font(f.getName, f.getStyle, f.getSize + screenDpiFontDelta)
-      m.setFont(f2)
-    }
+//    if (screenDpiFontDelta > 0) {
+//      val f = m.getFont
+//      val f2 = new Font(f.getName, f.getStyle, f.getSize + screenDpiFontDelta)
+//      m.setFont(f2)
+//    }
     LangInit.menuReady(m)
   }
 

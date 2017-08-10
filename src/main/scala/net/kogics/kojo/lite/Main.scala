@@ -77,6 +77,7 @@ object Main extends AppMenu with ScriptLoader { main =>
     }
 
     Utils.schedule(0.3) {
+      val ggbCanvas = new GeoGebraCanvas(kojoCtx)
       UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
         UIManager.setLookAndFeel(nim.getClassName)
       }
@@ -89,7 +90,6 @@ object Main extends AppMenu with ScriptLoader { main =>
       val Staging = new staging.API(spriteCanvas)
 
       val storyTeller = new StoryTeller(kojoCtx)
-      val ggbCanvas = new GeoGebraCanvas(kojoCtx)
       val canvas3d = new Canvas3D()
       val d3API = new d3.API(kojoCtx, canvas3d)
 

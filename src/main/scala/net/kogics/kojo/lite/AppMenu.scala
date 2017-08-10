@@ -388,7 +388,7 @@ trait AppMenu {
         aboutText.setEditorKit(new HTMLEditorKit)
         aboutText.setEditable(false)
         aboutText.setText(s"""<html><body>
-<div style="font-size: 12pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
+<div style="font-size: ${12 + kojoCtx.screenDpiFontDelta}pt; font-family: Verdana, 'Verdana CE',  Arial, 'Arial CE', 'Lucida Grande CE', lucida, 'Helvetica CE', sans-serif; ">
               <strong>Kojo</strong> ${Versions.KojoMajorVersion}<br/>
               Version: ${Versions.KojoVersion}  <em>${Versions.KojoRevision}</em><br/>
               Build date: ${Versions.KojoBuildDate}<br/>
