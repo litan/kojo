@@ -93,22 +93,24 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def screenSize = Toolkit.getDefaultToolkit.getScreenSize
 
   lazy val screenDpiFontDelta: Int = {
-    val delta = screenSize.width match {
-      case n if n < 1441 => 0
-      case n if n < 1681 => 1
-      case n if n < 1921 => 3
-      case n if n < 2561 => 5
-      case n if n < 3841 => 7
-      case _             => 9
+    val delta1 = screenSize.width match {
+      case n if n <= 1440 => 0
+      case n if n <= 1680 => 2
+      case n if n <= 1920 => 4
+      case n if n <= 2560 => 6
+      case n if n <= 2880 => 8
+      case n if n <= 3840 => 10
+      case _              => 12
     }
-    appProperty("font.increase") match {
-      case Some(d) => d.toInt + delta
-      case None    => delta
+    val delta = appProperty("font.increase") match {
+      case Some(d) => d.toInt + delta1
+      case None    => delta1
     }
+    System.setProperty("kojo.hidpi.font.increase", delta.toString)
+    delta
   }
 
   def lookAndFeelReady() = {
-    println(screenDpiFontDelta)
     if (screenDpiFontDelta > 0) {
       val defaults = UIManager.getLookAndFeelDefaults
       def changeFontSize(key: String, delta: Int) {

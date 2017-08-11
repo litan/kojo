@@ -452,6 +452,7 @@ Here's a partial list of the available commands:
   def screenDPI = kojoCtx.screenDPI
   def setScreenDPI(dpi: Int) { kojoCtx.screenDPI = dpi }
   def screenSize = Toolkit.getDefaultToolkit.getScreenSize
+  def hiDpiFontIncrease = System.getProperty("kojo.hidpi.font.increase") 
   def isScratchPad = kojoCtx.subKojo
   def isTracing = false
 

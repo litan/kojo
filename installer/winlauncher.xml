@@ -2,7 +2,7 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>gui</headerType>
   <jar></jar>
-  <outfile>/home/lalit/work/KojoDev/KojoLite/installer/bin/kojo.exe</outfile>
+  <outfile>kojo.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
   <chdir>.</chdir>
@@ -12,7 +12,7 @@
   <customProcName>false</customProcName>
   <stayAlive>false</stayAlive>
   <manifest></manifest>
-  <icon>/home/lalit/work/KojoDev/KojoLite/installer/icons/kojo48.ico</icon>
+  <icon>/home/lalit/work/kojo-2.11.11/installer/icons/kojo48.ico</icon>
   <classPath>
     <mainClass>net.kogics.kojo.lite.DesktopMain</mainClass>
     <cp>../lib/*.jar</cp>
