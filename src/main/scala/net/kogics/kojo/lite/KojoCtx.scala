@@ -90,19 +90,25 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     activityListener.setRealListener(l)
   }
 
-  lazy val screenDpiFontDelta: Int = appProperty("font.increase") match {
-    case Some(d) => d.toInt
-    case None => screenDPI match {
-      case n if n < 100 => 0
-      case n if n < 120 => 1
-      case n if n < 140 => 2
-      case n if n < 160 => 3
-      case n if n < 200 => 4
-      case _            => 5
+  def screenSize = Toolkit.getDefaultToolkit.getScreenSize
+
+  lazy val screenDpiFontDelta: Int = {
+    val delta = screenSize.width match {
+      case n if n < 1441 => 0
+      case n if n < 1681 => 1
+      case n if n < 1921 => 3
+      case n if n < 2561 => 5
+      case n if n < 3841 => 7
+      case _             => 9
+    }
+    appProperty("font.increase") match {
+      case Some(d) => d.toInt + delta
+      case None    => delta
     }
   }
 
   def lookAndFeelReady() = {
+    println(screenDpiFontDelta)
     if (screenDpiFontDelta > 0) {
       val defaults = UIManager.getLookAndFeelDefaults
       def changeFontSize(key: String, delta: Int) {
@@ -117,11 +123,11 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     LangInit.lookAndFeelReady()
   }
   def menuReady(m: JMenu) = {
-//    if (screenDpiFontDelta > 0) {
-//      val f = m.getFont
-//      val f2 = new Font(f.getName, f.getStyle, f.getSize + screenDpiFontDelta)
-//      m.setFont(f2)
-//    }
+    //    if (screenDpiFontDelta > 0) {
+    //      val f = m.getFont
+    //      val f2 = new Font(f.getName, f.getStyle, f.getSize + screenDpiFontDelta)
+    //      m.setFont(f2)
+    //    }
     LangInit.menuReady(m)
   }
 

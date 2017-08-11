@@ -74,7 +74,7 @@ trait StubMain {
       }
     }
     def maxMem =
-      if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "1536m"
+      if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "1280m"
 
     val cmdPart = s"-client -Xms32m -Xmx${maxMem} " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
