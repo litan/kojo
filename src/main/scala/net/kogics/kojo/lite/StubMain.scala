@@ -75,10 +75,13 @@ trait StubMain {
     }
     def maxMem =
       if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "1280m"
+    def maybeMarlin =
+      if (System.getProperty("java.vendor", "").toLowerCase.contains("jetbrains"))
+        "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
 
     val cmdPart = s"-client -Xms32m -Xmx${maxMem} " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
-      "-Dawt.useSystemAAFontSettings=lcd -Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " +
+      s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}" +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
       extraCmds +
       "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
