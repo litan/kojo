@@ -44,14 +44,15 @@ trait RmiMultiInstance {
     }
     catch {
       case e: Throwable =>
-        println("Unable to create RMI registry [%s]. Multi instance support will not work" format (e.getMessage()))
+        println("Unable to bind RMI registry to listen port; lost the race - bailing out...")
         registry = None
+        throw e
     }
   }
 
   def firstMainDone() {
     try {
-      println("[INFO] Removing RMI Listener")
+      println("[INFO] Removing RMI registry Listener")
       registry.foreach { UnicastRemoteObject.unexportObject(_, true) }
     }
     catch {
