@@ -69,6 +69,7 @@ import Typeclasses.mkIdentity
 import Typeclasses.some
 import edu.umd.cs.piccolo.event.PInputEvent
 import edu.umd.cs.piccolo.nodes.PText
+import java.util.Properties
 
 object Utils {
   lazy val Log = Logger.getLogger("Utils")
@@ -423,7 +424,7 @@ object Utils {
   def stripCR(str: String) = str.replaceAll("\r\n", "\n")
 
   lazy val messages = ResourceBundle.getBundle("net.kogics.kojo.lite.Bundle")
-  lazy val keyWithStrings = kojoCtx.appProperty("i18n.string.showkey") match {
+  lazy val keyWithStrings = appProperty("i18n.string.showkey") match {
     case Some(value) => java.lang.Boolean.valueOf(value).booleanValue()
     case None        => false
   }
@@ -756,5 +757,48 @@ object Utils {
       s"%.${n}f".format(d).replaceAllLiterally(decimalSep, ".").toDouble
     else
       s"%.${n}f".format(d).toDouble
+  }
+
+  val kojoProps = new Properties
+  val propsFile = new File(Utils.userDir + File.separatorChar + ".kojo/lite/kojo.properties")
+  if (propsFile.exists()) {
+    val is = new FileInputStream(propsFile)
+    try {
+      kojoProps.load(is)
+    }
+    catch {
+      case t: Throwable =>
+    }
+    finally {
+      is.close()
+    }
+  }
+  else {
+    propsFile.createNewFile()
+    val defProps = """
+      |# Uncomment/tweak options as desired:
+      |
+      |# Increase Kojo font size
+      |# font.increase=1
+      |
+      |# Or decrease Kojo font size
+      |# font.increase=-1
+      |
+      |# Specify max memory for Kojo in MB
+      |# memory.max=768m
+      |
+      |# Or specify max memory for Kojo in GB (1g, 2g, etc)
+      |# memory.max=1g
+      |
+      |# Show internal keys for UI elements; for localization developers 
+      |# i18n.string.showkey=true
+""".stripMargin
+    import RichFile._
+    propsFile.write(defProps)
+  }
+
+  def appProperty(key: String) = {
+    val ret = kojoProps.getProperty(key)
+    if (ret != null) Some(ret) else None
   }
 }

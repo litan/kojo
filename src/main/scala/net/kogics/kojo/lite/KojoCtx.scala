@@ -65,26 +65,6 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   var statusBar: StatusBar = _
   Utils.kojoCtx = this
 
-  val kojoProps = new Properties
-  val propsFile = new File(Utils.userDir + File.separatorChar + ".kojo/lite/kojo.properties")
-  if (propsFile.exists()) {
-    val is = new FileInputStream(propsFile)
-    try {
-      kojoProps.load(is)
-    }
-    catch {
-      case t: Throwable =>
-    }
-    finally {
-      is.close()
-    }
-  }
-
-  def appProperty(key: String) = {
-    val ret = kojoProps.getProperty(key)
-    if (ret != null) Some(ret) else None
-  }
-
   val activityListener = new DelegatingSpriteListener
   def setActivityListener(l: SpriteListener) {
     activityListener.setRealListener(l)
@@ -102,7 +82,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
       case n if n <= 3840 => 10
       case _              => 12
     }
-    val delta = appProperty("font.increase") match {
+    val delta = Utils.appProperty("font.increase") match {
       case Some(d) => d.toInt + delta1
       case None    => delta1
     }

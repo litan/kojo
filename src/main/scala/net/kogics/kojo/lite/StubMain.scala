@@ -73,13 +73,17 @@ trait StubMain {
         ""
       }
     }
-    def maxMem =
-      if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "1280m"
+    def maxMem = {
+      Utils.appProperty("memory.max") match {
+        case Some(d) => d
+        case None    => if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "768m"
+      }
+    }
     def maybeMarlin =
       if (System.getProperty("java.vendor", "").toLowerCase.contains("jetbrains"))
         "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
 
-    val cmdPart = s"-client -Xms32m -Xmx${maxMem} " +
+    val cmdPart = s"-client -Xms128m -Xmx${maxMem} " +
       "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
       s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}" +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
@@ -91,6 +95,7 @@ trait StubMain {
         s"-Djava.library.path=${Utils.libDir}"
       ) ++ cmdPart.split(' ')
 
+    log(s"Java VM args: ${cmdPart}")
     commandSeq!
   }
 
