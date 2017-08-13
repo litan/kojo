@@ -348,20 +348,28 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   val increaseFontItem = new JMenuItem(increaseFontSizeAction)
   increaseFontItem.setText(Utils.loadString("S_IncreaseFontSize"))
-  val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
+  val controlNumPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
+  val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_MASK)
+  val controlShiftPlus = KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
+  inputMap.put(controlNumPlus, "increase-font-size")
   inputMap.put(controlPlus, "increase-font-size")
+  inputMap.put(controlShiftPlus, "increase-font-size")
   am.put("increase-font-size", increaseFontSizeAction)
-  increaseFontSizeAction.setAccelerator(controlPlus)
+  increaseFontItem.setAccelerator(controlPlus)
   popup.add(increaseFontItem, idx)
   idx += 1
 
   val decreaseFontSizeAction = new DecreaseFontSizeAction()
   val decreaseFontItem = new JMenuItem(decreaseFontSizeAction)
   decreaseFontItem.setText(Utils.loadString("S_DecreaseFontSize"))
-  val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
+  val controlNumMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
+  val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_MASK)
+  val controlShiftMinus = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
+  inputMap.put(controlNumMinus, "decrease-font-size")
   inputMap.put(controlMinus, "decrease-font-size")
+  inputMap.put(controlShiftMinus, "decrease-font-size")
   am.put("decrease-font-size", decreaseFontSizeAction)
-  decreaseFontSizeAction.setAccelerator(controlMinus)
+  decreaseFontItem.setAccelerator(controlMinus)
   popup.add(decreaseFontItem, idx)
   idx += 1
 
@@ -369,7 +377,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   idx += 1
 
   val ctrlL = KeyStroke.getKeyStroke("control L")
-  val clearAction = new AbstractAction(Utils.loadString("S_ClearEditor"), Utils.loadIcon("/images/clears.png")) {
+  val clearAction = new AbstractAction(Utils.loadString("S_ClearEditor"), Utils.loadIcon("/images/24/clears.png")) {
     putValue(Action.ACCELERATOR_KEY, ctrlL)
     def actionPerformed(ev: ActionEvent) {
       closeFileAndClrEditorIgnoringCancel()
@@ -509,18 +517,24 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     val toolbar = new JToolBar
     toolbar.setFloatable(false)
-    toolbar.setPreferredSize(new Dimension(0, 28))
 
-    val runButton = makeNavigationButton("/images/run24.png", RunScript, Utils.loadString("S_RunScript"))
-    val runWorksheetButton = makeNavigationButton("/images/runw24.png", RunWorksheet, Utils.loadString("S_RunWorksheet"))
-    val traceButton = makeNavigationButton("/images/runt24.png", TraceScript, Utils.loadString("S_TraceScript"))
-    val compileButton = makeNavigationButton("/images/check.png", CompileScript, Utils.loadString("S_CheckScript"))
-    val stopButton = makeNavigationButton("/images/stop24.png", StopScript, Utils.loadString("S_StopScript"))
-    val hNextButton = makeNavigationButton("/images/history-next.png", HistoryNext, Utils.loadString("S_HistNext"))
-    val hPrevButton = makeNavigationButton("/images/history-prev.png", HistoryPrev, Utils.loadString("S_HistPrev"))
-    val clearSButton = makeNavigationButton("/images/clears.png", ClearEditor, Utils.loadString("S_ClearEditorT"))
-    val clearButton = makeNavigationButton("/images/clear24.png", ClearOutput, Utils.loadString("S_ClearOutput"))
-    val cexButton = makeNavigationButton("/images/upload.png", UploadCommand, Utils.loadString("S_Upload"))
+    val imageFolder = kojoCtx.screenDpiFontDelta match {
+      case n if n < 6 => 24
+      //      case n if n < 8 => 36
+      case _          => 48
+    }
+    toolbar.setPreferredSize(new Dimension(0, imageFolder + imageFolder / 6))
+
+    val runButton = makeNavigationButton(s"/images/$imageFolder/run.png", RunScript, Utils.loadString("S_RunScript"))
+    val runWorksheetButton = makeNavigationButton(s"/images/$imageFolder/runw.png", RunWorksheet, Utils.loadString("S_RunWorksheet"))
+    val traceButton = makeNavigationButton(s"/images/$imageFolder/runt.png", TraceScript, Utils.loadString("S_TraceScript"))
+    val compileButton = makeNavigationButton(s"/images/$imageFolder/check.png", CompileScript, Utils.loadString("S_CheckScript"))
+    val stopButton = makeNavigationButton(s"/images/$imageFolder/stop.png", StopScript, Utils.loadString("S_StopScript"))
+    val hNextButton = makeNavigationButton(s"/images/$imageFolder/history-next.png", HistoryNext, Utils.loadString("S_HistNext"))
+    val hPrevButton = makeNavigationButton(s"/images/$imageFolder/history-prev.png", HistoryPrev, Utils.loadString("S_HistPrev"))
+    val clearSButton = makeNavigationButton(s"/images/$imageFolder/clears.png", ClearEditor, Utils.loadString("S_ClearEditorT"))
+    val clearButton = makeNavigationButton(s"/images/$imageFolder/clear.png", ClearOutput, Utils.loadString("S_ClearOutput"))
+    val cexButton = makeNavigationButton(s"/images/$imageFolder/upload.png", UploadCommand, Utils.loadString("S_Upload"))
 
     toolbar.add(runButton)
     toolbar.add(runWorksheetButton)

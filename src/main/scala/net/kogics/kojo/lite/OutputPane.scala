@@ -140,8 +140,12 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     val incrFontSizeItem = new JMenuItem(increaseFontSizeAction)
     val inputMap = outputWindow.getInputMap
     val am = outputWindow.getActionMap
-    val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
+    val controlNumPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
+    val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_MASK)
+    val controlShiftPlus = KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
+    inputMap.put(controlNumPlus, "increase-font-size")
     inputMap.put(controlPlus, "increase-font-size")
+    inputMap.put(controlShiftPlus, "increase-font-size")
     am.put("increase-font-size", increaseFontSizeAction)
     incrFontSizeItem.setAccelerator(controlPlus)
     add(incrFontSizeItem)
@@ -152,8 +156,12 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
       }
     }
     val decrFontSizeItem = new JMenuItem(decreaseFontSizeAction)
-    val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
+    val controlNumMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
+    val controlMinus  = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_MASK)
+    val controlShiftMinus = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
+    inputMap.put(controlNumMinus, "decrease-font-size")
     inputMap.put(controlMinus, "decrease-font-size")
+    inputMap.put(controlShiftMinus, "decrease-font-size")
     am.put("decrease-font-size", decreaseFontSizeAction)
     decrFontSizeItem.setAccelerator(controlMinus)
     add(decrFontSizeItem)
