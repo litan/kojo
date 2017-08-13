@@ -47,7 +47,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   val kojoCtx = execSupport.kojoCtx
 
   val DefaultOutputColor = new Color(32, 32, 32)
-  val DefaultOutputFontSize = 13 + kojoCtx.screenDpiFontDelta
+  val DefaultOutputFontSize = kojoCtx.baseFontSize + kojoCtx.screenDpiFontDelta
   var outputColor = DefaultOutputColor
   var fontSize = DefaultOutputFontSize
   val baseStyle = StyleContext.getDefaultStyleContext.getStyle(StyleContext.DEFAULT_STYLE)
@@ -271,7 +271,11 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
         }
       </div>
 
-    val fontSize = if (kojoCtx.screenDpiFontDelta > 0) "font-size:%d%%;".format(104 + kojoCtx.screenDpiFontDelta * 2) else "font-size:large;"
+    val fontSize =
+      if (kojoCtx.screenDpiFontDelta > 0)
+        "font-size:large;"
+      else
+        "font-size:large;"
     val errMsg =
       <body style={ fontSize }>
         <div style="margin:5px;">

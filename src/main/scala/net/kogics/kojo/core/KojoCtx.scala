@@ -102,10 +102,11 @@ trait KojoCtx {
   def hideAppWaitCursor(): Unit
   def picLine(p1: Point2D.Double, p2: Point2D.Double): Picture
   def repaintCanvas(): Unit
-//  def appProperty(key: String): Option[String]
   def screenDpiFontDelta: Int
+  def baseFontSize: Int
+  def hiDpiFontIncrease: Int
   def menuReady(m: JMenu)
-  
+
   var fps: Int
   var screenDPI: Int
   def subKojo: Boolean
