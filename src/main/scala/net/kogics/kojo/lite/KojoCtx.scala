@@ -82,9 +82,9 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
       case n if n <= 1680 => 2
       case n if n <= 1920 => 4
       case n if n <= 2560 => 6
-      case n if n <= 2880 => 8
-      case n if n <= 3840 => 8
-      case _              => 10
+      case n if n <= 2880 => 6
+      case n if n <= 3840 => 6
+      case _              => 6
     }
     val delta = Utils.appProperty("font.increase") match {
       case Some(d) => d.toInt + delta1

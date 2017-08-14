@@ -520,8 +520,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     val imageFolder = kojoCtx.screenDpiFontDelta match {
       case n if n < 6 => 24
-      //      case n if n < 8 => 36
-      case _          => 48
+      case _          => 36
     }
     toolbar.setPreferredSize(new Dimension(0, imageFolder + imageFolder / 6))
 
