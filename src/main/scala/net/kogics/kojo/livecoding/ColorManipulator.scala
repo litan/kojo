@@ -22,13 +22,14 @@ import javax.swing.text.JTextComponent
 import javax.swing.text.Utilities
 
 import net.kogics.kojo.util.Utils
+import javax.swing.JDialog
 
 class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator {
   var target = ""
   var targetStart = 0
   var targetEnd = 0
   var targetColor: Color = null
-  var colorPopup: Popup = _
+  var colorPopup: JDialog = _
   var inSliderChange = false
   def isAbsent = colorPopup == null
   def isPresent = !isAbsent
@@ -132,7 +133,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     cc.getSelectionModel.addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) = Utils.safeProcess {
         val currTime = System.currentTimeMillis
-        if (currTime - lastChangeTime > 300) {
+        if (currTime - lastChangeTime > 200) {
           lastChangeTime = currTime
           val newColor = cc.getColor()
           if (oldColor != newColor) {
@@ -164,21 +165,16 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
     panel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ESCAPE"), "esc")
     panel.getActionMap.put("esc", closeAction)
 
-    val closeButton = new JButton(closeAction)
-    closeButton.setText(Utils.loadString("S_Close"))
-    val closePanel = new JPanel
-    closePanel.setLayout(new BorderLayout)
-    closePanel.add(closeButton, BorderLayout.SOUTH)
-    closePanel.setBorder(BorderFactory.createEtchedBorder())
-    panel.add(closePanel, BorderLayout.EAST)
-
-    colorPopup = factory.getPopup(ctx.codePane, panel, math.max(pt.x + 50, 10), math.max(pt.y - 300, 10))
-    colorPopup.show()
+    colorPopup = new JDialog(ctx.frame)
+    colorPopup.getContentPane.add(panel)
+    colorPopup.pack()
+    colorPopup.setLocationRelativeTo(ctx.codePane)
+    colorPopup.setVisible(true)
   }
 
   def close() {
     if (colorPopup != null) {
-      colorPopup.hide()
+      colorPopup.setVisible(false)
       colorPopup = null
       ctx.removeManipulator(this)
     }

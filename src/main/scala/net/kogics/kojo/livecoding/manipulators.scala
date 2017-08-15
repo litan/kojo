@@ -16,11 +16,13 @@ package net.kogics.kojo.livecoding
 
 import javax.swing.text.JTextComponent
 import java.awt.Color
+import javax.swing.JFrame
 
 trait ManipulationContext {
   def isRunningEnabled: Boolean
   def runIpmCode(code: String): Unit
   def codePane: JTextComponent
+  def frame: JFrame
   def addManipulator(im: InteractiveManipulator)
   def removeManipulator(im: InteractiveManipulator)
   def activateEditor()
