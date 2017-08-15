@@ -36,6 +36,8 @@ import net.kogics.kojo.xscala.RepeatCommands
 import net.kogics.kojo.xscala.ScalaCodeRunner
 
 import core.Voice
+import picture.DslImpl
+import picture.PicDrawingDsl
 import story.HandlerHolder
 import story.IntHandlerHolder
 import story.StringHandlerHolder
@@ -43,7 +45,6 @@ import story.VoidHandlerHolder
 import util.Read
 import util.Throttler
 import util.Utils
-import net.kogics.kojo.core.PicDrawingDsl
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {
@@ -502,12 +503,13 @@ Here's a partial list of the available commands:
   val ColPanel = widget.ColPanel
 
   object Shape {
-    def rect(h: Double, w: Double): PicDrawingDsl = picture.rect(h, w)
-    def vline(l: Double): PicDrawingDsl = picture.vline(l)
-    def hline(l: Double): PicDrawingDsl = picture.hline(l)
-    def circle(r: Double): PicDrawingDsl = picture.circle(r)
-    def arc(r: Double, angle: Double): PicDrawingDsl = picture.arc(r, angle)
-    def turtleMade(fn: => Unit): PicDrawingDsl = Picture(fn)
+    def rect(h: Double, w: Double): PicDrawingDsl = DslImpl(picture.rect(h, w))
+    def vline(l: Double): PicDrawingDsl = DslImpl(picture.vline(l))
+    def hline(l: Double): PicDrawingDsl = DslImpl(picture.hline(l))
+    def circle(r: Double): PicDrawingDsl = DslImpl(picture.circle(r))
+    def arc(r: Double, angle: Double): PicDrawingDsl = DslImpl(picture.arc(r, angle))
+    def turtleMade(fn: => Unit): PicDrawingDsl = DslImpl(Picture(fn))
   }
-
+  //  implicit def dsl2p(p: PicDrawingDsl): Picture = p.pic
+  def drawShape(pictures: PicDrawingDsl*) = pictures.foreach { _.draw() }
 }

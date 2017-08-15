@@ -14,26 +14,7 @@ import net.kogics.kojo.util.Vector2D
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.util.PBounds
 
-trait PicDrawingDsl { self: Picture =>
-  val drawnMsg = "Picture has already been drawn; drawing function '%s 'is not available."
-  def colored(color: Paint): Picture = {
-    checkDraw(drawnMsg format "colored")
-    setPenColor(color)
-    this
-  }
-  def withWidth(th: Double): Picture = {
-    checkDraw(drawnMsg format "withWidth")
-    setPenThickness(th)
-    this
-  }
-  def filled(color: Paint): Picture = {
-    checkDraw(drawnMsg format "filled")
-    setFillColor(color)
-    this
-  }
-}
-
-trait Picture extends InputAware with PicDrawingDsl {
+trait Picture extends InputAware {
   def canvas: SCanvas
   def myNode = tnode
   def decorateWith(painter: Painter): Unit
