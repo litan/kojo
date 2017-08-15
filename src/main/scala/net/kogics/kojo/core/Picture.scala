@@ -14,7 +14,26 @@ import net.kogics.kojo.util.Vector2D
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.util.PBounds
 
-trait Picture extends InputAware {
+trait PicDrawingDsl { self: Picture =>
+  val drawnMsg = "Picture has already been drawn; drawing function '%s 'is not available."
+  def colored(color: Paint): Picture = {
+    checkDraw(drawnMsg format "colored")
+    setPenColor(color)
+    this
+  }
+  def withWidth(th: Double): Picture = {
+    checkDraw(drawnMsg format "withWidth")
+    setPenThickness(th)
+    this
+  }
+  def filled(color: Paint): Picture = {
+    checkDraw(drawnMsg format "filled")
+    setFillColor(color)
+    this
+  }
+}
+
+trait Picture extends InputAware with PicDrawingDsl {
   def canvas: SCanvas
   def myNode = tnode
   def decorateWith(painter: Painter): Unit
@@ -22,16 +41,16 @@ trait Picture extends InputAware {
   def erase(): Unit
   def isDrawn(): Boolean
   def bounds: PBounds
-  def rotate(angle: Double): Picture
-  def rotateAboutPoint(angle: Double, x: Double, y: Double): Picture
-  def scale(factor: Double): Picture
-  def scale(x: Double, y: Double): Picture
-  def translate(x: Double, y: Double): Picture
-  def transv(v: Vector2D) = translate(v.x, v.y)
-  def offset(x: Double, y: Double)
-  def offsetv(v: Vector2D) = offset(v.x, v.y)
-  def flipX(): Picture
-  def flipY(): Picture
+  def rotate(angle: Double): Unit
+  def rotateAboutPoint(angle: Double, x: Double, y: Double): Unit
+  def scale(factor: Double): Unit
+  def scale(x: Double, y: Double): Unit
+  def translate(x: Double, y: Double): Unit
+  def transv(v: Vector2D) = translate(v.x, v.y): Unit
+  def offset(x: Double, y: Double): Unit
+  def offsetv(v: Vector2D) = offset(v.x, v.y): Unit
+  def flipX(): Unit
+  def flipY(): Unit
   def opacityMod(f: Double): Unit
   def hueMod(f: Double): Unit
   def satMod(f: Double): Unit
@@ -75,18 +94,6 @@ trait Picture extends InputAware {
   def setFillColor(color: Paint)
   def opacity: Double
   def setOpacity(o: Double)
-  def penColor(color: Paint): Picture = {
-    setPenColor(color)
-    this
-  }
-  def penWidth(th: Double): Picture = {
-    setPenThickness(th)
-    this
-  }
-  def fillColor(color: Paint): Picture = {
-    setFillColor(color)
-    this
-  }
   @deprecated("Use picture.react instead", "2.1")
   def act(fn: Picture => Unit) = react(fn)
   def react(fn: Picture => Unit): Unit
@@ -118,4 +125,5 @@ trait Picture extends InputAware {
   def showNext(): Unit = showNext(100)
   def showNext(gap: Long): Unit
   def update(newData: Any): Unit
+  def checkDraw(msg: String): Unit
 }

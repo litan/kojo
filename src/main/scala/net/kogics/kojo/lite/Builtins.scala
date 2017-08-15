@@ -43,6 +43,7 @@ import story.VoidHandlerHolder
 import util.Read
 import util.Throttler
 import util.Utils
+import net.kogics.kojo.core.PicDrawingDsl
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {
@@ -499,4 +500,14 @@ Here's a partial list of the available commands:
   val Slider = widget.Slider
   val RowPanel = widget.RowPanel
   val ColPanel = widget.ColPanel
+
+  object Shape {
+    def rect(h: Double, w: Double): PicDrawingDsl = picture.rect(h, w)
+    def vline(l: Double): PicDrawingDsl = picture.vline(l)
+    def hline(l: Double): PicDrawingDsl = picture.hline(l)
+    def circle(r: Double): PicDrawingDsl = picture.circle(r)
+    def arc(r: Double, angle: Double): PicDrawingDsl = picture.arc(r, angle)
+    def turtleMade(fn: => Unit): PicDrawingDsl = Picture(fn)
+  }
+
 }

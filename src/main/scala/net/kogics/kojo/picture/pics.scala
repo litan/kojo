@@ -97,30 +97,26 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     pgTransform = t2t(tnode.getTransformReference(true))
   }
 
-  def rotateAboutPoint(angle: Double, x: Double, y: Double) = {
+  def rotateAboutPoint(angle: Double, x: Double, y: Double) {
     translate(x, y)
     rotate(angle)
     translate(-x, -y)
   }
 
-  def rotate(angle: Double) = {
+  def rotate(angle: Double) {
     transformBy(AffineTransform.getRotateInstance(angle.toRadians))
-    this
   }
 
-  def scale(factor: Double) = {
+  def scale(factor: Double) {
     transformBy(AffineTransform.getScaleInstance(factor, factor))
-    this
   }
 
-  def scale(x: Double, y: Double) = {
+  def scale(x: Double, y: Double) {
     transformBy(AffineTransform.getScaleInstance(x, y))
-    this
   }
 
-  def translate(x: Double, y: Double) = {
+  def translate(x: Double, y: Double) {
     transformBy(AffineTransform.getTranslateInstance(x, y))
-    this
   }
 
   def offset(x: Double, y: Double) = Utils.runInSwingThread {
@@ -176,14 +172,12 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     tnode.setTransparency(o.toFloat)
   }
 
-  def flipX() = {
+  def flipX() {
     transformBy(AffineTransform.getScaleInstance(1, -1))
-    this
   }
 
-  def flipY() = {
+  def flipY() {
     transformBy(AffineTransform.getScaleInstance(-1, 1))
-    this
   }
 
   def axesOn() = Utils.runInSwingThread {
@@ -375,14 +369,15 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
 trait RedrawStopper extends Picture {
   @volatile var drawn = false
   def isDrawn = drawn
-  abstract override def draw() {
+  def checkDraw(msg: String) {
     if (drawn) {
-      throw new RuntimeException("You can't redraw a picture")
+      throw new RuntimeException(msg)
     }
-    else {
+  }
+  abstract override def draw() {
+      checkDraw("You can't redraw a picture")
       drawn = true
       super.draw()
-    }
   }
 }
 
