@@ -75,6 +75,18 @@ trait Picture extends InputAware {
   def setFillColor(color: Paint)
   def opacity: Double
   def setOpacity(o: Double)
+  def penColor(color: Paint): Picture = {
+    setPenColor(color)
+    this
+  }
+  def penWidth(th: Double): Picture = {
+    setPenThickness(th)
+    this
+  }
+  def fillColor(color: Paint): Picture = {
+    setFillColor(color)
+    this
+  }
   @deprecated("Use picture.react instead", "2.1")
   def act(fn: Picture => Unit) = react(fn)
   def react(fn: Picture => Unit): Unit

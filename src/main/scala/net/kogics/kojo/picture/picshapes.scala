@@ -60,15 +60,15 @@ trait PicShapeOps { self: Picture with CorePicOps =>
   }
 
   def britMod(f: Double) = Utils.runInSwingThread {
-    tnode.setPaint(Utils.britMod(fillColor(tnode.getPaint), f))
+    tnode.setPaint(Utils.britMod(extractFillColor(tnode.getPaint), f))
   }
 
   def hueMod(f: Double) = Utils.runInSwingThread {
-    tnode.setPaint(Utils.hueMod(fillColor(tnode.getPaint), f))
+    tnode.setPaint(Utils.hueMod(extractFillColor(tnode.getPaint), f))
   }
 
   def satMod(f: Double) = Utils.runInSwingThread {
-    tnode.setPaint(Utils.satMod(fillColor(tnode.getPaint), f))
+    tnode.setPaint(Utils.satMod(extractFillColor(tnode.getPaint), f))
   }
 
   def setFillColor(color: java.awt.Paint) = Utils.runInSwingThread {

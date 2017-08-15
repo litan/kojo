@@ -288,7 +288,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
 
   def myCanvas = canvas.pCanvas
 
-  protected def fillColor(fillPaint: Paint) = fillPaint match {
+  protected def extractFillColor(fillPaint: Paint) = fillPaint match {
     case null     => Color.white
     case c: Color => c
     case _        => throw new IllegalStateException("You can't extract rgb values of non Color paints")
@@ -458,25 +458,26 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
   def hueMod(f: Double) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
-      pl.setPaint(Utils.hueMod(fillColor(pl.getPaint), f))
+      pl.setPaint(Utils.hueMod(extractFillColor(pl.getPaint), f))
     }
   }
 
   def satMod(f: Double) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
-      pl.setPaint(Utils.satMod(fillColor(pl.getPaint), f))
+      pl.setPaint(Utils.satMod(extractFillColor(pl.getPaint), f))
     }
   }
 
   def britMod(f: Double) = Utils.runInSwingThread {
     val pp = t.penPaths
     pp.foreach { pl =>
-      pl.setPaint(Utils.britMod(fillColor(pl.getPaint), f))
+      pl.setPaint(Utils.britMod(extractFillColor(pl.getPaint), f))
     }
   }
 
   def setPenColor(color: Paint) = Utils.runInSwingThread {
+    t.setPenColor(color)
     val pp = t.penPaths
     pp.foreach { pl =>
       pl.setStrokePaint(color)
@@ -485,8 +486,8 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
   }
 
   def setPenThickness(th: Double) = Utils.runInSwingThread {
-    val pp = t.penPaths
     t.setPenThickness(th)
+    val pp = t.penPaths
     pp.foreach { pl =>
       pl.setStroke(t.lineStroke)
       pl.repaint()
@@ -494,6 +495,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
   }
 
   def setFillColor(color: Paint) = Utils.runInSwingThread {
+    t.setFillColor(color)
     val pp = t.penPaths
     pp.foreach { pl =>
       pl.setPaint(color)
