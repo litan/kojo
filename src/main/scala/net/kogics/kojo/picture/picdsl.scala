@@ -88,7 +88,7 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
   }
   def above(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "above")
-    DslImpl(VPics(other.pic, getPic(pic)))
+    DslImpl(VPics(getPic(other.pic), getPic(pic)))
   }
   def below(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "below")
