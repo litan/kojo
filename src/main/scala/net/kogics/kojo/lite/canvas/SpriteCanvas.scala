@@ -61,6 +61,7 @@ import edu.umd.cs.piccolox.pswing.PSwingCanvas
 import figure.Figure
 import turtle.Turtle
 import util.Utils
+import net.kogics.kojo.picture.PicCache
 
 class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas {
   val origLayer = getLayer()
@@ -646,6 +647,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       pictures.removeAllChildren()
       zoom(1, 0, 0)
     }
+    PicCache.clear()
     clearStage()
   }
 

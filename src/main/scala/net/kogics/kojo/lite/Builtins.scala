@@ -45,6 +45,7 @@ import story.VoidHandlerHolder
 import util.Read
 import util.Throttler
 import util.Utils
+import net.kogics.kojo.picture.PicCache
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {
@@ -502,13 +503,15 @@ Here's a partial list of the available commands:
   val RowPanel = widget.RowPanel
   val ColPanel = widget.ColPanel
 
+  type Shape = PicDrawingDsl
   object Shape {
-    def rect(h: Double, w: Double): PicDrawingDsl = DslImpl(picture.rect(h, w))
-    def vline(l: Double): PicDrawingDsl = DslImpl(picture.vline(l))
-    def hline(l: Double): PicDrawingDsl = DslImpl(picture.hline(l))
-    def circle(r: Double): PicDrawingDsl = DslImpl(picture.circle(r))
-    def arc(r: Double, angle: Double): PicDrawingDsl = DslImpl(picture.arc(r, angle))
-    def turtleMade(fn: => Unit): PicDrawingDsl = DslImpl(Picture(fn))
+    def rect(h: Double, w: Double): Shape = DslImpl(picture.rect(h, w))
+    def vline(l: Double): Shape = DslImpl(picture.vline(l))
+    def hline(l: Double): Shape = DslImpl(picture.hline(l))
+    def circle(r: Double): Shape = DslImpl(picture.circle(r))
+    def arc(r: Double, angle: Double): Shape = DslImpl(picture.arc(r, angle))
+    def turtleMade(fn: => Unit): Shape = DslImpl(Picture(fn))
+    def stack(shapes: Shape*): Shape = DslImpl(picStack(shapes map (s => PicCache.getPic(s.pic)) toList))
   }
   //  implicit def dsl2p(p: PicDrawingDsl): Picture = p.pic
   def drawShape(pictures: PicDrawingDsl*) = pictures.foreach { _.draw() }
