@@ -78,6 +78,12 @@ trait CoreBuiltins extends Rationals {
     val factor = math.pow(10, digits).toDouble
     math.round(n.doubleValue * factor).toLong / factor
   }
+  def lruCache[A, B](maxEntries: Int): collection.mutable.Map[A, B] = {
+    import collection.JavaConverters._
+    new java.util.LinkedHashMap[A, B]() {
+      override def removeEldestEntry(eldest: java.util.Map.Entry[A, B]) = size > maxEntries
+    }.asScala
+  }
 
   def random(upperBound: Int) = Random.nextInt(upperBound)
   def randomDouble(upperBound: Int) = Random.nextDouble * upperBound
