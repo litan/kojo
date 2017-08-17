@@ -11,7 +11,7 @@ trait PicDrawingDsl {
   }
   def outlined(color: Paint): PicDrawingDsl
   def withWidth(th: Double): PicDrawingDsl
-  def filledWith(color: Paint): PicDrawingDsl
+  def filled(color: Paint): PicDrawingDsl
   def translated(x: Double, y: Double): PicDrawingDsl
   def rotated(angle: Double): PicDrawingDsl
   def scaled(fx: Double, fy: Double = 0): PicDrawingDsl
@@ -61,8 +61,8 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
     pic.checkDraw(drawnMsg format "withWidth")
     DslImpl(StrokeWidth(th)(getPic(pic)))
   }
-  def filledWith(color: Paint): PicDrawingDsl = {
-    pic.checkDraw(drawnMsg format "filledWith")
+  def filled(color: Paint): PicDrawingDsl = {
+    pic.checkDraw(drawnMsg format "filled")
     DslImpl(Fill(color)(getPic(pic)))
   }
   def translated(x: Double, y: Double): PicDrawingDsl = {
