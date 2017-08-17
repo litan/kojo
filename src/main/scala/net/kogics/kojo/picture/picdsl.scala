@@ -9,9 +9,9 @@ trait PicDrawingDsl {
   def draw() {
     pic.draw()
   }
-  def colored(color: Paint): PicDrawingDsl
+  def outlined(color: Paint): PicDrawingDsl
   def withWidth(th: Double): PicDrawingDsl
-  def filled(color: Paint): PicDrawingDsl
+  def filledWith(color: Paint): PicDrawingDsl
   def translated(x: Double, y: Double): PicDrawingDsl
   def rotated(angle: Double): PicDrawingDsl
   def scaled(fx: Double, fy: Double = 0): PicDrawingDsl
@@ -53,16 +53,16 @@ object PicCache {
 case class DslImpl(pic: Picture) extends PicDrawingDsl {
   import PicCache.getPic
   val drawnMsg = "Picture has already been drawn; drawing function '%s 'is not available."
-  def colored(color: Paint): PicDrawingDsl = {
-    pic.checkDraw(drawnMsg format "colored")
+  def outlined(color: Paint): PicDrawingDsl = {
+    pic.checkDraw(drawnMsg format "outlined")
     DslImpl(Stroke(color)(getPic(pic)))
   }
   def withWidth(th: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "withWidth")
     DslImpl(StrokeWidth(th)(getPic(pic)))
   }
-  def filled(color: Paint): PicDrawingDsl = {
-    pic.checkDraw(drawnMsg format "filled")
+  def filledWith(color: Paint): PicDrawingDsl = {
+    pic.checkDraw(drawnMsg format "filledWith")
     DslImpl(Fill(color)(getPic(pic)))
   }
   def translated(x: Double, y: Double): PicDrawingDsl = {
@@ -88,15 +88,15 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
   }
   def above(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "above")
-    DslImpl(VPics(getPic(other.pic), getPic(pic)))
+    DslImpl(VPics2(getPic(other.pic), getPic(pic)))
   }
   def below(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "below")
-    DslImpl(VPics(getPic(pic), getPic(other.pic)))
+    DslImpl(VPics2(getPic(pic), getPic(other.pic)))
   }
   def beside(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "beside")
-    DslImpl(HPics(getPic(pic), getPic(other.pic)))
+    DslImpl(HPics2(getPic(pic), getPic(other.pic)))
   }
   def opaced(f: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "opaced")

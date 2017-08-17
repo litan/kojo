@@ -46,6 +46,8 @@ import util.Read
 import util.Throttler
 import util.Utils
 import net.kogics.kojo.picture.PicCache
+import net.kogics.kojo.picture.VPics2
+import net.kogics.kojo.picture.HPics2
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {
@@ -514,8 +516,8 @@ Here's a partial list of the available commands:
     def text(string: Any, fontSize: Int = 15): Shape = DslImpl(picture.textu(string, fontSize, black))
     def turtleMade(fn: => Unit): Shape = DslImpl(Picture(fn))
     def stack(shapes: Shape*): Shape = DslImpl(picStack(shapes map (s => PicCache.getPic(s.pic)) toList))
-    def row(shapes: Shape*): Shape = DslImpl(picRow(shapes map (s => PicCache.getPic(s.pic)) toList))
-    def col(shapes: Shape*): Shape = DslImpl(picCol(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def row(shapes: Shape*): Shape = DslImpl(HPics2(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def col(shapes: Shape*): Shape = DslImpl(VPics2(shapes map (s => PicCache.getPic(s.pic)) toList))
   }
   //  implicit def dsl2p(p: PicDrawingDsl): Picture = p.pic
   def drawShape(pictures: PicDrawingDsl*) = pictures.foreach { _.draw() }
