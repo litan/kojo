@@ -62,6 +62,7 @@ import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
 
 import scalariform.formatter.ScalaFormatter
+import javax.swing.text.Utilities
 
 class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
 
@@ -322,10 +323,32 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   val typeAtAction = new AbstractAction(Utils.loadString("S_ShowType")) {
     def actionPerformed(ev: ActionEvent) {
-      println(execSupport.typeAt(codePane.getCaretPosition()))
+      val offset = codePane.getCaretPosition
+      val typeAt = execSupport.typeAt(offset)
+      val wordStart = Utilities.getWordStart(codePane, offset)
+      val wordEnd = Utilities.getWordEnd(codePane, offset)
+      val word0 = codePane.getDocument.getText(wordStart, wordEnd - wordStart)
+      val delta = offset - wordStart
+      val words = word0.split(raw"\.")
+      val wordsWithCumIdx = words.foldLeft(Vector(("", 0))) { (l: Vector[(String, Int)], w: String) =>
+        l :+ (w, w.size + l.last._2 + 1)
+      }
+      wordsWithCumIdx.find { case (w, idx) => idx > delta } match {
+        case Some(wordIdx) =>
+          val word = wordIdx._1
+          word.find(c => !Character.isJavaIdentifierStart(c) && !Character.isJavaIdentifierPart(c)) match {
+            case Some(_) => println(s"[type around] $word : $typeAt")
+            case None    => println(s"[type] $word : $typeAt")
+          }
+        case None => println(s"[type at cursor] $typeAt")
+      }
     }
   }
   val typeAtItem = new JMenuItem(typeAtAction)
+  val controlT = KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK)
+  inputMap.put(controlT, "type-at")
+  am.put("type-at", typeAtAction)
+  typeAtItem.setAccelerator(controlT)
   popup.add(typeAtItem, idx)
   idx += 1
 
@@ -340,6 +363,22 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
   }
   val markOccurancesItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(markOccurancesAction)
+
+  val markOccurancesKeyboardAction = new AbstractAction() {
+    def actionPerformed(ev: ActionEvent) {
+      if (markOccurancesItem.isSelected()) {
+        markOccurancesItem.setSelected(false)
+      }
+      else {
+        markOccurancesItem.setSelected(true)
+      }
+      markOccurancesAction.actionPerformed(ev)
+    }
+  }
+  val controlShiftM = KeyStroke.getKeyStroke(KeyEvent.VK_M, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
+  inputMap.put(controlShiftM, "mark-occurances")
+  am.put("mark-occurances", markOccurancesKeyboardAction)
+  markOccurancesItem.setAccelerator(controlShiftM)
   popup.add(markOccurancesItem, idx)
   idx += 1
 
