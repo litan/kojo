@@ -375,9 +375,9 @@ trait RedrawStopper extends Picture {
     }
   }
   abstract override def draw() {
-      checkDraw("You can't redraw a picture")
-      drawn = true
-      super.draw()
+    checkDraw("You can't redraw a picture")
+    drawn = true
+    super.draw()
   }
 }
 
@@ -687,9 +687,10 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
   def realDraw() {
     var ox = 0.0
     pics.foreach { pic =>
-      pic.translate(ox, 0)
       pic.draw()
       val nbounds = pic.bounds
+      pic.translate(ox, 0)
+      pic.translate(-nbounds.getMinX, 0)
       ox = nbounds.getWidth + padding
     }
   }
@@ -743,9 +744,10 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
   def realDraw() {
     var oy = 0.0
     pics.foreach { pic =>
-      pic.translate(0, oy)
       pic.draw()
       val nbounds = pic.bounds
+      pic.translate(0, oy)
+      pic.translate(0, -nbounds.getMinY)
       oy = nbounds.getHeight + padding
     }
   }

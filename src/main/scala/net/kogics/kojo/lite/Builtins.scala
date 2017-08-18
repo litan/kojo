@@ -511,13 +511,13 @@ Here's a partial list of the available commands:
     def square(l: Double): Shape = rect(l, l)
     def vline(l: Double): Shape = DslImpl(picture.vline(l))
     def hline(l: Double): Shape = DslImpl(picture.hline(l))
-    def circle(r: Double): Shape = DslImpl(picture.circle(r))
+    def circle(r: Double): Shape = DslImpl(picture.circle(r)) translated (r, r)
     def arc(r: Double, angle: Double): Shape = DslImpl(picture.arc(r, angle))
     def text(string: Any, fontSize: Int = 15): Shape = DslImpl(picture.textu(string, fontSize, black))
     def turtleMade(fn: => Unit): Shape = DslImpl(Picture(fn))
     def stack(shapes: Shape*): Shape = DslImpl(picStack(shapes map (s => PicCache.getPic(s.pic)) toList))
-    def row(shapes: Shape*): Shape = DslImpl(HPics2(shapes map (s => PicCache.getPic(s.pic)) toList))
-    def col(shapes: Shape*): Shape = DslImpl(VPics2(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def row(shapes: Shape*): Shape = DslImpl(picRow(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def col(shapes: Shape*): Shape = DslImpl(picCol(shapes map (s => PicCache.getPic(s.pic)) toList))
   }
   //  implicit def dsl2p(p: PicDrawingDsl): Picture = p.pic
   def drawShape(pictures: PicDrawingDsl*) = pictures.foreach { _.draw() }
