@@ -677,35 +677,6 @@ class HPics(pics: List[Picture]) extends BasePicList(pics) {
   override def toString() = s"Picture Row (Id: ${System.identityHashCode(this)})"
 }
 
-object HPics2 {
-  def apply(pics: Picture*): HPics2 = new HPics2(pics.toList)
-  def apply(pics: List[Picture]): HPics2 = new HPics2(pics)
-  def apply(pics: Vector[Picture]): HPics2 = new HPics2(pics.toList)
-}
-
-class HPics2(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
-    var ox = 0.0
-    pics.foreach { pic =>
-      pic.draw()
-      val nbounds = pic.bounds
-      pic.translate(ox, 0)
-      pic.translate(-nbounds.getMinX, 0)
-      ox = nbounds.getWidth + padding
-    }
-  }
-
-  def copy = HPics2(picsCopy).withGap(padding)
-
-  override def dumpInfo() {
-    println(">>> HPics2 Start - " + System.identityHashCode(this))
-    super.dumpInfo()
-    println("<<< HPics2 End\n\n")
-  }
-
-  override def toString() = s"Picture Row2 (Id: ${System.identityHashCode(this)})"
-}
-
 object VPics {
   def apply(pics: Picture*): VPics = new VPics(pics.toList)
   def apply(pics: List[Picture]): VPics = new VPics(pics)
@@ -732,35 +703,6 @@ class VPics(pics: List[Picture]) extends BasePicList(pics) {
   }
 
   override def toString() = s"Picture Column (Id: ${System.identityHashCode(this)})"
-}
-
-object VPics2 {
-  def apply(pics: Picture*): VPics2 = new VPics2(pics.toList)
-  def apply(pics: List[Picture]): VPics2 = new VPics2(pics)
-  def apply(pics: Vector[Picture]): VPics2 = new VPics2(pics.toList)
-}
-
-class VPics2(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
-    var oy = 0.0
-    pics.foreach { pic =>
-      pic.draw()
-      val nbounds = pic.bounds
-      pic.translate(0, oy)
-      pic.translate(0, -nbounds.getMinY)
-      oy = nbounds.getHeight + padding
-    }
-  }
-
-  def copy = VPics2(picsCopy).withGap(padding)
-
-  override def dumpInfo() {
-    println(">>> VPics2 Start - " + System.identityHashCode(this))
-    super.dumpInfo()
-    println("<<< VPics2 End\n\n")
-  }
-
-  override def toString() = s"Picture Column2 (Id: ${System.identityHashCode(this)})"
 }
 
 object GPics {
