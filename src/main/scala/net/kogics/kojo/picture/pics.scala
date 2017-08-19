@@ -688,6 +688,7 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
     var ox = 0.0
     pics.foreach { pic =>
       pic.translate(ox, 0)
+      pic.invisible()
       pic.draw()
       val nbounds = pic.bounds
       val ox2 = ox
@@ -696,6 +697,7 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
         pic.tnode.invalidateFullBounds()
         pic.tnode.invalidatePaint()
         pic.tnode.repaint()
+        pic.visible()
       }
       ox = nbounds.getWidth + padding
     }
@@ -751,6 +753,7 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
     var oy = 0.0
     pics.foreach { pic =>
       pic.translate(0, oy)
+      pic.invisible()
       pic.draw()
       val nbounds = pic.bounds
       val oy2 = oy
@@ -759,6 +762,7 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
         pic.tnode.invalidateFullBounds()
         pic.tnode.invalidatePaint()
         pic.tnode.repaint()
+        pic.visible()
       }
       oy = nbounds.getHeight + padding
     }
