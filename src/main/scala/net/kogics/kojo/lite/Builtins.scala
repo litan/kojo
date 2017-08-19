@@ -46,8 +46,6 @@ import util.Read
 import util.Throttler
 import util.Utils
 import net.kogics.kojo.picture.PicCache
-import net.kogics.kojo.picture.VPics2
-import net.kogics.kojo.picture.HPics2
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {

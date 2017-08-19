@@ -14,7 +14,12 @@ trait PicDrawingDsl {
   def filled(color: Paint): PicDrawingDsl
   def translated(x: Double, y: Double): PicDrawingDsl
   def rotated(angle: Double): PicDrawingDsl
-  def scaled(fx: Double, fy: Double = 0): PicDrawingDsl
+//  def rotatedXY(angle: Double, x: Double, y: Double): PicDrawingDsl = {
+//    translated(-x, -y) rotated (angle) translated (x, y)
+//  }
+  def rotatedXY(angle: Double, x: Double, y: Double): PicDrawingDsl
+  def scaled(f: Double): PicDrawingDsl = scaledXY(f, f)
+  def scaledXY(fx: Double, fy: Double = 0): PicDrawingDsl
   def on(other: PicDrawingDsl): PicDrawingDsl
   def under(other: PicDrawingDsl): PicDrawingDsl
   def above(other: PicDrawingDsl): PicDrawingDsl
@@ -73,7 +78,11 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
     pic.checkDraw(drawnMsg format "rotated")
     DslImpl(Rot(angle)(getPic(pic)))
   }
-  def scaled(fx: Double, fy: Double = 0): PicDrawingDsl = {
+  def rotatedXY(angle: Double, x: Double, y: Double): PicDrawingDsl = {
+    pic.checkDraw(drawnMsg format "rotatedXY")
+    DslImpl(Rotp(angle, x, y)(getPic(pic)))
+  }
+  def scaledXY(fx: Double, fy: Double = 0): PicDrawingDsl = {
     val fy1 = if (fy == 0) fx else fy
     pic.checkDraw(drawnMsg format "scaled")
     DslImpl(ScaleXY(fx, fy1)(getPic(pic)))
