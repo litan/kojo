@@ -505,6 +505,7 @@ Here's a partial list of the available commands:
 
   type Shape = PicDrawingDsl
   object Shape {
+    def clear() = TSCanvas.cleari()
     def rect(h: Double, w: Double): Shape = DslImpl(picture.rect(h, w))
     def square(l: Double): Shape = rect(l, l)
     def vline(l: Double): Shape = DslImpl(picture.vline(l))
