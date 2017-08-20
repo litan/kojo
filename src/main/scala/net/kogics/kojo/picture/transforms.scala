@@ -72,7 +72,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def checkDraw(msg: String) = tpic.checkDraw(msg)
   def isVisible() = tpic.isVisible()
   def myCanvas = tpic.myCanvas
-  override def toImage = tpic.toImage 
+  override def toImage = tpic.toImage
   def showNext(gap: Long) = tpic.showNext(gap)
   def update(newData: Any) = tpic.update(newData)
 }
@@ -131,8 +131,17 @@ case class Offset(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
     pic.offset(x, y)
     pic.draw()
   }
-  def copy = Trans(x, y)(pic.copy)
+  def copy = Offset(x, y)(pic.copy)
   override def toString() = s"Offset($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
+}
+
+case class Position(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
+  def draw() {
+    pic.setPosition(x, y)
+    pic.draw()
+  }
+  def copy = Position(x, y)(pic.copy)
+  override def toString() = s"Position($x, $y) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
 case class FlipY(pic: Picture) extends Transform(pic) {

@@ -14,9 +14,9 @@ trait PicDrawingDsl {
   def filled(color: Paint): PicDrawingDsl
   def translated(x: Double, y: Double): PicDrawingDsl
   def rotated(angle: Double): PicDrawingDsl
-//  def rotatedXY(angle: Double, x: Double, y: Double): PicDrawingDsl = {
-//    translated(-x, -y) rotated (angle) translated (x, y)
-//  }
+  //  def rotatedXY(angle: Double, x: Double, y: Double): PicDrawingDsl = {
+  //    translated(-x, -y) rotated (angle) translated (x, y)
+  //  }
   def rotatedXY(angle: Double, x: Double, y: Double): PicDrawingDsl
   def scaled(f: Double): PicDrawingDsl = scaledXY(f, f)
   def scaledXY(fx: Double, fy: Double = 0): PicDrawingDsl
@@ -34,6 +34,8 @@ trait PicDrawingDsl {
   def brightened(f: Double): PicDrawingDsl
   def hueued(f: Double): PicDrawingDsl
   def withAxes(): PicDrawingDsl
+  def at(x: Double, y: Double): PicDrawingDsl
+  def atRt(r: Double, theta: Double) = at(r * math.cos(theta.toRadians), r * math.sin(theta.toRadians))
 }
 
 object PicCache {
@@ -97,7 +99,7 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
     DslImpl(GPics2(getPic(other.pic), getPic(pic)))
   }
   def on2(other: PicDrawingDsl): PicDrawingDsl = {
-    pic.checkDraw(drawnMsg format "on")
+    pic.checkDraw(drawnMsg format "on2")
     DslImpl(GPics(getPic(other.pic), getPic(pic)))
   }
   def under(other: PicDrawingDsl): PicDrawingDsl = {
@@ -105,7 +107,7 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
     DslImpl(GPics2(getPic(pic), getPic(other.pic)))
   }
   def under2(other: PicDrawingDsl): PicDrawingDsl = {
-    pic.checkDraw(drawnMsg format "under")
+    pic.checkDraw(drawnMsg format "under2")
     DslImpl(GPics(getPic(pic), getPic(other.pic)))
   }
   def above(other: PicDrawingDsl): PicDrawingDsl = {
@@ -113,7 +115,7 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
     DslImpl(VPics2(getPic(other.pic), getPic(pic)))
   }
   def above2(other: PicDrawingDsl): PicDrawingDsl = {
-    pic.checkDraw(drawnMsg format "above")
+    pic.checkDraw(drawnMsg format "above2")
     DslImpl(VPics(getPic(other.pic), getPic(pic)))
   }
   def below(other: PicDrawingDsl): PicDrawingDsl = {
@@ -121,7 +123,7 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
     DslImpl(VPics2(getPic(pic), getPic(other.pic)))
   }
   def below2(other: PicDrawingDsl): PicDrawingDsl = {
-    pic.checkDraw(drawnMsg format "below")
+    pic.checkDraw(drawnMsg format "below2")
     DslImpl(VPics(getPic(pic), getPic(other.pic)))
   }
   def beside(other: PicDrawingDsl): PicDrawingDsl = {
@@ -129,7 +131,7 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
     DslImpl(HPics2(getPic(pic), getPic(other.pic)))
   }
   def beside2(other: PicDrawingDsl): PicDrawingDsl = {
-    pic.checkDraw(drawnMsg format "beside")
+    pic.checkDraw(drawnMsg format "beside2")
     DslImpl(HPics(getPic(pic), getPic(other.pic)))
   }
   def opaced(f: Double): PicDrawingDsl = {
@@ -148,5 +150,8 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
     pic.checkDraw(drawnMsg format "withAxes")
     DslImpl(AxesOn(getPic(pic)))
   }
-
+  def at(x: Double, y: Double): PicDrawingDsl = {
+    pic.checkDraw(drawnMsg format "at")
+    DslImpl(Position(x, y)(getPic(pic)))
+  }
 }

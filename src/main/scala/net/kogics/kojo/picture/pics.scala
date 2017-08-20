@@ -701,10 +701,8 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
             prevNbounds.getMinY - nbounds.getMinY + (prevNbounds.height - nbounds.height) / 2
           case None => 0
         }
-        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(ox2 - nbounds.getMinX, yDelta))
-        pic.tnode.invalidateFullBounds()
-        pic.tnode.invalidatePaint()
-        pic.tnode.repaint()
+        pic.offset(ox2 - nbounds.getMinX, yDelta)
+        //        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(ox2 - nbounds.getMinX, yDelta))
         pic.visible()
       }
       ox = nbounds.getWidth + padding
@@ -774,10 +772,8 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
             prevNbounds.getMinX - nbounds.getMinX + (prevNbounds.width - nbounds.width) / 2
           case None => 0
         }
-        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(xDelta, oy2 - nbounds.getMinY))
-        pic.tnode.invalidateFullBounds()
-        pic.tnode.invalidatePaint()
-        pic.tnode.repaint()
+        pic.offset(xDelta, oy2 - nbounds.getMinY)
+        //        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(xDelta, oy2 - nbounds.getMinY))
         pic.visible()
       }
       oy = nbounds.getHeight + padding
@@ -841,10 +837,8 @@ class GPics2(pics: List[Picture]) extends BasePicList(pics) {
               prevNbounds.getMinY - nbounds.getMinY + (prevNbounds.height - nbounds.height) / 2)
           case None => (0.0, 0.0)
         }
-        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(xDelta, yDelta))
-        pic.tnode.invalidateFullBounds()
-        pic.tnode.invalidatePaint()
-        pic.tnode.repaint()
+        pic.offset(xDelta, yDelta)
+        //        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(xDelta, yDelta))
         pic.visible()
       }
       prevNbounds = Some(nbounds)
