@@ -517,7 +517,28 @@ Here's a partial list of the available commands:
     def stack(shapes: Shape*): Shape = DslImpl(picStack(shapes map (s => PicCache.getPic(s.pic)) toList))
     def row(shapes: Shape*): Shape = DslImpl(picRow(shapes map (s => PicCache.getPic(s.pic)) toList))
     def col(shapes: Shape*): Shape = DslImpl(picCol(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def draw2(shapes: Shape*) = shapes.foreach { _.draw() }
+    def draw(shapes: Shape*): Unit = {
+      def center(shape: Shape) = {
+        val cb = canvasBounds; val sb = shape.pic.bounds
+        val xDelta = cb.getMinX - sb.getMinX + (cb.width - sb.width) / 2
+        val yDelta = cb.getMinY - sb.getMinY + (cb.height - sb.height) / 2
+        shape.pic.translate(xDelta, yDelta)
+      }
+      if (shapes.size > 1) {
+        val shapeStack = stack(shapes: _*)
+        shapeStack.pic.invisible()
+        shapeStack.draw()
+        center(shapeStack)
+        shapeStack.pic.visible()
+      }
+      else {
+        val shape = shapes(0)
+        shape.pic.invisible()
+        shape.draw()
+        center(shape)
+        shape.pic.visible()
+      }
+    }
   }
-  //  implicit def dsl2p(p: PicDrawingDsl): Picture = p.pic
-  def drawShape(pictures: PicDrawingDsl*) = pictures.foreach { _.draw() }
 }
