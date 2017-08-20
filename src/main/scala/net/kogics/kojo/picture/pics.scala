@@ -781,7 +781,7 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
         pic.visible()
       }
       oy = nbounds.getHeight + padding
-      prevNbounds = Some(nbounds)      
+      prevNbounds = Some(nbounds)
     }
   }
 
@@ -818,6 +818,48 @@ class GPics(pics: List[Picture]) extends BasePicList(pics) {
   }
 
   override def toString() = s"Picture Stack (Id: ${System.identityHashCode(this)})"
+}
+
+object GPics2 {
+  def apply(pics: Picture*): GPics2 = new GPics2(pics.toList)
+  def apply(pics: List[Picture]): GPics2 = new GPics2(pics)
+  def apply(pics: Vector[Picture]): GPics2 = new GPics2(pics.toList)
+}
+
+class GPics2(pics: List[Picture]) extends BasePicList(pics) {
+  def realDraw() {
+    var prevNbounds: Option[PBounds] = None
+    pics.foreach { pic =>
+      pic.invisible()
+      pic.draw()
+      val nbounds = pic.bounds
+      val prevNboundsCopy = prevNbounds
+      Utils.runInSwingThread {
+        val (xDelta, yDelta) = prevNboundsCopy match {
+          case Some(prevNbounds) =>
+            (prevNbounds.getMinX - nbounds.getMinX + (prevNbounds.width - nbounds.width) / 2,
+              prevNbounds.getMinY - nbounds.getMinY + (prevNbounds.height - nbounds.height) / 2)
+          case None => (0.0, 0.0)
+        }
+        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(xDelta, yDelta))
+        pic.tnode.invalidateFullBounds()
+        pic.tnode.invalidatePaint()
+        pic.tnode.repaint()
+        pic.visible()
+      }
+      prevNbounds = Some(nbounds)
+    }
+  }
+
+  def copy = GPics2(picsCopy).withGap(padding)
+
+  override def dumpInfo() {
+    println(">>> GPics2 Start - " + System.identityHashCode(this))
+    super.dumpInfo()
+    println("<<< GPics2 End\n\n")
+  }
+
+  override def toString() = s"Picture Stack2 (Id: ${System.identityHashCode(this)})"
 }
 
 object BatchPics {

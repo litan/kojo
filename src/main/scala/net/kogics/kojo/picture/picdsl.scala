@@ -21,7 +21,9 @@ trait PicDrawingDsl {
   def scaled(f: Double): PicDrawingDsl = scaledXY(f, f)
   def scaledXY(fx: Double, fy: Double = 0): PicDrawingDsl
   def on(other: PicDrawingDsl): PicDrawingDsl
+  def on2(other: PicDrawingDsl): PicDrawingDsl
   def under(other: PicDrawingDsl): PicDrawingDsl
+  def under2(other: PicDrawingDsl): PicDrawingDsl
   def above(other: PicDrawingDsl): PicDrawingDsl
   def above2(other: PicDrawingDsl): PicDrawingDsl
   def below(other: PicDrawingDsl): PicDrawingDsl
@@ -92,9 +94,17 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
   }
   def on(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "on")
+    DslImpl(GPics2(getPic(other.pic), getPic(pic)))
+  }
+  def on2(other: PicDrawingDsl): PicDrawingDsl = {
+    pic.checkDraw(drawnMsg format "on")
     DslImpl(GPics(getPic(other.pic), getPic(pic)))
   }
   def under(other: PicDrawingDsl): PicDrawingDsl = {
+    pic.checkDraw(drawnMsg format "under")
+    DslImpl(GPics2(getPic(pic), getPic(other.pic)))
+  }
+  def under2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "under")
     DslImpl(GPics(getPic(pic), getPic(other.pic)))
   }
