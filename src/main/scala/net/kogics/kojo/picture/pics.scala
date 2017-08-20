@@ -42,6 +42,7 @@ import edu.umd.cs.piccolo.nodes.PPath
 import kgeom.PolyLine
 import util.Math
 import util.Utils
+import edu.umd.cs.piccolo.util.PBounds
 
 trait GeomPolygon { self: Picture =>
   lazy val geomPoly = {
@@ -686,20 +687,28 @@ object HPics2 {
 class HPics2(pics: List[Picture]) extends BasePicList(pics) {
   def realDraw() {
     var ox = 0.0
+    var prevNbounds: Option[PBounds] = None
     pics.foreach { pic =>
       pic.translate(ox, 0)
       pic.invisible()
       pic.draw()
       val nbounds = pic.bounds
+      val prevNboundsCopy = prevNbounds
       val ox2 = ox
       Utils.runInSwingThread {
-        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(ox2 - nbounds.getMinX, 0))
+        val yDelta = prevNboundsCopy match {
+          case Some(prevNbounds) =>
+            prevNbounds.getMinY - nbounds.getMinY + (prevNbounds.height - nbounds.height) / 2
+          case None => 0
+        }
+        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(ox2 - nbounds.getMinX, yDelta))
         pic.tnode.invalidateFullBounds()
         pic.tnode.invalidatePaint()
         pic.tnode.repaint()
         pic.visible()
       }
       ox = nbounds.getWidth + padding
+      prevNbounds = Some(nbounds)
     }
   }
 
@@ -751,20 +760,28 @@ object VPics2 {
 class VPics2(pics: List[Picture]) extends BasePicList(pics) {
   def realDraw() {
     var oy = 0.0
+    var prevNbounds: Option[PBounds] = None
     pics.foreach { pic =>
       pic.translate(0, oy)
       pic.invisible()
       pic.draw()
       val nbounds = pic.bounds
+      val prevNboundsCopy = prevNbounds
       val oy2 = oy
       Utils.runInSwingThread {
-        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(0, oy2 - nbounds.getMinY))
+        val xDelta = prevNboundsCopy match {
+          case Some(prevNbounds) =>
+            prevNbounds.getMinX - nbounds.getMinX + (prevNbounds.width - nbounds.width) / 2
+          case None => 0
+        }
+        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(xDelta, oy2 - nbounds.getMinY))
         pic.tnode.invalidateFullBounds()
         pic.tnode.invalidatePaint()
         pic.tnode.repaint()
         pic.visible()
       }
       oy = nbounds.getHeight + padding
+      prevNbounds = Some(nbounds)      
     }
   }
 

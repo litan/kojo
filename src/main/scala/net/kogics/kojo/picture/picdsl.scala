@@ -100,27 +100,27 @@ case class DslImpl(pic: Picture) extends PicDrawingDsl {
   }
   def above(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "above")
-    DslImpl(VPics(getPic(other.pic), getPic(pic)))
+    DslImpl(VPics2(getPic(other.pic), getPic(pic)))
   }
   def above2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "above")
-    DslImpl(VPics2(getPic(other.pic), getPic(pic)))
+    DslImpl(VPics(getPic(other.pic), getPic(pic)))
   }
   def below(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "below")
-    DslImpl(VPics(getPic(pic), getPic(other.pic)))
+    DslImpl(VPics2(getPic(pic), getPic(other.pic)))
   }
   def below2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "below")
-    DslImpl(VPics2(getPic(pic), getPic(other.pic)))
+    DslImpl(VPics(getPic(pic), getPic(other.pic)))
   }
   def beside(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "beside")
-    DslImpl(HPics(getPic(pic), getPic(other.pic)))
+    DslImpl(HPics2(getPic(pic), getPic(other.pic)))
   }
   def beside2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "beside")
-    DslImpl(HPics2(getPic(pic), getPic(other.pic)))
+    DslImpl(HPics(getPic(pic), getPic(other.pic)))
   }
   def opaced(f: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "opaced")
