@@ -514,6 +514,7 @@ Here's a partial list of the available commands:
     //    def arc(r: Double, angle: Double): Shape = DslImpl(picture.arc(r, angle))
     def text(string: Any, fontSize: Int = 15): Shape =
       DslImpl(picture.textu(string, fontSize, black)) translated (0, textExtent(string.toString, fontSize).height)
+    def image(file: String) =  DslImpl(picture.image(file, None))
     def turtleMade(fn: => Unit): Shape = DslImpl(Picture(fn))
     def stack(shapes: Shape*): Shape = DslImpl(picStack(shapes map (s => PicCache.getPic(s.pic)) toList))
     def row(shapes: Shape*): Shape = DslImpl(picRow(shapes map (s => PicCache.getPic(s.pic)) toList))
