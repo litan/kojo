@@ -506,19 +506,22 @@ Here's a partial list of the available commands:
   type Shape = PicDrawingDsl
   object Shape {
     def clear() = TSCanvas.cleari()
-    def rect(h: Double, w: Double): Shape = DslImpl(picture.rect(h, w))
-    def square(l: Double): Shape = rect(l, l)
+    def rectangle(h: Double, w: Double): Shape = DslImpl(picture.rect(h, w))
+    def square(l: Double): Shape = rectangle(l, l)
+    def circle(r: Double): Shape = DslImpl(picture.circle(r)) translated (r, r)
+    def gap(h: Double, w: Double) = rectangle(h, w) outlined (noColor)
     def vline(l: Double): Shape = DslImpl(picture.vline(l))
     def hline(l: Double): Shape = DslImpl(picture.hline(l))
-    def circle(r: Double): Shape = DslImpl(picture.circle(r)) translated (r, r)
-    //    def arc(r: Double, angle: Double): Shape = DslImpl(picture.arc(r, angle))
     def text(string: Any, fontSize: Int = 15): Shape =
       DslImpl(picture.textu(string, fontSize, black)) translated (0, textExtent(string.toString, fontSize).height)
-    def image(file: String) =  DslImpl(picture.image(file, None))
+    def image(file: String) = DslImpl(picture.image(file, None))
     def turtleMade(fn: => Unit): Shape = DslImpl(Picture(fn))
-    def stack(shapes: Shape*): Shape = DslImpl(picStack(shapes map (s => PicCache.getPic(s.pic)) toList))
-    def row(shapes: Shape*): Shape = DslImpl(picRow(shapes map (s => PicCache.getPic(s.pic)) toList))
-    def col(shapes: Shape*): Shape = DslImpl(picCol(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def stack(shapes: Shape*): Shape = DslImpl(picture.GPics2(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def row(shapes: Shape*): Shape = DslImpl(picture.HPics2(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def col(shapes: Shape*): Shape = DslImpl(picture.VPics2(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def stack2(shapes: Shape*): Shape = DslImpl(picture.GPics(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def row2(shapes: Shape*): Shape = DslImpl(picture.HPics(shapes map (s => PicCache.getPic(s.pic)) toList))
+    def col2(shapes: Shape*): Shape = DslImpl(picture.VPics(shapes map (s => PicCache.getPic(s.pic)) toList))
     def draw2(shapes: Shape*) = shapes.foreach { _.draw() }
     def draw(shapes: Shape*): Unit = {
       def center(shape: Shape) = {

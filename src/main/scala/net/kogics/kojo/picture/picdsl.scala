@@ -30,6 +30,14 @@ trait PicDrawingDsl {
   def below2(other: PicDrawingDsl): PicDrawingDsl
   def beside(other: PicDrawingDsl): PicDrawingDsl
   def beside2(other: PicDrawingDsl): PicDrawingDsl
+  def inRow(n: Int): PicDrawingDsl = {
+    assert(n > 0, "Can't repeat less than 1 times")
+    if (n == 1) this else this beside this.inRow(n - 1)
+  }
+  def inCol(n: Int): PicDrawingDsl = {
+    assert(n > 0, "Can't repeat less than 1 times")
+    if (n == 1) this else this below this.inRow(n - 1)
+  }
   def opaced(f: Double): PicDrawingDsl
   def brightened(f: Double): PicDrawingDsl
   def hueued(f: Double): PicDrawingDsl
