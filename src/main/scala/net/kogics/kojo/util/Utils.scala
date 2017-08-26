@@ -774,6 +774,7 @@ object Utils {
     }
   }
   else {
+    locateLogDir()
     propsFile.createNewFile()
     val defProps = """
       |# Uncomment/tweak options as desired:
