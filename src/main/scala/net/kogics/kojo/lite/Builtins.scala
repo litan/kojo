@@ -506,10 +506,10 @@ Here's a partial list of the available commands:
   type Shape = PicDrawingDsl
   object Shape {
     def clear() = TSCanvas.cleari()
-    def rectangle(h: Double, w: Double): Shape = DslImpl(picture.rect(h, w))
+    def rectangle(w: Double, h: Double): Shape = DslImpl(picture.rect(h, w))
     def square(l: Double): Shape = rectangle(l, l)
     def circle(r: Double): Shape = DslImpl(picture.circle(r)) translated (r, r)
-    def gap(h: Double, w: Double) = rectangle(h, w) outlined (noColor)
+    def gap(w: Double, h: Double) = rectangle(w, h) outlined (noColor)
     def vline(l: Double): Shape = DslImpl(picture.vline(l))
     def hline(l: Double): Shape = DslImpl(picture.hline(l))
     def text(string: Any, fontSize: Int = 15): Shape =
