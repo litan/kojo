@@ -528,7 +528,7 @@ Here's a partial list of the available commands:
         val cb = canvasBounds; val sb = shape.pic.bounds
         val xDelta = cb.getMinX - sb.getMinX + (cb.width - sb.width) / 2
         val yDelta = cb.getMinY - sb.getMinY + (cb.height - sb.height) / 2
-        shape.pic.translate(xDelta, yDelta)
+        shape.pic.offset(xDelta, yDelta)
       }
       if (shapes.size > 1) {
         val shapeStack = stack(shapes: _*)
