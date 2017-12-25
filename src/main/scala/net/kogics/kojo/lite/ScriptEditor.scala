@@ -652,17 +652,19 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     val mouseListener = new MouseAdapter {
       override def mouseClicked(e: MouseEvent) {
-        try {
-          val pt = new Point(e.getX(), e.getY());
-          val offset = codePane.viewToModel(pt);
-          execSupport.imanip.foreach { _ close () }
-          if (ipmProvider.isHyperlinkPoint(codePane, offset)) {
-            // ipmProvider.getHyperlinkSpan(codePane, offset)
-            ipmProvider.performClickAction(codePane, offset)
+        if (e.isControlDown) {
+          try {
+            val pt = new Point(e.getX(), e.getY());
+            val offset = codePane.viewToModel(pt);
+            execSupport.imanip.foreach { _ close () }
+            if (ipmProvider.isHyperlinkPoint(codePane, offset)) {
+              // ipmProvider.getHyperlinkSpan(codePane, offset)
+              ipmProvider.performClickAction(codePane, offset)
+            }
           }
-        }
-        catch {
-          case t: Throwable => println("IPM Problem: " + t.getMessage)
+          catch {
+            case t: Throwable => println("IPM Problem: " + t.getMessage)
+          }
         }
       }
 
