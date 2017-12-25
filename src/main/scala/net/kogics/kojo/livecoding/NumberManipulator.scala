@@ -176,9 +176,9 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
 
     numberTweakPopup = factory.getPopup(ctx.codePane, panel, pt.x - 50, pt.y - (rect.height * 3.5).toInt)
     numberTweakPopup.show()
-    //    Utils.schedule(0.3) {
-    //      slider.requestFocus()
-    //    }
+    Utils.schedule(0.1) {
+      focusSlider()
+    }
   }
 
   def focusSlider() {
