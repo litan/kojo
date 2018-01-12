@@ -2,7 +2,7 @@ source ~/bin/activate-java-16.sh
 java -version
 set -x 
 # Build Kojo
-./sbt.sh clean package
+./sbt.sh clean test package
 
 # Create installer
 rm -rf installerbuild
