@@ -1,12 +1,12 @@
 
-Copyright (C) 2009-2015 Lalit Pant <pant.lalit@gmail.com> and the Kojo Dev Team. Kojo is licensed under The GNU General Public License, Version 3. The full text of the license is available at: http://www.gnu.org/licenses/gpl.html, and is also reproduced below for quick reference.
+Copyright (C) 2009-2018 Lalit Pant <pant.lalit@gmail.com> and the Kojo Dev Team. Kojo is licensed under The GNU General Public License, Version 3. The full text of the license is available at: http://www.gnu.org/licenses/gpl.html, and is also reproduced below for quick reference.
 
 Kojo makes use of third-party software. A list of this software is available in the 'Help -> About' menu item in Kojo.
 
 The license files for all the third-party software bundled with Kojo are located in the licenses folder within the Kojo distribution. The source code for the third-party software may be obtained at the corresponding project urls specified in the 'Help -> About' menu item in Kojo.
 
 The source code for Kojo is available at:
-http://code.google.com/p/kojolite
+https://github.com/litan/kojo
 
 
                     GNU GENERAL PUBLIC LICENSE
