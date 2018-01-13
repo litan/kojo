@@ -60,7 +60,7 @@ trait CoreBuiltins extends Rationals {
 
   val C = staging.KColor
   
-  val RichColor = doodle.Color
+  val ColorMaker = doodle.Color
   implicit def rc2c(rc: doodle.Color): Color = rc.toAwt
   implicit def c2rc(c: Color): doodle.Color = doodle.Color.rgba(c.getRed, c.getGreen, c.getBlue, c.getAlpha)
   implicit val int2ubyte = syntax.Builtins.int2ubyte(_)
