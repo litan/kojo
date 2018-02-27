@@ -14,9 +14,12 @@
  */
 package net.kogics.kojo.livecoding
 
-import javax.swing.text.JTextComponent
 import java.awt.Color
+
 import javax.swing.JFrame
+import javax.swing.text.JTextComponent
+
+import net.kogics.kojo.doodle
 
 trait ManipulationContext {
   def isRunningEnabled: Boolean
@@ -28,6 +31,8 @@ trait ManipulationContext {
   def activateEditor()
   def knownColors: List[String]
   def knownColor(name: String): Color
+  def knownColors2: List[String]
+  def knownColor2(name: String): doodle.Color
 }
 
 trait InteractiveManipulator {

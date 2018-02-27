@@ -999,5 +999,7 @@ class CodeExecutionSupport(
 
   def knownColors = kojoCtx.knownColors
   def knownColor(name: String): Color = kojoCtx.knownColor(name)
+  def knownColors2 = kojoCtx.knownColors2
+  def knownColor2(name: String) = kojoCtx.knownColor2(name)
   def frame = kojoCtx.frame
 }

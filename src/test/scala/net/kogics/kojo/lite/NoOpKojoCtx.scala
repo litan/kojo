@@ -59,6 +59,8 @@ class NoOpKojoCtx extends core.KojoCtx {
   def lastColor_=(c: Color) { lc = c }
   def knownColors: List[String] = List()
   def knownColor(name: String) = Color.white
+  def knownColors2: List[String] = List()
+  def knownColor2(name: String) = doodle.Color.white
   def isVerboseOutput = false
   def showVerboseOutput() {}
   def hideVerboseOutput() {}

@@ -20,7 +20,7 @@ import javax.swing.text.Document
 import javax.swing.text.JTextComponent
 
 class IpmProvider(mctx: ManipulationContext) {
-  val manips = List(new ColorManipulator(mctx), new IntManipulator(mctx), new FloatManipulator(mctx))
+  val manips = List(new ColorManipulator(mctx), new ColorMakerManipulator(mctx), new IntManipulator(mctx), new FloatManipulator(mctx))
   var currManip: Option[InteractiveManipulator] = None
 
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {

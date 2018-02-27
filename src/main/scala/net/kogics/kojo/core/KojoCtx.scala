@@ -25,6 +25,8 @@ import javax.swing.JFrame
 import bibliothek.gui.dock.common.DefaultSingleCDockable
 import javax.swing.JMenu
 
+import net.kogics.kojo.doodle
+
 trait KojoCtx {
   def activityListener: SpriteListener
   def setActivityListener(l: SpriteListener): Unit
@@ -64,6 +66,8 @@ trait KojoCtx {
   def lastColor_=(c: Color)
   def knownColors: List[String]
   def knownColor(name: String): Color
+  def knownColors2: List[String]
+  def knownColor2(name: String): doodle.Color
   def isVerboseOutput: Boolean
   def showVerboseOutput(): Unit
   def hideVerboseOutput(): Unit
