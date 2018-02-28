@@ -144,6 +144,12 @@ trait CoreBuiltins extends Rationals {
   val VPics = picture.VPics
   type GPics = picture.GPics
   val GPics = picture.GPics
+  type HPics2 = picture.HPics2
+  val HPics2 = picture.HPics2
+  type VPics2 = picture.VPics2
+  val VPics2 = picture.VPics2
+  type GPics2 = picture.GPics2
+  val GPics2 = picture.GPics2
   type BatchPics = picture.BatchPics
   val BatchPics = picture.BatchPics
   val trans = picture.trans _
@@ -151,6 +157,8 @@ trait CoreBuiltins extends Rationals {
   def scale(f: Double) = picture.scale(f)
   def scale(x: Double, y: Double) = picture.scale(x, y)
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
+  def draw(pictures: IndexedSeq[Picture]) = pictures.foreach { _ draw () }
+  def draw(pictures: List[Picture]) = pictures.foreach { _ draw () }
   val fade = picture.fade _
   val blur = picture.blur _
   val pointLight = picture.pointLight _
