@@ -466,6 +466,7 @@ Here's a partial list of the available commands:
   }
 
   val PShapes = PicShape
+  val Picture = PicShape
   //  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
   object PicShape {
     def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
