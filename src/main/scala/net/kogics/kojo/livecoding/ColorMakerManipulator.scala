@@ -151,11 +151,15 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
             inSliderChange = true
             doc.remove(targetStart, target.length())
             val ndc = Color.rgba(newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha / 255.0)
+            val hueAngle = {
+              val a = ndc.hue.toDegrees.round
+              if (a < 0) 360 + a else a
+            }
             target = if (newColor.getAlpha == 255) {
-              "ColorMaker.hsl(%d, %.2f, %.2f)" format (ndc.hue.toDegrees.toInt, ndc.saturation.get, ndc.lightness.get)
+              "ColorMaker.hsl(%d, %.2f, %.2f)" format (hueAngle, ndc.saturation.get, ndc.lightness.get)
             }
             else {
-              "ColorMaker.hsla(%d, %.2f, %.2f, %.2f)" format (ndc.hue.toDegrees.toInt, ndc.saturation.get, ndc.lightness.get, ndc.alpha.get)
+              "ColorMaker.hsla(%d, %.2f, %.2f, %.2f)" format (hueAngle, ndc.saturation.get, ndc.lightness.get, ndc.alpha.get)
             }
             doc.insertString(targetStart, target, null);
             inSliderChange = false

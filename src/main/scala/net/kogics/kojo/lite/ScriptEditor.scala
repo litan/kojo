@@ -652,11 +652,11 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     val mouseListener = new MouseAdapter {
       override def mouseClicked(e: MouseEvent) {
+        execSupport.imanip.foreach { _ close () }
         if (e.isControlDown) {
           try {
             val pt = new Point(e.getX(), e.getY());
             val offset = codePane.viewToModel(pt);
-            execSupport.imanip.foreach { _ close () }
             if (ipmProvider.isHyperlinkPoint(codePane, offset)) {
               // ipmProvider.getHyperlinkSpan(codePane, offset)
               ipmProvider.performClickAction(codePane, offset)
