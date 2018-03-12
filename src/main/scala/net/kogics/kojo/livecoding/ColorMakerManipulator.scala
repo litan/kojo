@@ -42,7 +42,6 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
   def matcher2(possibleColorLine: String) = ColorPattern2.matcher(possibleColorLine)
 
   def findColorFunction(pane: JTextComponent, offset: Int): Boolean = {
-    import net.kogics.kojo.syntax.Builtins.{ int2ubyte, double2norm, int2angle }
     val lineStart = Utilities.getRowStart(pane, offset)
     val lineEnd = Utilities.getRowEnd(pane, offset)
     val line = pane.getDocument.getText(lineStart, lineEnd - lineStart)
@@ -144,7 +143,6 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
     var lastChangeTime = 0l
     cc.getSelectionModel.addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) = Utils.safeProcess {
-        import net.kogics.kojo.syntax.Builtins.{ int2ubyte, double2norm }
         val currTime = System.currentTimeMillis
         if (currTime - lastChangeTime > 200) {
           lastChangeTime = currTime

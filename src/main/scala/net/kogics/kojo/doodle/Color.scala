@@ -3,6 +3,7 @@ package net.kogics.kojo.doodle
 
 import net.kogics.kojo.syntax.angle._
 import net.kogics.kojo.syntax.normalized._
+import net.kogics.kojo.syntax.uByte._
 
 sealed abstract class Color extends Product with Serializable {
 
@@ -257,12 +258,24 @@ object Color extends CommonColors {
   def rgba(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte, a: Normalized): Color =
     RGBA(r, g, b, a)
 
+  def rgba(r: Int, g: Int, b: Int, a: Double): Color =
+    RGBA(r.uByte, g.uByte, b.uByte, a.normalized)
+
   def hsla(h: Angle, s: Normalized, l: Normalized, a: Normalized): Color =
     HSLA(h, s, l, a)
+
+  def hsla(h: Double, s: Double, l: Double, a: Double): Color =
+    HSLA(Angle.degrees(h), s.normalized, l.normalized, a.normalized)
 
   def rgb(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte): Color =
     rgba(r, g, b, 1.0.normalized)
 
+  def rgb(r: Int, g: Int, b: Int): Color =
+    rgba(r, g, b, 1.0)
+
   def hsl(h: Angle, s: Normalized, l: Normalized): Color =
     hsla(h, s, l, 1.0.normalized)
+
+  def hsl(h: Double, s: Double, l: Double): Color =
+    hsla(h, s, l, 1.0)
 }
