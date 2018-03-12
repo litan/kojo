@@ -244,6 +244,7 @@ trait AppMenu {
     val mathActivityMenu = newJMenu(Utils.loadString("S_MathActivities"))
     mathActivityMenu.add(menuItemFor("S_AdditionGame", "addition-game.kojo"))
     mathActivityMenu.add(menuItemFor("S_MultiplicationGame", "multiplication-game.kojo"))
+    mathActivityMenu.add(menuItemFor("S_AngleExperiment", "angle-experiment.kojo"))
     mathActivityMenu.add(menuItemFor("S_CountingGame", "counting.kojo", "/mathgames/"))
     mathActivityMenu.add(menuItemFor("S_MakeFractions", "make-fractions.kojo", "/mathgames/"))
     mathActivityMenu.add(menuItemFor("S_IdentifyFractions", "identify-fractions.kojo", "/mathgames/"))
