@@ -57,22 +57,6 @@ sealed abstract class Color extends Product with Serializable {
     original.copy(h = original.h + angle.degrees)
   }
 
-  /** Lighten the color by the given amount. This is an absolute
-    * amount, not an amount relative to the Color's current
-    * lightness. Lightness is clipped at Normalized.MaxValue */
-  def lighten(lightness: Double) = {
-    val original = this.toHSLA
-    original.copy(l = Normalized.clip(original.l + lightness.normalized))
-  }
-
-  /** Darken the color by the given amount. This is an absolute
-    * amount, not an amount relative to the Color's current
-    * lightness. Lightness is clipped at Normalized.MaxValue */
-  def darken(darkness: Double) = {
-    val original = this.toHSLA
-    original.copy(l = Normalized.clip(original.l - darkness.normalized))
-  }
-
   /** Saturate the color by the given amount. This is an absolute
     * amount, not an amount relative to the Color's current
     * saturation. Saturation is clipped at Normalized.MaxValue */
@@ -89,6 +73,22 @@ sealed abstract class Color extends Product with Serializable {
     original.copy(s = Normalized.clip(original.s - desaturation.normalized))
   }
 
+  /** Lighten the color by the given amount. This is an absolute
+    * amount, not an amount relative to the Color's current
+    * lightness. Lightness is clipped at Normalized.MaxValue */
+  def lighten(lightness: Double) = {
+    val original = this.toHSLA
+    original.copy(l = Normalized.clip(original.l + lightness.normalized))
+  }
+
+  /** Darken the color by the given amount. This is an absolute
+    * amount, not an amount relative to the Color's current
+    * lightness. Lightness is clipped at Normalized.MaxValue */
+  def darken(darkness: Double) = {
+    val original = this.toHSLA
+    original.copy(l = Normalized.clip(original.l - darkness.normalized))
+  }
+
   /** Increase the alpha channel by the given amount. */
   def fadeIn(opacity: Double) = {
     val original = this.toHSLA
@@ -99,24 +99,6 @@ sealed abstract class Color extends Product with Serializable {
   def fadeOut(opacity: Double) = {
     val original = this.toHSLA
     original.copy(a = Normalized.clip(original.a - opacity.normalized))
-  }
-
-  /** Lighten the color by the given *relative* amount. For example, calling
-    * `aColor.lightenBy(0.1.normalized` increases the lightness by 10% of the
-    * current lightness.
-    */
-  def lightenBy(lightness: Double) = {
-    val original = this.toHSLA
-    original.copy(l = Normalized.clip(original.l.get * (1 + lightness)))
-  }
-
-  /** Darken the color by the given *relative* amount. For example, calling
-    * `aColor.darkenBy(0.1.normalized` decreases the lightness by 10% of the
-    * current lightness.
-    */
-  def darkenBy(darkness: Double) = {
-    val original = this.toHSLA
-    original.copy(l = Normalized.clip(original.l.get * (1 - darkness)))
   }
 
   /** Saturate the color by the given *relative* amount. For example, calling
@@ -135,6 +117,24 @@ sealed abstract class Color extends Product with Serializable {
   def desaturateBy(desaturation: Double) = {
     val original = this.toHSLA
     original.copy(s = Normalized.clip(original.s.get * (1 - desaturation)))
+  }
+
+  /** Lighten the color by the given *relative* amount. For example, calling
+    * `aColor.lightenBy(0.1.normalized` increases the lightness by 10% of the
+    * current lightness.
+    */
+  def lightenBy(lightness: Double) = {
+    val original = this.toHSLA
+    original.copy(l = Normalized.clip(original.l.get * (1 + lightness)))
+  }
+
+  /** Darken the color by the given *relative* amount. For example, calling
+    * `aColor.darkenBy(0.1.normalized` decreases the lightness by 10% of the
+    * current lightness.
+    */
+  def darkenBy(darkness: Double) = {
+    val original = this.toHSLA
+    original.copy(l = Normalized.clip(original.l.get * (1 - darkness)))
   }
 
   /** Increase the alpha channel by the given relative amount. */
