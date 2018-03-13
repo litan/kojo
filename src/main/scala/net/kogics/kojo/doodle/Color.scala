@@ -36,117 +36,117 @@ sealed abstract class Color extends Product with Serializable {
   // Color manipulation ------------------------------------
 
   /** Copies this color, changing the hue to the given value*/
-  def hue(angle: Angle): Color =
-    this.toHSLA.copy(h = angle)
+  def hue(angle: Double): Color =
+    this.toHSLA.copy(h = angle.degrees)
 
   /** Copies this color, changing the saturation to the given value*/
-  def saturation(s: Normalized): Color =
-    this.toHSLA.copy(s = s)
+  def saturation(s: Double): Color =
+    this.toHSLA.copy(s = s.normalized)
 
   /** Copies this color, changing the lightness to the given value*/
-  def lightness(l: Normalized): Color =
-    this.toHSLA.copy(l = l)
+  def lightness(l: Double): Color =
+    this.toHSLA.copy(l = l.normalized)
 
   /** Copies this color, changing the alpha to the given value*/
-  def alpha(a: Normalized): Color =
-    this.toHSLA.copy(a = a)
+  def alpha(a: Double): Color =
+    this.toHSLA.copy(a = a.normalized)
 
   /** Rotate hue by the given angle */
-  def spin(angle: Angle) = {
+  def spin(angle: Double) = {
     val original = this.toHSLA
-    original.copy(h = original.h + angle)
+    original.copy(h = original.h + angle.degrees)
   }
 
   /** Lighten the color by the given amount. This is an absolute
     * amount, not an amount relative to the Color's current
     * lightness. Lightness is clipped at Normalized.MaxValue */
-  def lighten(lightness: Normalized) = {
+  def lighten(lightness: Double) = {
     val original = this.toHSLA
-    original.copy(l = Normalized.clip(original.l + lightness))
+    original.copy(l = Normalized.clip(original.l + lightness.normalized))
   }
 
   /** Darken the color by the given amount. This is an absolute
     * amount, not an amount relative to the Color's current
     * lightness. Lightness is clipped at Normalized.MaxValue */
-  def darken(darkness: Normalized) = {
+  def darken(darkness: Double) = {
     val original = this.toHSLA
-    original.copy(l = Normalized.clip(original.l - darkness))
+    original.copy(l = Normalized.clip(original.l - darkness.normalized))
   }
 
   /** Saturate the color by the given amount. This is an absolute
     * amount, not an amount relative to the Color's current
     * saturation. Saturation is clipped at Normalized.MaxValue */
-  def saturate(saturation: Normalized) = {
+  def saturate(saturation: Double) = {
     val original = this.toHSLA
-    original.copy(s = Normalized.clip(original.s + saturation))
+    original.copy(s = Normalized.clip(original.s + saturation.normalized))
   }
 
   /** Desaturate the color by the given amount. This is an absolute
     * amount, not an amount relative to the Color's current
     * saturation. Saturation is clipped at Normalized.MaxValue */
-  def desaturate(desaturation: Normalized) = {
+  def desaturate(desaturation: Double) = {
     val original = this.toHSLA
-    original.copy(s = Normalized.clip(original.s - desaturation))
+    original.copy(s = Normalized.clip(original.s - desaturation.normalized))
   }
 
   /** Increase the alpha channel by the given amount. */
-  def fadeIn(opacity: Normalized) = {
+  def fadeIn(opacity: Double) = {
     val original = this.toHSLA
-    original.copy(a = Normalized.clip(original.a + opacity))
+    original.copy(a = Normalized.clip(original.a + opacity.normalized))
   }
 
   /** Decrease the alpha channel by the given amount. */
-  def fadeOut(opacity: Normalized) = {
+  def fadeOut(opacity: Double) = {
     val original = this.toHSLA
-    original.copy(a = Normalized.clip(original.a - opacity))
+    original.copy(a = Normalized.clip(original.a - opacity.normalized))
   }
 
   /** Lighten the color by the given *relative* amount. For example, calling
     * `aColor.lightenBy(0.1.normalized` increases the lightness by 10% of the
     * current lightness.
     */
-  def lightenBy(lightness: Normalized) = {
+  def lightenBy(lightness: Double) = {
     val original = this.toHSLA
-    original.copy(l = Normalized.clip(original.l.get * (1 + lightness.get)))
+    original.copy(l = Normalized.clip(original.l.get * (1 + lightness)))
   }
 
   /** Darken the color by the given *relative* amount. For example, calling
     * `aColor.darkenBy(0.1.normalized` decreases the lightness by 10% of the
     * current lightness.
     */
-  def darkenBy(darkness: Normalized) = {
+  def darkenBy(darkness: Double) = {
     val original = this.toHSLA
-    original.copy(l = Normalized.clip(original.l.get * (1 - darkness.get)))
+    original.copy(l = Normalized.clip(original.l.get * (1 - darkness)))
   }
 
   /** Saturate the color by the given *relative* amount. For example, calling
     * `aColor.saturateBy(0.1.normalized` increases the saturation by 10% of the
     * current saturation.
     */
-  def saturateBy(saturation: Normalized) = {
+  def saturateBy(saturation: Double) = {
     val original = this.toHSLA
-    original.copy(s = Normalized.clip(original.s.get * (1 + saturation.get)))
+    original.copy(s = Normalized.clip(original.s.get * (1 + saturation)))
   }
 
   /** Desaturate the color by the given *relative* amount. For example, calling
     * `aColor.desaturateBy(0.1.normalized` decreases the saturation by 10% of the
     * current saturation.
     */
-  def desaturateBy(desaturation: Normalized) = {
+  def desaturateBy(desaturation: Double) = {
     val original = this.toHSLA
-    original.copy(s = Normalized.clip(original.s.get * (1 - desaturation.get)))
+    original.copy(s = Normalized.clip(original.s.get * (1 - desaturation)))
   }
 
   /** Increase the alpha channel by the given relative amount. */
-  def fadeInBy(opacity: Normalized) = {
+  def fadeInBy(opacity: Double) = {
     val original = this.toHSLA
-    original.copy(a = Normalized.clip(original.a.get * (1 + opacity.get)))
+    original.copy(a = Normalized.clip(original.a.get * (1 + opacity)))
   }
 
   /** Decrease the alpha channel by the given relative amount. */
-  def fadeOutBy(opacity: Normalized) = {
+  def fadeOutBy(opacity: Double) = {
     val original = this.toHSLA
-    original.copy(a = Normalized.clip(original.a.get * (1 - opacity.get)))
+    original.copy(a = Normalized.clip(original.a.get * (1 - opacity)))
   }
 
   // Other -------------------------------------------------
