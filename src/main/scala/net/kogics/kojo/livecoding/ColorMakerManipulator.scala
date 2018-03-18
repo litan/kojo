@@ -150,7 +150,7 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
           if (oldColor != newColor) {
             inSliderChange = true
             doc.remove(targetStart, target.length())
-            val ndc = Color.rgba(newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha / 255.0)
+            val ndc = Color.rgba(newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
             val hueAngle = {
               val a = ndc.hue.toDegrees.round
               if (a < 0) 360 + a else a

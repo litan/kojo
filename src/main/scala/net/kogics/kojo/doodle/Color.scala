@@ -258,8 +258,8 @@ object Color extends CommonColors {
   def rgba(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte, a: Normalized): Color =
     RGBA(r, g, b, a)
 
-  def rgba(r: Int, g: Int, b: Int, a: Double): Color =
-    RGBA(r.uByte, g.uByte, b.uByte, a.normalized)
+  def rgba(r: Int, g: Int, b: Int, a: Int): Color =
+    RGBA(r.uByte, g.uByte, b.uByte, (a / 255.0).normalized)
 
   def hsla(h: Angle, s: Normalized, l: Normalized, a: Normalized): Color =
     HSLA(h, s, l, a)
@@ -271,7 +271,7 @@ object Color extends CommonColors {
     rgba(r, g, b, 1.0.normalized)
 
   def rgb(r: Int, g: Int, b: Int): Color =
-    rgba(r, g, b, 1.0)
+    rgba(r, g, b, 255)
 
   def hsl(h: Angle, s: Normalized, l: Normalized): Color =
     hsla(h, s, l, 1.0.normalized)
