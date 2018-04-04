@@ -25,6 +25,7 @@ import edu.umd.cs.piccolo.activities.PActivity
 trait TSCanvasFeatures {
   def turtle0: Turtle
   def clear(): Unit
+  def clearStepDrawing(): Unit
   def newTurtle(x: Double, y: Double, costume: String): Turtle
   def showAxes(): Unit
   def hideAxes(): Unit

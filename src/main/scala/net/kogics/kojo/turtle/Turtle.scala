@@ -366,7 +366,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       throw new IllegalArgumentException("Negative delay not allowed")
     }
     // set it right here, as opposed to in the swing thread
-    // because all users of _animation delay uses it within the calling thread 
+    // because all users of _animation delay use it within the calling thread 
     // users are forward, arc, and moveTo
     _animationDelay = d
   }

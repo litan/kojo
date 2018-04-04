@@ -608,6 +608,10 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     realClear()
   }
 
+  def clearStepDrawing() {
+    origTurtle.clear()
+  }
+
   def clearWithUL(ul: UnitLen) {
     realSetUnitLength(ul)
     realClear()

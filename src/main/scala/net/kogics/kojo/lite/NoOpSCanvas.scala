@@ -18,6 +18,7 @@ import edu.umd.cs.piccolo.util.PBounds
 
 class NoOpSCanvas extends SCanvas {
   def clear() {}
+  def clearStepDrawing() {}
   def newTurtle(x: Double, y: Double, costume: String): Turtle = null
   def showAxes() {}
   def hideAxes() {}

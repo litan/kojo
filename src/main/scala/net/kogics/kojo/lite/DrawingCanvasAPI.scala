@@ -20,6 +20,7 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   UserCommand("clear", Nil, "Clears the screen, and brings the turtle to the center of the window.")
   def cleari() = { clear(); turtle0.invisible() }
   UserCommand("cleari", Nil, "Clears the turtle canvas and makes the turtle invisible.")
+  def clearStepDrawing() = tCanvas.clearStepDrawing()
 
   def zoom(factor: Double) = tCanvas.zoom(factor)
   def zoom(factor: Double, cx: Double, cy: Double) = tCanvas.zoom(factor, cx, cy)
