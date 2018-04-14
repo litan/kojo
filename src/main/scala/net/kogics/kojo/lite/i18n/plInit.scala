@@ -67,9 +67,10 @@ object PolishAPI {
     def podnieśPisak() = englishTurtle.penUp()
     def czyśćStylPisaka = englishTurtle.style.down
     def kolor(c: java.awt.Color) = englishTurtle.setPenColor(c)
-    def kolorLosowy = Color(random(256), random(256), random(256))
+    def kolorLosowy = builtins.Color(builtins.random(256), 
+	builtins.random(256), builtins.random(256))
     def utwórzKolor(czerwony:Int, zielony:Int, niebieski:Int) = 
-	Color(czerwony, zielony, niebieski)
+	builtins.Color(czerwony, zielony, niebieski)
     def wypełnienie(c: java.awt.Color) = englishTurtle.setFillColor(c)
     def grubość(n: Double) = englishTurtle.setPenThickness(n)
     def zapiszStyl() = englishTurtle.saveStyle()
@@ -104,7 +105,7 @@ object PolishAPI {
   lazy val czarny = builtins.black 
   lazy val biały = builtins.white
   lazy val przezroczysty = builtins.noColor
-  lazy val szary = builtins.grey
+  lazy val szary = builtins.gray
   lazy val pomarańczowy = builtins.orange
   def tło(kolor: Color) = builtins.setBackground(kolor)
   def tłoGradientPion(kolor1: Color, kolor2: Color) = builtins.TSCanvas.setBackgroundV(kolor1, kolor2)
