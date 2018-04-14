@@ -67,7 +67,10 @@ object PolishAPI {
     def podnieśPisak() = englishTurtle.penUp()
     def czyśćStylPisaka = englishTurtle.style.down
     def kolor(c: java.awt.Color) = englishTurtle.setPenColor(c)
-    def ustawWypełnienieKolorem(c: java.awt.Color) = englishTurtle.setFillColor(c)
+    def kolorLosowy = Color(random(256), random(256), random(256))
+    def utwórzKolor(czerwony:Int, zielony:Int, niebieski:Int) = 
+	Color(czerwony, zielony, niebieski)
+    def wypełnienie(c: java.awt.Color) = englishTurtle.setFillColor(c)
     def grubość(n: Double) = englishTurtle.setPenThickness(n)
     def zapiszStyl() = englishTurtle.saveStyle()
     def przywróćStyl() = englishTurtle.restoreStyle()
@@ -101,6 +104,8 @@ object PolishAPI {
   lazy val czarny = builtins.black 
   lazy val biały = builtins.white
   lazy val przezroczysty = builtins.noColor
+  lazy val szary = builtins.grey
+  lazy val pomarańczowy = builtins.orange
   def tło(kolor: Color) = builtins.setBackground(kolor)
   def tłoGradientPion(kolor1: Color, kolor2: Color) = builtins.TSCanvas.setBackgroundV(kolor1, kolor2)
   def tłoGradientPoz(kolor1: Color, kolor2: Color) = builtins.TSCanvas.setBackgroundH(kolor1, kolor2)
@@ -279,7 +284,7 @@ skoczDo(x, y)
     "podnieśPisak" -> <div><strong>podnieśPisak</strong>()<br/> po uruchomieniu polecenia poruszający się żółw nie zostawia śladu</div>.toString,
     "czyśćStylPisaka" -> <div><strong>czyśćStylPisaka</strong><br/> anuluje ustawienia koloru i grubości linii  Zwraca prawdę lub fałsz informujący czy pisak jest opuszczony <strong>true</strong> czy nie <strong>false</strong> </div>.toString,
     "kolor" -> <div><strong>kolor</strong>(kolorpisaka)<br/>Ustawia kolor pisaka
-<br/>Zdefiniowane kolory: <br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, przezroczysty.
+<br/>Zdefiniowane kolory: <br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, pomarańczowy, szary, przezroczysty.
 <br/>Można też ustawić kolor korzystając z obiektu Color 
 <br/><em>Przykład:</em> <br/><br/>
 <pre>
@@ -287,9 +292,12 @@ kolor(niebieski)
 naprzód()
 kolor(Color(220,30,40,250)) //(fioletowy) maksymalna wartość to 255, czerwony, zielony, niebieski, przezroczystość
 naprzód(200)
-</pre>
+</pre> 
+lub za pomocą ustawKolor(cz,n,z)
        </div>.toString,
-"ustawWypełnienieKolorem" -> <div><strong>ustawWypełnieKolorem</strong>(kolor)<br/> Ustawia kolor wypełnienia. Aby wypełnić musimy wykonać figurę zamkniętą</div>.toString,
+"kolorLosowy" -> <div><strong>kolorLosowy</strong>()<br/> losuje kolor</div>.toString,
+"utwórzKolor" -> <div><strong>utwórzKolor</strong>(czerwony:Int, zielony:Int, niebieski:Int)<br/> tworzy kolor ze zmiesznia podanych kolorów</div>.toString,
+"wypełnienie" -> <div><strong>wypełnienie</strong>(kolor)<br/> Ustawia kolor wypełnienia. Aby wypełnić musimy wykonać figurę zamkniętą</div>.toString,
     "grubość" -> <div><strong>grubość</strong>(grubość)<br/>Ustawia grubość pisaka</div>.toString,
     "zapiszStyl" -> <div><strong>zapiszStyl</strong>()<br/> Zapamiętuje styl (kolor, grubość pędzla, wypełnienie kolorem)<br/>>Odczyt stylu odbywa się za pomocą przywróćStyl</div>.toString,
     "przywróćStyl" -> <div><strong>przywróćStyl</strong>()<br/>Służy do odczytu zapamiętanego stylu  funkcją przwróćStyl</div>.toString,
