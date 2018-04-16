@@ -411,10 +411,10 @@ package object picture {
       val velMag = vel.magnitude
       var pulled = 0
       while (pic.collidesWith(obstacle) && pulled < velMag) {
-        pic.offsetv(v2)
+        pic.offset(v2)
         pulled += 1
       }
-      pic.offsetv(velNorm)
+      pic.offset(velNorm)
     }
 
     pullbackCollision()

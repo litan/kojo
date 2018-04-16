@@ -472,6 +472,7 @@ Here's a partial list of the available commands:
     def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
     def textu(s0: Any, fontSize: Int = 15, color: Color = red) = picture.textu(s0, fontSize, color)
     def rect(h: Double, w: Double) = picture.rect(h, w)
+    def rectangle(w: Double, h: Double) = picture.rect(h, w)
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
     def circle(r: Double) = picture.circle(r)
