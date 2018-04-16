@@ -15,9 +15,9 @@ cd ..
 # run IzPack to create installer
 cp -var installer/* installerbuild/
 cd installerbuild
-/home/lalit/IzPack/bin/compile install.xml
+~/tools/IzPack/bin/compile install.xml
 mv install.jar kojoInstall.jar
 echo jar installer generated -- installerbuild/kojoInstall.jar
-~/work/launch4j/launch4j winInstaller.xml
+~/tools/launch4j/launch4j winInstaller.xml
 
 
