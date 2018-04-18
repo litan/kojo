@@ -505,6 +505,48 @@ Here's a partial list of the available commands:
   val RowPanel = widget.RowPanel
   val ColPanel = widget.ColPanel
 
+  def showFps(c: Color = black) {
+    val cb = canvasBounds
+    var frameCnt = 0
+    val fpsLabel = Picture.textu("Fps: ", 15, c)
+    fpsLabel.setPosition(cb.x + 10, cb.y + cb.height - 10)
+    draw(fpsLabel)
+    fpsLabel.forwardInputTo(TSCanvas.stageArea)
+
+    TSCanvas.timer(1000) {
+      fpsLabel.update(s"Fps: $frameCnt")
+      frameCnt = 0
+    }
+    fpsLabel.react { self =>
+      frameCnt += 1
+    }
+  }
+
+  def drawCenteredMessage(m: String, c: Color, sz: Int) {
+    val cb = canvasBounds
+    val te = textExtent(m, 30)
+    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, sz)
+    draw(pic)
+  }
+
+  def showGameTime(limitSecs: Int, endMsg: String, c: Color = blue) {
+    val cb = canvasBounds
+    var gameTime = 0
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, c)
+    draw(timeLabel)
+    timeLabel.forwardInputTo(TSCanvas.stageArea)
+
+    TSCanvas.timer(1000) {
+      gameTime += 1
+      timeLabel.update(gameTime)
+
+      if (gameTime == limitSecs) {
+        drawCenteredMessage(endMsg, green, 30)
+        stopAnimation()
+      }
+    }
+  }
+
   type Shape = PicDrawingDsl
   object Shape {
     def clear() = TSCanvas.cleari()
