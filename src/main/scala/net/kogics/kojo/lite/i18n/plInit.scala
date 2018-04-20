@@ -206,7 +206,7 @@ object PlInit {
     "podnieśPisak" -> "podnieśPisak()",
     "czyśćStylPisaka" -> "czyśćStylPisaka",
     "kolor" -> "kolor(${kolorPisaka})",
-    "ustawWypełnienieKolorem" -> "ustawWypełnienieKolorem(${kolorWypełnienia})",
+    "wypełnienie" -> "wypełnienie(${kolorWypełnienia})",
     "grubość" -> "grubość(${grubośćPisaka})",
     "zapiszStyl" -> "zapiszStyl()",
     "przywróćStyl" -> "przywróćStyl()",
@@ -310,7 +310,8 @@ lub za pomocą ustawKolor(cz,n,z)
     "czyść" -> <div><strong>czyść</strong>()<br/>czyści zawartość płótna</div>.toString,
     "czyśćWyjście" -> <div><strong>czyśćWyjście</strong>()<br/>czyści okno wyjścia (komunikatów)</div>.toString,
     "tło" -> <div><strong>tło</strong>(kolorTła)<br/>ustawia kolor tła, zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, przezroczysty.<br/>Możemy też użyć obiektu Color </div>.toString,
-    "tłoGradientPion" -> <div><strong>tło</strong>(kolor1,kolor2)<br/> ustawia gradient zmieniający się w pionie od koloru kolor1 aż do koloru kolor2 <br/>Dostępe zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, przezroczysty.<br/>Można też użyć obiektu Color </div>.toString,
+    "tłoGradientPion" -> <div><strong>tłoGradientPion</strong>(kolor1,kolor2)<br/> ustawia gradient zmieniający się w pionie od koloru kolor1 aż do koloru kolor2 <br/>Dostępe zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, pomarańczowy, szary, biały, przezroczysty.<br/>Można też użyć obiektu Color </div>.toString,
+"tłoGradientPoz" -> <div><strong>tłoGradientPion</strong>(kolor1,kolor2)<br/> ustawia gradient zmieniający się w poziomie od koloru kolor1 aż do koloru kolor2 <br/>Dostępe zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, pomarańczowy, szary, przezroczysty.<br/>Można też użyć obiektu Color </div>.toString,
     "powtarzaj" -> <div><strong>powtarzaj</strong>(ilość) {{ polecenia }} - powtarza <em>polecenia w nawiasie</em> zadaną ilość razy.
         <br/><em>Przykład:</em> <br/><br/>
         <pre>

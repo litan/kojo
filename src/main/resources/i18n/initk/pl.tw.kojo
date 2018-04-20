@@ -23,8 +23,9 @@ val PolishAPI = net.kogics.kojo.lite.i18n.PolishAPI
 import PolishAPI.{
   //explicit imports needed due to problems with multiple wildcard imports
   Żółw,żółw,czyść,czyśćWyjście,
-  niebieski,czerwony,żółty,zielony,fioletowy,różowy,brązowy,czarny,biały,przezroczysty,
-  tło, KcPL, 
+  niebieski,czerwony,żółty,zielony,fioletowy,szary, 
+  różowy,brązowy,czarny,biały,przezroczysty,pomarańczowy,
+  tło, KcPL, tłoGradientPion, tłoGradientPoz,
   powtarzaj, powtarzajZLicznikem, dopóki,
   wejście, zaokrągl,
   liczbaLosowa, liczbaLosowaRzeczywista,
