@@ -28,8 +28,10 @@ trait Picture extends InputAware {
   def scale(x: Double, y: Double): Unit
   def translate(x: Double, y: Double): Unit
   def translate(v: Vector2D): Unit = translate(v.x, v.y): Unit
+  def transv(v: Vector2D) = translate(v.x, v.y): Unit
   def offset(x: Double, y: Double): Unit
   def offset(v: Vector2D): Unit = offset(v.x, v.y): Unit
+  def offsetv(v: Vector2D) = offset(v.x, v.y): Unit
   def flipX(): Unit
   def flipY(): Unit
   def opacityMod(f: Double): Unit
