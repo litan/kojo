@@ -685,6 +685,7 @@ object HPics2 {
 }
 
 class HPics2(pics: List[Picture]) extends BasePicList(pics) {
+  require(pics.size == 2)
   def realDraw() {
     var ox = 0.0
     var prevNbounds: Option[PBounds] = None
@@ -756,6 +757,7 @@ object VPics2 {
 }
 
 class VPics2(pics: List[Picture]) extends BasePicList(pics) {
+  require(pics.size == 2)
   def realDraw() {
     var oy = 0.0
     var prevNbounds: Option[PBounds] = None
@@ -823,6 +825,7 @@ object GPics2 {
 }
 
 class GPics2(pics: List[Picture]) extends BasePicList(pics) {
+  require(pics.size == 2)
   def realDraw() {
     var prevNbounds: Option[PBounds] = None
     pics.foreach { pic =>
