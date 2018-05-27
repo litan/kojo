@@ -7,10 +7,6 @@
  * the License at http://www.gnu.org/copyleft/gpl.html
  */
 
-#include <Servo.h>
-Servo servo;
-
-
 #define IN_PACK_MAX_SIZE (10) // ns, proc, and eight more bytes for args
 #define OUT_PACK_HDR_SIZE (3) // ret val type, ns, and proc
 byte incoming_packet[IN_PACK_MAX_SIZE]; 
@@ -18,6 +14,11 @@ byte outgoing_packet_hdr[OUT_PACK_HDR_SIZE];
 int counter;
 int state;
 int packetSize;
+boolean debug = false;
+
+// Include libs here
+#include <Servo.h>
+Servo servo;
 
 void setup() {
   Serial.begin(115200);
@@ -62,6 +63,12 @@ int len(const char str[]) {
 
 void log(String msg) {
   returnString(0, -1, msg);
+}
+
+void debugLog(String msg) {
+  if (debug) {
+    log(msg);
+  }
 }
 
 byte readByte() {
@@ -119,15 +126,17 @@ void returnString(byte ns, byte proc, String msg) {
   int len = msg.length();
   writeByte(OUT_PACK_HDR_SIZE + len);
   writeHeader(3, ns, proc);
-  char buf[len+1];
-  msg.toCharArray(buf, len+1);
-  writeArray((byte *)buf, len);
+  byte buf[len+1];
+  msg.getBytes(buf, len+1);
+  writeArray(buf, len);
 }
 
 void dispatchProc() {
   int intRet;
   int writeSize;
   byte byteRet;
+  byte b1, b2;
+  int i1, i2;
   byte ns = readByte();
   byte proc = readByte();
   switch (ns) {
@@ -142,28 +151,46 @@ void dispatchProc() {
     case 1: // inbuilt
       switch (proc) {
         case 1: // pinMode
-          pinMode(readByte(), readByte());
+          b1 = readByte();
+          b2 = readByte();
+          pinMode(b1, b2);
+          debugLog(String("pinMode(") + b1 + String(", ") + b2 + String(")"));
           break;
         case 2: // digitalWrite
-          digitalWrite(readByte(), readByte());
+          b1 = readByte();
+          b2 = readByte();
+          digitalWrite(b1, b2);
+          debugLog(String("digitalWrite(") + b1 + String(", ") + b2 + String(")"));
           break;
         case 3: // digitalRead
-          returnByte(1, 3, digitalRead(readByte()));
+          b1 = readByte();
+          returnByte(1, 3, digitalRead(b1));
+          debugLog(String("digitalRead(") + b1 + String(")"));
           break;
         case 4: // analogRead
-          returnInt(1, 4, analogRead(readByte()));
+          b1 = readByte();
+          returnInt(1, 4, analogRead(b1));
+          debugLog(String("analogRead(") + b1 + String(")"));
           break;
         case 5: // tone
-          tone(readByte(), readInt());
+          b1 = readByte();
+          i1 = readInt();
+          tone(b1, i1);
           break;
         case 6: // noTone
           noTone(readByte());
           break;
         case 7: // analogWrite
-          analogWrite(readByte(), readByte());
+          b1 = readByte();
+          b2 = readByte();
+          analogWrite(b1, b2);
+          debugLog(String("analogWrite(") + b1 + String(", ") + b2 + String(")"));
           break;
         case 8: // tone
-          tone(readByte(), readInt(), readInt());
+          b1 = readByte();
+          i1 = readInt();
+          i2 = readInt();
+          tone(b1, i1, i2);
           break;
       }
       break;
@@ -179,4 +206,3 @@ void dispatchProc() {
       break;
   }
 }
-
