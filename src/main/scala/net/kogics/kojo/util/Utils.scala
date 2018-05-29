@@ -506,9 +506,9 @@ object Utils {
     try {
       Class.forName("org.scalatest.FunSuite")
       true
-    } 
-    catch {
-      case e: ClassCastException => false
+    } catch {
+      case e: ClassNotFoundException => false
+      case _: Throwable              => false
     }
   }
 
