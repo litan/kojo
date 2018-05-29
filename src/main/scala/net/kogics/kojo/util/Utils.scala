@@ -502,7 +502,15 @@ object Utils {
       (codeFromScripts(modeFilter(initScripts, mode), initScriptDir) |+| langInit(mode)) map stripCR
     )
 
-  def isScalaTestAvailable = (libJars ++ installLibJars).exists { fname => fname.toLowerCase contains "scalatest" }
+  def isScalaTestAvailable = {
+    try {
+      Class.forName("org.scalatest.FunSuite")
+      true
+    } 
+    catch {
+      case e: ClassCastException => false
+    }
+  }
 
   lazy val scalaTestHelperCode = """
   import org.scalatest.FunSuite
