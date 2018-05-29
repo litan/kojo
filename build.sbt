@@ -30,6 +30,7 @@ libraryDependencies ++= Seq(
     "org.piccolo2d" % "piccolo2d-extras" % "1.3.1",
     "com.vividsolutions" % "jts" % "1.13" intransitive(),
     "com.h2database" % "h2" % "1.3.168",
+    "org.scalatest" % "scalatest_2.11" % "2.2.4" intransitive(),
     "junit" % "junit" % "4.10" % "test",
     "org.jmock" % "jmock" % "2.5.1" % "test",
     "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
@@ -38,8 +39,7 @@ libraryDependencies ++= Seq(
     "org.objenesis" % "objenesis" % "1.0" % "test",
     "org.hamcrest" % "hamcrest-core" % "1.1" % "test",
     "org.hamcrest" % "hamcrest-library" % "1.1" % "test",
-    ("org.scalacheck"  % "scalacheck_2.11" % "1.12.2" intransitive()) % "test",
-    ("org.scalatest" % "scalatest_2.11" % "2.2.4" intransitive()) % "test"
+    ("org.scalacheck"  % "scalacheck_2.11" % "1.12.2" intransitive()) % "test"
 )
 
 libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
@@ -51,3 +51,5 @@ EclipseKeys.withSource := true
 
 packageOptions in (Compile, packageBin) +=
     Package.ManifestAttributes("Permissions" -> "all-permissions", "Application-Name" -> "Kojo")
+    
+publishMavenStyle in ThisBuild := false    

@@ -128,7 +128,8 @@ object Utils {
     readStream(getClass.getResourceAsStream(res))
   }
 
-  /**Returns the content of the given file in the local variant selected by Locale.getDefault().
+  /**
+   * Returns the content of the given file in the local variant selected by Locale.getDefault().
    * At first tries to find a resource of the given file name in the subdirectory LL of the given root directory,
    * if the current default Locale has language LL selected.
    * If this resource is not found, then tries to find the given file directly in the named root directory.
@@ -140,15 +141,16 @@ object Utils {
     val locale = Locale.getDefault
     val langCode = locale.getLanguage
     val myClass = getClass
-    val localName = root+langCode+"/"+file
+    val localName = root + langCode + "/" + file
     val localStream = myClass.getResourceAsStream(localName)
-    val baseName = root+file
-    val stream = if(localStream == null){
+    val baseName = root + file
+    val stream = if (localStream == null) {
       myClass.getResourceAsStream(baseName)
-    }else{
+    }
+    else {
       localStream
     }
-    if(stream == null){
+    if (stream == null) {
       throw new IllegalArgumentException(s"Resource $localName or $baseName should exist.")
     }
     readStream(stream)
@@ -431,10 +433,12 @@ object Utils {
   def stringSuffix(key: String) = {
     if (keyWithStrings) s"[$key]" else ""
   }
-  
-  /**Returns the localized String for the given key.
-  * @throws NullPointerException if <code>key</code> is <code>null</code>
-  * @throws MissingResourceException if no object for the given key can be found*/
+
+  /**
+   * Returns the localized String for the given key.
+   * @throws NullPointerException if <code>key</code> is <code>null</code>
+   * @throws MissingResourceException if no object for the given key can be found
+   */
   def loadString(key: String) = {
     messages.getString(key) concat stringSuffix(key)
   }
@@ -467,9 +471,9 @@ object Utils {
   lazy val initScripts: List[String] = filesInDir(initScriptDir, "kojo")
   lazy val installLibJars: List[String] = Nil
   lazy val installInitScripts: List[String] = Nil
-  
+
   /**Locates where the log directory should be, creates it if necessary, and returns its File object.*/
-  def locateLogDir(): File = {    
+  def locateLogDir(): File = {
     val logDir = new File(s"$userDir/.kojo/lite/log/")
     if (!logDir.exists()) {
       logDir.mkdirs()
@@ -506,35 +510,17 @@ object Utils {
     try {
       Class.forName("org.scalatest.FunSuite")
       true
-    } catch {
+    }
+    catch {
       case e: ClassNotFoundException => false
       case _: Throwable              => false
     }
   }
 
   lazy val scalaTestHelperCode = """
-  import org.scalatest.FunSuite
-  import org.scalatest.Matchers
-
-  class TestRun extends FunSuite {
-      override def suiteName = "test-run"
-      def register(name: String)(fn: => Unit) = test(name)(fn)
-      def registerIgnored(name: String)(fn: => Unit) = ignore(name)(fn)
-  }
-
-  def test(name: String)(fn: => Unit) {
-      val suite = new TestRun()
-      suite.register(name)(fn)
-      suite.execute()
-  }
-
-  def ignore(name: String)(fn: => Unit) {
-      val suite = new TestRun()
-      suite.registerIgnored(name)(fn)
-      suite.execute()
-  }
-
-  import Matchers._
+  import net.kogics.kojo.util.ScalatestHelper.{test, ignore}
+  import org.scalatest.Matchers._
+  
 """
 
   def codeFromScripts(scripts: List[String], scriptDir: String): Option[String] = scripts match {
