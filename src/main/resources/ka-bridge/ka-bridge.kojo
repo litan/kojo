@@ -225,7 +225,12 @@ runInBackground {
     onAnimationStop {
         println(s"Closing port: ${arduinoPort.get}")
         println(s"Stopped at: ${new Date}")
-        serialPort.closePort()
+        try {
+            serialPort.closePort()
+        }
+        catch {
+            case _: Throwable =>
+        }
     }
 
     println(s"Started at: ${new Date}")
