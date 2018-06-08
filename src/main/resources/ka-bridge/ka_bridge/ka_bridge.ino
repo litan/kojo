@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Lalit Pant <pant.lalit@gmail.com>
+ * Copyright (C) 2014-2018 Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file

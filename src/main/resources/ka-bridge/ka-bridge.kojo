@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2014 Lalit Pant <pant.lalit@gmail.com>
+ * Copyright (C) 2014-2018 Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -55,10 +55,10 @@ def debugMsg(msg: => String) {
 
 class SerialPortReader extends SerialPortEventListener {
     //    var currPacket: ByteBuffer = _
-    var currData = ByteBuffer.allocate(0)
-    var state = 1 // new packet
-    var packetSize = 0
-    var bytesAvailable = 0
+    @volatile var currData = ByteBuffer.allocate(0)
+    @volatile var state = 1 // new packet
+    @volatile var packetSize = 0
+    @volatile var bytesAvailable = 0
 
     def readByte: Byte = {
         currData.get
@@ -157,7 +157,16 @@ runInBackground {
         try {
             writeArray(command)
             val ret = awaitResult(intPromise.future)
-            if (ret == 0xF0F0) true else false
+            if (ret == 0xF0F0) {
+                true
+            }
+            else {
+                println("Saw (maybe) old response on the line. Reading ping response again...")
+                // maybe old packet on the line; try one more time
+                intPromise = Promise()
+                val ret = awaitResult(intPromise.future)
+                if (ret == 0xF0F0) true else false
+            }
         }
         catch {
             case e: Exception =>
