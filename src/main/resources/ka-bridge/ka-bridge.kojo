@@ -113,10 +113,16 @@ class SerialPortReader extends SerialPortEventListener {
             readByte match {
                 case 1 => // byte
                     readByte; readByte
-                    bytePromise.success(readByte)
+                    val d = readByte
+                    if (bytePromise != null) {
+                        bytePromise.success(d)
+                    }
                 case 2 => // int
                     readByte; readByte
-                    intPromise.success(readInt)
+                    val d = readInt
+                    if (intPromise != null) {
+                        intPromise.success(d)
+                    }
                 case 3 => // string
                     readByte; readByte
                     val msg = readString
@@ -176,7 +182,9 @@ runInBackground {
 
     def connectAndCheck(portName: String): Boolean = {
         connect(portName)
+        debugMsg("Connection done; pinging soon...")
         pause(2)
+        debugMsg("Pinging...")
         val good = ping()
         if (!good) {
             serialPort.closePort()
