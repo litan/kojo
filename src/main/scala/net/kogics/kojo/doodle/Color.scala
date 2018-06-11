@@ -255,27 +255,27 @@ final case class RGBA(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte, a: Norm
 final case class HSLA(h: Angle, s: Normalized, l: Normalized, a: Normalized)            extends Color
 
 object Color extends CommonColors {
-  def rgba(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte, a: Normalized): Color =
+  private def rgba(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte, a: Normalized): Color =
     RGBA(r, g, b, a)
 
-  def rgba(r: Int, g: Int, b: Int, a: Int): Color =
-    RGBA(r.uByte, g.uByte, b.uByte, (a / 255.0).normalized)
+  def rgba(red: Int, green: Int, blue: Int, opacity: Int): Color =
+    RGBA(red.uByte, green.uByte, blue.uByte, (opacity / 255.0).normalized)
 
-  def hsla(h: Angle, s: Normalized, l: Normalized, a: Normalized): Color =
+  private def hsla(h: Angle, s: Normalized, l: Normalized, a: Normalized): Color =
     HSLA(h, s, l, a)
 
-  def hsla(h: Double, s: Double, l: Double, a: Double): Color =
-    HSLA(Angle.degrees(h), s.normalized, l.normalized, a.normalized)
+  def hsla(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double, opacityFraction: Double): Color =
+    HSLA(Angle.degrees(hueAngle), saturationFraction.normalized, lightnessFraction.normalized, opacityFraction.normalized)
 
-  def rgb(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte): Color =
+  private[doodle] def rgb(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte): Color =
     rgba(r, g, b, 1.0.normalized)
 
-  def rgb(r: Int, g: Int, b: Int): Color =
-    rgba(r, g, b, 255)
+  def rgb(red: Int, green: Int, blue: Int): Color =
+    rgba(red, green, blue, 255)
 
-  def hsl(h: Angle, s: Normalized, l: Normalized): Color =
+  private def hsl(h: Angle, s: Normalized, l: Normalized): Color =
     hsla(h, s, l, 1.0.normalized)
 
-  def hsl(h: Double, s: Double, l: Double): Color =
-    hsla(h, s, l, 1.0)
+  def hsl(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double): Color =
+    hsla(hueAngle, saturationFraction, lightnessFraction, 1.0)
 }
