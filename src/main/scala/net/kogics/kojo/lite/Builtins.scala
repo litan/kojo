@@ -505,10 +505,10 @@ Here's a partial list of the available commands:
   val RowPanel = widget.RowPanel
   val ColPanel = widget.ColPanel
 
-  def showFps(c: Color = black) {
+  def showFps(color: Color = black, fontSize: Int = 15) {
     val cb = canvasBounds
-    var frameCnt = 0
-    val fpsLabel = Picture.textu("Fps: ", 15, c)
+    @volatile var frameCnt = 0
+    val fpsLabel = Picture.textu("Fps: ", fontSize, color)
     fpsLabel.setPosition(cb.x + 10, cb.y + cb.height - 10)
     draw(fpsLabel)
     fpsLabel.forwardInputTo(TSCanvas.stageArea)
@@ -522,17 +522,17 @@ Here's a partial list of the available commands:
     }
   }
 
-  def drawCenteredMessage(m: String, c: Color, sz: Int) {
+  def drawCenteredMessage(message: String, color: Color = black, fontSize: Int = 15) {
     val cb = canvasBounds
-    val te = textExtent(m, 30)
-    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, sz)
+    val te = textExtent(message, 30)
+    val pic = penColor(color) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(message, fontSize)
     draw(pic)
   }
 
-  def showGameTime(limitSecs: Int, endMsg: String, c: Color = blue) {
+  def showGameTime(limitSecs: Int, endMsg: String, color: Color = black, fontSize: Int = 15) {
     val cb = canvasBounds
-    var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, c)
+    @volatile var gameTime = 0
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, fontSize, color)
     draw(timeLabel)
     timeLabel.forwardInputTo(TSCanvas.stageArea)
 
@@ -541,7 +541,7 @@ Here's a partial list of the available commands:
       timeLabel.update(gameTime)
 
       if (gameTime == limitSecs) {
-        drawCenteredMessage(endMsg, green, 30)
+        drawCenteredMessage(endMsg, color, fontSize * 2)
         stopAnimation()
       }
     }
