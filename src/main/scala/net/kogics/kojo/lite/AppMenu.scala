@@ -445,6 +445,8 @@ trait AppMenu {
               <li>JHLabs image filters (http://www.jhlabs.com/ip/filters/) for Picture effects</li>
               <li>jSSC (http://code.google.com/p/java-simple-serial-connector/) for serial port communication</li>
               <li>The Gargi font (http://savannah.nongnu.org/projects/gargi) for Devanagari support</li>
+              <li>The Doodle project (https://github.com/underscoreio/doodle) for rich color support</li>
+              <li>Scalatest (http://www.scalatest.org/) for testing</li>
               </ul>
               </div>
               </body></html>
