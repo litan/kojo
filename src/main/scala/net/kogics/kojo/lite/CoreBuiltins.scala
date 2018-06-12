@@ -121,8 +121,8 @@ trait CoreBuiltins extends Rationals {
   def setBackground(c: Paint)
   def Font(name: String, size: Int) = new Font(name, JFont.PLAIN, size)
   def Font(name: String, size: Int, style: Int) = new Font(name, style, size)
-  def textExtent(text: String, fontSize: Int) = Utils.runInSwingThreadAndWait {
-    val tnode = Utils.textNode(text, 0, 0, TSCanvas.camScale, fontSize)
+  def textExtent(text: String, fontSize: Int, fontName: String = null) = Utils.runInSwingThreadAndWait {
+    val tnode = Utils.textNode(text, 0, 0, TSCanvas.camScale, fontSize, if (fontName == null) None else Some(fontName))
     val b = tnode.getFullBounds
     new Rectangle(new Point(b.x, b.y), new Point(b.x + b.width, b.y + b.height))
   }

@@ -559,9 +559,13 @@ object Utils {
     tnode
   }
 
-  def textNode(text: String, x: Double, y: Double, camScale: Double, n: Int): PText = {
+  def textNode(text: String, x: Double, y: Double, camScale: Double, fontSize: Int, fontName0: Option[String] = None): PText = {
     val tnode = textNode(text, x, y, camScale)
-    val font = new Font(tnode.getFont.getName, Font.PLAIN, n)
+    val fontName = fontName0 match {
+      case Some(name) => name
+      case None    => tnode.getFont.getName
+    }
+    val font = new Font(fontName, Font.PLAIN, fontSize)
     tnode.setFont(font)
     tnode
   }

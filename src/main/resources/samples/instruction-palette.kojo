@@ -198,7 +198,12 @@ val story = Story(
 
 switchToDefaultPerspective()
 stClear()
-stSetStorytellerWidth(50)
+val stWidth = {
+    val l = new javax.swing.JLabel("")
+    val te = textExtent("http://runhandler/cc/nn Pg n#n ", l.getFont.getSize, l.getFont.getName)
+    math.max(50, te.width.toInt)
+}
+stSetStorytellerWidth(stWidth)
 
 import javax.swing._
 import java.awt.event._
