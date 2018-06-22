@@ -1,5 +1,4 @@
 ../target/scala-2.11/kojo_2.11-2.4.jar -> kojo2.jar
-../lib/AppleJavaExtensions.jar
 ../lib/rsyntaxtextarea.jar
 ../lib/rstaui.jar
 ../lib/autocomplete.jar
