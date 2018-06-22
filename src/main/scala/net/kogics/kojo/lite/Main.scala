@@ -71,15 +71,6 @@ object Main extends AppMenu with ScriptLoader { main =>
 
   def main(args: Array[String]): Unit = {
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%6$s%n")
-    if (isMac) {
-      System.setProperty("apple.awt.brushMetalLook", "true");
-      // use the mac system menu bar
-      System.setProperty("apple.laf.useScreenMenuBar", "true");
-      // set the "About" menu item name
-      System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Kojo");
-      // use smoother fonts
-      System.setProperty("apple.awt.textantialiasing", "true");
-    }
     System.setSecurityManager(null)
     kojoCtx = new KojoCtx(args.length == 1 && args(0) == "subKojo") // context needs to be created right up front to set user language
     Utils.runInSwingThreadAndWait {
