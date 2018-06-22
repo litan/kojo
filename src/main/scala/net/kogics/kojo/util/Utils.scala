@@ -374,6 +374,10 @@ object Utils {
   def installDir = System.getProperty("user.home")
   def homeDir = System.getProperty("user.home")
   def currentDir = System.getProperty("user.dir")
+  def isMac = {
+    val os = System.getProperty("os.name").toLowerCase()
+    os.startsWith("mac")
+  }
 
   def readStream(is: InputStream): String = {
     require(is != null, "resource should exist")

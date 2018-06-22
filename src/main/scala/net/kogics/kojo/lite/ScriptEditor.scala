@@ -551,6 +551,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       button.addActionListener(actionListener)
       button.setIcon(Utils.loadIcon(imageFile))
       // button.setMnemonic(KeyEvent.VK_ENTER)
+      if (Utils.isMac) {
+        button.setBorderPainted(false)
+      }
       button;
     }
 
