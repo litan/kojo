@@ -16,6 +16,7 @@ package net.kogics.kojo
 package lite
 
 import java.awt.BorderLayout
+import java.awt.Font
 import java.awt.Frame
 import java.awt.Toolkit
 import java.awt.event.WindowAdapter
@@ -29,6 +30,7 @@ import java.util.logging.SimpleFormatter
 import javax.swing.JFrame
 import javax.swing.UIManager
 import javax.swing.WindowConstants
+import javax.swing.plaf.FontUIResource
 
 import scala.collection.convert.WrapAsScala.propertiesAsScalaMap
 
@@ -62,8 +64,22 @@ object Main extends AppMenu with ScriptLoader { main =>
   @volatile var execSupport: CodeExecutionSupport = _
   @volatile implicit var kojoCtx: KojoCtx = _
 
+  def isMac = {
+    val os = System.getProperty("os.name").toLowerCase()
+    os.startsWith("mac")
+  }
+
   def main(args: Array[String]): Unit = {
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%6$s%n")
+    if (isMac) {
+      System.setProperty("apple.awt.brushMetalLook", "true");
+      // use the mac system menu bar
+      System.setProperty("apple.laf.useScreenMenuBar", "true");
+      // set the "About" menu item name
+      System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Kojo");
+      // use smoother fonts
+      System.setProperty("apple.awt.textantialiasing", "true");
+    }
     System.setSecurityManager(null)
     kojoCtx = new KojoCtx(args.length == 1 && args(0) == "subKojo") // context needs to be created right up front to set user language
     Utils.runInSwingThreadAndWait {
@@ -78,8 +94,15 @@ object Main extends AppMenu with ScriptLoader { main =>
 
     Utils.schedule(0.3) {
       val ggbCanvas = new GeoGebraCanvas(kojoCtx)
-      UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
-        UIManager.setLookAndFeel(nim.getClassName)
+      if (isMac) {
+        // use the system look and feel
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
+      }
+      else {
+        UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
+          UIManager.setLookAndFeel(nim.getClassName)
+        }
       }
 
       kojoCtx.lookAndFeelReady()
