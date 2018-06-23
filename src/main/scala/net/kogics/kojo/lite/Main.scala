@@ -66,12 +66,22 @@ object Main extends AppMenu with ScriptLoader { main =>
 
   def main(args: Array[String]): Unit = {
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%6$s%n")
+    // app name needs to be set right in the beginning (this applies to Mac; is ignored elsewhere) 
+    System.setProperty("apple.awt.application.name", "Kojo")
     System.setSecurityManager(null)
     kojoCtx = new KojoCtx(args.length == 1 && args(0) == "subKojo") // context needs to be created right up front to set user language
     if (Utils.isMac) {
-      import com.apple.eawt.Application
-      Application.getApplication.setDockIconImage(Utils.loadImage("/images/kojo48.png"))
-    }    
+      import com.apple.eawt.{ AboutHandler, Application }; import com.apple.eawt.AppEvent.AboutEvent; import javax.swing.JOptionPane
+      val app = Application.getApplication
+      app.setDockIconImage(Utils.loadImage("/images/kojo48.png"))
+      app.setAboutHandler(new AboutHandler {
+        def handleAbout(e: AboutEvent) {
+          JOptionPane.showMessageDialog(frame, "The Kojo Learning Environment\nSee 'Help -> About' for more information",
+            "", JOptionPane.PLAIN_MESSAGE)
+        }
+      })
+    }
+
     Utils.runInSwingThreadAndWait {
       splash = new SplashScreen()
     }
