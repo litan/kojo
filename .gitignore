@@ -12,3 +12,4 @@ security/
 target/
 *.*~
 /bin/
+.idea/
