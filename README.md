@@ -14,13 +14,10 @@
 **IDE setup**
 
 * Intellij IDEA  
-Just import via the sbt build config
+Import a new project via the Kojo SBT settings.
 
 * Eclipse  
-Just import via the sbt build config
-
-
-* Run `./sbt.sh eclipse` to generate project files for Eclipse. Then import the newly generated project into Eclipse
+Run `./sbt.sh eclipse` to generate project files for Eclipse. Then import the newly generated project into Eclipse.
 
 For running Kojo from within an IDE, the main class is `net.kogics.kojo.lite.DesktopMain`. For debugging, the main class is `net.kogics.kojo.lite.Main`. 
 
