@@ -111,7 +111,7 @@ case class ToggleButton(label: String)(al: Boolean => Unit) extends JToggleButto
   })
 }
 
-case class DropDown[T](origOptions: T*)(implicit reader: Read[T]) extends JComboBox {
+case class DropDown[T](origOptions: T*)(implicit reader: Read[T]) extends JComboBox[String] {
   setEditable(false)
   setOptions(origOptions: _*)
   var options = origOptions
@@ -131,7 +131,7 @@ case class DropDown[T](origOptions: T*)(implicit reader: Read[T]) extends JCombo
       inCanvas = true
     }
     options = noptions
-    setModel(new DefaultComboBoxModel(options.map(_.toString).toArray.asInstanceOf[Array[AnyRef]]))
+    setModel(new DefaultComboBoxModel(options.map(_.toString).toArray))
     if (inCanvas) {
       addItem(Constants.DropDownCanvasPadding)
     }

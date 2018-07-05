@@ -84,7 +84,7 @@ trait StubMain {
         "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
 
     val cmdPart = s"-client -Xms128m -Xmx${maxMem} " +
-      "-Xss1m -XX:PermSize=32m -XX:MaxPermSize=256m -Dapple.laf.useScreenMenuBar=true " +
+      "-Xss1m -Dapple.laf.useScreenMenuBar=true " +
       s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}" +
       "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
       extraCmds +
