@@ -68,6 +68,9 @@ object PicCache {
       pic
     }
   }
+  def deDup(ps: List[Picture]): List[Picture] = {
+    ps map getPic
+  }
 }
 
 case class DslImpl(pic: Picture) extends PicDrawingDsl {

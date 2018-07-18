@@ -109,4 +109,9 @@ trait Picture extends InputAware {
   def showNext(gap: Long): Unit
   def update(newData: Any): Unit
   def checkDraw(msg: String): Unit
+  def beside(other: Picture): Picture
+  def above(other: Picture): Picture
+  def below(other: Picture): Picture = other.above(this)
+  def on(other: Picture): Picture
+  def under(other: Picture): Picture = other.on(this)
 }

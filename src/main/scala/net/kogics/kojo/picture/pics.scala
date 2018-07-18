@@ -33,16 +33,16 @@ import com.vividsolutions.jts.geom.util.AffineTransformation
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Picture
+import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.kgeom.PolyLine
+import net.kogics.kojo.picture.PicCache.deDup
+import net.kogics.kojo.util.Math
+import net.kogics.kojo.util.Utils
 
-import core.Pixel
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.nodes.PPath
-import kgeom.PolyLine
-import util.Math
-import util.Utils
-import edu.umd.cs.piccolo.util.PBounds
 
 trait GeomPolygon { self: Picture =>
   lazy val geomPoly = {
@@ -365,6 +365,10 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
       false
     }
   }
+
+  def beside(other: Picture): Picture = HPics2(this, other)
+  def above(other: Picture): Picture = VPics2(other, this)
+  def on(other: Picture): Picture = GPics2(other, this)
 }
 
 trait RedrawStopper extends Picture {
@@ -651,9 +655,9 @@ abstract class BasePicList(val pics: List[Picture])
 }
 
 object HPics {
-  def apply(pics: Picture*): HPics = new HPics(pics.toList)
-  def apply(pics: List[Picture]): HPics = new HPics(pics)
-  def apply(pics: Vector[Picture]): HPics = new HPics(pics.toList)
+  def apply(pics: Picture*): HPics = new HPics(deDup(pics.toList))
+  def apply(pics: List[Picture]): HPics = new HPics(deDup(pics))
+  def apply(pics: Vector[Picture]): HPics = new HPics(deDup(pics.toList))
 }
 
 class HPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -679,9 +683,9 @@ class HPics(pics: List[Picture]) extends BasePicList(pics) {
 }
 
 object HPics2 {
-  def apply(pics: Picture*): HPics2 = new HPics2(pics.toList)
-  def apply(pics: List[Picture]): HPics2 = new HPics2(pics)
-  def apply(pics: Vector[Picture]): HPics2 = new HPics2(pics.toList)
+  def apply(pics: Picture*): HPics2 = new HPics2(deDup(pics.toList))
+  def apply(pics: List[Picture]): HPics2 = new HPics2(deDup(pics))
+  def apply(pics: Vector[Picture]): HPics2 = new HPics2(deDup(pics.toList))
 }
 
 class HPics2(pics: List[Picture]) extends BasePicList(pics) {
@@ -719,9 +723,9 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
 }
 
 object VPics {
-  def apply(pics: Picture*): VPics = new VPics(pics.toList)
-  def apply(pics: List[Picture]): VPics = new VPics(pics)
-  def apply(pics: Vector[Picture]): VPics = new VPics(pics.toList)
+  def apply(pics: Picture*): VPics = new VPics(deDup(pics.toList))
+  def apply(pics: List[Picture]): VPics = new VPics(deDup(pics))
+  def apply(pics: Vector[Picture]): VPics = new VPics(deDup(pics.toList))
 }
 
 class VPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -747,9 +751,9 @@ class VPics(pics: List[Picture]) extends BasePicList(pics) {
 }
 
 object VPics2 {
-  def apply(pics: Picture*): VPics2 = new VPics2(pics.toList)
-  def apply(pics: List[Picture]): VPics2 = new VPics2(pics)
-  def apply(pics: Vector[Picture]): VPics2 = new VPics2(pics.toList)
+  def apply(pics: Picture*): VPics2 = new VPics2(deDup(pics.toList))
+  def apply(pics: List[Picture]): VPics2 = new VPics2(deDup(pics))
+  def apply(pics: Vector[Picture]): VPics2 = new VPics2(deDup(pics.toList))
 }
 
 class VPics2(pics: List[Picture]) extends BasePicList(pics) {
@@ -787,9 +791,9 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
 }
 
 object GPics {
-  def apply(pics: Picture*): GPics = new GPics(pics.toList)
-  def apply(pics: List[Picture]): GPics = new GPics(pics)
-  def apply(pics: Vector[Picture]): GPics = new GPics(pics.toList)
+  def apply(pics: Picture*): GPics = new GPics(deDup(pics.toList))
+  def apply(pics: List[Picture]): GPics = new GPics(deDup(pics))
+  def apply(pics: Vector[Picture]): GPics = new GPics(deDup(pics.toList))
 }
 
 class GPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -811,9 +815,9 @@ class GPics(pics: List[Picture]) extends BasePicList(pics) {
 }
 
 object GPics2 {
-  def apply(pics: Picture*): GPics2 = new GPics2(pics.toList)
-  def apply(pics: List[Picture]): GPics2 = new GPics2(pics)
-  def apply(pics: Vector[Picture]): GPics2 = new GPics2(pics.toList)
+  def apply(pics: Picture*): GPics2 = new GPics2(deDup(pics.toList))
+  def apply(pics: List[Picture]): GPics2 = new GPics2(deDup(pics))
+  def apply(pics: Vector[Picture]): GPics2 = new GPics2(deDup(pics.toList))
 }
 
 class GPics2(pics: List[Picture]) extends BasePicList(pics) {
