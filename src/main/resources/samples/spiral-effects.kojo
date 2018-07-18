@@ -10,8 +10,6 @@ def spiralp = penColor(black) * fillColor(Color(255, 0, 204)) -> Picture {
     spiral(0, 91)
 }
 clear()
-setPenThickness(1)
-setAnimationDelay(0)
 val cb = canvasBounds
 def bg = trans(cb.x, cb.y) * fillColor(Color(153, 0, 255)) -> PicShape.rect(cb.height, cb.width)
 val pic = GPics(

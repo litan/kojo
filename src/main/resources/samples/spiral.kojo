@@ -8,7 +8,7 @@ def spiral(size: Int, angle: Int) {
 clear()
 setPenColor(darkGray)
 setFillColor(green)
-setBackgroundH(Color(255, 0, 0), yellow)
+setBackgroundH(red, yellow)
 setPenThickness(1)
 setAnimationDelay(0)
 spiral(0, 91)
