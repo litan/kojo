@@ -333,6 +333,9 @@ Here's a partial list of the available commands:
   val picCol = VPics
   val picStack = GPics
   val picBatch = BatchPics
+  val picRow2 = HPics2
+  val picCol2 = VPics2
+  val picStack2 = GPics2
 
   val rotp = picture.rotp _
   val opac = picture.opac _

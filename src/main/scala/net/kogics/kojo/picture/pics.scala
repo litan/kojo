@@ -685,29 +685,25 @@ object HPics2 {
 }
 
 class HPics2(pics: List[Picture]) extends BasePicList(pics) {
-  require(pics.size == 2)
   def realDraw() {
-    var ox = 0.0
-    var prevNbounds: Option[PBounds] = None
+    var prevPic: Option[Picture] = None
     pics.foreach { pic =>
-      pic.translate(ox, 0)
       pic.invisible()
       pic.draw()
-      val nbounds = pic.bounds
-      val prevNboundsCopy = prevNbounds
-      val ox2 = ox
-      Utils.runInSwingThread {
-        val yDelta = prevNboundsCopy match {
-          case Some(prevNbounds) =>
-            prevNbounds.getMinY - nbounds.getMinY + (prevNbounds.height - nbounds.height) / 2
-          case None => 0
-        }
-        pic.offset(ox2 - nbounds.getMinX, yDelta)
-        //        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(ox2 - nbounds.getMinX, yDelta))
-        pic.visible()
+      prevPic match {
+        case Some(ppic) =>
+          val pbounds = ppic.bounds
+          var bounds = pic.bounds
+          val tx = pbounds.getMinX + pbounds.getWidth + padding
+          pic.translate(tx, 0)
+          bounds = pic.bounds
+          val ty = pbounds.getMinY - bounds.getMinY + (pbounds.height - bounds.height) / 2
+          val tx2 = pbounds.getMaxX - bounds.getMinX
+          pic.offset(tx2, ty)
+        case None =>
       }
-      ox = nbounds.getWidth + padding
-      prevNbounds = Some(nbounds)
+      pic.visible()
+      prevPic = Some(pic)
     }
   }
 
@@ -757,29 +753,25 @@ object VPics2 {
 }
 
 class VPics2(pics: List[Picture]) extends BasePicList(pics) {
-  require(pics.size == 2)
   def realDraw() {
-    var oy = 0.0
-    var prevNbounds: Option[PBounds] = None
+    var prevPic: Option[Picture] = None
     pics.foreach { pic =>
-      pic.translate(0, oy)
       pic.invisible()
       pic.draw()
-      val nbounds = pic.bounds
-      val prevNboundsCopy = prevNbounds
-      val oy2 = oy
-      Utils.runInSwingThread {
-        val xDelta = prevNboundsCopy match {
-          case Some(prevNbounds) =>
-            prevNbounds.getMinX - nbounds.getMinX + (prevNbounds.width - nbounds.width) / 2
-          case None => 0
-        }
-        pic.offset(xDelta, oy2 - nbounds.getMinY)
-        //        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(xDelta, oy2 - nbounds.getMinY))
-        pic.visible()
+      prevPic match {
+        case Some(ppic) =>
+          val pbounds = ppic.bounds
+          var bounds = pic.bounds
+          val ty = pbounds.getMinY + pbounds.getHeight + padding
+          pic.translate(0, ty)
+          bounds = pic.bounds
+          val tx = pbounds.getMinX - bounds.getMinX + (pbounds.width - bounds.width) / 2
+          val ty2 = pbounds.getMaxY - bounds.getMinY
+          pic.offset(tx, ty2)
+        case None =>
       }
-      oy = nbounds.getHeight + padding
-      prevNbounds = Some(nbounds)
+      pic.visible()
+      prevPic = Some(pic)
     }
   }
 
@@ -825,26 +817,22 @@ object GPics2 {
 }
 
 class GPics2(pics: List[Picture]) extends BasePicList(pics) {
-  require(pics.size == 2)
   def realDraw() {
-    var prevNbounds: Option[PBounds] = None
+    var prevPic: Option[Picture] = None
     pics.foreach { pic =>
       pic.invisible()
       pic.draw()
-      val nbounds = pic.bounds
-      val prevNboundsCopy = prevNbounds
-      Utils.runInSwingThread {
-        val (xDelta, yDelta) = prevNboundsCopy match {
-          case Some(prevNbounds) =>
-            (prevNbounds.getMinX - nbounds.getMinX + (prevNbounds.width - nbounds.width) / 2,
-              prevNbounds.getMinY - nbounds.getMinY + (prevNbounds.height - nbounds.height) / 2)
-          case None => (0.0, 0.0)
-        }
-        pic.offset(xDelta, yDelta)
-        //        pic.tnode.getTransformReference(true).preConcatenate(AffineTransform.getTranslateInstance(xDelta, yDelta))
-        pic.visible()
+      prevPic match {
+        case Some(ppic) =>
+          val pbounds = ppic.bounds
+          val bounds = pic.bounds
+          val tx = pbounds.getMinX - bounds.getMinX + (pbounds.width - bounds.width) / 2
+          val ty = pbounds.getMinY - bounds.getMinY + (pbounds.height - bounds.height) / 2
+          pic.offset(tx, ty)
+        case None =>
       }
-      prevNbounds = Some(nbounds)
+      pic.visible()
+      prevPic = Some(pic)
     }
   }
 
