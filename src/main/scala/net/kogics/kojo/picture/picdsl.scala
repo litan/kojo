@@ -55,7 +55,7 @@ object PicCache {
     hits = 0
     misses = 0
   }
-  def getPic(pic: Picture): Picture = {
+  def freshPic(pic: Picture): Picture = {
     if (seen.contains(pic)) {
       val ret = pic.copy
       seen.add(ret)
@@ -68,101 +68,101 @@ object PicCache {
       pic
     }
   }
-  def deDup(ps: List[Picture]): List[Picture] = {
-    ps map getPic
+  def freshPics(ps: List[Picture]): List[Picture] = {
+    ps map freshPic
   }
 }
 
 case class DslImpl(pic: Picture) extends PicDrawingDsl {
-  import PicCache.getPic
+  import PicCache.freshPic
   val drawnMsg = "Picture has already been drawn; drawing function '%s 'is not available."
   def outlined(color: Paint): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "outlined")
-    DslImpl(Stroke(color)(getPic(pic)))
+    DslImpl(Stroke(color)(freshPic(pic)))
   }
   def withWidth(th: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "withWidth")
-    DslImpl(StrokeWidth(th)(getPic(pic)))
+    DslImpl(StrokeWidth(th)(freshPic(pic)))
   }
   def filled(color: Paint): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "filled")
-    DslImpl(Fill(color)(getPic(pic)))
+    DslImpl(Fill(color)(freshPic(pic)))
   }
   def translated(x: Double, y: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "translated")
-    DslImpl(Trans(x, y)(getPic(pic)))
+    DslImpl(Trans(x, y)(freshPic(pic)))
   }
   def rotated(angle: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "rotated")
-    DslImpl(Rot(angle)(getPic(pic)))
+    DslImpl(Rot(angle)(freshPic(pic)))
   }
   def rotatedXY(angle: Double, x: Double, y: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "rotatedXY")
-    DslImpl(Rotp(angle, x, y)(getPic(pic)))
+    DslImpl(Rotp(angle, x, y)(freshPic(pic)))
   }
   def scaledXY(fx: Double, fy: Double = 0): PicDrawingDsl = {
     val fy1 = if (fy == 0) fx else fy
     pic.checkDraw(drawnMsg format "scaled")
-    DslImpl(ScaleXY(fx, fy1)(getPic(pic)))
+    DslImpl(ScaleXY(fx, fy1)(freshPic(pic)))
   }
   def on(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "on")
-    DslImpl(GPics2(getPic(other.pic), getPic(pic)))
+    DslImpl(GPics2(freshPic(other.pic), freshPic(pic)))
   }
   def on2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "on2")
-    DslImpl(GPics(getPic(other.pic), getPic(pic)))
+    DslImpl(GPics(freshPic(other.pic), freshPic(pic)))
   }
   def under(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "under")
-    DslImpl(GPics2(getPic(pic), getPic(other.pic)))
+    DslImpl(GPics2(freshPic(pic), freshPic(other.pic)))
   }
   def under2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "under2")
-    DslImpl(GPics(getPic(pic), getPic(other.pic)))
+    DslImpl(GPics(freshPic(pic), freshPic(other.pic)))
   }
   def above(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "above")
-    DslImpl(VPics2(getPic(other.pic), getPic(pic)))
+    DslImpl(VPics2(freshPic(other.pic), freshPic(pic)))
   }
   def above2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "above2")
-    DslImpl(VPics(getPic(other.pic), getPic(pic)))
+    DslImpl(VPics(freshPic(other.pic), freshPic(pic)))
   }
   def below(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "below")
-    DslImpl(VPics2(getPic(pic), getPic(other.pic)))
+    DslImpl(VPics2(freshPic(pic), freshPic(other.pic)))
   }
   def below2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "below2")
-    DslImpl(VPics(getPic(pic), getPic(other.pic)))
+    DslImpl(VPics(freshPic(pic), freshPic(other.pic)))
   }
   def beside(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "beside")
-    DslImpl(HPics2(getPic(pic), getPic(other.pic)))
+    DslImpl(HPics2(freshPic(pic), freshPic(other.pic)))
   }
   def beside2(other: PicDrawingDsl): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "beside2")
-    DslImpl(HPics(getPic(pic), getPic(other.pic)))
+    DslImpl(HPics(freshPic(pic), freshPic(other.pic)))
   }
   def opaced(f: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "opaced")
-    DslImpl(Opac(f)(getPic(pic)))
+    DslImpl(Opac(f)(freshPic(pic)))
   }
   def brightened(f: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "brightened")
-    DslImpl(Brit(f)(getPic(pic)))
+    DslImpl(Brit(f)(freshPic(pic)))
   }
   def hueued(f: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "hueued")
-    DslImpl(Hue(f)(getPic(pic)))
+    DslImpl(Hue(f)(freshPic(pic)))
   }
   def withAxes(): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "withAxes")
-    DslImpl(AxesOn(getPic(pic)))
+    DslImpl(AxesOn(freshPic(pic)))
   }
   def at(x: Double, y: Double): PicDrawingDsl = {
     pic.checkDraw(drawnMsg format "at")
-    DslImpl(Position(x, y)(getPic(pic)))
+    DslImpl(Position(x, y)(freshPic(pic)))
   }
 }

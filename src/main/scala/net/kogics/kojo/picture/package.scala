@@ -57,7 +57,6 @@ package object picture {
   def fill(color: Paint) = Fillc(color)
   def stroke(color: Paint) = Strokec(color)
   def strokeWidth(w: Double) = StrokeWidthc(w)
-  def deco(painter: Painter) = Decoc(painter)
   def fade(n: Int) = Fadec(n)
   def blur(n: Int) = Blurc(n)
   def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) =

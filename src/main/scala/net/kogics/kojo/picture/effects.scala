@@ -17,6 +17,7 @@ package net.kogics.kojo
 package picture
 
 import core.Picture
+import net.kogics.kojo.picture.PicCache.freshPic
 
 abstract class Effect extends Transformer {
   def draw() {
@@ -28,7 +29,7 @@ case class Spin(n: Int)(pic: Picture) extends Effect {
   val tpic = spunP
   def spunP = {
     val lb = new collection.mutable.ListBuffer[Picture]
-    lb += pic
+    lb += freshPic(pic)
     var angle = 360.0 / n
     for (i <- 1 to n-1) {
       lb += rot(angle) -> pic.copy
@@ -43,7 +44,7 @@ case class Spin(n: Int)(pic: Picture) extends Effect {
 case class Reflect(n: Int)(pic: Picture) extends Effect {
   val tpic = reflectedP
   def reflectedP = {
-    HPics(pic, trans(n, 0)(FlipY(pic.copy)))
+    HPics(freshPic(pic), trans(n, 0)(FlipY(pic.copy)))
   }
   
   def copy = Reflect(n)(pic.copy)

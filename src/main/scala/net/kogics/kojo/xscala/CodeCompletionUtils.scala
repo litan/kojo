@@ -116,6 +116,7 @@ object CodeCompletionUtils {
     "fillColor" -> "fillColor(${color})",
     "penColor" -> "penColor(${color})",
     "penWidth" -> "penWidth(${n})",
+    "penThickness" -> "penThickness(${n})",
     "spin" -> "spin(${n})",
     "reflect" -> "reflect(${gap})",
     "fade" -> "fade(${distance})",
