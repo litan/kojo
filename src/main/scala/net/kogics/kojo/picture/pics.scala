@@ -424,7 +424,6 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
 
   def makeTnode = t.tlayer
 
-  def decorateWith(painter: Painter) = painter(t)
   def realDraw() {
     painter(t)
     Utils.runInSwingThread {
@@ -571,12 +570,6 @@ abstract class BasePicList(val pics: List[Picture])
 
   def bounds = Utils.runInSwingThreadAndPause {
     tnode.getFullBounds
-  }
-
-  def decorateWith(painter: Painter) {
-    pics.foreach { pic =>
-      pic.decorateWith(painter)
-    }
   }
 
   def hueMod(f: Double) {

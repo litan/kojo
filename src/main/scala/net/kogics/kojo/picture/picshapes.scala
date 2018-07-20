@@ -55,10 +55,6 @@ trait PicShapeOps { self: Picture with CorePicOps =>
     tnode.getFullBounds
   }
 
-  def decorateWith(painter: Painter) {
-    painter(null)
-  }
-
   def britMod(f: Double) = Utils.runInSwingThread {
     tnode.setPaint(Utils.britMod(extractFillColor(tnode.getPaint), f))
   }
@@ -103,8 +99,6 @@ trait NonVectorPicOps { self: Picture with CorePicOps =>
   def bounds = Utils.runInSwingThreadAndPause {
     tnode.getFullBounds
   }
-
-  def decorateWith(painter: Painter) = notSupported("decorateWith", "for non-vector picture")
 
   def britMod(f: Double) = notSupported("britMod", "for non-vector picture")
 

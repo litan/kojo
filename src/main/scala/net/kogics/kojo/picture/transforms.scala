@@ -45,7 +45,6 @@ trait Transformer extends Picture with CorePicOps2 {
   def transformBy(trans: AffineTransform) = tpic.transformBy(trans)
   def transform = tpic.transform
   def setTransform(trans: AffineTransform) = tpic.setTransform(trans)
-  def decorateWith(painter: Painter) = tpic.decorateWith(painter)
   def tnode = tpic.tnode
   def axesOn() = tpic.axesOn()
   def axesOff() = tpic.axesOff()

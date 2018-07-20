@@ -17,7 +17,6 @@ import edu.umd.cs.piccolo.util.PBounds
 trait Picture extends InputAware {
   def canvas: SCanvas
   def myNode = tnode
-  def decorateWith(painter: Painter): Unit
   def draw(): Unit
   def erase(): Unit
   def isDrawn(): Boolean
