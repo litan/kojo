@@ -1,9 +1,11 @@
-// Sling the ball (with the mouse) towards the target on the top-right. 
-// Then draw paddles on the canvas (with the mouse) to guide the ball 
+// Sling the ball (with the mouse) towards the target on the top-right.
+// Then draw paddles on the canvas (with the mouse) to guide the ball
 // away from the obstacles and towards the target.
 // You win if you hit the target within a minute
 switchToDefault2Perspective()
 cleari()
+setRefreshRate(50)
+
 drawStage(darkGray)
 val cb = canvasBounds
 val obsDelta = cb.width / 4
@@ -132,7 +134,7 @@ stageArea.onMouseDrag { (x, y) =>
     }
     paddlePts += Point(x, y)
     tempPaddle.erase()
-    tempPaddle = line(paddlePts, black)
+    tempPaddle = line(paddlePts, ColorMaker.aquamarine)
     tempPaddle.draw()
 }
 

@@ -3,6 +3,11 @@
 // You lose if your energy drops below zero, or you hit the edges of the screen
 // You win if you stay alive for a minute
 switchToDefault2Perspective()
+cleari()
+drawStage(darkGray)
+setRefreshRate(50)
+
+val cb = canvasBounds
 val carHeight = 100
 val markerHeight = 80
 // The collision polygon for the (very similarly sized) car images car1.png and car2.png
@@ -37,9 +42,6 @@ def createMarker() {
     markers += m
 }
 
-cleari()
-drawStage(darkGray)
-val cb = canvasBounds
 val player = car("/media/car-ride/car1.png")
 draw(player)
 drawAndHide(carE)
@@ -135,7 +137,7 @@ animate {
 
 var energyLevel = 0
 def energyText = s"Energy: $energyLevel"
-val energyLabel = trans(cb.x + 10, cb.y + cb.height - 10) -> PicShape.textu(energyText, 20, blue)
+val energyLabel = trans(cb.x + 10, cb.y + cb.height - 10) -> PicShape.textu(energyText, 20, ColorMaker.aquamarine)
 def updateEnergyTick() {
     energyLevel += 2
     energyLabel.update(energyText)
@@ -150,14 +152,12 @@ def updateEnergyCrash() {
 }
 
 def drawMessage(m: String, c: Color) {
-    val te = textExtent(m, 30)
-    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, 30)
-    draw(pic)
+    drawCenteredMessage(m, c, 30)
 }
 
 def manageGameScore() {
     var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, blue)
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, ColorMaker.azure)
     draw(timeLabel)
     draw(energyLabel)
     timeLabel.forwardInputTo(stageArea)
@@ -178,6 +178,6 @@ manageGameScore()
 playMp3Loop("/media/car-ride/car-move.mp3")
 activateCanvas()
 
-// Car images, via google images, from http://motor-kid.com/race-cars-top-view.html 
+// Car images, via google images, from http://motor-kid.com/race-cars-top-view.html
 // and www.carinfopic.com
 // Car sounds from http://soundbible.com

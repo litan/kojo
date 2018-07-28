@@ -1,8 +1,10 @@
 toggleFullScreenCanvas()
-val max1 = 9
 
+// Change max1, max2 to change the difficulty level of the game
+val max1 = 9
 val max2 = 10
-val bgColor = Color(208, 144, 73)
+
+val bgColor = ColorMaker.khaki
 
 def number(max: Int) = 2 + random(max - 1)
 def snumber(n: Int) = s" $n "
@@ -88,7 +90,7 @@ import java.awt.event.{ KeyAdapter, KeyEvent }
 answerF.addKeyListener(new KeyAdapter {
     def checkAnswer(x: Int) {
         if (x == answer) {
-            answerF.setForeground(green)
+            answerF.setForeground(Color(0, 220, 0))
             corrects += 1
             if (!done && enoughQTime) {
                 schedule(0.3) {
@@ -109,6 +111,14 @@ answerF.addKeyListener(new KeyAdapter {
 
     def checkingTime(e: KeyEvent) = {
         answerF.getText.length >= answerLen
+    }
+
+    override def keyPressed(e: KeyEvent) {
+        if (e.getKeyCode == Kc.VK_ESCAPE) {
+            e.consume()
+            stopAnimation()
+            toggleFullScreenCanvas()
+        }
     }
 
     override def keyTyped(e: KeyEvent) {

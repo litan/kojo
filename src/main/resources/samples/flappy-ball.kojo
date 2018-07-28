@@ -1,8 +1,10 @@
 // Use the up/down keys to prevent the ball from colliding with the
-// oncoming obstacles or the stage border. 
+// oncoming obstacles or the stage border.
 // You win if you keep the ball in play for a minute
 cleari()
 drawStage(black)
+setRefreshRate(50)
+
 val cb = canvasBounds
 def obstacle(h: Int, w: Int) = PicShape.rect(h, w)
 val playerE = trans(49, 31) -> PicShape.circle(30)
@@ -12,7 +14,7 @@ def createObstacle() {
     val height = random((0.5 * cb.height).toInt) + 50
     val trxy = if (randomBoolean) (cb.width / 2, cb.height / 2 - height)
     else (cb.width / 2, -cb.height / 2)
-    val obs = fillColor(Color(12, 34, 100)) * penColor(noColor) *
+    val obs = fillColor(ColorMaker.blueViolet) * penColor(noColor) *
         trans(trxy._1, trxy._2) -> obstacle(height, random(30) + 30)
     obstacles += obs
     draw(obs)
@@ -75,26 +77,11 @@ player.react { self =>
 }
 
 def drawMessage(m: String, c: Color) {
-    val te = textExtent(m, 30)
-    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, 30)
-    draw(pic)
+    drawCenteredMessage(m, c, 30)
 }
 
 def manageGameTime() {
-    var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, blue)
-    draw(timeLabel)
-    timeLabel.forwardInputTo(stageArea)
-
-    timer(1000) {
-        gameTime += 1
-        timeLabel.update(gameTime)
-
-        if (gameTime == 60) {
-            drawMessage("You Win", green)
-            stopAnimation()
-        }
-    }
+    showGameTime(60, "You Win", green, 20)
 }
 
 manageGameTime()
