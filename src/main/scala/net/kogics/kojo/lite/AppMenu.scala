@@ -222,6 +222,8 @@ trait AppMenu {
     animGameMenu.add(menuItemFor("S_FlappyBall", "flappy-ball.kojo"))
     animGameMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
     animGameMenu.add(menuItemFor("S_CarRide", "car-ride.kojo"))
+    animGameMenu.add(menuItemFor("S_RoboSim1", "go-furthest.kojo", "/robosim/"))
+
     samplesMenu.add(animGameMenu)
 
     val widgetsMenu = newJMenu(Utils.loadString("S_Widgets"))

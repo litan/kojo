@@ -264,6 +264,8 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
           throw new IllegalStateException("Unable to create geometry for picture - " + t.getMessage, t)
       }
     }
+    // thought related to getting geometry in global coords; runs into problems with, for e.g, a translated HPics inside a translated HPics
+    //    t2t(tnode.getLocalToGlobalTransform(null)).transform(_picGeom)
     pgTransform.transform(_picGeom)
   }
 
