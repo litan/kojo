@@ -8,7 +8,6 @@ case class Robot(x0: Int, y: Int, roomWalls: Picture) {
     val soundWave = trans(width / 2, height) * fillColor(ColorMaker.lightBlue) *
         penColor(ColorMaker.lightSlateGray) * penWidth(1) -> Picture.circle(width / 2)
     val robotBody = fillColor(rc) * penColor(rc) -> Picture.rectangle(width, height)
-    val sweepAngle = 90
     val lVelocity = 200.0 // pixels per sec
     val aVelocity = 180.0 // degrees per sec
     //    distanceSensor.axesOn()
