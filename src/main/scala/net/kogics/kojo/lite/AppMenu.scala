@@ -222,9 +222,14 @@ trait AppMenu {
     animGameMenu.add(menuItemFor("S_FlappyBall", "flappy-ball.kojo"))
     animGameMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
     animGameMenu.add(menuItemFor("S_CarRide", "car-ride.kojo"))
-    animGameMenu.add(menuItemFor("S_RoboSim1", "go-furthest.kojo", "/robosim/"))
 
     samplesMenu.add(animGameMenu)
+
+    val roboSimMenu = newJMenu(Utils.loadString("S_RobotSimulations"))
+    roboSimMenu.add(menuItemFor("S_RoboSim1", "obstacle-greedy.kojo", "/robosim/"))
+    roboSimMenu.add(menuItemFor("S_RoboSim2", "obstacle-furthest.kojo", "/robosim/"))
+
+    samplesMenu.add(roboSimMenu)
 
     val widgetsMenu = newJMenu(Utils.loadString("S_Widgets"))
     widgetsMenu.add(menuItemFor("S_WidgetsInCanvas", "widgets-canvas.kojo"))
