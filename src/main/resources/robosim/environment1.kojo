@@ -35,4 +35,3 @@ room7.setPosition(100, -50)
 val allRooms = picStack(roomWest, roomNorth, roomEast, roomSouth, room1, room2,
     room3, room4, room1m, room4m, room5, room6, room6m, room7)
 
-draw(allRooms)

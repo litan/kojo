@@ -1,8 +1,12 @@
 // #include /robosim/robot.kojo
 // #include /robosim/environment1.kojo
 
+// Included code can be seen here:
+// https://github.com/litan/kojo/tree/master/src/main/resources/robosim
+
 cleari()
 drawStage(ColorMaker.khaki)
+draw(allRooms) // allRooms comes from the included environment
 
 // turn on grid if you want to tweak room placement
 //showAxes()
