@@ -23,6 +23,7 @@ clearOutput()
 @volatile var serialPort: SerialPort = _
 @volatile var bytePromise: Promise[Byte] = _
 @volatile var intPromise: Promise[Int] = _
+@volatile var longPromise: Promise[Long] = _
 
 def writeArray(arr: Array[Byte]) {
     debugMsg(s"Arduino <- ${arr.toList}")
@@ -34,12 +35,21 @@ def writeArray(arr: Array[Byte]) {
     }
 }
 
+val MaxArduinoInt = math.pow(2, 16).toInt
+val MaxArduinoByte = math.pow(2, 8).toInt
+
 // write out an arduino unsigned int
 val intArray = new Array[Byte](2)
 def writeInt(i: Int) {
+    require(i < MaxArduinoInt, s"writeInt(n) - an Arduino unsigned int has to be less than: $MaxArduinoInt")
     intArray(0) = (i & 0x00FF).toByte
     intArray(1) = (i >> 8).toByte
     writeArray(intArray)
+}
+
+def writeString(s: String) {
+    val stringArray = s.getBytes("US-ASCII")
+    writeArray(stringArray)
 }
 
 def awaitResult[T](f: Future[T]): T = {
@@ -68,6 +78,14 @@ class SerialPortReader extends SerialPortEventListener {
         val lowByte: Int = readByte & 0x00FF
         val hiByte: Int = readByte & 0x00FF
         hiByte << 8 | lowByte
+    }
+
+    def readLong: Long = {
+        val lowByte: Long = readByte & 0x00FF
+        val hiByte: Long = readByte & 0x00FF
+        val hi2Byte: Long = readByte & 0x00FF
+        val hi3Byte: Long = readByte & 0x00FF
+        hi3Byte << 24 | hi2Byte << 16 | hiByte << 8 | lowByte
     }
 
     def readString: String = {
@@ -108,25 +126,48 @@ class SerialPortReader extends SerialPortEventListener {
     }
 
     def handleData() {
+        def drainBytes(n: Int, msg: String) {
+            repeat(n) {
+                readByte
+            }
+            println(msg)
+        }
         debugMsg(s"  Bytes available: $bytesAvailable, Curr packet size: $packetSize")
         if (bytesAvailable >= packetSize) {
             readByte match {
                 case 1 => // byte
-                    readByte; readByte
-                    val d = readByte
-                    if (bytePromise != null) {
+                    if (bytePromise != null && !bytePromise.isCompleted) {
+                        readByte; readByte
+                        val d = readByte
                         bytePromise.success(d)
                     }
+                    else {
+                        drainBytes(packetSize - 1, "Unexpected Byte received.")
+                    }
                 case 2 => // int
-                    readByte; readByte
-                    val d = readInt
-                    if (intPromise != null) {
+                    if (intPromise != null && !intPromise.isCompleted) {
+                        readByte; readByte
+                        val d = readInt
                         intPromise.success(d)
+                    }
+                    else {
+                        drainBytes(packetSize - 1, "Unexpected Int received.")
                     }
                 case 3 => // string
                     readByte; readByte
                     val msg = readString
                     println(s"[Arduino-Log] $msg")
+                case 4 => // long
+                    if (longPromise != null && !longPromise.isCompleted) {
+                        readByte; readByte
+                        val d = readLong
+                        longPromise.success(d)
+                    }
+                    else {
+                        drainBytes(packetSize - 1, "Unexpected Long received.")
+                    }
+                case _ => // unknown
+                    drainBytes(packetSize - 1, "Unknown data received.")
             }
             packetDone()
         }
@@ -151,9 +192,9 @@ runInBackground {
         serialPort.setParams(SerialPort.BAUDRATE_115200,
             SerialPort.DATABITS_8,
             SerialPort.STOPBITS_1,
-            SerialPort.PARITY_NONE,
-            true,
-            true)
+            SerialPort.PARITY_NONE
+        )
+        serialPort.setEventsMask(SerialPort.MASK_RXCHAR);
         serialPort.addEventListener(new SerialPortReader())
     }
 
@@ -181,15 +222,20 @@ runInBackground {
     }
 
     def connectAndCheck(portName: String): Boolean = {
-        connect(portName)
-        debugMsg("Connection done; pinging soon...")
-        pause(2)
-        debugMsg("Pinging...")
-        val good = ping()
-        if (!good) {
-            serialPort.closePort()
+        try {
+            connect(portName)
+            debugMsg("Connection done; pinging soon...")
+            pause(2)
+            debugMsg("Pinging...")
+            val good = ping()
+            if (!good) {
+                serialPort.closePort()
+            }
+            good
         }
-        good
+        catch {
+            case _: Throwable => false
+        }
     }
 
     var arduinoPort: Option[String] = None
@@ -226,15 +272,16 @@ runInBackground {
         throw new RuntimeException("Unable to find an Arduino port with the Kojo-Arduino bridge running at the other end.")
     }
 
-    setRefreshRate(1)
-    animate {
-    }
-
-    onAnimationStop {
+    def done() {
+        println("")
         println(s"Closing port: ${arduinoPort.get}")
         println(s"Stopped at: ${new Date}")
+        println("--")
         try {
-            serialPort.closePort()
+            if (serialPort.isOpened()) {
+                serialPort.purgePort(SerialPort.PURGE_RXCLEAR | SerialPort.PURGE_TXCLEAR)
+                serialPort.closePort()
+            }
         }
         catch {
             case _: Throwable =>
@@ -243,10 +290,15 @@ runInBackground {
 
     println(s"Started at: ${new Date}")
     println("--")
-    setup()
-    repeatWhile(true) {
-        // thread is interrupted when stop button is pressed
-        loop()
+    try {
+        setup()
+        repeatWhile(true) {
+            // thread is interrupted when stop button is pressed
+            loop()
+        }
+    }
+    finally {
+        done()
     }
 }
 
@@ -275,6 +327,7 @@ def digitalRead(pin: Byte): Byte = {
 }
 
 def analogWrite(pin: Byte, value: Int) {
+    require(value < MaxArduinoByte, s"analogWrite() - value has to be less than: $MaxArduinoByte")
     val command = Array[Byte](4, 1, 7, pin, value.toByte)
     //                        sz,ns,cmd,arg1,arg2
     writeArray(command)
@@ -319,10 +372,70 @@ object Servo {
     }
 }
 
+object SoftSerial {
+    // proxy for Softserial library
+    // namespace (ns) = 3
+
+    def begin(baud: Int) {
+        val command = Array[Byte](4, 3, 1)
+        //                        sz,ns,cmd
+        writeArray(command)
+        writeInt(baud)
+    }
+
+    def available(): Int = {
+        val command = Array[Byte](2, 3, 2)
+        //                        sz,ns,cmd
+        intPromise = Promise()
+        writeArray(command)
+        awaitResult(intPromise.future)
+    }
+
+    def read(): Int = {
+        val command = Array[Byte](2, 3, 3)
+        //                        sz,ns,cmd
+        intPromise = Promise()
+        writeArray(command)
+        awaitResult(intPromise.future)
+    }
+
+    def println(s: String): Int = {
+        val len = s.length
+        val command = Array[Byte](2 + 2 + len, 3, 4)
+        //                        sz,ns,cmd
+        intPromise = Promise()
+        writeArray(command)
+        writeInt(len)
+        writeString(s)
+        awaitResult(intPromise.future)
+    }
+}
+
+object UltraSonic {
+    // proxy for ultrasonic sensor
+    // namespace (ns) = 4
+
+    def init(triggerPin: Byte, echoPin: Byte) {
+        val command = Array[Byte](4, 4, 1, triggerPin, echoPin)
+        //                        sz,ns,cmd,arg1, arg2
+        writeArray(command)
+    }
+    
+    def pingMicroSecs(): Long = {
+        val command = Array[Byte](2, 4, 2)
+        //                        sz,ns,cmd
+        longPromise = Promise()
+        writeArray(command)
+        awaitResult(longPromise.future)
+    }
+}
+
+
+
 val INPUT, LOW = 0.toByte
 val OUTPUT, HIGH = 1.toByte
 
-def delay(n: Int) = Thread.sleep(n)
+def delay(n: Long) = Thread.sleep(n)
 def millis = epochTimeMillis
 
 // uncomment setup and loop methods below to compile/run this file standalone

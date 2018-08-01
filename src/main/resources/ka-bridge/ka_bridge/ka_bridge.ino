@@ -9,19 +9,38 @@
 
 #define IN_PACK_MAX_SIZE (10) // ns, proc, and eight more bytes for args
 #define OUT_PACK_HDR_SIZE (3) // ret val type, ns, and proc
+
+// #define DEBUG
+
+#ifdef DEBUG
+ #define debugLog(x)  log(x)
+#else
+ #define debugLog(x)
+#endif
+
 byte incoming_packet[IN_PACK_MAX_SIZE]; 
 byte outgoing_packet_hdr[OUT_PACK_HDR_SIZE]; 
 int counter;
 int state;
 int packetSize;
-boolean debug = false;
 
 // Include libs here
 #include <Servo.h>
+#include <SoftwareSerial.h>
+
 Servo servo;
+
+#define softSerial_RX 10
+#define softSerial_TX 11
+SoftwareSerial *softSerial = NULL;
+
+// For Ultrasonic sensor
+byte triggerPin, echoPin;
 
 void setup() {
   Serial.begin(115200);
+  delay(10);
+  log("Board (re)starting.");
   counter = 0;
   state = 1;
 }
@@ -65,12 +84,6 @@ void log(String msg) {
   returnString(0, -1, msg);
 }
 
-void debugLog(String msg) {
-  if (debug) {
-    log(msg);
-  }
-}
-
 byte readByte() {
   return incoming_packet[counter++];
 }
@@ -84,6 +97,16 @@ unsigned int readInt() {
   return retVal;
 }
 
+char* readString() {
+  int len = readInt();
+  char* buf = new char[len+1];
+  for (int i=0; i < len; i++){
+    buf[i] = readByte();
+  }
+  buf[len] = 0;
+  return buf;
+}
+
 void writeByte(byte b) {
   int written = Serial.write(b);
   while (written != 1) {
@@ -94,6 +117,13 @@ void writeByte(byte b) {
 void writeInt(unsigned int i) {
   writeByte(i & 0x00FF);
   writeByte(i >> 8);
+}
+
+void writeLong(unsigned long l) {
+  writeByte(l & 0x000000FF);
+  writeByte((l >> 8) & 0x0000FF);
+  writeByte((l >> 16) & 0x00FF);
+  writeByte(l >> 24);
 }
 
 void writeArray(byte arr[], int len) {
@@ -122,6 +152,12 @@ void returnInt(byte ns, byte proc, unsigned int intRet) {
   writeInt(intRet);
 }
 
+void returnLong(byte ns, byte proc, unsigned long longRet) {
+  writeByte(OUT_PACK_HDR_SIZE + 4); // packet size
+  writeHeader(4, ns, proc);
+  writeLong(longRet);
+}
+
 void returnString(byte ns, byte proc, String msg) {
   int len = msg.length();
   writeByte(OUT_PACK_HDR_SIZE + len);
@@ -136,7 +172,7 @@ void dispatchProc() {
   int writeSize;
   byte byteRet;
   byte b1, b2;
-  int i1, i2;
+  unsigned int i1, i2;
   byte ns = readByte();
   byte proc = readByte();
   switch (ns) {
@@ -153,24 +189,24 @@ void dispatchProc() {
         case 1: // pinMode
           b1 = readByte();
           b2 = readByte();
+          debugLog(String("pinMode(") + b1 + ", " + b2 + ")");
           pinMode(b1, b2);
-          debugLog(String("pinMode(") + b1 + String(", ") + b2 + String(")"));
           break;
         case 2: // digitalWrite
           b1 = readByte();
           b2 = readByte();
+          debugLog(String("digitalWrite(") + b1 + ", " + b2 + ")");
           digitalWrite(b1, b2);
-          debugLog(String("digitalWrite(") + b1 + String(", ") + b2 + String(")"));
           break;
         case 3: // digitalRead
           b1 = readByte();
+          debugLog(String("digitalRead(") + b1 + ")");
           returnByte(1, 3, digitalRead(b1));
-          debugLog(String("digitalRead(") + b1 + String(")"));
           break;
         case 4: // analogRead
           b1 = readByte();
+          debugLog(String("analogRead(") + b1 + ")");
           returnInt(1, 4, analogRead(b1));
-          debugLog(String("analogRead(") + b1 + String(")"));
           break;
         case 5: // tone
           b1 = readByte();
@@ -183,8 +219,8 @@ void dispatchProc() {
         case 7: // analogWrite
           b1 = readByte();
           b2 = readByte();
+          debugLog(String("analogWrite(") + b1 + ", " + b2 + ")");
           analogWrite(b1, b2);
-          debugLog(String("analogWrite(") + b1 + String(", ") + b2 + String(")"));
           break;
         case 8: // tone
           b1 = readByte();
@@ -204,5 +240,54 @@ void dispatchProc() {
           break;
       }
       break;
+    case 3: // soft serial lib
+      switch (proc) {
+        case 1: // begin
+          if (softSerial == NULL) {
+            softSerial = new SoftwareSerial(softSerial_RX, softSerial_TX);
+            debugLog("Created softSerial instance");
+          }
+          i1 = readInt();
+          debugLog(String("softSerial.begin(") + i1 + ")");
+          softSerial->begin(i1);
+          break;
+        case 2: // available
+          returnInt(3, 2, softSerial->available());
+          // debugLog("softSerial.available()");
+          break;
+        case 3: // read
+          i1 = softSerial->read();
+          debugLog(String("softSerial.read()") + " = " + i1);
+          returnInt(3, 3, i1);
+          break;
+        case 4: // println
+          char* str = readString();
+          debugLog(String("softSerial.println(") + str + ")");
+          returnInt(3, 4, softSerial->println(str));
+          delete str;
+          break;
+      }
+      break;
+    case 4: // Ultrasonic sensor
+      switch (proc) {
+        case 1: // init
+          triggerPin = readByte();
+          echoPin = readByte();
+          debugLog(String("Ultrasonic.init(") + triggerPin + ", " + echoPin + ")");
+          pinMode(triggerPin, OUTPUT);
+          pinMode(echoPin, INPUT);
+          break;
+        case 2: // pingMicroSecs
+          debugLog("Ultrasonic.pingMicroSecs()");
+          digitalWrite(triggerPin, LOW);
+          delayMicroseconds(2);
+          digitalWrite(triggerPin, HIGH);
+          delayMicroseconds(10);
+          digitalWrite(triggerPin, LOW);
+          returnLong(4, 2, pulseIn(echoPin, HIGH));
+          break;
+      }
+      break;
   }
 }
+
