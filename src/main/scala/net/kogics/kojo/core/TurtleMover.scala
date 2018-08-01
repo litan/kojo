@@ -19,7 +19,7 @@ import java.awt.Paint
 import java.awt.geom.Point2D
 import java.awt.Image
 
-case class Style(val penColor: Paint, val penThickness: Double, val fillColor: Paint, val font: Font, down: Boolean)
+case class Style(penColor: Paint, penThickness: Double, fillColor: Paint, font: Font, down: Boolean)
 trait Speed
 case object Slow extends Speed
 case object Medium extends Speed
@@ -81,6 +81,7 @@ trait TurtleMover extends RichTurtleCommands {
   def setPenFont(font: Font)
   def arc2(r: Double, a: Double): Unit
   def circle(r: Double) = arc2(r, 360)
+  def ellipse(r1: Double, r2: Double): Unit
   def setCostumeImage(image: Image): Unit
   def setCostume(costumeFile: String): Unit
   def setCostumes(costumeFiles: Vector[String]): Unit

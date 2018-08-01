@@ -223,6 +223,7 @@ object CodeCompletionUtils {
     "Picture" -> "Picture {\n    ${cursor}\n}",
     "circle" -> "circle(${radius})",
     "arc" -> "arc(${radius}, ${angle})",
+    "ellipse" -> "ellipse(${radius1}, ${radius2})",
     "show" -> "draw(${pic/s})",
     "wipe" -> "wipe()",
     "morph" -> "morph { polyLines =>\n    ${cursor}\n}",

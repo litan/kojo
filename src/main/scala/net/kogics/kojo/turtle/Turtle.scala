@@ -547,6 +547,24 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
+  def ellipse(r1: Double, r2: Double) {
+    val pos = position
+    val head = heading
+    val trans = new java.awt.geom.AffineTransform()
+    trans.translate(pos.x, pos.y)
+    trans.rotate((head - 90).toRadians)
+    trans.translate(-r1, 0)
+    val pt = new Point2D.Double(0, 0)
+
+    def x(t: Double) = r1 * math.cos(t.toRadians)
+    def y(t: Double) = r2 * math.sin(t.toRadians)
+    for (t <- 1 to 360) {
+      pt.setLocation(x(t), y(t))
+      trans.transform(pt, pt)
+      moveTo(pt.x, pt.y)
+    }
+  }
+
   def setCostume(costumeFile: String) = {
     Utils.runInSwingThread {
       setCostumeHelper(costumeFile)
