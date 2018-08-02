@@ -378,6 +378,10 @@ object Utils {
     val os = System.getProperty("os.name").toLowerCase()
     os.startsWith("mac")
   }
+  def isWin = {
+    val os = System.getProperty("os.name").toLowerCase()
+    os.startsWith("win")
+  }
 
   def readStream(is: InputStream): String = {
     require(is != null, "resource should exist")

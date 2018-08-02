@@ -1,6 +1,6 @@
 name := "Kojo"
 
-version := "2.4"
+version := "2.7"
 
 scalaVersion := "2.11.11"
 

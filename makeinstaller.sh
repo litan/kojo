@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 java -version
 set -x 
 # Build Kojo

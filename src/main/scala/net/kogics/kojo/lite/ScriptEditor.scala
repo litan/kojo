@@ -608,7 +608,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     statusStrip.linkToPane()
     codePane.addKeyListener(new KeyAdapter {
       override def keyPressed(evt: KeyEvent) {
-        execSupport.imanip.foreach { _ close () }
+        if (!evt.isControlDown) {
+          execSupport.imanip.foreach { _ close () }
+        }
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
