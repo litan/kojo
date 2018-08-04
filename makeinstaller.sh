@@ -22,6 +22,4 @@ source ~/bin/activate-java-16.sh
 
 mv install.jar kojoInstall.jar
 echo jar installer generated -- installerbuild/kojoInstall.jar
-
-
-
+~/tools/launch4j/launch4j winInstaller.xml
