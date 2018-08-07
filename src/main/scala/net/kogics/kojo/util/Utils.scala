@@ -36,6 +36,8 @@ import java.io.StringWriter
 import java.net.InetAddress
 import java.net.URL
 import java.util.LinkedList
+import java.util.Locale
+import java.util.Properties
 import java.util.ResourceBundle
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -43,19 +45,13 @@ import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 import java.util.logging.Level
 import java.util.logging.Logger
-import java.util.Locale
 
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
 import javax.swing.Timer
 import javax.swing.text.JTextComponent
 
-import scala.actors.Actor.actor
-import scala.actors.Actor.loop
-import scala.actors.Actor.react
 import scala.collection.mutable.HashMap
-import scala.collection.mutable.HashSet
-import scala.collection.mutable.SynchronizedSet
 
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
@@ -63,13 +59,10 @@ import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
+import net.kogics.kojo.util.RichFile.enrichFile
 
-import RichFile.enrichFile
-import Typeclasses.mkIdentity
-import Typeclasses.some
+import akka.actor.ActorSystem
 import edu.umd.cs.piccolo.event.PInputEvent
-import edu.umd.cs.piccolo.nodes.PText
-import java.util.Properties
 
 object Utils {
   lazy val Log = Logger.getLogger("Utils")
@@ -175,7 +168,8 @@ object Utils {
     }).start
   }
 
-  import collection.mutable.{ HashSet, SynchronizedSet }
+  import collection.mutable.HashSet
+  import collection.mutable.SynchronizedSet
   lazy val threads = new HashSet[Thread] with SynchronizedSet[Thread]
   var kojoCtx: KojoCtx = _
   lazy val listener = kojoCtx.activityListener
@@ -549,14 +543,11 @@ object Utils {
     }
   }
 
+  lazy val actorSystem = ActorSystem("Kojo")
+
   lazy val queuedRunner = new AsyncQueuedRunner {}
   def runAsyncQueued(fn: => Unit) {
-    runAsyncQueued(queuedRunner)(fn)
-  }
-  def runAsyncQueued(aqr: AsyncQueuedRunner)(fn: => Unit) {
-    aqr.asyncRunner ! aqr.RunCode { () =>
-      fn
-    }
+    queuedRunner.runAsyncQueued(fn)
   }
 
   import edu.umd.cs.piccolo.nodes.PText
@@ -571,7 +562,7 @@ object Utils {
     val tnode = textNode(text, x, y, camScale)
     val fontName = fontName0 match {
       case Some(name) => name
-      case None    => tnode.getFont.getName
+      case None       => tnode.getFont.getName
     }
     val font = new Font(fontName, Font.PLAIN, fontSize)
     tnode.setFont(font)

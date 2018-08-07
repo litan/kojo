@@ -22,7 +22,7 @@ libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % "2.11.11",
     "org.scala-lang" % "scala-compiler" % "2.11.11",
     "org.scala-lang" % "scala-reflect" % "2.11.11",
-    "org.scala-lang" % "scala-actors" % "2.11.11",
+    "com.typesafe.akka" % "akka-actor_2.11" % "2.5.14",
     "org.scala-lang.modules" % "scala-swing_2.11" % "1.0.2",
     "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
     "org.scala-lang.modules" % "scala-parser-combinators_2.11" % "1.0.4",

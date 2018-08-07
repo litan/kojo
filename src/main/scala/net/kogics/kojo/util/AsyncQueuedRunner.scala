@@ -1,18 +1,26 @@
 package net.kogics.kojo.util
 
+import akka.actor.Actor
+import akka.actor.Props
+
 trait AsyncQueuedRunner {
   case class RunCode(code: () => Unit)
-  import scala.actors._
-  import scala.actors.Actor._
-  val asyncRunner = actor {
-    loop {
-      react {
-        case RunCode(code) =>
-          Utils.safeProcess {
-            code()
-          }
-      }
+
+  class Runner extends Actor {
+    def receive = {
+      case RunCode(code) =>
+        Utils.safeProcess {
+          code()
+        }
+    }
+  }
+
+  val asyncRunner = Utils.actorSystem.actorOf(Props(new Runner), name = "AsyncRunner")
+
+  def runAsyncQueued(fn: => Unit) {
+    asyncRunner ! RunCode { () =>
+      fn
     }
   }
 }
-  
+

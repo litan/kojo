@@ -21,43 +21,43 @@ import java.io.Writer
 import java.util.logging.Level
 import java.util.logging.Logger
 
-import scala.actors.Actor
 import scala.collection.mutable.ListBuffer
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
+import net.kogics.kojo.core.CodeRunner
+import net.kogics.kojo.core.CodingMode
+import net.kogics.kojo.core.CompletionInfo
 import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.core.Interpreter.IR
+import net.kogics.kojo.core.Interpreter.Settings
+import net.kogics.kojo.core.MwMode
+import net.kogics.kojo.core.RunContext
+import net.kogics.kojo.core.StagingMode
+import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.util.Typeclasses.mkIdentity
 import net.kogics.kojo.util.Typeclasses.some
+import net.kogics.kojo.util.Utils
 
-import CodeCompletionUtils.InternalMethodsRe
-import CodeCompletionUtils.InternalVarsRe
-import CodeCompletionUtils.Keywords
-import CodeCompletionUtils.MethodDropFilter
-import CodeCompletionUtils.VarDropFilter
-import core.CodeRunner
-import core.CodingMode
-import core.CompletionInfo
-import core.Interpreter.IR
-import core.Interpreter.Settings
-import core.MwMode
-import core.RunContext
-import core.StagingMode
-import core.TwMode
-import util.Utils
+import akka.actor.Actor
+import akka.actor.ActorSystem
+import akka.actor.Props
+import akka.pattern.ask
+import akka.util.Timeout
 
 class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   val Log = Logger.getLogger("ScalaCodeRunner")
   val outputHandler = new InterpOutputHandler(runContext)
 
   // for debugging only!
-  def kojointerp = codeRunner.interp
-  def pcompiler = codeRunner.compilerAndRunner.pcompiler
-  def compiler = codeRunner.compilerAndRunner.compiler
+  //  def kojointerp = codeRunner.interp
+  //  def pcompiler = codeRunner.compilerAndRunner.pcompiler
+  //  def compiler = codeRunner.compilerAndRunner.compiler
 
   val codeRunner = makeCodeRunner
 
   private def makeCodeRunner = {
-    val actor = new InterpActor
-    actor.start()
+    val actor = Utils.actorSystem.actorOf(Props(new InterpActor), name = "InterpActor")
     actor
   }
 
@@ -65,7 +65,9 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     codeRunner ! Init
   }
 
-  def resetInterp() = codeRunner.resetInterp()
+  def resetInterp(): Unit = {
+    assert(false, "ResetInterp")
+  }
   // entry point for interp reset from GUI
   def resetInterpUI() = codeRunner ! ResetInterp
 
@@ -116,23 +118,29 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   case object ActivateD3
   case object ResetInterp
 
+  def askCodeRunner(m: Any): Any = {
+    implicit val timeout = Timeout(5 seconds)
+    val fresult = codeRunner ask m
+    Await.result(fresult, timeout.duration)
+  }
+
   def varCompletions(prefix: Option[String]): (List[String], Int) = {
-    val resp = (codeRunner !? VarCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
+    val resp = (this askCodeRunner VarCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
     resp.data
   }
 
   def keywordCompletions(prefix: Option[String]): (List[String], Int) = {
-    val resp = (codeRunner !? KeywordCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
+    val resp = (this askCodeRunner KeywordCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
     resp.data
   }
 
   def memberCompletions(code: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
-    val resp = (codeRunner !? MemberCompletionRequest(code, caretOffset, objid, prefix)).asInstanceOf[CompletionResponse2]
+    val resp = (this askCodeRunner MemberCompletionRequest(code, caretOffset, objid, prefix)).asInstanceOf[CompletionResponse2]
     resp.data
   }
 
   def typeAt(code: String, caretOffset: Int): String = {
-    (codeRunner !? TypeAtRequest(code, caretOffset)).asInstanceOf[String]
+    (this askCodeRunner TypeAtRequest(code, caretOffset)).asInstanceOf[String]
   }
 
   def activateTw() {
@@ -209,6 +217,10 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   }
 
   class InterpActor extends Actor {
+
+    def reply(m: Any): Unit = {
+      sender ! m
+    }
 
     var interp: KojoInterpreter = _
     var compilerAndRunner: CompilerAndRunner = _
@@ -299,179 +311,175 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       }
     }
 
-    def act() {
-      while (true) {
-        receive {
-          // Runs on Actor pool thread.
-          // while(true) receive - ensures we stay on the same thread
+    def receive = {
+      // Runs on Actor pool thread.
+      // while(true) receive - ensures we stay on the same thread
 
-          case Init =>
-            Utils.safeProcess {
-              loadInterp()
-              printInitScriptsLoadMsg()
-              activateTurtleMode()
-              runContext.onInterpreterInit()
-              loadCompiler()
-            }
-
-          case ActivateTw =>
-            Utils.safeProcess {
-              interp.reset()
-              initInterp()
-              activateTurtleMode()
-            }
-
-          case ActivateStaging =>
-            Utils.safeProcess {
-              interp.reset()
-              initInterp()
-              val imports = "import TSCanvas._; import Staging._"
-              outputHandler.withOutputSuppressed {
-                interp.interpret(imports)
-              }
-              cmodeInit = imports
-              mode = StagingMode
-              CodeCompletionUtils.activateStaging()
-              loadInitScripts(StagingMode)
-            }
-
-          case ActivateMw =>
-            Utils.safeProcess {
-              interp.reset()
-              initInterp()
-              val imports = "import Mw._"
-              outputHandler.withOutputSuppressed {
-                interp.interpret(imports)
-              }
-              cmodeInit = imports
-              mode = MwMode
-              CodeCompletionUtils.activateMw()
-              loadInitScripts(MwMode)
-            }
-
-          case ActivateD3 =>
-            Utils.safeProcess {
-              interp.reset()
-              initInterp()
-              val imports = "import D3._"
-              outputHandler.withOutputSuppressed {
-                interp.interpret(imports)
-              }
-              cmodeInit = imports
-              mode = D3Mode
-              CodeCompletionUtils.activateD3()
-              loadInitScripts(D3Mode)
-            }
-
-          case CompileCode(code) =>
-            try {
-              Log.info("CodeRunner actor compiling code:\n---\n%s\n---\n" format (code))
-              InterruptionManager.onInterpreterStart(compilerAndRunner)
-              runContext.onCompileStart()
-
-              val ret = compile(code)
-              Log.info("CodeRunner actor done compiling code. Return value %s" format (ret.toString))
-
-              if (ret == IR.Success) {
-                runContext.onCompileSuccess()
-              }
-              else {
-                runContext.onCompileError()
-              }
-            }
-            catch {
-              case t: Throwable =>
-                Log.log(Level.SEVERE, "Compiler Problem", t)
-                runContext.onInternalCompilerError()
-            }
-            finally {
-              Log.info("CodeRunner actor doing final handling for code.")
-              InterruptionManager.onInterpreterFinish()
-            }
-
-          case CompileRunCode(code) =>
-            try {
-              Log.info("CodeRunner actor compiling/running code:\n---\n%s\n---\n" format (code))
-              InterruptionManager.onInterpreterStart(compilerAndRunner)
-              runContext.onInterpreterStart(code)
-
-              val ret = compileAndRun(code)
-              Log.info("CodeRunner actor done compiling/running code. Return value %s" format (ret.toString))
-
-              if (ret == IR.Success) {
-                runContext.onRunSuccess()
-              }
-              else {
-                if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
-                else runContext.onRunError()
-              }
-            }
-            catch {
-              case t: Throwable =>
-                Log.log(Level.SEVERE, "CompilerAndRunner Problem", t)
-                runContext.onRunInterpError
-            }
-            finally {
-              Log.info("CodeRunner actor doing final handling for code.")
-              InterruptionManager.onInterpreterFinish()
-            }
-
-          case RunCode(code) =>
-            runCode(code, false)
-
-          case RunWorksheet(code) =>
-            runCode(code, true)
-
-          case ParseCode(code, browseAst) =>
-            try {
-              Log.info("CodeRunner actor parsing code:\n---\n%s\n---\n" format (code))
-              InterruptionManager.onInterpreterStart(compilerAndRunner)
-              runContext.onCompileStart()
-
-              val ret = compilerAndRunner.parse(code, browseAst)
-              Log.info("CodeRunner actor done parsing code. Return value %s" format (ret.toString))
-
-              if (ret == IR.Success) {
-                runContext.onCompileSuccess()
-              }
-              else {
-                runContext.onCompileError()
-              }
-            }
-            catch {
-              case t: Throwable =>
-                Log.log(Level.SEVERE, "Compiler Problem", t)
-                runContext.onInternalCompilerError()
-            }
-            finally {
-              Log.info("CodeRunner actor doing final handling for code.")
-              InterruptionManager.onInterpreterFinish()
-            }
-
-          case VarCompletionRequest(prefix) =>
-            safeProcessCompletionReq {
-              varCompletions(prefix)
-            }
-
-          case KeywordCompletionRequest(prefix) =>
-            safeProcessCompletionReq {
-              keywordCompletions(prefix)
-            }
-
-          case MemberCompletionRequest(code, caretOffset, objid, prefix) =>
-            safeProcessCompletionReq2 {
-              memberCompletions(code, caretOffset, objid, prefix)
-            }
-
-          case TypeAtRequest(code, caretOffset) =>
-            safeProcessResponse("") {
-              typeAt(code, caretOffset)
-            }
-
-          case ResetInterp =>
-            realResetInterp()
+      case Init =>
+        Utils.safeProcess {
+          loadInterp()
+          printInitScriptsLoadMsg()
+          activateTurtleMode()
+          runContext.onInterpreterInit()
+          loadCompiler()
         }
-      }
+
+      case ActivateTw =>
+        Utils.safeProcess {
+          interp.reset()
+          initInterp()
+          activateTurtleMode()
+        }
+
+      case ActivateStaging =>
+        Utils.safeProcess {
+          interp.reset()
+          initInterp()
+          val imports = "import TSCanvas._; import Staging._"
+          outputHandler.withOutputSuppressed {
+            interp.interpret(imports)
+          }
+          cmodeInit = imports
+          mode = StagingMode
+          CodeCompletionUtils.activateStaging()
+          loadInitScripts(StagingMode)
+        }
+
+      case ActivateMw =>
+        Utils.safeProcess {
+          interp.reset()
+          initInterp()
+          val imports = "import Mw._"
+          outputHandler.withOutputSuppressed {
+            interp.interpret(imports)
+          }
+          cmodeInit = imports
+          mode = MwMode
+          CodeCompletionUtils.activateMw()
+          loadInitScripts(MwMode)
+        }
+
+      case ActivateD3 =>
+        Utils.safeProcess {
+          interp.reset()
+          initInterp()
+          val imports = "import D3._"
+          outputHandler.withOutputSuppressed {
+            interp.interpret(imports)
+          }
+          cmodeInit = imports
+          mode = D3Mode
+          CodeCompletionUtils.activateD3()
+          loadInitScripts(D3Mode)
+        }
+
+      case CompileCode(code) =>
+        try {
+          Log.info("CodeRunner actor compiling code:\n---\n%s\n---\n" format (code))
+          InterruptionManager.onInterpreterStart(compilerAndRunner)
+          runContext.onCompileStart()
+
+          val ret = compile(code)
+          Log.info("CodeRunner actor done compiling code. Return value %s" format (ret.toString))
+
+          if (ret == IR.Success) {
+            runContext.onCompileSuccess()
+          }
+          else {
+            runContext.onCompileError()
+          }
+        }
+        catch {
+          case t: Throwable =>
+            Log.log(Level.SEVERE, "Compiler Problem", t)
+            runContext.onInternalCompilerError()
+        }
+        finally {
+          Log.info("CodeRunner actor doing final handling for code.")
+          InterruptionManager.onInterpreterFinish()
+        }
+
+      case CompileRunCode(code) =>
+        try {
+          Log.info("CodeRunner actor compiling/running code:\n---\n%s\n---\n" format (code))
+          InterruptionManager.onInterpreterStart(compilerAndRunner)
+          runContext.onInterpreterStart(code)
+
+          val ret = compileAndRun(code)
+          Log.info("CodeRunner actor done compiling/running code. Return value %s" format (ret.toString))
+
+          if (ret == IR.Success) {
+            runContext.onRunSuccess()
+          }
+          else {
+            if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
+            else runContext.onRunError()
+          }
+        }
+        catch {
+          case t: Throwable =>
+            Log.log(Level.SEVERE, "CompilerAndRunner Problem", t)
+            runContext.onRunInterpError
+        }
+        finally {
+          Log.info("CodeRunner actor doing final handling for code.")
+          InterruptionManager.onInterpreterFinish()
+        }
+
+      case RunCode(code) =>
+        runCode(code, false)
+
+      case RunWorksheet(code) =>
+        runCode(code, true)
+
+      case ParseCode(code, browseAst) =>
+        try {
+          Log.info("CodeRunner actor parsing code:\n---\n%s\n---\n" format (code))
+          InterruptionManager.onInterpreterStart(compilerAndRunner)
+          runContext.onCompileStart()
+
+          val ret = compilerAndRunner.parse(code, browseAst)
+          Log.info("CodeRunner actor done parsing code. Return value %s" format (ret.toString))
+
+          if (ret == IR.Success) {
+            runContext.onCompileSuccess()
+          }
+          else {
+            runContext.onCompileError()
+          }
+        }
+        catch {
+          case t: Throwable =>
+            Log.log(Level.SEVERE, "Compiler Problem", t)
+            runContext.onInternalCompilerError()
+        }
+        finally {
+          Log.info("CodeRunner actor doing final handling for code.")
+          InterruptionManager.onInterpreterFinish()
+        }
+
+      case VarCompletionRequest(prefix) =>
+        safeProcessCompletionReq {
+          varCompletions(prefix)
+        }
+
+      case KeywordCompletionRequest(prefix) =>
+        safeProcessCompletionReq {
+          keywordCompletions(prefix)
+        }
+
+      case MemberCompletionRequest(code, caretOffset, objid, prefix) =>
+        safeProcessCompletionReq2 {
+          memberCompletions(code, caretOffset, objid, prefix)
+        }
+
+      case TypeAtRequest(code, caretOffset) =>
+        safeProcessResponse("") {
+          typeAt(code, caretOffset)
+        }
+
+      case ResetInterp =>
+        realResetInterp()
     }
 
     def runCode(code: String, asWorksheet: Boolean) {
@@ -614,7 +622,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       catch {
         case iae: IllegalArgumentException =>
           runContext.reportError(Utils.exceptionMessage(iae)); IR.Error
-        case e: Throwable                  => throw e
+        case e: Throwable => throw e
       }
     }
 

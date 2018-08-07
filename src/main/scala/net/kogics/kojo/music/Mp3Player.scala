@@ -138,7 +138,7 @@ trait Mp3Player {
         mp3Player = Some(new Player(is))
       }
       if (mp3Player.isDefined) {
-        Utils.runAsyncQueued(queuedRunner) {
+        queuedRunner.runAsyncQueued {
           withLock(playLock) {
             if (stopFg) {
               done()
@@ -248,5 +248,4 @@ class KMp3(val kojoCtx: KojoCtx) extends Mp3Player {
   val pumpEvents = true
   def showError(msg: String) = println(msg)
 }
-
 
