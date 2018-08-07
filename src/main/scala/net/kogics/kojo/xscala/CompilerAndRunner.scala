@@ -28,12 +28,13 @@ import scala.reflect.internal.util.Position
 import scala.tools.nsc.Global
 import scala.tools.nsc.Settings
 import scala.tools.nsc.interactive
-import scala.tools.nsc.interactive.Response
 import scala.tools.nsc.io.VirtualDirectory
 import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 import scala.tools.util.PathResolver
 
+import net.kogics.kojo.core.CompletionInfo
+import net.kogics.kojo.core.Interpreter.IR
 import net.kogics.kojo.core.MemberKind.Class
 import net.kogics.kojo.core.MemberKind.Def
 import net.kogics.kojo.core.MemberKind.Object
@@ -43,10 +44,7 @@ import net.kogics.kojo.core.MemberKind.Trait
 import net.kogics.kojo.core.MemberKind.Type
 import net.kogics.kojo.core.MemberKind.Val
 import net.kogics.kojo.core.RunContext
-
-import core.CompletionInfo
-import core.Interpreter.IR
-import util.Utils
+import net.kogics.kojo.util.Utils
 
 trait CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String)
@@ -56,10 +54,12 @@ trait CompilerListener {
 }
 
 // This class borrows code and ideas from scala.tools.nsc.Interpreter
-class CompilerAndRunner(makeSettings: () => Settings,
-                        initCode: => Option[String],
-                        listener: CompilerListener,
-                        runContext: RunContext) extends StoppableCodeRunner {
+class CompilerAndRunner(
+  makeSettings: () => Settings,
+  initCode:     => Option[String],
+  listener:     CompilerListener,
+  runContext:   RunContext
+) extends StoppableCodeRunner {
   import language.postfixOps
 
   var counter = 0
@@ -102,7 +102,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
   // needed to prevent pcompiler from making the interp's classloader as 
   // its context loader (which causes a mem leak)
   // we could make pcompiler lazy, but then the first completion takes a big hit 
-  classLoader.setAsContext()
+  //  classLoader.setAsContext()
 
   private def makeClassLoader = {
     val parent = new URLClassLoader(compilerClasspath, getClass.getClassLoader())
@@ -178,7 +178,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
       else {
         try {
           classLoader = makeClassLoader
-          classLoader.setAsContext()
+          //          classLoader.setAsContext()
           val loadedResultObject = loadByName("Wrapper%d" format (counter))
           loadedResultObject.getMethod("entry").invoke(loadedResultObject)
           IR.Success
@@ -317,10 +317,9 @@ class CompilerAndRunner(makeSettings: () => Settings,
 
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
-    import scala.reflect.internal.Trees
 
     compilerCode(code0) map { code =>
-      classLoader.setAsContext()
+      //      classLoader.setAsContext()
       val source = new BatchSourceFile("scripteditor", code)
       val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
@@ -353,7 +352,7 @@ class CompilerAndRunner(makeSettings: () => Settings,
       "%s ;} // %s" format (code0.substring(0, offset), code0.substring(offset))
 
     compilerCode(augmentedCode0) map { code =>
-      classLoader.setAsContext()
+      //      classLoader.setAsContext()
 
       val source = new BatchSourceFile("scripteditor", code)
       val pos = new OffsetPosition(source, offset + offsetDelta + 1)

@@ -24,14 +24,15 @@ class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends 
     override protected def parentClassLoader = classOf[KojoInterpreter].getClassLoader
   }
   //  interp.setContextClassLoader()
-  val completer = new JLineCompletion(interp)
+//  val completer = new JLineCompletion(interp)
 
   def bind(name: String, boundType: String, value: Any) = interp.bind(name, boundType, value)
   def interpret(code: String) = {
     interp.setContextClassLoader()
     interp.interpret(code)
   }
-  def completions(id: String) = completer.completer.complete(s"$id.", id.length).candidates
+  // TODO: alternative for JLineCompletion
+  def completions(id: String) = Nil // completer.completer.complete(s"$id.", id.length).candidates
   def unqualifiedIds = interp.unqualifiedIds
   def stop(interpThread: Thread) {
     interpThread.interrupt()

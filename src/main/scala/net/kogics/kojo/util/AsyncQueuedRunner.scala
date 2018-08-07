@@ -15,7 +15,7 @@ trait AsyncQueuedRunner {
     }
   }
 
-  val asyncRunner = Utils.actorSystem.actorOf(Props(new Runner), name = "AsyncRunner")
+  val asyncRunner = Utils.actorSystem.actorOf(Props(new Runner))
 
   def runAsyncQueued(fn: => Unit) {
     asyncRunner ! RunCode { () =>

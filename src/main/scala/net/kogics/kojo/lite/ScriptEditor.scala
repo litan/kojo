@@ -75,12 +75,12 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   toolbar.setBackground(new Color(230, 230, 230))
 
   val SYNTAX_STYLE_SCALA2 = "text/scala2"
-  val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
-  tFactory.putMapping(SYNTAX_STYLE_SCALA2, "net.kogics.kojo.lexer.ScalariformTokenMaker")
+  //  val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
+  //  tFactory.putMapping(SYNTAX_STYLE_SCALA2, "net.kogics.kojo.lexer.ScalariformTokenMaker")
   FoldParserManager.get.addFoldParserMapping(SYNTAX_STYLE_SCALA2, new CurlyFoldParser)
-  TokenMakerFactory.setDefaultInstance(tFactory)
-  codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
-  //  codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+  //  TokenMakerFactory.setDefaultInstance(tFactory)
+  //  codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
+  codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
   codePane.setAntiAliasingEnabled(true)
   codePane.setBracketMatchingEnabled(true)
   codePane.setMatchedBracketBGColor(new Color(247, 247, 247))
@@ -217,7 +217,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               CompactControlReadability -> true,
               AlignParameters -> true,
               AlignSingleLineCaseStatements -> true,
-              PreserveDanglingCloseParenthesis -> true,
+//              PreserveDanglingCloseParenthesis -> true,
               FormatXml -> false
             )
           )

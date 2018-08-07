@@ -2,7 +2,7 @@ name := "Kojo"
 
 version := "2.7"
 
-scalaVersion := "2.11.11"
+scalaVersion := "2.12.6"
 
 fork in run := true
 
@@ -19,18 +19,19 @@ testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-s")
 autoScalaLibrary := false
 
 libraryDependencies ++= Seq(
-    "org.scala-lang" % "scala-library" % "2.11.11",
-    "org.scala-lang" % "scala-compiler" % "2.11.11",
-    "org.scala-lang" % "scala-reflect" % "2.11.11",
-    "com.typesafe.akka" % "akka-actor_2.11" % "2.5.14",
-    "org.scala-lang.modules" % "scala-swing_2.11" % "1.0.2",
-    "org.scala-lang.modules" % "scala-xml_2.11" % "1.0.5",
-    "org.scala-lang.modules" % "scala-parser-combinators_2.11" % "1.0.4",
+    "org.scala-lang" % "scala-library" % "2.12.6",
+    "org.scala-lang" % "scala-compiler" % "2.12.6",
+    "org.scala-lang" % "scala-reflect" % "2.12.6",
+    "com.typesafe.akka" % "akka-actor_2.12" % "2.5.14",
+    "org.scala-lang.modules" % "scala-swing_2.12" % "2.0.3",
+    "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6",
+    "org.scala-lang.modules" % "scala-parser-combinators_2.12" % "1.1.1",
     "org.piccolo2d" % "piccolo2d-core" % "1.3.1",
     "org.piccolo2d" % "piccolo2d-extras" % "1.3.1",
     "com.vividsolutions" % "jts" % "1.13" intransitive(),
     "com.h2database" % "h2" % "1.3.168",
-    "org.scalatest" % "scalatest_2.11" % "2.2.4" intransitive(),
+    "org.scalatest" % "scalatest_2.12" % "3.0.5" intransitive(),
+    "org.scalactic" % "scalactic_2.12" % "3.0.5" intransitive(),
     "junit" % "junit" % "4.10" % "test",
     "org.jmock" % "jmock" % "2.5.1" % "test",
     "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
@@ -39,10 +40,10 @@ libraryDependencies ++= Seq(
     "org.objenesis" % "objenesis" % "1.0" % "test",
     "org.hamcrest" % "hamcrest-core" % "1.1" % "test",
     "org.hamcrest" % "hamcrest-library" % "1.1" % "test",
-    ("org.scalacheck"  % "scalacheck_2.11" % "1.12.2" intransitive()) % "test"
+    ("org.scalacheck"  % "scalacheck_2.12" % "1.13.5" intransitive()) % "test"
 )
 
-libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
+//libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
 
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
