@@ -1,19 +1,19 @@
 Todos and things that look off
 ---
 
-KojoInterpreter - need to find alternative for JLineCompletion
-
-RMI problem on startup:
-Problem starting MultiInstanceHandler: remote object implements illegal remote interface; nested exception is:
-	java.lang.IllegalArgumentException: illegal remote method encountered: public static void net.kogics.kojo.lite.MultiInstanceHandler.run()
+ScalariformTokenMaker - need to recompile scalariform for 2.12 (and locate custom version first!)
+And/Or integrate latest RSTA and support darcula
 
 Turtletest scalacheck incompatibility
 
-ScalariformTokenMaker - need to recompile scalariform for 2.12 (and locate custom version first!)
+Done -- KojoInterpreter - need to find alternative for JLineCompletion
 
-CompilerAndRunner - need to find alternative for setAsContext
+Done -- RMI problem on startup:
+Problem starting MultiInstanceHandler: remote object implements illegal remote interface; nested exception is:
+	java.lang.IllegalArgumentException: illegal remote method encountered: public static void net.kogics.kojo.lite.MultiInstanceHandler.run()
 
-Tracing - many more events, and repeat looks weird in the trace
+Done -- CompilerAndRunner - need to find alternative for setAsContext
 
-Shift+Enter - extra chars in the output
+Done -- Shift+Enter - extra chars in the output
 
+Done -- Tracing - many more events, and repeat looks weird in the trace
