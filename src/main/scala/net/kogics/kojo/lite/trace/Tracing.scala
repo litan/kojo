@@ -264,7 +264,7 @@ that is not supported under Tracing.
 
       val vm = launchVM()
       println("Tracing started...")
-      val excludes = Array("java.*", "javax.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*", "net.kogics.kojo.util.*")
+      val excludes = Array("java.*", "javax.*", "jdk.internal.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*", "net.kogics.kojo.util.*")
 
       val evtQueue = vm.eventQueue
 
