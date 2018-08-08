@@ -25,12 +25,12 @@ import scala.reflect.internal.util.AbstractFileClassLoader
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.OffsetPosition
 import scala.reflect.internal.util.Position
+import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
 import scala.tools.nsc.Global
 import scala.tools.nsc.Settings
 import scala.tools.nsc.interactive
 import scala.tools.nsc.io.VirtualDirectory
 import scala.tools.nsc.reporters.Reporter
-import scala.tools.nsc.util.ScalaClassLoader.URLClassLoader
 import scala.tools.util.PathResolver
 
 import net.kogics.kojo.core.CompletionInfo
@@ -97,12 +97,11 @@ class CompilerAndRunner(
 
   val settings = makeSettings2()
 
-  val compilerClasspath: List[URL] = new PathResolver(settings) asURLs
+  val compilerClasspath: List[URL] = new PathResolver(settings).resultAsURLs.toList
   var classLoader = makeClassLoader
   // needed to prevent pcompiler from making the interp's classloader as 
   // its context loader (which causes a mem leak)
   // we could make pcompiler lazy, but then the first completion takes a big hit 
-  //  classLoader.setAsContext()
 
   private def makeClassLoader = {
     val parent = new URLClassLoader(compilerClasspath, getClass.getClassLoader())
@@ -128,7 +127,9 @@ class CompilerAndRunner(
     }
   }
 
-  val compiler = new Global(settings, reporter)
+  val compiler = classLoader.asContext {
+    new Global(settings, reporter)
+  }
 
   def pfxWithCounter = "%s%d%s" format (prefixHeader, counter, prefix)
 
@@ -178,10 +179,11 @@ class CompilerAndRunner(
       else {
         try {
           classLoader = makeClassLoader
-          //          classLoader.setAsContext()
-          val loadedResultObject = loadByName("Wrapper%d" format (counter))
-          loadedResultObject.getMethod("entry").invoke(loadedResultObject)
-          IR.Success
+          classLoader.asContext {
+            val loadedResultObject = loadByName("Wrapper%d" format (counter))
+            loadedResultObject.getMethod("entry").invoke(loadedResultObject)
+            IR.Success
+          }
         }
         catch {
           case t: Throwable =>
@@ -313,33 +315,37 @@ class CompilerAndRunner(
       )
     }
   }
-  val pcompiler = new KGlobal(makeSettings(), preporter)
+
+  val pcompiler = classLoader.asContext {
+    new KGlobal(makeSettings(), preporter)
+  }
 
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
 
     compilerCode(code0) map { code =>
-      //      classLoader.setAsContext()
-      val source = new BatchSourceFile("scripteditor", code)
-      val pos = new OffsetPosition(source, offset + offsetDelta + 1)
+      classLoader.asContext {
+        val source = new BatchSourceFile("scripteditor", code)
+        val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
-      var r1 = new Response[Unit]
-      pcompiler.askReload(List(source), r1)
+        var r1 = new Response[Unit]
+        pcompiler.askReload(List(source), r1)
 
-      var resp = new Response[pcompiler.Tree]
-      pcompiler.askTypeAt(pos, resp)
-      resp.get match {
-        case Left(x) =>
-          x match {
-            case t: pcompiler.ValOrDefDef => t.tpt.toString
-            case t: pcompiler.TypeDef     => t.name.toString
-            case t: pcompiler.ClassDef    => t.name.toString
-            case _                        => x.tpe.toString
-          }
+        var resp = new Response[pcompiler.Tree]
+        pcompiler.askTypeAt(pos, resp)
+        resp.get match {
+          case Left(x) =>
+            x match {
+              case t: pcompiler.ValOrDefDef => t.tpt.toString
+              case t: pcompiler.TypeDef     => t.name.toString
+              case t: pcompiler.ClassDef    => t.name.toString
+              case _                        => x.tpe.toString
+            }
 
-        case Right(y) =>
-          // println("Right:" + y)
-          ""
+          case Right(y) =>
+            // println("Right:" + y)
+            ""
+        }
       }
     } getOrElse ("")
   }
@@ -352,47 +358,47 @@ class CompilerAndRunner(
       "%s ;} // %s" format (code0.substring(0, offset), code0.substring(offset))
 
     compilerCode(augmentedCode0) map { code =>
-      //      classLoader.setAsContext()
+      classLoader.asContext {
+        val source = new BatchSourceFile("scripteditor", code)
+        val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
-      val source = new BatchSourceFile("scripteditor", code)
-      val pos = new OffsetPosition(source, offset + offsetDelta + 1)
+        var r1 = new Response[Unit]
+        pcompiler.askReload(List(source), r1)
 
-      var r1 = new Response[Unit]
-      pcompiler.askReload(List(source), r1)
+        var resp = new Response[List[pcompiler.Member]]
+        if (selection) {
+          pcompiler.askTypeCompletion(pos, resp)
+        }
+        else {
+          pcompiler.askScopeCompletion(pos, resp)
+        }
 
-      var resp = new Response[List[pcompiler.Member]]
-      if (selection) {
-        pcompiler.askTypeCompletion(pos, resp)
-      }
-      else {
-        pcompiler.askScopeCompletion(pos, resp)
-      }
-
-      val elb = new ListBuffer[CompletionInfo]
-      var response: pcompiler.Response[Unit] = null
-      for (completions <- resp.get.left.toOption) {
-        response = pcompiler.askForResponse { () =>
-          for (completion <- completions) {
-            try {
-              completion match {
-                case pcompiler.TypeMember(sym, tpe, true, inherited, viaView) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                  elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
-                case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                  elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
-                case _ =>
+        val elb = new ListBuffer[CompletionInfo]
+        var response: pcompiler.Response[Unit] = null
+        for (completions <- resp.get.left.toOption) {
+          response = pcompiler.askForResponse { () =>
+            for (completion <- completions) {
+              try {
+                completion match {
+                  case pcompiler.TypeMember(sym, tpe, true, inherited, viaView) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                    elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
+                  case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                    elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
+                  case _ =>
+                }
               }
-            }
-            catch {
-              case t: Throwable =>
-                println("Completion Problem 0: " + t.getMessage())
-              // ignore, and move on to the next one
+              catch {
+                case t: Throwable =>
+                  println("Completion Problem 0: " + t.getMessage())
+                // ignore, and move on to the next one
+              }
             }
           }
         }
+        // block till the last response is available
+        response.get(2000)
+        elb.toList
       }
-      // block till the last response is available
-      response.get(2000)
-      elb.toList
     } getOrElse (Nil)
   }
 }

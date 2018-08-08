@@ -15,8 +15,10 @@
 
 package net.kogics.kojo.xscala
 
-import scala.tools.nsc.interpreter._
 import java.io.PrintWriter
+
+import scala.tools.nsc.interpreter._
+
 import net.kogics.kojo.core.Interpreter
 
 class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends StoppableCodeRunner with Interpreter {
@@ -24,15 +26,18 @@ class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends 
     override protected def parentClassLoader = classOf[KojoInterpreter].getClassLoader
   }
   //  interp.setContextClassLoader()
-//  val completer = new JLineCompletion(interp)
+  val completer = new PresentationCompilerCompleter(interp)
 
   def bind(name: String, boundType: String, value: Any) = interp.bind(name, boundType, value)
   def interpret(code: String) = {
-    interp.setContextClassLoader()
-    interp.interpret(code)
+    interp.classLoader.asContext {
+      interp.interpret(code)
+    }
   }
-  // TODO: alternative for JLineCompletion
-  def completions(id: String) = Nil // completer.completer.complete(s"$id.", id.length).candidates
+  def completions(id: String) = {
+    val c = completer.complete(s"$id.", id.length + 1)
+    c.candidates
+  }
   def unqualifiedIds = interp.unqualifiedIds
   def stop(interpThread: Thread) {
     interpThread.interrupt()
