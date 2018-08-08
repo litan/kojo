@@ -217,7 +217,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               CompactControlReadability -> true,
               AlignParameters -> true,
               AlignSingleLineCaseStatements -> true,
-//              PreserveDanglingCloseParenthesis -> true,
+              DanglingCloseParenthesis -> true,
               FormatXml -> false
             )
           )
