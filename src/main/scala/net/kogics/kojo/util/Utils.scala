@@ -155,6 +155,8 @@ object Utils {
   }
 
   val RmiRegistryPort = 27468
+  val RmiHandlerName = "MultiInstanceHandler"
+
   def localHostString = localHost.getHostAddress
   def localHost = InetAddress.getByName(null)
 

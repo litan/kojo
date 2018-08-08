@@ -26,7 +26,7 @@ trait RmiMultiInstance {
   def firstInstance: Boolean = {
     try {
       registry = Some(LocateRegistry.getRegistry(Utils.localHostString, Utils.RmiRegistryPort))
-      registry.get.lookup(MultiInstanceHandler.Name).asInstanceOf[MultiInstanceHandler]
+      registry.get.lookup(Utils.RmiHandlerName).asInstanceOf[MultiInstanceHandler]
       // registry is up and name is bound. Not the first instance
       false
     }
@@ -62,7 +62,7 @@ trait RmiMultiInstance {
 
   def nthMain(args: Array[String]): Unit = Utils.safeProcess {
     registry foreach { r =>
-      val mih = r.lookup(MultiInstanceHandler.Name).asInstanceOf[MultiInstanceHandler]
+      val mih = r.lookup(Utils.RmiHandlerName).asInstanceOf[MultiInstanceHandler]
       println(s"[INFO] Connecting (via RMI) with args: ${args.mkString("[", ", ", "]")} to already running Kojo instance")
       mih.newInstance(args)
     }

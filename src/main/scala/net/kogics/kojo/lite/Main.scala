@@ -238,6 +238,6 @@ object Main extends AppMenu with ScriptLoader { main =>
   }
 
   def runMultiInstancehandler() {
-    MultiInstanceHandler.run()
+    MultiInstanceManager.run()
   }
 }

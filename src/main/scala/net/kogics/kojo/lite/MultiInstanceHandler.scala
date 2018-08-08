@@ -26,8 +26,7 @@ trait MultiInstanceHandler extends Remote {
   def newInstance(args: Array[String]): Unit
 }
 
-object MultiInstanceHandler {
-  val Name = "MultiInstanceHandler"
+object MultiInstanceManager {
   // make mih static so that it does not get garbage collected
   // we're trying to prevent the sporadic lack of activation of the first instance of Kojo from an nth instance 
   // and the accompanying 'Problem - no such object in table' message that shows up in the Java Console  
@@ -37,7 +36,7 @@ object MultiInstanceHandler {
       val sf = new RmiLocalhostSocketFactory
       val stub = UnicastRemoteObject.exportObject(mih, 0, sf, sf)
       val registry = LocateRegistry.getRegistry(Utils.localHostString, Utils.RmiRegistryPort)
-      registry.rebind(Name, stub)
+      registry.rebind(Utils.RmiHandlerName, stub)
     }
     catch {
       case t: Throwable =>
