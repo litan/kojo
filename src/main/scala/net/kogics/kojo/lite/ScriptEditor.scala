@@ -64,6 +64,8 @@ import net.kogics.kojo.xscala.CodeTemplates
 import scalariform.formatter.ScalaFormatter
 import javax.swing.text.Utilities
 
+import org.fife.ui.rsyntaxtextarea.Theme
+
 class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
 
   val codePane = new RSyntaxTextArea(5, 80)
@@ -97,6 +99,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   //  codePane.getSyntaxScheme.setStyle(TokenTypes.COMMENT_MULTILINE, new Style(new Color(10, 110, 10), null, commentFont))
   codePane.setSelectionColor(new Color(142, 191, 238))
   codePane.setMarkOccurrencesColor(new Color(150, 175, 200))
+
+  val theme = Theme.load(getClass.getResourceAsStream("dark-editor-theme.xml"))
+  theme.apply(codePane)
 
   val inputMap = codePane.getInputMap()
   inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
@@ -246,73 +251,73 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(formatItem, idx)
   idx += 1
 
-  val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace"), Utils.loadIcon("/images/extra/find.gif")) {
-    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
-      setTitle(Utils.loadString("S_FindReplace"))
-      override def setVisible(visible: Boolean) {
-        if (!visible) {
-          codePane.clearMarkAllHighlights()
-        }
-        super.setVisible(visible)
-      }
-    }
-    lazy val listener = new ActionListener {
-      def actionPerformed(ev: ActionEvent) {
-        val searchContext = dialog.getSearchContext
-        def markAllIf() {
-          if (searchContext.getMarkAll) {
-            codePane.clearMarkAllHighlights()
-            codePane.markAll(searchContext.getSearchFor, searchContext.getMatchCase(),
-              searchContext.getWholeWord, searchContext.isRegularExpression())
-          }
-          else {
-            codePane.clearMarkAllHighlights()
-          }
-        }
-        def find() {
-          var found = SearchEngine.find(codePane, searchContext)
-          if (!found) {
-            val oldDot = codePane.getCaret().getDot
-            codePane.getCaret().setDot(0)
-            found = SearchEngine.find(codePane, searchContext)
-            if (!found) {
-              codePane.getCaret().setDot(oldDot)
-            }
-          }
-        }
-
-        ev.getActionCommand match {
-          case AbstractFindReplaceDialog.ACTION_FIND =>
-            markAllIf()
-            find()
-
-          case AbstractFindReplaceDialog.ACTION_REPLACE =>
-            markAllIf()
-            val replaced = SearchEngine.replace(codePane, searchContext);
-            if (replaced) {
-              find()
-            }
-          case AbstractFindReplaceDialog.ACTION_REPLACE_ALL =>
-            SearchEngine.replaceAll(codePane, searchContext);
-          case _ =>
-        }
-      }
-    }
-    def actionPerformed(ev: ActionEvent) {
-      Option(codePane.getSelectedText) foreach { st =>
-        dialog.setSearchString(st)
-        codePane.setSelectionEnd(codePane.getSelectionStart)
-      }
-      dialog.setVisible(true)
-    }
-  }
-  val findReplaceItem = new JMenuItem(findReplaceAction)
-  val cf = KeyStroke.getKeyStroke("control F")
-  inputMap.put(cf, "find-replace")
-  am.put("find-replace", findReplaceAction)
-  findReplaceItem.setAccelerator(cf)
-  popup.add(findReplaceItem, idx)
-  idx += 1
+//  val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace"), Utils.loadIcon("/images/extra/find.gif")) {
+//    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
+//      setTitle(Utils.loadString("S_FindReplace"))
+//      override def setVisible(visible: Boolean) {
+//        if (!visible) {
+//          codePane.clearMarkAllHighlights()
+//        }
+//        super.setVisible(visible)
+//      }
+//    }
+//    lazy val listener = new ActionListener {
+//      def actionPerformed(ev: ActionEvent) {
+//        val searchContext = dialog.getSearchContext
+//        def markAllIf() {
+//          if (searchContext.getMarkAll) {
+//            codePane.clearMarkAllHighlights()
+//            codePane.markAll(searchContext.getSearchFor, searchContext.getMatchCase(),
+//              searchContext.getWholeWord, searchContext.isRegularExpression())
+//          }
+//          else {
+//            codePane.clearMarkAllHighlights()
+//          }
+//        }
+//        def find() {
+//          var found = SearchEngine.find(codePane, searchContext)
+//          if (!found) {
+//            val oldDot = codePane.getCaret().getDot
+//            codePane.getCaret().setDot(0)
+//            found = SearchEngine.find(codePane, searchContext)
+//            if (!found) {
+//              codePane.getCaret().setDot(oldDot)
+//            }
+//          }
+//        }
+//
+//        ev.getActionCommand match {
+//          case AbstractFindReplaceDialog.ACTION_FIND =>
+//            markAllIf()
+//            find()
+//
+//          case AbstractFindReplaceDialog.ACTION_REPLACE =>
+//            markAllIf()
+//            val replaced = SearchEngine.replace(codePane, searchContext);
+//            if (replaced) {
+//              find()
+//            }
+//          case AbstractFindReplaceDialog.ACTION_REPLACE_ALL =>
+//            SearchEngine.replaceAll(codePane, searchContext);
+//          case _ =>
+//        }
+//      }
+//    }
+//    def actionPerformed(ev: ActionEvent) {
+//      Option(codePane.getSelectedText) foreach { st =>
+//        dialog.setSearchString(st)
+//        codePane.setSelectionEnd(codePane.getSelectionStart)
+//      }
+//      dialog.setVisible(true)
+//    }
+//  }
+//  val findReplaceItem = new JMenuItem(findReplaceAction)
+//  val cf = KeyStroke.getKeyStroke("control F")
+//  inputMap.put(cf, "find-replace")
+//  am.put("find-replace", findReplaceAction)
+//  findReplaceItem.setAccelerator(cf)
+//  popup.add(findReplaceItem, idx)
+//  idx += 1
 
   val chooseColorItem = new JMenuItem(new ChooseColor(execSupport))
   popup.add(chooseColorItem, idx)

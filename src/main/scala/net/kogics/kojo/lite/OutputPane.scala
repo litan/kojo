@@ -46,7 +46,8 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   lazy val codePane = execSupport.codePane
   val kojoCtx = execSupport.kojoCtx
 
-  val DefaultOutputColor = new Color(32, 32, 32)
+  val DefaultOutputColor = Theme.currentTheme.outputPaneFg
+  val DefaultOutputBackground = Theme.currentTheme.outputPaneBg
   val DefaultOutputFontSize = kojoCtx.baseFontSize + kojoCtx.screenDpiFontDelta
   var outputColor = DefaultOutputColor
   var fontSize = DefaultOutputFontSize
@@ -63,8 +64,8 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   setLayout(outLayout)
   val outoutPanel = new JPanel(new BorderLayout)
   val outputWindow = new JTextPane
-  outputWindow.setForeground(new Color(32, 32, 32))
-  outputWindow.setBackground(Color.white)
+  outputWindow.setForeground(DefaultOutputColor)
+  outputWindow.setBackground(DefaultOutputBackground)
   outputWindow.setEditable(false)
   val outoutSp = new JScrollPane(outputWindow)
   outoutSp.setBorder(BorderFactory.createEmptyBorder())
@@ -349,7 +350,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   def clear() {
     outputColor = DefaultOutputColor
     setOutputFontSize(DefaultOutputFontSize)
-    outputWindow.setBackground(Color.white)
+    outputWindow.setBackground(DefaultOutputBackground)
     outputWindow.setText("")
     errorWindow.setText("")
     outoutPanel.remove(readInputPanel)

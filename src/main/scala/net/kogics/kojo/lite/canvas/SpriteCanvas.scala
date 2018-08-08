@@ -90,7 +90,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     Log.info(msg)
   }
 
-  setBackground(Color.white)
+  val backgroundColor = Theme.currentTheme.canvasBg
   setPreferredSize(new Dimension(200, 400))
   setDefaultRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
   setAnimatingRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
@@ -225,6 +225,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     val scale = camScale
     getCamera.getViewTransformReference.setToScale(scale, -scale)
     getCamera.setViewOffset(size.getWidth / 2f, size.getHeight / 2f)
+    setBackground(backgroundColor)
     updateAxesAndGrid()
   }
 
@@ -634,7 +635,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     gridOff()
     axesOff()
     Utils.runInSwingThreadAndWait {
-      setBackground(Color.white)
+      setBackground(backgroundColor)
       _showProt = false
       _showScale = false
       turtles.foreach { t => if (t == origTurtle) t.clear() else t.remove() }
@@ -837,7 +838,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       stageLeft,
       stageTop,
       stageRight,
-      stageBot)
+      stageBot
+    )
 
     stage.draw()
     stageArea.draw()

@@ -36,6 +36,8 @@ import scala.collection.convert.WrapAsScala.propertiesAsScalaMap
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
+import com.bulenkov.darcula.DarculaLaf
+
 import net.kogics.kojo.d3.Canvas3D
 import net.kogics.kojo.history.HistoryPanel
 import net.kogics.kojo.lite.canvas.SpriteCanvas
@@ -97,9 +99,12 @@ object Main extends AppMenu with ScriptLoader { main =>
         UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
       }
       else {
-        UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
-          UIManager.setLookAndFeel(nim.getClassName)
-        }
+        val dlaf = new DarculaLaf
+        UIManager.setLookAndFeel(dlaf)
+        UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
+        //        UIManager.getInstalledLookAndFeels.find { _.getName == "Darcula" }.foreach { nim =>
+        //          UIManager.setLookAndFeel(nim.getClassName)
+        //        }
       }
 
       kojoCtx.lookAndFeelReady()
