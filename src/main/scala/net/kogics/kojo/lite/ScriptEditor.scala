@@ -34,18 +34,17 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
+import javax.swing.text.Utilities
 
 import org.fife.rsta.ui.search.AbstractFindReplaceDialog
 import org.fife.rsta.ui.search.ReplaceDialog
 import org.fife.ui.autocomplete.AutoCompletion
-import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.DecreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.Style
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants
-import org.fife.ui.rsyntaxtextarea.TokenMakerFactory
 import org.fife.ui.rsyntaxtextarea.TokenTypes
 import org.fife.ui.rsyntaxtextarea.folding.CurlyFoldParser
 import org.fife.ui.rsyntaxtextarea.folding.FoldParserManager
@@ -62,9 +61,6 @@ import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
 
 import scalariform.formatter.ScalaFormatter
-import javax.swing.text.Utilities
-
-import org.fife.ui.rsyntaxtextarea.Theme
 
 class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
 
@@ -72,9 +68,6 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val statusStrip = new StatusStrip()
   val (toolbar, runButton, runWorksheetButton, traceButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
-
-  toolbar.setOpaque(true)
-  toolbar.setBackground(new Color(230, 230, 230))
 
   val SYNTAX_STYLE_SCALA2 = "text/scala2"
   //  val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
@@ -100,7 +93,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   codePane.setSelectionColor(new Color(142, 191, 238))
   codePane.setMarkOccurrencesColor(new Color(150, 175, 200))
 
-  val theme = Theme.load(getClass.getResourceAsStream("dark-editor-theme.xml"))
+  val theme = Theme.currentTheme.editorTheme
   theme.apply(codePane)
 
   val inputMap = codePane.getInputMap()
@@ -251,73 +244,73 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(formatItem, idx)
   idx += 1
 
-//  val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace"), Utils.loadIcon("/images/extra/find.gif")) {
-//    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
-//      setTitle(Utils.loadString("S_FindReplace"))
-//      override def setVisible(visible: Boolean) {
-//        if (!visible) {
-//          codePane.clearMarkAllHighlights()
-//        }
-//        super.setVisible(visible)
-//      }
-//    }
-//    lazy val listener = new ActionListener {
-//      def actionPerformed(ev: ActionEvent) {
-//        val searchContext = dialog.getSearchContext
-//        def markAllIf() {
-//          if (searchContext.getMarkAll) {
-//            codePane.clearMarkAllHighlights()
-//            codePane.markAll(searchContext.getSearchFor, searchContext.getMatchCase(),
-//              searchContext.getWholeWord, searchContext.isRegularExpression())
-//          }
-//          else {
-//            codePane.clearMarkAllHighlights()
-//          }
-//        }
-//        def find() {
-//          var found = SearchEngine.find(codePane, searchContext)
-//          if (!found) {
-//            val oldDot = codePane.getCaret().getDot
-//            codePane.getCaret().setDot(0)
-//            found = SearchEngine.find(codePane, searchContext)
-//            if (!found) {
-//              codePane.getCaret().setDot(oldDot)
-//            }
-//          }
-//        }
-//
-//        ev.getActionCommand match {
-//          case AbstractFindReplaceDialog.ACTION_FIND =>
-//            markAllIf()
-//            find()
-//
-//          case AbstractFindReplaceDialog.ACTION_REPLACE =>
-//            markAllIf()
-//            val replaced = SearchEngine.replace(codePane, searchContext);
-//            if (replaced) {
-//              find()
-//            }
-//          case AbstractFindReplaceDialog.ACTION_REPLACE_ALL =>
-//            SearchEngine.replaceAll(codePane, searchContext);
-//          case _ =>
-//        }
-//      }
-//    }
-//    def actionPerformed(ev: ActionEvent) {
-//      Option(codePane.getSelectedText) foreach { st =>
-//        dialog.setSearchString(st)
-//        codePane.setSelectionEnd(codePane.getSelectionStart)
-//      }
-//      dialog.setVisible(true)
-//    }
-//  }
-//  val findReplaceItem = new JMenuItem(findReplaceAction)
-//  val cf = KeyStroke.getKeyStroke("control F")
-//  inputMap.put(cf, "find-replace")
-//  am.put("find-replace", findReplaceAction)
-//  findReplaceItem.setAccelerator(cf)
-//  popup.add(findReplaceItem, idx)
-//  idx += 1
+  val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace"), Utils.loadIcon("/images/extra/find.gif")) {
+    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
+      setTitle(Utils.loadString("S_FindReplace"))
+      override def setVisible(visible: Boolean) {
+        if (!visible) {
+          //          codePane.clearMarkAllHighlights()
+        }
+        super.setVisible(visible)
+      }
+    }
+    lazy val listener = new ActionListener {
+      def actionPerformed(ev: ActionEvent) {
+        val searchContext = dialog.getSearchContext
+        def markAllIf() {
+          //          if (searchContext.getMarkAll) {
+          //            codePane.clearMarkAllHighlights()
+          //            codePane.markAll(searchContext.getSearchFor, searchContext.getMatchCase(),
+          //              searchContext.getWholeWord, searchContext.isRegularExpression())
+          //          }
+          //          else {
+          //            codePane.clearMarkAllHighlights()
+          //          }
+        }
+        def find() {
+          var found = SearchEngine.find(codePane, searchContext)
+          if (found == 0) {
+            val oldDot = codePane.getCaret().getDot
+            codePane.getCaret().setDot(0)
+            found = SearchEngine.find(codePane, searchContext)
+            if (found == 0) {
+              codePane.getCaret().setDot(oldDot)
+            }
+          }
+        }
+
+        ev.getActionCommand match {
+          case AbstractFindReplaceDialog.ACTION_FIND =>
+            markAllIf()
+            find()
+
+          case AbstractFindReplaceDialog.ACTION_REPLACE =>
+            markAllIf()
+            val replaced = SearchEngine.replace(codePane, searchContext);
+            if (replaced.getCount != 0) {
+              find()
+            }
+          case AbstractFindReplaceDialog.ACTION_REPLACE_ALL =>
+            SearchEngine.replaceAll(codePane, searchContext);
+          case _ =>
+        }
+      }
+    }
+    def actionPerformed(ev: ActionEvent) {
+      Option(codePane.getSelectedText) foreach { st =>
+        dialog.setSearchString(st)
+        codePane.setSelectionEnd(codePane.getSelectionStart)
+      }
+      dialog.setVisible(true)
+    }
+  }
+  val findReplaceItem = new JMenuItem(findReplaceAction)
+  val cf = KeyStroke.getKeyStroke("control F")
+  inputMap.put(cf, "find-replace")
+  am.put("find-replace", findReplaceAction)
+  findReplaceItem.setAccelerator(cf)
+  popup.add(findReplaceItem, idx)
+  idx += 1
 
   val chooseColorItem = new JMenuItem(new ChooseColor(execSupport))
   popup.add(chooseColorItem, idx)
@@ -556,14 +549,14 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       button.addActionListener(actionListener)
       button.setIcon(Utils.loadIcon(imageFile))
       // button.setMnemonic(KeyEvent.VK_ENTER)
-      if (Utils.isMac) {
-        button.setBorderPainted(false)
-      }
+      button.setBorderPainted(false)
       button;
     }
 
     val toolbar = new JToolBar
     toolbar.setFloatable(false)
+    toolbar.setOpaque(true)
+    Theme.currentTheme.toolbarBg.foreach { c => toolbar.setBackground(c) }
 
     val imageFolder = kojoCtx.screenDpiFontDelta match {
       case n if n < 6 => 24
