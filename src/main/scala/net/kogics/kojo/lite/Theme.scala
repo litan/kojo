@@ -3,7 +3,6 @@ package net.kogics.kojo.lite
 import java.awt.Color
 import java.awt.Font
 
-import javax.swing.LookAndFeel
 import javax.swing.UIManager
 import javax.swing.plaf.FontUIResource
 
@@ -24,6 +23,8 @@ trait Theme {
   def textBg: Color
   def textFg: Color
   def errorPaneFg: String
+  def tracingBg: Color
+  def tracingHighlightColor: Color
 }
 
 class DarkTheme extends Theme {
@@ -41,6 +42,8 @@ class DarkTheme extends Theme {
   val outputPaneFg = textFg
   val outputPaneBg = new Color(0x2d2d2d)
   val errorPaneFg = "orange"
+  val tracingBg = defaultBg
+  val tracingHighlightColor = new Color(173, 206, 238)
 }
 
 class LightTheme extends Theme {
@@ -66,6 +69,8 @@ class LightTheme extends Theme {
   val outputPaneFg = textFg
   val outputPaneBg = textBg
   val errorPaneFg = "red"
+  val tracingBg = Color.white
+  val tracingHighlightColor = new Color(173, 206, 238)
 }
 
 object Theme {

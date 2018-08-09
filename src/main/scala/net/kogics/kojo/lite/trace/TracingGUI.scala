@@ -47,7 +47,7 @@ import bibliothek.gui.dock.common.mode.ExtendedMode
 class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val events: JPanel = new JPanel
   events.setLayout(new BoxLayout(events, BoxLayout.Y_AXIS))
-  events.setBackground(Color.white)
+  events.setBackground(Theme.currentTheme.tracingBg)
   val traceHolder = new TraceHolder(null)
   traceHolder.setCloseable(true)
   traceHolder.setMaximizable(false)
@@ -60,7 +60,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val markingClr = new GradientPaint(0, 0, Color.black, 5, 5, Color.yellow, true)
   @volatile var eventDesc: JTextArea = _
   var eventHolder: JSplitPane = _
-  val highlightColor = new Color(173, 206, 238)
+  val highlightColor = Theme.currentTheme.tracingHighlightColor
 
   traceHolder.addCDockableStateListener(new CDockableStateListener {
     def visibilityChanged(dockable: CDockable) {
@@ -139,7 +139,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
 
     Utils.runInSwingThread {
       val te = new JButton(taText) {
-        setBackground(Color.white)
+        setBackground(Theme.currentTheme.tracingBg)
         setHorizontalAlignment(SwingConstants.LEFT)
         me.uiElems += this
 
@@ -236,7 +236,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
             }
           }
           override def mouseReleased(e: MouseEvent) {
-            currUiElems.foreach { _.setBackground(Color.white) }
+            currUiElems.foreach { _.setBackground(Theme.currentTheme.tracingBg) }
             me.uiElems.foreach { _.setBackground(highlightColor) }
             currUiElems = me.uiElems
           }
