@@ -38,8 +38,8 @@ import javax.swing.JScrollPane
 import javax.swing.JTextField
 import javax.swing.text.html.HTMLDocument
 
+import net.kogics.kojo.lite.Theme
 import net.kogics.kojo.util.Read
-
 import util.Utils
 
 class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player {
@@ -77,7 +77,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   ep.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20))
   ep.setEditable(false)
   ep.addHyperlinkListener(new LinkListener(this))
-  ep.setBackground(Color.white)
+  ep.setBackground(Theme.currentTheme.defaultBg)
   ep.setBorder(BorderFactory.createEmptyBorder())
   val sp = new JScrollPane(ep)
   sp.setBorder(BorderFactory.createEmptyBorder())

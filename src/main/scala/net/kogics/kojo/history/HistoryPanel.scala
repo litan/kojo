@@ -28,6 +28,7 @@ import javax.swing.table.DefaultTableCellRenderer
 
 import net.kogics.kojo.core.CodeExecutionSupport
 import net.kogics.kojo.core.HistoryListener
+import net.kogics.kojo.lite.Theme
 import net.kogics.kojo.util.Utils
 
 import sun.swing.table.DefaultTableCellHeaderRenderer
@@ -97,8 +98,8 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   }
   val table = new JTable(tableModel)
 
-  table.setBackground(Color.white)
-  //  table.setShowGrid(true)
+  //  table.setBackground(Color.white)
+  table.setShowGrid(false)
   table.setRowHeight(table.getRowHeight + 8)
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   table.setRowSelectionInterval(cmdh.size, cmdh.size)
@@ -133,7 +134,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   setLayout(new BorderLayout)
   add(new JScrollPane(table), BorderLayout.CENTER)
   val searchPane = new JPanel()
-  searchPane.setBackground(Color.white)
+  searchPane.setBackground(Theme.currentTheme.defaultBg)
   searchPane.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED))
 
   val searchField = new JTextField(20)

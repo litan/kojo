@@ -291,7 +291,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
           <strong>{ Utils.loadString("S_OutputScriptProblem") }</strong>
         </div>
         { errorLocation }
-        <div style="color:red;margin:5px;">
+        <div style={ s"color:${Theme.currentTheme.errorPaneFg};margin:5px;" }>
           <pre>{ errText }</pre>
         </div>
         { if (errCount > 2) errorLocation }
