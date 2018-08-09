@@ -1,20 +1,24 @@
 package net.kogics.kojo.lite
 
 import java.awt.Color
+import java.awt.Font
 
 import javax.swing.LookAndFeel
-import javax.swing.plaf.nimbus.NimbusLookAndFeel
+import javax.swing.UIManager
+import javax.swing.plaf.FontUIResource
 
 import org.fife.ui.rsyntaxtextarea.{Theme => RTheme}
 
 import com.bulenkov.darcula.DarculaLaf
+
+import net.kogics.kojo.util.Utils
 
 trait Theme {
   def outputPaneFg: Color
   def outputPaneBg: Color
   def canvasBg: Color
   def editorTheme: RTheme
-  def laf: LookAndFeel
+  def loadLookAndFeel(): Unit
   def toolbarBg: Option[Color]
   def defaultBg: Color
   def textBg: Color
@@ -22,10 +26,14 @@ trait Theme {
   def errorPaneFg: String
 }
 
-class Dark extends Theme {
+class DarkTheme extends Theme {
   val canvasBg = new Color(0x424447)
   val editorTheme = RTheme.load(getClass.getResourceAsStream("dark-editor-theme.xml"))
-  val laf = new DarculaLaf
+  def loadLookAndFeel(): Unit = {
+    val laf = new DarculaLaf
+    UIManager.setLookAndFeel(laf)
+    UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
+  }
   val toolbarBg = None
   val defaultBg = new Color(0x3c3f41)
   val textBg = defaultBg
@@ -35,10 +43,22 @@ class Dark extends Theme {
   val errorPaneFg = "orange"
 }
 
-class Light extends Theme {
+class LightTheme extends Theme {
   val canvasBg = Color.white
   val editorTheme = RTheme.load(getClass.getResourceAsStream("light-editor-theme.xml"))
-  val laf = new NimbusLookAndFeel
+  def loadLookAndFeel(): Unit = {
+    if (Utils.isMac) {
+      // use the system look and feel
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
+      UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
+    }
+    else {
+      UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
+        UIManager.setLookAndFeel(nim.getClassName)
+      }
+    }
+
+  }
   val toolbarBg = Some(new Color(230, 230, 230))
   val defaultBg = Color.white
   val textBg = Color.white
@@ -49,5 +69,11 @@ class Light extends Theme {
 }
 
 object Theme {
-  val currentTheme: Theme = new Light
+  val currentTheme: Theme = {
+    Utils.appProperty("theme") match {
+      case Some("dark") => new DarkTheme
+      case Some(_)      => new LightTheme
+      case None         => new LightTheme
+    }
+  }
 }

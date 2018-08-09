@@ -784,6 +784,9 @@ object Utils {
       |# Or decrease Kojo font size
       |# font.increase=-1
       |
+      |# Use dark UI theme; default is light theme.
+      |# theme=dark
+      |
       |# Specify max memory for Kojo in MB
       |# memory.max=768m
       |

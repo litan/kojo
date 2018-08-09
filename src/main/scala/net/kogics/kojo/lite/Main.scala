@@ -91,17 +91,8 @@ object Main extends AppMenu with ScriptLoader { main =>
 
     Utils.schedule(0.3) {
       val ggbCanvas = new GeoGebraCanvas(kojoCtx)
-      if (Utils.isMac) {
-        // use the system look and feel
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
-      }
-      else {
-        val laf = Theme.currentTheme.laf
-        UIManager.setLookAndFeel(laf)
-        UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
-      }
 
+      Theme.currentTheme.loadLookAndFeel()
       kojoCtx.lookAndFeelReady()
 
       val spriteCanvas = new SpriteCanvas(kojoCtx)
