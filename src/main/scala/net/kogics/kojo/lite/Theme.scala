@@ -25,10 +25,11 @@ trait Theme {
   def errorPaneFg: String
   def tracingBg: Color
   def tracingHighlightColor: Color
+  def tracingCallColor: String
 }
 
 class DarkTheme extends Theme {
-  val canvasBg = new Color(0x424447)
+  val canvasBg = new Color(0x424647)
   val editorTheme = RTheme.load(getClass.getResourceAsStream("dark-editor-theme.xml"))
   def loadLookAndFeel(): Unit = {
     val laf = new DarculaLaf
@@ -44,6 +45,7 @@ class DarkTheme extends Theme {
   val errorPaneFg = "orange"
   val tracingBg = defaultBg
   val tracingHighlightColor = new Color(173, 206, 238)
+  val tracingCallColor = "rgb(0,200,50)"
 }
 
 class LightTheme extends Theme {
@@ -71,6 +73,7 @@ class LightTheme extends Theme {
   val errorPaneFg = "red"
   val tracingBg = Color.white
   val tracingHighlightColor = new Color(173, 206, 238)
+  val tracingCallColor = "rgb(0,50,225)"
 }
 
 object Theme {

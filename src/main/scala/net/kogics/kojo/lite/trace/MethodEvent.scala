@@ -18,9 +18,12 @@ package net.kogics.kojo.lite.trace
 import com.sun.jdi.LocalVariable
 import com.sun.jdi.StackFrame
 import java.awt.geom.Point2D
+
 import net.kogics.kojo.core.Picture
 import scala.collection.mutable.ArrayBuffer
 import javax.swing.JComponent
+
+import net.kogics.kojo.lite.Theme
 
 class MethodEvent {
   @volatile var methodName: String = _
@@ -63,7 +66,7 @@ class MethodEvent {
     if (rawName.endsWith("_$eq"))
       <html><div style="font-family:Monospace"><span style="color:rgb(200,0,200)">{ "\u00b7 " * level } ASSIGN</span> { methodName } <span style="color:rgb(200,0,200)"> { assignArg }</span></div></html>.toString
     else
-      <html><div style="font-family:Monospace"><span style="color:rgb(0,50,225)">{ "\u00b7 " * level } CALL</span> { methodName } <span style="color:rgb(0,50,225)">{ pargs }</span></div></html>.toString
+      <html><div style="font-family:Monospace"><span style={ s"color:${Theme.currentTheme.tracingCallColor}" } >{ "\u00b7 " * level } CALL</span> { methodName } <span style={ s"color:${Theme.currentTheme.tracingCallColor}" }>{ pargs }</span></div></html>.toString
   }
 
   def exit(level: Int) = {
