@@ -36,8 +36,12 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.text.Utilities
 
+import org.fife.rsta.ui.CollapsibleSectionPanel
 import org.fife.rsta.ui.search.AbstractFindReplaceDialog
 import org.fife.rsta.ui.search.ReplaceDialog
+import org.fife.rsta.ui.search.ReplaceToolBar
+import org.fife.rsta.ui.search.SearchEvent
+import org.fife.rsta.ui.search.SearchListener
 import org.fife.ui.autocomplete.AutoCompletion
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
@@ -131,7 +135,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   //  sp.setFoldIndicatorEnabled(true)
   setLayout(new BorderLayout)
   add(toolbar, BorderLayout.NORTH)
-  add(sp, BorderLayout.CENTER)
+  val csp = new CollapsibleSectionPanel
+  csp.add(sp)
+  add(csp, BorderLayout.CENTER)
   add(statusStrip, BorderLayout.EAST)
 
   RTextArea.setIconGroup(new IconGroup("KojoIcons", "images/extra/"))
@@ -245,63 +251,79 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   idx += 1
 
   val findReplaceAction = new AbstractAction(Utils.loadString("S_FindReplace"), Utils.loadIcon("/images/extra/find.gif")) {
-    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
-      setTitle(Utils.loadString("S_FindReplace"))
-      override def setVisible(visible: Boolean) {
-        if (!visible) {
-          //          codePane.clearMarkAllHighlights()
-        }
-        super.setVisible(visible)
-      }
-    }
-    lazy val listener = new ActionListener {
-      def actionPerformed(ev: ActionEvent) {
-        val searchContext = dialog.getSearchContext
-        def markAllIf() {
-          //          if (searchContext.getMarkAll) {
-          //            codePane.clearMarkAllHighlights()
-          //            codePane.markAll(searchContext.getSearchFor, searchContext.getMatchCase(),
-          //              searchContext.getWholeWord, searchContext.isRegularExpression())
-          //          }
-          //          else {
-          //            codePane.clearMarkAllHighlights()
-          //          }
-        }
+
+    //    lazy val dialog: ReplaceDialog = new ReplaceDialog(frame, listener) {
+    //      setTitle(Utils.loadString("S_FindReplace"))
+    //      override def setVisible(visible: Boolean) {
+    //        val searchContext = getSearchContext
+    //        if (!visible) {
+    //          // dialog closing; get rid of marks, if any
+    //          val oldMarkAll = searchContext.getMarkAll
+    //          searchContext.setMarkAll(false)
+    //          val oldDot = codePane.getCaret.getDot
+    //          SearchEngine.find(codePane, searchContext)
+    //          codePane.getCaret.setDot(oldDot)
+    //          searchContext.setMarkAll(oldMarkAll)
+    //        }
+    //        super.setVisible(visible)
+    //      }
+    //    }
+
+    lazy val listener = new SearchListener {
+      def getSelectedText = codePane.getSelectedText
+
+      def searchEvent(ev: SearchEvent) {
+        val searchContext = toolbar.getSearchContext
         def find() {
           var found = SearchEngine.find(codePane, searchContext)
-          if (found == 0) {
-            val oldDot = codePane.getCaret().getDot
-            codePane.getCaret().setDot(0)
+          if (found.getCount == 0) {
+            val oldDot = codePane.getCaret.getDot
+            codePane.getCaret.setDot(0)
             found = SearchEngine.find(codePane, searchContext)
-            if (found == 0) {
-              codePane.getCaret().setDot(oldDot)
+            if (found.getCount == 0) {
+              codePane.getCaret.setDot(oldDot)
             }
           }
         }
 
-        ev.getActionCommand match {
-          case AbstractFindReplaceDialog.ACTION_FIND =>
-            markAllIf()
+        ev.getType match {
+          case SearchEvent.Type.MARK_ALL =>
+            SearchEngine.markAll(codePane, searchContext)
+          case SearchEvent.Type.FIND =>
             find()
-
-          case AbstractFindReplaceDialog.ACTION_REPLACE =>
-            markAllIf()
-            val replaced = SearchEngine.replace(codePane, searchContext);
-            if (replaced.getCount != 0) {
-              find()
-            }
-          case AbstractFindReplaceDialog.ACTION_REPLACE_ALL =>
+          case SearchEvent.Type.REPLACE =>
+            val replaced = SearchEngine.replace(codePane, searchContext)
+          case SearchEvent.Type.REPLACE_ALL =>
             SearchEngine.replaceAll(codePane, searchContext);
           case _ =>
         }
       }
     }
-    def actionPerformed(ev: ActionEvent) {
-      Option(codePane.getSelectedText) foreach { st =>
-        dialog.setSearchString(st)
-        codePane.setSelectionEnd(codePane.getSelectionStart)
+
+    lazy val toolbar: ReplaceToolBar = new ReplaceToolBar(listener) {
+      getSearchContext.setMarkAll(false)
+
+      override def removeNotify() {
+        val searchContext = getSearchContext
+        // toolbar closing; get rid of marks, if any
+        val oldMarkAll = searchContext.getMarkAll
+        searchContext.setMarkAll(false)
+        SearchEngine.markAll(codePane, searchContext)
+        val oldDot = codePane.getCaret.getDot
+        codePane.getCaret.setDot(oldDot)
+        searchContext.setMarkAll(oldMarkAll)
+        super.removeNotify()
       }
-      dialog.setVisible(true)
+    }
+
+    var toolbarAdded = false
+    def actionPerformed(ev: ActionEvent) {
+      //      dialog.setVisible(true)
+      if (!toolbarAdded) {
+        csp.addBottomComponent(toolbar)
+        toolbarAdded = true
+      }
+      csp.showBottomComponent(toolbar)
     }
   }
   val findReplaceItem = new JMenuItem(findReplaceAction)
