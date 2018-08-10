@@ -40,7 +40,7 @@ libraryDependencies ++= Seq(
     "org.objenesis" % "objenesis" % "1.0" % "test",
     "org.hamcrest" % "hamcrest-core" % "1.1" % "test",
     "org.hamcrest" % "hamcrest-library" % "1.1" % "test",
-    ("org.scalacheck"  % "scalacheck_2.12" % "1.13.5" intransitive()) % "test"
+    ("org.scalacheck"  % "scalacheck_2.12" % "1.14.0" intransitive()) % "test"
 )
 
 //libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
