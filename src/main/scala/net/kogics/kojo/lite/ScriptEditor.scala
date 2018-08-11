@@ -171,37 +171,37 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 //  d3Cb.setActionCommand("D3")
 //  modeMenu.add(d3Cb)
 
-  val syntaxColoringAction = new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
-      e.getActionCommand match {
-        case "Fast" =>
-          codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
-          fastColoringCb.setSelected(true)
-          richColoringCb.setSelected(false)
-        case "Rich" =>
-          codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
-          val doc = codePane.getDocument
-          doc.insertString(doc.getLength, " ", null)
-          doc.remove(doc.getLength - 1, 1)
-          fastColoringCb.setSelected(false)
-          richColoringCb.setSelected(true)
-      }
-    }
-  }
-
-  val syntaxColoringMenu = new JMenu(Utils.loadString("S_SyntaxColoring"))
-  kojoCtx.menuReady(syntaxColoringMenu)
-
-  val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
-  richColoringCb.setText(Utils.loadString("S_ColoringRich"))
-  richColoringCb.setActionCommand("Rich")
-  richColoringCb.setSelected(true)
-  syntaxColoringMenu.add(richColoringCb)
-
-  val fastColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
-  fastColoringCb.setText(Utils.loadString("S_ColoringFast"))
-  fastColoringCb.setActionCommand("Fast")
-  syntaxColoringMenu.add(fastColoringCb)
+//  val syntaxColoringAction = new AbstractAction {
+//    def actionPerformed(e: ActionEvent) {
+//      e.getActionCommand match {
+//        case "Fast" =>
+//          codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+//          fastColoringCb.setSelected(true)
+//          richColoringCb.setSelected(false)
+//        case "Rich" =>
+//          codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
+//          val doc = codePane.getDocument
+//          doc.insertString(doc.getLength, " ", null)
+//          doc.remove(doc.getLength - 1, 1)
+//          fastColoringCb.setSelected(false)
+//          richColoringCb.setSelected(true)
+//      }
+//    }
+//  }
+//
+//  val syntaxColoringMenu = new JMenu(Utils.loadString("S_SyntaxColoring"))
+//  kojoCtx.menuReady(syntaxColoringMenu)
+//
+//  val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
+//  richColoringCb.setText(Utils.loadString("S_ColoringRich"))
+//  richColoringCb.setActionCommand("Rich")
+//  richColoringCb.setSelected(true)
+//  syntaxColoringMenu.add(richColoringCb)
+//
+//  val fastColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
+//  fastColoringCb.setText(Utils.loadString("S_ColoringFast"))
+//  fastColoringCb.setActionCommand("Fast")
+//  syntaxColoringMenu.add(fastColoringCb)
 
   var tabSize = 4
 
@@ -468,8 +468,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(toggleMenuItem, idx)
   idx += 1
 
-  popup.add(syntaxColoringMenu, idx)
-  idx += 1
+//  popup.add(syntaxColoringMenu, idx)
+//  idx += 1
 
   val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
     def actionPerformed(ev: ActionEvent) {
