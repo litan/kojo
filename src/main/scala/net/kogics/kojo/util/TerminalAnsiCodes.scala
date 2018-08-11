@@ -16,8 +16,10 @@ package net.kogics.kojo.util
 
 import java.awt.Color
 
+import net.kogics.kojo.lite.Theme
+
 object TerminalAnsiCodes {
-  val AnsiRed = new Color(192, 0, 0)
+  val AnsiRed = Theme.currentTheme.errorColor
   val AnsiGreen = new Color(0, 127, 0)
   val NormalColor = new Color(32, 32, 32)
   val ESC = "\u001b"

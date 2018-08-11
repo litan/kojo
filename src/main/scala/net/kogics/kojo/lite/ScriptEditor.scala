@@ -733,9 +733,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
 
   class StatusStrip extends JPanel {
-    val ErrorColor = new Color(0xff1a1a) // reddish
-    val SuccessColor = new Color(0x33ff33) // greenish
-    val NeutralColor = new Color(0xf0f0f0) // very light gray
+    val ErrorColor = Theme.currentTheme.errorColor
+    val SuccessColor = Theme.currentTheme.successColor
+    val NeutralColor = Theme.currentTheme.neutralColor
     val StripWidth = 6
 
     setBackground(NeutralColor)
