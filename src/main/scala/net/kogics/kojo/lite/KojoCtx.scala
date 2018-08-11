@@ -137,7 +137,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     val seHeight = 1.1
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
-    grid.add(3, 0, 3, 3 - seHeight, topcs.d3h)
+//    grid.add(3, 0, 3, 3 - seHeight, topcs.d3h)
     grid.add(3, 0, 3, 3 - seHeight, topcs.aah)
     grid.add(3, 0, 3, 3 - seHeight, topcs.mwh)
     grid.add(3, 0, 3, 3 - seHeight, topcs.dch)
@@ -157,7 +157,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
     grid.add(3, 0, seWidth, 3, topcs.seh)
-    grid.add(3 + seWidth, 0, 7 - seWidth, 3 - owHeight, topcs.d3h)
+//    grid.add(3 + seWidth, 0, 7 - seWidth, 3 - owHeight, topcs.d3h)
     grid.add(3 + seWidth, 0, 7 - seWidth, 3 - owHeight, topcs.mwh)
     grid.add(3 + seWidth, 0, 7 - seWidth, 3 - owHeight, topcs.dch)
     grid.add(3 + seWidth, 2, 7 - seWidth, owHeight, topcs.owh)
@@ -172,7 +172,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
-    grid.add(3, 0, 3, 2, topcs.d3h)
+//    grid.add(3, 0, 3, 2, topcs.d3h)
     grid.add(3, 0, 3, 2, topcs.mwh)
     grid.add(3, 0, 3, 2, topcs.dch)
     grid.add(3, 2, 1.75, 1, topcs.seh)
@@ -189,7 +189,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 5, topcs.hih)
     grid.add(1, 0, 2, 5, topcs.sth)
-    grid.add(3, 0, 3, 2, topcs.d3h)
+//    grid.add(3, 0, 3, 2, topcs.d3h)
     grid.add(3, 0, 3, 2, topcs.mwh)
     grid.add(3, 0, 3, 2, topcs.dch)
     grid.add(3, 2, 3, 1.65, topcs.seh)
@@ -206,7 +206,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
-    grid.add(3, 0, 3, 2, topcs.d3h)
+//    grid.add(3, 0, 3, 2, topcs.d3h)
     grid.add(3, 0, 3, 2, topcs.mwh)
     grid.add(3, 0, 3, 2, topcs.dch)
     grid.add(3, 2, 1.75, 1, topcs.seh)
@@ -223,7 +223,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 3, topcs.hih)
     grid.add(1, 0, 2, 3, topcs.sth)
-    grid.add(3, 0, 3, 2, topcs.d3h)
+//    grid.add(3, 0, 3, 2, topcs.d3h)
     grid.add(3, 0, 3, 2, topcs.mwh)
     grid.add(3, 0, 3, 2, topcs.dch)
     grid.add(3, 2, 1.75, 1, topcs.seh)
@@ -239,7 +239,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def switchToOutputStoryViewingPerspective() = Utils.runInSwingThread {
     val grid = new CGrid(control)
     grid.add(0, 0, 1, 2, topcs.hih)
-    grid.add(1, 0, 1, 2, topcs.d3h)
+//    grid.add(1, 0, 1, 2, topcs.d3h)
     grid.add(1, 0, 1, 2, topcs.mwh)
     grid.add(1, 0, 1, 2, topcs.dch)
     grid.add(2, 0, 1, 2, topcs.sth)
@@ -295,10 +295,10 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   }
 
   def make3DCanvasVisible() = Utils.runInSwingThread {
-    if (!topcs.d3h.isShowing) {
-      topcs.d3h.toFront()
-      activateScriptEditor()
-    }
+//    if (!topcs.d3h.isShowing) {
+//      topcs.d3h.toFront()
+//      activateScriptEditor()
+//    }
   }
 
   def makeTraceWindowVisible(tw: DefaultSingleCDockable) = Utils.runInSwingThread {
@@ -316,12 +316,12 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   }
 
   def drawingCanvasActivated() {
-    topcs.d3h.otherPaneActivated()
+//    topcs.d3h.otherPaneActivated()
     topcs.mwh.otherPaneActivated()
   }
 
   def mwActivated() {
-    topcs.d3h.otherPaneActivated()
+//    topcs.d3h.otherPaneActivated()
   }
 
   def d3Activated() {

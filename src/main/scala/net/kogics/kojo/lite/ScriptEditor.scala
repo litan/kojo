@@ -165,11 +165,11 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   mwCb.setActionCommand("Mw")
   modeMenu.add(mwCb)
 
-  val d3Cb = new JCheckBoxMenuItem(switcher)
-  d3Cb.setText(Utils.loadString("S_D3Mode"))
-  d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
-  d3Cb.setActionCommand("D3")
-  modeMenu.add(d3Cb)
+//  val d3Cb = new JCheckBoxMenuItem(switcher)
+//  d3Cb.setText(Utils.loadString("S_D3Mode"))
+//  d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
+//  d3Cb.setActionCommand("D3")
+//  modeMenu.add(d3Cb)
 
   val syntaxColoringAction = new AbstractAction {
     def actionPerformed(e: ActionEvent) {
@@ -491,7 +491,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       switcher.updateCb(twCb)
       switcher.updateCb(stagingCb)
       switcher.updateCb(mwCb)
-      switcher.updateCb(d3Cb)
+//      switcher.updateCb(d3Cb)
     }
     def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
 

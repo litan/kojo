@@ -16,7 +16,6 @@ package net.kogics.kojo
 package lite
 
 import java.awt.BorderLayout
-import java.awt.Font
 import java.awt.Frame
 import java.awt.Toolkit
 import java.awt.event.WindowAdapter
@@ -28,19 +27,15 @@ import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
 
 import javax.swing.JFrame
-import javax.swing.UIManager
 import javax.swing.WindowConstants
-import javax.swing.plaf.FontUIResource
 
 import scala.collection.convert.WrapAsScala.propertiesAsScalaMap
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
-import net.kogics.kojo.d3.Canvas3D
 import net.kogics.kojo.history.HistoryPanel
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.lite.topc.ArithAerobicsHolder
-import net.kogics.kojo.lite.topc.D3CanvasHolder
 import net.kogics.kojo.lite.topc.DrawingCanvasHolder
 import net.kogics.kojo.lite.topc.HistoryHolder
 import net.kogics.kojo.lite.topc.MathworldHolder
@@ -101,8 +96,8 @@ object Main extends AppMenu with ScriptLoader { main =>
       val Staging = new staging.API(spriteCanvas)
 
       val storyTeller = new StoryTeller(kojoCtx)
-      val canvas3d = new Canvas3D()
-      val d3API = new d3.API(kojoCtx, canvas3d)
+      //      val canvas3d = new Canvas3D()
+      //      val d3API = new d3.API(kojoCtx, canvas3d)
 
       val mp3player = new KMp3(kojoCtx)
       val fuguePlayer = new FuguePlayer(kojoCtx)
@@ -113,7 +108,7 @@ object Main extends AppMenu with ScriptLoader { main =>
         Tw,
         Staging,
         ggbCanvas.Mw,
-        d3API,
+        null,
         storyTeller,
         mp3player,
         fuguePlayer,
@@ -151,11 +146,11 @@ object Main extends AppMenu with ScriptLoader { main =>
       val outputPaneH = new OutputWindowHolder(execSupport.outputPane)
       val storyHolder = new StoryTellerHolder(storyTeller)
       val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
-      val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
+      //      val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
       val historyHolder = new HistoryHolder(new HistoryPanel(execSupport))
       val arithAerobicsHolder = new ArithAerobicsHolder(new ArithAerobicsPane(frame, kojoCtx))
 
-      kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder, arithAerobicsHolder)
+      kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, mwHolder, null, historyHolder, arithAerobicsHolder)
       Theme.currentTheme.loadDefaultPerspective(kojoCtx)
 
       frame.setJMenuBar(menuBar)
