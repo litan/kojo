@@ -49,8 +49,9 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   val Log = Logger.getLogger("ScalaCodeRunner")
   val outputHandler = new InterpOutputHandler(runContext)
 
+  @volatile var kojointerp: KojoInterpreter = _
+
   // for debugging only!
-  //  def kojointerp = codeRunner.interp
   //  def pcompiler = codeRunner.compilerAndRunner.pcompiler
   //  def compiler = codeRunner.compilerAndRunner.compiler
 
@@ -567,6 +568,8 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
       interp = new KojoInterpreter(iSettings, new GuiPrintWriter())
       initInterp()
+      // backdoor to give access to the interpreter inside the script editor. Used by beginner challenges.
+      kojointerp = interp
     }
 
     def createCp(xs: List[String]): String = {

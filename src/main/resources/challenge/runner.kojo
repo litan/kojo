@@ -242,8 +242,8 @@ val inverse = Map(
 def altLine(line: String, n: Int) = {
     def splitLine = {
         val st = new java.util.StringTokenizer(line, "(, )")
-        import collection.JavaConversions._
-        st.toVector
+        import collection.JavaConverters._
+        st.asScala.toVector
     }
 
     val lineParts = splitLine
