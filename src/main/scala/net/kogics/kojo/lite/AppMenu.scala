@@ -455,6 +455,8 @@ trait AppMenu {
               <li>The Gargi font (http://savannah.nongnu.org/projects/gargi) for Devanagari support</li>
               <li>The Doodle project (https://github.com/underscoreio/doodle) for rich color support</li>
               <li>Scalatest (http://www.scalatest.org/) for testing</li>
+              <li>Akka (https://akka.io/) for concurrency</li>
+              <li>Darcula (https://github.com/bulenkov/Darcula) for the dark Kojo theme</li>
               </ul>
               </div>
               </body></html>
