@@ -570,7 +570,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       button.setIcon(Utils.loadIcon(imageFile))
       // button.setMnemonic(KeyEvent.VK_ENTER)
       button.setBorderPainted(false)
-      button;
+      button
     }
 
     val toolbar = new JToolBar

@@ -30,6 +30,11 @@ trait Theme {
   def tracingBg: Color
   def tracingHighlightColor: Color
   def tracingCallColor: String
+  def canvasAxesColor: Color
+  def canvasGridColor: Color
+  def canvasTickColor: Color
+  def canvasTickLabelColor: Color
+  def canvasTickIntegerLabelColor: Color
 }
 
 class DarkTheme extends Theme {
@@ -56,6 +61,11 @@ class DarkTheme extends Theme {
   val tracingBg = defaultBg
   val tracingHighlightColor = new Color(173, 206, 238)
   val tracingCallColor = "rgb(0,200,50)"
+  val canvasAxesColor = new Color(200, 200, 200)
+  val canvasGridColor = new Color(100, 100, 100)
+  val canvasTickColor = new Color(120, 120, 120)
+  val canvasTickLabelColor = new Color(150, 150, 150)
+  val canvasTickIntegerLabelColor = textFg
 }
 
 class LightTheme extends Theme {
@@ -91,6 +101,11 @@ class LightTheme extends Theme {
   val tracingBg = Color.white
   val tracingHighlightColor = new Color(173, 206, 238)
   val tracingCallColor = "rgb(0,50,225)"
+  val canvasAxesColor = new Color(100, 100, 100)
+  val canvasGridColor = new Color(200, 200, 200)
+  val canvasTickColor = new Color(150, 150, 150)
+  val canvasTickLabelColor = new Color(50, 50, 50)
+  val canvasTickIntegerLabelColor = Color.blue
 }
 
 object Theme {

@@ -67,11 +67,11 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   val origLayer = getLayer()
 
   val Log = Logger.getLogger(getClass.getName);
-  val AxesColor = new Color(100, 100, 100)
-  val GridColor = new Color(200, 200, 200)
-  val TickColor = new Color(150, 150, 150)
-  val TickLabelColor = new Color(50, 50, 50)
-  val TickIntegerLabelColor = Color.blue
+  val AxesColor = Theme.currentTheme.canvasAxesColor
+  val GridColor = Theme.currentTheme.canvasGridColor
+  val TickColor = Theme.currentTheme.canvasTickColor
+  val TickLabelColor = Theme.currentTheme.canvasTickLabelColor
+  val TickIntegerLabelColor = Theme.currentTheme.canvasTickIntegerLabelColor
 
   def Dpi = kojoCtx.screenDPI
   @volatile var unitLen: UnitLen = Pixel
