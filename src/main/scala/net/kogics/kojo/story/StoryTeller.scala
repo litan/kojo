@@ -142,7 +142,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   def makeControlPanel(): (JPanel, JButton, JButton) = {
     val cp = new JPanel
-    cp.setBackground(Color.white)
+    cp.setBackground(Theme.currentTheme.defaultBg)
     cp.setBorder(BorderFactory.createEtchedBorder())
 
     val prevBut = new JButton()
