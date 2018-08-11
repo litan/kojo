@@ -156,7 +156,7 @@ object Main extends AppMenu with ScriptLoader { main =>
       val arithAerobicsHolder = new ArithAerobicsHolder(new ArithAerobicsPane(frame, kojoCtx))
 
       kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, mwHolder, d3Holder, historyHolder, arithAerobicsHolder)
-      kojoCtx.switchToDefaultPerspective()
+      Theme.currentTheme.loadDefaultPerspective(kojoCtx)
 
       frame.setJMenuBar(menuBar)
 

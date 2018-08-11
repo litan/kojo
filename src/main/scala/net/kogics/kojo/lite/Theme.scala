@@ -18,6 +18,7 @@ trait Theme {
   def canvasBg: Color
   def editorTheme: RTheme
   def loadLookAndFeel(): Unit
+  def loadDefaultPerspective(kojoCtx: KojoCtx): Unit
   def toolbarBg: Option[Color]
   def defaultBg: Color
   def textBg: Color
@@ -38,6 +39,9 @@ class DarkTheme extends Theme {
     val laf = new DarculaLaf
     UIManager.setLookAndFeel(laf)
     UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
+  }
+  def loadDefaultPerspective(kojoCtx: KojoCtx): Unit = {
+    kojoCtx.switchToDefault2Perspective()
   }
   val toolbarBg = None
   val defaultBg = new Color(0x3c3f41)
@@ -70,6 +74,10 @@ class LightTheme extends Theme {
     }
 
   }
+  def loadDefaultPerspective(kojoCtx: KojoCtx): Unit = {
+    kojoCtx.switchToDefaultPerspective()
+  }
+
   val toolbarBg = Some(new Color(230, 230, 230))
   val defaultBg = Color.white
   val textBg = Color.white
