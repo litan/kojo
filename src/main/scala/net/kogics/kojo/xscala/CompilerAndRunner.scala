@@ -289,7 +289,8 @@ class CompilerAndRunner(
         || sym.owner == definitions.ObjectClass) {
         relevance += 40
       }
-      val casePenalty = if (name.take(prefix.length) != prefix.mkString) 50 else 0
+      val pfx = prefix
+      val casePenalty = if (name.take(pfx.length) != pfx.mkString) 50 else 0
       relevance += casePenalty
 
       val namesAndTypes = for {

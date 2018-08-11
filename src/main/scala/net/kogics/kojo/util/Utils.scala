@@ -510,7 +510,7 @@ object Utils {
       (codeFromScripts(modeFilter(initScripts, mode), initScriptDir) |+| langInit(mode)) map stripCR
     )
 
-  def isScalaTestAvailable = {
+  lazy val isScalaTestAvailable = {
     try {
       Class.forName("org.scalatest.FunSuite")
       true
