@@ -37,8 +37,6 @@ import javax.swing.event.PopupMenuListener
 import javax.swing.text.Utilities
 
 import org.fife.rsta.ui.CollapsibleSectionPanel
-import org.fife.rsta.ui.search.AbstractFindReplaceDialog
-import org.fife.rsta.ui.search.ReplaceDialog
 import org.fife.rsta.ui.search.ReplaceToolBar
 import org.fife.rsta.ui.search.SearchEvent
 import org.fife.rsta.ui.search.SearchListener
