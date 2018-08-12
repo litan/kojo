@@ -42,10 +42,10 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   fontDd.setSelectedItem(fontIncrease)
 
   val r1 = RowPanel(filler(10), Label("UI Theme:"), filler(3), themeDd)
-  val r2 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;&nbsp;<em>Lets you choose a
-    light or dark background for Kojo.</em></html>.toString()), filler(10))
+  val r2 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;&nbsp;<em>Choose a light or dark background
+    for Kojo.</em></html>.toString()), filler(10))
   val r3 = RowPanel(filler(10), Label("Font Adjustment:"), filler(3), fontDd)
-  val r4 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;&nbsp;<em>Lets you adjust Kojo font-size. Positive numbers increase<br/>
+  val r4 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;&nbsp;<em>Adjust Kojo font-size. Positive numbers increase<br/>
     &nbsp;&nbsp;&nbsp;the default font size; negative numbers decrease it.</em></html>.toString()), filler(10))
   val r5 = RowPanel(filler(10), Label(<html><em>After making changes, restart Kojo to activate new settings.</em></html>.toString()))
 

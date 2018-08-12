@@ -121,13 +121,13 @@ trait AppMenu {
     newKojo.setAccelerator(KeyStroke.getKeyStroke("control N"))
     fileMenu.add(newKojo)
 
-    fileMenu.addSeparator()
-
     fileMenu.add(new JMenuItem(new AbstractAction("Settings") {
       def actionPerformed(e: ActionEvent) {
         new SettingsWindow(frame).setVisible(true)
       }
     }))
+
+    fileMenu.addSeparator()
 
     fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_Exit")) {
       def actionPerformed(e: ActionEvent) {
