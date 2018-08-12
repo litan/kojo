@@ -42,11 +42,12 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   fontDd.setSelectedItem(fontIncrease)
 
   val r1 = RowPanel(filler(10), Label("UI Theme:"), filler(3), themeDd)
-  val r2 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;<em>Lets you choose a
+  val r2 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;&nbsp;<em>Lets you choose a
     light or dark background for Kojo.</em></html>.toString()), filler(10))
   val r3 = RowPanel(filler(10), Label("Font Adjustment:"), filler(3), fontDd)
-  val r4 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;<em>Lets you adjust Kojo font-size. Positive numbers increase<br/>
+  val r4 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;&nbsp;<em>Lets you adjust Kojo font-size. Positive numbers increase<br/>
     &nbsp;&nbsp;the default font size; negative numbers decrease it.</em></html>.toString()), filler(10))
+  val r5 = RowPanel(filler(10), Label(<html><em>After making changes, restart Kojo to activate new settings.</em></html>.toString()))
 
   val okCancel = new JPanel
   val ok = new JButton(Utils.loadString("S_OK"))
@@ -71,7 +72,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   okCancel.add(ok)
   okCancel.add(cancel)
 
-  val d = ColPanel(filler(1), r1, r2, r3, r4, filler(1), okCancel)
+  val d = ColPanel(filler(1), r1, r2, r3, r4, filler(1), r5, okCancel)
 
   setTitle("Settings")
   setModal(true)

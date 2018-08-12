@@ -3,7 +3,6 @@
 ../lib/rstaui.jar
 ../lib/autocomplete.jar
 ../lib/scalariform.jar
-../lib/js-1.6R5.jar
 ../lib/geogebra_main.jar
 ../lib/geogebra.jar
 ../lib/geogebra_algos.jar
