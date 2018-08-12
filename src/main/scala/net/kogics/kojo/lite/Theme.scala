@@ -35,6 +35,10 @@ trait Theme {
   def canvasTickColor: Color
   def canvasTickLabelColor: Color
   def canvasTickIntegerLabelColor: Color
+  def runPng: String
+  def runwPng: String
+  def runtPng: String
+  def stopPng: String
 }
 
 class DarkTheme extends Theme {
@@ -66,6 +70,10 @@ class DarkTheme extends Theme {
   val canvasTickColor = new Color(120, 120, 120)
   val canvasTickLabelColor = new Color(150, 150, 150)
   val canvasTickIntegerLabelColor = textFg
+  val runPng = "run-d.png"
+  val runwPng = "runw-d.png"
+  val runtPng = "runt-d.png"
+  val stopPng = "stop-d.png"
 }
 
 class LightTheme extends Theme {
@@ -106,6 +114,10 @@ class LightTheme extends Theme {
   val canvasTickColor = new Color(150, 150, 150)
   val canvasTickLabelColor = new Color(50, 50, 50)
   val canvasTickIntegerLabelColor = Color.blue
+  val runPng = "run.png"
+  val runwPng = "runw.png"
+  val runtPng = "runt.png"
+  val stopPng = "stop.png"
 }
 
 object Theme {

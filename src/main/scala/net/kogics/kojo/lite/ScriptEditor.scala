@@ -584,11 +584,13 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
     toolbar.setPreferredSize(new Dimension(0, imageFolder + imageFolder / 6))
 
-    val runButton = makeNavigationButton(s"/images/$imageFolder/run.png", RunScript, Utils.loadString("S_RunScript"))
-    val runWorksheetButton = makeNavigationButton(s"/images/$imageFolder/runw.png", RunWorksheet, Utils.loadString("S_RunWorksheet"))
-    val traceButton = makeNavigationButton(s"/images/$imageFolder/runt.png", TraceScript, Utils.loadString("S_TraceScript"))
+    import Theme.currentTheme.{runPng, runwPng, runtPng, stopPng}
+
+    val runButton = makeNavigationButton(s"/images/$imageFolder/$runPng", RunScript, Utils.loadString("S_RunScript"))
+    val runWorksheetButton = makeNavigationButton(s"/images/$imageFolder/$runwPng", RunWorksheet, Utils.loadString("S_RunWorksheet"))
+    val traceButton = makeNavigationButton(s"/images/$imageFolder/$runtPng", TraceScript, Utils.loadString("S_TraceScript"))
     val compileButton = makeNavigationButton(s"/images/$imageFolder/check.png", CompileScript, Utils.loadString("S_CheckScript"))
-    val stopButton = makeNavigationButton(s"/images/$imageFolder/stop.png", StopScript, Utils.loadString("S_StopScript"))
+    val stopButton = makeNavigationButton(s"/images/$imageFolder/$stopPng", StopScript, Utils.loadString("S_StopScript"))
     val hNextButton = makeNavigationButton(s"/images/$imageFolder/history-next.png", HistoryNext, Utils.loadString("S_HistNext"))
     val hPrevButton = makeNavigationButton(s"/images/$imageFolder/history-prev.png", HistoryPrev, Utils.loadString("S_HistPrev"))
     val clearSButton = makeNavigationButton(s"/images/$imageFolder/clears.png", ClearEditor, Utils.loadString("S_ClearEditorT"))
