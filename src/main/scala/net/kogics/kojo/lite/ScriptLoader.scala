@@ -2,8 +2,6 @@ package net.kogics.kojo.lite
 
 import net.kogics.kojo.util.Utils
 
-import net.kogics.kojo.lite.Main
-
 trait ScriptLoader { self: Main.type =>
   def _loadUrl(url: String)(postfn: => Unit = {}) {
     kojoCtx.switchToDefaultPerspective()

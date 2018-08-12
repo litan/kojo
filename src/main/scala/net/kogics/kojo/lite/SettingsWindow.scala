@@ -46,7 +46,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
     light or dark background for Kojo.</em></html>.toString()), filler(10))
   val r3 = RowPanel(filler(10), Label("Font Adjustment:"), filler(3), fontDd)
   val r4 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;&nbsp;<em>Lets you adjust Kojo font-size. Positive numbers increase<br/>
-    &nbsp;&nbsp;the default font size; negative numbers decrease it.</em></html>.toString()), filler(10))
+    &nbsp;&nbsp;&nbsp;the default font size; negative numbers decrease it.</em></html>.toString()), filler(10))
   val r5 = RowPanel(filler(10), Label(<html><em>After making changes, restart Kojo to activate new settings.</em></html>.toString()))
 
   val okCancel = new JPanel
