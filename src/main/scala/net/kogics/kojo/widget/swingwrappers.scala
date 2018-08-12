@@ -19,6 +19,7 @@ import javax.swing.JTextArea
 import javax.swing.JTextField
 import javax.swing.JToggleButton
 
+import net.kogics.kojo.lite.Theme
 import net.kogics.kojo.util.Constants
 import net.kogics.kojo.util.Read
 import net.kogics.kojo.util.Utils
@@ -56,13 +57,13 @@ trait Focusable { self: JComponent =>
 }
 
 case class RowPanel(comps: JComponent*) extends JPanel {
-  setBackground(Color.white)
+  setBackground(Theme.currentTheme.defaultBg)
   setLayout(new FlowLayout(FlowLayout.LEFT))
   comps.foreach { add(_) }
 }
 
 case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
-  setBackground(Color.white)
+  setBackground(Theme.currentTheme.defaultBg)
   setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
   comps.foreach { add(_) }
 }

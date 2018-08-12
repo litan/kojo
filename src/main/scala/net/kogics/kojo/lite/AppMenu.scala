@@ -123,6 +123,12 @@ trait AppMenu {
 
     fileMenu.addSeparator()
 
+    fileMenu.add(new JMenuItem(new AbstractAction("Settings") {
+      def actionPerformed(e: ActionEvent) {
+        new SettingsWindow(frame).setVisible(true)
+      }
+    }))
+
     fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_Exit")) {
       def actionPerformed(e: ActionEvent) {
         appExit()

@@ -759,6 +759,29 @@ object Utils {
   }
 
   val kojoProps = new Properties
+
+  val defProps = """
+                   |# Uncomment/tweak options as desired:
+                   |
+                   |# Increase Kojo font size
+                   |# font.increase=1
+                   |
+                   |# Or decrease Kojo font size
+                   |# font.increase=-1
+                   |
+                   |# Use dark UI theme; default is light theme.
+                   |# theme=dark
+                   |
+                   |# Specify max memory for Kojo in MB
+                   |# memory.max=768m
+                   |
+                   |# Or specify max memory for Kojo in GB (1g, 2g, etc)
+                   |# memory.max=1g
+                   |
+                   |# Show internal keys for UI elements; for localization developers 
+                   |# i18n.string.showkey=true
+                 """.stripMargin
+
   val propsFile = new File(Utils.userDir + File.separatorChar + ".kojo/lite/kojo.properties")
   if (propsFile.exists()) {
     val is = new FileInputStream(propsFile)
@@ -775,27 +798,6 @@ object Utils {
   else {
     locateLogDir()
     propsFile.createNewFile()
-    val defProps = """
-      |# Uncomment/tweak options as desired:
-      |
-      |# Increase Kojo font size
-      |# font.increase=1
-      |
-      |# Or decrease Kojo font size
-      |# font.increase=-1
-      |
-      |# Use dark UI theme; default is light theme.
-      |# theme=dark
-      |
-      |# Specify max memory for Kojo in MB
-      |# memory.max=768m
-      |
-      |# Or specify max memory for Kojo in GB (1g, 2g, etc)
-      |# memory.max=1g
-      |
-      |# Show internal keys for UI elements; for localization developers 
-      |# i18n.string.showkey=true
-""".stripMargin
     import RichFile._
     propsFile.write(defProps)
   }
@@ -803,5 +805,22 @@ object Utils {
   def appProperty(key: String) = {
     val ret = kojoProps.getProperty(key)
     if (ret != null) Some(ret) else None
+  }
+
+  def updateAppProperties(props: Map[String, String]): Unit = {
+    props.foreach {
+      case (key, value) =>
+        kojoProps.put(key, value)
+    }
+    val os = new FileOutputStream(propsFile)
+    try {
+      kojoProps.store(os, defProps)
+    }
+    catch {
+      case t: Throwable =>
+    }
+    finally {
+      os.close()
+    }
   }
 }
