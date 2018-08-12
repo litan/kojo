@@ -19,7 +19,7 @@
     <markAllHighlight color="6b8189" />
     <!-- TODO: Fix me -->
     <markOccurrencesHighlight color="5b7179" border="false" />
-    <matchedBracket fg="6A8088" bg="6b8189" highlightBoth="false" animate="true" />
+    <matchedBracket fg="6A8088" bg="6b8189" highlightBoth="false" animate="false" />
     <hyperlinks fg="a082bd" />
     <secondaryLanguages>
         <language index="1" bg="333344" />
@@ -39,11 +39,11 @@
         <style token="RESERVED_WORD" fg="93C763" bold="true" />
         <style token="RESERVED_WORD_2" fg="93C763" bold="true" />
         <style token="ANNOTATION" fg="E8E2B7" />
-        <style token="COMMENT_DOCUMENTATION" fg="6C788C" />
-        <style token="COMMENT_EOL" fg="66747B" />
-        <style token="COMMENT_MULTILINE" fg="66747B" />
-        <style token="COMMENT_KEYWORD" fg="ae9fbf" />
-        <style token="COMMENT_MARKUP" fg="ae9fbf" />
+        <style token="COMMENT_DOCUMENTATION" fg="808080" />
+        <style token="COMMENT_EOL" fg="808080" />
+        <style token="COMMENT_MULTILINE" fg="808080" />
+        <style token="COMMENT_KEYWORD" fg="808080" />
+        <style token="COMMENT_MARKUP" fg="808080" />
         <style token="FUNCTION" fg="E0E2E4" />
         <style token="DATA_TYPE" fg="678CB1" bold="true" />
         <style token="LITERAL_BOOLEAN" fg="93C763" bold="true" />
@@ -57,7 +57,7 @@
         <style token="MARKUP_TAG_NAME" fg="ABBFD3" bold="true" />
         <style token="MARKUP_TAG_ATTRIBUTE" fg="B3B689" />
         <style token="MARKUP_TAG_ATTRIBUTE_VALUE" fg="e1e2cf" />
-        <style token="MARKUP_COMMENT" fg="66747B" />
+        <style token="MARKUP_COMMENT" fg="808080" />
         <style token="MARKUP_DTD" fg="A082BD" />
         <style token="MARKUP_PROCESSING_INSTRUCTION" fg="A082BD" />
         <style token="MARKUP_CDATA" fg="d5e6f0" />
