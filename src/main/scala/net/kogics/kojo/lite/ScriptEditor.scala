@@ -290,7 +290,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           case SearchEvent.Type.FIND =>
             find()
           case SearchEvent.Type.REPLACE =>
-            val replaced = SearchEngine.replace(codePane, searchContext)
+            SearchEngine.replace(codePane, searchContext)
           case SearchEvent.Type.REPLACE_ALL =>
             SearchEngine.replaceAll(codePane, searchContext);
           case _ =>

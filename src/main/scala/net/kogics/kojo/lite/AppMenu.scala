@@ -383,7 +383,7 @@ trait AppMenu {
     helpMenu.add(menuItemFor("S_KojoOverview", "kojo-overview.kojo"))
     helpMenu.add(menuItemFor("S_ScalaTutorial", "scala-tutorial.kojo"))
     helpMenu.add(menuItemFor("S_ComposingMusic", "composing-music.kojo"))
-    helpMenu.add(menuItemFor("S_Intro3D", "d3-intro.kojo"))
+//    helpMenu.add(menuItemFor("S_Intro3D", "d3-intro.kojo"))
     helpMenu.addSeparator()
 
     val about = new JMenuItem(Utils.loadString("S_About"))
