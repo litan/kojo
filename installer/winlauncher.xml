@@ -19,12 +19,26 @@
     <cp>../lib/*.jar</cp>
   </classPath>
   <jre>
-    <path></path>
+    <path>../jre</path>
     <bundledJre64Bit>false</bundledJre64Bit>
     <bundledJreAsFallback>false</bundledJreAsFallback>
-    <minVersion>1.8.0_150</minVersion>
+    <minVersion>1.8.0_130</minVersion>
     <maxVersion>1.8.0_350</maxVersion>
     <jdkPreference>preferJre</jdkPreference>
     <runtimeBits>64/32</runtimeBits>
   </jre>
+  <versionInfo>
+    <fileVersion>2.7.0.0</fileVersion>
+    <txtFileVersion>Kojo 2.x launcher</txtFileVersion>
+    <fileDescription>Launcher for Kojo (www.kojo.in)</fileDescription>
+    <copyright>GPL Licensed. Copyright (C) 2018 Lalit Pant &lt;lalit_pant@yahoo.com&gt;</copyright>
+    <productVersion>2.7.0.0</productVersion>
+    <txtProductVersion>Kojo 2.x</txtProductVersion>
+    <productName>Kojo</productName>
+    <companyName>Kogics Foundation</companyName>
+    <internalName>Kojo</internalName>
+    <originalFilename>kojo.exe</originalFilename>
+    <trademarks></trademarks>
+    <language>ENGLISH_US</language>
+  </versionInfo>
 </launch4jConfig>
