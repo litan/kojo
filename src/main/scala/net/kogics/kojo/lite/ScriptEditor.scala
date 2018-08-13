@@ -165,43 +165,43 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   mwCb.setActionCommand("Mw")
   modeMenu.add(mwCb)
 
-//  val d3Cb = new JCheckBoxMenuItem(switcher)
-//  d3Cb.setText(Utils.loadString("S_D3Mode"))
-//  d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
-//  d3Cb.setActionCommand("D3")
-//  modeMenu.add(d3Cb)
+  //  val d3Cb = new JCheckBoxMenuItem(switcher)
+  //  d3Cb.setText(Utils.loadString("S_D3Mode"))
+  //  d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
+  //  d3Cb.setActionCommand("D3")
+  //  modeMenu.add(d3Cb)
 
-//  val syntaxColoringAction = new AbstractAction {
-//    def actionPerformed(e: ActionEvent) {
-//      e.getActionCommand match {
-//        case "Fast" =>
-//          codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
-//          fastColoringCb.setSelected(true)
-//          richColoringCb.setSelected(false)
-//        case "Rich" =>
-//          codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
-//          val doc = codePane.getDocument
-//          doc.insertString(doc.getLength, " ", null)
-//          doc.remove(doc.getLength - 1, 1)
-//          fastColoringCb.setSelected(false)
-//          richColoringCb.setSelected(true)
-//      }
-//    }
-//  }
-//
-//  val syntaxColoringMenu = new JMenu(Utils.loadString("S_SyntaxColoring"))
-//  kojoCtx.menuReady(syntaxColoringMenu)
-//
-//  val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
-//  richColoringCb.setText(Utils.loadString("S_ColoringRich"))
-//  richColoringCb.setActionCommand("Rich")
-//  richColoringCb.setSelected(true)
-//  syntaxColoringMenu.add(richColoringCb)
-//
-//  val fastColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
-//  fastColoringCb.setText(Utils.loadString("S_ColoringFast"))
-//  fastColoringCb.setActionCommand("Fast")
-//  syntaxColoringMenu.add(fastColoringCb)
+  //  val syntaxColoringAction = new AbstractAction {
+  //    def actionPerformed(e: ActionEvent) {
+  //      e.getActionCommand match {
+  //        case "Fast" =>
+  //          codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+  //          fastColoringCb.setSelected(true)
+  //          richColoringCb.setSelected(false)
+  //        case "Rich" =>
+  //          codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
+  //          val doc = codePane.getDocument
+  //          doc.insertString(doc.getLength, " ", null)
+  //          doc.remove(doc.getLength - 1, 1)
+  //          fastColoringCb.setSelected(false)
+  //          richColoringCb.setSelected(true)
+  //      }
+  //    }
+  //  }
+  //
+  //  val syntaxColoringMenu = new JMenu(Utils.loadString("S_SyntaxColoring"))
+  //  kojoCtx.menuReady(syntaxColoringMenu)
+  //
+  //  val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
+  //  richColoringCb.setText(Utils.loadString("S_ColoringRich"))
+  //  richColoringCb.setActionCommand("Rich")
+  //  richColoringCb.setSelected(true)
+  //  syntaxColoringMenu.add(richColoringCb)
+  //
+  //  val fastColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
+  //  fastColoringCb.setText(Utils.loadString("S_ColoringFast"))
+  //  fastColoringCb.setActionCommand("Fast")
+  //  syntaxColoringMenu.add(fastColoringCb)
 
   var tabSize = 4
 
@@ -468,8 +468,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(toggleMenuItem, idx)
   idx += 1
 
-//  popup.add(syntaxColoringMenu, idx)
-//  idx += 1
+  //  popup.add(syntaxColoringMenu, idx)
+  //  idx += 1
 
   val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
     def actionPerformed(ev: ActionEvent) {
@@ -491,7 +491,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       switcher.updateCb(twCb)
       switcher.updateCb(stagingCb)
       switcher.updateCb(mwCb)
-//      switcher.updateCb(d3Cb)
+      //      switcher.updateCb(d3Cb)
     }
     def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
 
@@ -628,9 +628,6 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     statusStrip.linkToPane()
     codePane.addKeyListener(new KeyAdapter {
       override def keyPressed(evt: KeyEvent) {
-        if (!evt.isControlDown) {
-          execSupport.imanip.foreach { _ close () }
-        }
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
@@ -646,17 +643,18 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               evt.consume
             }
           case KeyEvent.VK_UP =>
-            if (evt.isControlDown && hPrevButton.isEnabled) {
+            if ((evt.isControlDown || evt.isMetaDown) && hPrevButton.isEnabled) {
               execSupport.loadCodeFromHistoryPrev()
               evt.consume
             }
           case KeyEvent.VK_DOWN =>
-            if (evt.isControlDown) {
-              if (hNextButton.isEnabled) {
-                execSupport.loadCodeFromHistoryNext()
-              }
+            if ((evt.isControlDown || evt.isMetaDown) && hNextButton.isEnabled) {
+              execSupport.loadCodeFromHistoryNext()
               evt.consume
             }
+          case KeyEvent.VK_ESCAPE =>
+            execSupport.imanip.foreach { _ close () }
+
           case _ => // do nothing special
         }
       }
@@ -678,7 +676,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     val mouseListener = new MouseAdapter {
       override def mouseClicked(e: MouseEvent) {
         execSupport.imanip.foreach { _ close () }
-        if (e.isControlDown) {
+        if (e.isControlDown || e.isMetaDown) {
           try {
             val pt = new Point(e.getX(), e.getY());
             val offset = codePane.viewToModel(pt);
