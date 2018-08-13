@@ -334,18 +334,27 @@ class CompilerAndRunner(
 
         var resp = new Response[pcompiler.Tree]
         pcompiler.askTypeAt(pos, resp)
-        resp.get match {
-          case Left(x) =>
-            x match {
-              case t: pcompiler.ValOrDefDef => t.tpt.toString
-              case t: pcompiler.TypeDef     => t.name.toString
-              case t: pcompiler.ClassDef    => t.name.toString
-              case _                        => x.tpe.toString
-            }
 
-          case Right(y) =>
-            // println("Right:" + y)
-            ""
+        var response: pcompiler.Response[String] = null
+        val respget = resp.get // prime computation for PC thread!
+        response = pcompiler.askForResponse { () =>
+          respget match {
+            case Left(x) =>
+              x match {
+                case t: pcompiler.ValOrDefDef => t.tpt.toString
+                case t: pcompiler.TypeDef     => t.name.toString
+                case t: pcompiler.ClassDef    => t.name.toString
+                case _                        => x.tpe.toString
+              }
+
+            case Right(y) =>
+              // println("Right:" + y)
+              ""
+          }
+        }
+        response.get match {
+          case Left(s)  => s
+          case Right(t) => ""
         }
       }
     } getOrElse ("")

@@ -118,7 +118,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
   case object ActivateMw
   case object ActivateD3
   case object ResetInterp
-  val MaxResponseTime = 20 seconds
+  val MaxResponseTime = 2000 seconds
 
   def askCodeRunner(m: Any): Any = {
     implicit val timeout = Timeout(MaxResponseTime)
