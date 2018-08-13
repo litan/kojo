@@ -6,11 +6,11 @@ scalaVersion := "2.12.6"
 
 fork in run := true
 
-javaOptions in run ++= Seq("-Xmx1024m", "-Xss1m", "-XX:PermSize=32m", "-XX:MaxPermSize=512m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled", "-XX:+CMSPermGenSweepingEnabled")
+javaOptions in run ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
 
 fork in Test := true
 
-javaOptions in Test ++= Seq("-Xmx1024m", "-Xss1m", "-XX:PermSize=32m", "-XX:MaxPermSize=512m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled", "-XX:+CMSPermGenSweepingEnabled")
+javaOptions in Test ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
 
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-s")
 
