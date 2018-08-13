@@ -26,6 +26,7 @@ libraryDependencies ++= Seq(
     "org.scala-lang.modules" % "scala-swing_2.12" % "2.0.3",
     "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6",
     "org.scala-lang.modules" % "scala-parser-combinators_2.12" % "1.1.1",
+    "com.github.benhutchison" %% "scalaswingcontrib" % "1.7",
     "org.piccolo2d" % "piccolo2d-core" % "1.3.1",
     "org.piccolo2d" % "piccolo2d-extras" % "1.3.1",
     "com.vividsolutions" % "jts" % "1.13" intransitive(),

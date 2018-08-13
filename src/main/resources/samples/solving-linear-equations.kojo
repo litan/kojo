@@ -158,7 +158,6 @@ pg = IncrPage(
 )
 
 pages = pages :+ pg
-import scala.language.reflectiveCalls
 
 pg = Page(
     name = "practice",
@@ -193,6 +192,7 @@ pg = Page(
               by putting them into the space provided (below) and clicking the <em>Check Answer</em> button.
         </body>,
     code = {
+        import scala.language.reflectiveCalls
         Mw.clear()
         Mw.hideAlgebraView()
         Mw.showCASView()
@@ -219,6 +219,7 @@ pg = Page(
             on the RHS is optional.
         </body>,
     code = {
+        import scala.language.reflectiveCalls
         Mw.clear()
         Mw.hideAlgebraView()
         Mw.showCASView()
@@ -238,7 +239,7 @@ stClear()
 stPlayStory(story)
 
 import swing.{ TextField => STextField, Button => SButton, _ }
-import eu.flierl.grouppanel._
+import scalaswingcontrib.group._
 
 trait Question {
     def text: String
