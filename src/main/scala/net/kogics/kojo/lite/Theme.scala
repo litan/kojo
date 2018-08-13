@@ -24,6 +24,7 @@ trait Theme {
   def textBg: Color
   def textFg: Color
   def errorPaneFg: String
+  def errorPaneBg: String
   def errorColor: Color
   def successColor: Color
   def neutralColor: Color
@@ -58,9 +59,10 @@ class DarkTheme extends Theme {
   val textFg = new Color(0xbbbbbb)
   val outputPaneFg = textFg
   val outputPaneBg = new Color(0x2d2d2d)
-  val errorPaneFg = "FF430F"
-  val errorColor = new Color(0xFF430F)
-  val successColor = new Color(0x10aa10)
+  val errorPaneFg = "#F42E2E"
+  val errorPaneBg = "#2d2d2d"
+  val errorColor = new Color(0xF42E2E)
+  val successColor = new Color(0x06cc06)
   val neutralColor = defaultBg
   val tracingBg = defaultBg
   val tracingHighlightColor = new Color(173, 206, 238)
@@ -103,7 +105,8 @@ class LightTheme extends Theme {
   val outputPaneFg = textFg
   val outputPaneBg = textBg
   val errorPaneFg = "rgb(240, 0, 0)"
-  val errorColor = new Color(220, 0, 0)
+  val errorPaneBg = "white"
+  val errorColor = new Color(0xff1a1a)
   val successColor = new Color(0x33ff33)
   val neutralColor = new Color(0xf0f0f0)
   val tracingBg = Color.white

@@ -282,11 +282,12 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
     val fontSize =
       if (kojoCtx.screenDpiFontDelta > 0)
-        "font-size:large;"
+        "large"
       else
-        "font-size:large;"
+        "large"
+    val bg = Theme.currentTheme.errorPaneBg
     val errMsg =
-      <body style={ fontSize }>
+      <body style={ s"font-size:$fontSize;background-color:$bg" }>
         <div style="margin:5px;">
           <strong>{ Utils.loadString("S_OutputScriptProblem") }</strong>
         </div>
