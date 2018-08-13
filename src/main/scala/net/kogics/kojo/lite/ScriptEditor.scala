@@ -648,11 +648,13 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               evt.consume
             }
           case KeyEvent.VK_DOWN =>
-            if ((evt.isControlDown || evt.isMetaDown) && hNextButton.isEnabled) {
-              execSupport.loadCodeFromHistoryNext()
+            if (evt.isControlDown || evt.isMetaDown) {
+              if (hNextButton.isEnabled) {
+                execSupport.loadCodeFromHistoryNext()
+              }
+              // consume event in any case, to prevent scrolling when there is no 'next' history
               evt.consume
-            }
-          case KeyEvent.VK_ESCAPE =>
+            }          case KeyEvent.VK_ESCAPE =>
             execSupport.imanip.foreach { _ close () }
 
           case _ => // do nothing special
