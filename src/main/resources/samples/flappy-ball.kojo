@@ -3,7 +3,7 @@
 // You win if you keep the ball in play for a minute
 cleari()
 drawStage(black)
-setRefreshRate(50)
+// setRefreshRate(50)
 
 val cb = canvasBounds
 def obstacle(h: Int, w: Int) = PicShape.rect(h, w)

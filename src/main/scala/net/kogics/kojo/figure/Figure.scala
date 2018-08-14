@@ -52,6 +52,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
   private val camera = canvas.getCamera
   val DefaultColor = Color.red
   val DefaultFillColor: Color = null
+  val DefaultFps = 65 // seems to work better on Windows; fine on rest
   def DefaultStroke = new BasicStroke((2 / canvas.camScale).toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
   @volatile private var listener: SpriteListener = NoopSpriteListener
 
@@ -101,7 +102,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
       repaint()
       stopFn = None
       startFn = None
-      canvas.kojoCtx.fps = 50
+      canvas.kojoCtx.fps = DefaultFps
     }
   }
 

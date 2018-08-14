@@ -4,7 +4,7 @@
 // You win if you hit the target within a minute
 switchToDefault2Perspective()
 cleari()
-setRefreshRate(50)
+// setRefreshRate(50)
 
 drawStage(darkGray)
 val cb = canvasBounds

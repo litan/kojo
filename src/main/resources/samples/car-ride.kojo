@@ -5,7 +5,7 @@
 switchToDefault2Perspective()
 cleari()
 drawStage(darkGray)
-setRefreshRate(50)
+// setRefreshRate(50)
 
 val cb = canvasBounds
 val carHeight = 100

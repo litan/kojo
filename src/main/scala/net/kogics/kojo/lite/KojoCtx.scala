@@ -60,7 +60,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   var execSupport: CodeExecutionSupport = _
   var storyTeller: StoryTeller = _
   var control: CControl = _
-  @volatile var fps = 50
+  @volatile var fps = 50 // gets reset on clear
   @volatile var screenDPI = Toolkit.getDefaultToolkit.getScreenResolution
   var statusBar: StatusBar = _
   Utils.kojoCtx = this
