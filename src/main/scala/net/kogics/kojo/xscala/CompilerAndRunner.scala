@@ -354,7 +354,7 @@ class CompilerAndRunner(
         }
         response.get match {
           case Left(s)  => s
-          case Right(t) => ""
+          case Right(_) => ""
         }
       }
     } getOrElse ("")
@@ -383,10 +383,10 @@ class CompilerAndRunner(
           pcompiler.askScopeCompletion(pos, resp)
         }
 
-        val elb = new ListBuffer[CompletionInfo]
-        var response: pcompiler.Response[Unit] = null
+        var response: pcompiler.Response[List[CompletionInfo]] = null
         for (completions <- resp.get.left.toOption) {
           response = pcompiler.askForResponse { () =>
+            val elb = new ListBuffer[CompletionInfo]
             for (completion <- completions) {
               try {
                 completion match {
@@ -403,11 +403,13 @@ class CompilerAndRunner(
                 // ignore, and move on to the next one
               }
             }
+            elb.toList
           }
         }
-        // block till the last response is available
-        response.get(2000)
-        elb.toList
+        response.get match {
+          case Left(l)  => l
+          case Right(_) => Nil
+        }
       }
     } getOrElse (Nil)
   }
