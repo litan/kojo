@@ -4,9 +4,9 @@ import java.awt.Color
 
 trait CodeExecutionSupport {
   def activateTw(): Unit
-  def activateD3(): Unit
+  def activateVn(): Unit
   def isTwActive: Boolean
-  def isD3Active: Boolean
+  def isVnActive: Boolean
   def kojoCtx: KojoCtx
   def showOutput(outText: String, color: Color): Unit
   def commandHistory: CommandHistory

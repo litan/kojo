@@ -244,160 +244,9 @@ object CodeCompletionUtils {
     "setSlowness" -> "setSlowness(${delay})"
   )
 
-  val MwMethodTemplates = Map(
-    "figure" -> "figure(${name})",
-    "point" -> "point(${x}, ${y}, ${optionalLabel})",
-    "pointOn" -> "pointOn(${line}, ${x}, ${y})",
-    "line" -> "line(${point1}, ${point2})",
-    "lineSegment" -> "lineSegment(${point1}, ${point2Orlength})",
-    "ray" -> "ray(${point1}, ${point2})",
-    "circle" -> "circle(${center}, ${radius})",
-    "angle" -> "angle(${point1}, ${point2}, ${pointOrSize})",
-    "intersect" -> "intersect(${shape1}, ${shape2})",
-    "midpoint" -> "midpoint(${lineSegment})",
-    "perpendicular" -> "perpendicular(${toLine}, ${thruPoint})",
-    "parallel" -> "perpendicular(${toLine}, ${thruPoint})",
-    "setLabel" -> "setLabel(${label})",
-    "setColor" -> "setColor(${color})",
-    "add" -> "add(${shapes})",
-    "show" -> "show(${shapes})",
-    "showGrid" -> "showGrid()",
-    "hideGrid" -> "hideGrid()",
-    "showAxes" -> "showAxes()",
-    "hideAxes" -> "hideAxes()",
-    "showAlgebraView" -> "showAlgebraView()",
-    "hideAlgebraView" -> "hideAlgebraView()",
-    "turtle" -> "turtle(${x}, ${y})",
-    "labelPosition" -> "labelPosition(${label})",
-    "findPoint" -> "findPoint(${label})",
-    "findLine" -> "findLine(${label})",
-    "findAngle" -> "findAngle(${label})",
-    "beginPoly" -> "beginPoly()",
-    "endPoly" -> "endPoly()",
-    "showAngles" -> "showAngles()",
-    "showLengths" -> "showLengths()",
-    "hideLengths" -> "hideLengths()",
-    "hideAngles" -> "hideAngles()",
-    "showExternalAngles" -> "showExternalAngles()",
-    "hideExternalAngles" -> "hideExternalAngles()"
+  val VnMethodTemplates = Map[String, String](
   )
 
-  val StagingMethodTemplates = Map(
-    "point" -> "point(${x}, ${y})",
-    "line" -> "line(${x0}, ${y0}, ${x1}, ${y1})",
-    "rectangle" -> "rectangle(${x0}, ${y0}, ${width}, ${height})",
-    "text" -> "text(${content}, ${x}, ${y})",
-    "circle" -> "circle(${cx}, ${cy}, ${radius})",
-    "ellipse" -> "ellipse(${cx}, ${cy}, ${width}, ${height})",
-    "arc" -> "arc(${cx}, ${cy}, ${rx}, ${ry}, ${startDegree}, ${extentDegree})",
-    "refresh" -> "refresh {\n    ${cursor}\n}",
-    "screenSize" -> "screenSize(${width}, ${height})",
-    "background" -> "background(${color})",
-    "dot" -> "dot(${x}, ${y})",
-    "square" -> "square(${x}, ${y}, ${side})",
-    "roundRectangle" -> "roundRectangle(${x}, ${y}, ${width}, ${height}, ${rx}, ${ry})",
-    "pieslice" -> "pieslice(${cx}, ${cy}, ${rx}, ${ry}, ${startDegree}, ${extentDegree})",
-    "openArc" -> "openArc(${cx}, ${cy}, ${rx}, ${ry}, ${startDegree}, ${extentDegree})",
-    "chord" -> "chord(${cx}, ${cy}, ${rx}, ${ry}, ${startDegree}, ${extentDegree})",
-    "vector" -> "vector(${x0}, ${y0}, ${x1}, ${y1}, ${headLength})",
-    "star" -> "star(${cx}, ${cy}, ${inner}, ${outer}, ${numPoints})",
-    "polyline" -> "polyline(${points})",
-    "polygon" -> "polygon(${points})",
-    "triangle" -> "triangle(${point1}, ${point2}, ${point3})",
-    "quad" -> "quad(${point1}, ${point2}, ${point3}, ${point4})",
-    "svgShape" -> "svgShape(${element})",
-    "grayColors" -> "grayColors(${highGrayNum})",
-    "grayColorsWithAlpha" -> "grayColorsWithAlpha(${highGrayNum}, ${highAlphaNum})",
-    "rgbColors" -> "rgbColors(${highRedNum}, ${highGreenNum}, ${highBlueNum})",
-    "rgbColorsWithAlpha" -> "rgbColorsWithAlpha(${highRedNum}, ${highGreenNum}, ${highBlueNum}, ${highAlphaNum})",
-    "hsbColors" -> "hsbColors(${highHueNum}, ${highSaturationNum}, ${highBrightnessNum})",
-    "namedColor" -> "namedColor(${colorName})",
-    "lerpColor" -> "lerpColor(${colorFrom}, ${colorTo}, ${amount})",
-    "fill" -> "fill(${color})",
-    "noFill" -> "noFill()",
-    "stroke" -> "stroke(${color})",
-    "noStroke" -> "noStroke()",
-    "strokeWidth" -> "strokeWidth(${width})",
-    "withStyle" -> "withStyle (${fillColor}, ${strokeColor}, ${strokeWidth}) {\n    ${cursor}\n}",
-    "constrain" -> "constrain(${value}, ${min}, ${max})",
-    "norm" -> "norm(${value}, ${low}, ${high})",
-    "map" -> "map(${value}, ${min1}, ${max1}, ${min2}, ${max2})",
-    "sq" -> "sq(${value})",
-    "sqrt" -> "sqrt(${value})",
-    "dist" -> "dist(${x0}, ${y0}, ${x1}, ${y1})",
-    "mag" -> "mag(${x}, ${y})",
-    "lerp" -> "lerp(${low}, ${high}, ${value})",
-    "loop" -> "loop {\n    ${cursor}\n}",
-    "stop" -> "stop()",
-    "reset" -> "reset()",
-    "wipe" -> "wipe()",
-    "sprite" -> "sprite(${x}, ${y}, ${filename})",
-    "path" -> "path(${x}, ${y})",
-    "lineTo" -> "lineTo(${x}, ${y})",
-    "setFontSize" -> "setFontSize(${size})",
-    "setContent" -> "setContent(${content})",
-    "show" -> "show()",
-    "hide" -> "hide()",
-    "erase" -> "erase()"
-  )
-  
-  val D3MethodTemplates = Map(
-    "clear" -> "clear()",
-    "render" -> "render()",
-    "renderAlways" -> "renderAlways()",
-    "renderOnRequest" -> "renderOnRequest()",
-    "sphere" -> "sphere(${radius})",
-    "cylinder" -> "cylinder(${radius}, ${height})",
-    "plane" -> "plane()",
-    "cube" -> "cube(${dimension})",
-    "pointLight" -> "pointLight(${r}, ${g}, ${b}, ${x}, ${y}, ${z})",
-    "forward" -> "forward(${distance})",
-    "back" -> "back(${distance})",
-    "turn" -> "turn(${angle})",
-    "left" -> "left(${angle})",
-    "right" -> "right(${angle})",
-    "pitch" -> "pitch(${angle})",
-    "roll" -> "roll(${angle})",
-    "moveTo" -> "moveTo(${x}, ${y}, ${z})",
-    "lookAt" -> "lookAt(${x}, ${y}, ${z})",
-    "strafeUp" -> "strafeUp(${distance})",
-    "strafeDown" -> "strafeDown(${distance})",
-    "strafeLeft" -> "strafeLeft(${distance})",
-    "strafeRight" -> "strafeRight(${distance})",
-    "invisible" -> "invisible()",
-    "visible" -> "visible()",
-    "trailOn" -> "trailOn()",
-    "trailOff" -> "trailOff()",
-    "lineWidth" -> "lineWidth(${width})",
-    "color" -> "color(${r}, ${g}, ${b})",
-    "cameraForward" -> "cameraForward(${distance})",
-    "cameraBack" -> "cameraBack(${distance})",
-    "cameraTurn" -> "cameraTurn(${angle})",
-    "cameraLeft" -> "cameraLeft(${angle})",
-    "cameraRight" -> "cameraRight(${angle})",
-    "cameraPitch" -> "cameraPitch(${angle})",
-    "cameraRoll" -> "cameraRoll(${angle})",
-    "cameraStrafeUp" -> "cameraStrafeUp(${distance})",
-    "cameraStrafeDown" -> "cameraStrafeDown(${distance})",
-    "cameraStrafeLeft" -> "cameraStrafeLeft(${distance})",
-    "cameraStrafeRight" -> "cameraStrafeRight(${distance})",
-    "cameraMoveTo" -> "cameraMoveTo(${x}, ${y}, ${z})",
-    "cameraLookAt" -> "cameraLookAt(${x}, ${y}, ${z})",
-    "cameraAngle" -> "cameraAngle(${angle})",
-    "enableMouseControl" -> "enableMouseControl()",
-    "disableMouseControl" -> "disableMouseControl()",
-    "axesOn" -> "axesOn()",
-    "axesOff" -> "axesOff()",
-    "defaultLightsOn" -> "defaultLightsOn()",
-    "defaultLightsOff" -> "defaultLightsOff()",
-    "imageInterpolationOn" -> "imageInterpolationOn()",
-    "imageInterpolationOff" -> "imageInterpolationOff()",
-    "enableOrthographicMode" -> "enableOrthographicMode()",
-    "disableOrthographicMode" -> "disableOrthographicMode()"
-  ) 
-  
-  
-  
   @volatile var ExtraMethodTemplates: collection.Map[String, String] = TwMethodTemplates
 
   def activateTw() {
@@ -406,22 +255,10 @@ object CodeCompletionUtils {
     Help.activateTw()
   }
 
-  def activateMw() {
-    ExtraMethodTemplates = MwMethodTemplates
+  def activateVn() {
+    ExtraMethodTemplates = VnMethodTemplates
     clearLangTemplates()
-    Help.activateMw()
-  }
-
-  def activateStaging() {
-    ExtraMethodTemplates = StagingMethodTemplates
-    clearLangTemplates()
-    Help.activateStaging()
-  }
-
-  def activateD3() {
-    ExtraMethodTemplates = D3MethodTemplates
-    clearLangTemplates()
-    Help.activateD3()
+    Help.activateVn()
   }
 
   val langTemplates: collection.mutable.Map[String, Map[String, String]] = collection.mutable.Map()

@@ -16,12 +16,11 @@ package net.kogics.kojo.lite
 
 import net.kogics.kojo.core.CodeRunner
 import net.kogics.kojo.core.CodingMode
-import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.xscala
 import net.kogics.kojo.xscala.KojoInterpreter
-import net.kogics.kojo.xscala.ScalaCodeRunner
 import net.kogics.kojo.xscala.ScalaCodeRunner2
 
 trait AppMode {
@@ -34,11 +33,11 @@ class DesktopMode extends AppMode {
   def defaultCodingMode: CodingMode = TwMode
   def scalaCodeRunner(rc: RunContext): CodeRunner = new xscala.ScalaCodeRunner2(rc, defaultCodingMode)
   def kojoInterpreter(cr: CodeRunner): KojoInterpreter =
-    cr.asInstanceOf[ScalaCodeRunner].kojointerp
+    cr.asInstanceOf[ScalaCodeRunner2].kojointerp
 }
 
 class EmbeddedMode extends AppMode {
-  def defaultCodingMode: CodingMode = D3Mode
+  def defaultCodingMode: CodingMode = VanillaMode
   def scalaCodeRunner(rc: RunContext): CodeRunner = new xscala.ScalaCodeRunner2(rc, defaultCodingMode)
   def kojoInterpreter(cr: CodeRunner): KojoInterpreter =
     cr.asInstanceOf[ScalaCodeRunner2].kojointerp

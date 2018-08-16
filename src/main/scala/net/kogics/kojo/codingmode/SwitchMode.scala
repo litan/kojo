@@ -17,22 +17,26 @@ package net.kogics.kojo
 package codingmode
 
 import java.awt.event.ActionEvent
+
 import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
+
 import net.kogics.kojo.core.CodeExecutionSupport
+import net.kogics.kojo.core.TwMode
+import net.kogics.kojo.core.VanillaMode
 
 class SwitchMode(execSupport: CodeExecutionSupport) extends AbstractAction {
   def actionPerformed(e: ActionEvent) {
     e.getActionCommand match {
-      case "Tw" => execSupport.activateTw()
-      case "D3" => execSupport.activateD3()
+      case TwMode.code      => execSupport.activateTw()
+      case VanillaMode.code => execSupport.activateVn()
     }
   }
-  
+
   def updateCb(cb: JCheckBoxMenuItem) {
     cb.getActionCommand match {
-      case "Tw" => cb.setSelected(execSupport.isTwActive)
-      case "D3" => cb.setSelected(execSupport.isD3Active)
+      case TwMode.code      => cb.setSelected(execSupport.isTwActive)
+      case VanillaMode.code => cb.setSelected(execSupport.isVnActive)
     }
   }
 }

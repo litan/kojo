@@ -2,7 +2,6 @@ package net.kogics.kojo
 package lite
 
 import net.kogics.kojo.story.StoryTeller
-import net.kogics.kojo.d3.Canvas3D
 import javax.swing.JFrame
 import net.kogics.kojo.music.KMp3
 import net.kogics.kojo.mathworld.GeoGebraCanvas
@@ -19,8 +18,6 @@ object TestEnv {
 
     val storyTeller = new StoryTeller(kojoCtx)
     val ggbCanvas = new GeoGebraCanvas(kojoCtx)
-    val canvas3d = new Canvas3D()
-    val d3API = new d3.API(kojoCtx, canvas3d)
 
     val mp3player = new KMp3(kojoCtx)
     val fuguePlayer = new FuguePlayer(kojoCtx)
@@ -31,7 +28,6 @@ object TestEnv {
       Tw,
       Staging,
       ggbCanvas.Mw,
-      d3API,
       storyTeller,
       mp3player,
       fuguePlayer,

@@ -108,7 +108,6 @@ object Main extends AppMenu with ScriptLoader { main =>
         Tw,
         Staging,
         ggbCanvas.Mw,
-        null,
         storyTeller,
         mp3player,
         fuguePlayer,

@@ -32,7 +32,7 @@ trait CodeRunner {
   def memberCompletions(code: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int)
   def typeAt(code: String, caretOffset: Int): String
   def activateTw(): Unit
-  def activateD3(): Unit
+  def activateVn(): Unit
   def resetInterp(): Unit
   def resetInterpUI(): Unit
   def runContext: RunContext

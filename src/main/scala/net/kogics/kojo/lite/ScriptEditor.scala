@@ -57,6 +57,8 @@ import org.fife.ui.rtextarea.SearchEngine
 
 import net.kogics.kojo.action.ChooseColor
 import net.kogics.kojo.codingmode.SwitchMode
+import net.kogics.kojo.core.TwMode
+import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.livecoding.IpmProvider
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
@@ -136,14 +138,14 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val twCb = new JCheckBoxMenuItem(switcher)
   twCb.setText(Utils.loadString("S_TurtleMode"))
   twCb.setToolTipText(Utils.loadString("S_TurtleModeTT"))
-  twCb.setActionCommand("Tw")
+  twCb.setActionCommand(TwMode.code)
   modeMenu.add(twCb)
 
-  val d3Cb = new JCheckBoxMenuItem(switcher)
-  d3Cb.setText(Utils.loadString("S_D3Mode"))
-  d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
-  d3Cb.setActionCommand("D3")
-  modeMenu.add(d3Cb)
+  val vnCb = new JCheckBoxMenuItem(switcher)
+  vnCb.setText(Utils.loadString("S_VnMode"))
+  vnCb.setToolTipText(Utils.loadString("S_VnModeTT"))
+  vnCb.setActionCommand(VanillaMode.code)
+  modeMenu.add(vnCb)
 
   val syntaxColoringAction = new AbstractAction {
     def actionPerformed(e: ActionEvent) {
@@ -466,7 +468,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.addPopupMenuListener(new PopupMenuListener {
     def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       switcher.updateCb(twCb)
-      switcher.updateCb(d3Cb)
+      switcher.updateCb(vnCb)
     }
     def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
 

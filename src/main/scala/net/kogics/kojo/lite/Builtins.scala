@@ -56,7 +56,6 @@ class Builtins(
   val Tw:          TurtleWorldAPI,
   val Staging:     staging.API,
   val Mw:          MathWorld,
-  val D3:          d3.API,
   storyTeller:     story.StoryTeller,
   mp3player:       music.KMp3,
   fuguePlayer:     music.FuguePlayer,

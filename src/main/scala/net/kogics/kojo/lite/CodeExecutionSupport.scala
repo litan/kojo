@@ -31,7 +31,7 @@ import javax.swing.event.DocumentListener
 import javax.swing.text.Utilities
 
 import net.kogics.kojo.core.CodingMode
-import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.core.Interpreter
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.TwMode
@@ -99,7 +99,6 @@ class CodeExecutionSupport(
   Tw:            TurtleWorldAPI,
   Staging:       staging.API,
   Mw:            MathWorld,
-  D3:            d3.API,
   storyTeller:   story.StoryTeller,
   mp3player:     music.KMp3,
   fuguePlayer:   music.FuguePlayer,
@@ -143,7 +142,6 @@ class CodeExecutionSupport(
     Tw,
     Staging,
     Mw,
-    D3,
     storyTeller,
     mp3player,
     fuguePlayer,
@@ -364,7 +362,7 @@ class CodeExecutionSupport(
           interp.bind("predef", "net.kogics.kojo.lite.CodeExecutionSupport", CodeExecutionSupport.this)
           interp.interpret("val builtins = predef.builtins")
           interp.interpret("import builtins._")
-        case D3Mode =>
+        case VanillaMode =>
       }
     }
 
@@ -973,15 +971,15 @@ class CodeExecutionSupport(
     }
   }
 
-  def activateD3() {
-    if (codingMode != D3Mode) {
-      codingMode = D3Mode
-      codeRunner.activateD3()
+  def activateVn() {
+    if (codingMode != VanillaMode) {
+      codingMode = VanillaMode
+      codeRunner.activateVn()
     }
   }
 
   def isTwActive = codingMode == TwMode
-  def isD3Active = codingMode == D3Mode
+  def isVnActive = codingMode == VanillaMode
 
   def knownColors = kojoCtx.knownColors
   def knownColor(name: String): Color = kojoCtx.knownColor(name)

@@ -54,7 +54,7 @@ import javax.swing.text.JTextComponent
 import scala.collection.mutable.HashMap
 
 import net.kogics.kojo.core.CodingMode
-import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.util.RichFile.enrichFile
@@ -485,8 +485,8 @@ object Utils {
 
   def modeFilter(scripts: List[String], mode: CodingMode): List[String] = mode match {
     case TwMode =>
-      scripts.filter { f => !(f.endsWith(".st.kojo") || f.endsWith(".mw.kojo") || f.endsWith(".d3.kojo")) }
-    case D3Mode =>
+      scripts.filter { f => !(f.endsWith(".st.kojo") || f.endsWith(".mw.kojo") || f.endsWith(".vn.kojo")) }
+    case VanillaMode =>
       scripts.filter { f => !(f.endsWith(".tw.kojo") || f.endsWith(".st.kojo") || f.endsWith(".mw.kojo")) }
   }
 

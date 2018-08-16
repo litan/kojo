@@ -28,7 +28,7 @@ import net.kogics.kojo.core
 import net.kogics.kojo.core.CodeRunner
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.CompletionInfo
-import net.kogics.kojo.core.D3Mode
+import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.core.Interpreter.IR
 import net.kogics.kojo.core.Interpreter.Settings
 import net.kogics.kojo.core.RunContext
@@ -111,7 +111,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   case class CompletionResponse(data: (List[String], Int))
   case class CompletionResponse2(data: (List[CompletionInfo], Int))
   case object ActivateTw
-  case object ActivateD3
+  case object ActivateVn
   case object ResetInterp
   val MaxResponseTime = 2000 seconds
 
@@ -144,8 +144,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     codeRunner ! ActivateTw
   }
 
-  def activateD3() {
-    codeRunner ! ActivateD3
+  def activateVn() {
+    codeRunner ! ActivateVn
   }
 
   object InterruptionManager {
@@ -267,12 +267,12 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       loadInitScripts(TwMode)
     }
 
-    def activateD3Mode(): Unit = {
+    def activateVnMode(): Unit = {
       cmodeInit = ""
-      mode = D3Mode
-      CodeCompletionUtils.activateD3()
+      mode = VanillaMode
+      CodeCompletionUtils.activateVn()
       if (interpInited) {
-        loadInitScripts(D3Mode)
+        loadInitScripts(VanillaMode)
       }
     }
 
@@ -295,9 +295,9 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
             loadInitScripts(TwMode)
           }
 
-        case D3Mode =>
+        case VanillaMode =>
           outputHandler.withOutputSuppressed {
-            loadInitScripts(D3Mode)
+            loadInitScripts(VanillaMode)
           }
       }
     }
@@ -315,7 +315,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
             activateTurtleMode()
           }
           else {
-            activateD3Mode()
+            activateVnMode()
           }
           runContext.onInterpreterInit()
           loadCompiler()
@@ -328,11 +328,11 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           activateTurtleMode()
         }
 
-      case ActivateD3 =>
+      case ActivateVn =>
         Utils.safeProcess {
           interp.reset()
           initInterp()
-          activateD3Mode()
+          activateVnMode()
         }
 
       case CompileCode(code) =>
