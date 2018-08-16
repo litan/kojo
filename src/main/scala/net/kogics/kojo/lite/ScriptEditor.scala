@@ -1,7 +1,6 @@
 package net.kogics.kojo.lite
 
 import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.Dimension
 import java.awt.Event
 import java.awt.Font
@@ -41,13 +40,13 @@ import org.fife.rsta.ui.search.ReplaceToolBar
 import org.fife.rsta.ui.search.SearchEvent
 import org.fife.rsta.ui.search.SearchListener
 import org.fife.ui.autocomplete.AutoCompletion
+import org.fife.ui.rsyntaxtextarea.AbstractTokenMakerFactory
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.DecreaseFontSizeAction
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
-import org.fife.ui.rsyntaxtextarea.Style
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants
-import org.fife.ui.rsyntaxtextarea.TokenTypes
+import org.fife.ui.rsyntaxtextarea.TokenMakerFactory
 import org.fife.ui.rsyntaxtextarea.folding.CurlyFoldParser
 import org.fife.ui.rsyntaxtextarea.folding.FoldParserManager
 import org.fife.ui.rsyntaxtextarea.templates.StaticCodeTemplate
@@ -72,28 +71,15 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     clearSButton, clearButton, cexButton) = makeToolbar()
 
   val SYNTAX_STYLE_SCALA2 = "text/scala2"
-  //  val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
-  //  tFactory.putMapping(SYNTAX_STYLE_SCALA2, "net.kogics.kojo.lexer.ScalariformTokenMaker")
+  val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
+  tFactory.putMapping(SYNTAX_STYLE_SCALA2, "net.kogics.kojo.lexer.ScalariformTokenMaker")
   FoldParserManager.get.addFoldParserMapping(SYNTAX_STYLE_SCALA2, new CurlyFoldParser)
-  //  TokenMakerFactory.setDefaultInstance(tFactory)
-  //  codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
   codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+  //  codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
   codePane.setAntiAliasingEnabled(true)
-  codePane.setBracketMatchingEnabled(true)
-  codePane.setMatchedBracketBGColor(new Color(247, 247, 247))
-  codePane.setMatchedBracketBorderColor(new Color(192, 192, 192))
-  codePane.setAnimateBracketMatching(false)
-  codePane.setCloseCurlyBraces(true)
   codePane.setTabsEmulated(true)
   codePane.setTabSize(4)
   codePane.setCodeFoldingEnabled(true)
-  codePane.getSyntaxScheme.setStyle(TokenTypes.SEPARATOR, new Style(Color.blue))
-  codePane.getSyntaxScheme.setStyle(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, new Style(new Color(200, 50, 0)))
-  codePane.getSyntaxScheme.setStyle(TokenTypes.MARKUP_TAG_ATTRIBUTE_VALUE, new Style(new Color(200, 50, 0)))
-  //  val commentFont = codePane.getSyntaxScheme.getStyle(TokenTypes.COMMENT_MULTILINE).font
-  //  codePane.getSyntaxScheme.setStyle(TokenTypes.COMMENT_MULTILINE, new Style(new Color(10, 110, 10), null, commentFont))
-  codePane.setSelectionColor(new Color(142, 191, 238))
-  codePane.setMarkOccurrencesColor(new Color(150, 175, 200))
 
   val theme = Theme.currentTheme.editorTheme
   theme.apply(codePane)
@@ -171,37 +157,40 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   //  d3Cb.setActionCommand("D3")
   //  modeMenu.add(d3Cb)
 
-  //  val syntaxColoringAction = new AbstractAction {
-  //    def actionPerformed(e: ActionEvent) {
-  //      e.getActionCommand match {
-  //        case "Fast" =>
-  //          codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
-  //          fastColoringCb.setSelected(true)
-  //          richColoringCb.setSelected(false)
-  //        case "Rich" =>
-  //          codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
-  //          val doc = codePane.getDocument
-  //          doc.insertString(doc.getLength, " ", null)
-  //          doc.remove(doc.getLength - 1, 1)
-  //          fastColoringCb.setSelected(false)
-  //          richColoringCb.setSelected(true)
-  //      }
-  //    }
-  //  }
-  //
-  //  val syntaxColoringMenu = new JMenu(Utils.loadString("S_SyntaxColoring"))
-  //  kojoCtx.menuReady(syntaxColoringMenu)
-  //
-  //  val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
-  //  richColoringCb.setText(Utils.loadString("S_ColoringRich"))
-  //  richColoringCb.setActionCommand("Rich")
-  //  richColoringCb.setSelected(true)
-  //  syntaxColoringMenu.add(richColoringCb)
-  //
-  //  val fastColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
-  //  fastColoringCb.setText(Utils.loadString("S_ColoringFast"))
-  //  fastColoringCb.setActionCommand("Fast")
-  //  syntaxColoringMenu.add(fastColoringCb)
+  val syntaxColoringAction = new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      e.getActionCommand match {
+        case "Fast" =>
+          codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+          fastColoringCb.setSelected(true)
+          richColoringCb.setSelected(false)
+        case "Rich" =>
+          codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
+          val pos = codePane.getCaretPosition
+          val doc = codePane.getDocument
+          doc.insertString(doc.getLength, "", null)
+          doc.remove(doc.getLength - 1, 1)
+          codePane.setCaretPosition(pos)
+          fastColoringCb.setSelected(false)
+          richColoringCb.setSelected(true)
+      }
+    }
+  }
+
+  val syntaxColoringMenu = new JMenu(Utils.loadString("S_SyntaxColoring"))
+  kojoCtx.menuReady(syntaxColoringMenu)
+
+  val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
+  richColoringCb.setText(Utils.loadString("S_ColoringRich"))
+  richColoringCb.setActionCommand("Rich")
+  richColoringCb.setSelected(false)
+  syntaxColoringMenu.add(richColoringCb)
+
+  val fastColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
+  fastColoringCb.setText(Utils.loadString("S_ColoringFast"))
+  fastColoringCb.setActionCommand("Fast")
+  fastColoringCb.setSelected(true)
+  syntaxColoringMenu.add(fastColoringCb)
 
   var tabSize = 4
 
@@ -209,7 +198,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     import scalariform.formatter.preferences._
 
     def actionPerformed(ev: ActionEvent) {
-      val pos = codePane.getCaretPosition()
+      val pos = codePane.getCaretPosition
       try {
         codePane.setText(ScalaFormatter.format(
           codePane.getText,
@@ -468,8 +457,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(toggleMenuItem, idx)
   idx += 1
 
-  //  popup.add(syntaxColoringMenu, idx)
-  //  idx += 1
+  popup.add(syntaxColoringMenu, idx)
+  idx += 1
 
   val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
     def actionPerformed(ev: ActionEvent) {
@@ -654,7 +643,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               }
               // consume event in any case, to prevent scrolling when there is no 'next' history
               evt.consume
-            }          case KeyEvent.VK_ESCAPE =>
+            }
+          case KeyEvent.VK_ESCAPE =>
             execSupport.imanip.foreach { _ close () }
 
           case _ => // do nothing special
