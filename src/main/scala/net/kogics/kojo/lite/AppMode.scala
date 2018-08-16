@@ -45,6 +45,8 @@ class EmbeddedMode extends AppMode {
 
 object AppMode {
   val currentMode: AppMode = {
-    new DesktopMode
+    val osName = System.getProperty("os.name")
+    val osArch = System.getProperty("os.arch")
+    if (osName == "Linux" && osArch == "arm") new EmbeddedMode else new DesktopMode
   }
 }

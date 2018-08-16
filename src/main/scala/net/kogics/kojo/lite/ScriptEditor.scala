@@ -447,9 +447,6 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(toggleMenuItem, idx)
   idx += 1
 
-  popup.add(syntaxColoringMenu, idx)
-  idx += 1
-
   val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
     def actionPerformed(ev: ActionEvent) {
       execSupport.codeRunner.resetInterpUI()
@@ -457,6 +454,12 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
   val resetInterpItem = new JMenuItem(resetInterpAction)
   popup.add(resetInterpItem, idx)
+  idx += 1
+
+  popup.add(new JPopupMenu.Separator, idx)
+  idx += 1
+
+  popup.add(syntaxColoringMenu, idx)
   idx += 1
 
   popup.add(modeMenu, idx)

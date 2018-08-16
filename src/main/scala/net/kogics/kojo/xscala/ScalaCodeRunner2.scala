@@ -268,7 +268,9 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     }
 
     def activateVnMode(): Unit = {
-      cmodeInit = ""
+      // Make turtle/picture world available to compiler even in Vanilla mode
+      // Interpreter based completions/help are still missing in this mode.
+      cmodeInit = "import TSCanvas._; import Tw._"
       mode = VanillaMode
       CodeCompletionUtils.activateVn()
       if (interpInited) {
@@ -310,8 +312,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
         Utils.safeProcess {
           loadInterp()
           printInitScriptsLoadMsg()
-          initInterp()
           if (defaultMode == TwMode) {
+            initInterp()
             activateTurtleMode()
           }
           else {
