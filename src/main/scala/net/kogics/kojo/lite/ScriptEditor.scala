@@ -139,23 +139,11 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   twCb.setActionCommand("Tw")
   modeMenu.add(twCb)
 
-  val stagingCb = new JCheckBoxMenuItem(switcher)
-  stagingCb.setText(Utils.loadString("S_StagingMode"))
-  stagingCb.setToolTipText(Utils.loadString("S_StagingModeTT"))
-  stagingCb.setActionCommand("Staging")
-  modeMenu.add(stagingCb)
-
-  val mwCb = new JCheckBoxMenuItem(switcher)
-  mwCb.setText(Utils.loadString("S_MwMode"))
-  mwCb.setToolTipText(Utils.loadString("S_MwModeTT"))
-  mwCb.setActionCommand("Mw")
-  modeMenu.add(mwCb)
-
-  //  val d3Cb = new JCheckBoxMenuItem(switcher)
-  //  d3Cb.setText(Utils.loadString("S_D3Mode"))
-  //  d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
-  //  d3Cb.setActionCommand("D3")
-  //  modeMenu.add(d3Cb)
+  val d3Cb = new JCheckBoxMenuItem(switcher)
+  d3Cb.setText(Utils.loadString("S_D3Mode"))
+  d3Cb.setToolTipText(Utils.loadString("S_D3ModeTT"))
+  d3Cb.setActionCommand("D3")
+  modeMenu.add(d3Cb)
 
   val syntaxColoringAction = new AbstractAction {
     def actionPerformed(e: ActionEvent) {
@@ -478,9 +466,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.addPopupMenuListener(new PopupMenuListener {
     def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
       switcher.updateCb(twCb)
-      switcher.updateCb(stagingCb)
-      switcher.updateCb(mwCb)
-      //      switcher.updateCb(d3Cb)
+      switcher.updateCb(d3Cb)
     }
     def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
 

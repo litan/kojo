@@ -33,9 +33,7 @@ import javax.swing.text.Utilities
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.D3Mode
 import net.kogics.kojo.core.Interpreter
-import net.kogics.kojo.core.MwMode
 import net.kogics.kojo.core.RunContext
-import net.kogics.kojo.core.StagingMode
 import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.lite.canvas.SpriteCanvas
@@ -49,7 +47,6 @@ import net.kogics.kojo.util.FutureResult
 
 import util.Utils
 
-
 object CodeExecutionSupport {
 
   /**Contains the goal a user wants to reach, and the action he has to take for this.*/
@@ -58,7 +55,7 @@ object CodeExecutionSupport {
   /**The End-of-Line String used to separate lines of the welcome message*/
   val EOL = "\n"
   val goalActionSeparator = "→" //instead of -> in order to save one position. Christoph 2017-02-24
-  
+
   /**
    * Composes a welcome message from the head and a tabulated arrangement of the instructions.
    * Each instruction should have the format "goal -> action".
@@ -67,11 +64,11 @@ object CodeExecutionSupport {
    * In the end all "→" are one below another when using a monospace font.
    */
   def makeTabulatedWelcomeMessage(head: String, instructions: List[String]): String = {
-    require(head!=null, "head != null")
-    require(instructions!=null, "instructions != null")
+    require(head != null, "head != null")
+    require(instructions != null, "instructions != null")
     val instructionsSplitted = instructions.map(_.split("->", 2))
     val instructionsTrimmed: List[Line] = for (instr <- instructionsSplitted) yield {
-      val action = if(instr.length>1) Some(instr(1).trim) else None
+      val action = if (instr.length > 1) Some(instr(1).trim) else None
       Line(instr(0).trim, action)
     }
     val maxGoalLine = (Line("", None) :: instructionsTrimmed).maxBy(line => line.goal.length)
@@ -82,7 +79,7 @@ object CodeExecutionSupport {
       sb append "* "
       sb append instr.goal
       instr.action match {
-        case Some(a) => 
+        case Some(a) =>
           sb append " " * (maxGoalLen - instr.goal.length)
           sb append " "
           sb append goalActionSeparator
@@ -94,21 +91,22 @@ object CodeExecutionSupport {
     }
     sb.toString
   }
-  
+
 }
 
 class CodeExecutionSupport(
-  TSCanvas: DrawingCanvasAPI,
-  Tw: TurtleWorldAPI,
-  Staging: staging.API,
-  Mw: MathWorld,
-  D3: d3.API,
-  storyTeller: story.StoryTeller,
-  mp3player: music.KMp3,
-  fuguePlayer: music.FuguePlayer,
-  tCanvas: SpriteCanvas,
+  TSCanvas:      DrawingCanvasAPI,
+  Tw:            TurtleWorldAPI,
+  Staging:       staging.API,
+  Mw:            MathWorld,
+  D3:            d3.API,
+  storyTeller:   story.StoryTeller,
+  mp3player:     music.KMp3,
+  fuguePlayer:   music.FuguePlayer,
+  tCanvas:       SpriteCanvas,
   scriptEditor0: => ScriptEditor,
-  val kojoCtx: core.KojoCtx) extends core.CodeExecutionSupport with core.CodeCompletionSupport with ManipulationContext {
+  val kojoCtx:   core.KojoCtx
+) extends core.CodeExecutionSupport with core.CodeCompletionSupport with ManipulationContext {
   // the script editor that gets passed in is not yet inited (the last remaining circular dependency!)
   // we access it via a lazy val
   // and then import the stuff inside it, 
@@ -116,7 +114,7 @@ class CodeExecutionSupport(
   lazy val scriptEditor = scriptEditor0
   import scriptEditor._
   import CodeExecutionSupport._
-  
+
   var clearButton = new JButton
 
   val Log = Logger.getLogger("CodeExecutionSupport")
@@ -318,7 +316,7 @@ class CodeExecutionSupport(
           dot = Utilities.getRowEnd(codePane, dot) + 1
           codePane.insert("%s".format(code), dot)
           // minimize chance of dot moving to previous line because of upcoming format action
-          dot = Utilities.getRowEnd(codePane, dot) 
+          dot = Utilities.getRowEnd(codePane, dot)
         }
         scriptEditor.formatAction.actionPerformed(null)
         val currLine = lineAt(dot)
@@ -339,7 +337,7 @@ class CodeExecutionSupport(
           dot = Utilities.getRowEnd(codePane, dot) + 1
           codePane.insert("%s".format(code.replaceAllLiterally("${c}", "")), dot)
           // minimize chance of dot moving to previous line because of upcoming format action
-          dot = Utilities.getRowEnd(codePane, dot) 
+          dot = Utilities.getRowEnd(codePane, dot)
         }
         scriptEditor.formatAction.actionPerformed(null)
         val currLine = lineAt(dot)
@@ -361,9 +359,13 @@ class CodeExecutionSupport(
     def astStopPhase = kojoCtx.astStopPhase
 
     def initInterp(interp: Interpreter) {
-      interp.bind("predef", "net.kogics.kojo.lite.CodeExecutionSupport", CodeExecutionSupport.this)
-      interp.interpret("val builtins = predef.builtins")
-      interp.interpret("import builtins._")
+      codingMode match {
+        case TwMode =>
+          interp.bind("predef", "net.kogics.kojo.lite.CodeExecutionSupport", CodeExecutionSupport.this)
+          interp.interpret("val builtins = predef.builtins")
+          interp.interpret("import builtins._")
+        case D3Mode =>
+      }
     }
 
     val compilerPrefix = """ {
@@ -517,7 +519,7 @@ class CodeExecutionSupport(
   }
 
   def makeCodeRunner: core.CodeRunner = {
-    val codeRunner = new xscala.ScalaCodeRunner(runContext)
+    val codeRunner = AppMode.currentMode.scalaCodeRunner(runContext)
     codeRunner
   }
 
@@ -962,26 +964,12 @@ class CodeExecutionSupport(
 
   def activateEditor() = kojoCtx.activateScriptEditor()
 
-  @volatile var codingMode: CodingMode = TwMode // default mode for interp
+  @volatile var codingMode: CodingMode = AppMode.currentMode.defaultCodingMode
 
   def activateTw() {
     if (codingMode != TwMode) {
       codingMode = TwMode
       codeRunner.activateTw()
-    }
-  }
-
-  def activateStaging() {
-    if (codingMode != StagingMode) {
-      codingMode = StagingMode
-      codeRunner.activateStaging()
-    }
-  }
-
-  def activateMw() {
-    if (codingMode != MwMode) {
-      codingMode = MwMode
-      codeRunner.activateMw()
     }
   }
 
@@ -993,8 +981,6 @@ class CodeExecutionSupport(
   }
 
   def isTwActive = codingMode == TwMode
-  def isStagingActive = codingMode == StagingMode
-  def isMwActive = codingMode == MwMode
   def isD3Active = codingMode == D3Mode
 
   def knownColors = kojoCtx.knownColors

@@ -25,8 +25,6 @@ class SwitchMode(execSupport: CodeExecutionSupport) extends AbstractAction {
   def actionPerformed(e: ActionEvent) {
     e.getActionCommand match {
       case "Tw" => execSupport.activateTw()
-      case "Staging" => execSupport.activateStaging()
-      case "Mw" => execSupport.activateMw()
       case "D3" => execSupport.activateD3()
     }
   }
@@ -34,8 +32,6 @@ class SwitchMode(execSupport: CodeExecutionSupport) extends AbstractAction {
   def updateCb(cb: JCheckBoxMenuItem) {
     cb.getActionCommand match {
       case "Tw" => cb.setSelected(execSupport.isTwActive)
-      case "Staging" => cb.setSelected(execSupport.isStagingActive)
-      case "Mw" => cb.setSelected(execSupport.isMwActive)
       case "D3" => cb.setSelected(execSupport.isD3Active)
     }
   }

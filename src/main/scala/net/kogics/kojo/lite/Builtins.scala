@@ -33,7 +33,6 @@ import net.kogics.kojo.util.UserCommand
 import net.kogics.kojo.xscala.CodeCompletionUtils
 import net.kogics.kojo.xscala.Help
 import net.kogics.kojo.xscala.RepeatCommands
-import net.kogics.kojo.xscala.ScalaCodeRunner
 
 import core.Voice
 import picture.DslImpl
@@ -53,16 +52,17 @@ object Builtins {
 }
 
 class Builtins(
-  val TSCanvas: DrawingCanvasAPI,
-  val Tw: TurtleWorldAPI,
-  val Staging: staging.API,
-  val Mw: MathWorld,
-  val D3: d3.API,
-  storyTeller: story.StoryTeller,
-  mp3player: music.KMp3,
-  fuguePlayer: music.FuguePlayer,
-  val kojoCtx: core.KojoCtx,
-  scalaCodeRunner: core.CodeRunner) extends CoreBuiltins with RepeatCommands { builtins =>
+  val TSCanvas:    DrawingCanvasAPI,
+  val Tw:          TurtleWorldAPI,
+  val Staging:     staging.API,
+  val Mw:          MathWorld,
+  val D3:          d3.API,
+  storyTeller:     story.StoryTeller,
+  mp3player:       music.KMp3,
+  fuguePlayer:     music.FuguePlayer,
+  val kojoCtx:     core.KojoCtx,
+  scalaCodeRunner: core.CodeRunner
+) extends CoreBuiltins with RepeatCommands { builtins =>
   Builtins.instance = this
   import language.implicitConversions
   val tCanvas = TSCanvas.tCanvas
@@ -282,7 +282,7 @@ Here's a partial list of the available commands:
     scalaCodeRunner.resetInterp()
   }
 
-  def kojoInterp = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].kojointerp
+  def kojoInterp = AppMode.currentMode.kojoInterpreter(scalaCodeRunner)
   // for debugging only!
   //  def pcompiler = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].pcompiler
   //  def compiler = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].compiler
@@ -292,7 +292,7 @@ Here's a partial list of the available commands:
   }
   def reimportDefaults() = reimportBuiltins()
 
-  import story.{ HandlerHolder, IntHandlerHolder, StringHandlerHolder, VoidHandlerHolder }
+  import story.{HandlerHolder, IntHandlerHolder, StringHandlerHolder, VoidHandlerHolder}
   implicit def toIhm(handler: Int => Unit): HandlerHolder[Int] = new IntHandlerHolder(handler)
   implicit def toShm(handler: String => Unit): HandlerHolder[String] = new StringHandlerHolder(handler)
   implicit def toVhm(handler: () => Unit): HandlerHolder[Unit] = new VoidHandlerHolder(handler)

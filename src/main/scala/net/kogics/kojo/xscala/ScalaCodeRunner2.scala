@@ -12,8 +12,7 @@
  * rights and limitations under the License.
  *
  */
-package net.kogics.kojo
-package xscala
+package net.kogics.kojo.xscala
 
 import java.io.File
 import java.io.PrintWriter
@@ -25,6 +24,7 @@ import scala.collection.mutable.ListBuffer
 import scala.concurrent.Await
 import scala.concurrent.duration._
 
+import net.kogics.kojo.core
 import net.kogics.kojo.core.CodeRunner
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.CompletionInfo
@@ -42,7 +42,7 @@ import akka.actor.Props
 import akka.pattern.ask
 import akka.util.Timeout
 
-class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
+class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) extends CodeRunner {
   val Log = Logger.getLogger("ScalaCodeRunner")
   val outputHandler = new InterpOutputHandler(runContext)
 
@@ -144,14 +144,6 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     codeRunner ! ActivateTw
   }
 
-  def activateStaging(): Unit = {
-    println("Mode no longer available")
-  }
-
-  def activateMw() {
-    println("Mode no longer available")
-  }
-
   def activateD3() {
     codeRunner ! ActivateD3
   }
@@ -219,7 +211,15 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       sender ! m
     }
 
-    var interp: KojoInterpreter = _
+    def interp: KojoInterpreter = {
+      if (!interpInited) {
+        interpInited = true
+      }
+      _interp
+    }
+    var _interp: KojoInterpreter = _
+    var interpInited = false
+
     var compilerAndRunner: CompilerAndRunner = _
 
     def safeProcessResponse[T](default: T)(fn: => T) {
@@ -256,6 +256,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     }
 
     def activateTurtleMode() {
+      // not the first turtle mode activation
       outputHandler.withOutputSuppressed {
         interp.interpret("import TSCanvas._")
         interp.interpret("import Tw._")
@@ -264,6 +265,15 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
       mode = TwMode
       CodeCompletionUtils.activateTw()
       loadInitScripts(TwMode)
+    }
+
+    def activateD3Mode(): Unit = {
+      cmodeInit = ""
+      mode = D3Mode
+      CodeCompletionUtils.activateD3()
+      if (interpInited) {
+        loadInitScripts(D3Mode)
+      }
     }
 
     // meant to be called from scripts - so that it runs on the interp thread
@@ -286,9 +296,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
           }
 
         case D3Mode =>
-          val imports = "import D3._"
           outputHandler.withOutputSuppressed {
-            interp.interpret(imports)
             loadInitScripts(D3Mode)
           }
       }
@@ -302,7 +310,13 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
         Utils.safeProcess {
           loadInterp()
           printInitScriptsLoadMsg()
-          activateTurtleMode()
+          initInterp()
+          if (defaultMode == TwMode) {
+            activateTurtleMode()
+          }
+          else {
+            activateD3Mode()
+          }
           runContext.onInterpreterInit()
           loadCompiler()
         }
@@ -318,14 +332,7 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
         Utils.safeProcess {
           interp.reset()
           initInterp()
-          val imports = "import D3._"
-          outputHandler.withOutputSuppressed {
-            interp.interpret(imports)
-          }
-          cmodeInit = imports
-          mode = D3Mode
-          CodeCompletionUtils.activateD3()
-          loadInitScripts(D3Mode)
+          activateD3Mode()
         }
 
       case CompileCode(code) =>
@@ -520,10 +527,10 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
     def loadInterp() {
       val iSettings = makeSettings()
 
-      interp = new KojoInterpreter(iSettings, new GuiPrintWriter())
-      initInterp()
+      _interp = new KojoInterpreter(iSettings, new GuiPrintWriter())
+      //      initInterp()
       // backdoor to give access to the interpreter inside the script editor. Used by beginner challenges.
-      kojointerp = interp
+      kojointerp = _interp
     }
 
     def createCp(xs: List[String]): String = {
@@ -616,9 +623,14 @@ class ScalaCodeRunner(val runContext: RunContext) extends CodeRunner {
 
     def varCompletions(prefix: Option[String]): (List[String], Int) = {
       val pfx = prefix.getOrElse("")
-      def varFilter(s: String) = !VarDropFilter.contains(s) && !InternalVarsRe.matcher(s).matches
-      val c2s = interp.unqualifiedIds.filter { s => ignoreCaseStartsWith(s, pfx) && varFilter(s) }
-      (c2s, pfx.length)
+      if (interpInited) {
+        def varFilter(s: String) = !VarDropFilter.contains(s) && !InternalVarsRe.matcher(s).matches
+        val c2s = interp.unqualifiedIds.filter { s => ignoreCaseStartsWith(s, pfx) && varFilter(s) }
+        (c2s, pfx.length)
+      }
+      else {
+        (Nil, pfx.length)
+      }
     }
 
     def keywordCompletions(prefix: Option[String]): (List[String], Int) = {
