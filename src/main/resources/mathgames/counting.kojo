@@ -1,5 +1,5 @@
 // Copyright (C) 2015 Anusha Pant <anusha.pant@gmail.com>
-// The contents of this file are subject to 
+// The contents of this file are subject to
 // the GNU General Public License Version 3 (http://www.gnu.org/copyleft/gpl.html)
 
 toggleFullScreenCanvas()
@@ -145,6 +145,14 @@ answerF.addKeyListener(new KeyAdapter {
 
     def checkingTime(e: KeyEvent) = {
         answerF.getText.length >= answerLen
+    }
+
+    override def keyPressed(e: KeyEvent) {
+        if (e.getKeyCode == Kc.VK_ESCAPE) {
+            e.consume()
+            stopAnimation()
+            toggleFullScreenCanvas()
+        }
     }
 
     override def keyTyped(e: KeyEvent) {
