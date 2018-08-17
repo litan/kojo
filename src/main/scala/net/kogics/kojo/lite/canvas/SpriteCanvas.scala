@@ -225,7 +225,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     val scale = camScale
     getCamera.getViewTransformReference.setToScale(scale, -scale)
     getCamera.setViewOffset(size.getWidth / 2f, size.getHeight / 2f)
-    setBackground(backgroundColor)
+    setBackgroundWrapper(backgroundColor)
     updateAxesAndGrid()
   }
 
@@ -563,7 +563,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   private def exportImageToFile(outfile: File, width: Int, height: Int) {
-    val image = getCamera.toImage(width, height, getBackground)
+    val image = getCamera.toImage(width, height, currentBackground)
     javax.imageio.ImageIO.write(image.asInstanceOf[java.awt.image.BufferedImage], "png", outfile)
   }
 
@@ -635,7 +635,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     gridOff()
     axesOff()
     Utils.runInSwingThreadAndWait {
-      setBackground(backgroundColor)
+      setBackgroundWrapper(backgroundColor)
       _showProt = false
       _showScale = false
       turtles.foreach { t => if (t == origTurtle) t.clear() else t.remove() }
@@ -752,18 +752,25 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
   def cbounds = Utils.runInSwingThreadAndWait { getCamera.getViewBounds() }
 
+  var currentBackground: Paint = _
+  def setBackgroundWrapper(c: Color): Unit = {
+    setBackground(c)
+    currentBackground = c
+  }
+
   def setCanvasBackground(c: Paint) = Utils.runInSwingThread {
     c match {
       case color: Color if color.getAlpha == 255 =>
         // full screen windows get messed up with transparent color backgrounds
         // so set window background only if color is fully opaque 
-        setBackground(color)
+        setBackgroundWrapper(color)
       case _ =>
         val bounds = cbounds
         val rect = staging.Impl.API.rectangle(bounds.x, bounds.y, bounds.width, bounds.height)
         rect.setFillColor(c)
         rect.setPenThickness(0)
         rect.setPenColor(c)
+        currentBackground = c
     }
   }
   def setBackgroundH(c1: Color, c2: Color) = Utils.runInSwingThread {
