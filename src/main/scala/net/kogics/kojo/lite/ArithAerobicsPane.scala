@@ -3,17 +3,17 @@ package net.kogics.kojo.lite
 import java.awt.Color
 
 import javax.swing.JFrame
+import javax.swing.JLabel
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
 import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
 
 import net.kogics.kojo.util.Utils
-import net.kogics.rithica.addition.{ TopContainer => Adder }
-import net.kogics.rithica.division.{ TopContainer => Divider }
-import net.kogics.rithica.multiplication.{ TopContainer => Multiplier }
-import net.kogics.rithica.subtraction.{ TopContainer => Subtractor }
-import net.kogics.rithica.ui.{ TopContainer => ArithContainer }
+import net.kogics.rithica.addition.{TopContainer => Adder}
+import net.kogics.rithica.division.{TopContainer => Divider}
+import net.kogics.rithica.multiplication.{TopContainer => Multiplier}
+import net.kogics.rithica.subtraction.{TopContainer => Subtractor}
+import net.kogics.rithica.ui.{TopContainer => ArithContainer}
 
 class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
 
@@ -30,10 +30,8 @@ class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
     addTab(Utils.loadString("S_Subtraction"), subtractor)
     addTab(Utils.loadString("S_Multiplication"), multiplier)
     addTab(Utils.loadString("S_Division"), divider)
-    addChangeListener(new ChangeListener {
-      def stateChanged(e: ChangeEvent) {
-        handleTabChange()
-      }
+    addChangeListener((e: ChangeEvent) => {
+      handleTabChange()
     })
   }
 
@@ -44,9 +42,23 @@ class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
     }
   }
 
+  lazy val init2 = {
+    setTabPlacement(SwingConstants.LEFT)
+    val msg = <html>Arithmetic Aerobics is not available with the Dark theme.<br/><br/>
+      You can switch to the Light theme via <em>File -> Settings</em>.</html>.toString
+    val notAvailable = new JLabel(msg)
+    notAvailable.setHorizontalAlignment(SwingConstants.CENTER)
+    addTab("", notAvailable)
+  }
+
   def activated() {
-    init
-    requestFocusInWindow()
-    handleTabChange()
+    if (Theme.currentTheme.supportsRithica) {
+      init
+      requestFocusInWindow()
+      handleTabChange()
+    }
+    else {
+      init2
+    }
   }
 }
