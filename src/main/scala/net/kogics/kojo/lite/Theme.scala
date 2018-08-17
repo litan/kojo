@@ -54,6 +54,7 @@ trait Theme {
   def runwPng: String
   def runtPng: String
   def stopPng: String
+  def checkPng: String
   def supportsRithica: Boolean
 }
 
@@ -91,6 +92,7 @@ class DarkTheme extends Theme {
   val runwPng = "runw-d.png"
   val runtPng = "runt-d.png"
   val stopPng = "stop-d.png"
+  val checkPng = "check-d.png"
   val supportsRithica = false
 }
 
@@ -137,6 +139,7 @@ class LightTheme extends Theme {
   val runwPng = "runw.png"
   val runtPng = "runt.png"
   val stopPng = "stop.png"
+  val checkPng = "check.png"
   val supportsRithica = true
 }
 

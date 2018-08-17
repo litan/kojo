@@ -564,12 +564,12 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
     toolbar.setPreferredSize(new Dimension(0, imageFolder + imageFolder / 6))
 
-    import Theme.currentTheme.{runPng, runwPng, runtPng, stopPng}
+    import Theme.currentTheme.{runPng, runwPng, runtPng, stopPng, checkPng}
 
     val runButton = makeNavigationButton(s"/images/$imageFolder/$runPng", RunScript, Utils.loadString("S_RunScript"))
     val runWorksheetButton = makeNavigationButton(s"/images/$imageFolder/$runwPng", RunWorksheet, Utils.loadString("S_RunWorksheet"))
     val traceButton = makeNavigationButton(s"/images/$imageFolder/$runtPng", TraceScript, Utils.loadString("S_TraceScript"))
-    val compileButton = makeNavigationButton(s"/images/$imageFolder/check.png", CompileScript, Utils.loadString("S_CheckScript"))
+    val compileButton = makeNavigationButton(s"/images/$imageFolder/$checkPng", CompileScript, Utils.loadString("S_CheckScript"))
     val stopButton = makeNavigationButton(s"/images/$imageFolder/$stopPng", StopScript, Utils.loadString("S_StopScript"))
     val hNextButton = makeNavigationButton(s"/images/$imageFolder/history-next.png", HistoryNext, Utils.loadString("S_HistNext"))
     val hPrevButton = makeNavigationButton(s"/images/$imageFolder/history-prev.png", HistoryPrev, Utils.loadString("S_HistPrev"))
