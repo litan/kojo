@@ -41,7 +41,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   val fontDd = DropDown((-10 to 10).reverse: _*)
   fontDd.setSelectedItem(fontIncrease)
 
-  val r1 = RowPanel(filler(10), Label("UI Theme:"), filler(3), themeDd)
+  val r1 = RowPanel(filler(10), Label("Interface Theme:"), filler(3), themeDd)
   val r2 = RowPanel(filler(10), Label(<html>&nbsp;&nbsp;&nbsp;<em>Choose a light or dark background
     for Kojo.</em></html>.toString()), filler(10))
   val r3 = RowPanel(filler(10), Label("Font Adjustment:"), filler(3), fontDd)
