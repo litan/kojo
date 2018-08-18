@@ -44,8 +44,7 @@ class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
 
   lazy val init2 = {
     setTabPlacement(SwingConstants.LEFT)
-    val msg = <html>Arithmetic Aerobics is not available with the Dark theme.<br/><br/>
-      You can switch to the Light theme via <em>File -> Settings</em>.</html>.toString
+    val msg = Utils.loadString("S_RithicaDisabled")
     val notAvailable = new JLabel(msg)
     notAvailable.setHorizontalAlignment(SwingConstants.CENTER)
     addTab("", notAvailable)
