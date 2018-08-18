@@ -121,7 +121,7 @@ trait AppMenu {
     newKojo.setAccelerator(KeyStroke.getKeyStroke("control N"))
     fileMenu.add(newKojo)
 
-    fileMenu.add(new JMenuItem(new AbstractAction("Settings") {
+    fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_Settings")) {
       def actionPerformed(e: ActionEvent) {
         new SettingsWindow(frame).setVisible(true)
       }
