@@ -248,7 +248,8 @@ class CodeExecutionSupport(
         Utils.loadString("S_OutputHelp"),
         Utils.loadString("S_OutputManipulate"),
         Utils.loadString("S_OutputContext"),
-        Utils.loadString("S_OutputCanvasZoom")
+        Utils.loadString("S_OutputCanvasZoom"),
+        Utils.loadString("S_ThemeChange")
       )
       showOutput(makeTabulatedWelcomeMessage(head, instructions))
     }

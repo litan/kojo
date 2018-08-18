@@ -142,8 +142,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   modeMenu.add(twCb)
 
   val vnCb = new JCheckBoxMenuItem(switcher)
-  vnCb.setText(Utils.loadString("S_VnMode"))
-  vnCb.setToolTipText(Utils.loadString("S_VnModeTT"))
+  vnCb.setText(Utils.loadString("S_VanillaMode"))
+  vnCb.setToolTipText(Utils.loadString("S_VanillaModeTT"))
   vnCb.setActionCommand(VanillaMode.code)
   modeMenu.add(vnCb)
 
