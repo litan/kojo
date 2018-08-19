@@ -17,7 +17,7 @@ rm *.*
 rm -rf Uninstaller
 cp licenses/Kojo-license.txt .
 cd ..
+rm -rf Kojo-z
 mv installerbuild Kojo-z
 rm Kojo.zip
 zip -r Kojo.zip Kojo-z/*
-rm -rf Kojo-z
