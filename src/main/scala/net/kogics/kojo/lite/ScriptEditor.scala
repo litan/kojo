@@ -564,7 +564,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
     toolbar.setPreferredSize(new Dimension(0, imageFolder + imageFolder / 6))
 
-    import Theme.currentTheme.{runPng, runwPng, runtPng, stopPng, checkPng}
+    import Theme.currentTheme.{runPng, runwPng, runtPng, stopPng, checkPng, clearSePng, clearOwPng}
 
     val runButton = makeNavigationButton(s"/images/$imageFolder/$runPng", RunScript, Utils.loadString("S_RunScript"))
     val runWorksheetButton = makeNavigationButton(s"/images/$imageFolder/$runwPng", RunWorksheet, Utils.loadString("S_RunWorksheet"))
@@ -573,8 +573,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     val stopButton = makeNavigationButton(s"/images/$imageFolder/$stopPng", StopScript, Utils.loadString("S_StopScript"))
     val hNextButton = makeNavigationButton(s"/images/$imageFolder/history-next.png", HistoryNext, Utils.loadString("S_HistNext"))
     val hPrevButton = makeNavigationButton(s"/images/$imageFolder/history-prev.png", HistoryPrev, Utils.loadString("S_HistPrev"))
-    val clearSButton = makeNavigationButton(s"/images/$imageFolder/clears.png", ClearEditor, Utils.loadString("S_ClearEditorT"))
-    val clearButton = makeNavigationButton(s"/images/$imageFolder/clear.png", ClearOutput, Utils.loadString("S_ClearOutput"))
+    val clearSButton = makeNavigationButton(s"/images/$imageFolder/$clearSePng", ClearEditor, Utils.loadString("S_ClearEditorT"))
+    val clearButton = makeNavigationButton(s"/images/$imageFolder/$clearOwPng", ClearOutput, Utils.loadString("S_ClearOutput"))
     val cexButton = makeNavigationButton(s"/images/$imageFolder/upload.png", UploadCommand, Utils.loadString("S_Upload"))
 
     toolbar.add(runButton)
