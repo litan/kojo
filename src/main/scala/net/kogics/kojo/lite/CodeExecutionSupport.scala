@@ -363,6 +363,8 @@ class CodeExecutionSupport(
           interp.bind("predef", "net.kogics.kojo.lite.CodeExecutionSupport", CodeExecutionSupport.this)
           interp.interpret("val builtins = predef.builtins")
           interp.interpret("import builtins._")
+          interp.interpret("import net.kogics.kojo.util.ScalatestHelper.{test, ignore}")
+          interp.interpret("import org.scalatest.Matchers._")
         case VanillaMode =>
       }
     }
@@ -373,6 +375,8 @@ class CodeExecutionSupport(
   def entry() {
     // noop
   }
+  import net.kogics.kojo.util.ScalatestHelper.{test, ignore}
+  import org.scalatest.Matchers._
 """
 
     def onInterpreterInit() = {

@@ -504,23 +504,6 @@ object Utils {
       (codeFromScripts(modeFilter(initScripts, mode), initScriptDir) |+| langInit(mode)) map stripCR
     )
 
-  lazy val isScalaTestAvailable = {
-    try {
-      Class.forName("org.scalatest.FunSuite")
-      true
-    }
-    catch {
-      case e: ClassNotFoundException => false
-      case _: Throwable              => false
-    }
-  }
-
-  lazy val scalaTestHelperCode = """
-  import net.kogics.kojo.util.ScalatestHelper.{test, ignore}
-  import org.scalatest.Matchers._
-  
-"""
-
   def codeFromScripts(scripts: List[String], scriptDir: String): Option[String] = scripts match {
     case Nil => None
     case files => Some(
@@ -531,12 +514,7 @@ object Utils {
   }
 
   def initCode(mode: CodingMode): Option[String] = {
-    if (isScalaTestAvailable) {
-      some(scalaTestHelperCode) |+| initkCode(mode)
-    }
-    else {
-      initkCode(mode)
-    }
+    initkCode(mode)
   }
 
   lazy val actorSystem = ActorSystem("Kojo")
