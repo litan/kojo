@@ -40,7 +40,7 @@ byte triggerPin, echoPin;
 void setup() {
   Serial.begin(115200);
   delay(10);
-  log("Board (re)starting.");
+  // log("Board (re)starting.");
   counter = 0;
   state = 1;
 }

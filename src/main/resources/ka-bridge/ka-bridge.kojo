@@ -132,7 +132,7 @@ class SerialPortReader extends SerialPortEventListener {
             println(msg)
         }
         debugMsg(s"  Bytes available: $bytesAvailable, Curr packet size: $packetSize")
-        if (bytesAvailable >= packetSize) {
+        if (bytesAvailable >= packetSize && bytesAvailable > 0) {
             readByte match {
                 case 1 => // byte
                     if (bytePromise != null && !bytePromise.isCompleted) {
