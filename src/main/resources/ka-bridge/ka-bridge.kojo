@@ -64,7 +64,6 @@ def debugMsg(msg: => String) {
 }
 
 class SerialPortReader extends SerialPortEventListener {
-    //    var currPacket: ByteBuffer = _
     @volatile var currData = ByteBuffer.allocate(0)
     @volatile var state = 1 // new packet
     @volatile var packetSize = 0
@@ -142,7 +141,7 @@ class SerialPortReader extends SerialPortEventListener {
                         bytePromise.success(d)
                     }
                     else {
-                        drainBytes(packetSize - 1, "Unexpected Byte received.")
+                        drainBytes(packetSize - 1, "Unexpected Byte received and ignored.")
                     }
                 case 2 => // int
                     if (intPromise != null && !intPromise.isCompleted) {
@@ -151,7 +150,7 @@ class SerialPortReader extends SerialPortEventListener {
                         intPromise.success(d)
                     }
                     else {
-                        drainBytes(packetSize - 1, "Unexpected Int received.")
+                        drainBytes(packetSize - 1, "Unexpected Int received and ignored.")
                     }
                 case 3 => // string
                     readByte; readByte
@@ -164,10 +163,10 @@ class SerialPortReader extends SerialPortEventListener {
                         longPromise.success(d)
                     }
                     else {
-                        drainBytes(packetSize - 1, "Unexpected Long received.")
+                        drainBytes(packetSize - 1, "Unexpected Long received and ignored.")
                     }
                 case _ => // unknown
-                    drainBytes(packetSize - 1, "Unknown data received.")
+                    drainBytes(packetSize - 1, "Unknown data received and ignored.")
             }
             packetDone()
         }
