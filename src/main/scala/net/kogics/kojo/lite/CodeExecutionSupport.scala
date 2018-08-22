@@ -660,7 +660,7 @@ class CodeExecutionSupport(
 
   def runIpmCode(code: String) {
     stopScript()
-    codeRunner.runCode(code) // codeRunner.runCode(cleanWsOutput(code)) 
+    codeRunner.compileRunCode(code) // codeRunner.runCode(cleanWsOutput(code))
   }
 
   @volatile var traceRunning = false
