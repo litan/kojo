@@ -18,17 +18,12 @@ package figure
 
 import edu.umd.cs.piccolo._
 import edu.umd.cs.piccolo.nodes._
-import edu.umd.cs.piccolo.util._
-import edu.umd.cs.piccolo.event._
 import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
-import javax.swing._
 import java.awt.{ Point => _, List => _, _ }
 import net.kogics.kojo.util.Utils
 import core._
 import java.util.concurrent.Future
-import java.util.concurrent.FutureTask
-import java.util.concurrent.Callable
 import net.kogics.kojo.util.FutureResult
 
 object Figure {
@@ -198,6 +193,8 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
 
   def refresh(fn: => Unit): Future[PActivity]  = refresh(1000 / canvas.kojoCtx.fps, 0)(fn)
   def refresh(rate: Long, delay: Long)(fn: => Unit): Future[PActivity] = {
+    Utils.increaseSysTimerResolutionIfNeeded()
+
     @volatile var figAnimation: PActivity = null
     val promise = new FutureResult[PActivity]
 

@@ -66,7 +66,7 @@ trait StubMain {
       }
     }
     def extraCmds = {
-      if (System.getProperty("os.name") == "Linux" && System.getProperty("java.version").startsWith("1.8")) {
+      if (Utils.isLinux && System.getProperty("java.version").startsWith("1.8")) {
         "-Dsun.java2d.xrender=false "
       }
       else {

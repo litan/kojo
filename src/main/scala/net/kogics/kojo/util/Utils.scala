@@ -374,7 +374,11 @@ object Utils {
   }
   def isWin = {
     val os = System.getProperty("os.name").toLowerCase()
-    os.startsWith("win")
+    os.startsWith("windows")
+  }
+  def isLinux = {
+    val os = System.getProperty("os.name").toLowerCase()
+    os.startsWith("linux")
   }
 
   def readStream(is: InputStream): String = {
@@ -793,6 +797,30 @@ object Utils {
     }
     finally {
       os.close()
+    }
+  }
+
+  lazy val timerThreadCount = new java.util.concurrent.atomic.AtomicInteger(0)
+  def increaseSysTimerResolutionIfNeeded(): Unit = {
+    if (isWin) {
+      if (timerThreadCount.getAndIncrement == 0) {
+        println("Increasing system timer resolution.")
+        runAsyncMonitored {
+          try {
+            Thread.sleep(Int.MaxValue)
+          }
+          catch {
+            case _: Throwable =>
+              if (timerThreadCount.decrementAndGet > 0) {
+                println("Ignoring system timer resolution increase request.")
+              }
+              println("Resetting system timer resolution.")
+          }
+        }
+      }
+      else {
+        timerThreadCount.getAndDecrement
+      }
     }
   }
 }
