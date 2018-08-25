@@ -1,8 +1,8 @@
 /*
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  *   Massimo Ghisalberti <zairik@gmail.com>
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
- *   Lalit Pant <pant.lalit@gmail.com> 
+ *   Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -64,7 +64,7 @@ object ItalianCustomStatements {
     lazy val pred = fn1
     lazy val compl = fn2
   }
-  
+
   implicit class TernaryAssocExpression(cond: => Boolean){
     def ??[T](thenFn: => T) = new IfClauseExpression(cond, thenFn)
   }
@@ -91,15 +91,15 @@ object ItalianCustomStatements {
       if (thisFn == null) thatFn else thisFn
     }
   }
-  
+
   implicit class OrOperator[T](thatFn: => T) {
     def oppure[A >: T](thisFn: A) = {
       if(isNotEmpty(thatFn)) thatFn else thisFn
     }
   }
-  
+
   class IfThenClauseExpression[T](cond: => Boolean, thenFn: => T)
-      extends IfClauseExpression(cond, thenFn) {
+    extends IfClauseExpression(cond, thenFn) {
     def altrimenti[T](elseFn: => T) = {
       if(cond) thenFn else elseFn
     }
@@ -446,73 +446,469 @@ object ItInit {
   )
 
   val helpContent = Map(
-    "fai" -> (<div> <strong> fai </strong> - Permette di definire un blocco di codice da eseguire in una unità di esecuzione separata (thread). Il blocco di codice è eseguito una volta. <strong> self </strong> è la tartaruga a cui si riferisce.</div>).toString,
-    "rifai" -> (<div> <strong> rifai </strong> - Permette di definire un blocco di codice da eseguire in una unità di esecuzione separata (thread). Il blocco di codice è eseguito trenta volte al secondo. <strong> self </strong> è la tartaruga a cui si riferisce.</div>).toString,
-    "avanti" -> (<div> <strong> Avanti </strong> (passi). Sposta la tartaruga in avanti per il numero di passi dati </div>).toString,
-    "indietro" -> (<div> <strong> Indietro </strong> (passi). Sposta la tartaruga indietro per il numero di passi dati </div>).toString,
-    "sinistra" -> (<div> <strong> sinistra </strong> sinistra(). Gira la tartaruga di 90 gradi a sinistra (anti-orario). <br/> <strong> sinistra </strong> sinistra(angolo). Gira la Tartaruga sinistra (anti-orario) per il date angolo in gradi <br/> <strong> sinistra </strong> sinistra(angolo, Raggio). Gira la Tartaruga a sinistra (anti-orario) per il date angolo in gradi, Intorno al Raggio <br/> </div>).toString,
-    "destra" -> (<div> <strong> destra </strong> destra(). Gira La Tartaruga 90 gradi a destra (orario). <br/> <strong> destra </strong> destra(angolo). Gira la Tartaruga a destra (orario) per il date angolo in gradi <br/> <strong> destra </strong> destra(angolo, Raggio). Gira La Tartaruga destra (orario) per il date angolo in gradi, Intorno al Raggio <br/></div>).toString,
-    "saltaVerso" -> (<div> <strong> saltaVerso </strong> saltaVerso(x, y). posiziona la Tartaruga alle coordinate (x, y) senza disegnare Una linea. La direzione della Tartaruga non è cambiata. <br/> </div>).toString,
-    "muoviVerso" -> (<div> <strong> muoviVerso </strong> muoviVerso(x, y). Gira la Tartaruga verso (x, y) e si muove la tartaruga a quel punto </div>).toString,
-    "cambiaPosizione" -> (<div> <strong> cambiaPosizione </strong> cambiaPosizione(x, y). Cambia la posizione della Tartaruga ai valori forniti </div>).toString,
-    "salta" -> (<div> <strong> salta </strong> salta(passi). Sposta la tartaruga in avanti per il numero determinato di passi <em> con la penna </em>, senza che che nessuna linea sia disegnata. La penna viene messo giù dopo il salto. <br/> </div>).toString,
-    "casa" -> (<div> <strong> casa </strong> casa(). Sposta la tartaruga nella sua posizione originale al centro dello schermo e fa puntare a nord </div>).toString,
-    "verso" -> (<div> <strong> verso </strong> verso(x, y). Gira la Tartaruga verso il punto (x, y) </div>).toString,
-    "impostaDirezione" -> (<div> <strong> impostaDirezione </strong> impostaDirezione(angolo). Imposta la direzione della tartaruga al angolo dato (0 è verso il lato destra dello schermo (<em> est </em>), 90 è su ( <em> nord </em>)). </div>).toString,
-    "direzione" -> (<div> <strong> direzione </strong>. Interroga la direzione della tartaruga (0 è verso il lato destra dello schermo (<em> est </em>), 90 è alto (<em> nord </em >)). </div>).toString,
-    "est" -> (<div> <strong> est </strong> est(). Gira la Tartaruga verso est </div>).toString,
-    "ovest" -> (<div> <strong> ovest </strong> ovest(). Gira la Tartaruga verso ovest </div>).toString,
-    "nord" -> (<div> <strong> nord </strong> nord(). Gira la Tartaruga verso nord </div>).toString,
-    "sud" -> (<div> <strong> sud </strong> sud(). Gira la Tartaruga verso sud </div>).toString,
-    "ritardo" -> (<div> <strong> ritardo </strong> (ritardo). Imposta la velocità della tartaruga. Il ritardo  specificato</div>).toString,
-    "valoreRitardo" -> (<div> <strong> valoreRitardo </strong>. Legge la velocità della tartaruga. Il ritardo  specificato</div>).toString,
-    "scrivi" -> (<div> <strong> scrivi </strong> scrivi(oggetto). Scrive alla posizione della tartaruga, se l'oggetto non è una stringa lo converte. </div>).toString,
-    "impostaCarattere" -> (<div> <strong> impostaCarattere </strong> (n). Imposta il carattere con cui scrive la tartaruga</div>).toString,
-    "impostaGrandezzaCarattere" -> (<div> <strong> impostaGrandezzaCarattere </strong> (n). Specifica la dimensione del carattere con cui scrive la tartaruga</div>).toString,
-    "arco2" -> (<div> <strong> arco2 </strong> arco2(raggio, angolo). Fa fare alla tartaruga un arco con il raggio ed angolo dato <br/> per angoli positivi il giro è anti-orario. <br/> </div>).toString,
-    "arco" -> (<div> <strong> arco </strong> arco(raggio, angolo). Fa fare alla tartaruga un arco con il raggio ed angolo dato <br/> per angoli positivi il giro è anti-orario. <br/> </div>).toString,
-    "cerchio" -> (<div> <strong> cerchio </strong> cerchio(raggio). La tartaruga si muove in cerchio dato il raggio. <br/> Il comando cerchio(50) è equivalente al comando arco(50, 360). <br/> </div>).toString,
-    "poligono" -> (<div> <strong> poligono </strong> poligono(lato, lati). La tartaruga disegna un poligono </div>).toString,
-    "punto" -> (<div> <strong> punto </strong> punto(diametro). Disegna un punto dato il diametro.</div>).toString,
-    "visibile" -> (<div> <strong> visibile </strong> visibile(). Rende la tartaruga visibile dopo che è stato resa invisibile con il comando invisibile() </div>).toString,
-    "invisibile" -> (<div> <strong> invisibile </strong> invisibile(). rende la tartaruga invisibile. Utilizzare il comando visibile() per renderla di nuovo visibile. </div>).toString,
-    "abbassaPenna" -> (<div> <strong> abbassaPenna </strong> abbassaPenna(). Fa disegnare una linea alla Tartaruga <br/> Per impostazione predefinita la penna è abbassata. <br/> </div>).toString,
-    "alzaPenna" -> (<div> <strong> abbassaPenna </strong> abbassaPenna(). Alza la penna della tartaruga, in modo che essa non tracci linee al movimento. <br/> </div>).toString,
-    "èLaPennaAbbassata" -> (<div> <strong> èLaPennaAbbassata </strong>. Indica se la penna della tartaruga è giù </div>).toString,
-    "colorePenna" -> (<div> <strong> colorePenna </strong> (colore). Specifica il colore della penna che la tartaruga disegna con. <br/> </div>).toString,
-    "coloreRiempimento" -> (<div> <strong> coloreRiempimento </strong> (colore). Specifica il colore di riempimento delle figure disegnate dalla tartaruga. <br/> </div>).toString,
-    "impostaSpessorePenna" -> (<div> <strong> impostaSpessorePenna </strong> (spessore). Specifica la larghezza della penna che la tartaruga disegna con. <br/> </div>).toString,
-    "salvaStile" -> (<div> <strong> salvaStile </strong> salvaStile(). Salva lo stile corrente della tartaruga, in modo che possa facilmente essere ripristinato dopo con un <tt> restoreStyle() </tt>. <br/> <p> Lo stile della tartaruga include: <ul> <li> Colore penna </li> <li> Spessore penna </li> <li> Colore di riempimento </li> <li> Carattere </li> <li> Penna Su / Giù stato </li> </ul> </p> </div>).toString,
-    "ripristinaStile" -> (<div> <strong> ripristinaStile </strong> ripristinaStile(). Ripristina stile della tartaruga sulla base di una precedente <tt> saveStyle() </tt>. <br/> <p> Lo stile della tartaruga include: <ul> <li> Colore penna </li> <li> Spessore penna </li> <li> Colore di riempimento </li> <li> Carattere </li> <li> Penna Su / Giù stato </li> </ul> </p> </div>).toString,
-    "salvaPosizioneDirezione" -> (<div> <strong> salvaPosizioneDirezione </strong> salvaPosizioneDirezione(). Salva la posizione corrente della tartaruga e la direzione, in modo che possano facilmente essere ripristinata dopo con un <tt> ripristinaPosizioneDirezione() </tt>. <br/> </div>).toString,
-    "ripristinaPosizioneDirezione" -> (<div> <strong> ripristinaPosizioneDirezione </strong> ripristinaPosizioneDirezione(). ripristina la posizione corrente della tartaruga e la direzionesulla base di una precedente chiamata a <tt> salvaPosizioneDirezione() </tt>. <br/> </div>).toString,
-    "assi" -> (<div> <strong> assi </strong> assi(). Indica assi centrati sulla tartaruga.  </div>).toString,
-    "rimuoviAssi" -> (<div> <strong> rimuoviAssi </strong> (rimuoviAssi). Nasconde gli assi per le tartarughe su cui sono attivi dopo una chiamata a <tt> assi() </tt> </div>).toString,
-    "pulisci" -> (<div> <strong> pulisci </strong> pulisci(). Cancella la tela tartaruga, e porta la tartaruga al centro della tela </div>).toString,
-    "pulisciOutput" -> (<div> <strong> pulisciOutput </strong> pulisciOutput(). Cancella la finestra di output </div>).toString,
-    "sfondo" -> (<div> <strong> sfondo </strong> sfondo(colore). Imposta lo sfondo al colore specificato. È possibile usare i colori predefiniti per impostare lo sfondo, oppure è possibile creare colori utilizzando le funzioni <tt> Colore </tt>, <tt> ColorHSB </tt>, <tt> ColorG </tt>. </div>).toString,
-    "gradiente" -> (<div> <strong> gradiente </strong> gradiente(color1, color2). Imposta lo sfondo per un colore verticale in gradiente, definito dai due colori specificati. </div>).toString,
-    "ripeti" -> (<div> <strong> ripeti </strong> ripeti(n) {{}}. Ripete il blocco specificato di comandi (tra parentesi graffe) n numero di volte <br/> </div>).toString,
-    "ripetizione" -> (<div> <strong> ripetizione </strong> ripetizione(n) {{indice =>}}. Ripete il blocco specificato di comandi (tra parentesi graffe) n numero di volte. L'indice di ripetizione corrente è disponibile come <tt> indice </tt> all'interno delle parentesi graffe. </div>).toString,
-    "ripetiFinché" -> (<div> <strong> ripetiFinché </strong> ripetiFinché(cond) {{}}. Ripete il blocco specificato di comandi (tra parentesi graffe), mentre la condizione data è vera </div>).toString,
-    "ripetiPerOgniElementoDi" -> (<div> <strong> ripetiPer </strong> ripetiPerOgniElementoDi(ss) {{}}. Ripete il blocco specificato di comandi (tra parentesi graffe) per ogni elemento nella sequenza indicata <br/> </div>).toString,
-    "scriviLinea" -> (<div> <strong> scriviLinea </strong> (Oggetto). Consente di visualizzare la data oggettoect come una stringa nella finestra di output, con una nuova riga alla fine </div>).toString,
-    "leggiLinea" -> (<div> <strong> leggiLinea </strong> (stringaPrompt). Visualizza il prompt data nella finestra di output e legge una linea che l'utente inserisce </div>).toString,
-    "arrotonda" -> (<div> <strong> arrotonda </strong> (n, cifre). Arrotonda il numero specificato n per il numero specificato di cifre dopo la virgola </div>).toString,
-    "numeroCasuale" -> (<div> <strong> numeroCasuale </strong> (upper bound). Restituisce un numero intero casuale compreso tra 0 (incluso) e upper bound (esclusiva) </div>).toString,
-    "numeroDecimaleCasuale" -> (<div> <strong> numeroDecimaleCasuale </strong> (upper bound). Restituisce un numero casuale a doppia precisione decimale compreso tra 0 (incluso) e upper bound (esclusiva) </div>).toString,
-    "indossaCostume" -> (<div> <strong> indossaCostume </strong> indossaCostume(costumeFile). Cambia il costume (cioè immagine) associata con la tartaruga per l'immagine nel file specificato </div>).toString,
-    "indossaCostumi" -> (<div> <strong> indossaCostumi </strong> indossaCostumi(costumeFile1, costumeFile2,...). Specifica più costumi per la tartaruga, e imposta il costume della tartaruga al primo nella sequenza. È possibile scorrere i costumi chiamando <tt> nextCostume() </tt>. </div>).toString,
-    "indossaImmagine" -> (<div> <strong> indossaCostume </strong> indossaImmagine(immagine). Cambia il costume (cioè immagine) associata con la tartaruga con l'immagine nell'oggetto specificato </div>).toString,
-    "indossaImmagini" -> (<div> <strong> indossaCostumi </strong> indossaImmagini(immagine, immagine,...). Specifica più immagini per la tartaruga e imposta il costume della tartaruga al primo nella sequenza. È possibile scorrere i costumi chiamando <tt> nextCostume() </tt>. </div>).toString,
-    "prossimoCostume" -> (<div> <strong> prossimoCostume </strong> prossimoCostume(). cambi di costume della tartaruga a quella successiva nella sequenza dei costumi specificato da <tt> setCostumes (..) </tt> </div>).toString,
-    "scalaCostume" -> (<div> <strong> scalaCostume </strong> scalaCostume(fattore). Scala il costume della tartaruga </div>).toString,
-    "se" -> (<div><strong>se-altrimenti</strong> se (condizione) (se condizione vera) altrimenti (se condizione falsa). <br /> Espressione di controllo </div>).toString,
-    "seVero" -> (<div><strong> seVero </strong> seVero (condizione) (blocco). <br /> Espressione di controllo </div>).toString,
-    "oppure" -> (<div><strong> oppure </strong> valore1 oppure valore2. <br /> Se il valore1 è valutato come vuoto verrà restituito il valore2.</div>).toString,
-    "?:" -> (<div><strong> ?: </strong> Groovy Elvis Operator, simile a oppure ma lavora su valori nulli.</div>).toString,
-    "?:" -> (<div><strong> (condizione) ?: (se condizione vera) :: (se condizione falsa) </strong></div>).toString,
-    "lentezza" -> (<div> <strong> lentezza </strong> (millisecondi). Imposta la velocità della tartaruga. La lentezza  specificata</div>).toString,
-    "velocità" -> (<div> <strong> velocità </strong> (velocità). Imposta la velocità della tartaruga. La velocità  specificata può essere: Lentissima, Lenta, Media, Veloce, Velocissima</div>).toString
+    "fai" -> """
+      <div>
+        <p><strong>fai</strong>{ self => codice }</p>
+        <p>
+          Permette di definire un blocco di codice da eseguire in una unità di esecuzione separata (thread). Il blocco di codice è eseguito una volta.
+          <strong>self</strong> è la tartaruga a cui si riferisce.
+        </p>
+      </div>
+    """,
+    "rifai" -> """
+      <div>
+        <p><strong>rifai</strong>{ self => codice }</p>
+        <p>
+          Permette di definire un blocco di codice da eseguire in una unità di esecuzione separata (thread). Il blocco di codice è eseguito 30 volte al secondo.
+          <strong>self</strong> è la tartaruga a cui si riferisce.
+        </p>
+      </div>
+    """,
+    "avanti" -> """
+      <div>
+        <p><strong>avanti</strong>(passi)</p>
+        <p>Sposta la tartaruga in avanti per il numero di passi dati </p>
+      </div>
+    """,
+    "indietro" -> """
+      <div>
+        <p><strong>indietro</strong>(passi)</p>
+        <p>Sposta la tartaruga indietro per il numero di passi dati</p>
+      </div>
+    """,
+    "sinistra" -> """
+    <div>
+      <p><strong>sinistra</strong>()</p>
+      <p>Gira la tartaruga di 90 gradi a sinistra (anti-orario). </p>
+
+      <p><strong>sinistra</strong>(angolo).</p>
+      <p>Gira la Tartaruga sinistra (anti-orario) per il dato angolo in gradi </p>
+
+      <p><strong>sinistra</strong>(angolo, raggio)</p>
+      <p>Gira la Tartaruga a sinistra (anti-orario) per il dato angolo in gradi, intorno al raggio </p>
+    </div>
+    """,
+    "destra" -> """
+    <div>
+      <p><strong>destra</strong>()</p>
+      <p>Gira la tartaruga di 90 gradi a destra (orario). </p>
+
+      <p><strong>destra</strong>(angolo).</p>
+      <p>Gira la Tartaruga destra (orario) per il dato angolo in gradi </p>
+
+      <p><strong>destra</strong>(angolo, raggio)</p>
+      <p>Gira la Tartaruga a destra (orario) per il dato angolo in gradi, intorno al raggio </p>
+    </div>
+    """,
+    "saltaVerso" -> """
+      <div>
+        <p><strong>saltaVerso</strong>(x, y)</p>
+        <p>Posiziona la Tartaruga alle coordinate (x, y) senza disegnare Una linea. La direzione della Tartaruga non è cambiata. </p>
+      </div>
+      """,
+    "muoviVerso" -> """
+      <div>
+        <p><strong>muoviVerso</strong>(x, y)</p>
+        <p>Muove la Tartaruga verso il punto di coordinate x, y. </p>
+      </div>
+      """,
+    "cambiaPosizione" -> """
+      <div>
+        <p><strong>cambiaPosizione</strong>(x, y)</p>
+        <p>Cambia la posizione della Tartaruga verso il punto di coordinate x, y. </p>
+      </div>
+      """,
+    "salta" -> """
+      <div>
+        <p><strong>salta</strong>(passi)</p>
+        <p>Sposta la tartaruga in avanti per il numero determinato di passi <em> con la penna </em>,
+        senza che che nessuna linea sia disegnata. La penna viene messo giù dopo il salto. </p>
+      </div>
+      """,
+    "casa" -> """
+      <div>
+        <p><strong>casa</strong>()</p>
+        <p>Sposta la tartaruga nella sua posizione originale al centro dello schermo facendola puntare in alto. </p>
+      </div>
+      """,
+    "verso" -> """
+      <div>
+        <p><strong>verso</strong>(x, y)</p>
+        <p>Fa puntare la Tartaruga verso il punto di coordinate x, y. </p>
+      </div>
+      """,
+    "impostaDirezione" -> """
+      <div>
+        <p><strong>impostaDirezione</strong>(angolo)</p>
+        <p>Imposta la direzione della tartaruga all'angolo dato (0 è verso il lato destro dello schermo (<em> est </em>), 90 è su ( <em> nord </em>)). </p>
+      </div>
+      """,
+    "direzione" -> """
+      <div>
+        <p><strong>direzione</strong>.
+        <p>Interroga la direzione della tartaruga (0 è verso il lato destro dello schermo (<em> est </em>), 90 è alto (<em> nord </em>)). </p>
+      </div>
+      """,
+    "est" -> """
+      <div>
+        <p><strong>est</strong>()</p>
+        <p>Gira la Tartaruga verso est </p>
+      </div>
+      """,
+    "ovest" -> """
+      <div>
+        <p><strong>ovest</strong>()</p>
+        <p>Gira la Tartaruga verso ovest </p>
+      </div>
+      """,
+    "nord" -> """
+      <div>
+        <p><strong>nord</strong>()</p>
+        <p>Gira la Tartaruga verso nord </p>
+      </div>
+      """,
+    "sud" -> """
+      <div>
+        <p><strong>sud</strong>()</p>
+        <p>Gira la Tartaruga verso sud </p>
+      </div>
+      """,
+    "ritardo" -> """
+      <div>
+        <p><strong>ritardo</strong>(valore)</p>
+        <p>Imposta la velocità della tartaruga al valore specificato</p>
+      </div>
+      """,
+    "valoreRitardo" -> """
+      <div>
+        <p><strong>valoreRitardo</strong>.
+        <p>Legge la velocità della tartaruga</p>
+      </div>
+      """,
+    "scrivi" -> """
+      <div>
+        <p><strong>scrivi</strong>(testo)</p>
+        <p>Scrive alla posizione della tartaruga, se l'oggetto non è una <em>stringa</em> lo converte. </p>
+      </div>
+      """,
+    "impostaCarattere" -> """
+      <div>
+        <p><strong>impostaCarattere</strong>(font)</p>
+        <p>Imposta il carattere con cui scrive la tartaruga.</p>
+      </div>
+      """,
+    "impostaGrandezzaCarattere" -> """
+      <div>
+        <p><strong>impostaGrandezzaCarattere</strong>(n)</p>
+        <p>Specifica la dimensione del carattere con cui scrive la tartaruga</p>
+      </div>
+      """,
+    "arco2" -> """
+      <div>
+        <p><strong>arco2</strong>(raggio, angolo)</p>
+        <p>Fa fare alla tartaruga un arco con il raggio ed angolo dato.
+        Per angoli positivi il giro è anti-orario. </p>
+      </div>
+      """,
+    "arco" -> """
+      <div>
+        <p><strong>arco</strong>(raggio, angolo)</p>
+        <p>Fa fare alla tartaruga un arco con il raggio ed angolo dato.
+        Per angoli positivi il giro è anti-orario. </p>
+      </div>
+      """,
+    "cerchio" -> """
+      <div>
+        <p><strong>cerchio</strong>(raggio)</p>
+        <p>La tartaruga si muove in cerchio dato il raggio.
+        Il comando cerchio(50) è equivalente al comando arco(50, 360). </p>
+      </div>
+      """,
+    "poligono" -> """
+      <div>
+        <p><strong>poligono</strong>(lato, lati)</p>
+        <p>La tartaruga disegna un poligono. </p>
+      </div>
+      """,
+    "punto" -> """
+      <div>
+        <p><strong>punto</strong>(diametro)</p>
+        <p>Disegna un punto dato il diametro.</p>
+      </div>
+      """,
+    "visibile" -> """
+      <div>
+        <p><strong>visibile</strong>()</p>
+        <p>Rende la tartaruga visibile dopo che è stato resa invisibile con il comando <strong>invisibile</strong>(). </p>
+      </div>
+      """,
+    "invisibile" -> """
+      <div>
+        <p><strong>invisibile</strong>()</p>
+        <p>Rende la tartaruga invisibile. Utilizzare il comando <strong>visibile</strong>() per renderla di nuovo visibile. </p>
+      </div>
+      """,
+    "abbassaPenna" -> """
+      <div>
+        <p><strong>abbassaPenna</strong>()</p>
+        <p>Fa disegnare una linea alla Tartaruga.
+        Per impostazione predefinita la penna è abbassata. </p>
+      </div>
+      """,
+    "alzaPenna" -> """
+      <div>
+        <p><strong>abbassaPenna</strong>()</p>
+        <p>Alza la penna della tartaruga, in modo che essa non tracci linee al movimento. </p>
+      </div>
+      """,
+    "èLaPennaAbbassata" -> """
+      <div>
+        <p><strong>èLaPennaAbbassata</strong>.
+        <p>Indica se la penna della tartaruga è abbassata e potrà scrivere. </p>
+      </div>
+      """,
+    "colorePenna" -> """
+      <div>
+        <p><strong>colorePenna</strong>(colore)</p>
+        <p>Specifica il colore della penna con cui disegna la tartaruga. </p>
+      </div>
+      """,
+    "coloreRiempimento" -> """
+      <div>
+        <p><strong>coloreRiempimento</strong>(colore)</p>
+        <p>Specifica il colore di riempimento delle figure disegnate dalla tartaruga. </p>
+      </div>
+      """,
+    "impostaSpessorePenna" -> """
+      <div>
+        <p><strong>impostaSpessorePenna</strong>(spessore)</p>
+        <p>Specifica la larghezza della penna con cui disegna la tartaruga. </p>
+      </div>
+      """,
+    "salvaStile" -> """
+      <div>
+        <p><strong>salvaStile</strong>()</p>
+        <p>Salva lo stile corrente della tartaruga, in modo che possa essere facilmente ripristinato dopo con un <strong>ripristinaStile</strong>(). </p>
+        <p> Lo stile della tartaruga include:
+          <ul>
+            <li> Colore penna </li>
+            <li> Spessore penna </li>
+            <li> Colore di riempimento </li>
+            <li> Carattere </li>
+            <li> Lo stato della penna (Su/Giù)</li>
+          </ul>
+        </p>
+      </div>
+      """,
+    "ripristinaStile" -> """
+      <div>
+        <p><strong>ripristinaStile</strong>()</p>
+        <p>Ripristina lo stile salvato della tartaruga dopo con un <strong>salvaStile</strong>(). </p>
+        <p> Lo stile della tartaruga include:
+          <ul>
+            <li> Colore penna </li>
+            <li> Spessore penna </li>
+            <li> Colore di riempimento </li>
+            <li> Carattere </li>
+            <li> Lo stato della penna (Su/Giù)</li>
+          </ul>
+        </p>
+      </div>
+      """,
+    "salvaPosizioneDirezione" -> """
+      <div>
+        <p><strong>salvaPosizioneDirezione</strong>()</p>
+        <p>Salva la posizione corrente della tartaruga e la direzione, in modo che possano facilmente essere ripristinata
+          dopo un <strong>ripristinaPosizioneDirezione</strong>().
+        </p>
+      </div>
+      """,
+    "ripristinaPosizioneDirezione" -> """
+      <div>
+        <p><strong>ripristinaPosizioneDirezione</strong>()</p>
+        <p>Ripristina la posizione della tartaruga e la direzione dopo un <strong>salvaPosizioneDirezione</strong>().
+        </p>
+      </div>
+      """,
+    "assi" -> """
+      <div>
+        <p><strong>assi</strong>()</p>
+        <p>Visualizza gli assi centrati sulla tartaruga.</p>
+        </div>
+      """,
+    "rimuoviAssi" -> """
+      <div>
+        <p><strong>rimuoviAssi</strong></p>
+        <p>Nasconde gli assi per le tartarughe su cui sono attivi dopo una chiamata a <strong>assi</strong>()</p>
+      </div>
+      """,
+    "pulisci" -> """
+      <div>
+        <p><strong>pulisci</strong>()</p>
+        <p>Cancella l'area di disegno e ne riporta la tartaruga al centro </p>
+      </div>
+      """,
+    "pulisciOutput" -> """
+      <div>
+        <p><strong>pulisciOutput</strong>()</p>
+        <p>Cancella la finestra di output. </p>
+      </div>
+      """,
+    "sfondo" -> """
+      <div>
+        <p><strong>sfondo</strong>(colore)</p>
+        <p>Imposta lo sfondo al colore specificato. </p>
+        <p>
+          È possibile usare i colori predefiniti per impostare lo sfondo,
+          oppure è possibile creare colori utilizzando le funzioni
+          <strong> Colore </strong>,
+          <strong> ColorHSB </strong>,
+          <strong> ColorG </strong>.
+        </p>
+      </div>
+      """,
+    "gradiente" -> """
+      <div>
+        <p><strong>gradiente</strong>(colore1, colore2)</p>
+        <p>Imposta lo sfondo per un colore verticale in gradiente, definito dai due colori specificati. </p>
+        <p>
+          È possibile usare i colori predefiniti per impostare lo sfondo,
+          oppure è possibile creare colori utilizzando le funzioni
+          <strong> Colore </strong>,
+          <strong> ColorHSB </strong>,
+          <strong> ColorG </strong>.
+        </p>
+      </div>
+      """,
+    "ripeti" -> """
+      <div>
+        <p><strong>ripeti</strong>(n){ blocco }</p>
+        <p>Ripete il blocco specificato di comandi (tra parentesi graffe) n numero di volte </p>
+      </div>
+      """,
+    "ripetizione" -> """
+      <div>
+        <p><strong>ripetizione</strong>(n) { indice => {blocco}}</p>
+        <p>Ripete il blocco specificato di comandi (tra parentesi graffe) n numero di volte.
+        L'indice di ripetizione corrente è disponibile come <em> indice </em> all'interno delle parentesi graffe. </p>
+      </div>
+      """,
+    "ripetiFinché" -> """
+      <div>
+        <p><strong>ripetiFinché</strong>(condizione) { blocco }</p>
+        <p>Ripete il blocco specificato di comandi (tra parentesi graffe) finché la condizione data è vera. </p>
+      </div>
+      """,
+    "ripetiPerOgniElementoDi" -> """
+      <div>
+        <p><strong>ripetiPerOgniElementoDi</strong>(sequenza) { el => { blocco } }</p>
+        <p>Ripete il blocco specificato di comandi (tra parentesi graffe) per ogni elemento nella sequenza indicata </p>
+      </div>
+      """,
+    "scriviLinea" -> """
+      <div>
+        <p><strong>scriviLinea</strong>(oggetto)</p>
+        <p>Scrive una linea nella finestra di output andando a capo. </div>
+      """,
+    "leggiLinea" -> """
+      <div>
+        <p><strong>leggiLinea</strong>(stringaPrompt)</p>
+        <p>Visualizza il prompt indicato nella finestra di output e legge una linea inserita dall'utente.</p>
+      </div>
+      """,
+    "arrotonda" -> """
+      <div>
+        <p><strong>arrotonda</strong>(numero, cifre)</p>
+        <p>Arrotonda il numero per il numero specificato di cifre dopo la virgola </p>
+      </div>
+      """,
+    "numeroCasuale" -> """
+      <div>
+        <p><strong>numeroCasuale</strong>(limiteSuperiore)</p>
+        <p>Restituisce un numero intero casuale compreso tra 0 (incluso) e <em>limiteSuperiore</em> (escluso) </div>
+      """,
+    "numeroDecimaleCasuale" -> """
+      <div>
+        <p><strong>numeroCasuale</strong>(limiteSuperiore)</p>
+        <p>Restituisce un numero in virgola casuale compreso tra 0 (incluso) e <em>limiteSuperiore</em> (escluso) </div>
+      """,
+    "indossaCostume" -> """
+      <div>
+        <p><strong>indossaCostume</strong>(costumeFile)</p>
+        <p>Cambia il costume (cioè immagine) associata con la tartaruga con l'immagine nel file specificato. </p>
+      </div>
+      """,
+    "indossaCostumi" -> """
+      <div>
+        <p><strong>indossaCostumi</strong>(costumeFile1, costumeFile2,...)</p>
+        <p>Specifica più costumi per la tartaruga ed imposta il costume della tartaruga al primo nella sequenza.
+          È possibile scorrere i costumi chiamando <strong>prossimoCostume</strong>(). </p>
+      </div>
+      """,
+    "indossaImmagine" -> """
+      <div>
+        <p><strong>indossaImmagine</strong>(immagine)</p>
+        <p>Cambia il costume (cioè immagine) associata con la tartaruga con l'immagine nel file specificato. </p>
+      </div>
+      """,
+    "indossaImmagini" -> """
+      <div>
+        <p><strong>indossaImmagini</strong>(immagine1, immagine2,...)</p>
+        <p>Specifica più immagini per la tartaruga ed imposta l'immagine della tartaruga al primo nella sequenza.
+          È possibile scorrere i costumi chiamando <strong>prossimoCostume</strong>(). </p>
+      </div>
+      """,
+    "prossimoCostume" -> """
+      <div>
+        <p><strong>prossimoCostume</strong>()</p>
+        <p>Scorre nella sequenza dei costumi specificato da <strong>indossaCostumi</strong>(...) </div>
+      """,
+    "scalaCostume" -> """
+      <div>
+        <p><strong>scalaCostume</strong>(fattore)</p>
+        <p>Scala il costume della tartaruga.</p>
+      </div>
+      """,
+    "se" -> """
+      <div>
+        <p><strong>se</strong>(condizione) { blocco} <strong>altrimenti</strong>{ blocco}</p>
+        <p> Espressione di controllo. </p>
+      </div>
+      """,
+    "seVero" -> """
+      <div>
+        <p><strong>seVero</strong>(condizione) { blocco} </p>
+        <p> Espressione di controllo. </p>
+      </div>
+      """,
+    "oppure" -> """
+      <div>
+        <p>valore1 <strong>oppure</strong> valore2</p>
+        <p >Se il valore1 è valutato come vuoto verrà restituito il valore2. </p>
+      </div>
+      """,
+    "?:" -> """
+      <div>
+        <p>valore1 <strong>?:</strong> valore2</p>
+        <p>Groovy Elvis Operator, simile a oppure ma lavora su valori nulli.</p>
+      </div>
+      """,
+    "?: ::" -> """
+      <div>
+        <p><strong>(condizione) ?: (se condizione vera) :: (se condizione falsa)</strong>
+      </div>
+      """,
+    "lentezza" -> """
+      <div>
+        <p><strong>lentezza</strong>(millisecondi)</p>
+        <p>mposta la velocità della tartaruga. La lentezza  specificata. </p>
+      </div>
+      """,
+    "velocità" -> """
+      <div>
+        <p><strong>velocità</strong>(velocità)</p>
+        <p>Imposta la velocità della tartaruga. La velocità  specificata può essere: Lentissima, Lenta, Media, Veloce, Velocissima. </p>
+      </div>
+      """
   )
 }
