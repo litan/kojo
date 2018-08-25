@@ -807,6 +807,7 @@ object Utils {
         println("Increasing system timer resolution.")
         runAsyncMonitored {
           try {
+            // The irregularly long sleep makes the JVM set the OS timer resolution to 1 ms
             Thread.sleep(Int.MaxValue)
           }
           catch {
@@ -815,6 +816,7 @@ object Utils {
                 println("Ignoring system timer resolution increase request.")
               }
               println("Resetting system timer resolution.")
+              // When the thread terminates, the OS resets the system timer resolution
           }
         }
       }
