@@ -76,8 +76,13 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
   tFactory.putMapping(SYNTAX_STYLE_SCALA2, "net.kogics.kojo.lexer.ScalariformTokenMaker")
   FoldParserManager.get.addFoldParserMapping(SYNTAX_STYLE_SCALA2, new CurlyFoldParser)
-  codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
-  //  codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
+  val defaultSyntaxRich = false
+  if (defaultSyntaxRich) {
+    codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
+  }
+  else {
+    codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+  }
   codePane.setAntiAliasingEnabled(true)
   codePane.setTabsEmulated(true)
   codePane.setTabSize(4)
@@ -173,13 +178,13 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val richColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
   richColoringCb.setText(Utils.loadString("S_ColoringRich"))
   richColoringCb.setActionCommand("Rich")
-  richColoringCb.setSelected(false)
+  richColoringCb.setSelected(defaultSyntaxRich)
   syntaxColoringMenu.add(richColoringCb)
 
   val fastColoringCb: JCheckBoxMenuItem = new JCheckBoxMenuItem(syntaxColoringAction)
   fastColoringCb.setText(Utils.loadString("S_ColoringFast"))
   fastColoringCb.setActionCommand("Fast")
-  fastColoringCb.setSelected(true)
+  fastColoringCb.setSelected(!defaultSyntaxRich)
   syntaxColoringMenu.add(fastColoringCb)
 
   var tabSize = 4
@@ -188,7 +193,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     import scalariform.formatter.preferences._
 
     def actionPerformed(ev: ActionEvent) {
-      val pos = codePane.getCaretPosition
+      val caretLine = codePane.getCaretLineNumber
       try {
         codePane.setText(ScalaFormatter.format(
           codePane.getText,
@@ -204,11 +209,12 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           )
         ))
         try {
+          val pos = codePane.getLineStartOffset(caretLine)
           codePane.setCaretPosition(pos)
         }
         catch {
-          case badPos: IllegalArgumentException =>
-            codePane.setCaretPosition(codePane.getText().length())
+          case _: Throwable =>
+            codePane.setCaretPosition(codePane.getText.length)
         }
       }
       catch {
