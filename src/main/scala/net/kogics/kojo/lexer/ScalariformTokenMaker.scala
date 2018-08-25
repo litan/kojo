@@ -47,7 +47,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   override def getShouldIndentNextLineAfter(t: Token) = {
     if (t != null) {
       val text = t.getTextArray
-      val textCount = text.length
+      val textCount = t.getEndOffset - t.getTextOffset
       if (textCount == 1) {
         val ch = text(t.getTextOffset)
         ch == '{' || ch == '(' || ch == '='
