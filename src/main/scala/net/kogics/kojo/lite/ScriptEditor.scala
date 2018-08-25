@@ -158,7 +158,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
           val pos = codePane.getCaretPosition
           val doc = codePane.getDocument
-          doc.insertString(doc.getLength, "", null)
+          doc.insertString(doc.getLength, " ", null)
           doc.remove(doc.getLength - 1, 1)
           codePane.setCaretPosition(pos)
           fastColoringCb.setSelected(false)
