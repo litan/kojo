@@ -109,10 +109,10 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
             val uiPanel = panelm.getOrElseUpdate(nm, {
                 tfs.clear()
                 val uip: JPanel = ColPanel(
-                    new RowPanel(new Label("Your Program:") { setFont(tFont) }) {
+                    new RowPanel(new Label("Your Program:") { setForeground(black); setFont(tFont) }) {
                         setBackground(codePanelColor)
                     },
-                    new RowPanel(new Label(" clear()") { setFont(ddFont) }) {
+                    new RowPanel(new Label(" clear()") { setForeground(black); setFont(ddFont) }) {
                         setBackground(codePanelColor)
                     },
                     ColPanel(
@@ -294,8 +294,8 @@ val levelPages = challengeLevels.zipWithIndex.map {
 }
 val story = Story(levelPages: _*)
 
+switchToStoryViewingPerspective()
+stSetStorytellerWidth(350)
 cleari()
 stClear()
 stPlayStory(story)
-switchToStoryViewingPerspective()
-stSetStorytellerWidth(350)

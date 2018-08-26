@@ -2,7 +2,7 @@
 // The contents of this file are subject to 
 // the GNU General Public License Version 3 (http://www.gnu.org/copyleft/gpl.html)
 
-val pageStyle = "background-color:#99CCFF; margin:15px;font-size:small;"
+val pageStyle = "color:black;background-color:#99CCFF; margin:15px;font-size:small;"
 val centerStyle = "text-align:center;"
 val headerStyle = "text-align:center;font-size:110%;color:maroon;"
 val codeStyle = "font-size:90%;"
