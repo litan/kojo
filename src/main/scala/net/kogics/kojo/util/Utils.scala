@@ -66,6 +66,7 @@ object Utils {
   lazy val Log = Logger.getLogger("Utils")
   lazy val imageCache = new HashMap[String, Image]
   lazy val iconCache = new HashMap[String, ImageIcon]
+  val GuiTimeout = 10000
 
   def absolutePath(fname0: String): String = {
     def expandHomeDir(fname: String): String =
@@ -244,36 +245,40 @@ object Utils {
       fn
     }
     else {
-      batchLock.lock()
-      try {
-        while (batchQ.size > Max_Q_Size) {
-          notFull.await()
-        }
-        val needDrainer = batchQ.isEmpty
-        batchQ.add(fn _)
-        if (needDrainer) {
-          javax.swing.SwingUtilities.invokeLater(new Runnable {
-            override def run {
-              batchLock.lock()
-              while (!batchQ.isEmpty) {
-                try {
-                  batchQ.remove.apply()
+      if (batchLock.tryLock(GuiTimeout, TimeUnit.MILLISECONDS)) {
+        try {
+          while (batchQ.size > Max_Q_Size) {
+            notFull.await()
+          }
+          val needDrainer = batchQ.isEmpty
+          batchQ.add(fn _)
+          if (needDrainer) {
+            javax.swing.SwingUtilities.invokeLater(new Runnable {
+              override def run {
+                batchLock.lock()
+                while (!batchQ.isEmpty) {
+                  try {
+                    batchQ.remove.apply()
+                  }
+                  catch {
+                    case t: Throwable =>
+                      Utils.runLaterInSwingThread {
+                        reportException(t)
+                      }
+                  }
                 }
-                catch {
-                  case t: Throwable =>
-                    Utils.runLaterInSwingThread {
-                      reportException(t)
-                    }
-                }
+                notFull.signal()
+                batchLock.unlock()
               }
-              notFull.signal()
-              batchLock.unlock()
-            }
-          })
+            })
+          }
+        }
+        finally {
+          batchLock.unlock()
         }
       }
-      finally {
-        batchLock.unlock()
+      else {
+        throw new RuntimeException("Potential Deadlock. Bailing out!")
       }
     }
   }
@@ -293,7 +298,7 @@ object Utils {
     }
   }
 
-  def runInSwingThreadAndPause[T](fn: => T): T = runInSwingThreadAndWait(10000, "Potential Deadlock. Bailing out!")(fn)
+  def runInSwingThreadAndPause[T](fn: => T): T = runInSwingThreadAndWait(GuiTimeout, "Potential Deadlock. Bailing out!")(fn)
 
   def runInSwingThreadAndWait[T](timeout: Long, msg: String)(fn: => T): T = {
     if (inSwingThread) {
