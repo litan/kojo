@@ -194,6 +194,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     def actionPerformed(ev: ActionEvent) {
       val caretLine = codePane.getCaretLineNumber
+      val posInLine = codePane.getCaretOffsetFromLineStart
       try {
         codePane.setText(ScalaFormatter.format(
           codePane.getText,
@@ -209,7 +210,10 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           )
         ))
         try {
-          val pos = codePane.getLineStartOffset(caretLine)
+          val lineStart = codePane.getLineStartOffset(caretLine)
+          val lineEnd = codePane.getLineEndOffset(caretLine)
+          val lineLen = math.max(lineEnd - lineStart - 1, 0)
+          val pos = lineStart + math.min(posInLine, lineLen)
           codePane.setCaretPosition(pos)
         }
         catch {
