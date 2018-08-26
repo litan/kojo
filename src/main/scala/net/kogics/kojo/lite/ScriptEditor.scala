@@ -76,7 +76,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val tFactory = TokenMakerFactory.getDefaultInstance.asInstanceOf[AbstractTokenMakerFactory]
   tFactory.putMapping(SYNTAX_STYLE_SCALA2, "net.kogics.kojo.lexer.ScalariformTokenMaker")
   FoldParserManager.get.addFoldParserMapping(SYNTAX_STYLE_SCALA2, new CurlyFoldParser)
-  val defaultSyntaxRich = true
+  val defaultSyntaxRich = AppMode.currentMode.richSyntaxHighlighting
   if (defaultSyntaxRich) {
     codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
   }

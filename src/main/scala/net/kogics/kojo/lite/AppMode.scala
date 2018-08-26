@@ -24,23 +24,21 @@ import net.kogics.kojo.xscala.KojoInterpreter
 import net.kogics.kojo.xscala.ScalaCodeRunner2
 
 trait AppMode {
+  def richSyntaxHighlighting: Boolean
   def defaultCodingMode: CodingMode
-  def scalaCodeRunner(rc: RunContext): CodeRunner
-  def kojoInterpreter(cr: CodeRunner): KojoInterpreter
+  def scalaCodeRunner(rc: RunContext): CodeRunner = new xscala.ScalaCodeRunner2(rc, defaultCodingMode)
+  def kojoInterpreter(cr: CodeRunner): KojoInterpreter =
+    cr.asInstanceOf[ScalaCodeRunner2].kojointerp
 }
 
 class DesktopMode extends AppMode {
-  def defaultCodingMode: CodingMode = TwMode
-  def scalaCodeRunner(rc: RunContext): CodeRunner = new xscala.ScalaCodeRunner2(rc, defaultCodingMode)
-  def kojoInterpreter(cr: CodeRunner): KojoInterpreter =
-    cr.asInstanceOf[ScalaCodeRunner2].kojointerp
+  val defaultCodingMode = TwMode
+  val richSyntaxHighlighting = true
 }
 
 class EmbeddedMode extends AppMode {
-  def defaultCodingMode: CodingMode = VanillaMode
-  def scalaCodeRunner(rc: RunContext): CodeRunner = new xscala.ScalaCodeRunner2(rc, defaultCodingMode)
-  def kojoInterpreter(cr: CodeRunner): KojoInterpreter =
-    cr.asInstanceOf[ScalaCodeRunner2].kojointerp
+  val defaultCodingMode = VanillaMode
+  val richSyntaxHighlighting = false
 }
 
 object AppMode {
