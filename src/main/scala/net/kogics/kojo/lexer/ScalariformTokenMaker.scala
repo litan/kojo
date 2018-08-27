@@ -150,10 +150,14 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
       val (offset, len) = (e.getOffset, e.getLength)
       val doc = e.getDocument
+      val insertPrefix = doc.getText(offset, 1)
 
       val fullScanNeeded = {
         if (prevRemove) {
           prevRemove = false
+          true
+        }
+        else if (insertPrefix == "\n" || insertPrefix == "\r") {
           true
         }
         else {
