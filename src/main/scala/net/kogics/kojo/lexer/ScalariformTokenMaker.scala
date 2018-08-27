@@ -15,6 +15,10 @@
 
 package net.kogics.kojo.lexer
 
+import javax.swing.event.DocumentEvent
+import javax.swing.event.DocumentListener
+import javax.swing.text.Segment
+
 import scala.collection.mutable.ArrayBuffer
 
 import org.fife.ui.rsyntaxtextarea.AbstractTokenMaker
@@ -22,17 +26,19 @@ import org.fife.ui.rsyntaxtextarea.Token
 import org.fife.ui.rsyntaxtextarea.TokenMap
 import org.fife.ui.rsyntaxtextarea.TokenTypes
 
-import javax.swing.event.DocumentEvent
-import javax.swing.event.DocumentListener
-import javax.swing.text.Segment
+import scalariform.ScalaVersions
 import scalariform.lexer.ScalaLexer
-import scalariform.lexer.{Token => SfToken}
 import scalariform.lexer.TokenType
 import scalariform.lexer.Tokens
+import scalariform.lexer.{Token => SfToken}
 
 class ScalariformTokenMaker extends AbstractTokenMaker {
 
-  var docTokens = ScalaLexer.rawTokenise("", true).toVector
+  def rawTokenise(s: String) = {
+    ScalaLexer.createRawLexer(s, true, ScalaVersions.DEFAULT_VERSION).toVector
+  }
+
+  var docTokens = rawTokenise("")
   var debugOn = false
   var timingOn = false
   var prevRemove = false
@@ -194,7 +200,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         val (upper, udropped) = seekNextLineBreak(newPostInactive, 0)
         val flen = upper - lower
         val docFragment = doc.getText(lower, flen)
-        val newActive = ScalaLexer.rawTokenise(docFragment, true).toVector.map { t => t.copy(offset = t.offset + lower) }
+        val newActive = rawTokenise(docFragment).map { t => t.copy(offset = t.offset + lower) }
         docTokens =
           preInactive.slice(0, preInactive.size - dropped) ++
             newActive.slice(0, newActive.size - 1) ++
@@ -218,7 +224,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   def lexDoc(doc: String) {
     updateDiagnosticFlags()
     val t0 = System.currentTimeMillis()
-    docTokens = ScalaLexer.rawTokenise(doc, true).toVector
+    docTokens = rawTokenise(doc)
     docTokens = docTokens.slice(0, docTokens.size - 1)
     showTiming(t0, "Full")
   }
