@@ -177,8 +177,8 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
       else {
         updateDiagnosticFlags()
         val t0 = System.currentTimeMillis()
-        val preInactive = docTokens.takeWhile(!changeInToken(offset, len, _))
-        val active = docTokens.slice(preInactive.length, docTokens.length).takeWhile(changeInToken(offset, len, _))
+        val preInactive = docTokens.takeWhile(!changeInToken(offset, 1, _))
+        val active = docTokens.slice(preInactive.length, docTokens.length).takeWhile(changeInToken(offset, 1, _))
         val postInactive = docTokens.slice(preInactive.length + active.length, docTokens.length)
         val newPostInactive = postInactive.map { t => t.copy(offset = t.offset + len) }
 
