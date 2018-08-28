@@ -113,7 +113,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   case object ActivateTw
   case object ActivateVn
   case object ResetInterp
-  val MaxResponseTime = 2000 seconds
+  val MaxResponseTime = 2000.seconds
 
   def askCodeRunner(m: Any): Any = {
     implicit val timeout = Timeout(MaxResponseTime)

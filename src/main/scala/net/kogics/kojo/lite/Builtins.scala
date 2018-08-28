@@ -562,12 +562,12 @@ Here's a partial list of the available commands:
       DslImpl(picture.textu(string, fontSize, black)) translated (0, textExtent(string.toString, fontSize).height)
     def image(file: String) = DslImpl(picture.image(file, None))
     def turtleMade(fn: => Unit): Shape = DslImpl(Picture(fn))
-    def stack(shapes: Shape*): Shape = DslImpl(picture.GPics2(shapes map (s => PicCache.freshPic(s.pic)) toList))
-    def row(shapes: Shape*): Shape = DslImpl(picture.HPics2(shapes map (s => PicCache.freshPic(s.pic)) toList))
-    def col(shapes: Shape*): Shape = DslImpl(picture.VPics2(shapes map (s => PicCache.freshPic(s.pic)) toList))
-    def stack2(shapes: Shape*): Shape = DslImpl(picture.GPics(shapes map (s => PicCache.freshPic(s.pic)) toList))
-    def row2(shapes: Shape*): Shape = DslImpl(picture.HPics(shapes map (s => PicCache.freshPic(s.pic)) toList))
-    def col2(shapes: Shape*): Shape = DslImpl(picture.VPics(shapes map (s => PicCache.freshPic(s.pic)) toList))
+    def stack(shapes: Shape*): Shape = DslImpl(picture.GPics2(shapes.map (s => PicCache.freshPic(s.pic)).toList))
+    def row(shapes: Shape*): Shape = DslImpl(picture.HPics2(shapes.map (s => PicCache.freshPic(s.pic)).toList))
+    def col(shapes: Shape*): Shape = DslImpl(picture.VPics2(shapes.map (s => PicCache.freshPic(s.pic)).toList))
+    def stack2(shapes: Shape*): Shape = DslImpl(picture.GPics(shapes.map (s => PicCache.freshPic(s.pic)).toList))
+    def row2(shapes: Shape*): Shape = DslImpl(picture.HPics(shapes.map (s => PicCache.freshPic(s.pic)).toList))
+    def col2(shapes: Shape*): Shape = DslImpl(picture.VPics(shapes.map (s => PicCache.freshPic(s.pic)).toList))
     def draw2(shapes: Shape*) = shapes.foreach { _.draw() }
     def draw(shapes: Shape*): Unit = {
       def center(shape: Shape) = {

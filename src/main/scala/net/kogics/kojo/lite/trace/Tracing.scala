@@ -23,9 +23,7 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Point2D
 import java.io.File
 
-import scala.Vector
-import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.asScalaIterator
+import scala.collection.JavaConverters._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.reflect.internal.util.BatchSourceFile
@@ -67,7 +65,6 @@ import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.core.TwMode
-import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.picture.Pic
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CompilerOutputHandler
@@ -166,7 +163,7 @@ def main(args: Array[String]) {
     catch {
       case iae: IllegalArgumentException =>
         runCtx.reportError(s"${Utils.exceptionMessage(iae)}\n"); false
-      case e: Throwable                  => throw e
+      case e: Throwable => throw e
     }
   }
 
@@ -180,7 +177,7 @@ def main(args: Array[String]) {
 
   def launchVM() = {
     val conns = Bootstrap.virtualMachineManager.allConnectors
-    val connector = conns.find(_.name.equals("com.sun.jdi.RawCommandLineLaunch")).get.asInstanceOf[LaunchingConnector]
+    val connector = conns.asScala.find(_.name.equals("com.sun.jdi.RawCommandLineLaunch")).get.asInstanceOf[LaunchingConnector]
 
     // set connector arguments
     val connArgs = connector.defaultArguments()
@@ -220,7 +217,7 @@ def main(args: Array[String]) {
   val pictureKeywords = Set("Picture", "PicShape")
 
   def getThread(vm: VirtualMachine, name: String): ThreadReference =
-    vm.allThreads.find(_.name == name).getOrElse(null)
+    vm.allThreads.asScala.find(_.name == name).getOrElse(null)
 
   def trace(code: String) = {
     notSupported find { code.contains(_) } match {
@@ -271,7 +268,7 @@ that is not supported under Tracing.
       breakable {
         while (true) {
           val evtSet = evtQueue.remove()
-          for (evt <- evtSet.eventIterator) {
+          for (evt <- evtSet.eventIterator.asScala) {
             evt match {
 
               case threadStartEvt: ThreadStartEvent =>
@@ -409,7 +406,7 @@ that is not supported under Tracing.
       !frameVal.isInstanceOf[StringReference] &&
       !frameVal.isInstanceOf[ArrayReference]) {
       val objRef = frameVal.asInstanceOf[ObjectReference]
-      val mthd = objRef.referenceType.methodsByName("toString").find(_.argumentTypes.size == 0).get
+      val mthd = objRef.referenceType.methodsByName("toString").asScala.find(_.argumentTypes.size == 0).get
 
       evtReqs.foreach(_.disable)
       try {
@@ -468,7 +465,7 @@ that is not supported under Tracing.
 
     def methodArgs(value: Value => String): Seq[String] = try {
       if (methodEnterEvt.method.arguments.size > 0) {
-        methodEnterEvt.method.arguments.map { n =>
+        methodEnterEvt.method.arguments.asScala.map { n =>
           val frame = methodEnterEvt.thread.frame(0)
           val frameVal = frame.getValue(n)
           s"${n.name} = ${value(frameVal)}"
@@ -502,7 +499,7 @@ that is not supported under Tracing.
       try { codeLines(lineNum - 1) } catch { case _: Throwable => "N/A" }
     else
       ""
-    val localArgs = try { methodEnterEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
+    val localArgs = try { methodEnterEvt.method.arguments.asScala.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
 
     val isCommand = methodEnterEvt.method.returnTypeName == "void"
     def isTurtleCommand = isCommand && methodObjectType.contains("TracingTurtle")
@@ -567,7 +564,7 @@ that is not supported under Tracing.
     val methodObjectType = if (methodObject != null) methodObject.referenceType.name else ""
 
     val methodName = desugar(methodExitEvt.method.name, methodObjectType)
-    val localArgs = try { methodExitEvt.method.arguments.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
+    val localArgs = try { methodExitEvt.method.arguments.asScala.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
     val retVal = methodExitEvt.returnValue
 
     handleMethodReturn(methodName, methodExitEvt.method.declaringType.name, methodExitEvt.method.signature, stkfrm, localArgs, retVal)
@@ -633,9 +630,9 @@ that is not supported under Tracing.
         val toPrint = stringValue(stkfrm.getValue(localArgs(0)))
         builtins.print(toPrint)
       case "showScriptInOutput" =>
-        kojoCtx.showScriptInOutput
+        kojoCtx.showScriptInOutput()
       case "hideScriptInOutput" =>
-        kojoCtx.hideScriptInOutput
+        kojoCtx.hideScriptInOutput()
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Builtins command - $c")
     }
@@ -649,13 +646,13 @@ that is not supported under Tracing.
       case "cleari" =>
         TSCanvas.cleari()
       case "axesOn" =>
-        TSCanvas.axesOn
+        TSCanvas.axesOn()
       case "axesOff" =>
-        TSCanvas.axesOff
+        TSCanvas.axesOff()
       case "gridOn" =>
-        TSCanvas.gridOn
+        TSCanvas.gridOn()
       case "gridOff" =>
-        TSCanvas.gridOff
+        TSCanvas.gridOff()
       case "zoom" =>
         val (x, y, z) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(0)).toString.toDouble)
         TSCanvas.zoom(x, y, z)
@@ -673,8 +670,6 @@ that is not supported under Tracing.
   }
 
   def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], me: MethodEvent) {
-
-    import builtins.Tw
     val caller = stkfrm.thisObject.uniqueID
     val turtle = if (currPicture.isDefined)
       currPicture.get.asInstanceOf[Pic].t
@@ -754,9 +749,9 @@ that is not supported under Tracing.
       case "clear" =>
         turtle.clear()
       case "invisible" =>
-        turtle.invisible
+        turtle.invisible()
       case "visible" =>
-        turtle.visible
+        turtle.visible()
       case "forward" =>
         if (localArgs.length == 1) {
           val step = stkfrm.getValue(localArgs(0)).toString.toDouble
@@ -784,13 +779,13 @@ that is not supported under Tracing.
         val costume = stringValue(stkfrm.getValue(localArgs(0)))
         turtle.setCostume(costume)
       case "nextCostume" =>
-        turtle.nextCostume
+        turtle.nextCostume()
       case "setCostumes" =>
         var arg0 = stkfrm.getValue(localArgs(0)).asInstanceOf[ObjectReference]
         if (arg0.toString.contains("Vector")) {
           var costumes = Vector[String]()
-          val head = arg0.referenceType.methodsByName("head")(0)
-          val tail = arg0.referenceType.methodsByName("tail")(0)
+          val head = arg0.referenceType.methodsByName("head").get(0)
+          val tail = arg0.referenceType.methodsByName("tail").get(0)
           var arg = arg0
           var done = false
 
@@ -824,13 +819,13 @@ that is not supported under Tracing.
         val thickness = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.setPenThickness(thickness)
       case "penUp" =>
-        turtle.penUp
+        turtle.penUp()
       case "penDown" =>
-        turtle.penDown
+        turtle.penDown()
       case "savePosHe" =>
-        turtle.savePosHe
+        turtle.savePosHe()
       case "restorePosHe" =>
-        turtle.restorePosHe
+        turtle.restorePosHe()
       case "newTurtle" =>
       // handled on the exit event
       case "changePosition" =>
@@ -840,15 +835,15 @@ that is not supported under Tracing.
         val a = stkfrm.getValue(localArgs(0)).toString.toDouble
         turtle.scaleCostume(a)
       case "saveStyle" =>
-        turtle.saveStyle
+        turtle.saveStyle()
       case "restoreStyle" =>
-        turtle.restoreStyle
+        turtle.restoreStyle()
       case "remove" =>
-        turtle.remove
+        turtle.remove()
       case "beamsOn" =>
-        turtle.beamsOn
+        turtle.beamsOn()
       case "beamsOff" =>
-        turtle.beamsOff
+        turtle.beamsOff()
       case "setPenFontSize" =>
         val n = stkfrm.getValue(localArgs(0)).toString.toInt
         turtle.setPenFontSize(n)
@@ -871,8 +866,8 @@ that is not supported under Tracing.
 
   def targetList(list: ObjectReference): List[ObjectReference] = {
     val listFields = list.referenceType.fields
-    val hdf = listFields.filter { _.name.endsWith("head") }(0)
-    val tlf = listFields.filter { _.name.endsWith("tl") }(0)
+    val hdf = listFields.asScala.filter { _.name.endsWith("head") }(0)
+    val tlf = listFields.asScala.filter { _.name.endsWith("tl") }(0)
     val lpics = new ArrayBuffer[ObjectReference]
     var hd = list.getValue(hdf).asInstanceOf[ObjectReference]
     lpics += hd
@@ -971,15 +966,15 @@ that is not supported under Tracing.
     val fontVal = arg.asInstanceOf[ObjectReference]
 
     evtReqs.foreach(_.disable)
-    val nameMthd = fontVal.referenceType.methodsByName("getFontName")(0)
+    val nameMthd = fontVal.referenceType.methodsByName("getFontName").get(0)
     val nameValue = fontVal.invokeMethod(currThread, nameMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val name = nameValue.asInstanceOf[StringReference].value
 
-    val styleMthd = fontVal.referenceType.methodsByName("getStyle")(0)
+    val styleMthd = fontVal.referenceType.methodsByName("getStyle").get(0)
     val styleValue = fontVal.invokeMethod(currThread, styleMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val style = styleValue.asInstanceOf[IntegerValue].value
 
-    val sizeMthd = fontVal.referenceType.methodsByName("getSize")(0)
+    val sizeMthd = fontVal.referenceType.methodsByName("getSize").get(0)
     val sizeValue = fontVal.invokeMethod(currThread, sizeMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val size = sizeValue.asInstanceOf[IntegerValue].value
     evtReqs.foreach(_.enable)
@@ -995,7 +990,7 @@ that is not supported under Tracing.
     (pattern findAllIn str).foreach(c => rgb = rgb :+ c.toInt)
 
     evtReqs.foreach(_.disable)
-    val alphaMthd = colorVal.referenceType.methodsByName("getAlpha")(0)
+    val alphaMthd = colorVal.referenceType.methodsByName("getAlpha").get(0)
     val alphaValue = colorVal.invokeMethod(currThread, alphaMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val alpha = alphaValue.asInstanceOf[IntegerValue].value
     evtReqs.foreach(_.enable)
@@ -1054,7 +1049,7 @@ that is not supported under Tracing.
 
   def createBreakpointRequest(wrapperType: ReferenceType, vm: VirtualMachine, thread: ThreadReference) {
     val evtReqMgr = vm.eventRequestManager
-    val realMain = wrapperType.methodsByName("_main")(0)
+    val realMain = wrapperType.methodsByName("_main").get(0)
     val request = evtReqMgr.createBreakpointRequest(realMain.location)
     request.addThreadFilter(thread)
     request.setSuspendPolicy(EventRequest.SUSPEND_ALL)

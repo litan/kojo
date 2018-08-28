@@ -29,7 +29,7 @@ import java.util.logging.SimpleFormatter
 import javax.swing.JFrame
 import javax.swing.WindowConstants
 
-import scala.collection.convert.WrapAsScala.propertiesAsScalaMap
+import scala.collection.JavaConverters._
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
@@ -185,8 +185,11 @@ object Main extends AppMenu with ScriptLoader { main =>
     Log.info(s"Kojo version: ${Versions.KojoMajorVersion}, ${Versions.KojoVersion}")
     Log.info(s"Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}")
     val sysProps =
-      System.getProperties.toList.sorted.foldLeft(new StringBuilder) { case (sb, kv) => sb append s"\n${kv._1} = ${kv._2}" }
-    Log.info(s"System Properties:${sysProps}\n\n")
+      System.getProperties.asScala.toList.sorted.foldLeft(new StringBuilder) {
+        case (sb, kv) =>
+          sb append s"\n${kv._1} = ${kv._2}"
+      }
+    Log.info(s"System Properties:$sysProps\n\n")
   }
 
   def drawingCanvasHolder = kojoCtx.topcs.dch
