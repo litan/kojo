@@ -76,7 +76,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
   override def getTokenList(segment: Segment, initialTokenType: Int, docOffset: Int): Token = {
     def addRstaToken(t: SfToken) {
-      debug("  %s" format (t))
+      debug("  %s" format t)
       // offset of token within its segment = offset in doc - offset of segment within doc
       val segStartOffset = t.offset - (docOffset - segment.offset)
       val segEndOffset = segStartOffset + t.length - 1
@@ -86,7 +86,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
     debug("\n---\nGetting tokens for Line. Doc Offset: %d, Seg Offset: %d, Length: %d"
       format (docOffset, segment.offset, segment.length))
-    debug("Line Text:" + segment.toString())
+    debug("Line Text:" + segment.toString)
 
     resetTokenList()
     tokensForLine(segment, docOffset).foreach { addRstaToken }
@@ -106,7 +106,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
       val delta = segmentOffset - t.offset
       val upper = if (t.length > delta + segment.count) delta + segment.count else t.length
       val text = t.rawText.slice(delta, upper)
-      if (text.size > 0)
+      if (text.length > 0)
         Some(SfToken(t.tokenType, text, t.offset + delta, text))
       else
         None
@@ -115,7 +115,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     def splitLastActive(t: SfToken): Option[SfToken] = {
       val trim = segmentOffset + segment.count - t.offset
       val text = t.rawText.slice(0, trim)
-      if (text.size > 0)
+      if (text.length > 0)
         Some(SfToken(t.tokenType, text, t.offset, text))
       else
         None
@@ -139,7 +139,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
       active.foreach { lineTokens += _ }
     }
 
-    if (lineTokens.size == 0) {
+    if (lineTokens.isEmpty) {
       lineTokens += SfToken(Tokens.EOF, "", segmentOffset, "")
     }
 
@@ -210,13 +210,13 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     }
 
     def removeUpdate(e: DocumentEvent) {
-      val doc = e.getDocument().getText(0, e.getDocument().getLength())
+      val doc = e.getDocument.getText(0, e.getDocument.getLength)
       lexDoc(doc)
       prevRemove = true
     }
 
     def changedUpdate(e: DocumentEvent) {
-      val doc = e.getDocument().getText(0, e.getDocument().getLength())
+      val doc = e.getDocument.getText(0, e.getDocument.getLength)
       lexDoc(doc)
     }
   }
