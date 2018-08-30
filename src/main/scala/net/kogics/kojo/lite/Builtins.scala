@@ -19,6 +19,7 @@ package lite
 import java.awt.Paint
 import java.awt.TexturePaint
 import java.awt.Toolkit
+import java.awt.geom.GeneralPath
 import java.awt.geom.Rectangle2D
 
 import javax.swing.JComponent
@@ -33,7 +34,6 @@ import net.kogics.kojo.util.UserCommand
 import net.kogics.kojo.xscala.CodeCompletionUtils
 import net.kogics.kojo.xscala.Help
 import net.kogics.kojo.xscala.RepeatCommands
-
 import core.Voice
 import picture.DslImpl
 import picture.PicDrawingDsl
@@ -478,6 +478,7 @@ Here's a partial list of the available commands:
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
     def line(x: Double, y: Double) = picture.line(x, y)
+    def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.path(path) }
     def circle(r: Double) = picture.circle(r)
     def ellipse(rx: Double, ry: Double) = picture.ellipse(rx, ry)
     def arc(r: Double, angle: Double) = picture.arc(r, angle)

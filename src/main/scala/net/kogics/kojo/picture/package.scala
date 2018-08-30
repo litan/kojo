@@ -18,6 +18,7 @@ import java.awt.Color
 import java.awt.Image
 import java.awt.Paint
 import java.awt.event.KeyEvent
+import java.awt.geom.GeneralPath
 import java.util.Random
 
 import javax.swing.JComponent
@@ -141,6 +142,8 @@ package object picture {
   def rect2(w: Double, h: Double)(implicit canvas: SCanvas) = new RectanglePic(w, h)
 
   def line(x: Double, y: Double)(implicit canvas: SCanvas) = new LinePic(x, y)
+
+  def path(path: GeneralPath)(implicit canvas: SCanvas) = new PathPic(path)
 
   def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 

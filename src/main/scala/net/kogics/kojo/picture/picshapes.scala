@@ -21,6 +21,7 @@ import java.awt.Component
 import java.awt.Image
 import java.awt.RenderingHints
 import java.awt.geom.Arc2D
+import java.awt.geom.GeneralPath
 import java.awt.geom.Rectangle2D
 
 import javax.swing.JComboBox
@@ -243,6 +244,36 @@ class LinePic(x: Double, y: Double)(implicit val canvas: SCanvas) extends Pictur
   }
 
   def copy: net.kogics.kojo.core.Picture = new LinePic(x, y)
+}
+
+class PathPic(path: GeneralPath)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with PicShapeOps {
+  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    val cab = new ArrayBuffer[Coordinate]
+    val iter = path.getPathIterator(null, 1)
+    val pts = new Array[Float](6)
+    while (!iter.isDone) {
+      val stype = iter.currentSegment(pts)
+      cab += newCoordinate(pts(0), pts(1))
+      iter.next()
+    }
+    if (cab.size == 1) {
+      cab += cab(0)
+    }
+    Gf.createLineString(cab.toArray)
+  }
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    val node = new PPath(path)
+    _setPenColor(node, Color.red)
+    _setPenThickness(node, 2 / canvas.camScale)
+    node.setPaint(null)
+    node.setVisible(false)
+    picLayer.addChild(node)
+    node
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new PathPic(path)
 }
 
 class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
