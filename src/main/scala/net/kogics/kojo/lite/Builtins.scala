@@ -477,6 +477,7 @@ Here's a partial list of the available commands:
     def rectangle(w: Double, h: Double) = picture.rect2(w, h)
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
+    def line(x: Double, y: Double) = picture.line(x, y)
     def circle(r: Double) = picture.circle(r)
     def ellipse(rx: Double, ry: Double) = picture.ellipse(rx, ry)
     def arc(r: Double, angle: Double) = picture.arc(r, angle)

@@ -223,6 +223,28 @@ class RectanglePic(w: Double, h: Double)(implicit val canvas: SCanvas) extends P
   def copy: net.kogics.kojo.core.Picture = new RectanglePic(w, h)
 }
 
+class LinePic(x: Double, y: Double)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with PicShapeOps {
+  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    val cab = new ArrayBuffer[Coordinate]
+    cab += newCoordinate(0, 0)
+    cab += newCoordinate(x, y)
+    Gf.createLineString(cab.toArray)
+  }
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    val node = PPath.createLine(0, 0, x.toFloat, y.toFloat)
+    _setPenColor(node, Color.red)
+    _setPenThickness(node, 2 / canvas.camScale)
+    node.setPaint(null)
+    node.setVisible(false)
+    picLayer.addChild(node)
+    node
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new LinePic(x, y)
+}
+
 class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with NonVectorPicOps {
 
