@@ -22,6 +22,8 @@ import java.awt.Image
 import java.awt.RenderingHints
 import java.awt.geom.Arc2D
 import java.awt.geom.GeneralPath
+import java.awt.geom.PathIterator
+import java.awt.geom.Point2D
 import java.awt.geom.Rectangle2D
 
 import javax.swing.JComboBox
@@ -252,9 +254,20 @@ class PathPic(path: GeneralPath)(implicit val canvas: SCanvas) extends Picture w
     val cab = new ArrayBuffer[Coordinate]
     val iter = path.getPathIterator(null, 1)
     val pts = new Array[Float](6)
+    var prevMoveTo: Option[Point2D.Float] = None
     while (!iter.isDone) {
-      val stype = iter.currentSegment(pts)
-      cab += newCoordinate(pts(0), pts(1))
+      iter.currentSegment(pts) match {
+        case PathIterator.SEG_MOVETO =>
+          prevMoveTo = Some(new Point2D.Float(pts(0), pts(1)))
+        case PathIterator.SEG_LINETO =>
+          prevMoveTo.foreach { pt =>
+            cab += newCoordinate(pt.x, pt.y)
+            prevMoveTo = None
+          }
+          cab += newCoordinate(pts(0), pts(1))
+        case unexpected =>
+          println(s"Warning: unexpected segment type - $unexpected - in path geometry")
+      }
       iter.next()
     }
     if (cab.size == 1) {
