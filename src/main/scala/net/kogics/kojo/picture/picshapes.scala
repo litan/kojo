@@ -172,6 +172,31 @@ class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Pic
   def copy: net.kogics.kojo.core.Picture = new ArcPic(r, angle)
 }
 
+class RectanglePic(w: Double, h: Double)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with PicShapeOps {
+  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    val cab = new ArrayBuffer[Coordinate]
+    cab += newCoordinate(0, 0)
+    cab += newCoordinate(0, h)
+    cab += newCoordinate(w, h)
+    cab += newCoordinate(w, 0)
+    cab += newCoordinate(0, 0)
+    Gf.createLineString(cab.toArray)
+  }
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    val node = PPath.createRectangle(0, 0, w.toFloat, h.toFloat)
+    _setPenColor(node, Color.red)
+    _setPenThickness(node, 2 / canvas.camScale)
+    node.setPaint(null)
+    node.setVisible(false)
+    picLayer.addChild(node)
+    node
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new RectanglePic(w, h)
+}
+
 class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with NonVectorPicOps {
 
@@ -255,8 +280,8 @@ class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends
     def handleComponent(comp: Component) {
       comp match {
         case combo: JComboBox[_] => handleCombo(combo.asInstanceOf[JComboBox[AnyRef]])
-        case jp: JPanel       => jp.getComponents foreach { handleComponent }
-        case _                =>
+        case jp: JPanel          => jp.getComponents foreach { handleComponent }
+        case _                   =>
       }
     }
     handleComponent(swingComponent)

@@ -136,6 +136,8 @@ package object picture {
 
   def circle(r: Double)(implicit canvas: SCanvas) = new CirclePic(r)
 
+  def rect2(w: Double, h: Double)(implicit canvas: SCanvas) = new RectanglePic(w, h)
+
   def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
   def image(file: String, envelope: Option[Picture])(implicit canvas: SCanvas) = new FileImagePic(file, envelope)
