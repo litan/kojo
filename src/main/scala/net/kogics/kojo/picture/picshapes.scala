@@ -143,6 +143,32 @@ class CirclePic(r: Double)(implicit val canvas: SCanvas) extends Picture with Co
   def copy: net.kogics.kojo.core.Picture = new CirclePic(r)
 }
 
+class EllipsePic(rx: Double, ry: Double)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with PicShapeOps {
+  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    def x(t: Double) = rx * math.cos(t.toRadians)
+    def y(t: Double) = ry * math.sin(t.toRadians)
+    def cPoints = for (i <- 1 to 360) yield newCoordinate(x(i), y(i))
+    Gf.createLineString(cPoints.toArray)
+  }
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    val frx = rx.toFloat
+    val fry = ry.toFloat
+    val dx = 2 * frx
+    val dy = 2 * fry
+    val node = PPath.createEllipse(-frx, -fry, dx, dy)
+    _setPenColor(node, Color.red)
+    _setPenThickness(node, 2 / canvas.camScale)
+    node.setPaint(null)
+    node.setVisible(false)
+    picLayer.addChild(node)
+    node
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new EllipsePic(rx, ry)
+}
+
 class ArcPic(r: Double, angle: Double)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with PicShapeOps {
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {

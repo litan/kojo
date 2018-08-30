@@ -478,6 +478,7 @@ Here's a partial list of the available commands:
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
     def circle(r: Double) = picture.circle(r)
+    def ellipse(rx: Double, ry: Double) = picture.ellipse(rx, ry)
     def arc(r: Double, angle: Double) = picture.arc(r, angle)
     def image(fileName: String) = picture.image(fileName, None)
     def image(fileName: String, envelope: Picture) = picture.image(fileName, Some(envelope))
