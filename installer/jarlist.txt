@@ -11,7 +11,6 @@
 ../lib/jl1.0.1.jar
 ../lib/jlatexmath.jar
 ../lib/geogebra_cas.jar
-../lib/group-panel.jar
 ../lib/jfugue-4.1.jar -> jfugue.jar
 ../lib/httpunit.jar
 ../lib/geogebra_properties.jar
