@@ -85,7 +85,10 @@ trait PicShapeOps { self: Picture with CorePicOps =>
     _setPenThickness(tnode, th)
   }
   protected def _setPenThickness(node: PNode, th: Double) {
-    val stroke = new BasicStroke(th.toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
+    val stroke = if (th * self.canvas.camScale < 1)
+      new BasicStroke(th.toFloat, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL)
+    else
+      new BasicStroke(th.toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
     node.asInstanceOf[PPath].setStroke(stroke)
   }
 
