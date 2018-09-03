@@ -288,17 +288,20 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
 
     lazy val toolbar: ReplaceToolBar = new ReplaceToolBar(listener) {
-      getSearchContext.setMarkAll(false)
+      override def addNotify() = {
+        val sel = codePane.getSelectedText
+        if (sel != null) {
+          getSearchContext.setSearchFor(sel)
+          getSearchContext.setReplaceWith("")
+        }
+        super.addNotify()
+      }
 
       override def removeNotify() {
         val searchContext = getSearchContext
         // toolbar closing; get rid of marks, if any
-        val oldMarkAll = searchContext.getMarkAll
         searchContext.setMarkAll(false)
         SearchEngine.markAll(codePane, searchContext)
-        val oldDot = codePane.getCaret.getDot
-        codePane.getCaret.setDot(oldDot)
-        searchContext.setMarkAll(oldMarkAll)
         super.removeNotify()
       }
     }
