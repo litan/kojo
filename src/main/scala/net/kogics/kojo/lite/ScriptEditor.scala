@@ -279,7 +279,12 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           case SearchEvent.Type.FIND =>
             find()
           case SearchEvent.Type.REPLACE =>
-            SearchEngine.replace(codePane, searchContext)
+            val result = SearchEngine.replace(codePane, searchContext)
+            val nextFindRange = result.getMatchRange
+            if (nextFindRange.getEndOffset == nextFindRange.getStartOffset) {
+              // nothing found; try from beginning of document
+              find()
+            }
           case SearchEvent.Type.REPLACE_ALL =>
             SearchEngine.replaceAll(codePane, searchContext);
           case _ =>
@@ -289,10 +294,12 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     lazy val toolbar: ReplaceToolBar = new ReplaceToolBar(listener) {
       override def addNotify() = {
+        val searchContext = getSearchContext
+        searchContext.setMarkAll(false)
         val sel = codePane.getSelectedText
         if (sel != null) {
-          getSearchContext.setSearchFor(sel)
-          getSearchContext.setReplaceWith("")
+          searchContext.setSearchFor(sel)
+          searchContext.setReplaceWith("")
         }
         super.addNotify()
       }
