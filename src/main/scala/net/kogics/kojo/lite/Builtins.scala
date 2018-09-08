@@ -269,8 +269,9 @@ Here's a partial list of the available commands:
 
   def schedule(seconds: Double)(code: => Unit) = Utils.schedule(seconds)(code)
 
-  // undocumented
+  @deprecated("Use Color instead", "2.7")
   def color(rgbHex: Int) = new Color(rgbHex)
+
   def clearOutput() = kojoCtx.clearOutput()
 
   def interpret(code: String) {
@@ -475,12 +476,16 @@ Here's a partial list of the available commands:
     def textu(s0: Any, fontSize: Int = 15, color: Color = red) = picture.textu(s0, fontSize, color)
     def rect(h: Double, w: Double) = picture.rect(h, w)
     def rectangle(w: Double, h: Double) = picture.rect2(w, h)
+    def rectangle(x: Double, y: Double, w: Double, h: Double) = trans(x, y) -> picture.rect2(w, h)
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
     def line(x: Double, y: Double) = picture.line(x, y)
+    def line(x1: Double, y1: Double, x2: Double, y2: Double) = trans(x1, y1) -> picture.line(x2 - x1, y2 - y1)
     def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.path(path) }
     def circle(r: Double) = picture.circle(r)
+    def circle(x: Double, y: Double, r: Double) = trans(x, y) -> picture.circle(r)
     def ellipse(rx: Double, ry: Double) = picture.ellipse(rx, ry)
+    def ellipse(x: Double, y: Double, rx: Double, ry: Double) = trans(x, y) -> picture.ellipse(rx, ry)
     def arc(r: Double, angle: Double) = picture.arc(r, angle)
     def image(fileName: String) = picture.image(fileName, None)
     def image(fileName: String, envelope: Picture) = picture.image(fileName, Some(envelope))
@@ -565,12 +570,12 @@ Here's a partial list of the available commands:
       DslImpl(picture.textu(string, fontSize, black)) translated (0, textExtent(string.toString, fontSize).height)
     def image(file: String) = DslImpl(picture.image(file, None))
     def turtleMade(fn: => Unit): Shape = DslImpl(Picture(fn))
-    def stack(shapes: Shape*): Shape = DslImpl(picture.GPics2(shapes.map (s => PicCache.freshPic(s.pic)).toList))
-    def row(shapes: Shape*): Shape = DslImpl(picture.HPics2(shapes.map (s => PicCache.freshPic(s.pic)).toList))
-    def col(shapes: Shape*): Shape = DslImpl(picture.VPics2(shapes.map (s => PicCache.freshPic(s.pic)).toList))
-    def stack2(shapes: Shape*): Shape = DslImpl(picture.GPics(shapes.map (s => PicCache.freshPic(s.pic)).toList))
-    def row2(shapes: Shape*): Shape = DslImpl(picture.HPics(shapes.map (s => PicCache.freshPic(s.pic)).toList))
-    def col2(shapes: Shape*): Shape = DslImpl(picture.VPics(shapes.map (s => PicCache.freshPic(s.pic)).toList))
+    def stack(shapes: Shape*): Shape = DslImpl(picture.GPics2(shapes.map(s => PicCache.freshPic(s.pic)).toList))
+    def row(shapes: Shape*): Shape = DslImpl(picture.HPics2(shapes.map(s => PicCache.freshPic(s.pic)).toList))
+    def col(shapes: Shape*): Shape = DslImpl(picture.VPics2(shapes.map(s => PicCache.freshPic(s.pic)).toList))
+    def stack2(shapes: Shape*): Shape = DslImpl(picture.GPics(shapes.map(s => PicCache.freshPic(s.pic)).toList))
+    def row2(shapes: Shape*): Shape = DslImpl(picture.HPics(shapes.map(s => PicCache.freshPic(s.pic)).toList))
+    def col2(shapes: Shape*): Shape = DslImpl(picture.VPics(shapes.map(s => PicCache.freshPic(s.pic)).toList))
     def draw2(shapes: Shape*) = shapes.foreach { _.draw() }
     def draw(shapes: Shape*): Unit = {
       def center(shape: Shape) = {

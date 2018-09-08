@@ -220,7 +220,6 @@ object CodeCompletionUtils {
     "newTurtle" -> "newTurtle(${x}, ${y})",
     "pict" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
     "PictureT" -> "PictureT { t =>\n    import t._\n    ${cursor}\n}",
-    "Picture" -> "Picture {\n    ${cursor}\n}",
     "circle" -> "circle(${radius})",
     "arc" -> "arc(${radius}, ${angle})",
     "ellipse" -> "ellipse(${radius1}, ${radius2})",

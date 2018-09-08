@@ -97,9 +97,11 @@ trait CoreBuiltins extends Rationals {
   def randomColor = Color(random(256), random(256), random(256))
   def randomTransparentColor = Color(random(256), random(256), random(256), 100 + random(156))
 
+  @deprecated("Use Color instead", "2.7")
   def color(r: Int, g: Int, b: Int) = new Color(r, g, b)
   def Color(r: Int, g: Int, b: Int) = new Color(r, g, b, 255)
   def Color(r: Int, g: Int, b: Int, a: Int) = new Color(r, g, b, a)
+  def Color(rgbHex: Int, hasAlpha: Boolean = false) = new Color(rgbHex, hasAlpha)
   def ColorG(x1: Double, y1: Double, c1: Color, x2: Double, y2: Double, c2: Color, cyclic: Boolean = false) = {
     new GradientPaint(x1.toFloat, y1.toFloat, c1, x2.toFloat, y2.toFloat, c2, cyclic)
   }
