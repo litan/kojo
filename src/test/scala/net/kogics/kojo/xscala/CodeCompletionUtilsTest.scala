@@ -49,7 +49,7 @@ class CodeCompletionUtilsTest extends FunSuite with Matchers with BeforeAndAfter
   }
 
   test("builtins templates miss; Tw templates hit") {
-    CodeCompletionUtils.methodTemplate("Picture") should be("Picture {\n    ${cursor}\n}")
+    CodeCompletionUtils.methodTemplate("PictureT") should be("PictureT { t =>\n    import t._\n    ${cursor}\n}")
   }
 
   test("builtins templates miss; Tw templates miss; lang templates hit") {
