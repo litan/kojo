@@ -2,7 +2,8 @@
 java -version
 set -x 
 # Build Kojo
-./sbt.sh clean test package
+rm -rf dist
+./sbt.sh clean test buildDist
 
 # Create staging area
 rm -rf installerbuild
