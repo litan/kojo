@@ -219,6 +219,15 @@ trait AppMenu {
     physicsMenu.add(menuItemFor("S_NewtonsSecond", "physics-fma.kojo"))
     samplesMenu.add(physicsMenu)
 
+    val generativeArtMenu = newJMenu(Utils.loadString("S_GenerativeArt"))
+    generativeArtMenu.add(menuItemFor("S_TiledLines", "genart-tiled-lines.kojo"))
+    generativeArtMenu.add(menuItemFor("S_JoyDivision", "genart-joy-division.kojo"))
+    generativeArtMenu.add(menuItemFor("S_CubicDisarray", "genart-cubic-disarray.kojo"))
+    generativeArtMenu.add(menuItemFor("S_TriMesh", "genart-tri-mesh.kojo"))
+    generativeArtMenu.add(menuItemFor("S_Mondrian", "genart-mondrian.kojo"))
+
+    samplesMenu.add(generativeArtMenu)
+
     val animGameMenu = newJMenu(Utils.loadString("S_AnimationsGames"))
     animGameMenu.add(menuItemFor("S_TangramSkier", "tangram-skier.kojo"))
     animGameMenu.add(menuItemFor("S_Pong", "pong.kojo"))
@@ -256,6 +265,7 @@ trait AppMenu {
 
     val mathActivityMenu = newJMenu(Utils.loadString("S_MathActivities"))
     mathActivityMenu.add(menuItemFor("S_AdditionGame", "addition-game.kojo"))
+    mathActivityMenu.add(menuItemFor("S_SubtractionGame", "subtraction-game.kojo"))
     mathActivityMenu.add(menuItemFor("S_MultiplicationGame", "multiplication-game.kojo"))
     mathActivityMenu.add(menuItemFor("S_AngleExperiment", "angle-experiment.kojo"))
     mathActivityMenu.add(menuItemFor("S_CountingGame", "counting.kojo", "/mathgames/"))
