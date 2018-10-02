@@ -1,4 +1,4 @@
-// based on ideas from https://generativeartistry.com/
+// Based on ideas from https://generativeartistry.com/tutorials/joy-division/
 
 switchToDefault2Perspective()
 cleari()

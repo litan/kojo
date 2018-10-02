@@ -1,4 +1,4 @@
-// based on ideas from https://generativeartistry.com/
+// Based on ideas from https://generativeartistry.com/tutorials/triangular-mesh/
 
 switchToDefault2Perspective()
 cleari()

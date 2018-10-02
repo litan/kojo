@@ -1,4 +1,4 @@
-// based on ideas from https://generativeartistry.com/
+// Based on ideas from https://generativeartistry.com/tutorials/piet-mondrian/
 
 switchToDefault2Perspective()
 cleari()

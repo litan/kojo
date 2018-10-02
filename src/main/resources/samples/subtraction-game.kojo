@@ -154,7 +154,7 @@ def manageGameTime() {
         gameTime += 1
         timeLabel.update(gameTime)
 
-        if (gameTime == 600) {
+        if (gameTime == 60) {
             done = true
             val msg = s"""      Game over!
 

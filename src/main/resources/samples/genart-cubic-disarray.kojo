@@ -1,4 +1,4 @@
-// based on ideas from https://generativeartistry.com/
+// Based on ideas from https://generativeartistry.com/tutorials/cubic-disarray/
 
 switchToDefault2Perspective()
 cleari()
