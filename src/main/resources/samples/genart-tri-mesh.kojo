@@ -2,6 +2,7 @@
 
 switchToDefault2Perspective()
 cleari()
+setBackground(Color(60, 63, 65))
 val cb = canvasBounds
 val n = 10
 val stepx = cb.width / (n + 1)
