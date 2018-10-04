@@ -1134,93 +1134,94 @@ The code that you provide to react runs about thirty times per second, in the UI
       </pre>
     </div>
     ,
-    "PicShape.hline" -> 
+    "Picture.hline" ->
     <div>
-      <strong>PicShape.hline</strong>(length) - Creates a picture of a horizontal line with the given length.<br/>
+      <strong>Picture.hline</strong>(length) - Creates a picture of a horizontal line with the given length.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PicShape.hline(50))
+        draw(Picture.hline(50))
       </pre>
     </div>,
-    "PicShape.vline" -> 
+    "Picture.vline" ->
     <div>
-      <strong>PicShape.vline</strong>(length) - Creates a picture of a vertical line with the given length.<br/>
+      <strong>Picture.vline</strong>(length) - Creates a picture of a vertical line with the given length.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PicShape.vline(50))
+        draw(Picture.vline(50))
       </pre>
     </div>,
-    "PicShape.rect" -> 
+    "Picture.rect" ->
     <div>
-      <strong>PicShape.rect</strong>(height, width) - Creates a picture of a rectangle with the given height and width.<br/>
+      <strong>Picture.rect</strong>(height, width) - Creates a picture of a rectangle with the given height and width.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PicShape.rect(50, 100))
+        draw(Picture.rect(50, 100))
       </pre>
     </div>,
-    "PicShape.circle" -> 
+    "Picture.circle" ->
     <div>
-      <strong>PicShape.circle</strong>(radius) - Creates a picture of a circle with the given radius.<br/>
+      <strong>Picture.circle</strong>(radius) - Creates a picture of a circle with the given radius.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PicShape.circle(50))
+        draw(Picture.circle(50))
       </pre>
     </div>,
-    "PicShape.arc" -> 
+    "Picture.ellipse" ->
     <div>
-      <strong>PicShape.arc</strong>(radius, angle) - Creates a picture of an arc with the given radius and angle.<br/>
+      <strong>Picture.ellipse</strong>(rx, ry) - Creates a picture of an elipse with the given x radius and y radius.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PicShape.arc(50, 45))
+        val el = Picture.ellipse(50, 25)
+        draw(el)
       </pre>
     </div>,
-    "PicShape.text" -> 
+    "Picture.text" ->
     <div>
-      <strong>PicShape.text</strong>(content, size) - Creates a picture out of the given text with the given font-size.<br/>
+      <strong>Picture.text</strong>(content, size) - Creates a picture out of the given text with the given font-size.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PicShape.text("Hi There", 18))
+        draw(Picture.text("Hi There", 18))
       </pre>
     </div>,
-    "PicShape.image" -> 
+    "Picture.image" ->
     <div>
-      <strong>PicShape.image</strong>(fileName) - Creates a picture out of an image from the file with the given name.<br/>
-      <strong>PicShape.image</strong>(image) - Creates a picture out of the given image. The image can be created with the image(height, width) function.<br/>
+      <strong>Picture.image</strong>(fileName) - Creates a picture out of an image from the file with the given name.<br/>
+      <strong>Picture.image</strong>(image) - Creates a picture out of the given image. The image can be created with the image(height, width) function.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PicShape.image(Costume.womanWaving))
+        draw(Picture.image(Costume.womanWaving))
       </pre>
     </div>,
-    "PicShape.widget" -> 
+    "Picture.widget" ->
     <div>
-      <strong>PicShape.widget</strong>(component) - Creates a picture out of the given widget.<br/>
+      <strong>Picture.widget</strong>(component) - Creates a picture out of the given widget.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(PicShape.widget(Label("Hi there")))
+        draw(Picture.widget(Label("Hi there")))
       </pre>
     </div>,
     "draw" -> 
@@ -1231,7 +1232,7 @@ The code that you provide to react runs about thirty times per second, in the UI
       <br/>
       <pre>
         cleari()
-        draw(PicShape.hline(50), PicShape.vline(50)) 
+        draw(Picture.hline(50), Picture.vline(50))
       </pre>
     </div>,
     "HPics" -> 

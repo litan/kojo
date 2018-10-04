@@ -10,7 +10,7 @@ val summaryLinkStyle = "color:#1a1a1a"
 val codeLinkStyle = "text-decoration:none;font-size:x-small;color:#fafafa;"
 val footerStyle = "font-size:90%;margin-top:15px;color:#1a1a1a;"
 val helpStyle = "background-color:#ffffcc;margin:10px;"
-val footerPanelColor = color(0x93989c)
+val footerPanelColor = Color(0x93989c)
 
 val Turtle = "t"
 val Pictures = "p"
@@ -50,7 +50,7 @@ val tTemplates = LinkedHashMap(
     "hop(n)               " -> "hop(${c})",
     "right(a)             " -> "right(${c})",
     "left(a)              " -> "left(${c})",
-    "setAnimationDelay(d) " -> "setAnimationDelay(${c}100)",
+    "setSpeed(s)          " -> "setSpeed(${c}medium)",
     "setPenColor(c)       " -> "setPenColor(${c}randomColor)",
     "setFillColor(c)      " -> "setFillColor(${c}blue)",
     "setPenThickness(t)   " -> "setPenThickness(${c}4)",
@@ -91,7 +91,7 @@ else {
         pattern(n-5)
     }
 }""",
-    "recursion [function] " -> """def ${c}factorial(n: Int): Int = 
+    "recursion [function] " -> """def ${c}factorial(n: Int): Int =
     if (n == 0) 1 else n * factorial(n-1)"""
 )
 
@@ -100,27 +100,26 @@ val aTemplates = LinkedHashMap(
     "def       [command]  " -> """def ${c}newcmd(n: Int) {
     forward(50)
 }""",
-    "def       [function] " -> """def ${c}max(n1: Int, n2: Int) = 
+    "def       [function] " -> """def ${c}max(n1: Int, n2: Int) =
         if (n1 > n2) n1 else n2"""
 )
 
 val pTemplates = LinkedHashMap(
     "Picture              " -> """Picture {
-    ${c}forward(50)    
+    ${c}forward(50)
 }""",
-    "picRow(pics)         " -> "picRow(${c}p, p)",
-    "picCol(pics)         " -> "picCol(${c}p, p)",
-    "picStack(pics)       " -> "picStack(${c}p, p)",
-    "draw(pics)           " -> "draw(${c}pic)",
+    "picRow(pics)             " -> "picRow(${c}p, p)",
+    "picCol(pics)             " -> "picCol(${c}p, p)",
+    "picStack(pics)           " -> "picStack(${c}p, p)",
+    "draw(pics)               " -> "draw(${c}pic)",
     "" -> "",
-    "PicShape.hline(len)  " -> "PicShape.hline(${c}50)",
-    "PicShape.vline(len)  " -> "PicShape.vline(${c}50)",
-    "PicShape.rect(h, w)  " -> "PicShape.rect(${c}50, 100)",
-    "PicShape.circle(r)   " -> "PicShape.circle(${c}50)",
-    "PicShape.arc(r, a)   " -> "PicShape.arc(${c}50, 45)",
-    "PicShape.text(s, n)  " -> """PicShape.text(${c}"Hello", 18)""",
-    "PicShape.image(f)    " -> "PicShape.image(${c}Costume.womanWaving)",
-    "PicShape.widget(c)   " -> """PicShape.widget(${c}Label("Hi there"))"""
+    "Picture.line(w, h)       " -> "Picture.line(${c}50, 0)",
+    "Picture.rectangle(w, h)  " -> "Picture.rectangle(${c}100, 50)",
+    "Picture.circle(r)        " -> "Picture.circle(${c}50)",
+    "Picture.ellipse(rx, ry)  " -> "Picture.ellipse(${c}50, 25)",
+    "Picture.text(s, n)       " -> """Picture.text(${c}"Hello", 18)""",
+    "Picture.image(f)         " -> "Picture.image(${c}Costume.womanWaving)",
+    "Picture.widget(c)        " -> """Picture.widget(${c}Label("Hi there"))"""
 )
 
 val ptTemplates = LinkedHashMap(
@@ -168,7 +167,7 @@ val templates = Map(
 
 def runLink(category: String, n: Int) = s"http://runhandler/$category/$n"
 def code(category: String, n: Int) =
-    <div style={ codeStyle }> 
+    <div style={ codeStyle }>
         <pre><code><a href={ runLink(category, n) } style={ codeLinkStyle }> { instructions(category)(n) }</a></code></pre>
     </div>
 
@@ -177,7 +176,7 @@ def pageFor(cat: String) = Page(
     body =
         <body style={ pageStyle }>
         { navLinks }
-        <div style={ titleStyle }><a style={ summaryLinkStyle } href={ "http://runhandler/%s/%s" format(Summary, cat) }>{ catName(cat) }</a></div>        
+        <div style={ titleStyle }><a style={ summaryLinkStyle } href={ "http://runhandler/%s/%s" format(Summary, cat) }>{ catName(cat) }</a></div>
         { for (i <- 0 until instructions(cat).length) yield (if (instructions(cat)(i) == "") <br/> else code(cat, i)) }
         { footer }
         </body>,
@@ -223,7 +222,7 @@ def insertCodeBlock(cat: String, idx: Int) {
 
 stAddLinkHandler(Turtle, story) { idx: Int => insertCodeBlock(Turtle, idx) }
 stAddLinkHandler(ControlFlow, story) { idx: Int => insertCodeBlock(ControlFlow, idx) }
-stAddLinkHandler(Pictures, story) { idx: Int => insertCodeBlock(Pictures, idx) }
+stAddLinkHandler(Pictures, story) { idx: Int => insertCodeInline(Pictures, idx) }
 stAddLinkHandler(PictureXforms, story) { idx: Int => insertCodeInline(PictureXforms, idx) }
 stAddLinkHandler(Abstraction, story) { idx: Int => insertCodeBlock(Abstraction, idx) }
 stAddLinkHandler(Conditions, story) { idx: Int => insertCodeInline(Conditions, idx) }
@@ -293,11 +292,11 @@ runInGuiThread {
 
     footerPanel = new JPanel
     footerPanel.setBackground(footerPanelColor)
-    val helpLabel = new JLabel("Live Help"); helpLabel.setForeground(color(0xfafafa))
+    val helpLabel = new JLabel("Live Help"); helpLabel.setForeground(Color(0xfafafa))
     footerPanel.add(helpLabel)
-    val onButton = new JRadioButton("On"); onButton.setForeground(color(0xfafafa))
+    val onButton = new JRadioButton("On"); onButton.setForeground(Color(0xfafafa))
     onButton.setSelected(false)
-    val offButton = new JRadioButton("Off"); offButton.setForeground(color(0xfafafa))
+    val offButton = new JRadioButton("Off"); offButton.setForeground(Color(0xfafafa))
     offButton.setSelected(true)
     val onOff = new ButtonGroup; onOff.add(onButton); onOff.add(offButton)
     footerPanel.add(onButton)
