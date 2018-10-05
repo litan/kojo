@@ -200,6 +200,7 @@ trait AppMenu {
     fractalsMenu.add(menuItemFor("S_AnotherTree", "tree1.kojo"))
     fractalsMenu.add(menuItemFor("S_FibonacciTree", "fib-tree.kojo"))
     fractalsMenu.add(menuItemFor("S_Snowflake", "snowflake.kojo"))
+    fractalsMenu.add(menuItemFor("S_DragonCurve", "dragon-curve.kojo"))
     fractalsMenu.add(menuItemFor("S_SierpinskiTriangle", "sierpinski-tri.kojo"))
     fractalsMenu.add(menuItemFor("S_LSystems", "l-systems.kojo"))
     samplesMenu.add(fractalsMenu)
@@ -272,6 +273,7 @@ trait AppMenu {
     mathActivityMenu.add(menuItemFor("S_MakeFractions", "make-fractions.kojo", "/mathgames/"))
     mathActivityMenu.add(menuItemFor("S_IdentifyFractions", "identify-fractions.kojo", "/mathgames/"))
     mathActivityMenu.add(menuItemFor("S_AnglesAnimation", "angles.kojo"))
+    mathActivityMenu.add(menuItemFor("S_EstimatingPi", "estimating-pi.kojo"))
     mathActivityMenu.add(menuItemFor("S_SolvingLinearEquations", "solving-linear-equations.kojo"))
     samplesMenu.add(mathActivityMenu)
 
