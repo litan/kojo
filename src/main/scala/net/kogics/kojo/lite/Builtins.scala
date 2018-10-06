@@ -468,10 +468,10 @@ Here's a partial list of the available commands:
     new TexturePaint(img, new Rectangle2D.Double(x, y, img.getWidth, -img.getHeight))
   }
 
-  val PShapes = PicShape
-  val Picture = PicShape
+  val PShapes = Picture
+  val PicShape = Picture
   //  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
-  object PicShape {
+  object Picture {
     def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
     def textu(s0: Any, fontSize: Int = 15, color: Color = red) = picture.textu(s0, fontSize, color)
     def rect(h: Double, w: Double) = picture.rect(h, w)

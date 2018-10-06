@@ -26,7 +26,7 @@ object Help {
   def summaryFooter = 
     <div>
         <strong>Some Background</strong><br/>
-        The act of programming is based on three crucial elements:
+        The act of programming is based on three crucial ideas:
         <ul>
             <li>Primitives - are in-built facilities in your programming environment</li>
             <li>Composition - allows you to combine primitives (and abstractions)</li>
@@ -1134,17 +1134,29 @@ The code that you provide to react runs about thirty times per second, in the UI
       </pre>
     </div>
     ,
-    "Picture.hline" ->
+    "Picture.line" ->
     <div>
-      <strong>Picture.hline</strong>(length) - Creates a picture of a horizontal line with the given length.<br/>
+      <strong>Picture.line</strong>(width, height) - Creates a picture of a line with the given extent in the x and y directions.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(Picture.hline(50))
+        val line = Picture.line(50, 100)
+        draw(line)
       </pre>
     </div>,
+    "Picture.hline" ->
+      <div>
+        <strong>Picture.hline</strong>(length) - Creates a picture of a horizontal line with the given length.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+          cleari()
+          draw(Picture.hline(50))
+        </pre>
+      </div>,
     "Picture.vline" ->
     <div>
       <strong>Picture.vline</strong>(length) - Creates a picture of a vertical line with the given length.<br/>
@@ -1167,6 +1179,18 @@ The code that you provide to react runs about thirty times per second, in the UI
         draw(Picture.rect(50, 100))
       </pre>
     </div>,
+    "Picture.rectangle" ->
+      <div>
+        <strong>Picture.rectangle</strong>(width, height) - Creates a picture of a rectangle with the given width and height.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+          cleari()
+          val rect = Picture.rectangle(50, 100)
+          draw(rect)
+        </pre>
+      </div>,
     "Picture.circle" ->
     <div>
       <strong>Picture.circle</strong>(radius) - Creates a picture of a circle with the given radius.<br/>
@@ -1190,6 +1214,17 @@ The code that you provide to react runs about thirty times per second, in the UI
         draw(el)
       </pre>
     </div>,
+    "Picture.arc" ->
+      <div>
+        <strong>PicShape.arc</strong>(radius, angle) - Creates a picture of an arc with the given radius and angle.<br/>
+        <br/>
+        <em>Example:</em> <br/>
+        <br/>
+        <pre>
+          cleari()
+          draw(PicShape.arc(50, 45))
+        </pre>
+      </div>,
     "Picture.text" ->
     <div>
       <strong>Picture.text</strong>(content, size) - Creates a picture out of the given text with the given font-size.<br/>
