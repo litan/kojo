@@ -1,8 +1,7 @@
-// Copyright (C) 2016 Aditya Pant <adi2.pant@gmail.com>
-// The contents of this file are subject to 
-// the GNU General Public License Version 3 (http://www.gnu.org/copyleft/gpl.html)
-
-/**Prevent the square from escaping the canvas by arrow keys!*/
+// Contributed by Aditya Pant
+// Control the square by using the arrow keys,
+// and don't let it touch the edges of the canvas
+// If you can do this for 15 seconds, you win!
 
 toggleFullScreenCanvas()
 cleari()

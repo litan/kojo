@@ -21,4 +21,5 @@ setAnimationDelay(20)
 setPenThickness(7)
 setPenColor(Color(0x365348))
 
+hop(-100)
 dragon(10, 45)
