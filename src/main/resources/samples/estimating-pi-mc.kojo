@@ -4,14 +4,16 @@
 */
 def π(totalPoints: Int): Double = {
     def len(x: Double, y: Double) = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
-
-    val pointsInsideCircle = (0 until totalPoints).foldLeft(0) { (acc, n) =>
-        val insideCircle =
-            len(randomDouble(1) - 0.5, randomDouble(1) - 0.5) <= 0.5
-        val hit = if (insideCircle) 1 else 0
-        acc + hit
+    var pointsInsideCircle = 0
+    repeat(totalPoints) {
+        val newPointX = randomDouble(1)
+        val newPointY = randomDouble(1)
+        val newPointInsideCircle =
+            len(newPointX - 0.5, newPointY - 0.5) <= 0.5
+        if (newPointInsideCircle) {
+            pointsInsideCircle += 1
+        }
     }
-
     pointsInsideCircle * 4.0 / totalPoints
 }
 
