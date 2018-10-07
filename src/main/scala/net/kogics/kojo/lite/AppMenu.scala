@@ -213,6 +213,7 @@ trait AppMenu {
     val numProgMenu = newJMenu(Utils.loadString("S_Numbers"))
     numProgMenu.add(menuItemFor("S_Primes", "primes.kojo"))
     numProgMenu.add(menuItemFor("S_PrimeFactors", "prime-factors.kojo"))
+    numProgMenu.add(menuItemFor("S_EstimatingPiMC", "estimating-pi-mc.kojo"))
     samplesMenu.add(numProgMenu)
 
     val physicsMenu = newJMenu(Utils.loadString("S_Physics"))
