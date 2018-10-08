@@ -9,7 +9,7 @@ val linkStyle = "color:#fafafa"
 val summaryLinkStyle = "color:#1a1a1a"
 val codeLinkStyle = "text-decoration:none;font-size:x-small;color:#fafafa;"
 val footerStyle = "font-size:90%;margin-top:15px;color:#1a1a1a;"
-val helpStyle = "background-color:#ffffcc;margin:10px;"
+val helpStyle = "color:black;background-color:#ffffcc;margin:10px;"
 val footerPanelColor = Color(0x93989c)
 
 val Turtle = "t"
@@ -66,6 +66,9 @@ val tTemplates = LinkedHashMap(
 val cfTemplates = LinkedHashMap(
     "repeat    [command]  " -> """repeat(${c}4) {
     forward(50)
+}""",
+    "repeatFor [command]  " -> """repeatFor(${c}1 to 5) { n =>
+    println(n)
 }""",
     "if        [command]  " -> """if (${c}true) {
     setPenColor(blue)
