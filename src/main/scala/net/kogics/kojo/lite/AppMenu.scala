@@ -291,6 +291,7 @@ trait AppMenu {
     showcaseMenu.add(menuItemFor("S_Fern", "fern.kojo"))
     showcaseMenu.add(menuItemFor("S_LightedStar", "lighted-star.kojo"))
     showcaseMenu.add(menuItemFor("S_Mandel", "mandelbrot.kojo"))
+    showcaseMenu.add(menuItemFor("S_Mondrian", "genart-mondrian.kojo"))
     showcaseMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
     showcaseMenu.add(menuItemFor("S_CarRide", "car-ride.kojo"))
 
