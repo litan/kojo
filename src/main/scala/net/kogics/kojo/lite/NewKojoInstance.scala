@@ -3,7 +3,7 @@ package net.kogics.kojo.lite
 import java.net.URLDecoder
 
 object NewKojoInstance extends StubMain {
-   val classpath = {
+   lazy val classpath = {
     val urls = Thread.currentThread.getContextClassLoader match {
       case cl: java.net.URLClassLoader => cl.getURLs.toList
       case _                           => sys.error("classloader is not a URLClassLoader")

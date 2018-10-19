@@ -16,6 +16,8 @@ package net.kogics.kojo.lite
 
 import java.io.File
 
+import javax.swing.JOptionPane
+
 import scala.sys.process.stringSeqToProcess
 
 import net.kogics.kojo.util.Utils
@@ -34,6 +36,20 @@ trait StubMain {
   }
 
   def main(args: Array[String]): Unit = {
+    val javaVersion = System.getProperty("java.version")
+    println(javaVersion)
+    if (javaVersion != null) {
+      if (!javaVersion.startsWith("1.8")) {
+        JOptionPane.showMessageDialog(
+          null,
+          "Incompatible Java version - Kojo requires Java 8.\nVisit www.kogics.net/kojo-download for more information.",
+          "Kojo startup error",
+          JOptionPane.ERROR_MESSAGE
+        )
+        System.exit(1)
+      }
+    }
+
     Utils.safeProcess {
       if (firstInstance) {
         log(s"[INFO] Running first Kojo instance with args: ${args.mkString("[", ", ", "]")}")
@@ -90,7 +106,8 @@ trait StubMain {
       extraCmds +
       "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
     val commandSeq =
-      Seq(javaExec,
+      Seq(
+        javaExec,
         "-cp", classpath,
         s"-Djava.library.path=${Utils.libDir}"
       ) ++ cmdPart.split(' ')
