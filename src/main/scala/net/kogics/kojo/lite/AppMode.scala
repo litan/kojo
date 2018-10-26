@@ -28,7 +28,7 @@ trait AppMode {
   def defaultCodingMode: CodingMode
   def scalaCodeRunner(rc: RunContext): CodeRunner = new xscala.ScalaCodeRunner2(rc, defaultCodingMode)
   def kojoInterpreter(cr: CodeRunner): KojoInterpreter =
-    cr.asInstanceOf[ScalaCodeRunner2].kojointerp
+    cr.asInstanceOf[ScalaCodeRunner2].kojoInterpreter
 }
 
 class DesktopMode extends AppMode {

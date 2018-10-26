@@ -46,18 +46,17 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   val Log = Logger.getLogger("ScalaCodeRunner")
   val outputHandler = new InterpOutputHandler(runContext)
 
-  @volatile var kojointerp: KojoInterpreter = _
-
-  // for debugging only!
-  //  def pcompiler = codeRunner.compilerAndRunner.pcompiler
-  //  def compiler = codeRunner.compilerAndRunner.compiler
-
+  // have a place to store interp actor state, in case of a restart of the actor
+  val actorState = new InterpActorState
+  // create the actor
   val codeRunner = makeCodeRunner
 
   private def makeCodeRunner = {
     val actor = Utils.actorSystem.actorOf(Props(new InterpActor), name = "InterpActor")
     actor
   }
+
+  def kojoInterpreter = actorState.interpreter
 
   def start() = {
     codeRunner ! Init
@@ -214,6 +213,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     def interp: KojoInterpreter = {
       if (!interpInited) {
         interpInited = true
+        actorState.interpInited = true
       }
       _interp
     }
@@ -221,6 +221,14 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     var interpInited = false
 
     var compilerAndRunner: CompilerAndRunner = _
+
+    override def postRestart(reason: Throwable): Unit = {
+      val msg = "Code runner actor - postRestart triggered."
+      Log.info(msg); println(msg)
+      compilerAndRunner = actorState.compilerAndRunner
+      _interp = actorState.interpreter
+      interpInited = actorState.interpInited
+    }
 
     def safeProcessResponse[T](default: T)(fn: => T) {
       try {
@@ -498,6 +506,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
     def loadCompiler() {
       compilerAndRunner = new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext)
+      actorState.compilerAndRunner = compilerAndRunner
     }
 
     def initInterp() {
@@ -530,9 +539,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       val iSettings = makeSettings()
 
       _interp = new KojoInterpreter(iSettings, new GuiPrintWriter())
-      //      initInterp()
       // backdoor to give access to the interpreter inside the script editor. Used by beginner challenges.
-      kojointerp = _interp
+      actorState.interpreter = _interp
     }
 
     def createCp(xs: List[String]): String = {
@@ -677,4 +685,10 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       out.write(s)
     }
   }
+}
+
+class InterpActorState {
+  @volatile var interpreter: KojoInterpreter = _
+  @volatile var interpInited = false
+  @volatile var compilerAndRunner: CompilerAndRunner = _
 }
