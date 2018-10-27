@@ -192,6 +192,13 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       // Runs on Actor pool thread
       // might not be called for runaway computations
       // in which case Kojo has to be restarted
+
+      if (Thread.interrupted) {
+        // also clears thread interrupted flag
+        Log.info("Thread was interrupted after compiling/running.")
+        println("Thread was interrupted after compiling/running.")
+      }
+
       if (interruptTimer.isDefined) {
         Log.info("Cancelling interrupt timer")
         interruptTimer.get.stop
@@ -201,9 +208,6 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
       interpreterThread = None
       stoppable = None
-      if (Thread.interrupted) {
-        Log.info("Thread was interrupted after compiling/running.")
-      }
     }
   }
 
@@ -392,6 +396,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           }
         }
         catch {
+          case _: InterruptedException =>
+            println("Code runner actor - Interrupted")
           case t: Throwable =>
             Log.log(Level.SEVERE, "CompilerAndRunner Problem", t)
             runContext.onRunInterpError
