@@ -148,13 +148,13 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   }
 
   object InterruptionManager {
-    @volatile var interpreterThread: Option[Thread] = None
+    var interpreterThread: Option[Thread] = None
     @volatile var interruptTimer: Option[javax.swing.Timer] = None
-    @volatile var stoppable: Option[StoppableCodeRunner] = None
+    var stoppable: Option[StoppableCodeRunner] = None
 
     def interruptionInProgress = interruptTimer.isDefined
 
-    def interruptInterpreter() {
+    def interruptInterpreter(): Unit = synchronized {
       // Runs on swing thread
       if (interruptionInProgress) {
         Log.info("Interruption of Interpreter Requested")
@@ -166,7 +166,6 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
       if (interpreterThread.isDefined) {
         Log.info("Interruption of Interpreter Requested")
-        Log.info("Interrupting Interpreter thread...")
         interruptTimer = Some(Utils.schedule(4) {
           // don't need to clean out interrupt state because Kojo needs to be shut down anyway
           // and in fact, cleaning out the interrupt state will mess with a delayed interruption
@@ -174,11 +173,12 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           kprintln("Unable to stop script.\nPlease restart the Kojo Environment unless you see a 'Script Stopped' message soon.\n")
         })
         outputHandler.interpOutputSuppressed = true
+        Log.info("Interrupting Interpreter thread...")
         stoppable.foreach { _.stop(interpreterThread.get) }
       }
     }
 
-    def onInterpreterStart(stoppable: StoppableCodeRunner) {
+    def onInterpreterStart(stoppable: StoppableCodeRunner): Unit = synchronized {
       // Runs on Actor pool thread
       // we store the thread every time the interp runs
       // allows interp to switch between react and receive without impacting
@@ -187,7 +187,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       this.stoppable = Some(stoppable)
     }
 
-    def onInterpreterFinish() {
+    def onInterpreterFinish(): Unit = synchronized {
       Log.info("Interpreter Done notification received")
       // Runs on Actor pool thread
       // might not be called for runaway computations
@@ -201,6 +201,9 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
       interpreterThread = None
       stoppable = None
+      if (Thread.interrupted) {
+        Log.info("Thread was interrupted after compiling/running.")
+      }
     }
   }
 
