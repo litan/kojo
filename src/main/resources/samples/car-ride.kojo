@@ -29,7 +29,7 @@ val bplayer = newMp3Player
 val cplayer = newMp3Player
 
 def createCar() {
-    val c = trans(cb.x + random(cb.width.toInt), cb.y + cb.height) -> car("/media/car-ride/car2.png")
+    val c = trans(player.position.x + randomNormalDouble * cb.width / 10, cb.y + cb.height) -> car("/media/car-ride/car2.png")
     draw(c)
     cars += c -> Vector2D(0, -carSpeed)
 }
@@ -46,7 +46,7 @@ val player = car("/media/car-ride/car1.png")
 draw(player)
 drawAndHide(carE)
 
-timer(1200) {
+timer(1000) {
     createMarker()
     createCar()
 }
