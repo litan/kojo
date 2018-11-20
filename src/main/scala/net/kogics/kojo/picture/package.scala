@@ -334,7 +334,7 @@ package object picture {
   }
 
   def bouncePicVectorOffPic(pic: Picture, vel: Vector2D, obstacle: Picture, rg: Random): Vector2D = {
-    // returns points on the obstacle that contain the given collision coordinate 
+    // returns points on the obstacle that contain the given collision coordinate
     def obstacleCollPoints(c: Coordinate): Option[Array[Coordinate]] = {
       obstacle.picGeom.getCoordinates.sliding(2).find { cs =>
         val xcheck = if (cs(0).x > cs(1).x)
@@ -364,8 +364,7 @@ package object picture {
     def collisionVector = {
       val pt = obstacle.intersection(pic)
       val iCoords = pt.getCoordinates
-      //      println(s"***\nIntersection shape: ${pt}")
-      //      println(s"Intersection shape coords: ${iCoords.toVector}")
+
       if (iCoords.length == 0) {
         Vector2D(rg.nextDouble, rg.nextDouble).normalize
       }
@@ -377,39 +376,7 @@ package object picture {
         else {
           val c1 = iCoords(0)
           val c2 = iCoords(iCoords.length - 1)
-          val obsPts1 = obstacleCollPoints(c1)
-          val obsPts2 = obstacleCollPoints(c2)
-          if (obsPts1.isDefined && obsPts2.isDefined) {
-            //            println(s"Obstacle points #1: ${obsPts1.get.toVector}")
-            //            println(s"Obstacle points #2: ${obsPts2.get.toVector}")
-            val s1 = collection.mutable.HashSet.empty[Coordinate]
-            s1 += obsPts1.get(0); s1 += obsPts1.get(1)
-            val s2 = collection.mutable.HashSet.empty[Coordinate]
-            s2 += obsPts2.get(0); s2 += obsPts2.get(1)
-            val s1s2 = s1.intersect(s2)
-            if (s1s2.isEmpty) {
-              //              println("No common points in obstacle points #1 and #2")
-              val cv1 = makeVectorFromCollPoints(obsPts1)
-              val cv2 = makeVectorFromCollPoints(obsPts2)
-              //              println(s"cv1: $cv1")
-              //              println(s"cv2: $cv2")
-              cv1.normalize + cv2.normalize
-            }
-            else {
-              val obsCommonPt = s1s2.head
-              //              println(s"Common point in obstacle points #1 and #2: ${obsCommonPt}")
-              s1 -= obsCommonPt
-              s2 -= obsCommonPt
-              val cv1 = makeVectorFromCollPoints(Some(Array(c1, obsCommonPt)))
-              val cv2 = makeVectorFromCollPoints(Some(Array(obsCommonPt, c2)))
-              //              println(s"cv1: $cv1")
-              //              println(s"cv2: $cv2")
-              (cv1 + cv2).normalize
-            }
-          }
-          else {
-            Vector2D(rg.nextDouble, rg.nextDouble).normalize
-          }
+          makeVectorFromCollPoints(Some(Array(c1, c2))).normalize
         }
       }
     }
@@ -427,7 +394,6 @@ package object picture {
 
     pullbackCollision()
     val cv = collisionVector
-    //    println(s"cv: $cv\n***")
     vel.bounceOff(cv)
   }
 }
