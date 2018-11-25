@@ -823,34 +823,45 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     stageTop = noPic
     stageRight = noPic
     stageBot = noPic
+    stageArea = noPic
   }
 
   def drawStage(fillc: Paint) {
-    def border(size: Double) = picture.strokeWidth(0) -> picture.Pic { t =>
+    def left(size: Double) = picture.strokeWidth(0) -> picture.Pic { t =>
+      t.forward(size)
+    }
+    def top(size: Double) = picture.strokeWidth(0) -> picture.Pic { t =>
+      t.right()
+      t.forward(size)
+    }
+    def right(size: Double) = picture.strokeWidth(0) -> picture.Pic { t =>
+      t.right(180)
+      t.forward(size)
+    }
+    def bottom(size: Double) = picture.strokeWidth(0) -> picture.Pic { t =>
+      t.left()
       t.forward(size)
     }
     val cb = cbounds
     val xmax = cb.x.abs
     val ymax = cb.y.abs
 
-    stageLeft = picture.trans(-xmax, -ymax) -> border(cb.height)
-    stageTop = picture.trans(-xmax, ymax) * picture.rot(-90) -> border(cb.width)
-    stageRight = picture.trans(xmax, -ymax) -> border(cb.height)
-    stageBot = picture.trans(-xmax, -ymax) * picture.rot(-90) -> border(cb.width)
+    stageLeft = picture.trans(-xmax, -ymax) -> left(cb.height)
+    stageTop = picture.trans(-xmax, ymax) -> top(cb.width)
+    stageRight = picture.trans(xmax, ymax) -> right(cb.height)
+    stageBot = picture.trans(xmax, -ymax) -> bottom(cb.width)
     stageArea = picture.trans(-xmax, -ymax) * picture.fill(fillc) *
       picture.stroke(Color.darkGray) -> picture.rect(cb.height, cb.width)
 
-    // trans(0, 0) to force stage tnode realization up front, so that stage stays below stageArea
-    stage = picture.trans(0, 0) -> picture.GPics(
+    stage = picture.GPics(
       stageLeft,
       stageTop,
       stageRight,
       stageBot
     )
 
-    stage.draw()
     stageArea.draw()
-    //    setCanvasBackground(fillc)
+    stage.draw()
   }
 
   class Popup() extends JPopupMenu {
