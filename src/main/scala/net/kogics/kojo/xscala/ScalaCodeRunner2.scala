@@ -506,6 +506,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       //      iSettings.deprecation.value = true
       //      iSettings.feature.value = true
       //      iSettings.unchecked.value = true
+      iSettings.YpartialUnification.value = true
       iSettings
     }
 
