@@ -2,7 +2,7 @@ name := "Kojo"
 
 version := "2.7"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.7"
 
 fork in run := true
 
@@ -20,9 +20,9 @@ testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-s")
 autoScalaLibrary := false
 
 libraryDependencies ++= Seq(
-    "org.scala-lang" % "scala-library" % "2.12.6",
-    "org.scala-lang" % "scala-compiler" % "2.12.6",
-    "org.scala-lang" % "scala-reflect" % "2.12.6",
+    "org.scala-lang" % "scala-library" % "2.12.7",
+    "org.scala-lang" % "scala-compiler" % "2.12.7",
+    "org.scala-lang" % "scala-reflect" % "2.12.7",
     "com.typesafe.akka" % "akka-actor_2.12" % "2.5.14",
     "org.scala-lang.modules" % "scala-swing_2.12" % "2.0.3",
     "org.scala-lang.modules" % "scala-xml_2.12" % "1.0.6",
