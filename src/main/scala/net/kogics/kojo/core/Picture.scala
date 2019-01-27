@@ -113,4 +113,31 @@ trait Picture extends InputAware {
   def below(other: Picture): Picture = other.above(this)
   def on(other: Picture): Picture
   def under(other: Picture): Picture = other.on(this)
+  def animateToPosition(x: Double, y: Double, inMillis: Long)(onEnd: => Unit): Unit = {
+    import edu.umd.cs.piccolo.activities.PActivity
+    import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
+    val pos0 = position
+    val delay = inMillis; val amtx = x - pos0.x; val amty = y - pos0.y
+
+    val animActivity = new PActivity(delay) {
+      override def activityStep(elapsedTime: Long) {
+        val frac = elapsedTime.toDouble / delay
+        setPosition(pos0.x + amtx * frac, pos0.y + amty * frac)
+      }
+    }
+
+    animActivity.setDelegate(new PActivityDelegate {
+      override def activityStarted(activity: PActivity) {}
+      override def activityStepped(activity: PActivity) {}
+      override def activityFinished(activity: PActivity) {
+        setPosition(x, y)
+        onEnd
+      }
+    })
+    canvas.animateActivity(animActivity)
+  }
+  def animateToPositionDelta(dx: Double, dy: Double, inMillis: Long)(onEnd: => Unit): Unit = {
+    val pos0 = position
+    animateToPosition(pos0.x + dx, pos0.y + dy, inMillis)(onEnd)
+  }
 }
