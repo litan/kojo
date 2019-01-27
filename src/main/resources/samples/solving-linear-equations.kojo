@@ -319,7 +319,7 @@ class EqnQuestion extends Question {
 def borderWithMargin(m: Int) = {
     import javax.swing.border._
     import javax.swing.BorderFactory
-    val outsideBorder = BorderFactory.createLineBorder(color(128, 128, 128))
+    val outsideBorder = BorderFactory.createLineBorder(Color(128, 128, 128))
     val insideBorder = new EmptyBorder(m, m, m, m)
     new CompoundBorder(outsideBorder, insideBorder)
 }
@@ -470,7 +470,7 @@ lazy val ui = new GroupPanel {
 
     val questionf = new EditorPane {
         contentType = "text/html"
-        border = Swing.LineBorder(color(128, 128, 128))
+        border = Swing.LineBorder(Color(128, 128, 128))
         editable = false
     }
 
@@ -505,7 +505,7 @@ lazy val ui = new GroupPanel {
     }
 
     val resultf = new STextField(30) {
-        border = Swing.LineBorder(color(255, 255, 255))
+        border = Swing.LineBorder(Color(255, 255, 255))
         editable = false
         horizontalAlignment = Alignment.Center
         font = kfont
@@ -516,7 +516,7 @@ lazy val ui = new GroupPanel {
 
     // UI Layout
     background = white
-    border = Swing.LineBorder(color(240, 240, 240))
+    border = Swing.LineBorder(Color(240, 240, 240))
     theHorizontalLayout is Parallel(Center)(
         levelPanel,
         questionf,
@@ -705,7 +705,7 @@ lazy val ui2 = new GroupPanel {
     }
 
     val resultf = new STextField(30) {
-        border = Swing.LineBorder(color(255, 255, 255))
+        border = Swing.LineBorder(Color(255, 255, 255))
         editable = false
         horizontalAlignment = Alignment.Center
         font = kfont
@@ -716,7 +716,7 @@ lazy val ui2 = new GroupPanel {
 
     // UI Layout
     background = white
-    border = Swing.LineBorder(color(240, 240, 240))
+    border = Swing.LineBorder(Color(240, 240, 240))
     theHorizontalLayout is Parallel(Center)(
         questionf,
         answerf,
