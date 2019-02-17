@@ -8,6 +8,8 @@ import java.awt.Point
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.FocusAdapter
+import java.awt.event.FocusEvent
 import java.awt.event.InputEvent
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
@@ -68,6 +70,8 @@ import scalariform.formatter.ScalaFormatter
 class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
 
   val codePane = new RSyntaxTextArea(5, 80)
+  val codePane2 = new RSyntaxTextArea(5, 80)
+  val codePanes = List(codePane, codePane2)
   val statusStrip = new StatusStrip()
   val (toolbar, runButton, runWorksheetButton, traceButton, compileButton, stopButton, hNextButton, hPrevButton,
     clearSButton, clearButton, cexButton) = makeToolbar()
@@ -78,18 +82,18 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   FoldParserManager.get.addFoldParserMapping(SYNTAX_STYLE_SCALA2, new CurlyFoldParser)
   val defaultSyntaxRich = AppMode.currentMode.richSyntaxHighlighting
   if (defaultSyntaxRich) {
-    codePane.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2)
+    codePanes.foreach(_.setSyntaxEditingStyle(SYNTAX_STYLE_SCALA2))
   }
   else {
-    codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
+    codePanes.foreach(_.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA))
   }
-  codePane.setAntiAliasingEnabled(true)
-  codePane.setTabsEmulated(true)
-  codePane.setTabSize(4)
-  codePane.setCodeFoldingEnabled(true)
+  codePanes.foreach(_.setAntiAliasingEnabled(true))
+  codePanes.foreach(_.setTabsEmulated(true))
+  codePanes.foreach(_.setTabSize(4))
+  codePanes.foreach(_.setCodeFoldingEnabled(true))
 
   val theme = Theme.currentTheme.editorTheme
-  theme.apply(codePane)
+  codePanes.foreach(theme.apply(_))
 
   val inputMap = codePane.getInputMap()
   inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
@@ -98,10 +102,10 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   Utils.safeProcessSilent {
     if (kojoCtx.screenDpiFontDelta > 0) {
       for (i <- 1 to kojoCtx.screenDpiFontDelta) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
-      increaseFontSizeAction.actionPerformedImpl(null, codePane)
+      codePanes.foreach(increaseFontSizeAction.actionPerformedImpl(null, _))
     }
     else {
-      for (i <- 1 to 2) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
+      for (i <- 1 to 2) { codePanes.foreach(increaseFontSizeAction.actionPerformedImpl(null, _)) }
     }
   }
 
@@ -116,11 +120,13 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
 
   val provider = new KojoCompletionProvider(execSupport)
-  val ac = new AutoCompletion(provider)
-  ac.setParameterAssistanceEnabled(true)
-  ac.setAutoActivationEnabled(true)
-  ac.setShowDescWindow(true)
-  ac.install(codePane)
+  codePanes.foreach { pane =>
+    val ac = new AutoCompletion(provider)
+    ac.setParameterAssistanceEnabled(true)
+    ac.setAutoActivationEnabled(true)
+    ac.setShowDescWindow(true)
+    ac.install(pane)
+  }
 
   val sp = new RTextScrollPane(codePane)
   //  sp.setFoldIndicatorEnabled(true)
@@ -130,6 +136,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   csp.add(sp)
   add(csp, BorderLayout.CENTER)
   add(statusStrip, BorderLayout.EAST)
+  val interpComponent = codePane2
+  //  val interpComponent = new RTextScrollPane(codePane2)
+  //  add(interpComponent, BorderLayout.SOUTH)
 
   RTextArea.setIconGroup(new IconGroup("KojoIcons", "images/extra/"))
 
@@ -467,6 +476,24 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(toggleMenuItem, idx)
   idx += 1
 
+  var interpPaneVisible = false
+  val toggleInterpPaneAction = new AbstractAction(Utils.loadString("S_InterpPaneVisible")) {
+    def actionPerformed(ev: ActionEvent) {
+      if (interpPaneVisible) {
+        interpPaneVisible = false
+        hideInterpreterPane()
+      }
+      else {
+        interpPaneVisible = true
+        showInterpreterPane()
+      }
+    }
+  }
+  val toggleInterpPaneItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(toggleInterpPaneAction)
+  toggleInterpPaneItem.setSelected(false)
+  popup.add(toggleInterpPaneItem, idx)
+  idx += 1
+
   val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
     def actionPerformed(ev: ActionEvent) {
       execSupport.codeRunner.resetInterpUI()
@@ -502,6 +529,16 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     Utils.schedule(0.3) { codePane.requestFocusInWindow() }
   }
 
+  def showInterpreterPane(): Unit = {
+    add(interpComponent, BorderLayout.SOUTH)
+    Utils.schedule(1) { codePane2.requestFocusInWindow() }
+  }
+
+  def hideInterpreterPane(): Unit = {
+    remove(interpComponent)
+    Utils.schedule(1) { codePane.requestFocusInWindow() }
+  }
+
   val ipmProvider = new IpmProvider(execSupport)
   addCodePaneListeners()
 
@@ -518,46 +555,49 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     val UploadCommand = "UploadCommand"
 
     val actionListener = new ActionListener {
-      def actionPerformed(e: ActionEvent) = e.getActionCommand match {
-        case RunScript =>
-          if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
-            execSupport.runCode()
-          }
-          else {
-            execSupport.compileRunCode()
-          }
-          codePane.requestFocusInWindow()
-        case RunWorksheet =>
-          execSupport.runWorksheet()
-          codePane.requestFocusInWindow()
-        case TraceScript =>
-          execSupport.traceCode()
-          codePane.requestFocusInWindow()
-        case CompileScript =>
-          if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
-            execSupport.parseCode(false)
-          }
-          else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
-            execSupport.parseCode(true)
-          }
-          else {
-            execSupport.compileCode()
-          }
-        case StopScript =>
-          execSupport.stopScript()
-          codePane.requestFocusInWindow()
-        case HistoryNext =>
-          execSupport.loadCodeFromHistoryNext()
-          codePane.requestFocusInWindow()
-        case HistoryPrev =>
-          execSupport.loadCodeFromHistoryPrev()
-          codePane.requestFocusInWindow()
-        case ClearEditor =>
-          closeFileAndClrEditorIgnoringCancel()
-        case ClearOutput =>
-          execSupport.clrOutput()
-        case UploadCommand =>
-          execSupport.upload()
+      def actionPerformed(e: ActionEvent) {
+        activateCodePane1()
+        e.getActionCommand match {
+          case RunScript =>
+            if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
+              execSupport.runCode()
+            }
+            else {
+              execSupport.compileRunCode()
+            }
+            codePane.requestFocusInWindow()
+          case RunWorksheet =>
+            execSupport.runWorksheet()
+            codePane.requestFocusInWindow()
+          case TraceScript =>
+            execSupport.traceCode()
+            codePane.requestFocusInWindow()
+          case CompileScript =>
+            if ((e.getModifiers & Event.CTRL_MASK) == Event.CTRL_MASK) {
+              execSupport.parseCode(false)
+            }
+            else if ((e.getModifiers & Event.SHIFT_MASK) == Event.SHIFT_MASK) {
+              execSupport.parseCode(true)
+            }
+            else {
+              execSupport.compileCode()
+            }
+          case StopScript =>
+            execSupport.stopScript()
+            codePane.requestFocusInWindow()
+          case HistoryNext =>
+            execSupport.loadCodeFromHistoryNext()
+            codePane.requestFocusInWindow()
+          case HistoryPrev =>
+            execSupport.loadCodeFromHistoryPrev()
+            codePane.requestFocusInWindow()
+          case ClearEditor =>
+            closeFileAndClrEditorIgnoringCancel()
+          case ClearOutput =>
+            execSupport.clrOutput()
+          case UploadCommand =>
+            execSupport.upload()
+        }
       }
     }
 
@@ -707,6 +747,43 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
     codePane.addMouseListener(mouseListener)
     codePane.addMouseWheelListener(mouseListener)
+
+    codePane2.addKeyListener(new KeyAdapter {
+      override def keyPressed(evt: KeyEvent) {
+        evt.getKeyCode match {
+          case KeyEvent.VK_ENTER =>
+            if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
+              execSupport.runCode()
+              codePane2.setText("")
+              evt.consume
+            }
+          case _ => // do nothing special
+        }
+      }
+    })
+
+    codePane.addFocusListener(new FocusAdapter {
+      override def focusGained(e: FocusEvent) = {
+        activateCodePane1()
+      }
+    })
+    codePane2.addFocusListener(new FocusAdapter {
+      override def focusGained(e: FocusEvent) = {
+        activateCodePane2()
+      }
+    })
+  }
+
+  private def activateCodePane1(): Unit = {
+    execSupport.codePane = codePane
+    execSupport.kojoCtx.hideScriptInOutput()
+    execSupport.kojoCtx.hideVerboseOutput()
+  }
+
+  private def activateCodePane2(): Unit = {
+    execSupport.codePane = codePane2
+    execSupport.kojoCtx.showScriptInOutput()
+    execSupport.kojoCtx.showVerboseOutput()
   }
 
   def setTabSize(ts: Int) = Utils.runInSwingThread {
