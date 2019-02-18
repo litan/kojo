@@ -143,8 +143,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   csp.add(sp)
   add(csp, BorderLayout.CENTER)
   add(statusStrip, BorderLayout.EAST)
-  val interpComponent = codePane2
-  //  val interpComponent = new RTextScrollPane(codePane2)
+  //  val interpComponent = codePane2
+  val interpComponent = new RTextScrollPane(codePane2)
   //  add(interpComponent, BorderLayout.SOUTH)
 
   RTextArea.setIconGroup(new IconGroup("KojoIcons", "images/extra/"))
@@ -767,6 +767,19 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
               execSupport.runCode()
+              evt.consume
+            }
+          case KeyEvent.VK_UP =>
+            if ((evt.isControlDown || evt.isMetaDown) && hPrevButton.isEnabled) {
+              execSupport.loadCodeFromHistoryPrev()
+              evt.consume
+            }
+          case KeyEvent.VK_DOWN =>
+            if (evt.isControlDown || evt.isMetaDown) {
+              if (hNextButton.isEnabled) {
+                execSupport.loadCodeFromHistoryNext()
+              }
+              // consume event in any case, to prevent scrolling when there is no 'next' history
               evt.consume
             }
           case _ => // do nothing special

@@ -522,6 +522,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     def initInterp() {
       outputHandler.withOutputSuppressed {
         runContext.initInterp(interp)
+        interp.setMaxPrintStringLen(Int.MaxValue)
       }
     }
 

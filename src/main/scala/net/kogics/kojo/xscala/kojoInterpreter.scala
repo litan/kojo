@@ -28,6 +28,9 @@ class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends 
   //  interp.setContextClassLoader()
   val completer = new PresentationCompilerCompleter(interp)
 
+  def setMaxPrintStringLen(n: Int): Unit = {
+    interp.isettings.maxPrintString = n
+  }
   def bind(name: String, boundType: String, value: Any) = interp.bind(name, boundType, value)
   def interpret(code: String) = {
     interp.classLoader.asContext {
