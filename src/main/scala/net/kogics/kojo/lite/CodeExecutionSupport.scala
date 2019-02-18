@@ -134,6 +134,8 @@ class CodeExecutionSupport(
 
   @volatile var pendingCommands = false
   @volatile var codePane: JTextArea = _
+  @volatile var codePane1: JTextArea = _
+  @volatile var codePane2: JTextArea = _
   @volatile var startingUp = true
 
   val codeRunner = makeCodeRunner
@@ -157,6 +159,8 @@ class CodeExecutionSupport(
     codeRunner.start()
     clearButton = se.clearButton
     setCodePane(se.codePane)
+    codePane1 = se.codePane
+    codePane2 = se.codePane2
     hPrevButton.setEnabled(commandHistory.hasPrevious)
   }
 
@@ -896,9 +900,25 @@ class CodeExecutionSupport(
   }
   def varCompletions(prefix: Option[String]) = codeRunner.varCompletions(prefix)
   def keywordCompletions(prefix: Option[String]) = codeRunner.keywordCompletions(prefix)
-  def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = codeRunner.memberCompletions(codePane.getText, caretOffset, objid, prefix)
+  def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = {
+    val codeAndOffset = completionCodeAndOffset(caretOffset)
+    codeRunner.memberCompletions(codeAndOffset._1, codeAndOffset._2, objid, prefix)
+  }
   def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) = xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
-  def typeAt(caretOffset: Int) = codeRunner.typeAt(codePane.getText, caretOffset)
+  def typeAt(caretOffset: Int) = {
+    val codeAndOffset = completionCodeAndOffset(caretOffset)
+    codeRunner.typeAt(codeAndOffset._1, codeAndOffset._2)
+  }
+
+  private def completionCodeAndOffset(caretOffset: Int): (String, Int) = {
+    if (codePane == codePane1) {
+      (codePane.getText, caretOffset)
+    }
+    else {
+      val cp1text = codePane1.getText
+      (s"${cp1text}\n${codePane.getText}", caretOffset + cp1text.length + 1)
+    }
+  }
 
   var imanip: Option[InteractiveManipulator] = None
   def addManipulator(im: InteractiveManipulator) {

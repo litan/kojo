@@ -95,8 +95,15 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val theme = Theme.currentTheme.editorTheme
   codePanes.foreach(theme.apply(_))
 
-  val inputMap = codePane.getInputMap()
-  inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()), RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction);
+  val inputMap = codePane.getInputMap
+  val inputMap2 = codePane2.getInputMap
+  val inputMaps = List(inputMap, inputMap2)
+  inputMaps.foreach {
+    _.put(
+      KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()),
+      RSyntaxTextAreaEditorKit.rstaGoToMatchingBracketAction
+    )
+  }
 
   val increaseFontSizeAction = new IncreaseFontSizeAction()
   Utils.safeProcessSilent {
@@ -240,7 +247,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val formatItem = new JMenuItem(formatAction)
   val csf = KeyStroke.getKeyStroke("control shift F")
   inputMap.put(csf, "format-src")
-  val am = codePane.getActionMap()
+  val am = codePane.getActionMap
+  val am2 = codePane2.getActionMap
+  val actionMaps = List(am, am2)
   am.put("format-src", formatAction)
   formatItem.setAccelerator(csf)
   popup.add(formatItem, idx)
@@ -349,6 +358,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   val typeAtAction = new AbstractAction(Utils.loadString("S_ShowType")) {
     def actionPerformed(ev: ActionEvent) {
+      val codePane = execSupport.codePane
       val offset = codePane.getCaretPosition
       val typeAt = execSupport.typeAt(offset)
       val wordStart = Utilities.getWordStart(codePane, offset)
@@ -372,8 +382,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
   val typeAtItem = new JMenuItem(typeAtAction)
   val controlT = KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.CTRL_DOWN_MASK)
-  inputMap.put(controlT, "type-at")
-  am.put("type-at", typeAtAction)
+  inputMaps.foreach(_.put(controlT, "type-at"))
+  actionMaps.foreach(_.put("type-at", typeAtAction))
   typeAtItem.setAccelerator(controlT)
   popup.add(typeAtItem, idx)
   idx += 1
@@ -525,18 +535,21 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     def popupMenuCanceled(e: PopupMenuEvent) {}
   })
 
+  val focusRequestDelay = 0.3
   def activate() {
-    Utils.schedule(0.3) { codePane.requestFocusInWindow() }
+    Utils.schedule(focusRequestDelay) { codePane.requestFocusInWindow() }
   }
 
   def showInterpreterPane(): Unit = {
     add(interpComponent, BorderLayout.SOUTH)
-    Utils.schedule(1) { codePane2.requestFocusInWindow() }
+    revalidate()
+    Utils.schedule(focusRequestDelay) { codePane2.requestFocusInWindow() }
   }
 
   def hideInterpreterPane(): Unit = {
     remove(interpComponent)
-    Utils.schedule(1) { codePane.requestFocusInWindow() }
+    revalidate()
+    Utils.schedule(focusRequestDelay) { codePane.requestFocusInWindow() }
   }
 
   val ipmProvider = new IpmProvider(execSupport)
@@ -754,7 +767,6 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
               execSupport.runCode()
-              codePane2.setText("")
               evt.consume
             }
           case _ => // do nothing special
