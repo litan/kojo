@@ -145,7 +145,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   add(statusStrip, BorderLayout.EAST)
   //  val interpComponent = codePane2
   val interpComponent = new RTextScrollPane(codePane2)
-  //  add(interpComponent, BorderLayout.SOUTH)
+  add(interpComponent, BorderLayout.SOUTH)
+  hideInterpreterPane()
 
   RTextArea.setIconGroup(new IconGroup("KojoIcons", "images/extra/"))
 
@@ -541,19 +542,28 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
 
   def showInterpreterPane(): Unit = {
-    add(interpComponent, BorderLayout.SOUTH)
+    interpComponent.setVisible(true)
     revalidate()
     Utils.schedule(focusRequestDelay) { codePane2.requestFocusInWindow() }
   }
 
   def hideInterpreterPane(): Unit = {
-    remove(interpComponent)
+    interpComponent.setVisible(false)
     revalidate()
     Utils.schedule(focusRequestDelay) { codePane.requestFocusInWindow() }
   }
 
   val ipmProvider = new IpmProvider(execSupport)
   addCodePaneListeners()
+
+  private def compileRunOrInterpretCode(): Unit = {
+    if (interpComponent.isVisible) {
+      execSupport.runCode()
+    }
+    else {
+      execSupport.compileRunCode()
+    }
+  }
 
   def makeToolbar() = {
     val RunScript = "RunScript"
@@ -576,7 +586,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               execSupport.runCode()
             }
             else {
-              execSupport.compileRunCode()
+              compileRunOrInterpretCode()
             }
             codePane.requestFocusInWindow()
           case RunWorksheet =>
@@ -684,7 +694,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
-              execSupport.compileRunCode()
+              compileRunOrInterpretCode()
               evt.consume
             }
             else if (evt.isShiftDown && execSupport.isRunningEnabled) {
