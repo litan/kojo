@@ -335,9 +335,8 @@ class CompilerAndRunner(
         var resp = new Response[pcompiler.Tree]
         pcompiler.askTypeAt(pos, resp)
 
-        var response: pcompiler.Response[String] = null
-        val respget = resp.get // prime computation for PC thread!
-        response = pcompiler.askForResponse { () =>
+        val respget = resp.get
+        val response: pcompiler.Response[String] = pcompiler.askForResponse { () =>
           respget match {
             case Left(x) =>
               x match {
@@ -383,32 +382,35 @@ class CompilerAndRunner(
           pcompiler.askScopeCompletion(pos, resp)
         }
 
-        var response: pcompiler.Response[List[CompletionInfo]] = null
-        for (completions <- resp.get.left.toOption) {
-          response = pcompiler.askForResponse { () =>
-            val elb = new ListBuffer[CompletionInfo]
-            for (completion <- completions) {
-              try {
-                completion match {
-                  case pcompiler.TypeMember(sym, tpe, true, inherited, viaView) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                    elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
-                  case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                    elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
-                  case _ =>
+        val completionTimeout = 3000
+        resp.get(completionTimeout) match {
+          case Some(Left(completions)) =>
+            val response: pcompiler.Response[List[CompletionInfo]] = pcompiler.askForResponse { () =>
+              val elb = new ListBuffer[CompletionInfo]
+              completions.foreach { completion =>
+                try {
+                  completion match {
+                    case pcompiler.TypeMember(sym, tpe, true, inherited, viaView) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                      elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
+                    case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                      elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
+                    case _ =>
+                  }
+                }
+                catch {
+                  case t: Throwable =>
+                    println("Completion Problem 0: " + t.getMessage())
+                  // ignore, and move on to the next one
                 }
               }
-              catch {
-                case t: Throwable =>
-                  println("Completion Problem 0: " + t.getMessage())
-                // ignore, and move on to the next one
-              }
+              elb.toList
             }
-            elb.toList
-          }
-        }
-        response.get match {
-          case Left(l)  => l
-          case Right(_) => Nil
+            response.get match {
+              case Left(l)  => l
+              case Right(_) => Nil
+            }
+          case Some(Right(_)) => Nil
+          case None           => Nil
         }
       }
     } getOrElse (Nil)
