@@ -493,15 +493,22 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       if (interpPaneVisible) {
         interpPaneVisible = false
         hideInterpreterPane()
+        toggleInterpPaneItem.setSelected(false)
       }
       else {
         interpPaneVisible = true
         showInterpreterPane()
+        toggleInterpPaneItem.setSelected(true)
       }
     }
   }
   val toggleInterpPaneItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(toggleInterpPaneAction)
   toggleInterpPaneItem.setSelected(false)
+
+  val controlI = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK)
+  inputMaps.foreach(_.put(controlI, "toggle-interpreter-pane"))
+  actionMaps.foreach(_.put("toggle-interpreter-pane", toggleInterpPaneAction))
+  toggleInterpPaneItem.setAccelerator(controlI)
   popup.add(toggleInterpPaneItem, idx)
   idx += 1
 
