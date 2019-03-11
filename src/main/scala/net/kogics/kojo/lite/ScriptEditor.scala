@@ -512,6 +512,20 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(toggleInterpPaneItem, idx)
   idx += 1
 
+  val toggleInterpPaneFocusAction = new AbstractAction() {
+    def actionPerformed(ev: ActionEvent): Unit = {
+      if (codePane.hasFocus) {
+        codePane2.requestFocusInWindow()
+      }
+      else {
+        codePane.requestFocusInWindow()
+      }
+    }
+  }
+  val controlShiftI = KeyStroke.getKeyStroke(KeyEvent.VK_I, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
+  inputMaps.foreach(_.put(controlShiftI, "toggle-interpreter-pane-focus"))
+  actionMaps.foreach(_.put("toggle-interpreter-pane-focus", toggleInterpPaneFocusAction))
+
   val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
     def actionPerformed(ev: ActionEvent) {
       execSupport.codeRunner.resetInterpUI()
@@ -654,7 +668,13 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
     toolbar.setPreferredSize(new Dimension(0, imageFolder + imageFolder / 6))
 
-    import Theme.currentTheme.{runPng, runwPng, runtPng, stopPng, checkPng, clearSePng, clearOwPng}
+    import Theme.currentTheme.checkPng
+    import Theme.currentTheme.clearOwPng
+    import Theme.currentTheme.clearSePng
+    import Theme.currentTheme.runPng
+    import Theme.currentTheme.runtPng
+    import Theme.currentTheme.runwPng
+    import Theme.currentTheme.stopPng
 
     val runButton = makeNavigationButton(s"/images/$imageFolder/$runPng", RunScript, Utils.loadString("S_RunScript"))
     val runWorksheetButton = makeNavigationButton(s"/images/$imageFolder/$runwPng", RunWorksheet, Utils.loadString("S_RunWorksheet"))
