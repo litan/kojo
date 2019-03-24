@@ -208,6 +208,16 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   val formatAction = new AbstractAction(Utils.loadString("S_FormatSource")) {
     import scalariform.formatter.preferences._
+    val prefs = new FormattingPreferences(
+      Map(
+        IndentSpaces -> tabSize,
+        CompactControlReadability -> true,
+        AlignParameters -> true,
+        AlignSingleLineCaseStatements -> true,
+        DanglingCloseParenthesis -> Preserve,
+        FormatXml -> false
+      )
+    )
 
     def actionPerformed(ev: ActionEvent) {
       val caretLine = codePane.getCaretLineNumber
@@ -215,16 +225,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       try {
         codePane.setText(ScalaFormatter.format(
           codePane.getText,
-          new FormattingPreferences(
-            Map(
-              IndentSpaces -> tabSize,
-              CompactControlReadability -> true,
-              AlignParameters -> true,
-              AlignSingleLineCaseStatements -> true,
-              DanglingCloseParenthesis -> true,
-              FormatXml -> false
-            )
-          )
+          prefs
         ))
         try {
           val lineStart = codePane.getLineStartOffset(caretLine)
