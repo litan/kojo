@@ -66,9 +66,11 @@ import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.CodeTemplates
 
 import scalariform.formatter.ScalaFormatter
+import scalariform.formatter.preferences._
 
 class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
 
+  var tabSize = 4
   val codePane = new RSyntaxTextArea(5, 80)
   val codePane2 = new RSyntaxTextArea(5, 80)
   val codePanes = List(codePane, codePane2)
@@ -89,7 +91,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
   codePanes.foreach(_.setAntiAliasingEnabled(true))
   codePanes.foreach(_.setTabsEmulated(true))
-  codePanes.foreach(_.setTabSize(4))
+  codePanes.foreach(_.setTabSize(tabSize))
   codePanes.foreach(_.setCodeFoldingEnabled(true))
 
   val theme = Theme.currentTheme.editorTheme
@@ -204,28 +206,27 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   fastColoringCb.setSelected(!defaultSyntaxRich)
   syntaxColoringMenu.add(fastColoringCb)
 
-  var tabSize = 4
+  def makeFormatPrefs(ts: Int) = new FormattingPreferences(
+    Map(
+      IndentSpaces -> ts,
+      CompactControlReadability -> true,
+      AlignParameters -> true,
+      AlignSingleLineCaseStatements -> true,
+      DanglingCloseParenthesis -> Preserve,
+      FormatXml -> false
+    )
+  )
+
+  var formatPrefs = makeFormatPrefs(tabSize)
 
   val formatAction = new AbstractAction(Utils.loadString("S_FormatSource")) {
-    import scalariform.formatter.preferences._
-    val prefs = new FormattingPreferences(
-      Map(
-        IndentSpaces -> tabSize,
-        CompactControlReadability -> true,
-        AlignParameters -> true,
-        AlignSingleLineCaseStatements -> true,
-        DanglingCloseParenthesis -> Preserve,
-        FormatXml -> false
-      )
-    )
-
     def actionPerformed(ev: ActionEvent) {
       val caretLine = codePane.getCaretLineNumber
       val posInLine = codePane.getCaretOffsetFromLineStart
       try {
         codePane.setText(ScalaFormatter.format(
           codePane.getText,
-          prefs
+          formatPrefs
         ))
         try {
           val lineStart = codePane.getLineStartOffset(caretLine)
@@ -851,7 +852,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   def setTabSize(ts: Int) = Utils.runInSwingThread {
     tabSize = ts
-    codePane.setTabSize(ts)
+    codePanes.foreach(_.setTabSize(tabSize))
+    formatPrefs = makeFormatPrefs(tabSize)
   }
 
   def setFont(name: String) = Utils.runInSwingThread {
