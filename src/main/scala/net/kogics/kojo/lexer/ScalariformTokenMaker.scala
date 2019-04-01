@@ -35,7 +35,7 @@ import scalariform.lexer.{Token => SfToken}
 class ScalariformTokenMaker extends AbstractTokenMaker {
 
   def rawTokenise(s: String) = {
-    ScalaLexer.createRawLexer(s, true, ScalaVersions.DEFAULT_VERSION).toVector
+    ScalaLexer.createRawLexer(s, true, ScalaVersions.DEFAULT_VERSION).toArray
   }
 
   var docTokens = rawTokenise("")
@@ -143,7 +143,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
       lineTokens += SfToken(Tokens.EOF, "", segmentOffset, "")
     }
 
-    lineTokens.toVector
+    lineTokens.toArray
   }
 
   // Hooks called by RSTA on doc change
