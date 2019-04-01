@@ -76,6 +76,10 @@ trait CoreBuiltins extends Rationals {
   val fast = core.Fast
   val superFast = core.SuperFast
 
+  val HashMap = collection.mutable.HashMap
+  val HashSet = collection.mutable.HashSet
+  val ArrayBuffer = collection.mutable.ArrayBuffer
+
   def epochTimeMillis = System.currentTimeMillis()
   def epochTime = System.currentTimeMillis() / 1000.0
 
