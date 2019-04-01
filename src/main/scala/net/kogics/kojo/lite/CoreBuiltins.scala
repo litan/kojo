@@ -1,8 +1,8 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.{ Color => JColor }
-import java.awt.{ Font => JFont }
+import java.awt.{Color => JColor}
+import java.awt.{Font => JFont}
 import java.awt.GradientPaint
 import java.awt.GraphicsEnvironment
 import java.awt.LinearGradientPaint
@@ -59,11 +59,11 @@ trait CoreBuiltins extends Rationals {
   val ItalicFont = JFont.ITALIC
 
   val C = staging.KColor
-  
+
   val ColorMaker = doodle.Color
   implicit def rc2c(rc: doodle.Color): Color = rc.toAwt
   implicit def c2rc(c: Color): doodle.Color = doodle.Color.rgba(c.getRed, c.getGreen, c.getBlue, c.getAlpha)
-  
+
   //  val Color = staging.KColor
   val noColor = C.noColor
 
@@ -75,6 +75,10 @@ trait CoreBuiltins extends Rationals {
   val medium = core.Medium
   val fast = core.Fast
   val superFast = core.SuperFast
+
+  type MMap[K, V] = collection.mutable.Map[K, V]
+  type MSet[V] = collection.mutable.Set[V]
+  type MSeq[V] = collection.mutable.Seq[V]
 
   val HashMap = collection.mutable.HashMap
   val HashSet = collection.mutable.HashSet
