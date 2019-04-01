@@ -186,13 +186,13 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
         def seekPrevLineBreak(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
           case Seq() => (0, dropped)
-          case Seq(x, xs @ _*) =>
+          case x +: xs =>
             if (wsWithNl(x)) (x.offset, dropped) else seekPrevLineBreak(xs, dropped + 1)
         }
 
         def seekNextLineBreak(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
           case Seq() => (doc.getLength, dropped)
-          case Seq(x, xs @ _*) =>
+          case x +: xs =>
             if (wsWithNl(x)) (x.offset, dropped) else seekNextLineBreak(xs, dropped + 1)
         }
 
