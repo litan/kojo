@@ -36,9 +36,9 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
   def isAbsent = colorPopup == null
   def isPresent = !isAbsent
 
-  lazy val ColorPattern = Pattern.compile("""(ColorMaker\.)?(%s)""" format (ctx.knownColors2.mkString("|")))
+  lazy val ColorPattern = Pattern.compile("""(ColorMaker|cm)\.(%s)""" format (ctx.knownColors2.mkString("|")))
   def matcher(possibleColor: String) = ColorPattern.matcher(possibleColor)
-  lazy val ColorPattern2 = Pattern.compile("""ColorMaker.hsl(a)?\((\d+),\s*(\d+\.?\d?\d?),\s*(\d+\.?\d?\d?)(,\s*(\d+\.?\d?\d?))?\)""")
+  lazy val ColorPattern2 = Pattern.compile("""(ColorMaker|cm)\.hsl(a)?\((\d+),\s*(\d+\.?\d?\d?),\s*(\d+\.?\d?\d?)(,\s*(\d+\.?\d?\d?))?\)""")
   def matcher2(possibleColorLine: String) = ColorPattern2.matcher(possibleColorLine)
 
   def findColorFunction(pane: JTextComponent, offset: Int): Boolean = {
@@ -53,10 +53,10 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
       val lineOffset = offset - lineStart
       if (start <= lineOffset && lineOffset <= end) {
         target = m.group
-        val hsla = Seq(2, 3, 4, 6) map { e =>
+        val hsla = Seq(3, 4, 5, 7) map { e =>
           val ret = m.group(e)
           e match {
-            case 2 => ret.toInt
+            case 3 => ret.toInt
             case _ => if (ret != null) ret.toDouble else 1.0
           }
 
