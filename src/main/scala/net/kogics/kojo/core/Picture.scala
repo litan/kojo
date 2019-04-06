@@ -98,10 +98,10 @@ trait Picture extends InputAware {
     tnode.getInputEventListeners.foreach { tnode.removeInputEventListener(_) }
     p.tnode.getInputEventListeners.foreach { tnode.addInputEventListener(_) }
   }
-  def moveToFront() {
+  def moveToFront() = Utils.runInSwingThread {
     tnode.moveToFront()
   }
-  def moveToBack() {
+  def moveToBack() = Utils.runInSwingThread {
     tnode.moveToBack()
   }
   def showNext(): Unit = showNext(100)
@@ -113,7 +113,7 @@ trait Picture extends InputAware {
   def below(other: Picture): Picture = other.above(this)
   def on(other: Picture): Picture
   def under(other: Picture): Picture = other.on(this)
-  def animateToPosition(x: Double, y: Double, inMillis: Long)(onEnd: => Unit): Unit = {
+  def animateToPosition(x: Double, y: Double, inMillis: Long)(onEnd: => Unit): Unit = Utils.runInSwingThread {
     import edu.umd.cs.piccolo.activities.PActivity
     import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
     val pos0 = position
