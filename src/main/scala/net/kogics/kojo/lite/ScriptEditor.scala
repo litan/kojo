@@ -107,14 +107,18 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     )
   }
 
-  val increaseFontSizeAction = new IncreaseFontSizeAction()
+  val realIncreaseFontSizeAction = new IncreaseFontSizeAction()
+  val increaseFontSizeAction = new AbstractAction() {
+    override def actionPerformed(e: ActionEvent) = {
+      codePanes.foreach(realIncreaseFontSizeAction.actionPerformedImpl(null, _))
+    }
+  }
   Utils.safeProcessSilent {
     if (kojoCtx.screenDpiFontDelta > 0) {
-      for (i <- 1 to kojoCtx.screenDpiFontDelta) { increaseFontSizeAction.actionPerformedImpl(null, codePane) }
-      codePanes.foreach(increaseFontSizeAction.actionPerformedImpl(null, _))
+      for (i <- 1 to kojoCtx.screenDpiFontDelta) { increaseFontSizeAction.actionPerformed(null) }
     }
     else {
-      for (i <- 1 to 2) { codePanes.foreach(increaseFontSizeAction.actionPerformedImpl(null, _)) }
+      for (i <- 1 to 2) { increaseFontSizeAction.actionPerformed(null) }
     }
   }
 
@@ -437,7 +441,13 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   popup.add(increaseFontItem, idx)
   idx += 1
 
-  val decreaseFontSizeAction = new DecreaseFontSizeAction()
+  val realDecreaseFontSizeAction = new DecreaseFontSizeAction()
+  val decreaseFontSizeAction = new AbstractAction() {
+    override def actionPerformed(e: ActionEvent) = {
+      codePanes.foreach(realDecreaseFontSizeAction.actionPerformedImpl(null, _))
+    }
+  }
+
   val decreaseFontItem = new JMenuItem(decreaseFontSizeAction)
   decreaseFontItem.setText(Utils.loadString("S_DecreaseFontSize"))
   val controlNumMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
@@ -790,7 +800,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         if (e.isControlDown) {
           val delta = e.getWheelRotation
           val action = if (delta < 0) increaseFontSizeAction else decreaseFontSizeAction
-          action.actionPerformedImpl(null, codePane)
+          action.actionPerformed(null)
         }
         else {
           sp.getMouseWheelListeners foreach { _.mouseWheelMoved(e) }
