@@ -94,8 +94,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   codePanes.foreach(_.setTabSize(tabSize))
   codePanes.foreach(_.setCodeFoldingEnabled(true))
 
-  val theme = Theme.currentTheme.editorTheme
-  codePanes.foreach(theme.apply(_))
+  codePanes.foreach(Theme.currentTheme.loadEditorTheme.apply(_))
 
   val inputMap = codePane.getInputMap
   val inputMap2 = codePane2.getInputMap
@@ -115,7 +114,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   }
   Utils.safeProcessSilent {
     if (kojoCtx.screenDpiFontDelta > 0) {
-      for (i <- 1 to kojoCtx.screenDpiFontDelta) { increaseFontSizeAction.actionPerformed(null) }
+      for (i <- 1 to kojoCtx.screenDpiFontDelta + 1) { increaseFontSizeAction.actionPerformed(null) }
     }
     else {
       for (i <- 1 to 2) { increaseFontSizeAction.actionPerformed(null) }

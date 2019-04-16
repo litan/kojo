@@ -30,7 +30,7 @@ trait Theme {
   def outputPaneFg: Color
   def outputPaneBg: Color
   def canvasBg: Color
-  def editorTheme: RTheme
+  def loadEditorTheme: RTheme
   def loadLookAndFeel(): Unit
   def loadDefaultPerspective(kojoCtx: KojoCtx): Unit
   def toolbarBg: Option[Color]
@@ -62,7 +62,7 @@ trait Theme {
 
 class DarkTheme extends Theme {
   val canvasBg = new Color(0x424647)
-  val editorTheme = RTheme.load(getClass.getResourceAsStream("dark-editor-theme.xml"))
+  def loadEditorTheme = RTheme.load(getClass.getResourceAsStream("dark-editor-theme.xml"))
   def loadLookAndFeel(): Unit = {
     val laf = new DarculaLaf
     UIManager.setLookAndFeel(laf)
@@ -102,7 +102,7 @@ class DarkTheme extends Theme {
 
 class LightTheme extends Theme {
   val canvasBg = Color.white
-  val editorTheme = RTheme.load(getClass.getResourceAsStream("light-editor-theme.xml"))
+  def loadEditorTheme = RTheme.load(getClass.getResourceAsStream("light-editor-theme.xml"))
   def loadLookAndFeel(): Unit = {
     if (Utils.isMac) {
       // use the system look and feel
