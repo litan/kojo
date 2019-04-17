@@ -19,6 +19,7 @@ import java.awt.Image
 import java.awt.Paint
 import java.awt.event.KeyEvent
 import java.awt.geom.GeneralPath
+import java.net.URL
 import java.util.Random
 
 import javax.swing.JComponent
@@ -148,6 +149,7 @@ package object picture {
   def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
   def image(file: String, envelope: Option[Picture])(implicit canvas: SCanvas) = new FileImagePic(file, envelope)
+  def image(url: URL, envelope: Option[Picture])(implicit canvas: SCanvas) = new UrlImagePic(url, envelope)
 
   def image(img: Image, envelope: Option[Picture])(implicit canvas: SCanvas) = new ImagePic(img, envelope)
 

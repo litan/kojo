@@ -21,6 +21,7 @@ import java.awt.TexturePaint
 import java.awt.Toolkit
 import java.awt.geom.GeneralPath
 import java.awt.geom.Rectangle2D
+import java.net.URL
 
 import javax.swing.JComponent
 
@@ -486,6 +487,7 @@ Here's a partial list of the available commands:
   val PShapes = Picture
   val PicShape = Picture
   //  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
+  def url(url: String) = new URL(url)
   object Picture {
     def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
     def textu(s0: Any, fontSize: Int = 15, color: Color = red) = picture.textu(s0, fontSize, color)
@@ -504,6 +506,8 @@ Here's a partial list of the available commands:
     def arc(r: Double, angle: Double) = picture.arc(r, angle)
     def image(fileName: String) = picture.image(fileName, None)
     def image(fileName: String, envelope: Picture) = picture.image(fileName, Some(envelope))
+    def image(url: URL) = picture.image(url, None)
+    def image(url: URL, envelope: Picture) = picture.image(url, Some(envelope))
     def image(image: Image) = picture.image(image, None)
     def image(image: Image, envelope: Picture) = picture.image(image, Some(envelope))
     def widget(component: JComponent) = picture.widget(component)

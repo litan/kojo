@@ -25,6 +25,7 @@ import java.awt.geom.GeneralPath
 import java.awt.geom.PathIterator
 import java.awt.geom.Point2D
 import java.awt.geom.Rectangle2D
+import java.net.URL
 
 import javax.swing.JComboBox
 import javax.swing.JComponent
@@ -350,6 +351,11 @@ class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanv
 class FileImagePic(file: String, envelope: Option[Picture])(implicit canvas: SCanvas)
   extends ImagePic(Utils.loadImageC(file), envelope) {
   override def copy: net.kogics.kojo.core.Picture = new FileImagePic(file, envelope)
+}
+
+class UrlImagePic(url: URL, envelope: Option[Picture])(implicit canvas: SCanvas)
+  extends ImagePic(Utils.loadUrlImageC(url), envelope) {
+  override def copy: net.kogics.kojo.core.Picture = new UrlImagePic(url, envelope)
 }
 
 class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2

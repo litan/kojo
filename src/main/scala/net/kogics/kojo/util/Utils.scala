@@ -104,8 +104,16 @@ object Utils {
     }
   }
 
+  def loadUrlImage(url: URL): Image = {
+    Toolkit.getDefaultToolkit.createImage(url)
+  }
+
   def loadImageC(fname: String): Image = {
     imageCache.getOrElseUpdate(fname, loadImage(fname))
+  }
+
+  def loadUrlImageC(url: URL): Image = {
+    imageCache.getOrElseUpdate(url.toExternalForm, loadUrlImage(url))
   }
 
   def loadIcon(fname: String): ImageIcon = {
