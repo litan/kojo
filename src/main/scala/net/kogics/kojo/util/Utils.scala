@@ -105,7 +105,7 @@ object Utils {
   }
 
   def loadUrlImage(url: URL): Image = {
-    Toolkit.getDefaultToolkit.createImage(url)
+    ImageIO.read(url)
   }
 
   def loadImageC(fname: String): Image = {
@@ -700,7 +700,7 @@ object Utils {
             stripCR(file.readAsString)
           }
           else {
-            val res = loadResource(fileName0)
+            val res = loadResource(fileName)
             if (res == null) {
               file.readAsString // trigger exception
             }
