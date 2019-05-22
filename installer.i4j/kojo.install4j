@@ -290,7 +290,7 @@ return console.askOkCancel(message, true);
                           <void method="put">
                             <string>en</string>
                             <object class="com.install4j.api.beans.ExternalFile">
-                              <string>/home/lalit/Kojo.i4j/licenses/Kojoi-license.txt</string>
+                              <string>/home/lalit/work/kojo/installerbuild/licenses/Kojoi-license.txt</string>
                             </object>
                           </void>
                         </void>
