@@ -217,3 +217,5 @@ animate {
 }
 
 activateCanvas()
+
+// game resources sourced from: https://github.com/pricheal/pygame-tiled-demo

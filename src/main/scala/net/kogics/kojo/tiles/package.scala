@@ -134,32 +134,40 @@ package object tiles {
 
     def moveToTileLeft(pic: Picture) {
       val b = pic.bounds
+      val picp = pic.position
+      val delta = picp.x - b.x
       val txy = kojoToTile(b.x + b.width, b.y + b.height / 2)
-      val p = tileToKojo(TileXY(txy.x - 1, txy.y))
+      val b2xy = tileToKojo(TileXY(txy.x - 1, txy.y))
       val widthDiff = b.width - tileWidth
-      pic.setPosition(p.x - widthDiff, b.y)
+      pic.setPosition(b2xy.x - widthDiff + delta, b.y + delta)
     }
 
     def moveToTileRight(pic: Picture) {
       val b = pic.bounds
+      val picp = pic.position
+      val delta = picp.x - b.x
       val txy = kojoToTile(b.x, b.y + b.height / 2)
-      val p = tileToKojo(TileXY(txy.x + 1, txy.y))
-      pic.setPosition(p.x, b.y)
+      val b2xy = tileToKojo(TileXY(txy.x + 1, txy.y))
+      pic.setPosition(b2xy.x + delta, b.y + delta)
     }
 
     def moveToTileAbove(pic: Picture) {
       val b = pic.bounds
+      val picp = pic.position
+      val delta = picp.x - b.x
       val txy = kojoToTile(b.x + b.width / 2, b.y)
-      val p = tileToKojo(TileXY(txy.x, txy.y - 1))
-      pic.setPosition(b.x, p.y)
+      val b2xy = tileToKojo(TileXY(txy.x, txy.y - 1))
+      pic.setPosition(b.x + delta, b2xy.y + delta)
     }
 
     def moveToTileBelow(pic: Picture) {
       val b = pic.bounds
+      val picp = pic.position
+      val delta = picp.x - b.x
       val txy = kojoToTile(b.x + b.width / 2, b.y + b.height)
-      val p = tileToKojo(TileXY(txy.x, txy.y + 1))
+      val b2xy = tileToKojo(TileXY(txy.x, txy.y + 1))
       val heightDiff = b.height - tileHeight
-      pic.setPosition(b.x, p.y - heightDiff)
+      pic.setPosition(b.x + delta, b2xy.y - heightDiff + delta)
     }
 
     val currentLevelNumber = 0
