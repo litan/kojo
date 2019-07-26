@@ -619,4 +619,10 @@ Here's a partial list of the available commands:
       }
     }
   }
+
+  type TileWorld = tiles.TileWorld
+  type SpriteSheet = tiles.SpriteSheet
+  val SpriteSheet = tiles.SpriteSheet
+  type TileXY = tiles.TileXY
+  val TileXY = tiles.TileXY
 }
