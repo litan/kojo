@@ -1,10 +1,26 @@
+/*
+ * Copyright (C) 2012 Lalit Pant <pant.lalit@gmail.com>
+ *
+ * The contents of this file are subject to the GNU General Public License
+ * Version 3 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.gnu.org/copyleft/gpl.html
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ */
 package net.kogics.kojo
 
 import java.awt.image.BufferedImage
 
 import scala.collection.mutable.ArrayBuffer
 
+import org.mapeditor.core.MapLayer
 import org.mapeditor.core.TileLayer
+import org.mapeditor.core.{Tile => MapTile}
 
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.Point
@@ -24,14 +40,10 @@ package object tiles {
 
   case class TileXY(x: Int, y: Int)
 
+  // Kojo drawing specific view of a level in a tmx file
   case class Level(world: TileWorld)(implicit canvas: SCanvas) {
     // Create list of layers for map
-    val layers = ArrayBuffer.empty[Layer]
-
-    // Create layers for each layer in tile map
-    for (layer <- 0 to world.layerCount) {
-      layers.append(Layer(index = layer, world))
-    }
+    val layers = (0 until world.layerCount).map { layerIdx => Layer(layerIdx, world) }
 
     def draw() {
       layers.foreach { layer =>
@@ -40,41 +52,60 @@ package object tiles {
     }
   }
 
+  // Kojo drawing specific view of a layer in a level
   case class Layer(index: Int, world: TileWorld)(implicit canvas: SCanvas) {
-    // Create group of tiles for this layer
-    val tiles = ArrayBuffer.empty[Tile]
-    val mapLayer = world.layer(index)
+    val mapLayer = world.layerAt(index) match {
+      case tl: TileLayer => tl
+      case _@ l          => println(s"Ignoring non-tile layer: $l"); null
+    }
 
-    // Create tiles in the right position for each layer
-    for (x <- 0 until world.width) {
+    val tiles = Array.ofDim[Tile](world.height, world.width)
+
+    if (mapLayer != null) {
       for (y <- 0 until world.height) {
-        val img = mapLayer match {
-          case tl: TileLayer =>
-            val tile = tl.getTileAt(x, y)
+        for (x <- 0 until world.width) {
+          val img = {
+            val tile = mapLayer.getTileAt(x, y)
             if (tile != null) tile.getImage else null
-          case _ => null
-        }
-        if (img != null) {
-          val kxy = world.tileToKojo(TileXY(x, y))
-          tiles += Tile(image = img, x = kxy.x, y = kxy.y)
+          }
+
+          if (img != null) {
+            val kxy = world.tileToKojo(TileXY(x, y))
+            tiles(y)(x) = Tile(kxy.x, kxy.y, x, y, img)
+          }
         }
       }
     }
 
-    // Draw layer
     def draw() {
-      tiles.foreach { tile =>
-        tile.draw()
+      for (y <- 0 until world.height) {
+        for (x <- 0 until world.width) {
+          val tile = tiles(y)(x)
+          if (tile != null) {
+            tile.draw()
+          }
+        }
+      }
+    }
+
+    def removeTileAt(txy: TileXY): Unit = {
+      val tile = tiles(txy.y)(txy.x)
+      if (tile != null) {
+        tile.tilePic.erase()
+        tiles(txy.y)(txy.x) = null
+      }
+      else {
+        println("Trying to remove non-existent tile.")
       }
     }
   }
 
-  // Tile class with an image, x and y
-  case class Tile(image: BufferedImage, x: Double, y: Double)(implicit canvas: SCanvas) {
-    val tile = picture.image(image, None)
-    tile.setPosition(x, y)
+  // Kojo picture tile
+  case class Tile(kx: Double, ky: Double, tx: Int, ty: Int, image: BufferedImage)(implicit canvas: SCanvas) {
+    val tilePic = picture.image(image, None)
+    tilePic.setPosition(kx, ky)
     def draw() {
-      tile.draw()
+      tilePic.draw()
     }
   }
 
@@ -82,14 +113,16 @@ package object tiles {
     import org.mapeditor.io.TMXMapReader
     val mr = new TMXMapReader
     val tiledMap = mr.readMap(Utils.absolutePath(fileName))
-
     val layerCount = tiledMap.getLayerCount
     val tileHeight = tiledMap.getTileHeight
     val tileWidth = tiledMap.getTileWidth
     val width = tiledMap.getWidth
     val height = tiledMap.getHeight
 
-    def layer(idx: Int) = tiledMap.getLayer(idx)
+    // drawing specific view of the level
+    val currentLevel = Level(this)
+
+    def layerAt(idx: Int): MapLayer = tiledMap.getLayer(idx)
 
     val yShift = 0
     def tileToKojo(xy: TileXY): Point = {
@@ -105,37 +138,66 @@ package object tiles {
       TileXY(tx, ty)
     }
 
-    def tileAt(xy: TileXY, layer: Int) =
-      tiledMap.getLayer(layer).asInstanceOf[TileLayer].getTileAt(xy.x, xy.y)
+    def tileAt(xy: TileXY, layerIdx: Int): MapTile =
+      layerAt(layerIdx).asInstanceOf[TileLayer].getTileAt(xy.x, xy.y)
 
-    def tileLeft(pic: Picture, layer: Int) = {
+    def tileAtLeft(pic: Picture, layerIdx: Int) = {
       val b = pic.bounds
       val txy = kojoToTile(b.x, b.y + b.height / 2)
-      tileAt(txy, layer) != null
+      tileAt(txy, layerIdx)
     }
 
-    def tileRight(pic: Picture, layer: Int) = {
+    def hasTileAtLeft(pic: Picture, layerIdx: Int): Boolean = {
+      tileAtLeft(pic, layerIdx) != null
+    }
+
+    def tileAtRight(pic: Picture, layerIdx: Int): MapTile = {
       val b = pic.bounds
       val txy = kojoToTile(b.x + b.width, b.y + b.height / 2)
-      tileAt(txy, layer) != null
+      tileAt(txy, layerIdx)
     }
 
-    def tileAbove(pic: Picture, layer: Int) = {
+    def hasTileAtRight(pic: Picture, layerIdx: Int): Boolean = {
+      tileAtRight(pic, layerIdx) != null
+    }
+
+    def tileAbove(pic: Picture, layerIdx: Int): MapTile = {
       val b = pic.bounds
       val txy = kojoToTile(b.x + b.width / 2, b.y + b.height)
-      tileAt(txy, layer) != null
+      tileAt(txy, layerIdx)
     }
 
-    def tileBelow(pic: Picture, layer: Int) = {
+    def hasTileAbove(pic: Picture, layerIdx: Int): Boolean = {
+      tileAbove(pic, layerIdx) != null
+    }
+
+    def tileBelow(pic: Picture, layerIdx: Int): MapTile = {
       val b = pic.bounds
       val txy = kojoToTile(b.x + b.width / 2, b.y)
-      tileAt(txy, layer) != null
+      tileAt(txy, layerIdx)
+    }
+
+    def hasTileBelow(pic: Picture, layerIdx: Int): Boolean = {
+      tileBelow(pic, layerIdx) != null
+    }
+
+    def tileUnder(pic: Picture, layerIdx: Int): MapTile = {
+      val b = pic.bounds
+      val txy = kojoToTile(b.x + b.width / 2, b.y + b.height / 2)
+      tileAt(txy, layerIdx)
+    }
+
+    def hasTileUnder(pic: Picture, layerIdx: Int): Boolean = {
+      tileUnder(pic, layerIdx) != null
     }
 
     def moveToTileLeft(pic: Picture) {
       val b = pic.bounds
       val picp = pic.position
       val delta = picp.x - b.x
+      // delta is non-zero for vector pictures with a non-zero pen width
+      // here the assumptions is that deltax and deltay are the same, so we just use deltax
+      // the above assumption applies to pictures made in the first quadrant (top-right from origin)
       val txy = kojoToTile(b.x + b.width, b.y + b.height / 2)
       val b2xy = tileToKojo(TileXY(txy.x - 1, txy.y))
       val widthDiff = b.width - tileWidth
@@ -170,13 +232,17 @@ package object tiles {
       pic.setPosition(b.x + delta, b2xy.y - heightDiff + delta)
     }
 
-    val currentLevelNumber = 0
+    def removeTileAt(xy: TileXY, layerIdx: Int): Unit =
+      layerAt(layerIdx).asInstanceOf[TileLayer].setTileAt(xy.x, xy.y, null)
 
-    val levels = Array(Level(this))
-    val currentLevel = levels(currentLevelNumber)
-
-    // Draw aesthetic overlay
-    //    val overlay = pygame.image.load("resources/overlay.png")
+    def removeTileUnder(pic: Picture, layerIdx: Int): Unit = {
+      val b = pic.bounds
+      val txy = kojoToTile(b.x + b.width / 2, b.y + b.height / 2)
+      // remove tiled tile
+      removeTileAt(txy, layerIdx)
+      // remove picture tile
+      currentLevel.layers(layerIdx).removeTileAt(txy)
+    }
 
     def step() {
     }

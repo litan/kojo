@@ -4,6 +4,7 @@ scroll(-canvasBounds.x, canvasBounds.y)
 
 // Tiled map layer of tiles that you collide with
 val collisionLayer = 1
+val foodLayer = 2
 
 class Player(tx: Int, ty: Int, world: TileWorld) {
     val playerPos = world.tileToKojo(TileXY(tx, ty))
@@ -51,12 +52,23 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
     var speedY = -1.0
     var inJump = false
 
-    def update() {
+    def step() {
+        stepCollisions()
+        stepFood()
+    }
+
+    def stepFood() {
+        if (world.hasTileUnder(currentPic, foodLayer)) {
+            world.removeTileUnder(currentPic, foodLayer)
+        }        
+    }
+
+    def stepCollisions() {
         if (isKeyPressed(Kc.VK_RIGHT)) {
             facingRight = true
             updateImage(runningRight)
             currentPic.translate(speedX, 0)
-            if (world.tileRight(currentPic, collisionLayer)) {
+            if (world.hasTileAtRight(currentPic, collisionLayer)) {
                 world.moveToTileLeft(currentPic)
             }
         }
@@ -64,7 +76,7 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
             facingRight = false
             updateImage(runningLeft)
             currentPic.translate(-speedX, 0)
-            if (world.tileLeft(currentPic, collisionLayer)) {
+            if (world.hasTileAtLeft(currentPic, collisionLayer)) {
                 world.moveToTileRight(currentPic)
             }
         }
@@ -87,14 +99,14 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
         speedY = math.max(speedY, -10)
         currentPic.translate(0, speedY)
 
-        if (world.tileBelow(currentPic, collisionLayer)) {
+        if (world.hasTileBelow(currentPic, collisionLayer)) {
             inJump = false
             world.moveToTileAbove(currentPic)
             speedY = -1
         }
         else {
             inJump = true
-            if (world.tileAbove(currentPic, collisionLayer)) {
+            if (world.hasTileAbove(currentPic, collisionLayer)) {
                 world.moveToTileBelow(currentPic)
                 speedY = -1
             }
@@ -158,16 +170,16 @@ class Hitter(tx: Int, ty: Int, world: TileWorld) {
     //    var speedX = 0.0
     var speedY = -2.0
 
-    def update() {
+    def step() {
         speedY += gravity
         speedY = math.max(speedY, -10)
         currentPic.translate(0, speedY)
         currentPic.showNext()
-        if (world.tileBelow(currentPic, collisionLayer)) {
+        if (world.hasTileBelow(currentPic, collisionLayer)) {
             world.moveToTileAbove(currentPic)
             speedY = 5
         }
-        else if (world.tileAbove(currentPic, collisionLayer)) {
+        else if (world.hasTileAbove(currentPic, collisionLayer)) {
             world.moveToTileBelow(currentPic)
             speedY = -2
         }
@@ -206,9 +218,9 @@ hitters.foreach { hitter =>
 
 animate {
     tileWorld.step()
-    player.update()
+    player.step()
     hitters.foreach { hitter =>
-        hitter.update()
+        hitter.step()
         if (player.currentPic.collidesWith(hitter.currentPic)) {
             player.currentPic.rotate(90)
             stopAnimation()
