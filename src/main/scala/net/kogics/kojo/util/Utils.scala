@@ -161,6 +161,23 @@ object Utils {
     if (stream == null) None else Some(readStream(stream))
   }
 
+  def loadInstalledFile(fileName: String): String = {
+    val f = new File(installDir, fileName)
+    import RichFile._
+    if (f.exists()) {
+      f.readAsString
+    }
+    else {
+      val f2 = new File(installDir + File.separatorChar + "installer", fileName)
+      if (f2.exists()) {
+        f2.readAsString
+      }
+      else {
+        throw new RuntimeException(s"Unable to find installed file: $fileName")
+      }
+    }
+  }
+
   val RmiRegistryPort = 27468
   val RmiHandlerName = "MultiInstanceHandler"
 
@@ -378,7 +395,16 @@ object Utils {
     else println("Good")
   }
 
-  def installDir = System.getProperty("user.home")
+  def installDir = {
+    val cp = System.getProperty("java.class.path").split(File.pathSeparator)
+    cp.find { e => e.endsWith("rithica.jar") } match {
+      case Some(rPath) =>
+        val f = new File(rPath)
+        f.getParentFile.getParent
+      case None =>
+        System.getProperty("user.home")
+    }
+  }
   def homeDir = System.getProperty("user.home")
   def currentDir = System.getProperty("user.dir")
   def isMac = {

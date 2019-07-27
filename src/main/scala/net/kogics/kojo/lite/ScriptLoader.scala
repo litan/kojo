@@ -78,4 +78,19 @@ trait ScriptLoader { self: Main.type =>
     }
     scriptEditorHolder.activate()
   }
+
+  def loadAndRunInstalledFile(file: String) = {
+    try {
+      codePane.setText("")
+      val code = Utils.loadInstalledFile(file)
+      codePane.setText(Utils.stripCR(code))
+      codePane.setCaretPosition(0)
+      execSupport.compileRunCode()
+    }
+    catch {
+      case t: Throwable => codePane.append("// Problem loading/running code: %s" format (t.getMessage))
+    }
+    scriptEditorHolder.activate()
+  }
+
 }

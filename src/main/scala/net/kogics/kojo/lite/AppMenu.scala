@@ -168,6 +168,17 @@ trait AppMenu {
       })
       item
     }
+
+    def menuItemForInstalledFile(label: String, file: String) = {
+      val item = new JMenuItem(label)
+      item.addActionListener(new ActionListener {
+        def actionPerformed(ev: ActionEvent) {
+          loadAndRunInstalledFile(file)
+        }
+      })
+      item
+    }
+
     val samplesMenu = newJMenu(Utils.loadString("S_Samples"))
     samplesMenu.setMnemonic('S')
 
@@ -294,6 +305,7 @@ trait AppMenu {
     showcaseMenu.add(menuItemFor("S_Mondrian", "genart-mondrian.kojo"))
     showcaseMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
     showcaseMenu.add(menuItemFor("S_CarRide", "car-ride.kojo"))
+    showcaseMenu.add(menuItemForInstalledFile("S_Platformer", "examples/tiledgame/game.kojo"))
 
     menuBar.add(showcaseMenu)
 
