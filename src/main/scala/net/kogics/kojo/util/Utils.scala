@@ -165,11 +165,13 @@ object Utils {
     val f = new File(installDir, fileName)
     import RichFile._
     if (f.exists()) {
+      kojoCtx.setLastLoadStoreDir(f.getParent)
       f.readAsString
     }
     else {
       val f2 = new File(installDir + File.separatorChar + "installer", fileName)
       if (f2.exists()) {
+        kojoCtx.setLastLoadStoreDir(f2.getParent)
         f2.readAsString
       }
       else {
