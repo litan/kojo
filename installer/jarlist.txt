@@ -24,6 +24,7 @@
 ../dist/image-filters.jar
 ../dist/jssc.jar
 ../dist/darcula.jar
+../dist/libtiled.jar.jar
 ../dist/scala-reflect-2.12.8.jar -> scala-reflect.jar
 ../dist/akka-actor_2.12-2.5.14.jar -> akka-actors.jar
 ../dist/scala-swing_2.12-2.0.3.jar -> scala-swing.jar

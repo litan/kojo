@@ -169,7 +169,8 @@ trait AppMenu {
       item
     }
 
-    def menuItemForInstalledFile(label: String, file: String) = {
+    def menuItemForInstalledFile(key: String, file: String) = {
+      val label = Utils.loadString(key)
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
         def actionPerformed(ev: ActionEvent) {
