@@ -553,8 +553,10 @@ Here's a partial list of the available commands:
 
   def drawCenteredMessage(message: String, color: Color = black, fontSize: Int = 15) {
     val cb = canvasBounds
-    val te = textExtent(message, 30)
-    val pic = penColor(color) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(message, fontSize)
+    val te = textExtent(message, fontSize)
+    val pic = penColor(color) *
+      trans(cb.x + (cb.width - te.width) / 2, cb.y + (cb.height - te.height) / 2 + te.height) ->
+      PicShape.text(message, fontSize)
     draw(pic)
   }
 
