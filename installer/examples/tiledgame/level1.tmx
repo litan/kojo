@@ -5,17 +5,17 @@
  </tileset>
  <layer id="1" name="background" width="67" height="20">
   <data encoding="base64" compression="zlib">
-   eJztlsEKgCAQRP2P6r7HDnny//8rDwYRSrs60Gg+WLo83GaKyDkde5rePQTsGb/qIoA97V6EhyC360iD8rR7WzwE7O/+7MLuIWDP+Mcunt9jMZ6HgKWLJc4aZ6s8DwFLF60eAvaMvXYhGU8K7t0rOZb7Q8D+vGcXdg8Be8YRu/DpGl68i5H/L7zSq92LYHZh38XuIWDPiOjiBFS2KPg=
+   eJzt1EEKgCAUAFGP47KFrbz/vdoI00LISL5C80DafNKGKqUxR1u7zkWyBe5nqpPnRvfdRe9Mpa1Zc6P7ruY3AlvAFrAFbAFbwBaYefbcmcsf943kewFbwBaIesazXevD3ErRLd7eL5It4P8Cf2hxAddCIHE=
   </data>
  </layer>
  <layer id="2" name="collision" width="67" height="20">
   <data encoding="base64" compression="zlib">
-   eJzVmN9PwjAQxw+CaPwJ6rvGB0nU4IMRnoQhvDL+AQyL//8fYS/cZbfbday6LrHJNx2l7dpP767tUgBIDW085aF1quqFlsv/Q9rWHech9Zw6SkP1u2vU0ep62rJ6f2Su61S12XrqztRv3QeOs41Ul1kIf9kHs/52+nLaQZkRskiM8rZZxE44jx1pSzkykXNNnJaQ88igaB+axTD6qOMkiwXbhvSRTyiyyCBn1VV9/mcWOB9mgL6yFWXMYuE0h719aB4cO9n3ei2M+wQOxwJfHPf5NLPQMVHGDmSxhHKcyIyytuLHcYQ+0b5XTmsozkfaB9sE5gnkNpOJXLY9IsVMgwh94hryuvPeKf2DWSRQ3kvQjjIo28V1hHHqVGUXT07PTi+BfSIL5PAB5XOE3kfmYPuE1k3gGKx04XSpdCX+t+yizpnDd4aT5wucq/YTaRcsyaoPex/rk5pkcSg1GS/YNxaUryCfqyXLJpDjgHJk8eD0CDmLKSlGajJeIAucv4wHdexfijlgjvaBHJDHLb1jCvF4NLlXyThR5R/W/YTFPsJ+ovfUKdTnYZ0XpO/jO+Qd0LoPWneQOmcLLHslvYl8TM9jUVbF5I4ky/gcGsJCnnNYuD7omytSrHNLh94l91Gez4Tyd2N8WszCOmuFshjB3s/uKWefG1Eek4XeF1hVLHQMtVjoMznr1OmMdA5Fm5bfJtY0NrSFmXhvbLuw1tpigWNbimdmaLFIVfuJKq/6hsJ+wXv4jIRxTcYIGReqzhS+bxi6jW9MksWGxsT31DkU72iShe7Px8IXf3htOEak4n0Lqmet32+/5dX5Tqjt4gcJnKQV
+   eJzNmN1OwzAMhc+mMSZ+N+AexAV7AtgVW2G73fYI9P2fglqJVdc47SotLpaOUkKqON/sOOkBwMHQMdHfd0zbuL79ua1rHZNKI6WF+ntsjNEaJ95lTVp8YDa5ba3m07/JyMEH4DRmuY1YFEj/Jl4suszDj6LSFjWPEs340D4sHHyyzCsuvtFkUaKOi7Ea78HCygsvFl+VNgjxoXnw3sn5O3HwaWb0ebFgBlKl0ee1f1wafR7zckxQWyCs9weBBbeSxUVUTpuLZ886wgxIuqaX+BsXDw4+DRUXBUKOUGyccoZ8PMOct5XulO7F/+fGO15xwZK1dIpQQ6ZR52TRZRQXQ9QRWp8VE1Qv5rElFq+V3lCzWEXlsKHiIpULzIFaig/iQDye4nsr5ONhrduThb6HcI5wnuiausLpPGZov9/RHPIOKM8wnnWk7b78HCX7+Bzah8XImGePkJu7qK61DpkjkoV11urLYomQZy+x5Zxbxva/sdB7qMVCn8lZV5Wuo27QvH/LbxMUD1SzKBbWYt7/woJ824pnzhWLBes9th+qv+1bF+cF1/B11Cea+4X8NiSZ5zbyie+pGzTvaJKFXmOKRWr/2aOOgZ14ZjZHMSbFNrf9As5EYFY=
   </data>
  </layer>
  <layer id="3" name="food" width="67" height="20">
   <data encoding="base64" compression="zlib">
-   eJztzrEJAEAIA0C3cf8Nv00pNg9yByFFmlTBTv8+AADASEdncgMAuOIBGI0BEg==
+   eJztwQENAAAAwqD3T20PBxQAAAAAwIcBFPAAAQ==
   </data>
  </layer>
 </map>

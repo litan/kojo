@@ -1,5 +1,9 @@
 clearOutput()
 cleari()
+
+println("To win the game, drink the red potion on the bottom/right and return to the starting point to drink the green potion.")
+println(s"\nTo modify the game layout, change $installDir/examples/tiledgame/level1.tmx using the Tiled editor from www.mapeditor.org")
+
 scroll(-canvasBounds.x, canvasBounds.y)
 
 // Tiled map layer of tiles that you collide with
@@ -57,10 +61,19 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
         stepFood()
     }
 
+    var goalEnabled = false
     def stepFood() {
-        if (world.hasTileUnder(currentPic, foodLayer)) {
-            world.removeTileUnder(currentPic, foodLayer)
-        }        
+        if (currentPic.collidesWith(halfwayGoal)) {
+            halfwayGoal.erase()
+            goal.setOpacity(1)
+            goalEnabled = true
+        }
+        if (goalEnabled) {
+            if (currentPic.collidesWith(goal)) {
+                stopAnimation()
+                drawCenteredMessage("You Win!", white, 20)
+            }
+        }
     }
 
     def stepCollisions() {
@@ -156,7 +169,7 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
     }
 }
 
-class Hitter(tx: Int, ty: Int, world: TileWorld) {
+class AttackerUpDown(tx: Int, ty: Int, world: TileWorld) {
     val playerPos = world.tileToKojo(TileXY(tx, ty))
     val sheet = SpriteSheet("tiles.png", 24, 24)
     var currentPic = picBatch(List(
@@ -204,25 +217,36 @@ val tileWorld =
 
 // Create a player object and set the level it is in
 val player = new Player(9, 5, tileWorld)
-val hitters = List(
-    new Hitter(22, 2, tileWorld),
-    new Hitter(14, 2, tileWorld),
-    new Hitter(18, 2, tileWorld)
+val attackers = List(
+    new AttackerUpDown(14, 2, tileWorld),
+    new AttackerUpDown(18, 2, tileWorld),
+    new AttackerUpDown(22, 2, tileWorld),
+    new AttackerUpDown(32, 2, tileWorld),
+    new AttackerUpDown(35, 3, tileWorld)
 )
+
+val goal = trans(12, 12) * fillColor(cm.greenYellow) * penColor(black) -> Picture.circle(10)
+goal.setPosition(tileWorld.tileToKojo(TileXY(9, 2)))
+goal.setOpacity(0.2)
+draw(goal)
+
+val halfwayGoal = trans(12, 12) * fillColor(cm.red) * penColor(black) -> Picture.circle(10)
+halfwayGoal.setPosition(tileWorld.tileToKojo(TileXY(41, 15)))
+draw(halfwayGoal)
 
 tileWorld.draw()
 player.draw()
-hitters.foreach { hitter =>
-    hitter.draw()
+attackers.foreach { attacker =>
+    attacker.draw()
 }
 
 animate {
     tileWorld.step()
     player.step()
-    hitters.foreach { hitter =>
-        hitter.step()
-        if (player.currentPic.collidesWith(hitter.currentPic)) {
-            player.currentPic.rotate(90)
+    attackers.foreach { attacker =>
+        attacker.step()
+        if (player.currentPic.collidesWith(attacker.currentPic)) {
+            player.currentPic.rotate(30)
             stopAnimation()
         }
     }
