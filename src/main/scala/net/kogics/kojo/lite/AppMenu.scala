@@ -251,6 +251,7 @@ trait AppMenu {
     animGameMenu.add(menuItemFor("S_FlappyBall", "flappy-ball.kojo"))
     animGameMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
     animGameMenu.add(menuItemFor("S_CarRide", "car-ride.kojo"))
+    animGameMenu.add(menuItemForInstalledFile("S_Platformer", "examples/tiledgame/game.kojo"))
 
     samplesMenu.add(animGameMenu)
 
