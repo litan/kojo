@@ -15,6 +15,7 @@
 package net.kogics.kojo
 
 import java.awt.image.BufferedImage
+import java.io.File
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -110,9 +111,16 @@ package object tiles {
   }
 
   class TileWorld(fileName: String)(implicit canvas: SCanvas) {
+
+    val absolutePath = {
+      val p = Utils.absolutePath(fileName)
+      // forward slashes don't work on Windows for linked tilesets (with Tiled loader)
+      if (File.separatorChar == '\\') p.replaceAllLiterally("/", "\\") else p
+    }
+
     import org.mapeditor.io.TMXMapReader
     val mr = new TMXMapReader
-    val tiledMap = mr.readMap(Utils.absolutePath(fileName))
+    val tiledMap = mr.readMap(absolutePath)
     val layerCount = tiledMap.getLayerCount
     val tileHeight = tiledMap.getTileHeight
     val tileWidth = tiledMap.getTileWidth
