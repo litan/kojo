@@ -1,7 +1,8 @@
 clearOutput()
 cleari()
 
-println("To win the game, drink the red potion on the bottom/right and return to the starting point to drink the green potion.")
+println("To win the game, find and drink the red-ball potion and then return to the starting point to drink the (initially covered) green-ball potion.")
+println("\nDon't use the mouse to pan/zoom.")
 println(s"\nTo modify the game layout, change $installDir/examples/tiledgame/level1.tmx using the Tiled editor from www.mapeditor.org")
 
 scroll(-canvasBounds.x, canvasBounds.y)
@@ -14,8 +15,12 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
     val playerPos = world.tileToKojo(TileXY(tx, ty))
     val sheet = SpriteSheet("player.png", 30, 42)
 
-    val stillRight = picBatch(Picture.image(sheet.imageAt(0, 0)))
-    val stillLeft = picBatch(Picture.image(sheet.imageAt(0, 1)))
+    // player images are 30x40
+    // scale the player down to fit into a 24 pixel wide tile
+    def playerPicture(img: Image) = scale(0.8) -> Picture.image(img)
+
+    val stillRight = picBatch(playerPicture(sheet.imageAt(0, 0)))
+    val stillLeft = picBatch(playerPicture(sheet.imageAt(0, 1)))
 
     val runningRight = picBatch(List(
         sheet.imageAt(0, 2),
@@ -23,7 +28,7 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
         sheet.imageAt(2, 2),
         sheet.imageAt(3, 2),
         sheet.imageAt(4, 2)
-    ).map(Picture.image))
+    ).map(playerPicture))
 
     val runningLeft = picBatch(List(
         sheet.imageAt(0, 3),
@@ -31,21 +36,21 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
         sheet.imageAt(2, 3),
         sheet.imageAt(3, 3),
         sheet.imageAt(4, 3)
-    ).map(Picture.image))
+    ).map(playerPicture))
 
     val jumpingRight = picBatch(List(
         sheet.imageAt(0, 0),
         sheet.imageAt(1, 0),
         sheet.imageAt(2, 0),
         sheet.imageAt(3, 0)
-    ).map(Picture.image))
+    ).map(playerPicture))
 
     val jumpingLeft = picBatch(List(
         sheet.imageAt(0, 1),
         sheet.imageAt(1, 1),
         sheet.imageAt(2, 1),
         sheet.imageAt(3, 1)
-    ).map(Picture.image))
+    ).map(playerPicture))
 
     var currentPic = stillRight
     currentPic.setPosition(playerPos)
@@ -172,10 +177,14 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
 class AttackerUpDown(tx: Int, ty: Int, world: TileWorld) {
     val playerPos = world.tileToKojo(TileXY(tx, ty))
     val sheet = SpriteSheet("tiles.png", 24, 24)
+    // make attacker slighty smaller than a tile - to prevent picture based collision
+    // with the player in an adjacent tile
+    def attackerPicture(img: Image) = scale(0.98) * trans(0.2, 0.2) -> Picture.image(img)
+
     var currentPic = picBatch(List(
         sheet.imageAt(0, 6),
         sheet.imageAt(1, 6)
-    ).map(Picture.image))
+    ).map(attackerPicture))
 
     currentPic.setPosition(playerPos)
 
