@@ -3,7 +3,7 @@ cleari()
 
 println("To win the game, find and drink the red-ball potion and then return to the starting point to drink the (initially covered) green-ball potion.")
 println("\nDon't use the mouse to pan/zoom.")
-println(s"\nTo modify the game layout, change $installDir/examples/tiledgame/level1.tmx using the Tiled editor from www.mapeditor.org")
+println(s"\nTo modify the game layout, change '$installDir/examples/tiledgame/level1.tmx' using the Tiled editor from www.mapeditor.org")
 
 scroll(-canvasBounds.x, canvasBounds.y)
 
@@ -75,8 +75,9 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
         }
         if (goalEnabled) {
             if (currentPic.collidesWith(goal)) {
+                goal.erase()
                 stopAnimation()
-                drawCenteredMessage("You Win!", white, 20)
+                drawCenteredMessage("You Win!", white, 30)
             }
         }
     }
@@ -228,8 +229,8 @@ val tileWorld =
 val player = new Player(9, 5, tileWorld)
 val attackers = List(
     new AttackerUpDown(14, 2, tileWorld),
-    new AttackerUpDown(18, 2, tileWorld),
-    new AttackerUpDown(22, 2, tileWorld),
+    new AttackerUpDown(17, 3, tileWorld),
+    new AttackerUpDown(22, 9, tileWorld),
     new AttackerUpDown(32, 2, tileWorld),
     new AttackerUpDown(35, 3, tileWorld)
 )
