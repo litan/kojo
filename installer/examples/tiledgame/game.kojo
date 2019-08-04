@@ -1,3 +1,4 @@
+switchToDefault2Perspective()
 clearOutput()
 cleari()
 
@@ -6,6 +7,7 @@ println("\nDon't use the mouse to pan/zoom.")
 println(s"\nTo modify the game layout, change '$installDir/examples/tiledgame/level1.tmx' using the Tiled editor from www.mapeditor.org")
 
 scroll(-canvasBounds.x, canvasBounds.y)
+setBackground(ColorMaker.hsl(189, 0.03, 0.45))
 
 // Tiled map layer of tiles that you collide with
 val collisionLayer = 1
