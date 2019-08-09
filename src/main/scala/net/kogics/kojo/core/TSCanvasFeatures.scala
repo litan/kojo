@@ -70,4 +70,5 @@ trait TSCanvasFeatures {
   def onAnimationStart(fn: => Unit): Unit
   def onAnimationStop(fn: => Unit): Unit
   def resetPanAndZoom(): Unit
+  def disablePanAndZoom(): Unit
 }

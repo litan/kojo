@@ -176,8 +176,17 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   panHandler.getEventFilter.setNotMask(InputEvent.SHIFT_MASK)
   zoomHandler.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK | InputEvent.SHIFT_MASK))
 
-  setPanEventHandler(panHandler)
-  setZoomEventHandler(zoomHandler)
+  def disablePanAndZoom(): Unit = {
+    setPanEventHandler(null)
+    setZoomEventHandler(null)
+  }
+
+  def enablePanAndZoom(): Unit = {
+    setPanEventHandler(panHandler)
+    setZoomEventHandler(zoomHandler)
+  }
+
+  enablePanAndZoom()
 
   addInputEventListener(new PBasicInputEventHandler {
     val popup = new Popup()
@@ -209,8 +218,10 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       // If wheelRotation is 10, zoomFactor is 0, which causes an exception in zoomBy
       // If wheelRotation is > 10, zoomFactor is < 0.  The fix is to limit 
       // wheelRotation to 9.
-      val wheelRotation = math.min(e.getWheelRotation, 9)
-      zoomBy(1 - wheelRotation * 0.1, e.getPosition)
+      if (getZoomEventHandler != null) {
+        val wheelRotation = math.min(e.getWheelRotation, 9)
+        zoomBy(1 - wheelRotation * 0.1, e.getPosition)
+      }
     }
   })
 
@@ -651,6 +662,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
       pictures.removeAllChildren()
       zoom(1, 0, 0)
+      enablePanAndZoom()
     }
     PicCache.clear()
     clearStage()

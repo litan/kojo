@@ -1,9 +1,9 @@
 switchToDefault2Perspective()
 clearOutput()
 cleari()
+disablePanAndZoom()
 
 println("To win the game, find and drink the red-ball potion and then return to the starting point to drink the (initially covered) green-ball potion.")
-println("\nDon't use the mouse to pan/zoom.")
 println(s"\nTo modify the game layout, change '$installDir/examples/tiledgame/level1.tmx' using the Tiled editor from www.mapeditor.org")
 
 scroll(-canvasBounds.x, canvasBounds.y)

@@ -76,6 +76,7 @@ class NoOpSCanvas extends SCanvas {
   private[kojo] def setDefTurtle(t: TurtleLike) {}
   private[kojo] def restoreDefTurtle() {}
   def resetPanAndZoom() {}
+  def disablePanAndZoom() {}
 }
 
 
