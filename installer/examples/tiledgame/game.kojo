@@ -11,7 +11,6 @@ setBackground(ColorMaker.hsl(189, 0.03, 0.45))
 
 // Tiled map layer of tiles that you collide with
 val collisionLayer = 1
-val foodLayer = 2
 
 class Player(tx: Int, ty: Int, world: TileWorld) {
     val playerPos = world.tileToKojo(TileXY(tx, ty))

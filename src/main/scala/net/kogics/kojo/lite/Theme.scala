@@ -117,7 +117,7 @@ class LightTheme extends Theme {
 
   }
   def loadDefaultPerspective(kojoCtx: KojoCtx): Unit = {
-    kojoCtx.switchToDefaultPerspective()
+    kojoCtx.switchToDefault2Perspective()
   }
 
   val toolbarBg = Some(new Color(230, 230, 230))
