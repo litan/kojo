@@ -122,7 +122,7 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
         if (world.hasTileBelow(currentPic, collisionLayer)) {
             inJump = false
             world.moveToTileAbove(currentPic)
-            speedY = -1
+            speedY = 0
         }
         else {
             inJump = true

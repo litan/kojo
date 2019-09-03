@@ -132,17 +132,15 @@ package object tiles {
 
     def layerAt(idx: Int): MapLayer = tiledMap.getLayer(idx)
 
-    val yShift = 0
     def tileToKojo(xy: TileXY): Point = {
       val kx = xy.x * tileWidth
-      val ky = yShift - (xy.y + 1) * tileHeight + 1
+      val ky = -(xy.y + 1) * tileHeight
       Point(kx, ky)
     }
 
     def kojoToTile(x: Double, y: Double): TileXY = {
-      //        val pty = (b.y / tileHeight).toInt
       val tx = (x / tileWidth).toInt
-      val ty = ((yShift - y) / tileHeight).toInt
+      val ty = (-y / tileHeight).toInt
       TileXY(tx, ty)
     }
 
