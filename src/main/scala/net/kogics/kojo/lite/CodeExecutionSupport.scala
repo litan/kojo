@@ -376,11 +376,9 @@ class CodeExecutionSupport(
     val compilerPrefix = """ {
   val builtins = net.kogics.kojo.lite.Builtins.instance
   import builtins._
-  def entry() {
-    // noop
-  }
   import net.kogics.kojo.util.ScalatestHelper.{test, ignore}
   import org.scalatest.Matchers._
+  class UserCode {
 """
 
     def onInterpreterInit() = {

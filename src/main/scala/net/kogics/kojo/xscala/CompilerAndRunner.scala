@@ -79,6 +79,11 @@ class CompilerAndRunner(
 
   val codeTemplate = """%s
 %s
+  }
+
+  def entry() {
+    new UserCode
+  }
 }
 """
 
