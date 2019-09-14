@@ -8,6 +8,7 @@ class NoOpRunContext extends RunContext {
   val compilerPrefix = """ {
   val builtins = net.kogics.kojo.lite.Builtins.instance
   import builtins._
+  class UserCode {
 """
   def onInterpreterInit() {}
   def onInterpreterStart(code: String) {}
