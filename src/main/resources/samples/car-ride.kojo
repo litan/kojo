@@ -46,7 +46,7 @@ val player = car("/media/car-ride/car1.png")
 draw(player)
 drawAndHide(carE)
 
-timer(1000) {
+timer(800) {
     createMarker()
     createCar()
 }
