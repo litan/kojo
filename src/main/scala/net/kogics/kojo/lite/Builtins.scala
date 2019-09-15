@@ -365,6 +365,18 @@ Here's a partial list of the available commands:
     fn
   }
   def drawAndHide(pictures: Picture*) = pictures.foreach { p => p.draw(); p.invisible() }
+  def drawCentered(pic: Picture): Unit = {
+    pic.invisible()
+    pic.draw()
+    center(pic)
+    pic.visible()
+  }
+  def center(pic: Picture): Unit = {
+    val cb = canvasBounds; val pb = pic.bounds
+    val xDelta = cb.getMinX - pb.getMinX + (cb.width - pb.width) / 2
+    val yDelta = cb.getMinY - pb.getMinY + (cb.height - pb.height) / 2
+    pic.offset(xDelta, yDelta)
+  }
   def show(pictures: Picture*) {
     throw new UnsupportedOperationException("Use draw(pic/s) instead of show(pic/s)")
   }
