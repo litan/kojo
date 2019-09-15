@@ -83,7 +83,7 @@ object LangMenuFactory {
     "hi" → "हिंदी (Hindi)",
     "de" → "Deutsch (German)",
     "ru" → "Русский (Russian)",
-    "hr" → "Hrvatski"
+    "hr" → "Hrvatski (Croatian)"
   )
 
   /** If the language code is not in this map, then the country defaults to same code as the language. */
