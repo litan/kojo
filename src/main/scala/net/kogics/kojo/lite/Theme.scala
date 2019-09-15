@@ -24,6 +24,7 @@ import org.fife.ui.rsyntaxtextarea.{Theme => RTheme}
 
 import com.bulenkov.darcula.DarculaLaf
 
+import net.kogics.kojo.core
 import net.kogics.kojo.util.Utils
 
 trait Theme {
@@ -32,7 +33,7 @@ trait Theme {
   def canvasBg: Color
   def loadEditorTheme: RTheme
   def loadLookAndFeel(): Unit
-  def loadDefaultPerspective(kojoCtx: KojoCtx): Unit
+  def loadDefaultPerspective(kojoCtx: core.KojoCtx): Unit
   def toolbarBg: Option[Color]
   def defaultBg: Color
   def textBg: Color
@@ -68,7 +69,7 @@ class DarkTheme extends Theme {
     UIManager.setLookAndFeel(laf)
     UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
   }
-  def loadDefaultPerspective(kojoCtx: KojoCtx): Unit = {
+  def loadDefaultPerspective(kojoCtx: core.KojoCtx): Unit = {
     kojoCtx.switchToDefault2Perspective()
   }
   val toolbarBg = None
@@ -116,7 +117,7 @@ class LightTheme extends Theme {
     }
 
   }
-  def loadDefaultPerspective(kojoCtx: KojoCtx): Unit = {
+  def loadDefaultPerspective(kojoCtx: core.KojoCtx): Unit = {
     kojoCtx.switchToDefault2Perspective()
   }
 

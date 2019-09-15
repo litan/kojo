@@ -307,7 +307,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     stopMp3Loop()
     cp.setVisible(false)
     displayContent(defaultMsg)
-    kojoCtx.switchToDefaultPerspective()
+    Theme.currentTheme.loadDefaultPerspective(kojoCtx)
   }
 
   private def scrollEp() {
