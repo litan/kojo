@@ -716,19 +716,20 @@ object Utils {
       def countLines(s: String) = s.count(_ == '\n')
       val includes = """//\s*#include.*""".r.findAllIn(code)
       def getFileName(s: String) = """//\s*#include""".r.replaceFirstIn(s, "").trim
-      def expand(fileName: String) = {
-        val suffix = if (!fileName.contains(".")) ".kojo" else ""
-        absolutePath(fileName + suffix)
+      def addKojoExtension(fileName: String) = {
+        val justFileName = new File(fileName).getName
+        if (!justFileName.contains(".")) fileName + ".kojo" else fileName
       }
       def load(fileName0: String): String = {
-        val fileName = expand(fileName0)
+        val fileNameDotKojo = addKojoExtension(fileName0)
+        val fileName = absolutePath(fileNameDotKojo)
         def readFileContent = {
           val file = new File(fileName)
           if (file.exists) {
             stripCR(file.readAsString)
           }
           else {
-            val res = loadResource(fileName)
+            val res = loadResource(fileNameDotKojo)
             if (res == null) {
               file.readAsString // trigger exception
             }
