@@ -483,6 +483,11 @@ Here's a partial list of the available commands:
   def mouseX = staging.Inputs.mousePos.x
   def mouseY = staging.Inputs.mousePos.y
   def mousePosition = staging.Inputs.mousePos
+  def isMousePressed: Boolean = staging.Inputs.mousePressedFlag
+  def isMousePressed(button: Int): Boolean = {
+    staging.Inputs.mousePressedFlag && mouseButton == button
+  }
+  def mouseButton: Int = staging.Inputs.mouseBtn
   def screenDPI = kojoCtx.screenDPI
   def setScreenDPI(dpi: Int) { kojoCtx.screenDPI = dpi }
   def screenSize = Toolkit.getDefaultToolkit.getScreenSize
