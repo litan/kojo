@@ -34,12 +34,13 @@ import net.kogics.kojo.core.Point
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.Style
 import net.kogics.kojo.kgeom.PolyLine
+import net.kogics.kojo.music.Music
+import net.kogics.kojo.turtle.TurtleHelper.distance
+import net.kogics.kojo.turtle.TurtleHelper.posAfterForward
+import net.kogics.kojo.turtle.TurtleHelper.thetaAfterTurn
+import net.kogics.kojo.turtle.TurtleHelper.thetaTowards
 import net.kogics.kojo.util.Utils
 
-import TurtleHelper.distance
-import TurtleHelper.posAfterForward
-import TurtleHelper.thetaAfterTurn
-import TurtleHelper.thetaTowards
 import edu.umd.cs.piccolo.PLayer
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.activities.PActivity
@@ -47,7 +48,6 @@ import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
 import edu.umd.cs.piccolo.nodes.PImage
 import edu.umd.cs.piccolo.nodes.PPath
 import edu.umd.cs.piccolo.nodes.PText
-import music.Music
 
 class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
              initY: Double, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
@@ -74,6 +74,9 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private var lineColor: Paint = _
   private var fillColor: Paint = _
   private[kojo] var lineStroke: Stroke = _
+  private var lineCap: Int = _
+  private var lineJoin: Int = _
+
   private var font: Font = _
 
   private val pens = makePens
@@ -403,6 +406,10 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     pen.setFillColor(color)
   }
 
+  def setPenCapJoin(cap: Int, join: Int) = Utils.runInSwingThread {
+    pen.setCapJoin(cap, join)
+  }
+
   def saveStyle() = Utils.runInSwingThread {
     savedStyles.push(currStyle)
   }
@@ -710,6 +717,8 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     val JoinThin = BasicStroke.JOIN_BEVEL
     val DefaultColor = Color.red
     val DefaultFillColor = null
+    val DefaultCap = -1
+    val DefaultJoin = -1
     def DefaultStroke = {
       val t = 2 / camScale
       val (cap, join) = capJoin(t)
@@ -718,14 +727,26 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     val DefaultFont = new Font(new PText().getFont.getName, Font.PLAIN, 18)
 
     private def capJoin(t: Double) = {
-      val Cap = if (t * camScale < 1) CapThin else CapThick
-      val Join = if (t * camScale < 1) JoinThin else JoinThick
+      val Cap = if (lineCap == DefaultCap) {
+        if (t * camScale < 1) CapThin else CapThick
+      }
+      else {
+        lineCap
+      }
+      val Join = if (lineJoin == DefaultJoin) {
+        if (t * camScale < 1) JoinThin else JoinThick
+      }
+      else {
+        lineJoin
+      }
       (Cap, Join)
     }
 
     def init() {
       lineColor = DefaultColor
       fillColor = DefaultFillColor
+      lineCap = DefaultCap
+      lineJoin = DefaultJoin
       lineStroke = DefaultStroke
       font = DefaultFont
       addNewPath()
@@ -788,6 +809,13 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
     def setFillColor(color: Paint) {
       fillColor = color
+      addNewPath()
+    }
+
+    def setCapJoin(cap: Int, join: Int): Unit = {
+      lineCap = cap
+      lineJoin = join
+      lineStroke = new BasicStroke(getThickness.toFloat, cap, join)
       addNewPath()
     }
 

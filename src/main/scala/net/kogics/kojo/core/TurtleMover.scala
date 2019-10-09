@@ -15,9 +15,9 @@
 package net.kogics.kojo.core
 
 import java.awt.Font
+import java.awt.Image
 import java.awt.Paint
 import java.awt.geom.Point2D
-import java.awt.Image
 
 case class Style(penColor: Paint, penThickness: Double, fillColor: Paint, font: Font, down: Boolean)
 trait Speed
@@ -35,6 +35,7 @@ trait TurtleMover extends RichTurtleCommands {
   def setPenColor(color: Paint): Unit
   def setPenThickness(t: Double): Unit
   def setFillColor(color: Paint): Unit
+  def setPenCapJoin(cap: Int, join: Int): Unit
   def saveStyle(): Unit
   def restoreStyle(): Unit
   def savePosHe(): Unit
@@ -63,9 +64,9 @@ trait TurtleMover extends RichTurtleCommands {
   def animationDelay: Long
   def setAnimationDelay(d: Long)
   def setSpeed(speed: Speed) = speed match {
-    case Slow => setAnimationDelay(1000)
-    case Medium => setAnimationDelay(100)
-    case Fast => setAnimationDelay(10)
+    case Slow      => setAnimationDelay(1000)
+    case Medium    => setAnimationDelay(100)
+    case Fast      => setAnimationDelay(10)
     case SuperFast => setAnimationDelay(0)
   }
   def setSlowness(d: Long) = setAnimationDelay(d)

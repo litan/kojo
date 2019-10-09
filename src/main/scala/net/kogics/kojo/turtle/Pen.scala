@@ -18,7 +18,7 @@ package turtle
 import java.awt.Font
 import java.awt.Paint
 
-import core.Style
+import net.kogics.kojo.core.Style
 
 trait Pen {
   def init(): Unit
@@ -30,6 +30,7 @@ trait Pen {
   def setColor(color: Paint): Unit
   def setThickness(t: Double): Unit
   def setFillColor(color: Paint): Unit
+  def setCapJoin(cap: Int, join: Int): Unit
   def setStyle(style: Style): Unit
   def getColor: Paint
   def getFillColor: Paint

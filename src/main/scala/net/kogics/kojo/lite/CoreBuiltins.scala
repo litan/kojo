@@ -69,7 +69,8 @@ trait CoreBuiltins extends Rationals {
   val noColor = C.noColor
 
   val Kc = new staging.KeyCodes
-  val Mb = new staging.MouseButtons
+  val MouseButton = new staging.MouseButtons
+  val CapJoin = new staging.CapJoin
 
   val kmath = net.kogics.kojo.kmath.Kmath
 
