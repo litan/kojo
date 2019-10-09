@@ -40,6 +40,7 @@ class NoOpSCanvas extends SCanvas {
   def onKeyPress(fn: Int => Unit) {}
   def onKeyRelease(fn: Int => Unit) {}
   def onMouseClick(fn: (Double, Double) => Unit) {}
+  def onMouseDrag(fn: (Double, Double) => Unit) {}
   def setUnitLength(ul: UnitLen) {}
   def clearWithUL(ul: UnitLen) {}
   def camScale: Double = 1.0

@@ -107,7 +107,6 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   @volatile var turtles: List[Turtle] = Nil
   var puzzlers: List[Turtle] = Nil
   var figures: List[Figure] = Nil
-  var eventListeners: List[PInputEventListener] = Nil
 
   var _showAxes = false
   var _showGrid = false
@@ -180,12 +179,12 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   panHandler.getEventFilter.setNotMask(InputEvent.SHIFT_MASK)
   zoomHandler.setEventFilter(new PInputEventFilter(InputEvent.BUTTON1_MASK | InputEvent.SHIFT_MASK))
 
-  def disablePanAndZoom(): Unit = {
+  def disablePanAndZoom(): Unit = Utils.runInSwingThread {
     setPanEventHandler(null)
     setZoomEventHandler(null)
   }
 
-  def enablePanAndZoom(): Unit = {
+  def enablePanAndZoom(): Unit = Utils.runInSwingThread {
     setPanEventHandler(panHandler)
     setZoomEventHandler(zoomHandler)
   }
@@ -659,9 +658,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       figures.foreach { f => if (f == figure) f.clear() else f.remove() }
       figures = List(figures.last)
 
-      eventListeners.foreach { el => removeInputEventListener(el) }
-      eventListeners = Nil
-      staging.Inputs.removeKeyHandlers()
+      staging.Inputs.removeMouseKeyHandlers()
       getRoot.getDefaultInputManager.setKeyboardFocus(null)
 
       pictures.removeAllChildren()
@@ -735,16 +732,18 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   def onMouseClick(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
-    val eh = new PBasicInputEventHandler {
-      override def mousePressed(event: PInputEvent) {
-        val pos = event.getPosition
-        Utils.runAsyncQueued {
-          fn(pos.getX, pos.getY)
-        }
-      }
+    staging.Inputs.setMouseClickHandler { event =>
+      val pos = event.getPosition
+      fn(pos.getX, pos.getY)
     }
-    eventListeners = eh :: eventListeners
-    addInputEventListener(eh)
+  }
+
+  def onMouseDrag(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
+    disablePanAndZoom()
+    staging.Inputs.setMouseDragHandler { event =>
+      val pos = event.getPosition
+      fn(pos.getX, pos.getY)
+    }
   }
 
   var globalEl: PInputEventListener = _

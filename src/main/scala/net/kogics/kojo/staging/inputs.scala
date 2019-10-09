@@ -42,6 +42,13 @@ object Inputs {
   def isKeyPressed(key: Int) = pressedKeys.contains(key)
   var keyPressedHandler: Option[PInputEvent => Unit] = None
   var keyReleasedHandler: Option[PInputEvent => Unit] = None
+  var mouseClickHandler: Option[PInputEvent => Unit] = None
+  var mouseDragHandler: Option[PInputEvent => Unit] = None
+
+  def removeMouseKeyHandlers(): Unit = {
+    removeKeyHandlers()
+    removeMouseHandlers()
+  }
 
   def removeKeyHandlers() {
     keyPressedHandler = None
@@ -54,6 +61,16 @@ object Inputs {
   }
   def setKeyReleasedHandler(handler: PInputEvent => Unit) {
     keyReleasedHandler = Some(handler)
+  }
+  def removeMouseHandlers(): Unit = {
+    mouseClickHandler = None
+    mouseDragHandler = None
+  }
+  def setMouseClickHandler(handler: PInputEvent => Unit) {
+    mouseClickHandler = Some(handler)
+  }
+  def setMouseDragHandler(handler: PInputEvent => Unit) {
+    mouseDragHandler = Some(handler)
   }
 
   def activityStep() = {
@@ -106,12 +123,14 @@ object Inputs {
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
           mouseBtn = e.getButton
+          mouseClickHandler.foreach { _ apply e }
         }
         // Will be called when a drag is occurring.
         override def mouseDragged(e: PInputEvent) {
           super.mouseDragged(e)
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
+          mouseDragHandler.foreach { _ apply e }
         }
         // Will be invoked when the mouse enters a specified region.
         override def mouseEntered(e: PInputEvent) {
@@ -126,7 +145,7 @@ object Inputs {
           //e.popCursor
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
-          mousePressedFlag = false
+          // mousePressedFlag = false
         }
         // Will be called when the mouse is moved.
         override def mouseMoved(e: PInputEvent) {
@@ -168,4 +187,4 @@ object Inputs {
       Impl.canvas.addGlobalEventListener(iel)
     }
   }
-}  
+}

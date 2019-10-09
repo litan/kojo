@@ -63,6 +63,7 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def onKeyPress(fn: Int => Unit) = tCanvas.onKeyPress(fn)
   def onKeyRelease(fn: Int => Unit) = tCanvas.onKeyRelease(fn)
   def onMouseClick(fn: (Double, Double) => Unit) = tCanvas.onMouseClick(fn)
+  def onMouseDrag(fn: (Double, Double) => Unit) = tCanvas.onMouseDrag(fn)
 
   val Pixel = core.Pixel
   val Inch = core.Inch
