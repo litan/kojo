@@ -35,6 +35,7 @@ import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.Style
 import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.music.Music
+import net.kogics.kojo.staging.CapJoinConstants._
 import net.kogics.kojo.turtle.TurtleHelper.distance
 import net.kogics.kojo.turtle.TurtleHelper.posAfterForward
 import net.kogics.kojo.turtle.TurtleHelper.thetaAfterTurn
@@ -711,14 +712,8 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     //    val Log = Logger.getLogger(getClass.getName);
 
     val turtle = Turtle.this
-    val CapThick = BasicStroke.CAP_ROUND
-    val CapThin = BasicStroke.CAP_BUTT
-    val JoinThick = BasicStroke.JOIN_ROUND
-    val JoinThin = BasicStroke.JOIN_BEVEL
     val DefaultColor = Color.red
     val DefaultFillColor = null
-    val DefaultCap = -1
-    val DefaultJoin = -1
     def DefaultStroke = {
       val t = 2 / camScale
       val (cap, join) = capJoin(t)

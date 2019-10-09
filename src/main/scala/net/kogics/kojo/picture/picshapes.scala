@@ -40,6 +40,7 @@ import com.vividsolutions.jts.geom.Geometry
 
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.staging.CapJoinConstants._
 import net.kogics.kojo.util.Constants
 import net.kogics.kojo.util.Utils
 
@@ -82,15 +83,44 @@ trait PicShapeOps { self: Picture with CorePicOps =>
     node.asInstanceOf[PPath].setStrokePaint(color)
   }
 
+  private var lineCap: Int = DefaultCap
+  private var lineJoin: Int = DefaultJoin
+
   def setPenThickness(th: Double) = Utils.runInSwingThread {
     _setPenThickness(tnode, th)
   }
   protected def _setPenThickness(node: PNode, th: Double) {
-    val stroke = if (th * self.canvas.camScale < 1)
-      new BasicStroke(th.toFloat, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL)
-    else
-      new BasicStroke(th.toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
+    val (cap, join) = capJoin(th)
+    val stroke = new BasicStroke(th.toFloat, cap, join)
     node.asInstanceOf[PPath].setStroke(stroke)
+  }
+
+  def setPenCapJoin(cap: Int, join: Int) = Utils.runInSwingThread {
+    _setPenCapJoin(tnode, cap, join)
+  }
+
+  def _setPenCapJoin(node: PNode, cap: Int, join: Int): Unit = {
+    lineCap = cap
+    lineJoin = join
+    val th = node.asInstanceOf[PPath].getStroke.asInstanceOf[BasicStroke].getLineWidth
+    val stroke = new BasicStroke(th.toFloat, cap, join)
+    node.asInstanceOf[PPath].setStroke(stroke)
+  }
+
+  private def capJoin(t: Double) = {
+    val Cap = if (lineCap == DefaultCap) {
+      if (t * self.canvas.camScale < 1) CapThin else CapThick
+    }
+    else {
+      lineCap
+    }
+    val Join = if (lineJoin == DefaultJoin) {
+      if (t * self.canvas.camScale < 1) JoinThin else JoinThick
+    }
+    else {
+      lineJoin
+    }
+    (Cap, Join)
   }
 
   def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph", "for non-turtle picture")

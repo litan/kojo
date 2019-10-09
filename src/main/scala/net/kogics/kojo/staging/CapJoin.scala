@@ -10,3 +10,12 @@ class CapJoin {
   val CAP_ROUND = BasicStroke.CAP_ROUND
   val CAP_SQUARE = BasicStroke.CAP_SQUARE
 }
+
+object CapJoinConstants {
+  val CapThick = BasicStroke.CAP_ROUND
+  val CapThin = BasicStroke.CAP_BUTT
+  val JoinThick = BasicStroke.JOIN_ROUND
+  val JoinThin = BasicStroke.JOIN_BEVEL
+  val DefaultCap = -1
+  val DefaultJoin = -1
+}
