@@ -9,6 +9,11 @@ class CapJoin {
   val CAP_BUTT = BasicStroke.CAP_BUTT
   val CAP_ROUND = BasicStroke.CAP_ROUND
   val CAP_SQUARE = BasicStroke.CAP_SQUARE
+
+  // good combos
+  val BUTT_BEVEL = (CAP_BUTT, JOIN_BEVEL)
+  val ROUND_ROUND = (CAP_ROUND, JOIN_ROUND)
+  val SQUARE_MITER = (CAP_SQUARE, JOIN_MITER)
 }
 
 object CapJoinConstants {

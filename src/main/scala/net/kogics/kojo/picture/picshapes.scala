@@ -149,6 +149,8 @@ trait NonVectorPicOps { self: Picture with CorePicOps =>
 
   def setPenThickness(th: Double) = notSupported("setPenThickness", "for non-vector picture")
 
+  def setPenCapJoin(cap: Int, join: Int) = notSupported("setPenCapJoin", "for non-vector picture")
+
   def initGeom(): Geometry = notSupported("initGeometry", "for non-vector picture")
 
   def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph", "for non-vector picture")

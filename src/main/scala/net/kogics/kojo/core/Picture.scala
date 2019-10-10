@@ -73,6 +73,8 @@ trait Picture extends InputAware {
   def transform: AffineTransform
   def setPenColor(color: Paint)
   def setPenThickness(th: Double)
+  def setPenCapJoin(capJoin: (Int, Int)): Unit = setPenCapJoin(capJoin._1, capJoin._2)
+  def setPenCapJoin(cap: Int, join: Int): Unit
   def setFillColor(color: Paint)
   def opacity: Double
   def setOpacity(o: Double)

@@ -495,6 +495,15 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     }
   }
 
+  def setPenCapJoin(cap: Int, join: Int) = Utils.runInSwingThread {
+    t.setPenCapJoin(cap, join)
+    val pp = t.penPaths
+    pp.foreach { pl =>
+      pl.setStroke(t.lineStroke)
+      pl.repaint()
+    }
+  }
+
   def setFillColor(color: Paint) = Utils.runInSwingThread {
     t.setFillColor(color)
     val pp = t.penPaths
@@ -601,6 +610,12 @@ abstract class BasePicList(val pics: List[Picture])
   def setPenThickness(th: Double) {
     pics.foreach { pic =>
       pic.setPenThickness(th)
+    }
+  }
+
+  def setPenCapJoin(cap: Int, join: Int): Unit = {
+    pics.foreach { pic =>
+      pic.setPenCapJoin(cap, join)
     }
   }
 

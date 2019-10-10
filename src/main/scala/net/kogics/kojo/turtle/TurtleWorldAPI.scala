@@ -67,6 +67,7 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
   UserCommand.addSynopsisSeparator()
 
   def setPenCapJoin(cap: Int, join: Int) = turtle0.setPenCapJoin(cap, join)
+  def setPenCapJoin(capJoin: (Int, Int)) = turtle0.setPenCapJoin(capJoin._1, capJoin._2)
 
   def setPenThickness(t: Double) = turtle0.setPenThickness(t)
   UserCommand("setPenThickness", List("thickness"), "Specifies the width of the pen that the turtle draws with.")

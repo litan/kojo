@@ -57,6 +57,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def setScaleFactor(x: Double, y: Double) = tpic.setScaleFactor(x, y)
   def setPenColor(color: Paint) = tpic.setPenColor(color)
   def setPenThickness(th: Double) = tpic.setPenThickness(th)
+  def setPenCapJoin(cap: Int, join: Int) = tpic.setPenCapJoin(cap, join)
   def setFillColor(color: Paint) = tpic.setFillColor(color)
   def opacity = tpic.opacity
   def setOpacity(o: Double) = tpic.setOpacity(o)
