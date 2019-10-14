@@ -10,6 +10,7 @@ import java.awt.MultipleGradientPaint
 import java.awt.Paint
 import java.awt.RadialGradientPaint
 import java.awt.image.BufferedImage
+import java.net.URL
 import java.util.concurrent.CountDownLatch
 
 import scala.Array.canBuildFrom
@@ -182,6 +183,8 @@ trait CoreBuiltins extends Rationals {
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
   def setImagePixel(image: BufferedImage, x: Int, y: Int, c: Color) = image.setRGB(x, image.getHeight - 1 - y, c.getRGB)
+  def image(fileName: String): BufferedImage = Utils.loadBufImage(fileName)
+  def image(url: URL): BufferedImage = Utils.loadUrlImage(url)
 
   // For younger kids
   def clr() = { TSCanvas.clear(); TSCanvas.turtle0.invisible() }

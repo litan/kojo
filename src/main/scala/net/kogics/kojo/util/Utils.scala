@@ -104,7 +104,7 @@ object Utils {
     }
   }
 
-  def loadUrlImage(url: URL): Image = {
+  def loadUrlImage(url: URL): BufferedImage = {
     ImageIO.read(url)
   }
 
