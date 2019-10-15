@@ -21,6 +21,7 @@ import java.awt.TexturePaint
 import java.awt.Toolkit
 import java.awt.geom.GeneralPath
 import java.awt.geom.Rectangle2D
+import java.awt.image.BufferedImage
 import java.net.URL
 
 import javax.swing.JComponent
@@ -390,6 +391,14 @@ Here's a partial list of the available commands:
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def activateEditor() = kojoCtx.activateScriptEditor()
+
+  def toFlippedImage(p: Picture): BufferedImage = {
+    p.scale(1, -1)
+    val ret = p.toImage
+    p.scale(1, -1)
+    ret
+  }
+
   val hueMod = Utils.hueMod _
   val satMod = Utils.satMod _
   val britMod = Utils.britMod _
