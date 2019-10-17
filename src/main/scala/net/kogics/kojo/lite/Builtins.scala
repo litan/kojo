@@ -22,6 +22,7 @@ import java.awt.Toolkit
 import java.awt.geom.GeneralPath
 import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
+import java.awt.image.BufferedImageOp
 import java.net.URL
 
 import javax.swing.JComponent
@@ -392,11 +393,16 @@ Here's a partial list of the available commands:
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def activateEditor() = kojoCtx.activateScriptEditor()
 
-  def toFlippedImage(p: Picture): BufferedImage = {
+  def applyFilter(p: Picture, filter: BufferedImageOp): Picture = {
+    drawCentered(p)
     p.scale(1, -1)
-    val ret = p.toImage
-    p.scale(1, -1)
-    ret
+    val img = p.toImage
+    p.erase()
+    Picture.image(applyFilter(img, filter))
+  }
+
+  def applyFilter(img: BufferedImage, filter: BufferedImageOp): BufferedImage = {
+    filter.filter(img, null)
   }
 
   val hueMod = Utils.hueMod _
