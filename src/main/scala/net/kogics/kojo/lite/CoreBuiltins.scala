@@ -102,7 +102,7 @@ trait CoreBuiltins extends Rationals {
     }.asScala
   }
 
-  def randomSeed(seed: Long) { Random.setSeed(seed) }
+  def setRandomSeed(seed: Long) { Random.setSeed(seed) }
   def random(upperBound: Int) = Random.nextInt(upperBound)
   def randomDouble(upperBound: Int) = Random.nextDouble * upperBound
   def randomNormalDouble = Random.nextGaussian()

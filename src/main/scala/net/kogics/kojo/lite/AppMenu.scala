@@ -447,6 +447,7 @@ trait AppMenu {
                <li>Anusha Pant</li>
                <li>Nikhil Pant</li>
                <li>Sami Jaber</li>
+               <li>Aditya Pant</li>
                <li>Jerzy Redlarski</li>
                <li>Saurabh Kapoor</li>
                <li>Mushtaq Ahmed</li>
@@ -460,7 +461,6 @@ trait AppMenu {
                <li>Vipul Pandey</li>
                <li>Aleksei Loginov</li>
                <li>Massimo Maria Ghisalberti</li>
-               <li>Aditya Pant</li>
                <li>Luka Volaric</li>
                <li>Marcus Klang</li>
               </ul>
