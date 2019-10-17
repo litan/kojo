@@ -51,7 +51,10 @@ trait TurtleMover extends RichTurtleCommands {
   def setPosition(x: Double, y: Double) = jumpTo(x, y)
   def setPosition(p: Point): Unit = jumpTo(p)
   def moveTo(x: Double, y: Double): Unit
+  @deprecated("Use lineTo (or setPosition) instead of moveTo", "2.7.08")
   def moveTo(p: Point): Unit = moveTo(p.x, p.y)
+  def lineTo(x: Double, y: Double) = moveTo(x, y)
+  def lineTo(p: Point): Unit = moveTo(p.x, p.y)
   def setHeading(angle: Double) = turn(angle - heading)
   def turnNorth(): Unit = setHeading(90)
   def turnSouth(): Unit = setHeading(270)

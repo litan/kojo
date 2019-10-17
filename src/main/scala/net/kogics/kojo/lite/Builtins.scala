@@ -519,6 +519,10 @@ Here's a partial list of the available commands:
   val PShapes = Picture
   val PicShape = Picture
   //  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
+  implicit class GeneralPathOps(path: GeneralPath) {
+    // enable using setPosition instead of moveTo - to be consistent with turtle usage.
+    def setPosition(x: Double, y: Double) = path.moveTo(x, y)
+  }
   def url(url: String) = new URL(url)
   object Picture {
     def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
@@ -531,6 +535,7 @@ Here's a partial list of the available commands:
     def line(x: Double, y: Double) = picture.line(x, y)
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
     def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.path(path) }
+    def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
     def circle(r: Double) = picture.circle(r)
     // def circle(x: Double, y: Double, r: Double) = picture.offset(x, y) -> picture.circle(r)
     def ellipse(rx: Double, ry: Double) = picture.ellipse(rx, ry)
