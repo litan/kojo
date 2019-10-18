@@ -336,9 +336,15 @@ Here's a partial list of the available commands:
   val picCol = VPics
   val picStack = GPics
   val picBatch = BatchPics
+  @deprecated("Use picRowCentered instead of picRow2", "2.7.08")
   val picRow2 = HPics2
+  @deprecated("Use picColCentered instead of picCol2", "2.7.08")
   val picCol2 = VPics2
+  @deprecated("Use picStackCentered instead of picStack2", "2.7.08")
   val picStack2 = GPics2
+  val picRowCentered = HPics2
+  val picColCentered = VPics2
+  val picStackCentered = GPics2
 
   val rotp = picture.rotp _
   val opac = picture.opac _

@@ -107,6 +107,8 @@ trait CoreBuiltins extends Rationals {
   def randomDouble(upperBound: Int) = Random.nextDouble * upperBound
   def randomNormalDouble = Random.nextGaussian()
   def randomBoolean = Random.nextBoolean
+  def randomInt = Random.nextInt
+  def randomLong = Random.nextLong
   def randomFrom[T](seq: Seq[T]) = seq(random(seq.length))
   def randomColor = Color(random(256), random(256), random(256))
   def randomTransparentColor = Color(random(256), random(256), random(256), 100 + random(156))
