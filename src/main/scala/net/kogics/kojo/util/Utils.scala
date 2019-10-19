@@ -798,6 +798,11 @@ object Utils {
                    |
                    |# Show internal keys for UI elements; for localization developers 
                    |# i18n.string.showkey=true
+                   |
+                   |# Specify canvas image export options
+                   |# export.image.dpi=nn
+                   |# export.image.inches=nn or a4
+                   |# export.image.dimension=width or height
                  """.stripMargin
 
   val propsFile = new File(Utils.userDir + File.separatorChar + ".kojo/lite/kojo.properties")

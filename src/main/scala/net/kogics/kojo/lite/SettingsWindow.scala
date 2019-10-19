@@ -16,22 +16,31 @@ package net.kogics.kojo.lite
 
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.KeyAdapter
+import java.awt.event.KeyEvent
 
 import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JPanel
+import javax.swing.JTabbedPane
+import javax.swing.JTextField
+import javax.swing.event.ChangeEvent
 
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.widget.ColPanel
 import net.kogics.kojo.widget.DropDown
 import net.kogics.kojo.widget.Label
 import net.kogics.kojo.widget.RowPanel
+import net.kogics.kojo.widget.TextField
 
 class SettingsWindow(owner: JFrame) extends JDialog(owner) {
 
   val theme = Utils.appProperty("theme").getOrElse("light")
   val fontIncrease = Utils.appProperty("font.increase").getOrElse("0")
+  val dpi = Utils.appProperty("export.image.dpi").getOrElse("")
+  val inches = Utils.appProperty("export.image.inches").getOrElse("")
+  val dimension = Utils.appProperty("export.image.dimension").getOrElse("height")
 
   def filler(n: Int) = Label(" " * n)
 
@@ -41,11 +50,92 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   val fontDd = DropDown((-10 to 10).reverse: _*)
   fontDd.setSelectedItem(fontIncrease)
 
+  val dpiTf = TextField(dpi)
+  dpiTf.setColumns(3)
+
+  def handleInchesDdSelection(item: String): Unit = {
+    if (item.toLowerCase.trim == "a4") {
+      aspectTf.setText("A4")
+      dimensionDd.setSelectedItem("height")
+      dimensionDd.setEnabled(false)
+      adjustCanvasBtn.requestFocusInWindow()
+    }
+  }
+
+  val inchesDd = DropDown("A4")
+  inchesDd.setEditable(true)
+  val inchesDdEditor = {
+    try {
+      inchesDd.getEditor.getEditorComponent.asInstanceOf[JTextField]
+    }
+    catch {
+      case t: Throwable =>
+        println(t.getMessage)
+        new JTextField()
+    }
+  }
+  inchesDdEditor.setColumns(4)
+  inchesDd.setSelectedItem(inches)
+  inchesDd.onSelection { item =>
+    handleInchesDdSelection(item)
+  }
+  inchesDdEditor.addKeyListener(new KeyAdapter {
+    override def keyTyped(e: KeyEvent): Unit = {
+      aspectTf.setText("")
+      dimensionDd.setEnabled(true)
+    }
+  })
+  val dimensionDd = DropDown("height", "width")
+  dimensionDd.setSelectedItem(dimension)
+
   val r1 = RowPanel(filler(10), Label(Utils.loadString("S_UITheme")), filler(3), themeDd)
   val r2 = RowPanel(filler(10), Label(Utils.loadString("S_UIThemeHelp")), filler(10))
   val r3 = RowPanel(filler(10), Label(Utils.loadString("S_FontDelta")), filler(3), fontDd)
   val r4 = RowPanel(filler(10), Label(Utils.loadString("S_FontDeltaHelp")), filler(10))
   val r5 = RowPanel(filler(10), Label(Utils.loadString("S_SettingsRestart")))
+
+  val r7 = RowPanel(
+    filler(10),
+    Label(Utils.loadString("S_DPI")), dpiTf, filler(3),
+    Label(Utils.loadString("S_Inches")), inchesDd, filler(3),
+    Label(Utils.loadString("S_Dimension")), dimensionDd, filler(3)
+  )
+
+  def changeModality(modal: Boolean): Unit = {
+    setVisible(false)
+    setModal(modal)
+    setVisible(true)
+  }
+
+  val adjustCanvasBtn = new JButton(Utils.loadString("S_AdjustCanvas"))
+  adjustCanvasBtn.addActionListener(new ActionListener {
+    def actionPerformed(e: ActionEvent): Unit = {
+      changeModality(false)
+      aspectTf.value.toLowerCase.trim match {
+        case "a4" =>
+          Builtins.instance.setDrawingCanvasToA4()
+        case s =>
+          try {
+            val r = s.toDouble
+            Builtins.instance.setDrawingCanvasAspectRatio(r)
+          }
+          catch {
+            case throwable: Throwable =>
+          }
+      }
+    }
+  })
+  val aspectTf = TextField("")
+  //  aspectTf.addKeyListener(new KeyAdapter {
+  //    override def keyTyped(e: KeyEvent): Unit = {
+  //      if (inchesDd.value.toLowerCase.trim == "a4")
+  //      inchesDdEditor.setText("")
+  //      dimensionDd.setEnabled(true)
+  //    }
+  //  })
+  handleInchesDdSelection(inchesDd.value)
+
+  val r8 = RowPanel(filler(10), Label(Utils.loadString("S_CanvasAspectRatio")), aspectTf, adjustCanvasBtn, filler(3))
 
   val okCancel = new JPanel
   val ok = new JButton(Utils.loadString("S_OK"))
@@ -53,9 +143,38 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
     def actionPerformed(ev: ActionEvent): Unit = {
       val newFontIncrease = fontDd.value.toString
       val newTheme = themeDd.value
+      var newInches = {
+        val v = inchesDd.value
+        if (v.toLowerCase.trim == "a4") v
+        else {
+          try {
+            v.toDouble
+            v
+          }
+          catch {
+            case throwable: Throwable => ""
+          }
+        }
+      }
+      val newDpi = if (newInches.trim == "") "" else {
+        val v = dpiTf.value
+        try {
+          v.toInt
+          v
+        }
+        catch {
+          case throwable: Throwable =>
+            newInches = ""
+            ""
+        }
+      }
+      val newDimension = dimensionDd.value
       val m = Map(
         "theme" -> newTheme,
-        "font.increase" -> newFontIncrease
+        "font.increase" -> newFontIncrease,
+        "export.image.dpi" -> newDpi,
+        "export.image.inches" -> newInches,
+        "export.image.dimension" -> newDimension
       )
       Utils.updateAppProperties(m)
       setVisible(false)
@@ -70,11 +189,20 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   okCancel.add(ok)
   okCancel.add(cancel)
 
-  val d = ColPanel(filler(1), r1, r2, r3, r4, filler(1), r5, okCancel)
+  val d1 = ColPanel(filler(1), r1, r2, r3, r4, r5, filler(1))
+  val d2 = ColPanel(filler(1), r7, r8, ColPanel.verticalGlue, ColPanel.verticalGlue, filler(1))
 
   setTitle(Utils.loadString("S_Settings"))
   setModal(true)
   getRootPane.setDefaultButton(ok)
+  val tabbedPane = new JTabbedPane()
+  tabbedPane.add(Utils.loadString("S_System"), d1)
+  tabbedPane.add(Utils.loadString("S_ImageExport"), d2)
+  //  tabbedPane.addChangeListener((e: ChangeEvent) => {
+  //    changeModality(true)
+  //  })
+
+  val d = ColPanel(filler(1), tabbedPane, okCancel)
   getContentPane.add(d)
   setBounds(300, 300, 450, 400)
   pack()

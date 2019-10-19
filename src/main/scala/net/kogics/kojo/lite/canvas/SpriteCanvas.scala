@@ -590,13 +590,23 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   def exportThumbnail(filePrefix: String, height: Int): File = {
-    exportImageHelper(filePrefix, (getWidth.toFloat / getHeight * height).toInt, height)
+    exportImageHelper(filePrefix, widthForHeight(height), height)
   }
 
-  def exportImageH(filePrefix: String, height: Int): File = exportThumbnail(filePrefix, height)
+  def exportImageH(filePrefix: String, height: Int): File = {
+    exportImageHelper(filePrefix, widthForHeight(height), height)
+  }
 
   def exportImageW(filePrefix: String, width: Int): File = {
-    exportImageHelper(filePrefix, width, (getHeight.toFloat / getWidth * width).toInt)
+    exportImageHelper(filePrefix, width, heightForWidth(width))
+  }
+
+  def heightForWidth(width: Int): Int = {
+    (getHeight.toFloat / getWidth * width).toInt
+  }
+
+  def widthForHeight(height: Int): Int = {
+    (getWidth.toFloat / getHeight * height).toInt
   }
 
   def forceClear() {
@@ -947,8 +957,36 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       val fchooser = new FileChooser(kojoCtx)
       override def actionPerformed(e: ActionEvent) {
         val file = fchooser.chooseFile(Utils.stripDots(Utils.loadString("S_SaveAs")), "PNG Image File", "png")
+        val a4_dims = Map("height" -> 11.693, "width" -> 8.268)
         if (file != null) {
-          exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)
+          Utils.appProperty("export.image.dpi") match {
+            case Some(sDpi) if sDpi.length > 0 =>
+              val dpi = sDpi.toInt
+              val dim = Utils.appProperty("export.image.dimension").getOrElse("height")
+              val inches = Utils.appProperty("export.image.inches") match {
+                case Some(inchVal) =>
+                  inchVal.toLowerCase.trim match {
+                    case "a4"  => a4_dims.getOrElse(dim, 0.0)
+                    case sInch => sInch.toDouble
+                  }
+                case None => a4_dims.getOrElse(dim, 11.0)
+              }
+
+              if (dim == "height") {
+                val height = math.round(dpi * inches).toInt
+                exportImageToFile(file, widthForHeight(height), height)
+              }
+              else if (dim == "width") {
+                val width = math.round(dpi * inches).toInt
+                exportImageToFile(file, width, heightForWidth(width))
+              }
+
+            case Some(sDpi) if sDpi.length == 0 =>
+              exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)
+
+            case None =>
+              exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)
+          }
         }
       }
     })
