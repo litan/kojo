@@ -411,6 +411,19 @@ Here's a partial list of the available commands:
     filter.filter(img, null)
   }
 
+  def setDrawingCanvasAspectRatio(r: Double): Unit = {
+    val dch = Main.drawingCanvasHolder
+    val dc = dch.dc
+    val b = dc.getBounds()
+    val newWidth = b.height / r
+    import java.awt.Dimension
+    dch.setResizeRequest(new Dimension(math.round(newWidth).toInt, b.height), true)
+  }
+
+  def setDrawingCanvasToA4(): Unit = {
+    setDrawingCanvasAspectRatio(297.0 / 210)
+  }
+
   val hueMod = Utils.hueMod _
   val satMod = Utils.satMod _
   val britMod = Utils.britMod _
