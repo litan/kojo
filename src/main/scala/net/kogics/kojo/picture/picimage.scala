@@ -171,7 +171,9 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
       override def paint(paintContext: PPaintContext) {
         val finalImg = picWithEffects
         val g3 = paintContext.getGraphics()
-        g3.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+        if (paintContext.getScale == 1.0) {
+          g3.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
+        }
         g3.drawImage(finalImg, 0, 0, null)
       }
     }
@@ -194,7 +196,7 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
 
   def copy: net.kogics.kojo.core.Picture = new EffectableImagePic(pic.copy)
   override def toString() = s"EffectableImagePic (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
-  
+
   def fade(n: Int) {
     effects = effects :+ new FadeImageOp(n)
   }
@@ -307,7 +309,7 @@ case class SomeEffect(name: Symbol, props: Tuple2[Symbol, Any]*)(pic: Effectable
   override def toString() = s"Effect($name, $props) (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 }
 
-abstract class ComposableImageEffect extends ComposableTransformer { 
+abstract class ComposableImageEffect extends ComposableTransformer {
   def epic(p: Picture) = p match {
     case ep: EffectablePicture => ep
     case _                     => new EffectableImagePic(p)(p.canvas)
