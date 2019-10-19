@@ -107,6 +107,12 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
     setVisible(true)
   }
 
+  def setCurrentAspectRatio(): Unit = {
+    val cb = Builtins.instance.canvasBounds
+    val r = cb.width / cb.height
+    currentAspectTf.setText(f"$r%2.2f")
+  }
+
   val adjustCanvasBtn = new JButton(Utils.loadString("S_AdjustCanvas"))
   adjustCanvasBtn.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent): Unit = {
@@ -114,10 +120,16 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
       aspectTf.value.toLowerCase.trim match {
         case "a4" =>
           Builtins.instance.setDrawingCanvasToA4()
+          Utils.runLaterInSwingThread {
+            setCurrentAspectRatio()
+          }
         case s =>
           try {
             val r = s.toDouble
             Builtins.instance.setDrawingCanvasAspectRatio(r)
+            Utils.runLaterInSwingThread {
+              setCurrentAspectRatio()
+            }
           }
           catch {
             case throwable: Throwable =>
@@ -134,8 +146,11 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   //    }
   //  })
   handleInchesDdSelection(inchesDd.value)
+  val currentAspectTf = Label("")
+  setCurrentAspectRatio()
 
   val r8 = RowPanel(filler(10), Label(Utils.loadString("S_CanvasAspectRatio")), aspectTf, adjustCanvasBtn, filler(3))
+  val r9 = RowPanel(filler(10), Label(Utils.loadString("S_CanvasCurrentAspectRatio")), currentAspectTf, filler(3))
 
   val okCancel = new JPanel
   val ok = new JButton(Utils.loadString("S_OK"))
@@ -190,7 +205,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   okCancel.add(cancel)
 
   val d1 = ColPanel(filler(1), r1, r2, r3, r4, r5, filler(1))
-  val d2 = ColPanel(filler(1), r7, r8, ColPanel.verticalGlue, ColPanel.verticalGlue, filler(1))
+  val d2 = ColPanel(filler(1), r7, r8, r9, ColPanel.verticalGlue, ColPanel.verticalGlue, filler(1))
 
   setTitle(Utils.loadString("S_Settings"))
   setModal(true)
