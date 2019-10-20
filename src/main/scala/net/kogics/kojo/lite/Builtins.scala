@@ -530,10 +530,8 @@ Here's a partial list of the available commands:
   def isScratchPad = kojoCtx.subKojo
   def isTracing = false
 
-  def TexturePaint(file: String, x: Double, y: Double) = {
-    val img = Utils.loadBufImage(file)
-    new TexturePaint(img, new Rectangle2D.Double(x, y, img.getWidth, -img.getHeight))
-  }
+  def TexturePaint(file: String, x: Double, y: Double) =
+    cm.texture(file, x, y)
 
   val PShapes = Picture
   val PicShape = Picture

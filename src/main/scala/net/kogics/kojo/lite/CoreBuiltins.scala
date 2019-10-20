@@ -118,19 +118,12 @@ trait CoreBuiltins extends Rationals {
   def Color(r: Int, g: Int, b: Int) = new Color(r, g, b, 255)
   def Color(r: Int, g: Int, b: Int, a: Int) = new Color(r, g, b, a)
   def Color(rgbHex: Int, hasAlpha: Boolean = false) = new Color(rgbHex, hasAlpha)
-  def ColorG(x1: Double, y1: Double, c1: Color, x2: Double, y2: Double, c2: Color, cyclic: Boolean = false) = {
-    new GradientPaint(x1.toFloat, y1.toFloat, c1, x2.toFloat, y2.toFloat, c2, cyclic)
-  }
-  def ColorRadialG(x: Double, y: Double, radius: Double, distribution: Seq[Double], colors: Seq[Color], cyclic: Boolean = false) = {
-    val cycleMode = if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
-    val floatD: Array[Float] = distribution.map { _.toFloat }(collection.breakOut)
-    new RadialGradientPaint(x.toFloat, y.toFloat, radius.toFloat, floatD, colors.toArray, cycleMode)
-  }
-  def ColorLinearG(x1: Double, y1: Double, x2: Double, y2: Double, distribution: Seq[Double], colors: Seq[Color], cyclic: Boolean = false) = {
-    val cycleMode = if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
-    val floatD: Array[Float] = distribution.map { _.toFloat }(collection.breakOut)
-    new LinearGradientPaint(x1.toFloat, y1.toFloat, x2.toFloat, y2.toFloat, floatD, colors.toArray, cycleMode)
-  }
+  def ColorG(x1: Double, y1: Double, c1: Color, x2: Double, y2: Double, c2: Color, cyclic: Boolean = false) =
+    cm.linearGradient(x1, y1, c1, x2, y2, c2, cyclic)
+  def ColorRadialG(x: Double, y: Double, radius: Double, distribution: Seq[Double], colors: Seq[Color], cyclic: Boolean = false) =
+    cm.radialMultipleGradient(x, y, radius, distribution, colors, cyclic)
+  def ColorLinearG(x1: Double, y1: Double, x2: Double, y2: Double, distribution: Seq[Double], colors: Seq[Color], cyclic: Boolean = false) =
+    cm.linearMultipleGradient(x1, y1, x2, y2, distribution, colors, cyclic)
   def ColorHSB(h: Double, s: Double, b: Double) = java.awt.Color.getHSBColor((h / 360).toFloat, (s / 100).toFloat, (b / 100).toFloat)
   def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
 
