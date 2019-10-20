@@ -94,6 +94,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   val r4 = RowPanel(filler(10), Label(Utils.loadString("S_FontDeltaHelp")), filler(10))
   val r5 = RowPanel(filler(10), Label(Utils.loadString("S_SettingsRestart")))
 
+  val r6 = RowPanel(filler(7), Label(Utils.loadString("S_ImageExport")))
   val r7 = RowPanel(
     filler(10),
     Label(Utils.loadString("S_DPI")), dpiTf, filler(3),
@@ -205,14 +206,14 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   okCancel.add(cancel)
 
   val d1 = ColPanel(filler(1), r1, r2, r3, r4, r5, filler(1))
-  val d2 = ColPanel(filler(1), r7, r8, r9, ColPanel.verticalGlue, ColPanel.verticalGlue, filler(1))
+  val d2 = ColPanel(filler(1), r6, r7, r9, r8, ColPanel.verticalGlue, ColPanel.verticalGlue, filler(1))
 
   setTitle(Utils.loadString("S_Settings"))
   setModal(true)
   getRootPane.setDefaultButton(ok)
   val tabbedPane = new JTabbedPane()
   tabbedPane.add(Utils.loadString("S_System"), d1)
-  tabbedPane.add(Utils.loadString("S_ImageExport"), d2)
+  tabbedPane.add(Utils.loadString("S_Export"), d2)
   //  tabbedPane.addChangeListener((e: ChangeEvent) => {
   //    changeModality(true)
   //  })
