@@ -97,8 +97,8 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   val r7 = RowPanel(
     filler(10),
     Label(Utils.loadString("S_DPI")), dpiTf, filler(3),
-    Label(Utils.loadString("S_Inches")), inchesDd, filler(3),
-    Label(Utils.loadString("S_Dimension")), dimensionDd, filler(3)
+    Label(Utils.loadString("S_Dimension")), dimensionDd, filler(3),
+    Label(Utils.loadString("S_Inches")), inchesDd, filler(3)
   )
 
   def changeModality(modal: Boolean): Unit = {
