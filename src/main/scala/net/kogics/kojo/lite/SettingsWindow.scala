@@ -220,6 +220,6 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
 
   val d = ColPanel(filler(1), tabbedPane, okCancel)
   getContentPane.add(d)
-  setBounds(300, 300, 450, 400)
   pack()
+  setLocationRelativeTo(owner)
 }
