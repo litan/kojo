@@ -492,6 +492,7 @@ trait AppMenu {
               <li>Scalatest (http://www.scalatest.org/) for testing</li>
               <li>Akka (https://akka.io/) for concurrency</li>
               <li>Darcula (https://github.com/bulenkov/Darcula) for the dark Kojo theme</li>
+              <li>libTiled (https://www.mapeditor.org/) to load game level files created with the Tiled Map Editor</li>
               </ul>
               </div>
               </body></html>
