@@ -160,6 +160,7 @@ trait CoreBuiltins extends Rationals {
   val BatchPics = picture.BatchPics
   val trans = picture.trans _
   val rot = picture.rot _
+  def id = picture.trans(0, 0)
   def scale(f: Double) = picture.scale(f)
   def scale(x: Double, y: Double) = picture.scale(x, y)
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
