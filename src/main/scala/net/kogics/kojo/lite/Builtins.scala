@@ -420,8 +420,22 @@ Here's a partial list of the available commands:
     dch.setResizeRequest(new Dimension(math.round(newWidth).toInt, b.height), true)
   }
 
+  def setDrawingCanvasSize(width: Int, height: Int): Unit = {
+    val dch = Main.drawingCanvasHolder
+    import java.awt.Dimension
+    dch.setResizeRequest(new Dimension(width, height), true)
+  }
+
   def setDrawingCanvasToA4(): Unit = {
-    setDrawingCanvasAspectRatio(210.0 / 297)
+    setDrawingCanvasAspectRatio(210.0 / 297.0)
+  }
+
+  def setDrawingCanvasToA4Landscape(): Unit = {
+    setDrawingCanvasAspectRatio(297.0 / 210.0)
+  }
+
+  def setDrawingCanvasToA3(): Unit = {
+    setDrawingCanvasAspectRatio(297.0 / 420.0)
   }
 
   val hueMod = Utils.hueMod _

@@ -53,16 +53,16 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   val dpiTf = TextField(dpi)
   dpiTf.setColumns(3)
 
-  def handleInchesDdSelection(item: String): Unit = {
-    if (item.toLowerCase.trim == "a4") {
-      aspectTf.setText("A4")
+  def handleInchesDdSelection(item: String): Unit = PaperSize.fromString(item) match {
+    case Some(ps) =>
+      aspectTf.setText(ps.name)
       dimensionDd.setSelectedItem("height")
       dimensionDd.setEnabled(false)
       adjustCanvasBtn.requestFocusInWindow()
-    }
+    case None =>
   }
 
-  val inchesDd = DropDown("A4")
+  val inchesDd = DropDown(PaperSize.allSizes: _*)
   inchesDd.setEditable(true)
   val inchesDdEditor = {
     try {
@@ -118,15 +118,20 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   adjustCanvasBtn.addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent): Unit = {
       changeModality(false)
-      aspectTf.value.toLowerCase.trim match {
-        case "a4" =>
-          Builtins.instance.setDrawingCanvasToA4()
+      PaperSize.fromString(aspectTf.value) match {
+        case Some(ps) =>
+          ps match {
+            case A4 =>
+              Builtins.instance.setDrawingCanvasToA4()
+            case A4Landscape =>
+              Builtins.instance.setDrawingCanvasToA4Landscape()
+          }
           Utils.runLaterInSwingThread {
             setCurrentAspectRatio()
           }
-        case s =>
+        case None =>
           try {
-            val r = s.toDouble
+            val r = aspectTf.value.toDouble
             Builtins.instance.setDrawingCanvasAspectRatio(r)
             Utils.runLaterInSwingThread {
               setCurrentAspectRatio()
@@ -139,13 +144,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
     }
   })
   val aspectTf = TextField("")
-  //  aspectTf.addKeyListener(new KeyAdapter {
-  //    override def keyTyped(e: KeyEvent): Unit = {
-  //      if (inchesDd.value.toLowerCase.trim == "a4")
-  //      inchesDdEditor.setText("")
-  //      dimensionDd.setEnabled(true)
-  //    }
-  //  })
+  aspectTf.setColumns(8)
   handleInchesDdSelection(inchesDd.value)
   val currentAspectTf = Label("")
   setCurrentAspectRatio()
@@ -161,15 +160,16 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
       val newTheme = themeDd.value
       var newInches = {
         val v = inchesDd.value
-        if (v.toLowerCase.trim == "a4") v
-        else {
-          try {
-            v.toDouble
-            v
-          }
-          catch {
-            case throwable: Throwable => ""
-          }
+        PaperSize.fromString(v) match {
+          case Some(ps) => ps.name
+          case None =>
+            try {
+              v.toDouble
+              v
+            }
+            catch {
+              case throwable: Throwable => ""
+            }
         }
       }
       val newDpi = if (newInches.trim == "") "" else {
