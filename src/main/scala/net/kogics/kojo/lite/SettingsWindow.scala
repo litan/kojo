@@ -125,6 +125,10 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
               Builtins.instance.setDrawingCanvasToA4()
             case A4Landscape =>
               Builtins.instance.setDrawingCanvasToA4Landscape()
+            case A3 =>
+              Builtins.instance.setDrawingCanvasToA3()
+            case A3Landscape =>
+              Builtins.instance.setDrawingCanvasToA3Landscape()
           }
           Utils.runLaterInSwingThread {
             setCurrentAspectRatio()

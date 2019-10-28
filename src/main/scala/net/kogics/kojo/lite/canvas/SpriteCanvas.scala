@@ -965,7 +965,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
               val inches = Utils.appProperty("export.image.inches") match {
                 case Some(inchVal) =>
                   PaperSize.fromString(inchVal) match {
-                    case Some(ps) => if (dim == "height") ps.height else ps.width
+                    case Some(ps) => if (dim == "height") ps.heightInches else ps.widthInches
                     case None     => inchVal.toDouble
                   }
                 case None => 1.0

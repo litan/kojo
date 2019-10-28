@@ -427,15 +427,19 @@ Here's a partial list of the available commands:
   }
 
   def setDrawingCanvasToA4(): Unit = {
-    setDrawingCanvasAspectRatio(210.0 / 297.0)
+    setDrawingCanvasAspectRatio(A4.aspectRatio)
   }
 
   def setDrawingCanvasToA4Landscape(): Unit = {
-    setDrawingCanvasAspectRatio(297.0 / 210.0)
+    setDrawingCanvasAspectRatio(A4Landscape.aspectRatio)
   }
 
   def setDrawingCanvasToA3(): Unit = {
-    setDrawingCanvasAspectRatio(297.0 / 420.0)
+    setDrawingCanvasAspectRatio(A3.aspectRatio)
+  }
+
+  def setDrawingCanvasToA3Landscape(): Unit = {
+    setDrawingCanvasAspectRatio(A3Landscape.aspectRatio)
   }
 
   val hueMod = Utils.hueMod _
