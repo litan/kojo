@@ -801,7 +801,7 @@ object Utils {
                    |
                    |# Specify canvas image export options
                    |# export.image.dpi=nn
-                   |# export.image.inches=nn or a4
+                   |# export.image.inches=nn or a4, a3, etc.
                    |# export.image.dimension=width or height
                  """.stripMargin
 
@@ -827,7 +827,7 @@ object Utils {
 
   def appProperty(key: String) = {
     val ret = kojoProps.getProperty(key)
-    if (ret != null) Some(ret) else None
+    if (ret != null && ret.length > 0) Some(ret) else None
   }
 
   def updateAppProperties(props: Map[String, String]): Unit = {

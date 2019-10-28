@@ -959,7 +959,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
         val file = fchooser.chooseFile(Utils.stripDots(Utils.loadString("S_SaveAs")), "PNG Image File", "png")
         if (file != null) {
           Utils.appProperty("export.image.dpi") match {
-            case Some(sDpi) if sDpi.length > 0 =>
+            case Some(sDpi) =>
               val dpi = sDpi.toInt
               val dim = Utils.appProperty("export.image.dimension").getOrElse("height")
               val inches = Utils.appProperty("export.image.inches") match {
@@ -979,9 +979,6 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
                 val width = math.round(dpi * inches).toInt
                 exportImageToFile(file, width, heightForWidth(width))
               }
-
-            case Some(sDpi) if sDpi.length == 0 =>
-              exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)
 
             case None =>
               exportImageToFile(file, SpriteCanvas.this.getWidth, SpriteCanvas.this.getHeight)

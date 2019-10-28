@@ -25,7 +25,6 @@ import javax.swing.JFrame
 import javax.swing.JPanel
 import javax.swing.JTabbedPane
 import javax.swing.JTextField
-import javax.swing.event.ChangeEvent
 
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.widget.ColPanel
@@ -111,7 +110,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   def setCurrentAspectRatio(): Unit = {
     val cb = Builtins.instance.canvasBounds
     val r = cb.width / cb.height
-    currentAspectTf.setText(f"$r%2.2f")
+    currentAspectTf.setText(f"$r%2.3f")
   }
 
   val adjustCanvasBtn = new JButton(Utils.loadString("S_AdjustCanvas"))
