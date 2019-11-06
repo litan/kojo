@@ -420,7 +420,7 @@ class CodeExecutionSupport(
     }
 
     private def onError() {
-      Utils.runInSwingThread {
+      Utils.runLaterInSwingThread {
         statusStrip.onError()
       }
       // just in case this was a story
@@ -445,7 +445,7 @@ class CodeExecutionSupport(
 
     def onRunSuccess() = {
       runDone()
-      Utils.runInSwingThread {
+      Utils.runLaterInSwingThread {
         statusStrip.onSuccess()
       }
       Utils.schedule(0.2) {
@@ -491,7 +491,7 @@ class CodeExecutionSupport(
 
     private def runDone() = {
       tCanvas.onRunDone()
-      Utils.runInSwingThread {
+      Utils.runLaterInSwingThread {
         enableRunButton(true)
         if (!pendingCommands) {
           stopButton.setEnabled(false)

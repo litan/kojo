@@ -231,7 +231,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
     override def postRestart(reason: Throwable): Unit = {
       val msg = "Code runner actor - postRestart triggered."
-      Log.info(msg); println(msg)
+      Log.info(msg)
       compilerAndRunner = actorState.compilerAndRunner
       _interp = actorState.interpreter
       interpInited = actorState.interpInited
@@ -391,6 +391,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
             runContext.onRunSuccess()
           }
           else {
+            Utils.clearQ()
             if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
             else runContext.onRunError()
           }
@@ -478,6 +479,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           runContext.onRunSuccess()
         }
         else {
+          Utils.clearQ()
           if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
           else runContext.onRunError()
         }

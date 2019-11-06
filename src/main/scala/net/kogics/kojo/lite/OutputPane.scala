@@ -233,7 +233,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     errText = ""
     errOffset = 0
     errCount = 0
-    Utils.runInSwingThread {
+    Utils.runLaterInSwingThread {
       errorWindow.setText("")
       outLayout.show(this, "Output")
     }
@@ -306,14 +306,14 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   }
 
   def showOutput(outText: String) {
-    Utils.runInSwingThread {
+    Utils.runLaterInSwingThread {
       showOutputHelper(outText, outputColor)
     }
     lastOutput = outText
   }
 
   def showOutput(outText: String, color: Color) {
-    Utils.runInSwingThread {
+    Utils.runLaterInSwingThread {
       showOutputHelper(outText, color)
     }
     lastOutput = outText
@@ -325,7 +325,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   }
 
   def showError(errMsg: String) {
-    Utils.runInSwingThread {
+    Utils.runLaterInSwingThread {
       appendError(errMsg)
       execSupport.enableClearButton()
     }
@@ -333,7 +333,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   }
 
   def showException(errText: String) {
-    Utils.runInSwingThread {
+    Utils.runLaterInSwingThread {
       appendError(errText)
       execSupport.enableClearButton()
     }
@@ -341,7 +341,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   }
 
   def showSmartError(errText: String, line: Int, column: Int, offset: Int) {
-    Utils.runInSwingThread {
+    Utils.runLaterInSwingThread {
       appendError(errText, Some(offset))
       execSupport.enableClearButton()
     }

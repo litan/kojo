@@ -266,13 +266,20 @@ object Utils {
   val notFull = batchLock.newCondition
   val Max_Q_Size = 9000
   val batchQ = new LinkedList[() => Unit]
-  // this is the core of Kojo UI performance - so the code is a little low-level 
+
+  @volatile var keepProcessingQ = true
+  def clearQ(): Unit = {
+    keepProcessingQ = false
+  }
+
+  // this is the core of Kojo UI performance - so the code is a little low-level
   def runInSwingThread(fn: => Unit) {
     if (EventQueue.isDispatchThread) {
       fn
     }
     else {
       if (batchLock.tryLock(GuiTimeout, TimeUnit.MILLISECONDS)) {
+        keepProcessingQ = true
         try {
           while (batchQ.size > Max_Q_Size) {
             notFull.await()
@@ -285,7 +292,12 @@ object Utils {
                 batchLock.lock()
                 while (!batchQ.isEmpty) {
                   try {
-                    batchQ.remove.apply()
+                    if (keepProcessingQ) {
+                      batchQ.remove.apply()
+                    }
+                    else {
+                      batchQ.clear()
+                    }
                   }
                   catch {
                     case t: Throwable =>
@@ -305,7 +317,8 @@ object Utils {
         }
       }
       else {
-        throw new RuntimeException("Potential Deadlock. Bailing out!")
+        keepProcessingQ = false
+        throw new RuntimeException("Potential Deadlock Or Overload. Bailing out!")
       }
     }
   }
