@@ -28,6 +28,8 @@ object ColorMap {
     "darkGoldenrod" -> Color.darkGoldenrod,
     "darkGray" -> Color.darkGray,
     "darkGrey" -> Color.darkGrey,
+    "darkGrayClassic" -> Color.darkGrayClassic,
+    "darkGreyClassic" -> Color.darkGreyClassic,
     "darkGreen" -> Color.darkGreen,
     "darkKhaki" -> Color.darkKhaki,
     "darkMagenta" -> Color.darkMagenta,

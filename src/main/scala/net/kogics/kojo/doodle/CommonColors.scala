@@ -30,6 +30,8 @@ trait CommonColors {
   val darkGoldenrod        = Color.rgb(0xb8.uByte, 0x86.uByte, 0x0b.uByte)
   val darkGray             = Color.rgb(0xa9.uByte, 0xa9.uByte, 0xa9.uByte)
   val darkGrey             = Color.rgb(0xa9.uByte, 0xa9.uByte, 0xa9.uByte)
+  val darkGrayClassic      = Color.rgb(0x40.uByte, 0x40.uByte, 0x40.uByte)
+  val darkGreyClassic      = Color.rgb(0x40.uByte, 0x40.uByte, 0x40.uByte)
   val darkGreen            = Color.rgb(0x00.uByte, 0x64.uByte, 0x00.uByte)
   val darkKhaki            = Color.rgb(0xbd.uByte, 0xb7.uByte, 0x6b.uByte)
   val darkMagenta          = Color.rgb(0x8b.uByte, 0x00.uByte, 0x8b.uByte)
