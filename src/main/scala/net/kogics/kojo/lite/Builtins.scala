@@ -585,8 +585,8 @@ Here's a partial list of the available commands:
     def widget(component: JComponent) = picture.widget(component)
     def button(label: String)(fn: => Unit) = widget(Button(label)(fn))
     def effectablePic(pic: Picture) = picture.effectablePic(pic)
-    def hgap(n: Double) = penColor(noColor) -> Picture.rectangle(n, 1)
-    def vgap(n: Double) = penColor(noColor) -> Picture.rectangle(1, n)
+    def hgap(n: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(n, 0.001)
+    def vgap(n: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(0.001, n)
     def showBounds(p: Picture, c: Color = cm.black) = Utils.runInSwingThread {
       val b = p.tnode.getGlobalFullBounds
       val pic = trans(b.x, b.y) * penColor(c) -> rectangle(b.width, b.height)
