@@ -112,6 +112,14 @@ trait CoreBuiltins extends Rationals {
   def randomFrom[T](seq: Seq[T]) = seq(random(seq.length))
   def randomColor = Color(random(256), random(256), random(256))
   def randomTransparentColor = Color(random(256), random(256), random(256), 100 + random(156))
+  def initRandomGenerator() {
+    initRandomGenerator(randomLong)
+  }
+
+  def initRandomGenerator(seed: Long) {
+    println(s"Random seed set to: ${seed}L")
+    setRandomSeed(seed)
+  }
 
   @deprecated("Use Color instead", "2.7")
   def color(r: Int, g: Int, b: Int) = new Color(r, g, b)
