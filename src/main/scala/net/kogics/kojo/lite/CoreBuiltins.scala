@@ -1,19 +1,14 @@
 package net.kogics.kojo
 package lite
 
+import java.awt.GraphicsEnvironment
+import java.awt.Paint
+import java.awt.image.BufferedImage
 import java.awt.{Color => JColor}
 import java.awt.{Font => JFont}
-import java.awt.GradientPaint
-import java.awt.GraphicsEnvironment
-import java.awt.LinearGradientPaint
-import java.awt.MultipleGradientPaint
-import java.awt.Paint
-import java.awt.RadialGradientPaint
-import java.awt.image.BufferedImage
 import java.net.URL
 import java.util.concurrent.CountDownLatch
 
-import scala.Array.canBuildFrom
 import scala.language.implicitConversions
 
 import com.jhlabs.image.LightFilter.Light
@@ -22,6 +17,8 @@ import net.kogics.kojo.core.Rectangle
 import net.kogics.kojo.core.TSCanvasFeatures
 import net.kogics.kojo.kmath.Rationals
 import net.kogics.kojo.turtle.LoTurtle
+import net.kogics.kojo.util.PerlinNoiseImproved
+import net.kogics.kojo.util.PerlinNoiseProcessing
 import net.kogics.kojo.util.Utils
 
 trait CoreBuiltins extends Rationals {
@@ -120,6 +117,8 @@ trait CoreBuiltins extends Rationals {
     println(s"Random seed set to: ${seed}L")
     setRandomSeed(seed)
   }
+  lazy val perlin = new PerlinNoiseProcessing()
+  lazy val perlin2 = new PerlinNoiseImproved()
 
   @deprecated("Use Color instead", "2.7")
   def color(r: Int, g: Int, b: Int) = new Color(r, g, b)
