@@ -699,8 +699,11 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
-  def wipe = Utils.runInSwingThread {
-    pictures.removeAllChildren()
+  def wipe = {
+    Utils.runInSwingThread {
+      pictures.removeAllChildren()
+    }
+    PicCache.clear()
   }
 
   def newFigure(x: Int = 0, y: Int = 0) = {
