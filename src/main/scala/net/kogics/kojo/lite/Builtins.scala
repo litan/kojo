@@ -28,6 +28,7 @@ import java.net.URL
 import javax.swing.JComponent
 
 import scala.language.implicitConversions
+import scala.swing.Graphics2D
 
 import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.story.HandlerHolder
@@ -571,6 +572,7 @@ Here's a partial list of the available commands:
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
     def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.path(path) }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
+    def fromDrawableImage(w: Int, h: Int)(fn: Graphics2D => Unit) = picture.drawableImage(w, h, fn)
     def circle(r: Double) = picture.circle(r)
     // def circle(x: Double, y: Double, r: Double) = picture.offset(x, y) -> picture.circle(r)
     def ellipse(rx: Double, ry: Double) = picture.ellipse(rx, ry)

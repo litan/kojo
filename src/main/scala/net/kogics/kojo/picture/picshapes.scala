@@ -18,8 +18,10 @@ package net.kogics.kojo.picture
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Component
+import java.awt.GraphicsEnvironment
 import java.awt.Image
 import java.awt.RenderingHints
+import java.awt.Transparency
 import java.awt.geom.Arc2D
 import java.awt.geom.GeneralPath
 import java.awt.geom.PathIterator
@@ -34,6 +36,7 @@ import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
 import scala.collection.mutable.ArrayBuffer
+import scala.swing.Graphics2D
 
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.Geometry
@@ -323,6 +326,44 @@ class PathPic(path: GeneralPath)(implicit val canvas: SCanvas) extends Picture w
   }
 
   def copy: net.kogics.kojo.core.Picture = new PathPic(path)
+}
+
+class DrawableImagePic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with NonVectorPicOps {
+  override def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    val cab = new ArrayBuffer[Coordinate]
+    cab += newCoordinate(0, 0)
+    cab += newCoordinate(0, h)
+    cab += newCoordinate(w, h)
+    cab += newCoordinate(w, 0)
+    cab += newCoordinate(0, 0)
+    Gf.createLineString(cab.toArray)
+  }
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    lazy val buffImg = {
+      val graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDefaultConfiguration
+      val buffImg = graphicsConfiguration.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
+      val gbi = buffImg.createGraphics
+      new PPaintContext(gbi).setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
+      gbi.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
+      fn(gbi)
+      buffImg
+    }
+
+    val node = new PNode {
+      override def paint(paintContext: PPaintContext) {
+        val g2 = paintContext.getGraphics
+        g2.drawImage(buffImg, null, 0, 0)
+      }
+    }
+    node.setBounds(0, 0, w, h)
+    node.setVisible(false)
+    picLayer.addChild(node)
+    node
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new RectanglePic(w, h)
 }
 
 class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2

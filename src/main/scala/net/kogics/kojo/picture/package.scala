@@ -24,6 +24,8 @@ import java.util.Random
 
 import javax.swing.JComponent
 
+import scala.swing.Graphics2D
+
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
 
@@ -147,6 +149,9 @@ package object picture {
   def path(path: GeneralPath)(implicit canvas: SCanvas) = new PathPic(path)
 
   def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
+
+  def drawableImage(w: Int, h: Int, fn: Graphics2D => Unit)(implicit canvas: SCanvas) =
+    new DrawableImagePic(w, h, fn)
 
   def image(file: String, envelope: Option[Picture])(implicit canvas: SCanvas) = new FileImagePic(file, envelope)
   def image(url: URL, envelope: Option[Picture])(implicit canvas: SCanvas) = new UrlImagePic(url, envelope)
