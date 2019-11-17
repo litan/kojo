@@ -119,6 +119,17 @@ trait CoreBuiltins extends Rationals {
   }
   lazy val perlin = new PerlinNoiseProcessing()
   lazy val perlin2 = new PerlinNoiseImproved()
+  def triangulate(points: Seq[Point]) = {
+    import collection.JavaConverters._
+
+    import io.github.jdiemke.triangulation.DelaunayTriangulator
+    import io.github.jdiemke.triangulation.Vector2D
+
+    val triangulator = new DelaunayTriangulator((points map { p => new Vector2D(p.x, p.y) }).asJava)
+    triangulator.triangulate()
+    val tr = triangulator.getTriangles
+    tr.asScala
+  }
 
   @deprecated("Use Color instead", "2.7")
   def color(r: Int, g: Int, b: Int) = new Color(r, g, b)

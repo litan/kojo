@@ -239,6 +239,7 @@ trait AppMenu {
     generativeArtMenu.add(menuItemFor("S_CubicDisarray", "genart-cubic-disarray.kojo"))
     generativeArtMenu.add(menuItemFor("S_TriMesh", "genart-tri-mesh.kojo"))
     generativeArtMenu.add(menuItemFor("S_Mondrian", "genart-mondrian.kojo"))
+    generativeArtMenu.add(menuItemFor("S_Delaunay", "genart-delaunay.kojo"))
 
     samplesMenu.add(generativeArtMenu)
 
@@ -305,6 +306,7 @@ trait AppMenu {
     showcaseMenu.add(menuItemFor("S_LightedStar", "lighted-star.kojo"))
     showcaseMenu.add(menuItemFor("S_Mandel", "mandelbrot.kojo"))
     showcaseMenu.add(menuItemFor("S_Mondrian", "genart-mondrian.kojo"))
+    showcaseMenu.add(menuItemFor("S_Delaunay", "genart-delaunay.kojo"))
     showcaseMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
     showcaseMenu.add(menuItemFor("S_CarRide", "car-ride.kojo"))
     showcaseMenu.add(menuItemForInstalledFile("S_Platformer", "examples/tiledgame/game.kojo"))
@@ -493,6 +495,8 @@ trait AppMenu {
               <li>Akka (https://akka.io/) for concurrency</li>
               <li>Darcula (https://github.com/bulenkov/Darcula) for the dark Kojo theme</li>
               <li>libTiled (https://www.mapeditor.org/) to load game level files created with the Tiled Map Editor</li>
+              <li>Processing (https://processing.org/) for perlin noise</li>
+              <li>Delaunay Triangulator (https://github.com/jdiemke/delaunay-triangulator) for triangulation of points</li>
               </ul>
               </div>
               </body></html>

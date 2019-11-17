@@ -56,6 +56,7 @@ trait TSCanvasFeatures {
   def clearWithUL(ul: UnitLen): Unit
   def camScale: Double
   def wipe(): Unit
+  def erasePictures() = wipe()
   def setBackgroundH(c1: Color, c2: Color): Unit
   def setBackgroundV(c1: Color, c2: Color): Unit
   def drawStage(fillc: Paint): Unit
