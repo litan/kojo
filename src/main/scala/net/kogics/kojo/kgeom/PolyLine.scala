@@ -102,9 +102,11 @@ class PolyLine extends PNode {
       g2.fill(polyLinePath)
     }
 
-    g2.setStroke(stroke)
-    g2.setPaint(strokePaint)
-    g2.draw(polyLinePath)
+    if (strokePaint != null) {
+      g2.setStroke(stroke)
+      g2.setPaint(strokePaint)
+      g2.draw(polyLinePath)
+    }
   }
 
   def updateBounds() {
