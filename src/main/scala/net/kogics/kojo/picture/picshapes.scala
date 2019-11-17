@@ -340,17 +340,17 @@ class DrawableImagePic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canv
     Gf.createLineString(cab.toArray)
   }
 
-  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
-    lazy val buffImg = {
-      val graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDefaultConfiguration
-      val buffImg = graphicsConfiguration.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
-      val gbi = buffImg.createGraphics
-      new PPaintContext(gbi).setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
-      gbi.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
-      fn(gbi)
-      buffImg
-    }
+  lazy val (buffImg, gbi) = {
+    val graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDefaultConfiguration
+    val buffImg = graphicsConfiguration.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
+    val gbi = buffImg.createGraphics
+    new PPaintContext(gbi).setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
+    gbi.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
+    fn(gbi)
+    (buffImg, gbi)
+  }
 
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val node = new PNode {
       override def paint(paintContext: PPaintContext) {
         val g2 = paintContext.getGraphics
@@ -363,7 +363,12 @@ class DrawableImagePic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canv
     node
   }
 
-  def copy: net.kogics.kojo.core.Picture = new RectanglePic(w, h)
+  def update(): Unit = {
+    fn(gbi)
+    tnode.repaint()
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new DrawableImagePic(w, h, fn)
 }
 
 class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
