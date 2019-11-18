@@ -146,12 +146,12 @@ package object picture {
 
   def line(x: Double, y: Double)(implicit canvas: SCanvas) = new LinePic(x, y)
 
-  def path(path: GeneralPath)(implicit canvas: SCanvas) = new PathPic(path)
+  def fromPath(path: GeneralPath)(implicit canvas: SCanvas) = new PathPic(path)
 
   def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
-  def drawableImage(w: Int, h: Int, fn: Graphics2D => Unit)(implicit canvas: SCanvas) =
-    new DrawableImagePic(w, h, fn)
+  def fromJava2d(w: Int, h: Int, fn: Graphics2D => Unit)(implicit canvas: SCanvas) =
+    new Java2DPic(w, h, fn)
 
   def image(file: String, envelope: Option[Picture])(implicit canvas: SCanvas) = new FileImagePic(file, envelope)
   def image(url: URL, envelope: Option[Picture])(implicit canvas: SCanvas) = new UrlImagePic(url, envelope)

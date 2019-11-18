@@ -328,7 +328,8 @@ class PathPic(path: GeneralPath)(implicit val canvas: SCanvas) extends Picture w
   def copy: net.kogics.kojo.core.Picture = new PathPic(path)
 }
 
-class DrawableImagePic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+// a picture that lets you use the full Java2D API for drawing via a Graphics2D
+class Java2DPic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with NonVectorPicOps {
   override def initGeom(): com.vividsolutions.jts.geom.Geometry = {
     val cab = new ArrayBuffer[Coordinate]
@@ -340,7 +341,7 @@ class DrawableImagePic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canv
     Gf.createLineString(cab.toArray)
   }
 
-  lazy val (buffImg, gbi) = {
+  lazy val (imageWithDrawing, imageG2D) = {
     val graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDefaultConfiguration
     val buffImg = graphicsConfiguration.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
     val gbi = buffImg.createGraphics
@@ -354,7 +355,7 @@ class DrawableImagePic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canv
     val node = new PNode {
       override def paint(paintContext: PPaintContext) {
         val g2 = paintContext.getGraphics
-        g2.drawImage(buffImg, null, 0, 0)
+        g2.drawImage(imageWithDrawing, null, 0, 0)
       }
     }
     node.setBounds(0, 0, w, h)
@@ -364,11 +365,16 @@ class DrawableImagePic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canv
   }
 
   def update(): Unit = {
-    fn(gbi)
+    fn(imageG2D)
     tnode.repaint()
   }
 
-  def copy: net.kogics.kojo.core.Picture = new DrawableImagePic(w, h, fn)
+  override def erase() = {
+    super.erase()
+    imageG2D.dispose()
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new Java2DPic(w, h, fn)
 }
 
 class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
