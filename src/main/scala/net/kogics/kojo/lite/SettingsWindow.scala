@@ -167,7 +167,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
           case Some(ps) => ps.name
           case None =>
             try {
-              v.toDouble
+              assert(v.toDouble > 0)
               v
             }
             catch {
@@ -178,7 +178,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
       val newDpi = if (newInches.trim == "") "" else {
         val v = dpiTf.value
         try {
-          v.toInt
+          assert(v.toInt > 0)
           v
         }
         catch {
