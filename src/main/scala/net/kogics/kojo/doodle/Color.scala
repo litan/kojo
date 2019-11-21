@@ -324,4 +324,7 @@ object Color extends CommonColors {
     val img = Utils.loadBufImage(file)
     new TexturePaint(img, new Rectangle2D.Double(x, y, img.getWidth, -img.getHeight))
   }
+
+  def hex(rgbHex: Int) = new AwtColor(rgbHex, false)
+  def hexa(rgbHex: Int) = new AwtColor(rgbHex, true)
 }
