@@ -223,6 +223,7 @@ trait CoreBuiltins extends Rationals {
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
   def setImagePixel(image: BufferedImage, x: Int, y: Int, c: Color) = image.setRGB(x, image.getHeight - 1 - y, c.getRGB)
+  def getImagePixel(image: BufferedImage, x: Int, y: Int) = Color(image.getRGB(x, image.getHeight - 1 - y), true)
   def image(fileName: String): BufferedImage = Utils.loadBufImage(fileName)
   def image(url: URL): BufferedImage = Utils.loadUrlImage(url)
 
