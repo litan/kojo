@@ -101,12 +101,37 @@ trait CoreBuiltins extends Rationals {
 
   def setRandomSeed(seed: Long) { Random.setSeed(seed) }
   def random(upperBound: Int) = Random.nextInt(upperBound)
-  def randomDouble(upperBound: Int) = Random.nextDouble * upperBound
+  def random(lowerBound: Int, upperBound: Int): Int = lowerBound + random(upperBound - lowerBound)
+  def randomDouble(upperBound: Double) = Random.nextDouble * upperBound
+  def randomDouble(lowerBound: Double, upperBound: Double): Double = lowerBound + randomDouble(upperBound - lowerBound)
   def randomNormalDouble = Random.nextGaussian()
   def randomBoolean = Random.nextBoolean
   def randomInt = Random.nextInt
   def randomLong = Random.nextLong
   def randomFrom[T](seq: Seq[T]) = seq(random(seq.length))
+  def randomFrom[T](seq: Seq[T], weights: Seq[Double]): T = {
+    val sum = weights.sum
+    val probabilities = if (Utils.doublesEqual(sum, 1.0, 1e-3)) {
+      weights
+    }
+    else {
+      weights.map { w => w / sum }
+    }
+
+    // sourced from:
+    // https://stackoverflow.com/questions/24869304/scala-how-can-i-generate-numbers-according-to-an-expected-distribution
+    val p = Random.nextDouble
+    val it = seq.zip(probabilities).iterator
+    var accum = 0.0
+    while (it.hasNext) {
+      val (item, itemProb) = it.next
+      accum += itemProb
+      if (accum >= p)
+        return item // return so that we don't have to search through the whole distribution
+    }
+    sys.error("this should never happen") // needed so it will compile
+  }
+
   def randomColor = Color(random(256), random(256), random(256))
   def randomTransparentColor = Color(random(256), random(256), random(256), 100 + random(156))
   def initRandomGenerator() {
