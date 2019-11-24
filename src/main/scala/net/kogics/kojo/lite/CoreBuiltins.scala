@@ -71,6 +71,7 @@ trait CoreBuiltins extends Rationals {
   val CapJoin = new staging.CapJoin
 
   val kmath = net.kogics.kojo.kmath.Kmath
+  val mathx = kmath
 
   val slow = core.Slow
   val medium = core.Medium
