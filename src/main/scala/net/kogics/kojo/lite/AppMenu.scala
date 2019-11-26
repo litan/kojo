@@ -497,6 +497,7 @@ trait AppMenu {
               <li>libTiled (https://www.mapeditor.org/) to load game level files created with the Tiled Map Editor</li>
               <li>Processing (https://processing.org/) for perlin noise</li>
               <li>Delaunay Triangulator (https://github.com/jdiemke/delaunay-triangulator) for triangulation of points</li>
+              <li>Java implementation of HSLuv (https://github.com/hsluv/hsluv-java) for a perceptually uniform color space</li>
               </ul>
               </div>
               </body></html>

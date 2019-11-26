@@ -11,6 +11,8 @@ import java.awt.{Color => AwtColor}
 
 import scala.collection.mutable.ArrayBuffer
 
+import org.hsluv.HUSLColorConverter
+
 import net.kogics.kojo.syntax.angle._
 import net.kogics.kojo.syntax.normalized._
 import net.kogics.kojo.syntax.uByte._
@@ -327,4 +329,13 @@ object Color extends CommonColors {
 
   def hex(rgbHex: Int) = new AwtColor(rgbHex, false)
   def hexa(rgbHex: Int) = new AwtColor(rgbHex, true)
+
+  def hsluv(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double): Color = {
+    val rgbs = HUSLColorConverter.hsluvToRgb(Array(hueAngle, saturationFraction * 100, lightnessFraction * 100))
+    rgb((rgbs(0) * 255).toInt, (rgbs(1) * 255).toInt, (rgbs(2) * 255).toInt)
+  }
+  def hsluva(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double, opacityFraction: Double): Color = {
+    val rgbs = HUSLColorConverter.hsluvToRgb(Array(hueAngle, saturationFraction * 100, lightnessFraction * 100))
+    rgba((rgbs(0) * 255).toInt, (rgbs(1) * 255).toInt, (rgbs(2) * 255).toInt, (opacityFraction * 255).toInt)
+  }
 }
