@@ -4,15 +4,12 @@ package lite
 import java.awt.GraphicsEnvironment
 import java.awt.Paint
 import java.awt.image.BufferedImage
-import java.awt.image.BufferedImageOp
 import java.awt.{Color => JColor}
 import java.awt.{Font => JFont}
 import java.net.URL
 import java.util.concurrent.CountDownLatch
 
 import scala.language.implicitConversions
-
-import com.jhlabs.image.LightFilter.Light
 
 import net.kogics.kojo.core.Rectangle
 import net.kogics.kojo.core.TSCanvasFeatures
@@ -211,17 +208,6 @@ trait CoreBuiltins extends Rationals {
   def draw(pictures: Picture*) = pictures.foreach { _ draw () }
   def draw(pictures: IndexedSeq[Picture]) = pictures.foreach { _ draw () }
   def draw(pictures: List[Picture]) = pictures.foreach { _ draw () }
-  val fade = picture.fade _
-  val blur = picture.blur _
-  val pointLight = picture.pointLight _
-  val spotLight = picture.spotLight _
-  def lights(lights: Light*) = picture.lights(lights: _*)
-  val PointLight = picture.PointLight _
-  val SpotLight = picture.SpotLight _
-  val noise = picture.noise _
-  val weave = picture.weave _
-  def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = picture.effect(name, props: _*)
-  def applyFilter(filter: BufferedImageOp) = picture.ApplyFilterc(filter)
 
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)

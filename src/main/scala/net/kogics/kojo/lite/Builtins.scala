@@ -28,6 +28,8 @@ import javax.swing.JComponent
 import scala.language.implicitConversions
 import scala.swing.Graphics2D
 
+import com.jhlabs.image.LightFilter.Light
+
 import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.UserCommand
@@ -357,7 +359,22 @@ Here's a partial list of the available commands:
   val reflect = picture.reflect _
   val row = picture.row _
   val col = picture.col _
+
+  val fade = picture.fade _
+  val blur = picture.blur _
+  val pointLight = picture.pointLight _
+  val spotLight = picture.spotLight _
+  def lights(lights: Light*) = picture.lights(lights: _*)
+  val PointLight = picture.PointLight _
+  val SpotLight = picture.SpotLight _
+  val noise = picture.noise _
+  val weave = picture.weave _
+  def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = picture.effect(name, props: _*)
+  def applyFilter(filter: BufferedImageOp) = picture.ApplyFilterc(filter)
+
+
   // put api functions here to enable code completion right from function definitions
+  def transform(fn: Picture => Unit) = preDrawTransform(fn)
   def preDrawTransform(fn: Picture => Unit) = picture.PreDrawTransformc(fn)
   def postDrawTransform(fn: Picture => Unit) = picture.PostDrawTransformc(fn)
 
