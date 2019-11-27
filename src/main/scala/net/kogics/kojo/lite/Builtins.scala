@@ -394,15 +394,15 @@ Here's a partial list of the available commands:
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def activateEditor() = kojoCtx.activateScriptEditor()
 
-  def applyFilter(p: Picture, filter: BufferedImageOp): Picture = {
+  def filterPicture(p: Picture, filter: BufferedImageOp): Picture = {
     drawCentered(p)
     p.scale(1, -1)
     val img = p.toImage
     p.erase()
-    Picture.image(applyFilter(img, filter))
+    Picture.image(filterImage(img, filter))
   }
 
-  def applyFilter(img: BufferedImage, filter: BufferedImageOp): BufferedImage = {
+  def filterImage(img: BufferedImage, filter: BufferedImageOp): BufferedImage = {
     filter.filter(img, null)
   }
 

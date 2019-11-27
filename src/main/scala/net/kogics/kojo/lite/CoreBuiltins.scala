@@ -4,6 +4,7 @@ package lite
 import java.awt.GraphicsEnvironment
 import java.awt.Paint
 import java.awt.image.BufferedImage
+import java.awt.image.BufferedImageOp
 import java.awt.{Color => JColor}
 import java.awt.{Font => JFont}
 import java.net.URL
@@ -220,6 +221,7 @@ trait CoreBuiltins extends Rationals {
   val noise = picture.noise _
   val weave = picture.weave _
   def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = picture.effect(name, props: _*)
+  def applyFilter(filter: BufferedImageOp) = picture.ApplyFilterc(filter)
 
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)

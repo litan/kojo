@@ -19,6 +19,7 @@ import java.awt.Image
 import java.awt.Paint
 import java.awt.event.KeyEvent
 import java.awt.geom.GeneralPath
+import java.awt.image.BufferedImageOp
 import java.net.URL
 import java.util.Random
 
@@ -28,7 +29,6 @@ import scala.swing.Graphics2D
 
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
-
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.geom.PrecisionModel
@@ -39,7 +39,6 @@ import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.util.Vector2D
-
 import core.Picture
 
 package object picture {
@@ -71,6 +70,7 @@ package object picture {
   def noise(amount: Int, density: Double) = Noisec(amount, density)
   def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) = Weavec(xWidth, xGap, yWidth, yGap)
   def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = SomeEffectc(name, props: _*)
+  def applyFilter(filter: BufferedImageOp) = ApplyFilterc(filter)
 
   def PointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) = {
     val fltr = new LightFilter
