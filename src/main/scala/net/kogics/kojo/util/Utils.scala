@@ -659,49 +659,30 @@ object Utils {
     }
   }
 
-  private def rgbaComps(color: Color) = (color.getRed, color.getGreen, color.getBlue, color.getAlpha())
-
   def checkHsbModFactor(f: Double) {
     if (f < -1 || f > 1) {
       throw new IllegalArgumentException("mod factor needs to be between -1 and 1")
     }
   }
 
-  private def modHsb(q: Double, f: Double) = {
-    checkHsbModFactor(f)
+  def awtColorToDoodleColor(c: Color): doodle.Color =
+    doodle.Color.rgba(c.getRed, c.getGreen, c.getBlue, c.getAlpha)
 
-    if (f > 0) {
-      q * (1 - f) + f
-    }
-    else {
-      q * (1 + f)
-    }
+  def hueMod(c: Color, f: Double): Color = {
+    val rc = awtColorToDoodleColor(c)
+    rc.spinBy(f).toAwt
   }
 
-  def hsbColor(h: Float, s: Float, b: Float, a: Int) = {
-    val newrgb = Color.HSBtoRGB(h, s, b)
-    new Color((newrgb & 0x00ffffff) | (a << 24), true)
+  def satMod(c: Color, f: Double): Color = {
+    val rc = awtColorToDoodleColor(c)
+    rc.saturateBy(f).toAwt
   }
 
-  def hueMod(c: Color, f: Double) = {
-    val (r, g, b, a) = rgbaComps(c)
-    val hsb = Color.RGBtoHSB(r, g, b, null)
-    val h = modHsb(hsb(0), f).toFloat
-    hsbColor(h, hsb(1), hsb(2), a)
-  }
+  def britMod(c: Color, f: Double): Color = lightMod(c, f)
 
-  def satMod(c: Color, f: Double) = {
-    val (r, g, b, a) = rgbaComps(c)
-    val hsb = Color.RGBtoHSB(r, g, b, null)
-    val s = modHsb(hsb(1), f).toFloat
-    hsbColor(hsb(0), s, hsb(2), a)
-  }
-
-  def britMod(c: Color, f: Double) = {
-    val (r, g, b, a) = rgbaComps(c)
-    val hsb = Color.RGBtoHSB(r, g, b, null)
-    val br = modHsb(hsb(2), f).toFloat
-    hsbColor(hsb(0), hsb(1), br, a)
+  def lightMod(c: Color, f: Double): Color = {
+    val rc = awtColorToDoodleColor(c)
+    rc.lightenBy(f).toAwt
   }
 
   def stripTrailingChar(s: String, c: Char): String = s.reverse.dropWhile(_ == c).reverse

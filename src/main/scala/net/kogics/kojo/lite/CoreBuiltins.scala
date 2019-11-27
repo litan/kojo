@@ -61,7 +61,7 @@ trait CoreBuiltins extends Rationals {
   val ColorMaker = doodle.Color
   val cm = doodle.Color
   implicit def rc2c(rc: doodle.Color): Color = rc.toAwt
-  implicit def c2rc(c: Color): doodle.Color = doodle.Color.rgba(c.getRed, c.getGreen, c.getBlue, c.getAlpha)
+  implicit def c2rc(c: Color): doodle.Color = Utils.awtColorToDoodleColor(c)
 
   //  val Color = staging.KColor
   val noColor = C.noColor

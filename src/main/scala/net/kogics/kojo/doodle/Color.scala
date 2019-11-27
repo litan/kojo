@@ -70,6 +70,12 @@ sealed abstract class Color extends Product with Serializable {
     original.copy(h = original.h + angle.degrees)
   }
 
+  /** Rotate hue by the given amount relative to a full turn */
+  def spinBy(turnFactor: Double) = {
+    val original = this.toHSLA
+    original.copy(h = original.h + Angle.turns(turnFactor))
+  }
+
   /**
    * Saturate the color by the given amount. This is an absolute
    * amount, not an amount relative to the Color's current
