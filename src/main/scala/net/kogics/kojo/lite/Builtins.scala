@@ -345,6 +345,7 @@ Here's a partial list of the available commands:
   val hue = picture.hue _
   val sat = picture.sat _
   val brit = picture.brit _
+  val light = picture.brit _
   val offset = picture.offset _
   val flip = picture.flipY
   val flipY = picture.flipY
@@ -457,6 +458,7 @@ Here's a partial list of the available commands:
   val hueMod = Utils.hueMod _
   val satMod = Utils.satMod _
   val britMod = Utils.britMod _
+  val lightMod = Utils.lightMod _
 
   type Vector2D = util.Vector2D
   val Vector2D = util.Vector2D
