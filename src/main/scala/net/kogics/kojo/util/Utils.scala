@@ -675,14 +675,14 @@ object Utils {
 
   def satMod(c: Color, f: Double): Color = {
     val rc = awtColorToDoodleColor(c)
-    rc.saturateBy(f).toAwt
+    rc.saturate(f).toAwt
   }
 
   def britMod(c: Color, f: Double): Color = lightMod(c, f)
 
   def lightMod(c: Color, f: Double): Color = {
     val rc = awtColorToDoodleColor(c)
-    rc.lightenBy(f).toAwt
+    rc.lighten(f).toAwt
   }
 
   def stripTrailingChar(s: String, c: Char): String = s.reverse.dropWhile(_ == c).reverse
