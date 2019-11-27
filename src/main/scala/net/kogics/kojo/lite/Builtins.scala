@@ -366,6 +366,9 @@ Here's a partial list of the available commands:
   val reflect = picture.reflect _
   val row = picture.row _
   val col = picture.col _
+  // put api functions here to enable code completion right from function definitions
+  def preDrawTransform(fn: Picture => Unit) = picture.PreDrawTransformc(fn)
+  def postDrawTransform(fn: Picture => Unit) = picture.PostDrawTransformc(fn)
 
   implicit val _picCanvas = tCanvas
   def pict(painter: Painter) = picture.Pic(painter)

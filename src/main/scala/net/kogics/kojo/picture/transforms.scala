@@ -242,6 +242,24 @@ case class StrokeWidth(w: Double)(pic: Picture) extends Transform(pic) {
   override def toString() = s"StrokeWidth($w) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
+case class PreDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transform(pic) {
+  def draw() {
+    fn(tpic)
+    tpic.draw()
+  }
+  override def copy = PreDrawTransform(fn)(pic.copy)
+  override def toString() = s"PreDrawTransform($fn) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
+}
+
+case class PostDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transform(pic) {
+  def draw() {
+    tpic.draw()
+    fn(tpic)
+  }
+  override def copy = PostDrawTransform(fn)(pic.copy)
+  override def toString() = s"PostDrawTransform($fn) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
+}
+
 abstract class ComposableTransformer extends Function1[Picture, Picture] { outer =>
   def apply(p: Picture): Picture
   def -> (p: Picture) = apply(p)
@@ -314,4 +332,12 @@ case class Strokec(color: Paint) extends ComposableTransformer {
 
 case class StrokeWidthc(w: Double) extends ComposableTransformer {
   def apply(p: Picture) = StrokeWidth(w)(p)
+}
+
+case class PreDrawTransformc(fn: Picture => Unit) extends ComposableTransformer {
+  def apply(p: Picture) = PreDrawTransform(fn)(p)
+}
+
+case class PostDrawTransformc(fn: Picture => Unit) extends ComposableTransformer {
+  def apply(p: Picture) = PostDrawTransform(fn)(p)
 }
