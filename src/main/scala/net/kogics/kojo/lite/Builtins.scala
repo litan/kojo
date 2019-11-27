@@ -17,10 +17,8 @@ package net.kogics.kojo
 package lite
 
 import java.awt.Paint
-import java.awt.TexturePaint
 import java.awt.Toolkit
 import java.awt.geom.GeneralPath
-import java.awt.geom.Rectangle2D
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImageOp
 import java.net.URL
@@ -31,9 +29,7 @@ import scala.language.implicitConversions
 import scala.swing.Graphics2D
 
 import net.kogics.kojo.mathworld.MathWorld
-import net.kogics.kojo.story.HandlerHolder
 import net.kogics.kojo.turtle.TurtleWorldAPI
-import net.kogics.kojo.util.Read
 import net.kogics.kojo.util.UserCommand
 import net.kogics.kojo.xscala.CodeCompletionUtils
 import net.kogics.kojo.xscala.Help
@@ -41,11 +37,6 @@ import net.kogics.kojo.xscala.RepeatCommands
 import core.Voice
 import picture.DslImpl
 import picture.PicDrawingDsl
-import story.HandlerHolder
-import story.IntHandlerHolder
-import story.StringHandlerHolder
-import story.VoidHandlerHolder
-import util.Read
 import util.Throttler
 import util.Utils
 import net.kogics.kojo.picture.PicCache
