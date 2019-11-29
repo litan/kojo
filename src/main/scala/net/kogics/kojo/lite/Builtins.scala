@@ -373,7 +373,6 @@ Here's a partial list of the available commands:
   def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = picture.effect(name, props: _*)
   def applyFilter(filter: BufferedImageOp) = picture.ApplyFilterc(filter)
 
-
   // put api functions here to enable code completion right from function definitions
   def transform(fn: Picture => Unit) = preDrawTransform(fn)
   def preDrawTransform(fn: Picture => Unit) = picture.PreDrawTransformc(fn)
@@ -585,7 +584,28 @@ Here's a partial list of the available commands:
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
     def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.fromPath(path) }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
-    def fromCanvas(w: Int, h: Int)(fn: Graphics2D => Unit) = picture.fromJava2d(w, h, fn)
+    def fromCanvas(w: Double, h: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(w, h, fn)
+    def fromScreenCanvas(scalef: Double)(fn: Graphics2D => Unit) = {
+      val cb = canvasBounds
+      val pic = fromCanvas(cb.width * scalef, cb.height * scalef) { g2d =>
+        g2d.scale(scalef, scalef)
+        g2d.translate(cb.width / 2, cb.height / 2)
+        fn(g2d)
+      }
+      pic.scale(1 / scalef)
+      pic.setPosition(cb.x, cb.y)
+      pic
+    }
+    def fromProcessingCanvas(scalef: Double)(fn: Graphics2D => Unit) = {
+      val cb = canvasBounds
+      val pic = fromCanvas(cb.width * scalef, cb.height * scalef) { g2d =>
+        g2d.scale(scalef, scalef)
+        fn(g2d)
+      }
+      pic.scale(1 / scalef, -1 / scalef)
+      pic.setPosition(cb.x, cb.y + cb.height)
+      pic
+    }
     def circle(r: Double) = picture.circle(r)
     // def circle(x: Double, y: Double, r: Double) = picture.offset(x, y) -> picture.circle(r)
     def ellipse(rx: Double, ry: Double) = picture.ellipse(rx, ry)

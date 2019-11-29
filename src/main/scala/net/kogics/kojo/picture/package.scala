@@ -150,7 +150,7 @@ package object picture {
 
   def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 
-  def fromJava2d(w: Int, h: Int, fn: Graphics2D => Unit)(implicit canvas: SCanvas) =
+  def fromJava2d(w: Double, h: Double, fn: Graphics2D => Unit)(implicit canvas: SCanvas) =
     new Java2DPic(w, h, fn)
 
   def image(file: String, envelope: Option[Picture])(implicit canvas: SCanvas) = new FileImagePic(file, envelope)

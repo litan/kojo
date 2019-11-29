@@ -329,7 +329,7 @@ class PathPic(path: GeneralPath)(implicit val canvas: SCanvas) extends Picture w
 }
 
 // a picture that lets you use the full Java2D API for drawing via a Graphics2D
-class Java2DPic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+class Java2DPic(w: Double, h: Double, fn: Graphics2D => Unit)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with NonVectorPicOps {
   override def initGeom(): com.vividsolutions.jts.geom.Geometry = {
     val cab = new ArrayBuffer[Coordinate]
@@ -343,7 +343,7 @@ class Java2DPic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canvas: SCa
 
   lazy val (imageWithDrawing, imageG2D) = {
     val graphicsConfiguration = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDefaultConfiguration
-    val buffImg = graphicsConfiguration.createCompatibleImage(w, h, Transparency.TRANSLUCENT)
+    val buffImg = graphicsConfiguration.createCompatibleImage(w.toInt, h.toInt, Transparency.TRANSLUCENT)
     val gbi = buffImg.createGraphics
     new PPaintContext(gbi).setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
     gbi.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
@@ -353,9 +353,18 @@ class Java2DPic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canvas: SCa
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val node = new PNode {
+      var drawn = false
       override def paint(paintContext: PPaintContext) {
         val g2 = paintContext.getGraphics
         g2.drawImage(imageWithDrawing, null, 0, 0)
+        drawn = true
+      }
+
+      override def setParent(newParent: PNode) {
+        super.setParent(newParent)
+        if (newParent == null && drawn) {
+          imageG2D.dispose()
+        }
       }
     }
     node.setBounds(0, 0, w, h)
@@ -367,11 +376,6 @@ class Java2DPic(w: Int, h: Int, fn: Graphics2D => Unit)(implicit val canvas: SCa
   def update(): Unit = {
     fn(imageG2D)
     tnode.repaint()
-  }
-
-  override def erase() = {
-    super.erase()
-    imageG2D.dispose()
   }
 
   def copy: net.kogics.kojo.core.Picture = new Java2DPic(w, h, fn)
