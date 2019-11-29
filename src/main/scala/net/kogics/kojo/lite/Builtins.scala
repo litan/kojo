@@ -37,6 +37,7 @@ import net.kogics.kojo.xscala.CodeCompletionUtils
 import net.kogics.kojo.xscala.Help
 import net.kogics.kojo.xscala.RepeatCommands
 import core.Voice
+import net.kogics.kojo.picture.Java2DPic
 import picture.DslImpl
 import picture.PicDrawingDsl
 import util.Throttler
@@ -585,7 +586,8 @@ Here's a partial list of the available commands:
     def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.fromPath(path) }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
     def fromCanvas(w: Double, h: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(w, h, fn)
-    def fromScreenCanvas(scalef: Double)(fn: Graphics2D => Unit) = {
+    def fromScreenCanvas(fn: Graphics2D => Unit): Java2DPic = fromScreenCanvas(1)(fn)
+    def fromScreenCanvas(scalef: Double)(fn: Graphics2D => Unit): Java2DPic = {
       val cb = canvasBounds
       val pic = fromCanvas(cb.width * scalef, cb.height * scalef) { g2d =>
         g2d.scale(scalef, scalef)
@@ -596,7 +598,8 @@ Here's a partial list of the available commands:
       pic.setPosition(cb.x, cb.y)
       pic
     }
-    def fromProcessingCanvas(scalef: Double)(fn: Graphics2D => Unit) = {
+    def fromProcessingCanvas(fn: Graphics2D => Unit): Java2DPic = fromProcessingCanvas(1)(fn)
+    def fromProcessingCanvas(scalef: Double)(fn: Graphics2D => Unit): Java2DPic = {
       val cb = canvasBounds
       val pic = fromCanvas(cb.width * scalef, cb.height * scalef) { g2d =>
         g2d.scale(scalef, scalef)
