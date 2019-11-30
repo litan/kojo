@@ -574,46 +574,46 @@ Here's a partial list of the available commands:
   }
   def url(url: String) = new URL(url)
   object Picture {
-    def text(s0: Any, fontSize: Int = 15) = picture.text(s0, fontSize)
-    def textu(s0: Any, fontSize: Int = 15, color: Color = red) = picture.textu(s0, fontSize, color)
+    def text(content: Any, fontSize: Int = 15) = picture.text(content, fontSize)
+    def textu(content: Any, fontSize: Int = 15, color: Color = red) = picture.textu(content, fontSize, color)
     def rect(h: Double, w: Double) = picture.rect(h, w)
-    def rectangle(w: Double, h: Double) = picture.rect2(w, h)
+    def rectangle(width: Double, height: Double) = picture.rect2(width, height)
     // def rectangle(x: Double, y: Double, w: Double, h: Double) = picture.offset(x, y) -> picture.rect2(w, h)
     def vline(l: Double) = picture.vline(l)
     def hline(l: Double) = picture.hline(l)
-    def line(x: Double, y: Double) = picture.line(x, y)
+    def line(width: Double, height: Double) = picture.line(width, height)
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
     def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.fromPath(path) }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
-    def fromCanvas(w: Double, h: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(w, h, fn)
+    def fromCanvas(width: Double, height: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(width, height, fn)
     def fromScreenCanvas(fn: Graphics2D => Unit): Java2DPic = fromScreenCanvas(1)(fn)
-    def fromScreenCanvas(scalef: Double)(fn: Graphics2D => Unit): Java2DPic = {
+    def fromScreenCanvas(scaleFactor: Double)(fn: Graphics2D => Unit): Java2DPic = {
       val cb = canvasBounds
-      val pic = fromCanvas(cb.width * scalef, cb.height * scalef) { g2d =>
-        g2d.scale(scalef, scalef)
+      val pic = fromCanvas(cb.width * scaleFactor, cb.height * scaleFactor) { g2d =>
+        g2d.scale(scaleFactor, scaleFactor)
         g2d.translate(cb.width / 2, cb.height / 2)
         fn(g2d)
       }
-      pic.scale(1 / scalef)
+      pic.scale(1 / scaleFactor)
       pic.setPosition(cb.x, cb.y)
       pic
     }
     def fromProcessingCanvas(fn: Graphics2D => Unit): Java2DPic = fromProcessingCanvas(1)(fn)
-    def fromProcessingCanvas(scalef: Double)(fn: Graphics2D => Unit): Java2DPic = {
+    def fromProcessingCanvas(scaleFactor: Double)(fn: Graphics2D => Unit): Java2DPic = {
       val cb = canvasBounds
-      val pic = fromCanvas(cb.width * scalef, cb.height * scalef) { g2d =>
-        g2d.scale(scalef, scalef)
+      val pic = fromCanvas(cb.width * scaleFactor, cb.height * scaleFactor) { g2d =>
+        g2d.scale(scaleFactor, scaleFactor)
         fn(g2d)
       }
-      pic.scale(1 / scalef, -1 / scalef)
+      pic.scale(1 / scaleFactor, -1 / scaleFactor)
       pic.setPosition(cb.x, cb.y + cb.height)
       pic
     }
-    def circle(r: Double) = picture.circle(r)
+    def circle(radius: Double) = picture.circle(radius)
     // def circle(x: Double, y: Double, r: Double) = picture.offset(x, y) -> picture.circle(r)
-    def ellipse(rx: Double, ry: Double) = picture.ellipse(rx, ry)
+    def ellipse(xRadius: Double, yRadius: Double) = picture.ellipse(xRadius, yRadius)
     // def ellipse(x: Double, y: Double, rx: Double, ry: Double) = picture.offset(x, y) -> picture.ellipse(rx, ry)
-    def arc(r: Double, angle: Double) = picture.arc(r, angle)
+    def arc(radius: Double, angle: Double) = picture.arc(radius, angle)
     def image(fileName: String) = picture.image(fileName, None)
     def image(fileName: String, envelope: Picture) = picture.image(fileName, Some(envelope))
     def image(url: URL) = picture.image(url, None)
@@ -623,15 +623,15 @@ Here's a partial list of the available commands:
     def widget(component: JComponent) = picture.widget(component)
     def button(label: String)(fn: => Unit) = widget(Button(label)(fn))
     def effectablePic(pic: Picture) = picture.effectablePic(pic)
-    def hgap(n: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(n, 0.001)
-    def vgap(n: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(0.001, n)
-    def showBounds(p: Picture, c: Color = cm.black) = Utils.runInSwingThread {
-      val b = p.tnode.getGlobalFullBounds
-      val pic = trans(b.x, b.y) * penColor(c) -> rectangle(b.width, b.height)
-      draw(pic)
+    def hgap(gap: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(gap, 0.001)
+    def vgap(gap: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(0.001, gap)
+    def showBounds(pic: Picture, c: Color = cm.black) = Utils.runInSwingThread {
+      val b = pic.tnode.getGlobalFullBounds
+      val bpic = trans(b.x, b.y) * penColor(c) -> rectangle(b.width, b.height)
+      draw(bpic)
     }
-    def showAxes(p: Picture) = {
-      p.axesOn()
+    def showAxes(pic: Picture) = {
+      pic.axesOn()
     }
   }
   type Widget = JComponent
