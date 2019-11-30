@@ -391,7 +391,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
             runContext.onRunSuccess()
           }
           else {
-            Utils.clearQ()
+            Utils.clearGuiBatchQ()
             if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
             else runContext.onRunError()
           }
@@ -479,7 +479,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           runContext.onRunSuccess()
         }
         else {
-          Utils.clearQ()
+          Utils.clearGuiBatchQ()
           if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
           else runContext.onRunError()
         }

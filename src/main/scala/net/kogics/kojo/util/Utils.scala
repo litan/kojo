@@ -268,7 +268,7 @@ object Utils {
   val batchQ = new LinkedList[() => Unit]
 
   @volatile var keepProcessingQ = true
-  def clearQ(): Unit = {
+  def clearGuiBatchQ(): Unit = {
     keepProcessingQ = false
   }
 
