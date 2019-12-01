@@ -553,7 +553,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     else {
       makeArc()
     }
-    Thread.sleep(10)
+    Thread.sleep(1)
   }
 
   def ellipse(r1: Double, r2: Double) {
