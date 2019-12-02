@@ -1,3 +1,4 @@
+switchToDefaultPerspective()
 // val pageStyle = "color:#1e1e1e; margin:15px;"
 val pageStyle = "color:black;background-color:#99CCFF; margin:15px;font-size:small;"
 val centerStyle = "text-align:center;"
@@ -303,7 +304,7 @@ val treeSample = """
 def tree(distance: Double) {
     if (distance > 4) {
         setPenThickness(distance/7)
-        setPenColor(color(distance.toInt,
+        setPenColor(Color(distance.toInt,
            math.abs(255-distance*3).toInt, 125))
         forward(distance)
         right(25)
@@ -348,7 +349,7 @@ pages += IncrPage(
                 def tree(distance: Double) {
                     if (distance > 4) {
                         setPenThickness(distance/7)
-                        setPenColor(color(distance.toInt, math.abs(255-distance*3).toInt, 125))
+                        setPenColor(Color(distance.toInt, math.abs(255-distance*3).toInt, 125))
                         forward(distance)
                         right(25)
                         tree(distance*0.8-2)
@@ -602,7 +603,7 @@ pages += IncrPage(
                     setHeading(90)
                     write("m=%.1f, c=%.1f" format(m, c))
                     for(x <- -dom+10 to dom; if (x % 10 == 0)) {
-                        moveTo(x, y(m, x, c))
+                        lineTo(x, y(m, x, c))
                     }
                 }
                 stAddButton ("Clear") {
@@ -750,7 +751,7 @@ pages += IncrPage(
                     val P8 = Mw.intersect(L2, L3)
 
                     // Show Angles that transversal makes with lines
-                    val color1 = color(0, 102, 0)
+                    val color1 = Color(0, 102, 0)
 
                     val A1 = Mw.angle(P1,P7,P5)
                     A1.setColor(color1)
@@ -773,7 +774,7 @@ pages += IncrPage(
                 A pair of alternate angles are marked on the figure. Play with
                 the two marked points on the transversal, P5 and P6, by dragging them around - to
                 get a feel for the truth of this property. <em>Make sure you keep the
-                point P6 above the top line, and the point P5 below the bottom line, as 
+                point P6 above the top line, and the point P5 below the bottom line, as
                 you move the points around</em>.
             </p>
         )
@@ -826,8 +827,8 @@ pages += IncrPage(
                     val b = Mw.lineSegment(C,A)
                     fig.add(a, b, c)
 
-                    val color1 = color(0, 0, 102)
-                    val color2 = color(153, 0, 0)
+                    val color1 = Color(0, 0, 102)
+                    val color2 = Color(153, 0, 0)
 
                     val X = Mw.angle(B,A,C)
                     X.setLabel("X")
@@ -1030,7 +1031,7 @@ pages += IncrPage(
             <ul>
                 <li>Making pretty computer sketches and paintings.
                     <div style={smallNoteStyle}>
-                        See the <em>Samples | Next Steps</em>, <em>Samples | Fractals</em> and <em>Samples | Multiple Turtles</em> 
+                        See the <em>Samples | Next Steps</em>, <em>Samples | Fractals</em> and <em>Samples | Multiple Turtles</em>
                         menu items for many examples.
                     </div>
                 </li>

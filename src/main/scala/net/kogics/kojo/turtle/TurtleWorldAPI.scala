@@ -32,7 +32,7 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
   def position: Point = turtle0.position
   UserCommand.addSynopsis("position - Queries the turtle's position.")
 
-  @deprecated("Use lineTo (or setPosition) instead of moveTo", "2.7.08")
+  @deprecated("Use lineTo instead of moveTo", "2.7.08")
   def moveTo(x: Double, y: Double) = turtle0.moveTo(x, y)
   UserCommand("moveTo", List("x", "y"), "Turns the turtle towards (x, y) and moves the turtle to that point. ")
 
