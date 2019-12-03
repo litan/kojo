@@ -29,7 +29,7 @@ def innerTriangles(n: Double, levels: Int) {
     
     val l = if (levels > 10) 10 else levels
     setPenThickness(l)
-    setPenColor(color(l.toInt*20, l.toInt*25, 100))
+    setPenColor(Color(l.toInt*20, l.toInt*25, 100))
     
     // left bottom (#1) inner triangle
     triangle(n/2)

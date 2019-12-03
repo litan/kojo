@@ -29,8 +29,8 @@ val speed = 100
 
 // Initial ink colors and tyle type to use
 // These will be changed later so use var not val
-var firstColor = color(235, 0, 20)
-var secondColor = color(20, 0, 235)
+var firstColor = Color(235, 0, 20)
+var secondColor = Color(20, 0, 235)
 var tyleType = 1
 
 // In your own tile pattern, remember to start and end in the bottom-left,
@@ -245,8 +245,8 @@ for (i <- 0 to loops - 1) { //as loops have shortest arms 0, 1, 2, etc
     // We can gradually alter the colors each loop.
     // The colors will be (127, 128, 0) and (0, 128, 127) at final loop.
     if (loops != 0) { //prevents division by 0 errors
-        firstColor = color(235 - 128/loops*(i+1), 128/loops*(i+1), 20)
-        secondColor = color(20, 128/loops*(i+1), 255 - 128/loops*(i+1))
+        firstColor = Color(235 - 128/loops*(i+1), 128/loops*(i+1), 20)
+        secondColor = Color(20, 128/loops*(i+1), 255 - 128/loops*(i+1))
     }
     windSpiral(i)
 }
