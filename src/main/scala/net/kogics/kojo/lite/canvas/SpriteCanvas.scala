@@ -26,7 +26,6 @@ import java.awt.event.ComponentAdapter
 import java.awt.event.ComponentEvent
 import java.awt.event.InputEvent
 import java.awt.geom.Point2D
-import java.io.File
 import java.util.concurrent.Future
 import java.util.logging.Logger
 
@@ -36,14 +35,17 @@ import javax.swing.JPopupMenu
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 
-import net.kogics.kojo.core
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
-import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.UnitLen
+import net.kogics.kojo.figure.Figure
+import net.kogics.kojo.picture.PicCache
+import net.kogics.kojo.staging.Rectangle
+import net.kogics.kojo.turtle.Turtle
 import net.kogics.kojo.util.FileChooser
+import net.kogics.kojo.util.Utils
 
 import edu.umd.cs.piccolo.PCanvas
 import edu.umd.cs.piccolo.PNode
@@ -58,11 +60,6 @@ import edu.umd.cs.piccolo.nodes.PPath
 import edu.umd.cs.piccolo.nodes.PText
 import edu.umd.cs.piccolo.util.PPaintContext
 import edu.umd.cs.piccolox.pswing.PSwingCanvas
-import figure.Figure
-import turtle.Turtle
-import util.Utils
-import net.kogics.kojo.picture.PicCache
-import net.kogics.kojo.staging.Rectangle
 
 class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas {
   val origLayer = getLayer()
@@ -665,6 +662,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       pictures.removeAllChildren()
       zoom(1, 0, 0)
       enablePanAndZoom()
+      Builtins.instance.resetPictureDraw()
     }
     PicCache.clear()
     Utils.clearGuiBatchQ()

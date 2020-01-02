@@ -106,10 +106,9 @@ class PictureDraw(val b: Builtins) {
   val MITER = CapJoin.JOIN_MITER
   val BEVEL = CapJoin.JOIN_BEVEL
 
-
-  var fillColor: Color = null
-  var strokeColor: Color = cm.red
-  var strokeThickness = 2.0
+  var fillColor: Color = _
+  var strokeColor: Color = _
+  var strokeThickness = 0.0
   var shapeVertices: collection.mutable.ArrayBuffer[(Double, Double)] = null
   var matrices = List.empty[AffineTransform]
   var penCap = ROUND
@@ -117,6 +116,21 @@ class PictureDraw(val b: Builtins) {
   var width = 0
   var height = 0
   val transform = new AffineTransform
+
+  reset()
+
+  def reset(): Unit = {
+    fillColor = null
+    strokeColor = cm.red
+    strokeThickness = 2.0
+    shapeVertices = null
+    matrices = List.empty[AffineTransform]
+    penCap = ROUND
+    penJoin = MITER
+    width = 0
+    height = 0
+    transform.setToIdentity()
+  }
 
   def background(c: Color) {
     setBackground(c)
