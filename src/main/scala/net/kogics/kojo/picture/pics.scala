@@ -62,7 +62,14 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
   protected val camera = canvas.getCamera
   protected var axes: PNode = _
   protected var _picGeom: Geometry = _
-  protected var pgTransform = new AffineTransformation
+  protected var _pgTransform: AffineTransformation = _
+
+  def pgTransform = {
+    if (_pgTransform == null) {
+      _pgTransform = t2t(tnode.getTransformReference(true))
+    }
+    _pgTransform
+  }
 
   protected def realDraw(): Unit
 
@@ -90,12 +97,12 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
   def transformBy(trans: AffineTransform) = Utils.runInSwingThread {
     tnode.transformBy(trans)
     //    pgTransform.composeBefore(t2t(trans))
-    pgTransform = t2t(tnode.getTransformReference(true))
+    _pgTransform = null
   }
 
   def setTransform(trans: AffineTransform) = Utils.runInSwingThread {
     tnode.setTransform(trans)
-    pgTransform = t2t(tnode.getTransformReference(true))
+    _pgTransform = null
   }
 
   def rotateAboutPoint(angle: Double, x: Double, y: Double) {
@@ -122,7 +129,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
 
   def offset(x: Double, y: Double) = Utils.runInSwingThread {
     tnode.offset(x, y)
-    pgTransform = t2t(tnode.getTransformReference(true))
+    _pgTransform = null
   }
 
   def opacityMod(f: Double) = Utils.runInSwingThread {
@@ -136,7 +143,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
 
   def setPosition(x: Double, y: Double) = Utils.runInSwingThread {
     tnode.setOffset(x, y)
-    pgTransform = t2t(tnode.getTransformReference(true))
+    _pgTransform = null
   }
 
   def heading = Utils.runInSwingThreadAndPause {
@@ -145,7 +152,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
 
   def setHeading(angle: Double) = Utils.runInSwingThread {
     rotate(angle - heading)
-    pgTransform = t2t(tnode.getTransformReference(true))
+    _pgTransform = null
   }
 
   def scaleFactor = Utils.runInSwingThreadAndPause {
@@ -156,7 +163,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
   def setScaleFactor(x: Double, y: Double) = Utils.runInSwingThread {
     val tr = tnode.getTransformReference(true)
     tr.scale(x / tr.getScaleX, y / tr.getScaleY)
-    pgTransform = t2t(tr)
+    _pgTransform = null
     tnode.invalidatePaint();
     tnode.invalidateFullBounds();
   }
