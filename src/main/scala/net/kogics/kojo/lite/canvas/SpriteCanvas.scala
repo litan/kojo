@@ -530,17 +530,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
-  def zoom(factor0: Double, cx: Double, cy: Double): Unit = {
-    require(factor0 != 0, "Zoom factor can't be 0.")
-    Utils.runInSwingThreadAndWait {
-      val size = getSize(null)
-      val factor = factor0 * camScale
-      getCamera.getViewTransformReference.setToScale(factor, -factor)
-      getCamera.getViewTransformReference.setOffset(size.getWidth / 2d, size.getHeight / 2d)
-      getCamera.getViewTransformReference.translate(-cx, -cy)
-      updateAxesAndGrid()
-      repaint()
-    }
+  def zoom(factor: Double, cx: Double, cy: Double): Unit = {
+    zoomXY(factor, factor, cx, cy)
   }
 
   def zoomXY(xfactor0: Double, yfactor0: Double, cx: Double, cy: Double) {

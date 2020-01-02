@@ -264,8 +264,10 @@ Here's a partial list of the available commands:
 
   def runInGuiThread(code: => Unit) = Utils.runInSwingThread(code)
   UserCommand.addSynopsis("runInGuiThread", List("code"), "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command.")
+  def runInDrawingThread(code: => Unit) = Utils.runInSwingThread(code)
 
   def schedule(seconds: Double)(code: => Unit) = Utils.schedule(seconds)(code)
+  def scheduleN(n: Int, seconds: Double)(code: => Unit) = Utils.scheduleRecN(n, seconds)(code)
 
   @deprecated("Use Color instead", "2.7")
   def color(rgbHex: Int) = new Color(rgbHex)
@@ -424,7 +426,7 @@ Here's a partial list of the available commands:
     filter.filter(img, null)
   }
 
-  def setDrawingCanvasAspectRatio(r: Double): Unit = {
+  def setDrawingCanvasAspectRatio(r: Double): Unit = Utils.runLaterInSwingThread {
     val dch = Main.drawingCanvasHolder
     val dc = dch.dc
     val b = dc.getBounds()
@@ -433,7 +435,7 @@ Here's a partial list of the available commands:
     dch.setResizeRequest(new Dimension(math.round(newWidth).toInt, b.height), true)
   }
 
-  def setDrawingCanvasSize(width: Int, height: Int): Unit = {
+  def setDrawingCanvasSize(width: Int, height: Int): Unit = Utils.runLaterInSwingThread {
     val dch = Main.drawingCanvasHolder
     import java.awt.Dimension
     dch.setResizeRequest(new Dimension(width, height), true)
@@ -747,4 +749,6 @@ Here's a partial list of the available commands:
   val SpriteSheet = tiles.SpriteSheet
   type TileXY = tiles.TileXY
   val TileXY = tiles.TileXY
+
+  val PictureDraw = new PictureDraw(this)
 }
