@@ -868,14 +868,12 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       t.forward(size)
     }
     val cb = cbounds
-    val xmax = cb.x.abs
-    val ymax = cb.y.abs
 
-    stageLeft = picture.trans(-xmax, -ymax) -> left(cb.height)
-    stageTop = picture.trans(-xmax, ymax) -> top(cb.width)
-    stageRight = picture.trans(xmax, ymax) -> right(cb.height)
-    stageBot = picture.trans(xmax, -ymax) -> bottom(cb.width)
-    stageArea = picture.trans(-xmax, -ymax) * picture.fill(fillc) *
+    stageLeft = picture.trans(cb.x, cb.y) -> left(cb.height)
+    stageTop = picture.trans(cb.x, cb.y + cb.height) -> top(cb.width)
+    stageRight = picture.trans(cb.x + cb.width, cb.y + cb.height) -> right(cb.height)
+    stageBot = picture.trans(cb.x + cb.width, cb.y) -> bottom(cb.width)
+    stageArea = picture.trans(cb.x, cb.y) * picture.fill(fillc) *
       picture.stroke(Color.darkGray) -> picture.rect(cb.height, cb.width)
 
     stage = picture.GPics(
