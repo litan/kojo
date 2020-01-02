@@ -15,6 +15,7 @@
 package net.kogics.kojo.lite
 
 import net.kogics.kojo.util.Utils
+import java.awt.geom.AffineTransform
 
 class PictureDraw(val b: Builtins) {
   import b._
@@ -105,7 +106,6 @@ class PictureDraw(val b: Builtins) {
   val MITER = CapJoin.JOIN_MITER
   val BEVEL = CapJoin.JOIN_BEVEL
 
-  import java.awt.geom.AffineTransform
 
   var fillColor: Color = null
   var strokeColor: Color = cm.red
@@ -116,8 +116,6 @@ class PictureDraw(val b: Builtins) {
   var penJoin = MITER
   var width = 0
   var height = 0
-
-  import java.awt.geom.AffineTransform
   val transform = new AffineTransform
 
   def background(c: Color) {

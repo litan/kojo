@@ -588,20 +588,18 @@ Here's a partial list of the available commands:
     def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.fromPath(path) }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
     def fromCanvas(width: Double, height: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(width, height, fn)
-    def fromScreenCanvas(fn: Graphics2D => Unit): Java2DPic = fromScreenCanvas(1)(fn)
-    def fromScreenCanvas(scaleFactor: Double)(fn: Graphics2D => Unit): Java2DPic = {
+    def fromScreenCanvas(fn: Graphics2D => Unit) = fromScreenCanvas(1)(fn)
+    def fromScreenCanvas(scaleFactor: Double)(fn: Graphics2D => Unit): Picture = {
       val cb = canvasBounds
       val pic = fromCanvas(cb.width * scaleFactor, cb.height * scaleFactor) { g2d =>
         g2d.scale(scaleFactor, scaleFactor)
         g2d.translate(cb.width / 2, cb.height / 2)
         fn(g2d)
       }
-      pic.scale(1 / scaleFactor)
-      pic.setPosition(cb.x, cb.y)
-      pic
+      offset(cb.x, cb.y) * scale(1 / scaleFactor) -> pic
     }
-    def fromProcessingCanvas(fn: Graphics2D => Unit): Java2DPic = fromProcessingCanvas(1)(fn)
-    def fromProcessingCanvas(scaleFactor: Double)(fn: Graphics2D => Unit): Java2DPic = {
+    def fromProcessingCanvas(fn: Graphics2D => Unit) = fromProcessingCanvas(1)(fn)
+    def fromProcessingCanvas(scaleFactor: Double)(fn: Graphics2D => Unit): Picture = {
       val cb = canvasBounds
       val pic = fromCanvas(cb.width * scaleFactor, cb.height * scaleFactor) { g2d =>
         g2d.scale(scaleFactor, scaleFactor)
@@ -609,7 +607,7 @@ Here's a partial list of the available commands:
       }
       pic.scale(1 / scaleFactor, -1 / scaleFactor)
       pic.setPosition(cb.x, cb.y + cb.height)
-      pic
+      offset(cb.x, cb.y + cb.height) * scale(1 / scaleFactor, -1 / scaleFactor) -> pic
     }
     def circle(radius: Double) = picture.circle(radius)
     // def circle(x: Double, y: Double, r: Double) = picture.offset(x, y) -> picture.circle(r)
