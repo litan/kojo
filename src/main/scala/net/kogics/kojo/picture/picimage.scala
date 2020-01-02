@@ -22,11 +22,14 @@ import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 import java.awt.image.BufferedImageOp
 
+import scala.collection.mutable.ArrayBuffer
+
 import com.jhlabs.image.GaussianFilter
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
 import com.jhlabs.image.NoiseFilter
 import com.jhlabs.image.WeaveFilter
+import com.vividsolutions.jts.geom.Coordinate
 
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
@@ -169,6 +172,17 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
     node.setVisible(false)
     picLayer.addChild(node)
     node
+  }
+
+  override def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    val cab = new ArrayBuffer[Coordinate]
+    val b = tnode.getFullBounds
+    cab += newCoordinate(b.x, b.y)
+    cab += newCoordinate(b.x, b.y + b.height)
+    cab += newCoordinate(b.x + b.width, b.y + b.height)
+    cab += newCoordinate(b.x + b.width, b.y)
+    cab += newCoordinate(b.x, b.y)
+    pgTransform.getInverse.transform(Gf.createLineString(cab.toArray))
   }
 
   def pimage(img: BufferedImage) = {

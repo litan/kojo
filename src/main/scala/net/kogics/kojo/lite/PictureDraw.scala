@@ -66,6 +66,10 @@ class PictureDraw(val b: Builtins) {
     TSCanvas.zoom(1, 0, 0)
   }
 
+  def frozen(): Unit = {
+    _frozen = true
+  }
+
   def cm_hsv(h: Double, s: Double, v: Double) = {
     val hh = h
     var ll = (2 - s) * v
@@ -116,6 +120,7 @@ class PictureDraw(val b: Builtins) {
   var width = 0
   var height = 0
   val transform = new AffineTransform
+  var _frozen = false
 
   reset()
 
@@ -130,6 +135,7 @@ class PictureDraw(val b: Builtins) {
     width = 0
     height = 0
     transform.setToIdentity()
+    _frozen = false
   }
 
   def background(c: Color) {
@@ -184,11 +190,21 @@ class PictureDraw(val b: Builtins) {
     p.setTransform(transform)
   }
 
+  val noOpFilter = new com.jhlabs.image.AbstractBufferedImageOp {
+    import java.awt.image.BufferedImage
+    def filter(src: BufferedImage, dest: BufferedImage) = src
+  }
+
+  def drawPic(pic: Picture): Picture = {
+    val pic2 = if (_frozen) applyFilter(noOpFilter) -> pic else pic
+    pic2.draw()
+    pic2
+  }
+
   def ellipse(cx: Double, cy: Double, w: Double, h: Double) = {
     val el = offset(cx, cy) -> Picture.ellipse(w / 2, h / 2)
     applyState(el)
-    el.draw()
-    el
+    drawPic(el)
   }
 
   // a version of ellipse that does not clash with the turtle ellipse
@@ -197,24 +213,21 @@ class PictureDraw(val b: Builtins) {
   def line(x1: Double, y1: Double, x2: Double, y2: Double) = {
     val l = offset(x1, y1) -> Picture.line(x2 - x1, y2 - y1)
     applyState(l)
-    l.draw()
-    l
+    drawPic(l)
   }
 
   def rect(x: Double, y: Double, w: Double, h: Double) = {
     val r = offset(x, y) -> Picture.rectangle(w, h)
     applyState(r)
-    r.draw()
-    r
+    drawPic(r)
   }
 
-  def rectangle(x: Double, y: Double, w: Double, h: Double) = rect(x, y, width, height)
+  def rectangle(x: Double, y: Double, w: Double, h: Double) = rect(x, y, w, h)
 
   def turtleShape(x: Double, y: Double)(fn: Turtle => Unit) = {
     val pic = offset(x, y) -> Picture.fromTurtle(fn)
     applyState(pic)
-    pic.draw()
-    pic
+    drawPic(pic)
   }
 
   def beginShape() {
@@ -235,8 +248,7 @@ class PictureDraw(val b: Builtins) {
     }
     shapeVertices = null
     applyState(pic)
-    pic.draw()
-    pic
+    drawPic(pic)
   }
 
   def translate(x: Double, y: Double) {
@@ -274,8 +286,7 @@ class PictureDraw(val b: Builtins) {
 
   def shape(pic: Picture, fx: Double, fy: Double) = {
     applyState(pic)
-    pic.draw()
     pic.scale(fx, fy)
-    pic
+    drawPic(pic)
   }
 }
