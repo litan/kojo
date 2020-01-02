@@ -728,7 +728,57 @@ Here's a partial list of the available commands:
   val TileXY = tiles.TileXY
 
   val PictureDraw = new PictureDraw(this)
+  var width = 0
+  var height = 0
+
   def resetPictureDraw(): Unit = {
     PictureDraw.reset()
+    width = 0
+    height = 0
   }
+
+  def setup(fn: => Unit) = runInGuiThread {
+    fn
+  }
+
+  def draw(fn: => Unit) = TSCanvas.animate {
+    fn
+  }
+
+  private def wh = {
+    lazy val cb = canvasBounds
+    val w = if (width == 0) cb.width else width
+    val h = if (height == 0) cb.height else height
+    (w, h)
+  }
+
+  def topLeftOrigin() {
+    val (w, h) = wh
+    def work = TSCanvas.zoomXY(1, -1, w / 2, -h / 2)
+    work
+    Utils.schedule(0.5) {
+      work
+    }
+  }
+
+  def bottomLeftOrigin() {
+    val (w, h) = wh
+    def work = TSCanvas.zoomXY(1, 1, w / 2, h / 2)
+    work
+    Utils.schedule(0.5) {
+      work
+    }
+  }
+
+  def rangeTo(start: Int, end: Int, step: Int = 1) = start to end by step
+  def rangeTill(start: Int, end: Int, step: Int = 1) = start until end by step
+
+  def rangeTo(start: Double, end: Double, step: Double) = Range.BigDecimal.inclusive(start, end, step)
+  def rangeTill(start: Double, end: Double, step: Double) = Range.BigDecimal(start, end, step)
+
+  def distance(x1: Double, y1: Double, x2: Double, y2: Double) =
+    math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2))
+
+  import scala.language.implicitConversions
+  implicit def bd2double(bd: BigDecimal) = bd.doubleValue
 }
