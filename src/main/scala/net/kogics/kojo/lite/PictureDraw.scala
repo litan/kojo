@@ -20,15 +20,6 @@ import java.awt.geom.AffineTransform
 class PictureDraw(val b: Builtins) {
   import b._
 
-  def size(w: Double, h: Double) {
-    width = w.toInt
-    height = h.toInt
-    // the resizing takes a couple of tries to settle down
-    repeat(2) {
-      setDrawingCanvasSize(width, height)
-    }
-  }
-
   def frozen(): Unit = {
     _frozen = true
   }

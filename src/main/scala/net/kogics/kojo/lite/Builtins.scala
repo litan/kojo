@@ -737,6 +737,15 @@ Here's a partial list of the available commands:
     height = 0
   }
 
+  def size(w: Double, h: Double) {
+    width = w.toInt
+    height = h.toInt
+    // the resizing takes a couple of tries to settle down
+    repeat(2) {
+      setDrawingCanvasSize(width, height)
+    }
+  }
+
   def setup(fn: => Unit) = runInGuiThread {
     fn
   }
