@@ -139,33 +139,31 @@ class PictureDraw(val b: Builtins) {
     pic2
   }
 
+  def returnPic(x: Double, y: Double, pic: Picture) = {
+    applyState(pic)
+    pic.translate(x, y)
+    drawPic(pic)
+  }
+
   def ellipse(cx: Double, cy: Double, w: Double, h: Double) = {
-    val el = offset(cx, cy) -> Picture.ellipse(w / 2, h / 2)
-    applyState(el)
-    drawPic(el)
+    returnPic(cx, cy, Picture.ellipse(w / 2, h / 2))
   }
 
   // a version of ellipse that does not clash with the turtle ellipse
   def ellip(cx: Double, cy: Double, w: Double, h: Double) = ellipse(cx, cy, w, h)
 
   def line(x1: Double, y1: Double, x2: Double, y2: Double) = {
-    val l = offset(x1, y1) -> Picture.line(x2 - x1, y2 - y1)
-    applyState(l)
-    drawPic(l)
+    returnPic(x1, y1, Picture.line(x2 - x1, y2 - y1))
   }
 
   def rect(x: Double, y: Double, w: Double, h: Double) = {
-    val r = offset(x, y) -> Picture.rectangle(w, h)
-    applyState(r)
-    drawPic(r)
+    returnPic(x, y, Picture.rectangle(w, h))
   }
 
   def rectangle(x: Double, y: Double, w: Double, h: Double) = rect(x, y, w, h)
 
   def turtleShape(x: Double, y: Double)(fn: Turtle => Unit) = {
-    val pic = offset(x, y) -> Picture.fromTurtle(fn)
-    applyState(pic)
-    drawPic(pic)
+    returnPic(x, y, Picture.fromTurtle(fn))
   }
 
   def beginShape() {
