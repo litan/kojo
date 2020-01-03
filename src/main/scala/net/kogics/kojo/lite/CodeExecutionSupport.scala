@@ -368,7 +368,7 @@ class CodeExecutionSupport(
           interp.interpret("val builtins = predef.builtins")
           interp.interpret("import builtins._")
           interp.interpret("import net.kogics.kojo.util.ScalatestHelper.{test, ignore}")
-          interp.interpret("import org.scalatest.Matchers._")
+          interp.interpret("import org.scalatest.Matchers")
         case VanillaMode =>
       }
     }
@@ -377,7 +377,7 @@ class CodeExecutionSupport(
   val builtins = net.kogics.kojo.lite.Builtins.instance
   import builtins._
   import net.kogics.kojo.util.ScalatestHelper.{test, ignore}
-  import org.scalatest.Matchers._
+  import org.scalatest.Matchers
   class UserCode {
 """
 
