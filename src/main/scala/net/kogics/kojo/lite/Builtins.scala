@@ -728,8 +728,8 @@ Here's a partial list of the available commands:
   val TileXY = tiles.TileXY
 
   val PictureDraw = new PictureDraw(this)
-  var width = 0
-  var height = 0
+  @volatile var width = 0
+  @volatile var height = 0
 
   def resetPictureDraw(): Unit = {
     PictureDraw.reset()
@@ -761,7 +761,7 @@ Here's a partial list of the available commands:
     (w, h)
   }
 
-  def topLeftOrigin() {
+  def originTopLeft() {
     val (w, h) = wh
     def work = TSCanvas.zoomXY(1, -1, w / 2, -h / 2)
     work
@@ -770,7 +770,7 @@ Here's a partial list of the available commands:
     }
   }
 
-  def bottomLeftOrigin() {
+  def originBottomLeft() {
     val (w, h) = wh
     def work = TSCanvas.zoomXY(1, 1, w / 2, h / 2)
     work
