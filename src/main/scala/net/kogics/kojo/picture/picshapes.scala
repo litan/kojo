@@ -346,7 +346,7 @@ class Java2DPic(w: Double, h: Double, fn: Graphics2D => Unit)(implicit val canva
     val buffImg = graphicsConfiguration.createCompatibleImage(w.toInt, h.toInt, Transparency.TRANSLUCENT)
     val gbi = buffImg.createGraphics
     new PPaintContext(gbi).setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
-    gbi.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
+    // gbi.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
     fn(gbi)
     (buffImg, gbi)
   }

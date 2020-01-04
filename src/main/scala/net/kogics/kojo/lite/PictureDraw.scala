@@ -46,7 +46,7 @@ class PictureDraw(val b: Builtins) {
     setRandomSeed(s)
   }
 
-  val ROUND = CapJoin.CAP_ROUND //> ROUND: Int = 1
+  val ROUND = CapJoin.CAP_ROUND
   val PROJECT = CapJoin.CAP_SQUARE
   val SQUARE = CapJoin.CAP_BUTT
   val MITER = CapJoin.JOIN_MITER
