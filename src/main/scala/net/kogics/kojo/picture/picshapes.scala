@@ -18,6 +18,7 @@ package net.kogics.kojo.picture
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Component
+import java.awt.Font
 import java.awt.GraphicsEnvironment
 import java.awt.Image
 import java.awt.RenderingHints
@@ -532,6 +533,14 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
   }
 
   override def setPenThickness(th: Double) = notSupported("setPenThickness", "for text picture")
+
+  def setText(t: String) = Utils.runInSwingThread {
+    ptext.setText(t)
+  }
+
+  def setPenFont(f: Font) = Utils.runInSwingThread {
+    ptext.setFont(f)
+  }
 
   override def update(newData: Any) = Utils.runInSwingThread {
     ptext.setText(newData.toString)
