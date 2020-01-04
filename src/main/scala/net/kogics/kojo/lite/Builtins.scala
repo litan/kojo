@@ -795,13 +795,13 @@ Here's a partial list of the available commands:
   def canvasSketch(sketch: {
                      def setup(cd: CanvasDraw)
                      def draw(cd: CanvasDraw)
-                   }): Unit = {
+                   }, scaleFactor: Double = 1): Unit = {
 
     @volatile var inited = false
     @volatile var cd: CanvasDraw = null
-    val pic = Picture.fromCanvas(width, height) { g2d =>
+    val pic = Picture.fromCanvas(width * scaleFactor, height * scaleFactor) { g2d =>
       if (!inited) {
-        cd = new CanvasDraw(g2d, width, height, builtins)
+        cd = new CanvasDraw(g2d, width * scaleFactor, height * scaleFactor, builtins)
         sketch.setup(cd)
         inited = true
       }
@@ -810,6 +810,7 @@ Here's a partial list of the available commands:
       }
     }
     draw(pic)
+    pic.scale(1 / scaleFactor)
     TSCanvas.animate {
       pic.update()
     }
