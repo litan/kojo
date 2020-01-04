@@ -790,4 +790,38 @@ Here's a partial list of the available commands:
 
   import scala.language.implicitConversions
   implicit def bd2double(bd: BigDecimal) = bd.doubleValue
+
+  type CanvasDraw = net.kogics.kojo.lite.CanvasDraw
+  def canvasSketch(sketch: {
+                     def setup(cd: CanvasDraw)
+                     def draw(cd: CanvasDraw)
+                   }): Unit = {
+
+    @volatile var inited = false
+    @volatile var cd: CanvasDraw = null
+    val pic = Picture.fromCanvas(width, height) { g2d =>
+      if (!inited) {
+        cd = new CanvasDraw(g2d, width, height, builtins)
+        sketch.setup(cd)
+        inited = true
+      }
+      else {
+        sketch.draw(cd)
+      }
+    }
+    draw(pic)
+    TSCanvas.animate {
+      pic.update()
+    }
+  }
+
+  type PictureDraw = net.kogics.kojo.lite.PictureDraw
+  def pictureSketch(sketch: {
+                      def setup(cd: PictureDraw)
+                      def draw(cd: PictureDraw)
+                    }): Unit = {
+
+    setup(sketch.setup(PictureDraw))
+    draw(sketch.draw(PictureDraw))
+  }
 }
