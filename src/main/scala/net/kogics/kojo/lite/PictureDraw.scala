@@ -108,6 +108,10 @@ class PictureDraw(val b: Builtins) {
     fillColor = cm.rgb(r, g, b)
   }
 
+  def fill(n: Int, a: Int): Unit = {
+    fillColor = cm.rgba(n, n, n, a)
+  }
+
   def stroke(c: Color) {
     strokeColor = c
   }

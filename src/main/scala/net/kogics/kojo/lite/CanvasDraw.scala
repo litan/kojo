@@ -66,6 +66,10 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     fillColor = c
   }
 
+  def fill(n: Int, a: Int): Unit = {
+    fillColor = cm.rgba(n, n, n, a)
+  }
+
   def stroke(gray: Int, alpha: Int) {
     strokeColor = cm.rgba(gray, gray, gray, alpha)
   }
