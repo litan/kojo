@@ -68,6 +68,7 @@ trait Picture extends InputAware {
   def setPosition(p: Point): Unit = setPosition(p.x, p.y)
   def heading: Double
   def setHeading(angle: Double)
+  def setRotation(angle: Double) = setHeading(angle)
   def scaleFactor: (Double, Double)
   def setScaleFactor(x: Double, y: Double): Unit
   def transform: AffineTransform
