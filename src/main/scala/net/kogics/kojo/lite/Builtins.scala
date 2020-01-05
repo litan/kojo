@@ -752,22 +752,20 @@ Here's a partial list of the available commands:
   val TileXY = tiles.TileXY
 
   val PictureDraw = new PictureDraw(this)
-  @volatile var width = 0
-  @volatile var height = 0
+  @volatile var cwidth = 0
+  @volatile var cheight = 0
 
   def resetPictureDraw(): Unit = {
     PictureDraw.reset()
-    width = 0
-    height = 0
+    val cb = canvasBounds
+    cwidth = cb.width.toInt
+    cheight = cb.height.toInt
   }
 
-  def size(w: Double, h: Double) {
-    width = w.toInt
-    height = h.toInt
-    // the resizing takes a couple of tries to settle down
-    repeat(2) {
-      setDrawingCanvasSize(width, height)
-    }
+  def size(width: Int, height: Int) {
+    cwidth = width
+    cheight = height
+    setDrawingCanvasSize(width, height)
   }
 
   def setup(fn: => Unit) = runInGuiThread {
@@ -780,8 +778,8 @@ Here's a partial list of the available commands:
 
   private def wh = {
     lazy val cb = canvasBounds
-    val w = if (width == 0) cb.width else width
-    val h = if (height == 0) cb.height else height
+    val w = if (cwidth == 0) cb.width else cwidth
+    val h = if (cheight == 0) cb.height else cheight
     (w, h)
   }
 
@@ -823,9 +821,9 @@ Here's a partial list of the available commands:
 
     @volatile var inited = false
     @volatile var cd: CanvasDraw = null
-    val pic = Picture.fromCanvas(width * scaleFactor, height * scaleFactor) { g2d =>
+    val pic = Picture.fromCanvas(cwidth * scaleFactor, cheight * scaleFactor) { g2d =>
       if (!inited) {
-        cd = new CanvasDraw(g2d, width * scaleFactor, height * scaleFactor, builtins)
+        cd = new CanvasDraw(g2d, cwidth * scaleFactor, cheight * scaleFactor, builtins)
         sketch.setup(cd)
         inited = true
       }
