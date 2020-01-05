@@ -144,22 +144,20 @@ class PictureDraw(val b: Builtins) {
     drawPic(pic)
   }
 
-  def ellipse(cx: Double, cy: Double, w: Double, h: Double) = {
-    returnPic(cx, cy, Picture.ellipse(w / 2, h / 2))
+  def ellipse(cx: Double, cy: Double, width: Double, height: Double) = {
+    returnPic(cx, cy, Picture.ellipse(width / 2, height / 2))
   }
 
   // a version of ellipse that does not clash with the turtle ellipse
-  def ellip(cx: Double, cy: Double, w: Double, h: Double) = ellipse(cx, cy, w, h)
+  def ellip(cx: Double, cy: Double, width: Double, height: Double) = ellipse(cx, cy, width, height)
 
   def line(x1: Double, y1: Double, x2: Double, y2: Double) = {
     returnPic(x1, y1, Picture.line(x2 - x1, y2 - y1))
   }
 
-  def rect(x: Double, y: Double, w: Double, h: Double) = {
-    returnPic(x, y, Picture.rectangle(w, h))
+  def rectangle(x: Double, y: Double, width: Double, height: Double) = {
+    returnPic(x, y, Picture.rectangle(width, height))
   }
-
-  def rectangle(x: Double, y: Double, w: Double, h: Double) = rect(x, y, w, h)
 
   def turtleShape(x: Double, y: Double)(fn: Turtle => Unit) = {
     returnPic(x, y, Picture.fromTurtle(fn))
