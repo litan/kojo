@@ -613,6 +613,30 @@ Here's a partial list of the available commands:
       pic.axesOn()
     }
   }
+  object PictureMaker {
+    private def placeAndDraw(pic: Picture, x: Double, y: Double) = {
+      pic.setPosition(x, y)
+      pic.draw()
+      pic
+    }
+    def rectangle(x: Double, y: Double, width: Double, height: Double) = {
+      val pic = Picture.rectangle(width, height)
+      placeAndDraw(pic, x, y)
+    }
+    def ellipse(x: Double, y: Double, width: Double, height: Double) = {
+      val pic = Picture.ellipse(width / 2, height / 2)
+      placeAndDraw(pic, x, y)
+    }
+    def line(x1: Double, y1: Double, x2: Double, y2: Double) = {
+      val pic = Picture.line(x2 - x1, y2 - y1)
+      placeAndDraw(pic, x1, y1)
+    }
+    def fromPath(fn: GeneralPath => Unit) = {
+      val pic = Picture.fromPath(fn)
+      placeAndDraw(pic, 0, 0)
+    }
+  }
+  val pm = PictureMaker
   type Widget = JComponent
   type TextField[A] = widget.TextField[A]
   type TextArea = widget.TextArea
