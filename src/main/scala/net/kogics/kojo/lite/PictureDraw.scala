@@ -132,13 +132,8 @@ class PictureDraw(val b: Builtins) {
     p.setTransform(transform)
   }
 
-  val noOpFilter = new com.jhlabs.image.AbstractBufferedImageOp {
-    import java.awt.image.BufferedImage
-    def filter(src: BufferedImage, dest: BufferedImage) = src
-  }
-
   def drawPic(pic: Picture): Picture = {
-    val pic2 = if (_frozen) applyFilter(noOpFilter) -> pic else pic
+    val pic2 = if (_frozen) Picture.effectablePic(pic) else pic
     pic2.draw()
     pic2
   }
