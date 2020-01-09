@@ -749,6 +749,13 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
+  def onMouseMove(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
+    staging.Inputs.setMouseMoveHandler { event =>
+      val pos = event.getPosition
+      fn(pos.getX, pos.getY)
+    }
+  }
+
   var globalEl: PInputEventListener = _
   def addGlobalEventListener(l: PInputEventListener) {
     globalEl = l

@@ -44,6 +44,7 @@ object Inputs {
   var keyReleasedHandler: Option[PInputEvent => Unit] = None
   var mouseClickHandler: Option[PInputEvent => Unit] = None
   var mouseDragHandler: Option[PInputEvent => Unit] = None
+  var mouseMoveHandler: Option[PInputEvent => Unit] = None
 
   def removeMouseKeyHandlers(): Unit = {
     removeKeyHandlers()
@@ -65,12 +66,16 @@ object Inputs {
   def removeMouseHandlers(): Unit = {
     mouseClickHandler = None
     mouseDragHandler = None
+    mouseMoveHandler = None
   }
   def setMouseClickHandler(handler: PInputEvent => Unit) {
     mouseClickHandler = Some(handler)
   }
   def setMouseDragHandler(handler: PInputEvent => Unit) {
     mouseDragHandler = Some(handler)
+  }
+  def setMouseMoveHandler(handler: PInputEvent => Unit) {
+    mouseMoveHandler = Some(handler)
   }
 
   def activityStep() = {
@@ -152,6 +157,7 @@ object Inputs {
           super.mouseMoved(e)
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
+          mouseMoveHandler.foreach { _ apply e }
         }
         // Will be called when a mouse button is pressed down.
         override def mousePressed(e: PInputEvent) {

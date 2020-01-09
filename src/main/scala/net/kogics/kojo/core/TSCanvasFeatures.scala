@@ -52,6 +52,7 @@ trait TSCanvasFeatures {
   def onKeyRelease(fn: Int => Unit): Unit
   def onMouseClick(fn: (Double, Double) => Unit): Unit
   def onMouseDrag(fn: (Double, Double) => Unit): Unit
+  def onMouseMove(fn: (Double, Double) => Unit): Unit
   def setUnitLength(ul: UnitLen): Unit
   def clearWithUL(ul: UnitLen): Unit
   def camScale: Double
