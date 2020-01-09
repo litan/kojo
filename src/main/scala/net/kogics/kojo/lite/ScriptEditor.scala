@@ -743,6 +743,11 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               execSupport.traceCode()
               evt.consume
             }
+          case KeyEvent.VK_Q =>
+            if (evt.isControlDown) {
+              execSupport.stopScript()
+              evt.consume
+            }
           case KeyEvent.VK_UP =>
             if ((evt.isControlDown || evt.isMetaDown) && hPrevButton.isEnabled) {
               execSupport.loadCodeFromHistoryPrev()

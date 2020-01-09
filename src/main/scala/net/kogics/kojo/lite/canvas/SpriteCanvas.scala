@@ -682,6 +682,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       puzzlers.foreach { t => t.stop }
       turtles.foreach { t => t.stop }
       figures.foreach { f => f.stop }
+      staging.Inputs.removeMouseKeyHandlers()
       kojoCtx.activityListener.pendingCommandsDone()
       Utils.schedule(0.5) {
         kojoCtx.activityListener.pendingCommandsDone()
