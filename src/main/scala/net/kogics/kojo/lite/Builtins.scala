@@ -591,6 +591,7 @@ Here's a partial list of the available commands:
     def circle(radius: Double) = picture.circle(radius)
     // def circle(x: Double, y: Double, r: Double) = picture.offset(x, y) -> picture.circle(r)
     def ellipse(xRadius: Double, yRadius: Double) = picture.ellipse(xRadius, yRadius)
+    def ellipseInRect(width: Double, height: Double) = picture.trans(width / 2, height / 2) -> picture.ellipse(width / 2, height / 2)
     // def ellipse(x: Double, y: Double, rx: Double, ry: Double) = picture.offset(x, y) -> picture.ellipse(rx, ry)
     def arc(radius: Double, angle: Double) = picture.arc(radius, angle)
     def image(fileName: String) = picture.image(fileName, None)
