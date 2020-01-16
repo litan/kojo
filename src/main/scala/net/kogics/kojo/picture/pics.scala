@@ -576,7 +576,6 @@ abstract class BasePicList(val pics: List[Picture])
   def makeTnode = Utils.runInSwingThreadAndPause {
     val tn = new PNode()
     pics.foreach { pic =>
-      picLayer.removeChild(pic.tnode)
       tn.addChild(pic.tnode)
     }
     picLayer.addChild(tn)
