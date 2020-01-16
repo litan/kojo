@@ -514,13 +514,11 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
   with TNodeCacher with RedrawStopper with PicShapeOps {
 
   def initGeom(): Geometry = notSupported("initGeometry", "for text picture")
-  var ptext: PText = _
+  val ptext = Utils.textNode(text, 0, 0, canvas.camScale, size)
+  ptext.setTextPaint(color)
+  ptext.setPaint(null)
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
-    ptext = Utils.textNode(text, 0, 0, canvas.camScale, size)
-    ptext.setTextPaint(color)
-    ptext.setPaint(null)
-
     val node = new PNode
     node.setVisible(false)
     node.addChild(ptext)
