@@ -81,8 +81,13 @@ trait CoreBuiltins extends Rationals {
   type MSeq[V] = collection.mutable.Seq[V]
 
   val HashMap = collection.mutable.HashMap
+  type HashMap[K, V] = collection.mutable.HashMap[K, V]
+
   val HashSet = collection.mutable.HashSet
+  type HashSet[V] = collection.mutable.HashSet[V]
+
   val ArrayBuffer = collection.mutable.ArrayBuffer
+  type ArrayBuffer[V] = collection.mutable.ArrayBuffer[V]
 
   def epochTimeMillis = System.currentTimeMillis()
   def epochTime = System.currentTimeMillis() / 1000.0

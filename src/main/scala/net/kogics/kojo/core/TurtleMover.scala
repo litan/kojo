@@ -103,8 +103,11 @@ trait TurtleMover extends RichTurtleCommands {
   def hop(): Unit = hop(25)
   def dot(diameter: Int): Unit = {
     saveStyle()
+    savePosHe()
     setPenThickness(diameter)
+    hop(-0.01 / 2)
     forward(0.01)
+    restorePosHe()
     restoreStyle()
   }
   def perimeter: Double
