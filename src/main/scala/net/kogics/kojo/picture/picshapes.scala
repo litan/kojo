@@ -540,6 +540,11 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
     ptext.setFont(f)
   }
 
+  def setPenFontSize(n: Int) = Utils.runInSwingThread {
+    val f = ptext.getFont
+    ptext.setFont(f.deriveFont(n.toFloat))
+  }
+
   override def update(newData: Any) = Utils.runInSwingThread {
     ptext.setText(newData.toString)
   }
