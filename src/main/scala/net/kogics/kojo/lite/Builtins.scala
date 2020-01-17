@@ -606,13 +606,17 @@ Here's a partial list of the available commands:
     def effectablePic(pic: Picture) = picture.effectablePic(pic)
     def hgap(gap: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(gap, 0.001)
     def vgap(gap: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(0.001, gap)
-    def showBounds(pic: Picture, c: Color = cm.black) = Utils.runInSwingThread {
-      val b = pic.tnode.getGlobalFullBounds
-      val bpic = trans(b.x, b.y) * penColor(c) -> rectangle(b.width, b.height)
-      draw(bpic)
+    def showBounds(pics: Picture*) = Utils.runInSwingThread {
+      pics.foreach { pic =>
+        val b = pic.tnode.getGlobalFullBounds
+        val bpic = trans(b.x, b.y) -> rectangle(b.width, b.height)
+        draw(bpic)
+      }
     }
-    def showAxes(pic: Picture) = {
-      pic.axesOn()
+    def showAxes(pics: Picture*) = {
+      pics.foreach { pic =>
+        pic.axesOn()
+      }
     }
   }
   object PictureMaker {
