@@ -710,10 +710,9 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
       prevPic match {
         case Some(ppic) =>
           val pbounds = ppic.bounds
-          var bounds = pic.bounds
           val tx = pbounds.getMinX + pbounds.getWidth + padding
           pic.translate(tx, 0)
-          bounds = pic.bounds
+          val bounds = pic.bounds
           val ty = pbounds.getMinY - bounds.getMinY + (pbounds.height - bounds.height) / 2
           val tx2 = pbounds.getMaxX - bounds.getMinX
           pic.offset(tx2, ty)
@@ -778,10 +777,9 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
       prevPic match {
         case Some(ppic) =>
           val pbounds = ppic.bounds
-          var bounds = pic.bounds
           val ty = pbounds.getMinY + pbounds.getHeight + padding
           pic.translate(0, ty)
-          bounds = pic.bounds
+          val bounds = pic.bounds
           val tx = pbounds.getMinX - bounds.getMinX + (pbounds.width - bounds.width) / 2
           val ty2 = pbounds.getMaxY - bounds.getMinY
           pic.offset(tx, ty2)
