@@ -594,7 +594,7 @@ Here's a partial list of the available commands:
     def ellipseInRect(width: Double, height: Double) = picture.trans(width / 2, height / 2) -> picture.ellipse(width / 2, height / 2)
     // def ellipse(x: Double, y: Double, rx: Double, ry: Double) = picture.offset(x, y) -> picture.ellipse(rx, ry)
     def arc(radius: Double, angle: Double) = picture.arc(radius, angle)
-    def point = picture.trans(0, 0.01 / 2) -> line(0, 0.01)
+    def point = picture.trans(0, -0.01 / 2) -> line(0, 0.01)
     def image(fileName: String) = picture.image(fileName, None)
     def image(fileName: String, envelope: Picture) = picture.image(fileName, Some(envelope))
     def image(url: URL) = picture.image(url, None)
