@@ -453,8 +453,7 @@ case class GRAYA(v: Int, a: Int) extends ColorModes
 
 //T ShapeMethodsTest begins
 trait Shape  extends InputAware {
-  def myCanvas = Impl.canvas
-  def myNode = node
+  def pnode = node
   def node: PNode
   var sizeFactor = 1.0
 

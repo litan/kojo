@@ -287,8 +287,6 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
 
   override def toString() = s"Picture with Id: ${System.identityHashCode(this)}"
 
-  def myCanvas = canvas.pCanvas
-
   protected def extractFillColor(fillPaint: Paint) = fillPaint match {
     case null     => Color.white
     case c: Color => c

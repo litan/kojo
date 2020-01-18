@@ -23,9 +23,8 @@ import edu.umd.cs.piccolo.PNode
 import net.kogics.kojo.util.Utils
 
 trait InputAware {
-  def myCanvas: PCanvas
-  def myNode: PNode
-  
+  def pnode: PNode
+
   def onMousePress(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
       override def mousePressed(event: PInputEvent) {
@@ -36,9 +35,9 @@ trait InputAware {
       }
     }
     h.setEventFilter(new PInputEventFilter(java.awt.event.InputEvent.BUTTON1_MASK))
-    myNode.addInputEventListener(h)
+    pnode.addInputEventListener(h)
   }
-  
+
   def onMouseRelease(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
       override def mouseReleased(event: PInputEvent) {
@@ -49,9 +48,9 @@ trait InputAware {
       }
     }
     h.setEventFilter(new PInputEventFilter(java.awt.event.InputEvent.BUTTON1_MASK))
-    myNode.addInputEventListener(h)
+    pnode.addInputEventListener(h)
   }
-  
+
   def onMouseClick(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
       override def mouseClicked(event: PInputEvent) {
@@ -62,9 +61,9 @@ trait InputAware {
       }
     }
     h.setEventFilter(new PInputEventFilter(java.awt.event.InputEvent.BUTTON1_MASK))
-    myNode.addInputEventListener(h)
+    pnode.addInputEventListener(h)
   }
-  
+
   def onMouseDrag(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
       override def mouseDragged(event: PInputEvent) {
@@ -76,9 +75,9 @@ trait InputAware {
       }
     }
     h.setEventFilter(new PInputEventFilter(java.awt.event.InputEvent.BUTTON1_MASK))
-    myNode.addInputEventListener(h)
+    pnode.addInputEventListener(h)
   }
-  
+
   def onMouseMove(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
       override def mouseMoved(event: PInputEvent) {
@@ -89,7 +88,7 @@ trait InputAware {
         }
       }
     }
-    myNode.addInputEventListener(h)
+    pnode.addInputEventListener(h)
   }
 
   def onMouseEnter(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
@@ -102,9 +101,9 @@ trait InputAware {
         }
       }
     }
-    myNode.addInputEventListener(h)
+    pnode.addInputEventListener(h)
   }
-  
+
   def onMouseExit(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
       override def mouseExited(event: PInputEvent) {
@@ -115,7 +114,7 @@ trait InputAware {
         }
       }
     }
-    myNode.addInputEventListener(h)
+    pnode.addInputEventListener(h)
   }
   
 //  import java.awt.event.KeyEvent
