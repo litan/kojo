@@ -368,49 +368,48 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
 
     val viewBounds = getCamera.getViewBounds()
-    val width = viewBounds.width.toFloat
-    val height = viewBounds.height.toFloat
-    val vbx = viewBounds.x.toFloat
-    val vby = viewBounds.y.toFloat
+    val width = viewBounds.width.toInt
+    val height = viewBounds.height.toInt
+    val vbx = viewBounds.x.toInt
+    val vby = viewBounds.y.toInt
 
     import java.awt.geom._
-    val screenCenter = new Point2D.Double(vbx + width / 2, vby + height / 2)
 
     val deltap = new Point2D.Double(delta, delta)
-    val numxTicks = Math.ceil(width / deltap.getY).toInt + 4
-    val numyTicks = Math.ceil(height / deltap.getX).toInt + 4
+    val numxTicks = Math.ceil(width / deltap.getX).toInt + 1
+    val numyTicks = Math.ceil(height / deltap.getY).toInt + 1
     val tickSize = 3
 
     val xStart = {
-      val x = viewBounds.x
+      val x = vbx
       if (x < 0) Math.floor(x / deltap.getX) * deltap.getX
       else Math.ceil(x / deltap.getX) * deltap.getX
-    } - 2 * deltap.getX
+    }
 
     val yStart = {
-      val y = viewBounds.y
+      val y = vby
       if (y < 0) Math.floor(y / deltap.getY) * deltap.getY
       else Math.ceil(y / deltap.getY) * deltap.getY
-    } - 2 * deltap.getY
+    }
 
     grid.removeAllChildren()
     axes.removeAllChildren()
 
-    val xmin = xStart - deltap.getX
-    val xmax = xStart + (numxTicks + 1) * deltap.getX
+    val xmin = xStart
+    val xmax = xStart + (numxTicks - 1) * deltap.getX
 
-    val ymin = yStart - deltap.getY
-    val ymax = yStart + (numyTicks + 1) * deltap.getY
+    val ymin = yStart
+    val ymax = yStart + (numyTicks - 1) * deltap.getY
 
     if (_showAxes) {
-      val xa1 = getCamera.viewToLocal(new Point2D.Double(xmin, 0))
-      var xa2 = getCamera.viewToLocal(new Point2D.Double(xmax, 0))
+      val xa1 = getCamera.viewToLocal(new Point2D.Double(viewBounds.x, 0))
+      var xa2 = getCamera.viewToLocal(new Point2D.Double(viewBounds.x + viewBounds.width, 0))
       val xAxis = PPath.createLine(xa1.getX.toFloat, xa1.getY.toFloat, xa2.getX.toFloat, xa2.getY.toFloat)
       xAxis.setStrokePaint(AxesColor)
       axes.addChild(xAxis)
 
-      val ya1 = getCamera.viewToLocal(new Point2D.Double(0, ymin))
-      val ya2 = getCamera.viewToLocal(new Point2D.Double(0, ymax))
+      val ya1 = getCamera.viewToLocal(new Point2D.Double(0, viewBounds.y))
+      val ya2 = getCamera.viewToLocal(new Point2D.Double(0, viewBounds.y + viewBounds.height))
       val yAxis = PPath.createLine(ya1.getX.toFloat, ya1.getY.toFloat, ya2.getX.toFloat, ya2.getY.toFloat)
       yAxis.setStrokePaint(AxesColor)
       axes.addChild(yAxis)
@@ -421,8 +420,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       val ycoord = yStart + i * deltap.getY
       if (_showGrid) {
         // gridOn
-        val pt1 = getCamera.viewToLocal(new Point2D.Double(xmin, ycoord))
-        val pt2 = getCamera.viewToLocal(new Point2D.Double(xmax, ycoord))
+        val pt1 = getCamera.viewToLocal(new Point2D.Double(viewBounds.x, ycoord))
+        val pt2 = getCamera.viewToLocal(new Point2D.Double(viewBounds.x + viewBounds.width, ycoord))
         val gridline = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
         gridline.setStrokePaint(GridColor)
         grid.addChild(gridline)
@@ -453,8 +452,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     for (i <- 0 until numxTicks) {
       val xcoord = xStart + i * deltap.getX
       if (_showGrid) {
-        val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, ymax))
-        val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, ymin))
+        val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, viewBounds.y + viewBounds.height))
+        val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, viewBounds.y))
         val gridline = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
         gridline.setStrokePaint(GridColor)
         grid.addChild(gridline)
