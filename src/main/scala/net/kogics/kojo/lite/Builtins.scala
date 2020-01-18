@@ -264,7 +264,9 @@ Here's a partial list of the available commands:
 
   def runInGuiThread(code: => Unit) = Utils.runInSwingThread(code)
   UserCommand.addSynopsis("runInGuiThread", List("code"), "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command.")
+
   def runInDrawingThread(code: => Unit) = Utils.runInSwingThread(code)
+  def evalInDrawingThread[T](fn: => T) = Utils.runInSwingThreadAndWait(fn)
 
   def schedule(seconds: Double)(code: => Unit) = Utils.schedule(seconds)(code)
   def scheduleN(n: Int, seconds: Double)(code: => Unit) = Utils.scheduleRecN(n, seconds)(code)
