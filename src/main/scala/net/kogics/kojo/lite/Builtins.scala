@@ -374,7 +374,7 @@ Here's a partial list of the available commands:
   val noise = picture.noise _
   val weave = picture.weave _
   def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = picture.effect(name, props: _*)
-  def applyFilter(filter: BufferedImageOp) = picture.ApplyFilterc(filter)
+  def effect(filter: BufferedImageOp) = picture.ApplyFilterc(filter)
 
   // put api functions here to enable code completion right from function definitions
   def transform(fn: Picture => Unit) = preDrawTransform(fn)
@@ -527,6 +527,10 @@ Here's a partial list of the available commands:
   def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, TSCanvas.stageBorder)
   def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D =
     picture.bouncePicVectorOffPic(pic, v, obstacle, Random)
+
+  def bouncePicOffStage(pic: Picture, vel: Vector2D): Vector2D = bouncePicVectorOffPic(pic, vel, TSCanvas.stageBorder)
+  def bouncePicOffPic(pic: Picture, vel: Vector2D, obstacle: Picture): Vector2D =
+    picture.bouncePicVectorOffPic(pic, vel, obstacle, Random)
 
   def switchToDefaultPerspective() = kojoCtx.switchToDefaultPerspective()
   def switchToDefault2Perspective() = kojoCtx.switchToDefault2Perspective()
