@@ -827,6 +827,7 @@ Here's a partial list of the available commands:
   implicit def bd2double(bd: BigDecimal) = bd.doubleValue
 
   type CanvasDraw = net.kogics.kojo.lite.CanvasDraw
+  import scala.language.reflectiveCalls
   def canvasSketch(sketch: {
                      def setup(cd: CanvasDraw)
                      def draw(cd: CanvasDraw)
