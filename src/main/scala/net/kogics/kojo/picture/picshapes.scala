@@ -99,6 +99,13 @@ trait PicShapeOps { self: Picture with CorePicOps =>
     node.asInstanceOf[PPath].setStroke(stroke)
   }
 
+  override def setNoPen(): Unit = {
+    val pnode = tnode.asInstanceOf[PPath]
+    pnode.setStroke(null)
+    pnode.setStrokePaint(null)
+    pnode.repaint()
+  }
+
   def setPenCapJoin(cap: Int, join: Int) = Utils.runInSwingThread {
     _setPenCapJoin(tnode, cap, join)
   }

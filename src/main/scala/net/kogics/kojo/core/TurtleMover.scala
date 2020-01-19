@@ -34,6 +34,10 @@ trait TurtleMover extends RichTurtleCommands {
   def penDown(): Unit
   def setPenColor(color: Paint): Unit
   def setPenThickness(t: Double): Unit
+  def setNoPen(): Unit = {
+    setPenColor(null)
+    setPenThickness(0)
+  }
   def setFillColor(color: Paint): Unit
   def setPenCapJoin(cap: Int, join: Int): Unit
   def saveStyle(): Unit

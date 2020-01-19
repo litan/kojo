@@ -360,6 +360,7 @@ Here's a partial list of the available commands:
   val penColor = picture.stroke _
   val penWidth = picture.strokeWidth _
   val penThickness = picture.strokeWidth _
+  def noPen() = transform(_.setNoPen())
 
   val spin = picture.spin _
   val reflect = picture.reflect _
