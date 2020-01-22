@@ -3,7 +3,7 @@ def plot(start: Double, end: Double,
     setPosition(start, f(start))
     var curr = start
     while (curr <= end) {
-        moveTo(curr, f(curr))
+        lineTo(curr, f(curr))
         curr += step
     }
 }

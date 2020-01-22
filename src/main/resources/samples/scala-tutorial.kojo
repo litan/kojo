@@ -285,7 +285,7 @@ def poly(x:Double)=0.001*x*x+0.5*x+10
 gridOn();axesOn()
 val range=200
 setPosition(-range,poly(-range))
-for(x <- -range+10 to range; if (x % 10 == 0)) moveTo(x, poly(x))
+for(x <- -range+10 to range; if (x % 10 == 0)) lineTo(x, poly(x))
 """.c,
                  "Now turn off axes.".p,
                  "clear()".c
@@ -1018,7 +1018,7 @@ pages += Page(
             row("forward(100)".c, "Moves the turtle forward a 100 steps."),
             row("back(50)".c,"Moves the turtle back 50 steps."),
             row("setPosition(100, 100)".c, "Sends the turtle to the point (x, y) without drawing a line. The turtle's heading is not changed."),
-            row("moveTo(20, 30)".c, "Turns the turtle towards (x, y) and moves the turtle to that point."), 
+            row("lineTo(20, 30)".c, "Turns the turtle towards (x, y) and moves the turtle to that point."),
             row("turn(30)".c, "Turns the turtle through a specified angle. Angles are positive for counter-clockwise turns."),
             row("right()".c, "Turns the turtle 90 degrees right (clockwise)."),
             row("right(60)".c, "Turns the turtle 60 degrees right (clockwise)."),

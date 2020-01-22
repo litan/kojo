@@ -49,8 +49,8 @@ def line(ps: ArrayBuffer[Point], c: Color) = Picture {
     }
     setPenColor(c)
     setFillColor(c)
-    jumpTo(ps(0).x, ps(0).y)
-    moveTo(ps(1).x, ps(1).y)
+    setPosition(ps(0).x, ps(0).y)
+    lineTo(ps(1).x, ps(1).y)
     hop(-sqsz / 2)
     left(90)
     sq()
