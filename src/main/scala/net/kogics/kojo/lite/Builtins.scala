@@ -820,9 +820,6 @@ Here's a partial list of the available commands:
   def rangeTo(start: Double, end: Double, step: Double) = Range.BigDecimal.inclusive(start, end, step)
   def rangeTill(start: Double, end: Double, step: Double) = Range.BigDecimal(start, end, step)
 
-  def distance(x1: Double, y1: Double, x2: Double, y2: Double) =
-    math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2))
-
   import scala.language.implicitConversions
   implicit def bd2double(bd: BigDecimal) = bd.doubleValue
 
