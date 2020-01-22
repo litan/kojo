@@ -139,7 +139,7 @@ object CodeCompletionUtils {
     "animate" -> "animate {\n    ${cursor}\n}",
     "schedule" -> "schedule(${seconds}) {\n    ${cursor}\n}",
     "runInBackground" -> "runInBackground {\n    ${cursor}\n}",
-    "runInGuiThread" -> "runInGuiThread {\n    ${cursor}\n}",
+    "runInDrawingThread" -> "runInDrawingThread {\n    ${cursor}\n}",
     "onAnimationStart" -> "onAnimationStart {\n    ${cursor}\n}",
     "onAnimationStop" -> "onAnimationStop {\n    ${cursor}\n}",
     "act" -> "act { self => // we give this turtle the name 'self' within act {...}\n    ${cursor}\n}",
