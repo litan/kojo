@@ -785,7 +785,7 @@ Here's a partial list of the available commands:
     fn
   }
 
-  def draw(fn: => Unit) = TSCanvas.animate {
+  def drawLoop(fn: => Unit) = TSCanvas.animate {
     fn
   }
 
@@ -826,8 +826,8 @@ Here's a partial list of the available commands:
   type CanvasDraw = net.kogics.kojo.lite.CanvasDraw
   import scala.language.reflectiveCalls
   def canvasSketch(sketch: {
-                     def setup(cd: CanvasDraw)
-                     def draw(cd: CanvasDraw)
+                     def setup(cd: CanvasDraw): Unit
+                     def drawLoop(cd: CanvasDraw): Unit
                    }, scaleFactor: Double = 1): Unit = {
 
     @volatile var inited = false
@@ -839,7 +839,7 @@ Here's a partial list of the available commands:
         inited = true
       }
       else {
-        sketch.draw(cd)
+        sketch.drawLoop(cd)
       }
     }
     draw(pic)
@@ -851,11 +851,11 @@ Here's a partial list of the available commands:
 
   type PictureDraw = net.kogics.kojo.lite.PictureDraw
   def pictureSketch(sketch: {
-                      def setup(cd: PictureDraw)
-                      def draw(cd: PictureDraw)
+                      def setup(cd: PictureDraw): Unit
+                      def drawLoop(cd: PictureDraw): Unit
                     }): Unit = {
 
     setup(sketch.setup(PictureDraw))
-    draw(sketch.draw(PictureDraw))
+    drawLoop(sketch.drawLoop(PictureDraw))
   }
 }
