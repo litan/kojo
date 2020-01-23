@@ -158,6 +158,7 @@ class PictureDraw(val b: Builtins) {
   def rectangle(x: Double, y: Double, width: Double, height: Double) = {
     returnPic(x, y, Picture.rectangle(width, height))
   }
+  val rect = rectangle _ // canvas compatibility
 
   def turtleShape(x: Double, y: Double)(fn: Turtle => Unit) = {
     returnPic(x, y, Picture.fromTurtle(fn))
