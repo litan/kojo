@@ -75,6 +75,30 @@ object CodeTemplates {
     "def (command)" -> """def ${cmdName}(${in1}: ${Type1}, ${in2}: ${Type2}) {
     ${cursor}
 }
+""",
+    "canvasSketch" -> """cleari()
+setBackground(white)
+originBottomLeft()
+
+class Sketch {
+    var x = 0
+    def setup(surface: CanvasDraw) {
+        import surface._
+        strokeWeight(4)
+        rect(0, cheight/2, 40, 40)
+        ${cursor}
+    }
+
+    def drawLoop(surface: CanvasDraw) {
+        import surface._
+        background(255)
+        x += 2
+        rect(x, cheight/2, 40, 40)
+    }
+}
+
+val sketch = new Sketch
+canvasSketch(sketch)
 """
   )
 
