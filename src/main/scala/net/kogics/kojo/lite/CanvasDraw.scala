@@ -132,6 +132,10 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     drawShape(tempRect)
   }
 
+  def point(x: Double, y: Double): Unit = {
+    line(x - 0.01 / 2, y, x + 0.01 / 2, y)
+  }
+
   def translate(x: Double, y: Double) {
     g2d.translate(x, y)
   }

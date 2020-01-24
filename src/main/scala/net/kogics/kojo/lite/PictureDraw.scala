@@ -160,6 +160,10 @@ class PictureDraw(val b: Builtins) {
   }
   val rect = rectangle _ // canvas compatibility
 
+  def point(x: Double, y: Double) = {
+    line(x - 0.01 / 2, y, x + 0.01 / 2, y)
+  }
+
   def turtleShape(x: Double, y: Double)(fn: Turtle => Unit) = {
     returnPic(x, y, Picture.fromTurtle(fn))
   }
