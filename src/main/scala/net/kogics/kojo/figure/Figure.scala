@@ -20,7 +20,7 @@ import edu.umd.cs.piccolo._
 import edu.umd.cs.piccolo.nodes._
 import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
-import java.awt.{ Point => _, List => _, _ }
+import java.awt.{Point => _, List => _, _}
 import net.kogics.kojo.util.Utils
 import core._
 import java.util.concurrent.Future
@@ -165,12 +165,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     currLayer.repaint
   }
 
-  private var pendingAnimations = Vector.empty[PActivity]
-  private var inRunner = false
-
-  def onRunStart() = Utils.runLaterInSwingThread {
-    inRunner = true
-  }
+  def onRunStart() {}
 
   def handleStartFn() {
     if (figAnimations.isEmpty && startFn.isDefined) {
@@ -178,20 +173,9 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     }
   }
 
-  def onRunDone() = Utils.runLaterInSwingThread {
-    inRunner = false
-    if (!pendingAnimations.isEmpty) {
-      handleStartFn()
-    }
-    pendingAnimations foreach { figAnimation =>
-      figAnimations = figAnimation :: figAnimations
-      canvas.animateActivity(figAnimation)
-    }
+  def onRunDone() {}
 
-    pendingAnimations = Vector.empty
-  }
-
-  def refresh(fn: => Unit): Future[PActivity]  = refresh(1000 / canvas.kojoCtx.fps, 0)(fn)
+  def refresh(fn: => Unit): Future[PActivity] = refresh(1000 / canvas.kojoCtx.fps, 0)(fn)
   def refresh(rate: Long, delay: Long)(fn: => Unit): Future[PActivity] = {
     Utils.increaseSysTimerResolutionIfNeeded()
 
@@ -230,14 +214,9 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         }
       })
 
-      if (inRunner) {
-        pendingAnimations = pendingAnimations :+ figAnimation
-      }
-      else {
-        handleStartFn()
-        figAnimations = figAnimation :: figAnimations
-        canvas.animateActivity(figAnimation)
-      }
+      handleStartFn()
+      figAnimations = figAnimation :: figAnimations
+      canvas.animateActivity(figAnimation)
       promise.set(figAnimation)
     }
     promise
@@ -254,7 +233,6 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         stopFn.get.apply()
       }
       figAnimations = Nil
-      pendingAnimations = Vector.empty
     }
   }
 
