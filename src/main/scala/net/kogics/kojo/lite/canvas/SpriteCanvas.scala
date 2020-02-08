@@ -368,65 +368,60 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
 
     val viewBounds = getCamera.getViewBounds()
-    val width = viewBounds.width.toInt
-    val height = viewBounds.height.toInt
-    val vbx = viewBounds.x.toInt
-    val vby = viewBounds.y.toInt
-
+    val xmin = viewBounds.x
+    val xmax = viewBounds.x + viewBounds.width
+    val ymin = viewBounds.y
+    val ymax = viewBounds.y + viewBounds.height
     import java.awt.geom._
 
     val deltap = new Point2D.Double(delta, delta)
-    val numxTicks = Math.ceil(width / deltap.getX).toInt + 1
-    val numyTicks = Math.ceil(height / deltap.getY).toInt + 1
+    val numxTicks = Math.ceil(viewBounds.width.toInt / deltap.getX).toInt
+    val numyTicks = Math.ceil(viewBounds.height.toInt / deltap.getY).toInt
     val tickSize = 3
 
     val xStart = {
-      val x = vbx
-      if (x < 0) Math.floor(x / deltap.getX) * deltap.getX
-      else Math.ceil(x / deltap.getX) * deltap.getX
+      val x = xmin.toInt
+      if (x < 0) Math.ceil(x / deltap.getX) * deltap.getX
+      else Math.floor(x / deltap.getX) * deltap.getX
     }
 
     val yStart = {
-      val y = vby
-      if (y < 0) Math.floor(y / deltap.getY) * deltap.getY
-      else Math.ceil(y / deltap.getY) * deltap.getY
+      val y = ymin.toInt
+      if (y < 0) Math.ceil(y / deltap.getY) * deltap.getY
+      else Math.floor(y / deltap.getY) * deltap.getY
     }
 
     grid.removeAllChildren()
     axes.removeAllChildren()
 
-    val xmin = xStart
-    val xmax = xStart + (numxTicks - 1) * deltap.getX
-
-    val ymin = yStart
-    val ymax = yStart + (numyTicks - 1) * deltap.getY
-
     if (_showAxes) {
-      val xa1 = getCamera.viewToLocal(new Point2D.Double(viewBounds.x, 0))
-      var xa2 = getCamera.viewToLocal(new Point2D.Double(viewBounds.x + viewBounds.width, 0))
+      val xa1 = getCamera.viewToLocal(new Point2D.Double(xmin, 0))
+      val xa2 = getCamera.viewToLocal(new Point2D.Double(xmax, 0))
       val xAxis = PPath.createLine(xa1.getX.toFloat, xa1.getY.toFloat, xa2.getX.toFloat, xa2.getY.toFloat)
       xAxis.setStrokePaint(AxesColor)
       axes.addChild(xAxis)
 
-      val ya1 = getCamera.viewToLocal(new Point2D.Double(0, viewBounds.y))
-      val ya2 = getCamera.viewToLocal(new Point2D.Double(0, viewBounds.y + viewBounds.height))
+      val ya1 = getCamera.viewToLocal(new Point2D.Double(0, ymin))
+      val ya2 = getCamera.viewToLocal(new Point2D.Double(0, ymax))
       val yAxis = PPath.createLine(ya1.getX.toFloat, ya1.getY.toFloat, ya2.getX.toFloat, ya2.getY.toFloat)
       yAxis.setStrokePaint(AxesColor)
       axes.addChild(yAxis)
     }
+
+    def inRange(a: Double, b: Double, c: Double) = a >= b && a <= c
 
     // gridlines and ticks on y axis
     for (i <- 0 until numyTicks) {
       val ycoord = yStart + i * deltap.getY
       if (_showGrid) {
         // gridOn
-        val pt1 = getCamera.viewToLocal(new Point2D.Double(viewBounds.x, ycoord))
-        val pt2 = getCamera.viewToLocal(new Point2D.Double(viewBounds.x + viewBounds.width, ycoord))
+        val pt1 = getCamera.viewToLocal(new Point2D.Double(xmin, ycoord))
+        val pt2 = getCamera.viewToLocal(new Point2D.Double(xmax, ycoord))
         val gridline = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
         gridline.setStrokePaint(GridColor)
         grid.addChild(gridline)
       }
-      if (_showAxes) {
+      if (_showAxes && inRange(ycoord, ymin, ymax)) {
         val pt1 = getCamera.viewToLocal(new Point2D.Double(-tickSize / scale, ycoord))
         val pt2 = getCamera.viewToLocal(new Point2D.Double(tickSize / scale, ycoord))
         val tick = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
@@ -452,13 +447,13 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     for (i <- 0 until numxTicks) {
       val xcoord = xStart + i * deltap.getX
       if (_showGrid) {
-        val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, viewBounds.y + viewBounds.height))
-        val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, viewBounds.y))
+        val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, ymax))
+        val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, ymin))
         val gridline = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
         gridline.setStrokePaint(GridColor)
         grid.addChild(gridline)
       }
-      if (_showAxes) {
+      if (_showAxes && inRange(xcoord, xmin, xmax)) {
         val pt1 = getCamera.viewToLocal(new Point2D.Double(xcoord, tickSize / scale))
         val pt2 = getCamera.viewToLocal(new Point2D.Double(xcoord, -tickSize / scale))
         val tick = PPath.createLine(pt1.getX.toFloat, pt1.getY.toFloat, pt2.getX.toFloat, pt2.getY.toFloat)
