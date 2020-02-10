@@ -110,9 +110,52 @@ class Builtins(
   def readln(prompt: String): String = kojoCtx.readInput(prompt)
   UserCommand("readln", List("promptString"), "Displays the given prompt in the output window and reads a line that the user enters.")
 
+  var breakDlg = false
+  var escapeStop = false
+  var scriptRunning = false
+  def onRunStart(): Unit = {
+    scriptRunning = true
+    escapeStop = false
+  }
+
+  def onRunDone(): Unit = {
+    scriptRunning = false
+  }
+
   def breakpoint(msg: Any): Unit = {
+    val resumeMsg = "Hit Enter to resume"
     println(msg)
-    readln("Hit Enter to resume")
+    if (Utils.inSwingThread) {
+      import javax.swing.JOptionPane
+      if (!breakDlg) {
+        if (escapeStop) {
+          if (scriptRunning) {
+            breakDlg = true
+            escapeStop = false
+            if (JOptionPane.showInputDialog(kojoCtx.frame, msg, resumeMsg, JOptionPane.INFORMATION_MESSAGE) == null) {
+              escapeStop = true
+              kojoCtx.stopScript()
+            }
+            breakDlg = false
+          }
+        }
+        else {
+          breakDlg = true
+          escapeStop = false
+          if (JOptionPane.showInputDialog(kojoCtx.frame, msg, resumeMsg, JOptionPane.INFORMATION_MESSAGE) == null) {
+            escapeStop = true
+            kojoCtx.stopScript()
+          }
+          breakDlg = false
+        }
+      }
+      else {
+        pause(.3)
+      }
+    }
+    else {
+      readln(resumeMsg)
+    }
   }
 
   def readInt(prompt: String): Int = readln(prompt).toInt

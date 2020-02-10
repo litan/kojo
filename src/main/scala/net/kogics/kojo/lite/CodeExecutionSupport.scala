@@ -400,7 +400,7 @@ class CodeExecutionSupport(
       showNormalCursor()
       enableRunButton(false)
       stopButton.setEnabled(true)
-      tCanvas.onRunStart()
+      runStart()
     }
 
     def onCompileStart() {
@@ -489,8 +489,14 @@ class CodeExecutionSupport(
       showSmartError(errText, line, column, offset)
     }
 
+    private def runStart(): Unit = {
+      tCanvas.onRunStart()
+      builtins.onRunStart()
+    }
+
     private def runDone() = {
       tCanvas.onRunDone()
+      builtins.onRunDone()
       Utils.runLaterInSwingThread {
         enableRunButton(true)
         if (!pendingCommands) {
@@ -563,21 +569,30 @@ class CodeExecutionSupport(
   def enableClearButton() = if (!clearButton.isEnabled) clearButton.setEnabled(true)
 
   def readInput(prompt: String): String = {
-    val input = new FutureResult[String]
-    Utils.runInSwingThread {
-      val inputField = outputPane.createReadInputPanel(prompt)
-      kojoCtx.activateOutputPane()
-      Utils.schedule(0.1) { inputField.requestFocusInWindow(); kojoCtx.scrollOutputToEnd() }
-      Utils.schedule(0.9) { inputField.requestFocusInWindow() }
-      inputField.addActionListener(new ActionListener {
-        def actionPerformed(e: ActionEvent) {
-          //          println("%s: %s" format (prompt, inputField.getText))
-          input.set(inputField.getText)
-          outputPane.removeInputPanel()
-        }
-      })
+    if (Utils.inSwingThread) {
+      throw new RuntimeException("Input can't be read from the GUI thread")
     }
-    input.get
+    else {
+      val input = new FutureResult[String]
+      Utils.runInSwingThread {
+        val inputField = outputPane.createReadInputPanel(prompt)
+        kojoCtx.activateOutputPane()
+        Utils.schedule(0.1) {
+          inputField.requestFocusInWindow(); kojoCtx.scrollOutputToEnd()
+        }
+        Utils.schedule(0.9) {
+          inputField.requestFocusInWindow()
+        }
+        inputField.addActionListener(new ActionListener {
+          def actionPerformed(e: ActionEvent) {
+            //          println("%s: %s" format (prompt, inputField.getText))
+            input.set(inputField.getText)
+            outputPane.removeInputPanel()
+          }
+        })
+      }
+      input.get
+    }
   }
 
   def showOutput(outText: String) = outputPane.showOutput(outText)
