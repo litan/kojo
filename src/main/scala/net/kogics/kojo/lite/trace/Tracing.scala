@@ -261,7 +261,7 @@ that is not supported under Tracing.
 
       val vm = launchVM()
       println("Tracing started...")
-      val excludes = Array("java.*", "javax.*", "jdk.internal.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*", "net.kogics.kojo.util.*")
+      val excludes = Array("java.*", "javax.*", "jdk.internal.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*", "net.kogics.kojo.util.*", "org.apache.commons.math.*")
 
       val evtQueue = vm.eventQueue
 
@@ -372,13 +372,13 @@ that is not supported under Tracing.
       handleOutputEvent(me, enter, "[> Method Enter]", "[< Method Exit]")
     }
     else {
-      hiddenEventCount += 1
-      if (hiddenEventCount % 30 == 0) {
-        print(".")
-        if (hiddenEventCount % (30 * 30) == 0) {
-          print("\n")
-        }
-      }
+      //      hiddenEventCount += 1
+      //      if (hiddenEventCount % 30 == 0) {
+      //        print(".")
+      //        if (hiddenEventCount % (30 * 30) == 0) {
+      //          print("\n")
+      //        }
+      //      }
     }
   }
 
