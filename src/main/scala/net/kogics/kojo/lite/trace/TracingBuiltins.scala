@@ -76,6 +76,7 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
   def setEditorFont(name: String) {}
   def clearOutput() {}
   def readln(prompt: String): String = "Unsupported"
+  def breakpoint(msg: Any): Unit = {}
   //  def readInt(prompt: String): Int = 0
   //  def readDouble(prompt: String): Double = 0
   def addCodeTemplates(lang: String, templates: Map[String, String]) {}

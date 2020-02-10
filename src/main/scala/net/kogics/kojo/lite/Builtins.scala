@@ -110,6 +110,11 @@ class Builtins(
   def readln(prompt: String): String = kojoCtx.readInput(prompt)
   UserCommand("readln", List("promptString"), "Displays the given prompt in the output window and reads a line that the user enters.")
 
+  def breakpoint(msg: Any): Unit = {
+    println(msg)
+    readln("Hit Enter to resume")
+  }
+
   def readInt(prompt: String): Int = readln(prompt).toInt
   UserCommand("readInt", List("promptString"), "Displays the given prompt in the output window and reads an Integer value that the user enters.")
 

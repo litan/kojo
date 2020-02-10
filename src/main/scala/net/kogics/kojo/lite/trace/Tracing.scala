@@ -633,6 +633,9 @@ that is not supported under Tracing.
         kojoCtx.showScriptInOutput()
       case "hideScriptInOutput" =>
         kojoCtx.hideScriptInOutput()
+      case "breakpoint" =>
+        val obj = stkfrm.getValue(localArgs(0))
+        builtins.breakpoint(obj)
       case c @ _ =>
       //        println(s"**TODO** - Unimplemented Builtins command - $c")
     }
