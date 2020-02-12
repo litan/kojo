@@ -14,6 +14,7 @@
  */
 package net.kogics.kojo.lite
 
+import java.awt.Component
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
@@ -426,6 +427,7 @@ trait AppMenu {
         val kojoIcon = new JLabel()
         kojoIcon.setIcon(Utils.loadIcon("/images/splash.png"))
         kojoIcon.setSize(430, 280)
+        kojoIcon.setAlignmentX(Component.CENTER_ALIGNMENT)
         aboutPanel.add(kojoIcon)
 
         val aboutText = new JEditorPane
@@ -503,11 +505,13 @@ trait AppMenu {
               </body></html>
               """
         )
-        aboutText.setPreferredSize(new Dimension(430, 300))
-        aboutText.setMaximumSize(new Dimension(430, 300))
+        aboutText.setPreferredSize(new Dimension(650, 300))
+        aboutText.setMaximumSize(new Dimension(650, 300))
         aboutText.setCaretPosition(0)
         aboutPanel.add(new JScrollPane(aboutText))
         val ok = new JButton(Utils.loadString("S_OK"))
+        ok.setAlignmentX(Component.CENTER_ALIGNMENT)
+        aboutBox.getRootPane.setDefaultButton(ok)
         ok.addActionListener(new ActionListener {
           def actionPerformed(ev: ActionEvent) {
             aboutBox.setVisible(false)
@@ -516,12 +520,9 @@ trait AppMenu {
         aboutPanel.add(ok)
 
         aboutBox.setModal(true)
-        // does not work because there's a textpane in the panel. request focus below
-        // aboutBox.getRootPane.setDefaultButton(ok)
         aboutBox.getContentPane.add(aboutPanel)
-        aboutBox.setSize(430, 600)
-        aboutBox.setLocationRelativeTo(null)
         aboutBox.pack()
+        aboutBox.setLocationRelativeTo(frame)
         ok.requestFocusInWindow()
         aboutBox.setVisible(true)
       }
