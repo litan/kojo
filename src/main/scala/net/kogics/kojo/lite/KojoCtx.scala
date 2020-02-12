@@ -267,7 +267,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   def activateOutputPane() = Utils.runInSwingThread {
     topcs.owh.toFront()
-    //    topcs.owh.ow.requestFocusInWindow()
+    topcs.owh.outputPane.requestFocusInWindow()
   }
 
   def makeTurtleWorldVisible() = Utils.runInSwingThread {

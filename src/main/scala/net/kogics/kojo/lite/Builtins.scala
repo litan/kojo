@@ -37,7 +37,6 @@ import net.kogics.kojo.xscala.CodeCompletionUtils
 import net.kogics.kojo.xscala.Help
 import net.kogics.kojo.xscala.RepeatCommands
 import core.Voice
-import net.kogics.kojo.picture.Java2DPic
 import picture.DslImpl
 import picture.PicDrawingDsl
 import util.Throttler
@@ -110,48 +109,19 @@ class Builtins(
   def readln(prompt: String): String = kojoCtx.readInput(prompt)
   UserCommand("readln", List("promptString"), "Displays the given prompt in the output window and reads a line that the user enters.")
 
-  var breakDlg = false
-  var escapeStop = false
-  var scriptRunning = false
   def onRunStart(): Unit = {
-    scriptRunning = true
-    escapeStop = false
+    BreakpointPane.onRunStart()
   }
 
   def onRunDone(): Unit = {
-    scriptRunning = false
+    BreakpointPane.onRunDone()
   }
 
   def breakpoint(msg: Any): Unit = {
     val resumeMsg = "Hit Enter to resume"
     println(msg)
     if (Utils.inSwingThread) {
-      import javax.swing.JOptionPane
-      if (!breakDlg) {
-        if (escapeStop) {
-          if (scriptRunning) {
-            breakDlg = true
-            escapeStop = false
-            if (JOptionPane.showInputDialog(kojoCtx.frame, msg, resumeMsg, JOptionPane.INFORMATION_MESSAGE) == null) {
-              escapeStop = true
-              kojoCtx.stopScript()
-            }
-            breakDlg = false
-          }
-        }
-        else {
-          breakDlg = true
-          escapeStop = false
-          if (JOptionPane.showInputDialog(kojoCtx.frame, msg, resumeMsg, JOptionPane.INFORMATION_MESSAGE) == null) {
-            escapeStop = true
-            kojoCtx.stopScript()
-          }
-          breakDlg = false
-        }
-      }
-      else {
-        pause(.3)
-      }
+      BreakpointPane.show(msg, resumeMsg, kojoCtx)
     }
     else {
       readln(resumeMsg)
