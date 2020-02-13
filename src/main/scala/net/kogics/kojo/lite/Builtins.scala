@@ -121,12 +121,7 @@ class Builtins(
     val pauseMessage = "Program paused at Breakpoint"
     val resumeMsg = "Hit Enter to resume"
     println(msg)
-    if (Utils.inSwingThread) {
-      BreakpointPane.show(msg, pauseMessage, resumeMsg, kojoCtx)
-    }
-    else {
-      readln(s"$pauseMessage, $resumeMsg")
-    }
+    BreakpointPane.show(msg, pauseMessage, resumeMsg, kojoCtx)
   }
 
   def readInt(prompt: String): Int = readln(prompt).toInt

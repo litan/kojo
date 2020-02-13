@@ -11,6 +11,7 @@ import javax.swing.ScrollPaneConstants
 import javax.swing.border.EmptyBorder
 
 import net.kogics.kojo.core
+import net.kogics.kojo.util.Utils
 import net.kogics.kojo.widget.ColPanel
 
 object BreakpointPane {
@@ -37,7 +38,15 @@ object BreakpointPane {
       escapeStop = false
       if (dlg.show(msg, pauseMessage, resumeMsg) == 0) {
         escapeStop = true
-        kojoCtx.stopScript()
+        if (Utils.inSwingThread) {
+          kojoCtx.stopScript()
+        }
+        else {
+          // force the calling thread to block and then interrupt it to stop it
+          Utils.runInSwingThreadAndWait {
+            kojoCtx.stopScript()
+          }
+        }
       }
     }
     if (escapeStop) {
