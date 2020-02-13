@@ -34,7 +34,6 @@ object BreakpointPane {
     }
 
     def showDlg(): Unit = {
-      kojoCtx.activateOutputPane()
       escapeStop = false
       if (dlg.show(msg, pauseMessage, resumeMsg) == 0) {
         escapeStop = true
