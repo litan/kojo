@@ -27,7 +27,7 @@ object BreakpointPane {
     scriptRunning = false
   }
 
-  def show(msg: Any, resumeMsg: String, kojoCtx: core.KojoCtx) = {
+  def show(msg: Any, pauseMessage: String, resumeMsg: String, kojoCtx: core.KojoCtx) = {
     if (dlg == null) {
       dlg = new BreakpointPane(kojoCtx.frame)
     }
@@ -35,7 +35,7 @@ object BreakpointPane {
     def showDlg(): Unit = {
       kojoCtx.activateOutputPane()
       escapeStop = false
-      if (dlg.show(msg, resumeMsg) == 0) {
+      if (dlg.show(msg, pauseMessage, resumeMsg) == 0) {
         escapeStop = true
         kojoCtx.stopScript()
       }
@@ -54,7 +54,7 @@ object BreakpointPane {
 class BreakpointPane(owner: JFrame) extends JDialog(owner) {
   var btnPressed = false
 
-  setTitle("Breakpoint Message")
+  setTitle("Breakpoint")
   setModal(true)
 
   val bkptMsglabel = new JLabel()
@@ -77,11 +77,12 @@ class BreakpointPane(owner: JFrame) extends JDialog(owner) {
   val panel = ColPanel(sp, resumeCancelLabel, d)
   getContentPane.add(panel)
 
-  def show(msg: Any, resumeMsg: String): Int = {
+  def show(msg: Any, pauseMessage: String, resumeMsg: String): Int = {
     setVisible(false)
     btnPressed = false
+    setTitle(pauseMessage)
     bkptMsglabel.setText(msg.toString)
-    resumeCancelLabel.setText(resumeMsg + ", Escape to cancel")
+    resumeCancelLabel.setText(resumeMsg + ", Escape to stop")
     pack()
     val sz = getSize
     setSize(500, sz.height)

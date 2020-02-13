@@ -118,13 +118,14 @@ class Builtins(
   }
 
   def breakpoint(msg: Any): Unit = {
+    val pauseMessage = "Program paused at Breakpoint"
     val resumeMsg = "Hit Enter to resume"
     println(msg)
     if (Utils.inSwingThread) {
-      BreakpointPane.show(msg, resumeMsg, kojoCtx)
+      BreakpointPane.show(msg, pauseMessage, resumeMsg, kojoCtx)
     }
     else {
-      readln(resumeMsg)
+      readln(s"$pauseMessage, $resumeMsg")
     }
   }
 
