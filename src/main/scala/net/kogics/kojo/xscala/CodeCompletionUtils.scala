@@ -214,7 +214,8 @@ object CodeCompletionUtils {
     "image" -> "image(${height}, ${width})",
     "PicShape.image" -> "", // use default via reflection
     "setImagePixel" -> "setImagePixel(${img}, ${x}, ${y}, ${color})",
-    "scroll" -> "scroll(${x}, ${y})"
+    "scroll" -> "scroll(${x}, ${y})",
+    "breakpoint" -> "breakpoint(${msg})"
 )
   
   val TwMethodTemplates = Map(
