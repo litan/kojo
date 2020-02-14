@@ -183,6 +183,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     val promise = new FutureResult[PActivity]
 
     Utils.runLaterInSwingThread {
+      val _ = figAnimation // force a volatile read to trigger a StoreLoad memory barrier
       figAnimation = new PActivity(-1, rate, System.currentTimeMillis + delay) {
         override def activityStep(elapsedTime: Long) {
           currLayer = fgLayer
