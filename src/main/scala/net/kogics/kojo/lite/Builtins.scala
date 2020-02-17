@@ -448,14 +448,16 @@ Here's a partial list of the available commands:
     val dc = dch.dc
     val b = dc.getBounds()
     val newWidth = b.height * r
-    import java.awt.Dimension
-    dch.setResizeRequest(new Dimension(math.round(newWidth).toInt, b.height), true)
+    setDrawingCanvasSize(math.round(newWidth).toInt, b.height)
   }
 
   def setDrawingCanvasSize(width: Int, height: Int): Unit = Utils.runLaterInSwingThread {
     val dch = Main.drawingCanvasHolder
     import java.awt.Dimension
-    dch.setResizeRequest(new Dimension(width, height), true)
+    val dim = new Dimension(width, height)
+    dch.setResizeRequest(dim, true)
+    // and another time to go the final mile!
+    dch.setResizeRequest(dim, true)
   }
 
   def setDrawingCanvasToA4(): Unit = {
