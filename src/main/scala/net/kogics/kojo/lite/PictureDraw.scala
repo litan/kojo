@@ -24,24 +24,6 @@ class PictureDraw(val b: Builtins) {
     _frozen = true
   }
 
-  def cm_hsv(h: Double, s: Double, v: Double) = {
-    val hh = h
-    var ll = (2 - s) * v
-    val den = if (ll <= 1) ll else 2 - ll
-    val ss = s * v / den
-    ll /= 2
-    cm.hsl(hh, ss, ll)
-  }
-
-  def cm_hsvuv(h: Double, s: Double, v: Double) = {
-    val hh = h
-    var ll = (2 - s) * v
-    val den = if (ll <= 1) ll else 2 - ll
-    val ss = s * v / den
-    ll /= 2
-    cm.hsluv(hh, ss, ll)
-  }
-
   def randomSeed(s: Long) {
     setRandomSeed(s)
   }

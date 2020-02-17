@@ -286,26 +286,14 @@ final case class RGBA(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte, a: Norm
 final case class HSLA(h: Angle, s: Normalized, l: Normalized, a: Normalized) extends Color
 
 object Color extends CommonColors {
-  private def rgba(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte, a: Normalized): Color =
-    RGBA(r, g, b, a)
-
   def rgba(red: Int, green: Int, blue: Int, opacity: Int): Color =
     RGBA(red.uByte, green.uByte, blue.uByte, (opacity / 255.0).normalized)
-
-  private def hsla(h: Angle, s: Normalized, l: Normalized, a: Normalized): Color =
-    HSLA(h, s, l, a)
 
   def hsla(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double, opacityFraction: Double): Color =
     HSLA(Angle.degrees(hueAngle), saturationFraction.normalized, lightnessFraction.normalized, opacityFraction.normalized)
 
-  private[doodle] def rgb(r: UnsignedByte, g: UnsignedByte, b: UnsignedByte): Color =
-    rgba(r, g, b, 1.0.normalized)
-
   def rgb(red: Int, green: Int, blue: Int): Color =
     rgba(red, green, blue, 255)
-
-  private def hsl(h: Angle, s: Normalized, l: Normalized): Color =
-    hsla(h, s, l, 1.0.normalized)
 
   def hsl(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double): Color =
     hsla(hueAngle, saturationFraction, lightnessFraction, 1.0)
@@ -343,5 +331,34 @@ object Color extends CommonColors {
   def hsluva(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double, opacityFraction: Double): Color = {
     val rgbs = HUSLColorConverter.hsluvToRgb(Array(hueAngle, saturationFraction * 100, lightnessFraction * 100))
     rgba((rgbs(0) * 255).toInt, (rgbs(1) * 255).toInt, (rgbs(2) * 255).toInt, (opacityFraction * 255).toInt)
+  }
+
+  private def hsvToHsl(h: Double, s: Double, v: Double) = {
+    val hh = h
+    var ll = (2 - s) * v
+    val den = if (ll <= 1) ll else 2 - ll
+    val ss = s * v / den
+    ll /= 2
+    (hh, ss, ll)
+  }
+
+  def hsv(h: Double, s: Double, v: Double) = {
+    val hslparts = hsvToHsl(h, s, v)
+    hsl(hslparts._1, hslparts._2, hslparts._3)
+  }
+
+  def hsva(h: Double, s: Double, v: Double, opacityFraction: Double) = {
+    val hslparts = hsvToHsl(h, s, v)
+    hsla(hslparts._1, hslparts._2, hslparts._3, opacityFraction)
+  }
+
+  def hsvuv(h: Double, s: Double, v: Double) = {
+    val hslparts = hsvToHsl(h, s, v)
+    hsluv(hslparts._1, hslparts._2, hslparts._3)
+  }
+
+  def hsvuva(h: Double, s: Double, v: Double, opacityFraction: Double) = {
+    val hslparts = hsvToHsl(h, s, v)
+    hsluva(hslparts._1, hslparts._2, hslparts._3, opacityFraction)
   }
 }
