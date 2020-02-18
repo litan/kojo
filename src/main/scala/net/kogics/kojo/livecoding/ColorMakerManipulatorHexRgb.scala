@@ -1,20 +1,18 @@
-package net.kogics.kojo
-package livecoding
+package net.kogics.kojo.livecoding
 
 import java.awt.BorderLayout
-import java.awt.{ Color => JColor }
+import java.awt.Color
 import java.awt.Point
 import java.awt.event.ActionEvent
 import java.util.regex.Pattern
 
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory
-import javax.swing.JButton
 import javax.swing.JColorChooser
 import javax.swing.JComponent
+import javax.swing.JDialog
 import javax.swing.JPanel
 import javax.swing.KeyStroke
-import javax.swing.Popup
 import javax.swing.PopupFactory
 import javax.swing.SwingUtilities
 import javax.swing.event.ChangeEvent
@@ -23,10 +21,8 @@ import javax.swing.text.JTextComponent
 import javax.swing.text.Utilities
 
 import net.kogics.kojo.util.Utils
-import doodle.Color
-import javax.swing.JDialog
 
-class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipulator {
+class ColorMakerManipulatorHexRgb(ctx: ManipulationContext) extends InteractiveManipulator {
   var target = ""
   var targetStart = 0
   var targetEnd = 0
@@ -36,10 +32,33 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
   def isAbsent = colorPopup == null
   def isPresent = !isAbsent
 
-  lazy val ColorPattern = Pattern.compile("""(ColorMaker|cm)\.(%s)""" format (ctx.knownColors2.mkString("|")))
+  lazy val ColorPattern = Pattern.compile("""(ColorMaker|cm)\.hex(a)?\(0x((\d|[a-f])+)\)""")
   def matcher(possibleColor: String) = ColorPattern.matcher(possibleColor)
-  lazy val ColorPattern2 = Pattern.compile("""(ColorMaker|cm)\.hsl(a)?\((\d+),\s*(\d+\.?\d?\d?),\s*(\d+\.?\d?\d?)(,\s*(\d+\.?\d?\d?))?\)""")
+  lazy val ColorPattern2 = Pattern.compile("""(ColorMaker|cm)\.rgb(a)?\((\d+),\s*(\d+),\s*(\d+)(,\s*(\d+))?\)""")
   def matcher2(possibleColorLine: String) = ColorPattern2.matcher(possibleColorLine)
+
+  def findColorHexFunction(pane: JTextComponent, offset: Int): Boolean = {
+    val lineStart = Utilities.getRowStart(pane, offset)
+    val lineEnd = Utilities.getRowEnd(pane, offset)
+    val line = pane.getDocument.getText(lineStart, lineEnd - lineStart)
+    val m = matcher(line)
+    var found = false
+    while (!found && m.find()) {
+      val start = m.start
+      val end = m.end
+      val lineOffset = offset - lineStart
+      if (start <= lineOffset && lineOffset <= end) {
+        target = m.group
+        val rgba = Integer.parseUnsignedInt(m.group(3), 16)
+        val hasAlpha = (rgba >> 24) != 0
+        targetColor = new Color(rgba, hasAlpha)
+        targetStart = lineStart + start
+        targetEnd = lineStart + end
+        found = true
+      }
+    }
+    found
+  }
 
   def findColorFunction(pane: JTextComponent, offset: Int): Boolean = {
     val lineStart = Utilities.getRowStart(pane, offset)
@@ -53,26 +72,17 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
       val lineOffset = offset - lineStart
       if (start <= lineOffset && lineOffset <= end) {
         target = m.group
-        val hsla = Seq(3, 4, 5, 7) map { e =>
+        val rgba = Seq(3, 4, 5, 7) map { e =>
           val ret = m.group(e)
-          e match {
-            case 3 => ret.toInt
-            case _ => if (ret != null) ret.toDouble else 1.0
-          }
-
+          if (ret != null) ret.toInt else 255
         }
-        targetColor = Color.hsla(hsla(0).toInt, hsla(1), hsla(2), hsla(3))
+        targetColor = new Color(rgba(0), rgba(1), rgba(2), rgba(3))
         targetStart = lineStart + start
         targetEnd = lineStart + end
         found = true
       }
     }
     found
-  }
-
-  def trimColor(c: String) = {
-    val parts = c.split(raw"\.")
-    if (parts.length == 2) parts(1) else parts(0)
   }
 
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
@@ -84,13 +94,7 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
         false
       }
       else {
-        val possibleColor = pane.getDocument.getText(wordStart, wordEnd - wordStart)
-        val m = matcher(possibleColor)
-        if (m.matches()) {
-          target = possibleColor
-          targetColor = ctx.knownColor2(trimColor(possibleColor))
-          targetStart = wordStart
-          targetEnd = wordEnd
+        if (findColorHexFunction(pane, offset)) {
           true
         }
         else {
@@ -124,18 +128,18 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
     val pt = new Point(rect.x, rect.y)
     SwingUtilities.convertPointToScreen(pt, ctx.codePane)
     val panel = new JPanel()
-    panel.setBorder(BorderFactory.createLineBorder(JColor.darkGray, 1))
+    panel.setBorder(BorderFactory.createLineBorder(Color.darkGray, 1))
     panel.setLayout(new BorderLayout)
-    val cc = new JColorChooser(targetColor.toAwt)
+    val cc = new JColorChooser(targetColor)
     val panels = cc.getChooserPanels.toVector
-    val hslPanel = panels.find { p =>
+    val rgbPanel = panels.find { p =>
       // a hack, but can't think of anything better
-      // need to check HSL text for each new language
-      p.getDisplayName.contains("HSL") /* || p.getDisplayName.contains("RVB") */
+      // need to check RGB text for each new language
+      p.getDisplayName.contains("RGB") || p.getDisplayName.contains("RVB")
     }
-    hslPanel match {
-      case Some(hslp) =>
-        val newps = hslp +: panels.filter { p => p != hslp }
+    rgbPanel match {
+      case Some(rgbp) =>
+        val newps = rgbp +: panels.filter { p => p != rgbp }
         cc.setChooserPanels(newps.toArray)
       case None =>
     }
@@ -150,16 +154,11 @@ class ColorMakerManipulator(ctx: ManipulationContext) extends InteractiveManipul
           if (oldColor != newColor) {
             inSliderChange = true
             doc.remove(targetStart, target.length())
-            val ndc = Color.rgba(newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
-            val hueAngle = {
-              val a = ndc.hue.toDegrees.round
-              if (a < 0) 360 + a else a
-            }
             target = if (newColor.getAlpha == 255) {
-              "ColorMaker.hsl(%d, %.2f, %.2f)" format (hueAngle, ndc.saturation.get, ndc.lightness.get)
+              "ColorMaker.rgb(%d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue)
             }
             else {
-              "ColorMaker.hsla(%d, %.2f, %.2f, %.2f)" format (hueAngle, ndc.saturation.get, ndc.lightness.get, ndc.alpha.get)
+              "ColorMaker.rgba(%d, %d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
             }
             doc.insertString(targetStart, target, null);
             inSliderChange = false

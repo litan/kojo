@@ -22,8 +22,9 @@ import javax.swing.text.JTextComponent
 class IpmProvider(mctx: ManipulationContext) {
   val manips = List(
     new ColorManipulator(mctx),
-    new ColorMakerManipulator(mctx),
-    new ColorMakerManipulator2(mctx),
+    new ColorMakerManipulatorKnownHsl(mctx),
+    new ColorMakerManipulatorHexRgb(mctx),
+    new ColorMakerManipulatorHsv(mctx),
     new IntManipulator(mctx),
     new FloatManipulator(mctx)
   )

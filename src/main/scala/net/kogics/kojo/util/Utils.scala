@@ -864,4 +864,8 @@ object Utils {
       }
     }
   }
+
+  def strFormat(format: String, args: Any*): String = {
+    String.format(Locale.ROOT, format, args.map(_.asInstanceOf[AnyRef]) : _*)
+  }
 }
