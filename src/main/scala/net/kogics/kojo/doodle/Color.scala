@@ -329,7 +329,7 @@ object Color extends CommonColors {
   }
 
   def hex(rgbHex: Int) = new AwtColor(rgbHex, false)
-  def hexa(rgbHex: Int) = new AwtColor(rgbHex, true)
+  def hexa(argbHex: Int) = new AwtColor(argbHex, true)
 
   def hsluv(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double): Color = {
     val rgbs = HUSLColorConverter.hsluvToRgb(Array(hueAngle, saturationFraction * 100, lightnessFraction * 100))
@@ -340,7 +340,7 @@ object Color extends CommonColors {
     rgba((rgbs(0) * 255).toInt, (rgbs(1) * 255).toInt, (rgbs(2) * 255).toInt, (opacityFraction * 255).toInt)
   }
 
-  private def hsvToHsl(h: Double, s: Double, v: Double) = {
+  private def hsbToHsl(h: Double, s: Double, v: Double) = {
     val hh = h
     var ll = (2 - s) * v
     val den = if (ll <= 1) ll else 2 - ll
@@ -349,23 +349,23 @@ object Color extends CommonColors {
     (hh, ss, ll)
   }
 
-  def hsb(h: Double, s: Double, v: Double) = {
-    val hslparts = hsvToHsl(h, s, v)
+  def hsb(hueAngle: Double, saturationFraction: Double, brightnessFraction: Double) = {
+    val hslparts = hsbToHsl(hueAngle, saturationFraction, brightnessFraction)
     hsl(hslparts._1, hslparts._2, hslparts._3)
   }
 
-  def hsba(h: Double, s: Double, v: Double, opacityFraction: Double) = {
-    val hslparts = hsvToHsl(h, s, v)
+  def hsba(hueAngle: Double, saturationFraction: Double, brightnessFraction: Double, opacityFraction: Double) = {
+    val hslparts = hsbToHsl(hueAngle, saturationFraction, brightnessFraction)
     hsla(hslparts._1, hslparts._2, hslparts._3, opacityFraction)
   }
 
-  def hsbuv(h: Double, s: Double, v: Double) = {
-    val hslparts = hsvToHsl(h, s, v)
+  def hsbuv(hueAngle: Double, saturationFraction: Double, brightnessFraction: Double) = {
+    val hslparts = hsbToHsl(hueAngle, saturationFraction, brightnessFraction)
     hsluv(hslparts._1, hslparts._2, hslparts._3)
   }
 
-  def hsbuva(h: Double, s: Double, v: Double, opacityFraction: Double) = {
-    val hslparts = hsvToHsl(h, s, v)
+  def hsbuva(hueAngle: Double, saturationFraction: Double, brightnessFraction: Double, opacityFraction: Double) = {
+    val hslparts = hsbToHsl(hueAngle, saturationFraction, brightnessFraction)
     hsluva(hslparts._1, hslparts._2, hslparts._3, opacityFraction)
   }
 }
