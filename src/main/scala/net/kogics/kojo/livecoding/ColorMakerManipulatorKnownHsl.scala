@@ -154,10 +154,10 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
               if (a < 0) 360 + a else a
             }
             target = if (newColor.getAlpha == 255) {
-              "ColorMaker.hsl(%d, %.2f, %.2f)" format (hueAngle, ndc.saturation.get, ndc.lightness.get)
+              Utils.strFormat("ColorMaker.hsl(%d, %.2f, %.2f)", hueAngle, ndc.saturation.get, ndc.lightness.get)
             }
             else {
-              "ColorMaker.hsla(%d, %.2f, %.2f, %.2f)" format (hueAngle, ndc.saturation.get, ndc.lightness.get, ndc.alpha.get)
+              Utils.strFormat("ColorMaker.hsla(%d, %.2f, %.2f, %.2f)", hueAngle, ndc.saturation.get, ndc.lightness.get, ndc.alpha.get)
             }
             doc.insertString(targetStart, target, null);
             inSliderChange = false
