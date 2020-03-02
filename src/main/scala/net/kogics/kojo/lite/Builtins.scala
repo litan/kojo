@@ -28,6 +28,7 @@ import javax.swing.JComponent
 import scala.language.implicitConversions
 import scala.swing.Graphics2D
 
+import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
 
 import net.kogics.kojo.mathworld.MathWorld
@@ -392,6 +393,13 @@ Here's a partial list of the available commands:
   val weave = picture.weave _
   def effect(name: Symbol, props: Tuple2[Symbol, Any]*) = picture.effect(name, props: _*)
   def effect(filter: BufferedImageOp) = picture.ApplyFilterc(filter)
+  type ImageOp = picture.ImageOp
+  def effect(filterOp: ImageOp) = {
+    val filterOp2 = new AbstractBufferedImageOp {
+      def filter(src: BufferedImage, dest: BufferedImage) = filterOp.filter(src)
+    }
+    picture.ApplyFilterc(filterOp2)
+  }
 
   // put api functions here to enable code completion right from function definitions
   def transform(fn: Picture => Unit) = preDrawTransform(fn)
