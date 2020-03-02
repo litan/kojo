@@ -99,6 +99,13 @@ trait StubMain {
       if (System.getProperty("java.vendor", "").toLowerCase.contains("jetbrains"))
         "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
 
+    def libPath = {
+      Utils.appProperty("library.path") match {
+        case Some(path) => Utils.libDir + File.pathSeparatorChar + path
+        case None    => Utils.libDir
+      }
+    }
+
     val cmdPart = s"-client -Xms128m -Xmx${maxMem} " +
       "-Xss1m -Dapple.laf.useScreenMenuBar=true " +
       s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}" +
@@ -109,7 +116,7 @@ trait StubMain {
       Seq(
         javaExec,
         "-cp", classpath,
-        s"-Djava.library.path=${Utils.libDir}"
+        s"-Djava.library.path=${libPath}"
       ) ++ cmdPart.split(' ')
 
     log(s"Java VM args: ${cmdPart}")

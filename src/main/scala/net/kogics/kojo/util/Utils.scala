@@ -790,6 +790,9 @@ object Utils {
                    |# Or specify max memory for Kojo in GB (1g, 2g, etc)
                    |# memory.max=1g
                    |
+                   |# library load path
+                   |# library.path=
+                   |
                    |# Show internal keys for UI elements; for localization developers 
                    |# i18n.string.showkey=true
                    |
