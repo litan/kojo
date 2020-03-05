@@ -18,7 +18,7 @@ import java.io.File
 
 import javax.swing.JOptionPane
 
-import scala.sys.process.stringSeqToProcess
+import scala.sys.process.Process
 
 import net.kogics.kojo.util.Utils
 
@@ -100,9 +100,25 @@ trait StubMain {
         "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
 
     def libPath = {
-      Utils.appProperty("library.path") match {
-        case Some(path) => Utils.libDir + File.pathSeparatorChar + path
-        case None    => Utils.libDir
+      val libraryPath =
+        Utils.appProperty("library.path") match {
+          case Some(path) => Utils.libDir + File.pathSeparatorChar + path
+          case None       => Utils.libDir
+        }
+      val pythonPath =
+        Utils.appProperty("python.home") map { path =>
+          s"${File.pathSeparatorChar}$path/lib${File.pathSeparatorChar}$path/lib/python3.8/site-packages/jep"
+        }
+      libraryPath + pythonPath.getOrElse("")
+    }
+
+    def extraEnv: Seq[(String, String)] = {
+      if (Utils.isLinux) {
+        // Support copied python (conda) environments
+        Seq("LD_LIBRARY_PATH" -> libPath)
+      }
+      else {
+        Seq()
       }
     }
 
@@ -120,7 +136,7 @@ trait StubMain {
       ) ++ cmdPart.split(' ')
 
     log(s"Java VM args: ${cmdPart}")
-    commandSeq!
+    Process(commandSeq, None, extraEnv: _*)!
   }
 
   def createCp(xs: List[String]): String = {
