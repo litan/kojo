@@ -18,6 +18,7 @@ import java.io.File
 
 import javax.swing.JOptionPane
 
+import scala.collection.mutable.ArrayBuffer
 import scala.sys.process.Process
 
 import net.kogics.kojo.util.Utils
@@ -100,22 +101,28 @@ trait StubMain {
         "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
 
     def libPath = {
-      val libraryPath =
-        Utils.appProperty("library.path") match {
-          case Some(path) => Utils.libDir + File.pathSeparatorChar + path
-          case None       => Utils.libDir
-        }
-      val pythonPath =
-        Utils.appProperty("python.home") map { path =>
-          s"${File.pathSeparatorChar}$path/lib${File.pathSeparatorChar}$path/lib/python3.8/site-packages/jep"
-        }
-      libraryPath + pythonPath.getOrElse("")
+      val libraryPath = new StringBuilder(Utils.libDir)
+      Utils.appProperty("library.path") match {
+        case Some(path) => libraryPath.append(File.pathSeparatorChar + path)
+        case None       =>
+      }
+      Utils.appProperty("python.home") match {
+        case Some(phome) =>
+          libraryPath.append(File.pathSeparatorChar + s"$phome/lib" +
+            File.pathSeparatorChar + s"$phome/lib/python3.8/site-packages/jep")
+        case None =>
+      }
+      libraryPath.toString
     }
 
     def extraEnv: Seq[(String, String)] = {
       if (Utils.isLinux) {
-        // Support copied python (conda) environments
-        Seq("LD_LIBRARY_PATH" -> libPath)
+        val env = ArrayBuffer("LD_LIBRARY_PATH" -> libPath)
+        Utils.appProperty("python.home") match {
+          case Some(phome) => env.append("PYTHONHOME" -> phome)
+          case None        =>
+        }
+        env
       }
       else {
         Seq()
