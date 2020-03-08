@@ -484,6 +484,30 @@ Here's a partial list of the available commands:
     setDrawingCanvasAspectRatio(A3Landscape.aspectRatio)
   }
 
+  def setDrawingCanvasToA2(): Unit = {
+    setDrawingCanvasAspectRatio(A2.aspectRatio)
+  }
+
+  def setDrawingCanvasToA2Landscape(): Unit = {
+    setDrawingCanvasAspectRatio(A2Landscape.aspectRatio)
+  }
+
+  def setDrawingCanvasToA1(): Unit = {
+    setDrawingCanvasAspectRatio(A1.aspectRatio)
+  }
+
+  def setDrawingCanvasToA1Landscape(): Unit = {
+    setDrawingCanvasAspectRatio(A1Landscape.aspectRatio)
+  }
+
+  def setDrawingCanvasToA0(): Unit = {
+    setDrawingCanvasAspectRatio(A0.aspectRatio)
+  }
+
+  def setDrawingCanvasToA0Landscape(): Unit = {
+    setDrawingCanvasAspectRatio(A0Landscape.aspectRatio)
+  }
+
   val hueMod = Utils.hueMod _
   val satMod = Utils.satMod _
   val britMod = Utils.britMod _
