@@ -32,7 +32,7 @@ class InterpOutputHandler(ctx: RunContext) {
   val ErrorTextWithoutLinkMode = 5
   @volatile var currMode = OutputMode
 
-  val errorPattern = java.util.regex.Pattern.compile("""(^<console>:\d+: )error:""")
+  val errorPattern = java.util.regex.Pattern.compile("""error:""")
   val exceptionPattern = java.util.regex.Pattern.compile("""^\w+(\.[\w\$]+)+(Exception|Error)""")
   @volatile var interpOutputSuppressed = false
   @volatile var worksheetLineNum: Option[Int] = None
@@ -67,9 +67,13 @@ class InterpOutputHandler(ctx: RunContext) {
   }
 
   private def reportNonExceptionOutput(output: String) {
+    if (output.trim == "^") {
+      return
+    }
+
     val m = errorPattern.matcher(output)
     if (m.find) {
-      val errMsg = output.substring(m.group(1).length, output.length)
+      val errMsg = output.trim
       if (worksheetLineNum.isEmpty) {
         ctx.reportError(errMsg)
       }
@@ -85,7 +89,7 @@ class InterpOutputHandler(ctx: RunContext) {
 
   def flushWorksheetError() {
     firstWorksheetError foreach { msg =>
-      worksheetLineNum foreach { reportWorksheetOutput(msg.lines.next, _) }
+      worksheetLineNum foreach { reportWorksheetOutput(msg.linesIterator.next, _) }
       ctx.reportError(msg)
     }
     firstWorksheetError = None
