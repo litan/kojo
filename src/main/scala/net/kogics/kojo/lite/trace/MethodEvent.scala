@@ -31,7 +31,7 @@ class MethodEvent {
   @volatile var targetObject: String = _
   @volatile var targetType: String = _
   @volatile var declaringType: String = _
-  @volatile var args: Seq[String] = _
+  @volatile var args: collection.Seq[String] = _
   @volatile var returnVal: String = _
   @volatile var returnType: String = _
   @volatile var parent: Option[MethodEvent] = None

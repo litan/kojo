@@ -463,9 +463,9 @@ that is not supported under Tracing.
 
   def handleMethodEntry(methodEnterEvt: MethodEntryEvent) {
 
-    def methodArgs(value: Value => String): Seq[String] = try {
+    def methodArgs(value: Value => String): collection.Seq[String] = try {
       if (methodEnterEvt.method.arguments.size > 0) {
-        methodEnterEvt.method.arguments.asScala.toSeq.map { n =>
+        methodEnterEvt.method.arguments.asScala.map { n =>
           val frame = methodEnterEvt.thread.frame(0)
           val frameVal = frame.getValue(n)
           s"${n.name} = ${value(frameVal)}"
