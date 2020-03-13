@@ -184,7 +184,7 @@ pages += Page(
         </body>
 )
 
-val story = Story(pages: _*)
+val story = Story(pages.toSeq: _*)
 stClear()
 stAddLinkHandler("example", story) { idx: Int =>
     stSetScript(examples(idx))

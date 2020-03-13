@@ -19,6 +19,8 @@ import net.kogics.kojo.util.PerlinNoiseImproved
 import net.kogics.kojo.util.PerlinNoiseProcessing
 import net.kogics.kojo.util.Utils
 
+import io.github.jdiemke.triangulation.Triangle2D
+
 trait CoreBuiltins extends Rationals {
   def TSCanvas: TSCanvasFeatures
 
@@ -148,7 +150,7 @@ trait CoreBuiltins extends Rationals {
   }
   lazy val perlin = new PerlinNoiseProcessing()
   lazy val perlin2 = new PerlinNoiseImproved()
-  def triangulate(points: Seq[Point]) = {
+  def triangulate(points: collection.Seq[Point]): collection.Seq[Triangle2D] = {
     import collection.JavaConverters._
 
     import io.github.jdiemke.triangulation.DelaunayTriangulator
