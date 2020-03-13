@@ -65,16 +65,15 @@ class InterpOutputHandlerTest {
 
   @Test
   def testErrorPattern1 = {
-    val output1 = """<console>:1: error: Invalid literal number
+    val output1 = """     error: Invalid literal number
 error: Invalid literal number
-       12x\n
-  
-"""      
+       12x
+
+"""
+
     val output2 = """error: Invalid literal number
 error: Invalid literal number
-       12x\n
-  
-"""      
+       12x"""
 
       
     val runCtx = (context.mock(classOf[RunContext])).asInstanceOf[RunContext]
