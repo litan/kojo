@@ -508,7 +508,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       //      iSettings.deprecation.value = true
       //      iSettings.feature.value = true
       //      iSettings.unchecked.value = true
-      iSettings.YpartialUnification.value = true
+      iSettings.nowarn.value = true
       iSettings
     }
 
@@ -524,7 +524,6 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     def initInterp() {
       outputHandler.withOutputSuppressed {
         runContext.initInterp(interp)
-        interp.setMaxPrintStringLen(Int.MaxValue)
       }
     }
 

@@ -297,13 +297,13 @@ case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: D
   override def toString() = s"SpotLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
-case class Lights(lights: Light*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
+case class Lights(nlights: Light*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
   def draw() {
-    tpic.lights(lights: _*)
+    tpic.lights(nlights: _*)
     tpic.draw()
   }
-  def copy = Lights(lights: _*)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"Lights($lights) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
+  def copy = Lights(nlights: _*)(pic.copy.asInstanceOf[EffectablePicture])
+  override def toString() = s"Lights($nlights) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
 case class Noise(amount: Int, density: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {

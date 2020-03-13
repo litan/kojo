@@ -122,7 +122,7 @@ trait StubMain {
           case Some(phome) => env.append("PYTHONHOME" -> phome)
           case None        =>
         }
-        env
+        env.toSeq
       }
       else {
         Seq()

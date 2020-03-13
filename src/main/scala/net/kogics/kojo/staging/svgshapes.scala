@@ -76,6 +76,7 @@ object SvgShape {
     (pointsItr map { a => Point(a(0), a(1)) }).toList
   }
 
+  import staging.Style
   def setStyle(ns: scala.xml.Node) {
     val fc_? = matchFill(ns)
     val sc_? = matchStroke(ns)

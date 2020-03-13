@@ -110,7 +110,7 @@ object ItalianCustomStatements {
   }
 
   implicit def seVero[T](cond: Boolean)(thenFn: => T) = {
-    if (cond) thenFn else Unit
+    if (cond) thenFn else ()
   }
 
 }

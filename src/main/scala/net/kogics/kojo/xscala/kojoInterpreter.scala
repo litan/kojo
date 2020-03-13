@@ -18,35 +18,32 @@ package net.kogics.kojo.xscala
 import java.io.PrintWriter
 
 import scala.tools.nsc.interpreter._
+import scala.tools.nsc.interpreter.shell.ReplReporterImpl
 
 import net.kogics.kojo.core.Interpreter
 
 class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends StoppableCodeRunner with Interpreter {
-  val interp = new IMain(settings, out) {
+  val interp = new IMain(settings, None, settings, new ReplReporterImpl(settings, out)) {
     override protected def parentClassLoader = classOf[KojoInterpreter].getClassLoader
   }
   //  interp.setContextClassLoader()
-  val completer = new PresentationCompilerCompleter(interp)
 
-  def setMaxPrintStringLen(n: Int): Unit = {
-    interp.isettings.maxPrintString = n
-  }
   def bind(name: String, boundType: String, value: Any) = interp.bind(name, boundType, value)
   def interpret(code: String) = {
     interp.classLoader.asContext {
       interp.interpret(code)
     }
   }
-  def completions(id: String) = {
-    val c = completer.complete(s"$id.", id.length + 1)
-    c.candidates
+  def completions(id: String): List[String] = {
+    interp.presentationCompile(id.length + 1, s"$id.") match {
+      case Right(value) =>
+        value.candidates(0)._2
+      case Left(_) => Nil
+    }
   }
   def unqualifiedIds = interp.unqualifiedIds
   def stop(interpThread: Thread) {
     interpThread.interrupt()
-    //    interp.lineManager.cancel()
   }
   def reset() = interp.reset()
-
-  //  def evalExpr[T: Manifest](line: String): T = false
 }

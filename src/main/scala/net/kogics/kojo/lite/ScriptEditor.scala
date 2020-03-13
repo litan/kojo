@@ -762,7 +762,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
               evt.consume
             }
           case KeyEvent.VK_ESCAPE =>
-            execSupport.imanip.foreach { _ close () }
+            execSupport.imanip.foreach { _.close() }
 
           case _ => // do nothing special
         }
@@ -784,7 +784,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     val mouseListener = new MouseAdapter {
       override def mouseClicked(e: MouseEvent) {
-        execSupport.imanip.foreach { _ close () }
+        execSupport.imanip.foreach { _.close() }
         if (e.isControlDown || e.isMetaDown) {
           try {
             val pt = new Point(e.getX(), e.getY());

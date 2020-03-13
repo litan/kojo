@@ -39,6 +39,7 @@ import java.util.LinkedList
 import java.util.Locale
 import java.util.Properties
 import java.util.ResourceBundle
+import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
@@ -51,6 +52,7 @@ import javax.swing.ImageIcon
 import javax.swing.Timer
 import javax.swing.text.JTextComponent
 
+import scala.collection.mutable
 import scala.collection.mutable.HashMap
 
 import net.kogics.kojo.core.CodingMode
@@ -196,9 +198,7 @@ object Utils {
     }).start
   }
 
-  import collection.mutable.HashSet
-  import collection.mutable.SynchronizedSet
-  lazy val threads = new HashSet[Thread] with SynchronizedSet[Thread]
+  lazy val threads = ConcurrentHashMap.newKeySet[Thread]()
   var kojoCtx: KojoCtx = _
   lazy val listener = kojoCtx.activityListener
   var timer: Timer = _
@@ -248,7 +248,7 @@ object Utils {
   }
 
   def stopMonitoredThreads() {
-    threads.foreach { t => t.interrupt() }
+    threads.forEach { t => t.interrupt() }
     threads.clear()
   }
 
@@ -704,7 +704,7 @@ object Utils {
   }
 
   def preProcessInclude(code: String): (String, Int, Int) = {
-    val included = new HashSet[String]()
+    val included = new mutable.HashSet[String]()
 
     def _preProcessInclude(code: String): (String, Int, Int) = {
       def countLines(s: String) = s.count(_ == '\n')

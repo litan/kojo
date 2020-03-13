@@ -6,7 +6,7 @@ scalaVersion := "2.13.1"
 
 fork in run := true
 
-scalacOptions := Seq("-feature", "-deprecation")
+scalacOptions := Seq("-feature")
 javaOptions in run ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
 
 fork in Test := true
@@ -66,11 +66,6 @@ lazy val dist = project
   )
 
 //libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
-
-EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
-
-//Download source jars for dependencies:
-EclipseKeys.withSource := true
 
 packageOptions in (Compile, packageBin) +=
     Package.ManifestAttributes("Permissions" -> "all-permissions", "Application-Name" -> "Kojo")

@@ -92,7 +92,7 @@ class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunConte
 
   val reporter = new Reporter {
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
-      severity.count += 1
+//      severity.count += 1
       lazy val line = position.line - lineNumOffset
       lazy val offset = position.startOrPoint - offsetDelta
       severity match {
@@ -465,7 +465,7 @@ that is not supported under Tracing.
 
     def methodArgs(value: Value => String): Seq[String] = try {
       if (methodEnterEvt.method.arguments.size > 0) {
-        methodEnterEvt.method.arguments.asScala.map { n =>
+        methodEnterEvt.method.arguments.asScala.toSeq.map { n =>
           val frame = methodEnterEvt.thread.frame(0)
           val frameVal = frame.getValue(n)
           s"${n.name} = ${value(frameVal)}"

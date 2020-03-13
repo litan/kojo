@@ -15,7 +15,6 @@
 package net.kogics.kojo
 package history
 
-import scala.collection.Seq
 import scala.collection.mutable
 import net.kogics.kojo.core.HistoryItem
 import net.kogics.kojo.core.HistoryListener
@@ -161,7 +160,7 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
       allHistory.foreach { hi =>
         internalAdd(hi)
       }
-      listener foreach { _ historyReady () }
+      listener foreach { _.historyReady() }
     }
   }
 

@@ -16,33 +16,22 @@
 package net.kogics.kojo
 package xscala
 
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FunSuite
-import org.scalatest.matchers.ShouldMatchers
-import scala.tools.nsc.Settings
-import scala.tools.nsc.interpreter._
-import net.kogics.kojo.lite.CodeExecutionSupport
-import net.kogics.kojo.lite.canvas.SpriteCanvas
-import net.kogics.kojo.lite.KojoCtx
-import net.kogics.kojo.lite.canvas.SpriteCanvas
-import net.kogics.kojo.lite.NoOpRunContext
-import net.kogics.kojo.lite.ScriptEditor
-import net.kogics.kojo.story.StoryTeller
-import net.kogics.kojo.d3.Canvas3D
-import net.kogics.kojo.music.KMp3
-import net.kogics.kojo.mathworld.GeoGebraCanvas
-import net.kogics.kojo.turtle.TurtleWorldAPI
-import net.kogics.kojo.lite.DrawingCanvasAPI
-import net.kogics.kojo.music.FuguePlayer
-import net.kogics.kojo.lite.NoOpKojoCtx
 import java.io.OutputStreamWriter
 import java.io.PrintWriter
-import javax.swing.JFrame
+
+import scala.tools.nsc.Settings
+import scala.tools.nsc.interpreter._
+
+import org.junit.runner.RunWith
+import org.scalatest.FunSuite
+import org.scalatest.Matchers
+import org.scalatest.junit.JUnitRunner
+
+import net.kogics.kojo.lite.NoOpKojoCtx
 import net.kogics.kojo.lite.TestEnv
 
 @RunWith(classOf[JUnitRunner])
-class InterpTest extends FunSuite with ShouldMatchers {
+class InterpTest extends FunSuite with Matchers {
   import language.reflectiveCalls
 
   def fixture = new {

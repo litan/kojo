@@ -358,9 +358,9 @@ object SvgPath {
     
     try {
       ParseExpr(d).get match {
-        case List((move: SVGCmd, drawcmds: List[SVGCmd])) =>
+        case List((move: SVGCmd, drawcmds)) =>
           move()
-          drawcmds foreach (_())
+          drawcmds.asInstanceOf[List[SVGCmd]] foreach (_())
         case Nil =>
       }
     }

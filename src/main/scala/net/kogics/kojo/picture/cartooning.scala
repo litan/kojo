@@ -142,7 +142,7 @@ case class RichPicture(pic: Picture) {
         println("  " + plToString(pl))
         pl
       }
-      polyLines.toBuffer
+      polyLines.toSeq
     }
     println(")")
   }

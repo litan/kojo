@@ -530,7 +530,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
   }
 
   def morph(fn: Seq[PolyLine] => Seq[PolyLine]) = Utils.runInSwingThread {
-    val newPaths = fn(t.penPaths)
+    val newPaths = fn(t.penPaths.toSeq)
     if (t.penPaths != newPaths) {
       t.penPaths.foreach { tnode.removeChild }
       t.penPaths.clear()
