@@ -129,7 +129,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
       case None =>
     }
     var oldColor = cc.getColor()
-    var lastChangeTime = 0l
+    var lastChangeTime = 0L
     cc.getSelectionModel.addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) = Utils.safeProcess {
         val currTime = System.currentTimeMillis

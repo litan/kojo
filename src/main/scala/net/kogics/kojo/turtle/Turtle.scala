@@ -60,7 +60,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   def tlayer: PLayer = layer
   private val camera = canvas.getCamera
   if (bottomLayer) camera.addLayer(0, layer) else camera.addLayer(math.max(camera.getLayerCount - 1, 0), layer)
-  @volatile private[turtle] var _animationDelay = 0l
+  @volatile private[turtle] var _animationDelay = 0L
 
   private val turtleImage = new PImage
   private val turtle = new PNode
@@ -170,7 +170,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     beamsOffWorker()
   }
 
-  _animationDelay = 1000l
+  _animationDelay = 1000L
   init()
 
   private def thetaDegrees = Utils.rad2degrees(theta)
@@ -289,7 +289,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   def clear() = {
-    _animationDelay = 1000l
+    _animationDelay = 1000L
     Utils.runInSwingThread {
       pen.clear()
       layer.removeAllChildren() // get rid of stuff not written by pen, like text nodes

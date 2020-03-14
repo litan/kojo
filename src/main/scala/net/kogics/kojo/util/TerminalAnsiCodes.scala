@@ -26,9 +26,9 @@ object TerminalAnsiCodes {
 
   def isColoredString(s: String) = s.startsWith(s"$ESC[")
 
-  def parse(s: String): Seq[(String, Color)] = {
+  def parse(s: String): collection.Seq[(String, Color)] = {
     val strs = s.split(s"$ESC\\[")
-    strs filter { _.size > 0 } map { ss =>
+    strs filter { _.length > 0 } map { ss =>
       val mindex = ss.indexOf('m')
       val clr = ss.substring(0, mindex) match {
         case "0"  => NormalColor

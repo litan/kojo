@@ -75,7 +75,7 @@ class CompilerAndRunner(
   def prefix = "%s%s\n" format (prefix0, initCode.getOrElse(""))
 
   var includedLines: Int = 0
-  def prefixLines = prefix.lines.size + includedLines
+  def prefixLines = prefix.linesIterator.size + includedLines
 
   val codeTemplate = """%s
 %s
@@ -118,7 +118,7 @@ class CompilerAndRunner(
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
       //      severity.count += 1
       lazy val line = position.line - prefixLines - 1 // we added an extra line after the prefix in the code template. Take it off
-      lazy val offset = position.startOrPoint - offsetDelta - 1 // we added an extra newline char after the prefix
+      lazy val offset = position.start - offsetDelta - 1 // we added an extra newline char after the prefix
       severity match {
         case ERROR if position.isDefined =>
           listener.error(msg, line, position.column, offset, position.lineContent)

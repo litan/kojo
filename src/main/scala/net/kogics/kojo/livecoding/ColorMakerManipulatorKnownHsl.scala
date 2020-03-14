@@ -138,7 +138,7 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
       case None =>
     }
     var oldColor = cc.getColor()
-    var lastChangeTime = 0l
+    var lastChangeTime = 0L
     cc.getSelectionModel.addChangeListener(new ChangeListener {
       def stateChanged(e: ChangeEvent) = Utils.safeProcess {
         val currTime = System.currentTimeMillis

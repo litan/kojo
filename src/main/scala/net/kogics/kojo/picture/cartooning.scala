@@ -228,7 +228,7 @@ case class Skeleton(points: Array[Point2D]) { //was MorphTarget
     import t._
     if (size > 1) {
       jumpTo(points(0))
-      for (i <- 1 until size) moveTo(points(i))
+      for (i <- 1 until size) lineTo(points(i))
     }
   }
   override def toString = points.mkString("Skeleton(", ",", ")")

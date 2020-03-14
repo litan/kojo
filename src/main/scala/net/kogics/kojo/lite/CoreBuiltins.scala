@@ -99,7 +99,7 @@ trait CoreBuiltins extends Rationals {
     math.round(n.doubleValue * factor).toLong / factor
   }
   def lruCache[A, B](maxEntries: Int): collection.mutable.Map[A, B] = {
-    import collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     new java.util.LinkedHashMap[A, B]() {
       override def removeEldestEntry(eldest: java.util.Map.Entry[A, B]) = size > maxEntries
     }.asScala
@@ -151,8 +151,7 @@ trait CoreBuiltins extends Rationals {
   lazy val perlin = new PerlinNoiseProcessing()
   lazy val perlin2 = new PerlinNoiseImproved()
   def triangulate(points: collection.Seq[Point]): collection.Seq[Triangle2D] = {
-    import collection.JavaConverters._
-
+    import scala.jdk.CollectionConverters._
     import io.github.jdiemke.triangulation.DelaunayTriangulator
     import io.github.jdiemke.triangulation.Vector2D
 

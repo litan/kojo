@@ -126,11 +126,11 @@ class WeaveImageOp(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) e
 class SomeEffectImageOp(name0: Symbol, props: Tuple2[Symbol, Any]*) extends ImageOp {
   val name = name0.name
   def filter(img: BufferedImage): BufferedImage = {
-    val cls = Class.forName(s"com.jhlabs.image.${name.head.toUpper + name.tail}Filter")
+    val cls = Class.forName(s"com.jhlabs.image.${name.head.toUpper}${name.tail}Filter")
     val fltr = cls.newInstance().asInstanceOf[BufferedImageOp]
     props.foreach { pv =>
       val prop0 = pv._1.name
-      val prop = prop0.head.toUpper + prop0.tail
+      val prop = s"${prop0.head.toUpper}${prop0.tail}"
       val value = pv._2
       val valueClass = value match {
         case i: Int   => 1.getClass

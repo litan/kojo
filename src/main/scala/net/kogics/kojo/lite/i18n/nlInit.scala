@@ -130,7 +130,7 @@ object DutchAPI {
   }
   def willekeurig(n: Int) = builtins.random(n)
   def willekeurigDecimaal(n: Int) = builtins.randomDouble(n)
-  def kleur(r: Int, g: Int, b: Int) = builtins.color(r, g, b)
+  def kleur(r: Int, g: Int, b: Int) = builtins.Color(r, g, b)
 
   //some type aliases in Dutch
   type GeheelGetal = Int

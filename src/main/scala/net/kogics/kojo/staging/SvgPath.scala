@@ -296,38 +296,47 @@ object SvgPath {
     def moveto: Parser[SVGCmd]     = ("M" | "m")~repsep(coordPair, oc)    ^^ {
       case "M"~b => MoveToAbs(b)
       case "m"~b => MoveToRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def lineto: Parser[SVGCmd]     = ("L" | "l")~repsep(coordPair, oc)    ^^ {
       case "L"~b => LineToAbs(b)
       case "l"~b => LineToRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def hlineto: Parser[SVGCmd]    = ("H" | "h")~repsep(number, oc)       ^^ {
       case "H"~b => HLineToAbs(b)
       case "h"~b => HLineToRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def vlineto: Parser[SVGCmd]    = ("V" | "v")~repsep(number, oc)       ^^ {
       case "V"~b => VLineToAbs(b)
       case "v"~b => VLineToRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def curveto: Parser[SVGCmd]    = ("C" | "c")~repsep(coordPairTri, oc) ^^ {
       case "C"~b => CurveToAbs(b)
       case "c"~b => CurveToRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def sCurveto: Parser[SVGCmd]   = ("S" | "s")~repsep(coordPairDbl, oc) ^^ {
       case "S"~b => SmoothCurveToAbs(b)
       case "s"~b => SmoothCurveToRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def qBezierto: Parser[SVGCmd]  = ("Q" | "q")~repsep(coordPairDbl, oc) ^^ {
       case "Q"~b => QuadBezierAbs(b)
       case "q"~b => QuadBezierRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def sqBezierto: Parser[SVGCmd] = ("T" | "t")~repsep(coordPair, oc)    ^^ {
       case "T"~b => SmoothQuadBezierAbs(b)
       case "t"~b => SmoothQuadBezierRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def elliptArc: Parser[Any]     = ("A" | "a")~repsep(arcArg, oc)       ^^ {
       case "A"~b => EllipticalArcAbs(b)
       case "a"~b => EllipticalArcRel(b)
+      case _ => throw new RuntimeException("Parse error")
     }
     def coordPair: Parser[Point]   = number~oc~number                     ^^ {
       case a~c~b => Point(a.asInstanceOf[Float], b.asInstanceOf[Float])

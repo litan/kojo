@@ -29,7 +29,7 @@ import java.util.logging.SimpleFormatter
 import javax.swing.JFrame
 import javax.swing.WindowConstants
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 

@@ -323,7 +323,7 @@ class CodeExecutionSupport(
         }
         scriptEditor.formatAction.actionPerformed(null)
         val currLine = lineAt(dot)
-        val leadingSpaces = currLine.prefixLength { _ == ' ' }
+        val leadingSpaces = currLine.segmentLength { _ == ' ' }
         codePane.setCaretPosition(Utilities.getRowEnd(codePane, dot) + 1 + leadingSpaces)
       }
       else {
@@ -344,7 +344,7 @@ class CodeExecutionSupport(
         }
         scriptEditor.formatAction.actionPerformed(null)
         val currLine = lineAt(dot)
-        val leadingSpaces = currLine.prefixLength { _ == ' ' }
+        val leadingSpaces = currLine.segmentLength { _ == ' ' }
         codePane.setCaretPosition(Utilities.getRowStart(codePane, dot) + leadingSpaces + cOffset)
       }
       else {

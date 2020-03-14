@@ -5,7 +5,7 @@ import org.scalacheck.Prop.forAll
 import org.scalacheck.Prop.propBoolean
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
-import org.scalatest.prop.Checkers
+import org.scalatestplus.scalacheck.Checkers
 import org.scalatest.junit.JUnitRunner
 import net.kogics.kojo.lite.NoOpKojoCtx
 import net.kogics.kojo.lite.canvas.SpriteCanvas

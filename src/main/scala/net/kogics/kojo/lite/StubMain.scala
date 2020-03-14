@@ -103,12 +103,12 @@ trait StubMain {
     def libPath = {
       val libraryPath = new StringBuilder(Utils.libDir)
       Utils.appProperty("library.path") match {
-        case Some(path) => libraryPath.append(File.pathSeparatorChar + path)
+        case Some(path) => libraryPath.append(File.pathSeparator + path)
         case None       =>
       }
       Utils.appProperty("python.home") match {
         case Some(phome) =>
-          libraryPath.append(File.pathSeparatorChar + s"$phome/lib" +
+          libraryPath.append(File.pathSeparator + s"$phome/lib" +
             File.pathSeparatorChar + s"$phome/lib/python3.8/site-packages/jep")
         case None =>
       }

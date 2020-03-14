@@ -1,6 +1,6 @@
 package net.kogics.kojo.util
 
-import org.scalatest.junit.JUnitSuite
+import org.scalatestplus.junit.JUnitSuite
 import org.junit.Test
 import org.junit.Assert._
 import net.kogics.kojo.lite.NoOpKojoCtx

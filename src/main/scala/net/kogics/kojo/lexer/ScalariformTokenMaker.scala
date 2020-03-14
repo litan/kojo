@@ -95,8 +95,9 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   }
 
   def tokensForLine(segment: Segment, segmentOffset: Int) = {
-    def isLastMultiline(ts: Seq[SfToken]) = ts match {
-      case Seq() => false
+    import collection.IndexedSeq
+    def isLastMultiline(ts: IndexedSeq[SfToken]) = ts match {
+      case IndexedSeq() => false
       case ts2 =>
         val t = ts2.last
         if (t.rawText.contains("\n")) true else false
@@ -131,7 +132,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     }
 
     if (isLastMultiline(active)) {
-      val (active3, active4) = active.splitAt(active.size - 1)
+      val (active3, active4) = active.splitAt(active.length - 1)
       active3.foreach { lineTokens += _ }
       splitLastActive(active4(0)).foreach { lineTokens += _ }
     }
@@ -151,6 +152,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   override def onRemove(e: DocumentEvent) = docListener.removeUpdate(e)
 
   def makeDocListener = new DocumentListener {
+    import collection.IndexedSeq
     def insertUpdate(e: DocumentEvent): Unit = {
       def changeInToken(offset: Int, len: Int, t: SfToken) = scalariform.utils.Range(offset, len).intersects(t.range)
 
@@ -184,14 +186,16 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
         def wsWithNl(x: SfToken) = x.tokenType == Tokens.WS && x.rawText.contains("\n")
 
-        def seekPrevLineBreak(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
-          case Seq() => (0, dropped)
+        @annotation.tailrec
+        def seekPrevLineBreak(ts: IndexedSeq[SfToken], dropped: Int): (Int, Int) = ts match {
+          case IndexedSeq() => (0, dropped)
           case x +: xs =>
             if (wsWithNl(x)) (x.offset, dropped) else seekPrevLineBreak(xs, dropped + 1)
         }
 
-        def seekNextLineBreak(ts: Seq[SfToken], dropped: Int): (Int, Int) = ts match {
-          case Seq() => (doc.getLength, dropped)
+        @annotation.tailrec
+        def seekNextLineBreak(ts: IndexedSeq[SfToken], dropped: Int): (Int, Int) = ts match {
+          case IndexedSeq() => (doc.getLength, dropped)
           case x +: xs =>
             if (wsWithNl(x)) (x.offset, dropped) else seekNextLineBreak(xs, dropped + 1)
         }
@@ -202,9 +206,9 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         val docFragment = doc.getText(lower, flen)
         val newActive = rawTokenise(docFragment).map { t => t.copy(offset = t.offset + lower) }
         docTokens =
-          preInactive.slice(0, preInactive.size - dropped) ++
-            newActive.slice(0, newActive.size - 1) ++
-            newPostInactive.slice(udropped, newPostInactive.size)
+          preInactive.slice(0, preInactive.length - dropped) ++
+            newActive.slice(0, newActive.length - 1) ++
+            newPostInactive.slice(udropped, newPostInactive.length)
         showTiming(t0, "Incr")
       }
     }
@@ -225,7 +229,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     updateDiagnosticFlags()
     val t0 = System.currentTimeMillis()
     docTokens = rawTokenise(doc)
-    docTokens = docTokens.slice(0, docTokens.size - 1)
+    docTokens = docTokens.slice(0, docTokens.length - 1)
     showTiming(t0, "Full")
   }
 

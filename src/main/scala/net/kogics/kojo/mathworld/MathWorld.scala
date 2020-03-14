@@ -156,9 +156,9 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
   def figure(name: String) = new MwFigure(name)
 
   def intersect(l1: MwLine, l2: MwLine): MwPoint = _Algo.intersect(_ggbApi, l1, l2)
-  def intersect(l: MwLine, c: MwCircle): Seq[MwPoint] = _Algo.intersect(_ggbApi, l, c)
-  def intersect(c: MwCircle, l: MwLine): Seq[MwPoint] = intersect(l, c)
-  def intersect(c1: MwCircle, c2: MwCircle): Seq[MwPoint] = _Algo.intersect(_ggbApi, c1, c2)
+  def intersect(l: MwLine, c: MwCircle): collection.Seq[MwPoint] = _Algo.intersect(_ggbApi, l, c)
+  def intersect(c: MwCircle, l: MwLine): collection.Seq[MwPoint] = intersect(l, c)
+  def intersect(c1: MwCircle, c2: MwCircle): collection.Seq[MwPoint] = _Algo.intersect(_ggbApi, c1, c2)
 
   def midpoint(ls: MwLineSegment): MwPoint = _Algo.midpoint(ls)
   def perpendicular(l: MwLine, p: MwPoint): MwLine = _Algo.perpendicular(l, p)

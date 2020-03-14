@@ -68,28 +68,28 @@ object LangMenuFactory {
       Utils.loadIcon("/images/generic-flag.png")
       // langIcon(kojoCtx.userLanguage)
     )
-    supportedLanguages.foreach {lang ⇒ langMenu.add(langMenuItem(lang))}
+    supportedLanguages.foreach {lang => langMenu.add(langMenuItem(lang))}
     langMenu
   }
 
   private val langNames = Map (
-    "en" → "English",
-    "sv" → "Svenska (Swedish)",
-    "fr" → "Français (French)",
-    "pl" → "Polski (Polish)",
-    "nl" → "Nederlands (Dutch)",
-    "eo" → "Esperanto (international)",
-    "it" → "Italiano (Italian)",
-    "hi" → "हिंदी (Hindi)",
-    "de" → "Deutsch (German)",
-    "ru" → "Русский (Russian)",
-    "hr" → "Hrvatski (Croatian)"
+    "en" -> "English",
+    "sv" -> "Svenska (Swedish)",
+    "fr" -> "Français (French)",
+    "pl" -> "Polski (Polish)",
+    "nl" -> "Nederlands (Dutch)",
+    "eo" -> "Esperanto (international)",
+    "it" -> "Italiano (Italian)",
+    "hi" -> "हिंदी (Hindi)",
+    "de" -> "Deutsch (German)",
+    "ru" -> "Русский (Russian)",
+    "hr" -> "Hrvatski (Croatian)"
   )
 
   /** If the language code is not in this map, then the country defaults to same code as the language. */
   private val langToCountry = Map(
-    "en" → "us",
-    "hi" → "in"
+    "en" -> "us",
+    "hi" -> "in"
   )
 
   /**The set of codes of all languages, for which there is no flag icon in geogebra.*/

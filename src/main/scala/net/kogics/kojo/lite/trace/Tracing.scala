@@ -23,7 +23,7 @@ import java.awt.geom.AffineTransform
 import java.awt.geom.Point2D
 import java.io.File
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.reflect.internal.util.BatchSourceFile
@@ -94,7 +94,7 @@ class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunConte
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
 //      severity.count += 1
       lazy val line = position.line - lineNumOffset
-      lazy val offset = position.startOrPoint - offsetDelta
+      lazy val offset = position.start - offsetDelta
       severity match {
         case ERROR if position.isDefined =>
           listener.error(msg, line, position.column, offset, position.lineContent)
@@ -124,7 +124,7 @@ object UserCode {
 """
 
   val prefix = "%s%s\n" format (prefix0, Utils.initCode(TwMode).getOrElse(""))
-  val prefixLines = prefix.lines.size
+  val prefixLines = prefix.linesIterator.size
   @volatile var includedLines = 0
   def lineNumOffset = prefixLines + includedLines
   @volatile var offsetDelta = 0
@@ -236,7 +236,7 @@ def main(args: Array[String]) {
       evtReqs = Vector[EventRequest]()
       currEvtVec.clear
       hiddenEventCount = 0
-      codeLines = code.lines.toVector
+      codeLines = code.linesIterator.toVector
 
       val success = compile(code)
       if (!success) {

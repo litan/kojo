@@ -18,7 +18,7 @@ class LangMenuFactoryTest extends FunSuite with Matchers {
   }
 
   test("langMenu has icon for supported languages") {
-    LangMenuFactory.supportedLanguages.foreach {lang ⇒
+    LangMenuFactory.supportedLanguages.foreach {lang =>
       implicit val kojoCtx = new KojoCtx(false)
       kojoCtx.userLanguage = lang
       val menu = LangMenuFactory.createLangMenu()
@@ -31,7 +31,7 @@ class LangMenuFactoryTest extends FunSuite with Matchers {
     implicit val kojoCtx = new KojoCtx(false)
     kojoCtx.userLanguage = "en"
     val menu = LangMenuFactory.createLangMenu()
-    menu.getMenuComponents.foreach {menu ⇒
+    menu.getMenuComponents.foreach {menu =>
       menu.asInstanceOf[JMenuItem].getIcon should be (null)
     }
   }
