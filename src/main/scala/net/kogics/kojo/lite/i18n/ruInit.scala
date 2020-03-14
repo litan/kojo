@@ -108,19 +108,19 @@ object RussianAPI {
   //  }
 
   //loops 
-  def повтори(n: Int)(block: => Unit) {
+  def повтори(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
 
-  def i_повтори(n: Int)(block: Int => Unit) {
+  def i_повтори(n: Int)(block: Int => Unit): Unit = {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def пока_повтори(условие: => Boolean)(block: => Unit) {
+  def пока_повтори(условие: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatWhile(условие) { block }
   }
 
-  def для_повтори[T](последовательность: Iterable[T])(block: T => Unit) {
+  def для_повтори[T](последовательность: Iterable[T])(block: T => Unit): Unit = {
     RepeatCommands.repeatFor(последовательность) { block }
   }
 
@@ -145,7 +145,7 @@ object RussianAPI {
 }
 
 object RussianInit {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     RussianAPI.builtins = builtins
     builtins match {

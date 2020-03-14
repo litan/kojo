@@ -174,22 +174,22 @@ object GermanAPI {
   
   //Loops in German:
   //upprepa(n)
-  def schleife(anzahl: Int)(block: => Unit) {
+  def schleife(anzahl: Int)(block: => Unit): Unit = {
     RepeatCommands.repeatFor(1 to anzahl){i => block}
   }
   //sålänge(villkor: => Boolean)(block: => Unit)
-  def schleifeSolange(bedingung: => Boolean)(block: => Unit) {
+  def schleifeSolange(bedingung: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatWhile(bedingung){block}
   }
   //Not in swedish API
-  def schleifeBis(bedingung: => Boolean)(block: => Unit) {
+  def schleifeBis(bedingung: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatUntil(bedingung){block}
   }
   //I mean too limited by fixing the start value. Christoph:
   //def räkneslinga(n: Int)(block: Int => Unit) {
   //  for (i <- 1 to n) block(i)
   //}
-  def schleifeBereich(start: Int, ende: Int)(verarbeiten: Int => Unit){
+  def schleifeBereich(start: Int, ende: Int)(verarbeiten: Int => Unit): Unit ={
     RepeatCommands.repeatFor(start to ende){verarbeiten}
   }
   //The new Kojo loops from RepeatCommands regularly call the Throttler to enable interruption of busy loops.
@@ -198,7 +198,7 @@ object GermanAPI {
   //schleifeFür(1 to 5){}
   //schleifeFür(0 until 5)[}
   //schleifeFür(Seq(red, green, blue)){}
-  def schleifeFür[T](elemente: Iterable[T])(verarbeiten: T => Unit){
+  def schleifeFür[T](elemente: Iterable[T])(verarbeiten: T => Unit): Unit ={
     RepeatCommands.repeatFor(elemente){verarbeiten}
   }
   
@@ -233,7 +233,7 @@ object GermanAPI {
   def systemzeit = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
   
   //räknaTill
-  def zählzeitStoppen(bisZahl: BigInt) {
+  def zählzeitStoppen(bisZahl: BigInt): Unit = {
     var c: BigInt = 1
     print("*** Zählen von 1 bis ... ")
     val startZeit = systemzeit
@@ -251,7 +251,7 @@ object GermanAPI {
 }
 
 object DeInit {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     GermanAPI.builtins = builtins
     builtins match {

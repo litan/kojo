@@ -31,7 +31,7 @@ trait StubMain {
   def firstMainDone(): Unit
   def nthMain(args: Array[String]): Unit
   def log(msg: String) = println(msg)
-  def done() {
+  def done(): Unit = {
     log("[INFO] Kojo Launcher Done.")
     System.exit(0)
   }
@@ -70,7 +70,7 @@ trait StubMain {
     done()
   }
 
-  def realMain(args: Array[String]) {
+  def realMain(args: Array[String]): Unit = {
     val javaHome = System.getProperty("java.home")
     log("[INFO] Java Home: " + javaHome)
     val javaExec = {

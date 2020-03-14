@@ -44,7 +44,7 @@ trait AppMenu {
 
     val openWeb = new JMenuItem(Utils.loadString("S_OpenFromWeb"))
     openWeb.addActionListener(new ActionListener {
-      def actionPerformed(ev: ActionEvent) {
+      def actionPerformed(ev: ActionEvent): Unit = {
         val urlGetter = new JDialog(frame)
         urlGetter.setTitle(Utils.loadString("S_OpenFromWeb"))
 
@@ -60,14 +60,14 @@ trait AppMenu {
         val okCancel = new JPanel
         val ok = new JButton(Utils.loadString("S_OK"))
         ok.addActionListener(new ActionListener {
-          def actionPerformed(ev: ActionEvent) {
+          def actionPerformed(ev: ActionEvent): Unit = {
             urlGetter.setVisible(false)
             loadUrl(urlBox.getText)
           }
         })
         val cancel = new JButton(Utils.loadString("S_Cancel"))
         cancel.addActionListener(new ActionListener {
-          def actionPerformed(ev: ActionEvent) {
+          def actionPerformed(ev: ActionEvent): Unit = {
             urlGetter.setVisible(false)
           }
         })
@@ -113,7 +113,7 @@ trait AppMenu {
 
     val newKojo = new JMenuItem(Utils.loadString("S_New_Scratchpad"))
     newKojo.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         Utils.runAsync {
           NewKojoInstance.main(Array("subKojo"))
         }
@@ -123,7 +123,7 @@ trait AppMenu {
     fileMenu.add(newKojo)
 
     fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_Settings")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         new SettingsWindow(frame).setVisible(true)
       }
     }))
@@ -131,7 +131,7 @@ trait AppMenu {
     fileMenu.addSeparator()
 
     fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_Exit")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         appExit()
       }
     }))
@@ -142,7 +142,7 @@ trait AppMenu {
       val label = Utils.loadString(key)
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
-        def actionPerformed(ev: ActionEvent) {
+        def actionPerformed(ev: ActionEvent): Unit = {
           //loadAndRunResource(root + file)
           loadAndRunLocalizedResource(root, file)
         }
@@ -153,7 +153,7 @@ trait AppMenu {
     def menuItemNELFor(label: String, file: String) = {
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
-        def actionPerformed(ev: ActionEvent) {
+        def actionPerformed(ev: ActionEvent): Unit = {
           loadAndRunResourceNEL("/samples/" + file)
         }
       })
@@ -163,7 +163,7 @@ trait AppMenu {
     def menuItemForUrl(label: String, url: String) = {
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
-        def actionPerformed(ev: ActionEvent) {
+        def actionPerformed(ev: ActionEvent): Unit = {
           loadAndRunUrl(url)
         }
       })
@@ -174,7 +174,7 @@ trait AppMenu {
       val label = Utils.loadString(key)
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
-        def actionPerformed(ev: ActionEvent) {
+        def actionPerformed(ev: ActionEvent): Unit = {
           loadAndRunInstalledFile(file + ".installed")
         }
       })
@@ -319,7 +319,7 @@ trait AppMenu {
 
     val resetWindows = new JMenuItem(Utils.loadString("S_DefaultPerspective"))
     resetWindows.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         kojoCtx.switchToDefaultPerspective()
       }
     })
@@ -327,7 +327,7 @@ trait AppMenu {
 
     val resetWindows2 = new JMenuItem(Utils.loadString("S_Default2Perspective"))
     resetWindows2.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         kojoCtx.switchToDefault2Perspective()
       }
     })
@@ -335,7 +335,7 @@ trait AppMenu {
 
     val worksheetItem = new JMenuItem(Utils.loadString("S_WorksheetPerspective"))
     worksheetItem.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         kojoCtx.switchToWorksheetPerspective()
       }
     })
@@ -343,7 +343,7 @@ trait AppMenu {
 
     val scriptEditingItem = new JMenuItem(Utils.loadString("S_ScriptEditingPerspective"))
     scriptEditingItem.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         kojoCtx.switchToScriptEditingPerspective()
       }
     })
@@ -351,7 +351,7 @@ trait AppMenu {
 
     val historyItem = new JMenuItem(Utils.loadString("S_HistoryBrowsingPerspective"))
     historyItem.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         kojoCtx.switchToHistoryBrowsingPerspective()
       }
     })
@@ -359,7 +359,7 @@ trait AppMenu {
 
     val storyItem = new JMenuItem(Utils.loadString("S_StoryViewingPerspective"))
     storyItem.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         kojoCtx.switchToStoryViewingPerspective()
       }
     })
@@ -367,7 +367,7 @@ trait AppMenu {
 
     val canvasItem = new JMenuItem(Utils.loadString("S_OutputStoryViewingPerspective"))
     canvasItem.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         kojoCtx.switchToOutputStoryViewingPerspective()
       }
     })
@@ -384,14 +384,14 @@ trait AppMenu {
     windowMenu.add(fullScreenOutputItem)
 
     windowMenu.getPopupMenu.addPopupMenuListener(new PopupMenuListener {
-      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+      def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit = {
         FullScreenSupport.updateMenuItem(fullScreenCanvasItem, fsCanvasAction)
         FullScreenSupport.updateMenuItem(fullScreenOutputItem, fsOutputAction)
       }
 
-      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
+      def popupMenuWillBecomeInvisible(e: PopupMenuEvent): Unit = {}
 
-      def popupMenuCanceled(e: PopupMenuEvent) {}
+      def popupMenuCanceled(e: PopupMenuEvent): Unit = {}
     })
 
     menuBar.add(windowMenu)
@@ -419,7 +419,7 @@ trait AppMenu {
 
     val about = new JMenuItem(Utils.loadString("S_About"))
     about.addActionListener(new ActionListener {
-      def actionPerformed(ev: ActionEvent) {
+      def actionPerformed(ev: ActionEvent): Unit = {
         val aboutBox = new JDialog(frame)
         val aboutPanel = new JPanel
         aboutPanel.setLayout(new BoxLayout(aboutPanel, BoxLayout.Y_AXIS))
@@ -513,7 +513,7 @@ trait AppMenu {
         ok.setAlignmentX(Component.CENTER_ALIGNMENT)
         aboutBox.getRootPane.setDefaultButton(ok)
         ok.addActionListener(new ActionListener {
-          def actionPerformed(ev: ActionEvent) {
+          def actionPerformed(ev: ActionEvent): Unit = {
             aboutBox.setVisible(false)
           }
         })

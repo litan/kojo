@@ -1887,24 +1887,24 @@ repeat(5) {{
   
   @volatile var modeSpecificContent: Map[String, String] = TwContent
   
-  def activateTw() {
+  def activateTw(): Unit = {
     modeSpecificContent = TwContent
     clearLangContent()
   }
 
-  def activateVn() {
+  def activateVn(): Unit = {
     modeSpecificContent = VnContent
     clearLangContent()
   }
 
   val langContent: collection.mutable.Map[String, Map[String, String]] = collection.mutable.Map()
-  def addContent(lang: String, content: Map[String, String]) {
+  def addContent(lang: String, content: Map[String, String]): Unit = {
 //    import util.Typeclasses._
 //    langContent +=  (lang -> (langContent.getOrElse(lang, Map()) |+| content))
     langContent +=  (lang -> (langContent.getOrElse(lang, Map()) ++ content))
   }
   
-  def clearLangContent() {
+  def clearLangContent(): Unit = {
     langContent.clear()
   }
   

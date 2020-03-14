@@ -10,28 +10,28 @@ class ScriptEditorHolder(val se: ScriptEditor)
   
   setNoFileTitle()
 
-  def activate() {
+  def activate(): Unit = {
     toFront()
     se.activate()
   }
 
-  def fileOpened(fileName: String) {
+  def fileOpened(fileName: String): Unit = {
     setTitleText("%s - %s" format (title, fileName))
   }
 
-  def fileModified(fileName: String) {
+  def fileModified(fileName: String): Unit = {
     setTitleText("%s - %s*" format (title, fileName))
   }
 
-  def fileSaved(fileName: String) {
+  def fileSaved(fileName: String): Unit = {
     setTitleText("%s - %s" format (title, fileName))
   }
 
-  def fileClosed(fileName: String) {
+  def fileClosed(fileName: String): Unit = {
     setNoFileTitle()
   }
 
-  def setNoFileTitle() {
+  def setNoFileTitle(): Unit = {
     if (se.kojoCtx.subKojo) {
       setTitleText("%s ( %s )" format (title, scratch))
     }

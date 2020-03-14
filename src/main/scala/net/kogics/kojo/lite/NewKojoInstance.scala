@@ -13,9 +13,9 @@ object NewKojoInstance extends StubMain {
   }
 
   def firstInstance = true
-  def firstMain(args: Array[String]) {}
-  def firstMainDone() {}
+  def firstMain(args: Array[String]): Unit = {}
+  def firstMainDone(): Unit = {}
   def nthMain(args: Array[String]) = throw new UnsupportedOperationException
-  override def log(msg: String) {}
-  override def done() { }
+  override def log(msg: String): Unit = {}
+  override def done(): Unit = { }
 }

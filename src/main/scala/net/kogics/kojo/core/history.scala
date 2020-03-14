@@ -11,18 +11,18 @@ case class HistoryItem(
   at: Date = new Date)
 
 trait HistoryListener {
-  def itemAdded
-  def selectionChanged(n: Int)
-  def ensureVisible(n: Int)
-  def historyReady()  
+  def itemAdded: Unit
+  def selectionChanged(n: Int): Unit
+  def ensureVisible(n: Int): Unit
+  def historyReady(): Unit  
 }
 
 trait HistorySaver {
   def save(code: String, file: Option[String]): HistoryItem
   def readAll(): Seq[HistoryItem]
   def readSome(filter: String): Seq[HistoryItem]
-  def updateStar(hi: HistoryItem)
-  def updateTags(hi: HistoryItem)
+  def updateStar(hi: HistoryItem): Unit
+  def updateTags(hi: HistoryItem): Unit
 }
 
 trait CommandHistory {

@@ -82,7 +82,7 @@ abstract class Transform(pic: Picture) extends Transformer {
 }
 
 case class Rot(angle: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.rotate(angle)
     tpic.draw()
   }
@@ -91,7 +91,7 @@ case class Rot(angle: Double)(pic: Picture) extends Transform(pic) {
 }
 
 case class Rotp(angle: Double, x: Double, y: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.rotateAboutPoint(angle, x, y)
     tpic.draw()
   }
@@ -100,7 +100,7 @@ case class Rotp(angle: Double, x: Double, y: Double)(pic: Picture) extends Trans
 }
 
 case class Scale(factor: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.scale(factor)
     tpic.draw()
   }
@@ -109,7 +109,7 @@ case class Scale(factor: Double)(pic: Picture) extends Transform(pic) {
 }
 
 case class ScaleXY(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.scale(x, y)
     tpic.draw()
   }
@@ -118,7 +118,7 @@ case class ScaleXY(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
 }
 
 case class Trans(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.translate(x, y)
     tpic.draw()
   }
@@ -127,7 +127,7 @@ case class Trans(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
 }
 
 case class Offset(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.offset(x, y)
     tpic.draw()
   }
@@ -136,7 +136,7 @@ case class Offset(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
 }
 
 case class Position(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.setPosition(x, y)
     tpic.draw()
   }
@@ -145,7 +145,7 @@ case class Position(x: Double, y: Double)(pic: Picture) extends Transform(pic) {
 }
 
 case class FlipY(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.flipY()
     tpic.draw()
   }
@@ -154,7 +154,7 @@ case class FlipY(pic: Picture) extends Transform(pic) {
 }
 
 case class FlipX(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.flipX()
     tpic.draw()
   }
@@ -163,7 +163,7 @@ case class FlipX(pic: Picture) extends Transform(pic) {
 }
 
 case class AxesOn(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.draw()
     tpic.axesOn()
   }
@@ -172,7 +172,7 @@ case class AxesOn(pic: Picture) extends Transform(pic) {
 }
 
 case class Opac(f: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.opacityMod(f)
     tpic.draw()
   }
@@ -183,7 +183,7 @@ case class Opac(f: Double)(pic: Picture) extends Transform(pic) {
 case class Hue(f: Double)(pic: Picture) extends Transform(pic) {
   Utils.checkHsbModFactor(f)
 
-  def draw() {
+  def draw(): Unit = {
     tpic.draw()
     tpic.hueMod(f)
   }
@@ -194,7 +194,7 @@ case class Hue(f: Double)(pic: Picture) extends Transform(pic) {
 case class Sat(f: Double)(pic: Picture) extends Transform(pic) {
   Utils.checkHsbModFactor(f)
 
-  def draw() {
+  def draw(): Unit = {
     tpic.draw()
     tpic.satMod(f)
   }
@@ -205,7 +205,7 @@ case class Sat(f: Double)(pic: Picture) extends Transform(pic) {
 case class Brit(f: Double)(pic: Picture) extends Transform(pic) {
   Utils.checkHsbModFactor(f)
 
-  def draw() {
+  def draw(): Unit = {
     tpic.draw()
     tpic.britMod(f)
   }
@@ -214,7 +214,7 @@ case class Brit(f: Double)(pic: Picture) extends Transform(pic) {
 }
 
 case class Fill(color: Paint)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.setFillColor(color)
     tpic.draw()
   }
@@ -223,7 +223,7 @@ case class Fill(color: Paint)(pic: Picture) extends Transform(pic) {
 }
 
 case class Stroke(color: Paint)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.setPenColor(color)
     tpic.draw()
   }
@@ -233,7 +233,7 @@ case class Stroke(color: Paint)(pic: Picture) extends Transform(pic) {
 }
 
 case class StrokeWidth(w: Double)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.setPenThickness(w)
     tpic.draw()
   }
@@ -242,7 +242,7 @@ case class StrokeWidth(w: Double)(pic: Picture) extends Transform(pic) {
 }
 
 case class PreDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     fn(tpic)
     tpic.draw()
   }
@@ -251,7 +251,7 @@ case class PreDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transform
 }
 
 case class PostDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transform(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.draw()
     fn(tpic)
   }

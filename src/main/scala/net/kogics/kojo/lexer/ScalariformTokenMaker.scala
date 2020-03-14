@@ -75,7 +75,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   }
 
   override def getTokenList(segment: Segment, initialTokenType: Int, docOffset: Int): Token = {
-    def addRstaToken(t: SfToken) {
+    def addRstaToken(t: SfToken): Unit = {
       debug("  %s" format t)
       // offset of token within its segment = offset in doc - offset of segment within doc
       val segStartOffset = t.offset - (docOffset - segment.offset)
@@ -151,7 +151,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
   override def onRemove(e: DocumentEvent) = docListener.removeUpdate(e)
 
   def makeDocListener = new DocumentListener {
-    def insertUpdate(e: DocumentEvent) {
+    def insertUpdate(e: DocumentEvent): Unit = {
       def changeInToken(offset: Int, len: Int, t: SfToken) = scalariform.utils.Range(offset, len).intersects(t.range)
 
       val (offset, len) = (e.getOffset, e.getLength)
@@ -209,19 +209,19 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
       }
     }
 
-    def removeUpdate(e: DocumentEvent) {
+    def removeUpdate(e: DocumentEvent): Unit = {
       val doc = e.getDocument.getText(0, e.getDocument.getLength)
       lexDoc(doc)
       prevRemove = true
     }
 
-    def changedUpdate(e: DocumentEvent) {
+    def changedUpdate(e: DocumentEvent): Unit = {
       val doc = e.getDocument.getText(0, e.getDocument.getLength)
       lexDoc(doc)
     }
   }
 
-  def lexDoc(doc: String) {
+  def lexDoc(doc: String): Unit = {
     updateDiagnosticFlags()
     val t0 = System.currentTimeMillis()
     docTokens = rawTokenise(doc)
@@ -275,19 +275,19 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     }
   }
 
-  def debug(msg: => String) {
+  def debug(msg: => String): Unit = {
     if (debugOn) {
       println(msg)
     }
   }
 
-  def showTiming(t0: Long, mod: String) {
+  def showTiming(t0: Long, mod: String): Unit = {
     if (timingOn) {
       println("Doc lexing [%s] took: %2.4f secs" format (mod, (System.currentTimeMillis - t0) / 1000.0))
     }
   }
 
-  def updateDiagnosticFlags() {
+  def updateDiagnosticFlags(): Unit = {
     debugOn = if (System.getProperty("kojo.lexer.debug") == "true") true else false
     timingOn = if (System.getProperty("kojo.lexer.timing") == "true") true else false
   }

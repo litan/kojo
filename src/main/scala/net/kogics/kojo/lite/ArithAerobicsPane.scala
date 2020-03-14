@@ -35,7 +35,7 @@ class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
     })
   }
 
-  def handleTabChange() {
+  def handleTabChange(): Unit = {
     val container = getSelectedComponent().asInstanceOf[ArithContainer]
     Utils.schedule(0.6) {
       container.focusGained()
@@ -50,7 +50,7 @@ class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
     addTab("", notAvailable)
   }
 
-  def activated() {
+  def activated(): Unit = {
     if (Theme.currentTheme.supportsRithica) {
       init
       requestFocusInWindow()

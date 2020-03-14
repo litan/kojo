@@ -27,22 +27,22 @@ class LinkListenerTest {
   val ll = new LinkListener(st)
   
   @Test
-  def test1 {
+  def test1: Unit = {
     assertEquals((2,1), ll.localpageLocation("http://localpage/2"))
   }
 
   @Test
-  def test2 {
+  def test2: Unit = {
     assertEquals((2,3), ll.localpageLocation("http://LOCALPAGE/2#3"))
   }
 
   @Test
-  def test3 {
+  def test3: Unit = {
     assertEquals((12,11), ll.localpageLocation("http://localpage/12#11"))
   }
 
   @Test
-  def test4 {
+  def test4: Unit = {
     val pg = Page(
       name = "",
       body =
@@ -63,7 +63,7 @@ class LinkListenerTest {
   }
 
   @Test
-  def test5 {
+  def test5: Unit = {
     try {
       ll.localpageLocation("http://localpage/5#x")
       fail("Invalid location not detected")
@@ -75,7 +75,7 @@ class LinkListenerTest {
   }
 
   @Test
-  def test6 {
+  def test6: Unit = {
     val story = Story(
       Page(
         name = "pg1",
@@ -127,17 +127,17 @@ class LinkListenerTest {
   }
 
   @Test
-  def testHandlerData {
+  def testHandlerData: Unit = {
     assertEquals(("code","5"), ll.handlerData("http://runHandler/code/5"))
   }
 
   @Test
-  def testHandlerData2 {
+  def testHandlerData2: Unit = {
     assertEquals(("code2","7"), ll.handlerData("http://runhandler/code2/7 "))
   }
 
   @Test
-  def testHandlerData3 {
+  def testHandlerData3: Unit = {
     assertEquals(("code3",""), ll.handlerData("http://runhandler/code3"))
   }
 }

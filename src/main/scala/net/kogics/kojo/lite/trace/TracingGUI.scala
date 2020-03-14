@@ -63,14 +63,14 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val highlightColor = Theme.currentTheme.tracingHighlightColor
 
   traceHolder.addCDockableStateListener(new CDockableStateListener {
-    def visibilityChanged(dockable: CDockable) {
+    def visibilityChanged(dockable: CDockable): Unit = {
       if (!dockable.isVisible) {
         events.removeAll()
         traceHolder.remove(eventHolder)
         eventHolder = null
       }
     }
-    def extendedModeChanged(dockable: CDockable, mode: ExtendedMode) {}
+    def extendedModeChanged(dockable: CDockable, mode: ExtendedMode): Unit = {}
   })
 
   def reset() = Utils.runInSwingThread {
@@ -92,15 +92,15 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
     kojoCtx.makeTraceWindowVisible(traceHolder)
   }
 
-  def addEnterEvent(me: MethodEvent) {
+  def addEnterEvent(me: MethodEvent): Unit = {
     addEvent(me)
   }
 
-  def addExitEvent(me: MethodEvent) {
+  def addExitEvent(me: MethodEvent): Unit = {
     addEvent(me)
   }
 
-  private def addEvent(me: MethodEvent) {
+  private def addEvent(me: MethodEvent): Unit = {
     def meSubLines(me: MethodEvent): Seq[(Point2D.Double, Point2D.Double)] = {
       def nodeSeq = me.turtlePoints match {
         case Some(tp) => Vector(tp)
@@ -144,7 +144,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
         me.uiElems += this
 
         addMouseListener(new MouseAdapter {
-          override def mousePressed(e: MouseEvent) {
+          override def mousePressed(e: MouseEvent): Unit = {
             eventDesc.setText(meDesc)
             Utils.runLaterInSwingThread {
               Utils.scrollToOffset(0, eventDesc)
@@ -187,7 +187,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
                   var minx, miny = Double.MaxValue
                   var maxx, maxy = Double.MinValue
 
-                  def processBounds(p: Point2D.Double) {
+                  def processBounds(p: Point2D.Double): Unit = {
                     if (p.x < minx) minx = p.x
                     else if (p.x > maxx) maxx = p.x
 
@@ -235,7 +235,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
               }
             }
           }
-          override def mouseReleased(e: MouseEvent) {
+          override def mouseReleased(e: MouseEvent): Unit = {
             currUiElems.foreach { _.setBackground(Theme.currentTheme.tracingBg) }
             me.uiElems.foreach { _.setBackground(highlightColor) }
             currUiElems = me.uiElems

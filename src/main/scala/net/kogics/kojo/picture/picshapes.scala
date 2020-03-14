@@ -83,7 +83,7 @@ trait PicShapeOps { self: Picture with CorePicOps =>
   def setPenColor(color: java.awt.Paint) = Utils.runInSwingThread {
     _setPenColor(tnode, color)
   }
-  protected def _setPenColor(node: PNode, color: java.awt.Paint) {
+  protected def _setPenColor(node: PNode, color: java.awt.Paint): Unit = {
     node.asInstanceOf[PPath].setStrokePaint(color)
   }
 
@@ -93,7 +93,7 @@ trait PicShapeOps { self: Picture with CorePicOps =>
   def setPenThickness(th: Double) = Utils.runInSwingThread {
     _setPenThickness(tnode, th)
   }
-  protected def _setPenThickness(node: PNode, th: Double) {
+  protected def _setPenThickness(node: PNode, th: Double): Unit = {
     val (cap, join) = capJoin(th)
     val stroke = new BasicStroke(th.toFloat, cap, join)
     node.asInstanceOf[PPath].setStroke(stroke)
@@ -135,7 +135,7 @@ trait PicShapeOps { self: Picture with CorePicOps =>
   }
 
   def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph", "for non-turtle picture")
-  def dumpInfo() {}
+  def dumpInfo(): Unit = {}
   def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine", "for non-turtle picture")
 }
 
@@ -165,7 +165,7 @@ trait NonVectorPicOps { self: Picture with CorePicOps =>
   def initGeom(): Geometry = notSupported("initGeometry", "for non-vector picture")
 
   def morph(fn: Seq[net.kogics.kojo.kgeom.PolyLine] => Seq[net.kogics.kojo.kgeom.PolyLine]) = notSupported("morph", "for non-vector picture")
-  def dumpInfo() {}
+  def dumpInfo(): Unit = {}
   def foreachPolyLine(fn: net.kogics.kojo.kgeom.PolyLine => Unit) = notSupported("foreachPolyLine", "for non-vector picture")
 }
 
@@ -362,13 +362,13 @@ class Java2DPic(w: Double, h: Double, fn: Graphics2D => Unit)(implicit val canva
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val node = new PNode {
       var drawn = false
-      override def paint(paintContext: PPaintContext) {
+      override def paint(paintContext: PPaintContext): Unit = {
         val g2 = paintContext.getGraphics
         g2.drawImage(imageWithDrawing, null, 0, 0)
         drawn = true
       }
 
-      override def setParent(newParent: PNode) {
+      override def setParent(newParent: PNode): Unit = {
         super.setParent(newParent)
         if (newParent == null && drawn) {
           imageG2D.dispose()
@@ -394,7 +394,7 @@ class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanv
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val inode = new PImage(img) {
-      override def paint(paintContext: PPaintContext) {
+      override def paint(paintContext: PPaintContext): Unit = {
         if (paintContext.getScale == 1.0) {
           val g2 = paintContext.getGraphics()
           g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
@@ -457,24 +457,24 @@ class UrlImagePic(url: URL, envelope: Option[Picture])(implicit canvas: SCanvas)
 class SwingPic(swingComponent: JComponent)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with NonVectorPicOps {
 
-  def pswingHook(ps: PSwing) {}
+  def pswingHook(ps: PSwing): Unit = {}
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val pswing = new PSwing(swingComponent)
-    def handleCombo(combo: JComboBox[AnyRef]) {
+    def handleCombo(combo: JComboBox[AnyRef]): Unit = {
       combo.addItem(Constants.DropDownCanvasPadding)
       combo.addPopupMenuListener(new PopupMenuListener {
-        def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+        def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit = {
           combo.setBounds(getNodeBoundsInCanvas(pswing, combo))
           if (insidePanel(combo)) {
             combo.revalidate()
           }
         }
-        def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
-        def popupMenuCanceled(e: PopupMenuEvent) {}
+        def popupMenuWillBecomeInvisible(e: PopupMenuEvent): Unit = {}
+        def popupMenuCanceled(e: PopupMenuEvent): Unit = {}
       })
     }
-    def handleComponent(comp: Component) {
+    def handleComponent(comp: Component): Unit = {
       comp match {
         case combo: JComboBox[_] => handleCombo(combo.asInstanceOf[JComboBox[AnyRef]])
         case jp: JPanel          => jp.getComponents foreach { handleComponent }

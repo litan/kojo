@@ -105,7 +105,7 @@ trait CoreBuiltins extends Rationals {
     }.asScala
   }
 
-  def setRandomSeed(seed: Long) { Random.setSeed(seed) }
+  def setRandomSeed(seed: Long): Unit = { Random.setSeed(seed) }
   def random(upperBound: Int) = Random.nextInt(upperBound)
   def random(lowerBound: Int, upperBound: Int): Int = lowerBound + random(upperBound - lowerBound)
   def randomDouble(upperBound: Double) = Random.nextDouble * upperBound
@@ -140,11 +140,11 @@ trait CoreBuiltins extends Rationals {
 
   def randomColor = Color(random(256), random(256), random(256))
   def randomTransparentColor = Color(random(256), random(256), random(256), 100 + random(156))
-  def initRandomGenerator() {
+  def initRandomGenerator(): Unit = {
     initRandomGenerator(randomLong)
   }
 
-  def initRandomGenerator(seed: Long) {
+  def initRandomGenerator(seed: Long): Unit = {
     println(s"Random seed set to: ${seed}L")
     setRandomSeed(seed)
   }
@@ -176,9 +176,9 @@ trait CoreBuiltins extends Rationals {
   def ColorHSB(h: Double, s: Double, b: Double) = java.awt.Color.getHSBColor((h / 360).toFloat, (s / 100).toFloat, (b / 100).toFloat)
   def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
 
-  def clearOutput()
+  def clearOutput(): Unit
   def readln(prompt: String): String
-  def setBackground(c: Paint)
+  def setBackground(c: Paint): Unit
   def Font(name: String, size: Int) = new Font(name, JFont.PLAIN, size)
   def Font(name: String, size: Int, style: Int) = new Font(name, style, size)
   def textExtent(text: String, fontSize: Int, fontName: String = null) = Utils.runInSwingThreadAndWait {

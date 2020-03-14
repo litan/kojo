@@ -37,7 +37,7 @@ trait RmiMultiInstance {
     }
   }
 
-  def firstMain(args: Array[String]) {
+  def firstMain(args: Array[String]): Unit = {
     try {
       val sf = new RmiLocalhostSocketFactory
       registry = Some(LocateRegistry.createRegistry(Utils.RmiRegistryPort, sf, sf))
@@ -50,7 +50,7 @@ trait RmiMultiInstance {
     }
   }
 
-  def firstMainDone() {
+  def firstMainDone(): Unit = {
     try {
       println("[INFO] Removing RMI registry Listener")
       registry.foreach { UnicastRemoteObject.unexportObject(_, true) }

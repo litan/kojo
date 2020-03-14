@@ -107,15 +107,15 @@ object SwedishAPI {
   }
   
   //loops in Swedish
-  def upprepa(n: Int)(block: => Unit) {
+  def upprepa(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n){ block }
   }
 
-  def räkneslinga(n: Int)(block: Int => Unit) {
+  def räkneslinga(n: Int)(block: Int => Unit): Unit = {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def sålänge(villkor: => Boolean)(block: => Unit) {
+  def sålänge(villkor: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatWhile (villkor) { block }
   }  
 
@@ -138,7 +138,7 @@ object SwedishAPI {
   //speedTest
   def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
   
-  def räknaTill(n: BigInt) {
+  def räknaTill(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** Räknar från 1 till ... ")
     val startTid = systemtid
@@ -156,7 +156,7 @@ object SwedishAPI {
 }
 
 object SvInit {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     net.kogics.kojo.lite.i18n.SwedishAPI.builtins = builtins
     builtins match {

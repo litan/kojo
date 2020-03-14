@@ -22,7 +22,7 @@ import net.kogics.kojo.util.Throttler
 object RepeatCommands extends RepeatCommands
 
 trait RepeatCommands {
-  def repeat(n: Int) (fn: => Unit) {
+  def repeat(n: Int) (fn: => Unit): Unit = {
     var i = 0
     while(i < n) {
       fn
@@ -30,7 +30,7 @@ trait RepeatCommands {
     }
   }
 
-  def repeati(n: Int) (fn: Int => Unit) {
+  def repeati(n: Int) (fn: Int => Unit): Unit = {
     var i = 0
     while(i < n) {
       fn(i+1)
@@ -38,21 +38,21 @@ trait RepeatCommands {
     }
   }
 
-  def repeatWhile(cond: => Boolean) (fn: => Unit) {
+  def repeatWhile(cond: => Boolean) (fn: => Unit): Unit = {
     while (cond) {
       fn
       Throttler.throttle()
     }
   }
 
-  def repeatUntil(cond: => Boolean) (fn: => Unit) {
+  def repeatUntil(cond: => Boolean) (fn: => Unit): Unit = {
     while (!cond) {
       fn
       Throttler.throttle()
     }
   }
   
-  def repeatFor[T](seq: Iterable[T])(fn: T => Unit) {
+  def repeatFor[T](seq: Iterable[T])(fn: T => Unit): Unit = {
     val iter = seq.iterator
     while (iter.hasNext) {
       fn(iter.next)

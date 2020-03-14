@@ -27,7 +27,7 @@ class StoryTellerTest {
   val st = new StoryTeller(kojoCtx)
 
   @Test
-  def testIntFieldValue {
+  def testIntFieldValue: Unit = {
     val tf = st.addField("f1", "")
     val fv = st.fieldValue("f1", 3)
     assertTrue(fv.isInstanceOf[Int] && fv == 3)
@@ -38,7 +38,7 @@ class StoryTellerTest {
   }
 
   @Test
-  def testDoubleFieldValue {
+  def testDoubleFieldValue: Unit = {
     val tf = st.addField("f1", "")
     val fv = st.fieldValue("f1", 3.0)
     assertTrue(fv.isInstanceOf[Double] && fv == 3)
@@ -49,7 +49,7 @@ class StoryTellerTest {
   }
 
   @Test
-  def testStringFieldValue {
+  def testStringFieldValue: Unit = {
     val tf = st.addField("f1", "")
     val fv = st.fieldValue("f1", "abc")
     assertTrue(fv.isInstanceOf[String] && fv == "abc")

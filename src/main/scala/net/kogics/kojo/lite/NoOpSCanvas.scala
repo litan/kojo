@@ -17,38 +17,38 @@ import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.util.PBounds
 
 class NoOpSCanvas extends SCanvas {
-  def clear() {}
-  def clearStepDrawing() {}
+  def clear(): Unit = {}
+  def clearStepDrawing(): Unit = {}
   def newTurtle(x: Double, y: Double, costume: String): Turtle = null
-  def showAxes() {}
-  def hideAxes() {}
-  def showGrid() {}
-  def hideGrid() {}
+  def showAxes(): Unit = {}
+  def hideAxes(): Unit = {}
+  def showGrid(): Unit = {}
+  def hideGrid(): Unit = {}
   def showProtractor(x: Double, y: Double) = null
-  def hideProtractor() {}
+  def hideProtractor(): Unit = {}
   def showScale(x: Double, y: Double) = null
-  def hideScale() {}
-  def zoom(factor: Double) {}
-  def zoom(factor: Double, cx: Double, cy: Double) {}
-  def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double) {}
-  def scroll(x: Double, y: Double) {}
+  def hideScale(): Unit = {}
+  def zoom(factor: Double): Unit = {}
+  def zoom(factor: Double, cx: Double, cy: Double): Unit = {}
+  def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit = {}
+  def scroll(x: Double, y: Double): Unit = {}
   def exportImage(filePrefix: String): java.io.File = null
   def exportImage(filePrefix: String, width: Int, height: Int): java.io.File = null
   def exportImageH(filePrefix: String, height: Int): java.io.File = null
   def exportImageW(filePrefix: String, width: Int): java.io.File = null
   def exportThumbnail(filePrefix: String, height: Int): java.io.File = null
-  def onKeyPress(fn: Int => Unit) {}
-  def onKeyRelease(fn: Int => Unit) {}
-  def onMouseClick(fn: (Double, Double) => Unit) {}
-  def onMouseDrag(fn: (Double, Double) => Unit) {}
-  def onMouseMove(fn: (Double, Double) => Unit) {}
-  def setUnitLength(ul: UnitLen) {}
-  def clearWithUL(ul: UnitLen) {}
+  def onKeyPress(fn: Int => Unit): Unit = {}
+  def onKeyRelease(fn: Int => Unit): Unit = {}
+  def onMouseClick(fn: (Double, Double) => Unit): Unit = {}
+  def onMouseDrag(fn: (Double, Double) => Unit): Unit = {}
+  def onMouseMove(fn: (Double, Double) => Unit): Unit = {}
+  def setUnitLength(ul: UnitLen): Unit = {}
+  def clearWithUL(ul: UnitLen): Unit = {}
   def camScale: Double = 1.0
-  def wipe() {}
-  def setBackgroundH(c1: Color, c2: Color) {}
-  def setBackgroundV(c1: Color, c2: Color) {}
-  def drawStage(fillc: Paint) {}
+  def wipe(): Unit = {}
+  def setBackgroundH(c1: Color, c2: Color): Unit = {}
+  def setBackgroundV(c1: Color, c2: Color): Unit = {}
+  def drawStage(fillc: Paint): Unit = {}
   def stage: Picture = null
   def stageLeft: Picture = null
   def stageTop: Picture = null
@@ -57,17 +57,17 @@ class NoOpSCanvas extends SCanvas {
   def stageArea: Picture = null
 
   def turtle0: Turtle = null
-  def activate() {}
+  def activate(): Unit = {}
   def cbounds: PBounds = null
-  def setCanvasBackground(c: Paint) {}
+  def setCanvasBackground(c: Paint): Unit = {}
   def kojoCtx: KojoCtx = null
   def timer(rate: Long)(fn: => Unit): Future[PActivity] = null
   def animate(fn: => Unit): Future[PActivity] = null
-  def animateActivity(a: PActivity) {}
-  def stopAnimation() {}
-  def stopAnimationActivity(a: Future[PActivity]) {}
-  def onAnimationStart(fn: => Unit) {}
-  def onAnimationStop(fn: => Unit) {}
+  def animateActivity(a: PActivity): Unit = {}
+  def stopAnimation(): Unit = {}
+  def stopAnimationActivity(a: Future[PActivity]): Unit = {}
+  def onAnimationStart(fn: => Unit): Unit = {}
+  def onAnimationStop(fn: => Unit): Unit = {}
   // stuff for the pictures module
   def getCamera: PCamera = new PCamera
   def pictures: PLayer = null
@@ -75,10 +75,10 @@ class NoOpSCanvas extends SCanvas {
   def unitLen = null
   type TurtleLike <: Turtle
   private[kojo] def newInvisibleTurtle(x: Double, y: Double) = null.asInstanceOf[TurtleLike]
-  private[kojo] def setDefTurtle(t: TurtleLike) {}
-  private[kojo] def restoreDefTurtle() {}
-  def resetPanAndZoom() {}
-  def disablePanAndZoom() {}
+  private[kojo] def setDefTurtle(t: TurtleLike): Unit = {}
+  private[kojo] def restoreDefTurtle(): Unit = {}
+  def resetPanAndZoom(): Unit = {}
+  def disablePanAndZoom(): Unit = {}
 }
 
 

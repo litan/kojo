@@ -6,7 +6,7 @@ import net.kogics.kojo.core.Picture
 
 trait PicDrawingDsl {
   def pic: Picture
-  def draw() {
+  def draw(): Unit = {
     pic.draw()
   }
   def outlined(color: Paint): PicDrawingDsl
@@ -50,7 +50,7 @@ object PicCache {
   var hits = 0
   var misses = 0
   val seen = new java.util.concurrent.ConcurrentHashMap[Picture, Int]()
-  def clear() {
+  def clear(): Unit = {
     seen.clear()
     hits = 0
     misses = 0

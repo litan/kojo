@@ -4,27 +4,27 @@ import net.kogics.kojo.core.Interpreter
 import net.kogics.kojo.core.RunContext
 
 class NoOpRunContext extends RunContext {
-  def initInterp(interp: Interpreter) {}
+  def initInterp(interp: Interpreter): Unit = {}
   val compilerPrefix = """ {
   val builtins = net.kogics.kojo.lite.Builtins.instance
   import builtins._
   class UserCode {
 """
-  def onInterpreterInit() {}
-  def onInterpreterStart(code: String) {}
-  def onRunError() {}
-  def onRunSuccess() {}
-  def onRunInterpError() {}
-  def onCompileStart() {}
-  def onCompileError() {}
-  def onCompileSuccess() {}
-  def onInternalCompilerError() {}
+  def onInterpreterInit(): Unit = {}
+  def onInterpreterStart(code: String): Unit = {}
+  def onRunError(): Unit = {}
+  def onRunSuccess(): Unit = {}
+  def onRunInterpError(): Unit = {}
+  def onCompileStart(): Unit = {}
+  def onCompileError(): Unit = {}
+  def onCompileSuccess(): Unit = {}
+  def onInternalCompilerError(): Unit = {}
 
-  def reportOutput(outText: String) {}
-  def reportWorksheetOutput(result: String, lineNum: Int) {}
-  def reportError(errMsg: String) {}
-  def reportException(errText: String) {}
-  def reportSmartError(errText: String, line: Int, column: Int, offset: Int) {}
+  def reportOutput(outText: String): Unit = {}
+  def reportWorksheetOutput(result: String, lineNum: Int): Unit = {}
+  def reportError(errMsg: String): Unit = {}
+  def reportException(errText: String): Unit = {}
+  def reportSmartError(errText: String, line: Int, column: Int, offset: Int): Unit = {}
 
   def astStopPhase: String = "typer"
   def isStoryRunning: Boolean = false

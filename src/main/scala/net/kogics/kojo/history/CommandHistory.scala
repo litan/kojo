@@ -25,8 +25,8 @@ class NoopHistorySaver extends HistorySaver {
   def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
   def readAll(): Seq[HistoryItem] = Seq()
   def readSome(filter: String): Seq[HistoryItem] = Seq()
-  def updateStar(hi: HistoryItem) {}
-  def updateTags(hi: HistoryItem) {}
+  def updateStar(hi: HistoryItem): Unit = {}
+  def updateTags(hi: HistoryItem): Unit = {}
 }
 
 object CommandHistory {
@@ -52,16 +52,16 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
   loadAll()
   //  loadInit() // async loading
 
-  def setListener(l: HistoryListener) {
+  def setListener(l: HistoryListener): Unit = {
     //    if (listener.isDefined) throw new IllegalArgumentException("Listener already defined")
     listener = Some(l)
   }
 
-  def clearListener() {
+  def clearListener(): Unit = {
     listener = None
   }
 
-  def internalAdd(hi: HistoryItem) {
+  def internalAdd(hi: HistoryItem): Unit = {
     history += hi
     hIndex = history.size
   }
@@ -113,15 +113,15 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
   def size = history.size
   def apply(idx: Int) = history(idx)
 
-  def ensureVisible(idx: Int) {
+  def ensureVisible(idx: Int): Unit = {
     listener foreach { _ ensureVisible (idx) }
   }
 
-  def ensureLastEntryVisible() {
+  def ensureLastEntryVisible(): Unit = {
     ensureVisible(size)
   }
 
-  def starHelper(hi: HistoryItem, on: Boolean) {
+  def starHelper(hi: HistoryItem, on: Boolean): Unit = {
     try {
       hi.starred = on
       historySaver.updateStar(hi)
@@ -133,15 +133,15 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
     }
   }
 
-  def star(hi: HistoryItem) {
+  def star(hi: HistoryItem): Unit = {
     starHelper(hi, true)
   }
 
-  def unstar(hi: HistoryItem) {
+  def unstar(hi: HistoryItem): Unit = {
     starHelper(hi, false)
   }
 
-  def saveTags(hi: HistoryItem, tags: String) {
+  def saveTags(hi: HistoryItem, tags: String): Unit = {
     val oldTags = hi.tags
     try {
       hi.tags = tags
@@ -164,14 +164,14 @@ class CommandHistory private[kojo] (historySaver: HistorySaver) extends core.Com
     }
   }
 
-  def loadAll() {
+  def loadAll(): Unit = {
     history.clear()
     historySaver.readAll.reverse.foreach { hi =>
       internalAdd(hi)
     }
   }
 
-  def filter(text: String) {
+  def filter(text: String): Unit = {
     history.clear()
     historySaver.readSome(text).reverse.foreach { hi =>
       internalAdd(hi)

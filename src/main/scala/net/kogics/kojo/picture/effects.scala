@@ -20,7 +20,7 @@ import core.Picture
 import net.kogics.kojo.picture.PicCache.freshPic
 
 abstract class Effect extends Transformer {
-  def draw() {
+  def draw(): Unit = {
     tpic.draw()
   }
 }

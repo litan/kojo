@@ -188,7 +188,7 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   def pimage(img: BufferedImage) = {
     val inode: PImage = new PImage(img) {
       lazy val picWithEffects: BufferedImage = effects.foldLeft(img) { (imgt, op) => op.filter(imgt) }
-      override def paint(paintContext: PPaintContext) {
+      override def paint(paintContext: PPaintContext): Unit = {
         val finalImg = picWithEffects
         val g3 = paintContext.getGraphics()
         if (paintContext.getScale == 1.0) {
@@ -217,28 +217,28 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   def copy: net.kogics.kojo.core.Picture = new EffectableImagePic(pic.copy)
   override def toString() = s"EffectableImagePic (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 
-  def fade(n: Int) {
+  def fade(n: Int): Unit = {
     effects = effects :+ new FadeImageOp(n)
   }
-  def blur(n: Int) {
+  def blur(n: Int): Unit = {
     effects = effects :+ new BlurImageOp(n)
   }
-  def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) {
+  def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double): Unit = {
     effects = effects :+ new PointLightImageOp(x, y, direction, elevation, distance)
   }
-  def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) {
+  def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double): Unit = {
     effects = effects :+ new SpotLightImageOp(x, y, direction, elevation, distance)
   }
-  def lights(lights: Light*) {
+  def lights(lights: Light*): Unit = {
     effects = effects :+ new LightsImageOp(lights: _*)
   }
-  def noise(amount: Int, density: Double) {
+  def noise(amount: Int, density: Double): Unit = {
     effects = effects :+ new NoiseImageOp(amount, density)
   }
-  def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) {
+  def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double): Unit = {
     effects = effects :+ new WeaveImageOp(xWidth, xGap, yWidth, yGap)
   }
-  def effect(name: Symbol, props: Tuple2[Symbol, Any]*) {
+  def effect(name: Symbol, props: Tuple2[Symbol, Any]*): Unit = {
     effects = effects :+ new SomeEffectImageOp(name, props: _*)
   }
   def applyFilter(filter: BufferedImageOp): Unit = {
@@ -262,7 +262,7 @@ abstract class EffectableTransformer(pic: EffectablePicture) extends EffectableP
 }
 
 case class Fade(n: Int)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.fade(n)
     tpic.draw()
   }
@@ -271,7 +271,7 @@ case class Fade(n: Int)(pic: EffectablePicture) extends EffectableTransformer(pi
 }
 
 case class Blur(n: Int)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.blur(n)
     tpic.draw()
   }
@@ -280,7 +280,7 @@ case class Blur(n: Int)(pic: EffectablePicture) extends EffectableTransformer(pi
 }
 
 case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.pointLight(x, y, direction, elevation, distance)
     tpic.draw()
   }
@@ -289,7 +289,7 @@ case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: 
 }
 
 case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.spotLight(x, y, direction, elevation, distance)
     tpic.draw()
   }
@@ -298,7 +298,7 @@ case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: D
 }
 
 case class Lights(nlights: Light*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.lights(nlights: _*)
     tpic.draw()
   }
@@ -307,7 +307,7 @@ case class Lights(nlights: Light*)(pic: EffectablePicture) extends EffectableTra
 }
 
 case class Noise(amount: Int, density: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.noise(amount, density)
     tpic.draw()
   }
@@ -316,7 +316,7 @@ case class Noise(amount: Int, density: Double)(pic: EffectablePicture) extends E
 }
 
 case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.weave(xWidth, xGap, yWidth, yGap)
     tpic.draw()
   }
@@ -325,7 +325,7 @@ case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic
 }
 
 case class SomeEffect(name: Symbol, props: Tuple2[Symbol, Any]*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.effect(name, props: _*)
     tpic.draw()
   }
@@ -334,7 +334,7 @@ case class SomeEffect(name: Symbol, props: Tuple2[Symbol, Any]*)(pic: Effectable
 }
 
 case class ApplyFilter(filter: BufferedImageOp)(pic: EffectablePicture) extends EffectableTransformer(pic) {
-  def draw() {
+  def draw(): Unit = {
     tpic.applyFilter(filter)
     tpic.draw()
   }

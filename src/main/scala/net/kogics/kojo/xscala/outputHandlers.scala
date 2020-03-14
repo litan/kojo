@@ -39,11 +39,11 @@ class InterpOutputHandler(ctx: RunContext) {
   @volatile var firstWorksheetError: Option[String] = None
   @volatile var includedLines: Int = 0
 
-  def showInterpOutput(lineFragment: String) {
+  def showInterpOutput(lineFragment: String): Unit = {
     if (!interpOutputSuppressed) reportInterpOutput(lineFragment)
   }
   
-  private def reportWorksheetOutput(output: String, line: Int) {
+  private def reportWorksheetOutput(output: String, line: Int): Unit = {
       if (output.trim == "") return
 
       val wline = line - includedLines
@@ -52,7 +52,7 @@ class InterpOutputHandler(ctx: RunContext) {
       }
   }
 
-  private def reportExceptionOutput(output0: String) {
+  private def reportExceptionOutput(output0: String): Unit = {
     Log.info("Exception in interpreter output: " + output0)
     val lines = output0.split("\n")
 
@@ -66,7 +66,7 @@ class InterpOutputHandler(ctx: RunContext) {
     ctx.reportException(output)
   }
 
-  private def reportNonExceptionOutput(output: String) {
+  private def reportNonExceptionOutput(output: String): Unit = {
     if (output.trim == "^") {
       return
     }
@@ -87,7 +87,7 @@ class InterpOutputHandler(ctx: RunContext) {
     }
   }
 
-  def flushWorksheetError() {
+  def flushWorksheetError(): Unit = {
     firstWorksheetError foreach { msg =>
       worksheetLineNum foreach { reportWorksheetOutput(msg.linesIterator.next, _) }
       ctx.reportError(msg)
@@ -95,11 +95,11 @@ class InterpOutputHandler(ctx: RunContext) {
     firstWorksheetError = None
   }
 
-  def clearWorksheetError() {
+  def clearWorksheetError(): Unit = {
     firstWorksheetError = None
   }
 
-  def reportInterpOutput(output: String) {
+  def reportInterpOutput(output: String): Unit = {
     if (output == "") return
 
     if (exceptionPattern.matcher(output).find) {
@@ -124,21 +124,21 @@ class InterpOutputHandler(ctx: RunContext) {
 }
 
 class CompilerOutputHandler(ctx: RunContext) extends CompilerListener {
-  def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String) {
+  def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String): Unit = {
     ctx.reportError("Error[%d,%d]: %s\n" format (line, column, msg))
     ctx.reportSmartError("%s\n" format (lineContent), line, column, offset)
     ctx.reportError(" " * (column - 1) + "^\n")
   }
 
-  def warning(msg: String, line: Int, column: Int) {
+  def warning(msg: String, line: Int, column: Int): Unit = {
     println("Warning: %s\n" format (msg))
   }
 
-  def info(msg: String, line: Int, column: Int) {
+  def info(msg: String, line: Int, column: Int): Unit = {
     println("Info: %s\n" format (msg))
   }
 
-  def message(msg: String) {
+  def message(msg: String): Unit = {
     println("%s\n" format (msg))
   }
 }

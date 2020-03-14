@@ -26,14 +26,14 @@ import net.kogics.kojo.core.TwMode
 import net.kogics.kojo.core.VanillaMode
 
 class SwitchMode(execSupport: CodeExecutionSupport) extends AbstractAction {
-  def actionPerformed(e: ActionEvent) {
+  def actionPerformed(e: ActionEvent): Unit = {
     e.getActionCommand match {
       case TwMode.code      => execSupport.activateTw()
       case VanillaMode.code => execSupport.activateVn()
     }
   }
 
-  def updateCb(cb: JCheckBoxMenuItem) {
+  def updateCb(cb: JCheckBoxMenuItem): Unit = {
     cb.getActionCommand match {
       case TwMode.code      => cb.setSelected(execSupport.isTwActive)
       case VanillaMode.code => cb.setSelected(execSupport.isVnActive)

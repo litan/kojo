@@ -20,55 +20,55 @@ import bibliothek.gui.dock.common.DefaultSingleCDockable
 class NoOpKojoCtx extends core.KojoCtx {
   Utils.kojoCtx = this
   def activityListener = NoopSpriteListener
-  def setActivityListener(l: SpriteListener) {}
+  def setActivityListener(l: SpriteListener): Unit = {}
   def canvasLocation = null
   type ActionLike = Action
   def fullScreenCanvasAction() = null
   def fullScreenOutputAction() = null
-  def updateMenuItem(mi: JCheckBoxMenuItem, action: ActionLike) {}
-  def setStorytellerWidth(width: Int) {}
-  def activateDrawingCanvasHolder() {}
-  def activateDrawingCanvas() {}
-  def activateScriptEditor() {}
-  def activateOutputPane() {}
-  def makeStagingVisible() {}
-  def makeTurtleWorldVisible() {}
-  def makeMathWorldVisible() {}
-  def makeStoryTellerVisible() {}
-  def make3DCanvasVisible() {}
-  def makeTraceWindowVisible(tw: DefaultSingleCDockable) {}
+  def updateMenuItem(mi: JCheckBoxMenuItem, action: ActionLike): Unit = {}
+  def setStorytellerWidth(width: Int): Unit = {}
+  def activateDrawingCanvasHolder(): Unit = {}
+  def activateDrawingCanvas(): Unit = {}
+  def activateScriptEditor(): Unit = {}
+  def activateOutputPane(): Unit = {}
+  def makeStagingVisible(): Unit = {}
+  def makeTurtleWorldVisible(): Unit = {}
+  def makeMathWorldVisible(): Unit = {}
+  def makeStoryTellerVisible(): Unit = {}
+  def make3DCanvasVisible(): Unit = {}
+  def makeTraceWindowVisible(tw: DefaultSingleCDockable): Unit = {}
   def baseDir: String = System.getProperty("user.dir")
   def stopScript(): Unit = {}
-  def stopInterpreter() {}
-  def stopActivity() {}
-  def stopStory() {}
-  def scrollOutputToEnd() {}
+  def stopInterpreter(): Unit = {}
+  def stopActivity(): Unit = {}
+  def stopStory(): Unit = {}
+  def scrollOutputToEnd(): Unit = {}
   def frame: JFrame = null
-  def fileOpened(file: java.io.File) {}
-  def fileModified() {}
-  def fileSaved() {}
-  def fileClosed() {}
+  def fileOpened(file: java.io.File): Unit = {}
+  def fileModified(): Unit = {}
+  def fileSaved(): Unit = {}
+  def fileClosed(): Unit = {}
   var llsdir = ""
   def getLastLoadStoreDir() = llsdir
-  def setLastLoadStoreDir(dir: String) { llsdir = dir }
-  def drawingCanvasActivated() {}
-  def mwActivated() {}
-  def d3Activated() {}
+  def setLastLoadStoreDir(dir: String): Unit = { llsdir = dir }
+  def drawingCanvasActivated(): Unit = {}
+  def mwActivated(): Unit = {}
+  def d3Activated(): Unit = {}
   var lc: Color = _
   def lastColor = lc
-  def lastColor_=(c: Color) { lc = c }
+  def lastColor_=(c: Color): Unit = { lc = c }
   def knownColors: List[String] = List()
   def knownColor(name: String) = Color.white
   def knownColors2: List[String] = List()
   def knownColor2(name: String) = doodle.Color.white
   def isVerboseOutput = false
-  def showVerboseOutput() {}
-  def hideVerboseOutput() {}
+  def showVerboseOutput(): Unit = {}
+  def hideVerboseOutput(): Unit = {}
   def isSriptShownInOutput = false
-  def showScriptInOutput() {}
-  def hideScriptInOutput() {}
-  def clearOutput() {}
-  def kprintln(outText: String) {}
+  def showScriptInOutput(): Unit = {}
+  def hideScriptInOutput(): Unit = {}
+  def clearOutput(): Unit = {}
+  def kprintln(outText: String): Unit = {}
   def readInput(prompt: String): String = ""
   def setAstStopPhase(phase: String): Unit = {}
   def astStopPhase: String = "typer"
@@ -79,18 +79,18 @@ class NoOpKojoCtx extends core.KojoCtx {
   def clickInterpreterRun(): Unit = {}
   def clickWorksheetRun(): Unit = {}
   def userLanguage: String = "en"
-  def userLanguage_=(lang: String) {}
-  def switchToDefaultPerspective() {}
-  def switchToDefault2Perspective() {}
-  def switchToScriptEditingPerspective() {}
-  def switchToWorksheetPerspective() {}
-  def switchToStoryViewingPerspective() {}
-  def switchToHistoryBrowsingPerspective() {}
-  def switchToOutputStoryViewingPerspective() {}
-  def setOutputBackground(color: Color) {}
-  def setOutputForeground(color: Color) {}
-  def setOutputFontSize(n: Int) {}
-  def formatSource() {}
+  def userLanguage_=(lang: String): Unit = {}
+  def switchToDefaultPerspective(): Unit = {}
+  def switchToDefault2Perspective(): Unit = {}
+  def switchToScriptEditingPerspective(): Unit = {}
+  def switchToWorksheetPerspective(): Unit = {}
+  def switchToStoryViewingPerspective(): Unit = {}
+  def switchToHistoryBrowsingPerspective(): Unit = {}
+  def switchToOutputStoryViewingPerspective(): Unit = {}
+  def setOutputBackground(color: Color): Unit = {}
+  def setOutputForeground(color: Color): Unit = {}
+  def setOutputFontSize(n: Int): Unit = {}
+  def formatSource(): Unit = {}
   def showStatusText(text: String): Unit = {}
   def showStatusCaretPos(line: Int, col: Int): Unit = {}
   def setEditorTabSize(ts: Int): Unit = {}
@@ -98,7 +98,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def showAppWaitCursor(): Unit = {}
   def hideAppWaitCursor(): Unit = {}
   def picLine(p1: Point2D.Double, p2: Point2D.Double): Picture = null
-  def repaintCanvas() {}
+  def repaintCanvas(): Unit = {}
   def appProperty(key: String): Option[String] = None
   def screenDpiFontDelta: Int = 0
   def baseFontSize: Int = 0

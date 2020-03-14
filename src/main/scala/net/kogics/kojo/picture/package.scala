@@ -297,7 +297,7 @@ package object picture {
 
   private def cross(l: Double)(implicit canvas: SCanvas) = stroke(Color.blue) -> Pic { t =>
     import t._
-    def line() {
+    def line(): Unit = {
       forward(l / 2)
       penUp()
       back(l)
@@ -309,7 +309,7 @@ package object picture {
     line()
   }
 
-  private def addMouseHandlers(p: Picture) {
+  private def addMouseHandlers(p: Picture): Unit = {
     var (oldx, oldy) = (0.0, 0.0)
     var pressDelta = (0.0, 0.0)
     p.onMouseDrag { (x, y) =>

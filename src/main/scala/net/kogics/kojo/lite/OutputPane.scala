@@ -82,7 +82,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
   errorWindow.addHyperlinkListener(new HyperlinkListener {
     val linkRegex = """(?i)http://error/(\d+)""".r
-    def hyperlinkUpdate(e: HyperlinkEvent) {
+    def hyperlinkUpdate(e: HyperlinkEvent): Unit = {
       if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
         e.getURL.toString match {
           case linkRegex(offset) =>
@@ -107,7 +107,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   val popup = new JPopupMenu {
     val verboseOutput = new JCheckBoxMenuItem(Utils.loadString("S_ShowVerboseOutput"))
     verboseOutput.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         if (verboseOutput.isSelected) {
           kojoCtx.showVerboseOutput()
         }
@@ -120,7 +120,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
     val showCode = new JCheckBoxMenuItem(Utils.loadString("S_ShowScriptInOutput"))
     showCode.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         if (showCode.isSelected) {
           kojoCtx.showScriptInOutput()
         }
@@ -134,7 +134,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     addSeparator()
 
     val increaseFontSizeAction = new AbstractAction(Utils.loadString("S_IncreaseFontSize")) {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         increaseOutputFontSize()
       }
     }
@@ -152,7 +152,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     add(incrFontSizeItem)
 
     val decreaseFontSizeAction = new AbstractAction(Utils.loadString("S_DecreaseFontSize")) {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         decreaseOutputFontSize()
       }
     }
@@ -170,7 +170,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit.getMenuShortcutKeyMask), DefaultEditorKit.copyAction);
 
     errorWindow.addFocusListener(new FocusAdapter {
-      override def focusGained(e: FocusEvent) {
+      override def focusGained(e: FocusEvent): Unit = {
         incrFontSizeItem.setEnabled(false)
         decrFontSizeItem.setEnabled(false)
 
@@ -178,7 +178,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     })
 
     outputWindow.addFocusListener(new FocusAdapter {
-      override def focusGained(e: FocusEvent) {
+      override def focusGained(e: FocusEvent): Unit = {
         incrFontSizeItem.setEnabled(true)
         decrFontSizeItem.setEnabled(true)
 
@@ -186,7 +186,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     })
 
     val mListener = new MouseAdapter {
-      override def mouseWheelMoved(e: MouseWheelEvent) {
+      override def mouseWheelMoved(e: MouseWheelEvent): Unit = {
         if (e.isControlDown) {
           val delta = e.getWheelRotation
           val action = if (delta < 0) increaseFontSizeAction else decreaseFontSizeAction
@@ -203,7 +203,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
     val clearItem = new JMenuItem(Utils.loadString("S_Clear"))
     clearItem.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         kojoCtx.clearOutput()
       }
     })
@@ -216,20 +216,20 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     add(fullScreenItem)
 
     addPopupMenuListener(new PopupMenuListener {
-      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+      def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit = {
         verboseOutput.setState(kojoCtx.isVerboseOutput)
         showCode.setState(kojoCtx.isSriptShownInOutput)
         kojoCtx.updateMenuItem(fullScreenItem, fsOutputAction)
       }
-      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
-      def popupMenuCanceled(e: PopupMenuEvent) {}
+      def popupMenuWillBecomeInvisible(e: PopupMenuEvent): Unit = {}
+      def popupMenuCanceled(e: PopupMenuEvent): Unit = {}
     })
   }
 
   outputWindow.setComponentPopupMenu(popup)
   errorWindow.setComponentPopupMenu(popup)
 
-  def resetErrInfo() {
+  def resetErrInfo(): Unit = {
     errText = ""
     errOffset = 0
     errCount = 0
@@ -239,7 +239,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     }
   }
 
-  def appendOutput(s: String, color: Color) {
+  def appendOutput(s: String, color: Color): Unit = {
     if (TerminalAnsiCodes.isColoredString(s)) {
       TerminalAnsiCodes.parse(s) foreach { cstr =>
         appendOutput(cstr._1, cstr._2)
@@ -259,7 +259,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     }
   }
 
-  def appendError(s: String, offset: Option[Int] = None) {
+  def appendError(s: String, offset: Option[Int] = None): Unit = {
     errText += s
     if (offset.isDefined) {
       // errCount is used only for 'Check Script' case
@@ -305,14 +305,14 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     Utils.schedule(0.9) { outLayout.show(this, "Error") }
   }
 
-  def showOutput(outText: String) {
+  def showOutput(outText: String): Unit = {
     Utils.runLaterInSwingThread {
       showOutputHelper(outText, outputColor)
     }
     lastOutput = outText
   }
 
-  def showOutput(outText: String, color: Color) {
+  def showOutput(outText: String, color: Color): Unit = {
     Utils.runLaterInSwingThread {
       showOutputHelper(outText, color)
     }
@@ -324,7 +324,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     execSupport.enableClearButton()
   }
 
-  def showError(errMsg: String) {
+  def showError(errMsg: String): Unit = {
     Utils.runLaterInSwingThread {
       appendError(errMsg)
       execSupport.enableClearButton()
@@ -332,7 +332,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     //    lastOutput = errMsg
   }
 
-  def showException(errText: String) {
+  def showException(errText: String): Unit = {
     Utils.runLaterInSwingThread {
       appendError(errText)
       execSupport.enableClearButton()
@@ -340,7 +340,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     //    lastOutput = errText
   }
 
-  def showSmartError(errText: String, line: Int, column: Int, offset: Int) {
+  def showSmartError(errText: String, line: Int, column: Int, offset: Int): Unit = {
     Utils.runLaterInSwingThread {
       appendError(errText, Some(offset))
       execSupport.enableClearButton()
@@ -348,7 +348,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     //    lastOutput = errText
   }
 
-  def clear() {
+  def clear(): Unit = {
     outputColor = DefaultOutputColor
     setOutputFontSize(DefaultOutputFontSize)
     outputWindow.setBackground(DefaultOutputBackground)
@@ -358,7 +358,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     outoutPanel.revalidate()
   }
 
-  def clearLastOutput() {
+  def clearLastOutput(): Unit = {
     lastOutput = ""
   }
 
@@ -383,7 +383,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     inputField
   }
 
-  def removeInputPanel() {
+  def removeInputPanel(): Unit = {
     outoutPanel.remove(readInputPanel)
     outoutPanel.revalidate()
   }
@@ -410,21 +410,21 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     outputWindow.setFont(new Font(Font.MONOSPACED, Font.PLAIN, size))
   }
 
-  def increaseOutputFontSize() {
+  def increaseOutputFontSize(): Unit = {
     setOutputFontSize(fontSize + 1)
   }
 
-  def decreaseOutputFontSize() {
+  def decreaseOutputFontSize(): Unit = {
     setOutputFontSize(fontSize - 1)
   }
 
-  def maybeOutputDelimiter() {
+  def maybeOutputDelimiter(): Unit = {
     if (lastOutput.length > 0 && !lastOutput.endsWith(OutputDelimiter))
       showOutput(OutputDelimiter, execSupport.promptColor)
   }
 
   // should be called in swing thread
-  def scrollToEnd() {
+  def scrollToEnd(): Unit = {
     //    outputWindow.setCaretPosition(outputWindow.getDocument.getLength)
     val vsb = outoutSp.getVerticalScrollBar
     vsb.setValue(vsb.getMaximum)

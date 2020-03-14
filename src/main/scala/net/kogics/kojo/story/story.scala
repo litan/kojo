@@ -70,7 +70,7 @@ class IncrPage(val name: String, style: String, body: List[Para]) extends Viewab
     </body>
   }
   
-  private def runCode(n: Int) {
+  private def runCode(n: Int): Unit = {
     Utils.runAsyncMonitored {
       body(n-1).code
     }
@@ -79,12 +79,12 @@ class IncrPage(val name: String, style: String, body: List[Para]) extends Viewab
   def hasNextView = currPara < paras
   def hasPrevView = currPara > 1
 
-  def forward() {
+  def forward(): Unit = {
     currPara += 1
     if (currPara > paras) throw new IllegalStateException("Gone past view range")
   }
 
-  def back() {
+  def back(): Unit = {
     currPara -= 1
     if (currPara < 1) throw new IllegalStateException("Gone past view range")
   }
@@ -122,7 +122,7 @@ case class Story(pages: Viewable*) extends Viewable {
     }
   }
 
-  def forward() {
+  def forward(): Unit = {
     if (pages(currPage).hasNextView) {
       pages(currPage).forward()
     }
@@ -131,7 +131,7 @@ case class Story(pages: Viewable*) extends Viewable {
     }
   }
 
-  def back() {
+  def back(): Unit = {
     if (pages(currPage).hasPrevView) {
       pages(currPage).back()
     }
@@ -151,7 +151,7 @@ case class Story(pages: Viewable*) extends Viewable {
       false
   }
 
-  def goto(pg: Int, para: Int) {
+  def goto(pg: Int, para: Int): Unit = {
     // currpage - 0 based
     // pg - 1 based
     val targetPage = pg - 1
@@ -209,7 +209,7 @@ case class Story(pages: Viewable*) extends Viewable {
     handlers(name) = hm
   }
   
-  def handleLink(name: String, data: String) {
+  def handleLink(name: String, data: String): Unit = {
     handlers(name).handle(data)
   }
 
@@ -217,7 +217,7 @@ case class Story(pages: Viewable*) extends Viewable {
     linkEnterHandlers(name) = hm
   }
   
-  def handleLinkEnter(name: String, data: String) {
+  def handleLinkEnter(name: String, data: String): Unit = {
     linkEnterHandlers(name).handle(data)
   }
 
@@ -225,16 +225,16 @@ case class Story(pages: Viewable*) extends Viewable {
     linkExitHandlers(name) = hm
   }
   
-  def handleLinkExit(name: String, data: String) {
+  def handleLinkExit(name: String, data: String): Unit = {
     linkExitHandlers(name).handle(data)
   }
   
   @volatile var stopFn: Option[() => Unit] = None
-  def onStop(fn: => Unit) {
+  def onStop(fn: => Unit): Unit = {
     stopFn = Some(fn _)
   }
   
-  def stop() {
+  def stop(): Unit = {
     stopFn.foreach(_.apply)
   }
   

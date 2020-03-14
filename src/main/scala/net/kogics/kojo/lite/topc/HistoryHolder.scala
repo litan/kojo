@@ -10,11 +10,11 @@ class HistoryHolder(val hw: HistoryPanel)
   extends BaseHolder("HW", Utils.loadString("CTL_HistoryTopComponent"), hw) {
  
   addFocusListener(new CFocusListener {
-    override def focusGained(dockable: CDockable) {
+    override def focusGained(dockable: CDockable): Unit = {
       hw.searchField.requestFocusInWindow()
     }
 
-    override def focusLost(dockable: CDockable) {
+    override def focusLost(dockable: CDockable): Unit = {
     }
   })
 }

@@ -14,7 +14,7 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
   val kojoCtx = new NoOpKojoCtx
   
   
-  @Test def tabulateNormal(){
+  @Test def tabulateNormal(): Unit ={
     //Given
     val head = "Welcome to Kojo"
     val instructions = List(
@@ -30,7 +30,7 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
       "* Type key          " + goalActionSeparator + " Insert it into the script editor" + EOL //"* " + 18 chars left of "→"
   }
   
-  @Test def tabulateExtraneousWhiteSpace(){
+  @Test def tabulateExtraneousWhiteSpace(): Unit ={
     //Given
     val head = "Welcome to Kojo"
     val instructions = List(
@@ -46,7 +46,7 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
       "* Type key          " + goalActionSeparator + " Insert it into the script editor" + EOL
   }
   
-  @Test def tabulateWithoutArrow(){
+  @Test def tabulateWithoutArrow(): Unit ={
     //Given
     val head = "Welcome to Kojo"
     val instructions = List(
@@ -60,7 +60,7 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
       "* Type key: Insert it into the script editor" + EOL
   }
   
-  @Test def tabulateEmpties(){
+  @Test def tabulateEmpties(): Unit ={
     //Given
     val head = ""
     val instructions = List()
@@ -71,7 +71,7 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
     result shouldBe EOL
   }
   
-  @Test def tabulateNullHead(){
+  @Test def tabulateNullHead(): Unit ={
     //Given
     val head = null
     val instructions = List()
@@ -81,7 +81,7 @@ class CodeExecutionSupportTest extends JUnitSuite with org.scalatest.Matchers {
     }
   }
   
-  @Test def tabulateNullInstructions(){
+  @Test def tabulateNullInstructions(): Unit ={
     //Given
     val head = ""
     val instructions = null

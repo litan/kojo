@@ -190,9 +190,9 @@ object Utils {
 
   def inSwingThread = EventQueue.isDispatchThread
 
-  def runAsync(fn: => Unit) {
+  def runAsync(fn: => Unit): Unit = {
     new Thread(new Runnable {
-      def run {
+      def run: Unit = {
         fn
       }
     }).start
@@ -226,9 +226,9 @@ object Utils {
     }
   }
 
-  def runAsyncMonitored(fn: => Unit) {
+  def runAsyncMonitored(fn: => Unit): Unit = {
     lazy val t: Thread = new Thread(new Runnable {
-      def run {
+      def run: Unit = {
         startPumpingEvents()
         try {
           fn
@@ -247,16 +247,16 @@ object Utils {
     t.start()
   }
 
-  def stopMonitoredThreads() {
+  def stopMonitoredThreads(): Unit = {
     threads.forEach { t => t.interrupt() }
     threads.clear()
   }
 
   def noMonitoredThreads = threads.isEmpty
 
-  def runLaterInSwingThread(fn: => Unit) {
+  def runLaterInSwingThread(fn: => Unit): Unit = {
     javax.swing.SwingUtilities.invokeLater(new Runnable {
-      override def run {
+      override def run: Unit = {
         fn
       }
     })
@@ -273,7 +273,7 @@ object Utils {
   }
 
   // this is the core of Kojo UI performance - so the code is a little low-level
-  def runInSwingThread(fn: => Unit) {
+  def runInSwingThread(fn: => Unit): Unit = {
     if (EventQueue.isDispatchThread) {
       fn
     }
@@ -288,7 +288,7 @@ object Utils {
           batchQ.add(fn _)
           if (needDrainer) {
             javax.swing.SwingUtilities.invokeLater(new Runnable {
-              override def run {
+              override def run: Unit = {
                 batchLock.lock()
                 while (!batchQ.isEmpty) {
                   try {
@@ -330,7 +330,7 @@ object Utils {
     else {
       var t: T = null.asInstanceOf[T]
       javax.swing.SwingUtilities.invokeAndWait(new Runnable {
-        override def run {
+        override def run: Unit = {
           t = fn
         }
       })
@@ -348,7 +348,7 @@ object Utils {
       var t: T = null.asInstanceOf[T]
       val latch = new CountDownLatch(1)
       javax.swing.SwingUtilities.invokeLater(new Runnable {
-        override def run {
+        override def run: Unit = {
           t = fn
           latch.countDown()
         }
@@ -371,7 +371,7 @@ object Utils {
 
   def schedule(secs: Double)(f: => Unit): Timer = {
     lazy val t: Timer = new Timer((secs * 1000).toInt, new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         t.stop
         f
       }
@@ -382,7 +382,7 @@ object Utils {
 
   def scheduleRec(secs: Double)(f: => Unit): Timer = {
     val t: Timer = new Timer((secs * 1000).toInt, new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         f
       }
     })
@@ -393,7 +393,7 @@ object Utils {
   def scheduleRecN(n: Int, secs: Double)(f: => Unit): Timer = {
     @volatile var count = 0
     lazy val t: Timer = new Timer((secs * 1000).toInt, new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         count += 1
         if (count == n) {
           t.stop()
@@ -405,7 +405,7 @@ object Utils {
     t
   }
 
-  def replAssertEquals(a: Any, b: Any) {
+  def replAssertEquals(a: Any, b: Any): Unit = {
     if (a != b) println("Not Good. First: %s, Second: %s" format (a.toString, b.toString))
     else println("Good")
   }
@@ -455,7 +455,7 @@ object Utils {
 
   def readUrl(url: String) = readStream(new URL(url).openConnection().getInputStream)
 
-  def copyFile(in: File, out: File) {
+  def copyFile(in: File, out: File): Unit = {
     val sourceChannel = new FileInputStream(in).getChannel
     val destinationChannel = new FileOutputStream(out).getChannel
     sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel)
@@ -463,7 +463,7 @@ object Utils {
     destinationChannel.close();
   }
 
-  def readFileIntoMem(f: File) {
+  def readFileIntoMem(f: File): Unit = {
     val fis = new FileInputStream(f)
     val bs = new BufferedInputStream(fis)
     val buf = new Array[Byte](1024)
@@ -578,7 +578,7 @@ object Utils {
   lazy val actorSystem = ActorSystem("Kojo")
 
   lazy val queuedRunner = new AsyncQueuedRunner {}
-  def runAsyncQueued(fn: => Unit) {
+  def runAsyncQueued(fn: => Unit): Unit = {
     queuedRunner.runAsyncQueued(fn)
   }
 
@@ -601,7 +601,7 @@ object Utils {
     tnode
   }
 
-  def trect(h: Double, w: Double, t: core.Turtle) {
+  def trect(h: Double, w: Double, t: core.Turtle): Unit = {
     import t._
     var i = 0
     while (i < 2) {
@@ -613,12 +613,12 @@ object Utils {
     }
   }
 
-  def reportException(t: Throwable) {
+  def reportException(t: Throwable): Unit = {
     println(s"Problem - ${t.toString} (see log for details)")
     Log.log(Level.SEVERE, "Problem", t)
   }
 
-  def safeProcess(fn: => Unit) {
+  def safeProcess(fn: => Unit): Unit = {
     try {
       fn
     }
@@ -627,7 +627,7 @@ object Utils {
     }
   }
 
-  def safeProcessSilent(fn: => Unit) {
+  def safeProcessSilent(fn: => Unit): Unit = {
     try {
       fn
     }
@@ -646,7 +646,7 @@ object Utils {
     }
   }
 
-  def giveupLock(lock: Lock)(fn: => Unit) {
+  def giveupLock(lock: Lock)(fn: => Unit): Unit = {
     lock.unlock()
     try {
       fn
@@ -659,7 +659,7 @@ object Utils {
     }
   }
 
-  def checkHsbModFactor(f: Double) {
+  def checkHsbModFactor(f: Double): Unit = {
     if (f < -1 || f > 1) {
       throw new IllegalArgumentException("mod factor needs to be between -1 and 1")
     }
@@ -755,7 +755,7 @@ object Utils {
     _preProcessInclude(code)
   }
 
-  def scrollToOffset(offset: Int, comp: JTextComponent) {
+  def scrollToOffset(offset: Int, comp: JTextComponent): Unit = {
     comp.scrollRectToVisible(comp.modelToView(offset))
   }
 

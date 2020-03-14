@@ -19,9 +19,9 @@ import net.kogics.swill.Conversation
 import net.kogics.kojo.util.Utils
 
 trait TalkListener {
-  def onStart()
-  def onEvent(msg: String)
-  def onFinish(success: Boolean)
+  def onStart(): Unit
+  def onEvent(msg: String): Unit
+  def onFinish(success: Boolean): Unit
 }
 
 object Talker {
@@ -36,41 +36,41 @@ class Talker(email: String, password: String, listener: TalkListener) {
   Conversation.server = Talker.server
   @volatile var _cancel = false
 
-  def fireEvent(msg: String) {
+  def fireEvent(msg: String): Unit = {
     Utils.runInSwingThread {
       listener.onEvent(msg)
     }
   }
 
-  def fireStart() {
+  def fireStart(): Unit = {
     Utils.runInSwingThread {
       listener.onStart()
     }
   }
 
-  def fireFinish(success: Boolean) {
+  def fireFinish(success: Boolean): Unit = {
     Utils.runInSwingThread {
       listener.onFinish(success)
     }
   }
 
-  def fireProblem(msg: String) {
+  def fireProblem(msg: String): Unit = {
     throw new IllegalStateException(msg)
   }
 
-  def checkCancel() {
+  def checkCancel(): Unit = {
     if (_cancel) {
       throw new IllegalStateException("Upload Cancelled.")
     }
   }
 
-  def cancel() {
+  def cancel(): Unit = {
     _cancel = true
   }
 
-  def upload(title: String, category: String, catData: String, code: String, file: java.io.File) {
+  def upload(title: String, category: String, catData: String, code: String, file: java.io.File): Unit = {
     val uploadRunner = new Runnable {
-      def run {
+      def run: Unit = {
         try {
           fireStart()
 

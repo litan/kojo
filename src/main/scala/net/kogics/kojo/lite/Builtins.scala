@@ -96,7 +96,7 @@ class Builtins(
   def version = println("Scala " + scala.tools.nsc.Properties.versionString)
   UserCommand.addSynopsis("version - Displays the version of Scala being used.")
 
-  def print(obj: Any) {
+  def print(obj: Any): Unit = {
     // Runs on Actor pool (interpreter) thread
     kojoCtx.kprintln("%s" format (obj))
     Throttler.throttleHard()
@@ -141,7 +141,7 @@ class Builtins(
   UserCommand.addSynopsis("astStopPhase - Gets the compiler phase value for AST printing.")
   UserCommand("setAstStopPhase", List("stopAfterPhase"), "Sets the compiler phase value for AST printing.")
 
-  def stClear() {
+  def stClear(): Unit = {
     storyTeller.clear()
   }
   UserCommand.addSynopsisSeparator()
@@ -158,7 +158,7 @@ class Builtins(
   type StoryPage = story.Viewable
   UserCommand.addCompletion("Story", List("pages"))
 
-  def stPlayStory(st: story.Story) {
+  def stPlayStory(st: story.Story): Unit = {
     storyTeller.playStory(st)
   }
   UserCommand("stPlayStory", List("story"), "Play the given story.")
@@ -172,23 +172,23 @@ class Builtins(
     </div>
   UserCommand("stFormula", List("latex"), "Converts the supplied latex string into html that can be displayed in the Story Teller Window.")
 
-  def stPlayMp3(mp3File: String) {
+  def stPlayMp3(mp3File: String): Unit = {
     storyTeller.playMp3(mp3File)
   }
   UserCommand("stPlayMp3", List("fileName"), "Plays the specified MP3 file.")
 
-  def stPlayMp3Loop(mp3File: String) {
+  def stPlayMp3Loop(mp3File: String): Unit = {
     storyTeller.playMp3Loop(mp3File)
   }
   UserCommand("stPlayMp3Loop", List("fileName"), "Plays the specified MP3 file in the background.")
 
-  def stAddButton(label: String)(fn: => Unit) {
+  def stAddButton(label: String)(fn: => Unit): Unit = {
     storyTeller.addButton(label)(fn)
   }
   UserCommand.addCompletion("stAddButton", " (${label}) {\n    ${cursor}\n}")
   UserCommand.addSynopsis("stAddButton(label) {code} - Adds a button with the given label to the Story Teller Window, and runs the supplied code when the button is clicked.")
 
-  def stAddField(label: String, default: Any) {
+  def stAddField(label: String, default: Any): Unit = {
     storyTeller.addField(label, default)
   }
   UserCommand("stAddField", List("label", "default"), "Adds an input field with the supplied label and default value to the Story Teller Window.")
@@ -203,7 +203,7 @@ class Builtins(
   }
   UserCommand("stFieldValue", List("label", "default"), "Gets the value of the specified field.")
 
-  def stShowStatusMsg(msg: String) {
+  def stShowStatusMsg(msg: String): Unit = {
     storyTeller.showStatusMsg(msg)
   }
   UserCommand("stShowStatusMsg", List("msg"), "Shows the specified message in the Story Teller status bar.")
@@ -223,7 +223,7 @@ class Builtins(
   def stClickRunAsWorksheetButton() = kojoCtx.clickWorksheetRun()
   UserCommand("stClickRunAsWorksheetButton", Nil, "Simulates a click of the 'run as worksheet' button")
 
-  def stShowStatusError(msg: String) {
+  def stShowStatusError(msg: String): Unit = {
     storyTeller.showStatusError(msg)
   }
   UserCommand("stShowStatusError", List("msg"), "Shows the specified error message in the Story Teller status bar.")
@@ -257,17 +257,17 @@ Here's a partial list of the available commands:
 
   val MusicScore = core.Score
 
-  def playMusic(voice: Voice, n: Int = 1) {
+  def playMusic(voice: Voice, n: Int = 1): Unit = {
     fuguePlayer.playMusic(voice, n)
   }
   UserCommand("playMusic", List("score"), "Plays the specified melody, rhythm, or score.")
 
-  def playMusicUntilDone(voice: Voice, n: Int = 1) {
+  def playMusicUntilDone(voice: Voice, n: Int = 1): Unit = {
     fuguePlayer.playMusicUntilDone(voice, n)
   }
   UserCommand("playMusicUntilDone", List("score"), "Plays the specified melody, rhythm, or score, and waits till the music finishes.")
 
-  def playMusicLoop(voice: Voice) {
+  def playMusicLoop(voice: Voice): Unit = {
     fuguePlayer.playMusicLoop(voice)
   }
   UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
@@ -291,11 +291,11 @@ Here's a partial list of the available commands:
 
   def clearOutput() = kojoCtx.clearOutput()
 
-  def interpret(code: String) {
+  def interpret(code: String): Unit = {
     scalaCodeRunner.runCode(code)
   }
 
-  def resetInterpreter() {
+  def resetInterpreter(): Unit = {
     scalaCodeRunner.resetInterp()
   }
 
@@ -304,7 +304,7 @@ Here's a partial list of the available commands:
   //  def pcompiler = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].pcompiler
   //  def compiler = scalaCodeRunner.asInstanceOf[ScalaCodeRunner].compiler
 
-  def reimportBuiltins() {
+  def reimportBuiltins(): Unit = {
     interpret("import TSCanvas._; import Tw._")
   }
   def reimportDefaults() = reimportBuiltins()
@@ -314,30 +314,30 @@ Here's a partial list of the available commands:
   implicit def toShm(handler: String => Unit): HandlerHolder[String] = new StringHandlerHolder(handler)
   implicit def toVhm(handler: () => Unit): HandlerHolder[Unit] = new VoidHandlerHolder(handler)
 
-  def stAddLinkHandler[T](name: String, story: Story)(implicit hm: HandlerHolder[T]) {
+  def stAddLinkHandler[T](name: String, story: Story)(implicit hm: HandlerHolder[T]): Unit = {
     storyTeller.addLinkHandler(name, story)(hm)
   }
 
-  def stAddLinkEnterHandler[T](name: String, story: Story)(implicit hm: HandlerHolder[T]) {
+  def stAddLinkEnterHandler[T](name: String, story: Story)(implicit hm: HandlerHolder[T]): Unit = {
     storyTeller.addLinkEnterHandler(name, story)(hm)
   }
 
-  def stAddLinkExitHandler[T](name: String, story: Story)(implicit hm: HandlerHolder[T]) {
+  def stAddLinkExitHandler[T](name: String, story: Story)(implicit hm: HandlerHolder[T]): Unit = {
     storyTeller.addLinkExitHandler(name, story)(hm)
   }
 
-  def stAddUiComponent(c: JComponent) {
+  def stAddUiComponent(c: JComponent): Unit = {
     storyTeller.addUiComponent(c)
   }
 
-  def stAddUiBigComponent(c: JComponent) {
+  def stAddUiBigComponent(c: JComponent): Unit = {
     storyTeller.addUiBigComponent(c)
   }
 
   private val urlHandler = new story.LinkListener(storyTeller)
   def stGotoUrl(url: String) = urlHandler.gotoUrl(new java.net.URL(url))
 
-  def stOnStoryStop(story: Story)(fn: => Unit) {
+  def stOnStoryStop(story: Story)(fn: => Unit): Unit = {
     storyTeller.onStop(story, fn)
   }
 
@@ -425,11 +425,11 @@ Here's a partial list of the available commands:
     val yDelta = cb.getMinY - pb.getMinY + (cb.height - pb.height) / 2
     pic.offset(xDelta, yDelta)
   }
-  def show(pictures: Picture*) {
+  def show(pictures: Picture*): Unit = {
     throw new UnsupportedOperationException("Use draw(pic/s) instead of show(pic/s)")
   }
 
-  def setRefreshRate(fps: Int) {
+  def setRefreshRate(fps: Int): Unit = {
     require(fps >= 1 && fps <= 200, "FPS needs to be in the range: 1 to 200")
     kojoCtx.fps = fps
   }
@@ -516,17 +516,17 @@ Here's a partial list of the available commands:
   type Vector2D = util.Vector2D
   val Vector2D = util.Vector2D
 
-  def playMp3(mp3File: String) {
+  def playMp3(mp3File: String): Unit = {
     mp3player.playMp3(mp3File)
   }
   UserCommand("playMp3", List("fileName"), "Plays the specified MP3 file.")
 
-  def playMp3Sound(mp3File: String) {
+  def playMp3Sound(mp3File: String): Unit = {
     mp3player.playMp3Sound(mp3File)
   }
   UserCommand("playMp3Sound", List("fileName"), "Plays the specified MP3 sound.")
 
-  def playMp3Loop(mp3File: String) {
+  def playMp3Loop(mp3File: String): Unit = {
     mp3player.playMp3Loop(mp3File)
   }
   UserCommand("playMp3Loop", List("fileName"), "Plays the specified MP3 file in the background.")
@@ -540,10 +540,10 @@ Here's a partial list of the available commands:
   def stopMp3Loop() = mp3player.stopMp3Loop()
   def stopMusic() = fuguePlayer.stopMusic()
   def newMp3Player = new music.KMp3(kojoCtx)
-  def addCodeTemplates(lang: String, templates: Map[String, String]) {
+  def addCodeTemplates(lang: String, templates: Map[String, String]): Unit = {
     CodeCompletionUtils.addTemplates(lang, templates)
   }
-  def addHelpContent(lang: String, content: Map[String, String]) {
+  def addHelpContent(lang: String, content: Map[String, String]): Unit = {
     Help.addContent(lang, content)
   }
 
@@ -612,7 +612,7 @@ Here's a partial list of the available commands:
   }
   def mouseButton: Int = staging.Inputs.mouseBtn
   def screenDPI = kojoCtx.screenDPI
-  def setScreenDPI(dpi: Int) { kojoCtx.screenDPI = dpi }
+  def setScreenDPI(dpi: Int): Unit = { kojoCtx.screenDPI = dpi }
   def screenSize = Toolkit.getDefaultToolkit.getScreenSize
   def hiDpiFontIncrease = kojoCtx.hiDpiFontIncrease
   def baseFontSize = kojoCtx.baseFontSize
@@ -718,7 +718,7 @@ Here's a partial list of the available commands:
   val RowPanel = widget.RowPanel
   val ColPanel = widget.ColPanel
 
-  def showFps(color: Color = black, fontSize: Int = 15) {
+  def showFps(color: Color = black, fontSize: Int = 15): Unit = {
     val cb = canvasBounds
     @volatile var frameCnt = 0
     val fpsLabel = Picture.textu("Fps: ", fontSize, color)
@@ -735,7 +735,7 @@ Here's a partial list of the available commands:
     }
   }
 
-  def drawCenteredMessage(message: String, color: Color = black, fontSize: Int = 15) {
+  def drawCenteredMessage(message: String, color: Color = black, fontSize: Int = 15): Unit = {
     val cb = canvasBounds
     val te = textExtent(message, fontSize)
     val pic = penColor(color) *
@@ -744,7 +744,7 @@ Here's a partial list of the available commands:
     draw(pic)
   }
 
-  def showGameTime(limitSecs: Int, endMsg: String, color: Color = black, fontSize: Int = 15) {
+  def showGameTime(limitSecs: Int, endMsg: String, color: Color = black, fontSize: Int = 15): Unit = {
     val cb = canvasBounds
     @volatile var gameTime = 0
     val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, fontSize, color)
@@ -823,7 +823,7 @@ Here's a partial list of the available commands:
     cheight = cb.height.toInt
   }
 
-  def size(width: Int, height: Int) {
+  def size(width: Int, height: Int): Unit = {
     cwidth = width
     cheight = height
     setDrawingCanvasSize(width, height)
@@ -844,7 +844,7 @@ Here's a partial list of the available commands:
     (w, h)
   }
 
-  def originTopLeft() {
+  def originTopLeft(): Unit = {
     val (w, h) = wh
     def work = TSCanvas.zoomXY(1, -1, w / 2, -h / 2)
     work
@@ -853,7 +853,7 @@ Here's a partial list of the available commands:
     }
   }
 
-  def originBottomLeft() {
+  def originBottomLeft(): Unit = {
     val (w, h) = wh
     def work = TSCanvas.zoomXY(1, 1, w / 2, h / 2)
     work

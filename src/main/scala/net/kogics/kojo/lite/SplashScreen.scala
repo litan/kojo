@@ -37,7 +37,7 @@ class SplashScreen extends JWindow {
   setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
   setVisible(true);
 
-  def close() {
+  def close(): Unit = {
     Utils.schedule(0.3) {
       setVisible(false);
     }

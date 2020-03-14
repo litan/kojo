@@ -3,7 +3,7 @@ package net.kogics.kojo.lite
 class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b: Builtins) {
   import b._
 
-  def randomSeed(s: Long) {
+  def randomSeed(s: Long): Unit = {
     setRandomSeed(s)
   }
 
@@ -32,19 +32,19 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
   def makeStroke(n: Double, cap: Int, join: Int) =
     new java.awt.BasicStroke(n.toFloat, cap, join)
 
-  def noStroke() {
+  def noStroke(): Unit = {
     strokeColor = null
   }
 
-  def noFill() {
+  def noFill(): Unit = {
     fillColor = null
   }
 
-  def fill(r: Int, g: Int, b: Int) {
+  def fill(r: Int, g: Int, b: Int): Unit = {
     fillColor = cm.rgb(r, g, b)
   }
 
-  def fill(c: Color) {
+  def fill(c: Color): Unit = {
     fillColor = c
   }
 
@@ -52,24 +52,24 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     fillColor = cm.rgba(n, n, n, a)
   }
 
-  def stroke(gray: Int, alpha: Int) {
+  def stroke(gray: Int, alpha: Int): Unit = {
     strokeColor = cm.rgba(gray, gray, gray, alpha)
   }
 
-  def stroke(r: Int, g: Int, b: Int) {
+  def stroke(r: Int, g: Int, b: Int): Unit = {
     strokeColor = cm.rgb(r, g, b)
   }
 
-  def stroke(c: Color) {
+  def stroke(c: Color): Unit = {
     strokeColor = c
   }
 
-  def strokeWeight(n: Double) {
+  def strokeWeight(n: Double): Unit = {
     strokeThickness = n
     stroke = makeStroke(strokeThickness, penCap, penJoin)
   }
 
-  def drawShape(s: java.awt.Shape) {
+  def drawShape(s: java.awt.Shape): Unit = {
     if (fillColor != null) {
       g2d.setPaint(fillColor)
       g2d.fill(s)
@@ -81,35 +81,35 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     }
   }
 
-  def background(c: Color) {
+  def background(c: Color): Unit = {
     tempRect.setRect(0, 0, width, height)
     g2d.setPaint(c)
     g2d.fill(tempRect)
   }
 
-  def background(n: Int) {
+  def background(n: Int): Unit = {
     tempRect.setRect(0, 0, width, height)
     g2d.setPaint(cm.rgb(n, n, n))
     g2d.fill(tempRect)
   }
 
-  def background(n: Int, a: Int) {
+  def background(n: Int, a: Int): Unit = {
     tempRect.setRect(0, 0, width, height)
     g2d.setPaint(cm.rgba(n, n, n, a))
     g2d.fill(tempRect)
   }
 
-  def ellipse(cx: Double, cy: Double, w: Double, h: Double) {
+  def ellipse(cx: Double, cy: Double, w: Double, h: Double): Unit = {
     tempEllipse.setFrame(cx - w / 2, cy - h / 2, w, h)
     drawShape(tempEllipse)
   }
 
-  def line(x1: Double, y1: Double, x2: Double, y2: Double) {
+  def line(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
     tempLine.setLine(x1, y1, x2, y2)
     drawShape(tempLine)
   }
 
-  def rect(x1: Double, y1: Double, x2: Double, y2: Double) {
+  def rect(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
     tempRect.setRect(x1, y1, x2, y2)
     drawShape(tempRect)
   }
@@ -118,40 +118,40 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     line(x - 0.01 / 2, y, x + 0.01 / 2, y)
   }
 
-  def translate(x: Double, y: Double) {
+  def translate(x: Double, y: Double): Unit = {
     g2d.translate(x, y)
   }
 
-  def rotate(angle: Double) {
+  def rotate(angle: Double): Unit = {
     g2d.rotate(angle)
   }
 
-  def scale(f: Double) {
+  def scale(f: Double): Unit = {
     g2d.scale(f, f)
   }
 
-  def scale(fx: Double, fy: Double) {
+  def scale(fx: Double, fy: Double): Unit = {
     g2d.scale(fx, fy)
   }
 
-  def pushMatrix() {
+  def pushMatrix(): Unit = {
     matrices = g2d.getTransform :: matrices
   }
 
-  def popMatrix() {
+  def popMatrix(): Unit = {
     g2d.setTransform(matrices.head)
     matrices = matrices.tail
   }
 
-  def blendMode(c: java.awt.Composite) {
+  def blendMode(c: java.awt.Composite): Unit = {
     g2d.setComposite(c)
   }
 
-  def beginShape() {
+  def beginShape(): Unit = {
     shapeVertices = ArrayBuffer.empty[(Double, Double)]
   }
 
-  def vertex(x: Double, y: Double) {
+  def vertex(x: Double, y: Double): Unit = {
     shapeVertices.append((x, y))
   }
 
@@ -166,12 +166,12 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     drawShape(tempPath)
   }
 
-  def strokeCap(n: Int) {
+  def strokeCap(n: Int): Unit = {
     penCap = n
     stroke = makeStroke(strokeThickness, penCap, penJoin)
   }
 
-  def strokeJoin(n: Int) {
+  def strokeJoin(n: Int): Unit = {
     penJoin = n
     stroke = makeStroke(strokeThickness, penCap, penJoin)
   }

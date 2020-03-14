@@ -77,7 +77,7 @@ object SvgShape {
   }
 
   import staging.Style
-  def setStyle(ns: scala.xml.Node) {
+  def setStyle(ns: scala.xml.Node): Unit = {
     val fc_? = matchFill(ns)
     val sc_? = matchStroke(ns)
     val sw_? = matchStrokeWidth(ns)

@@ -39,7 +39,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
   var timer: Timer = _
   val pumpEvents: Boolean = true
 
-  private def startPumpingEvents() {
+  private def startPumpingEvents(): Unit = {
     if (pumpEvents && timer == null) {
       listener.hasPendingCommands()
       timer = Utils.scheduleRec(0.5) {
@@ -48,7 +48,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
     }
   }
 
-  private def stopPumpingEvents() {
+  private def stopPumpingEvents(): Unit = {
     if (pumpEvents && currBgMusic.isEmpty) {
       if (timer != null) {
         timer.stop()
@@ -61,7 +61,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
     }
   }
   
-  private def stopAndCreate(voice: core.Voice, n: Int) {
+  private def stopAndCreate(voice: core.Voice, n: Int): Unit = {
     if (n > 10) {
       throw new IllegalArgumentException("Score repeat count cannot be more than 10")
     }
@@ -76,8 +76,8 @@ class FuguePlayer(kojoCtx: KojoCtx) {
     }
   }
   
-  def playMusic(voice: core.Voice, n: Int = 1) {
-    def done() {
+  def playMusic(voice: core.Voice, n: Int = 1): Unit = {
+    def done(): Unit = {
       stopFg = false
       currMusic = None
       stopPumpingEvents()
@@ -103,7 +103,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
     }
   }
 
-  def playMusicUntilDone(voice: core.Voice, n: Int = 1) {
+  def playMusicUntilDone(voice: core.Voice, n: Int = 1): Unit = {
     withLock(playLock) {
       stopAndCreate(voice, n)
       Utils.runAsync {
@@ -124,9 +124,9 @@ class FuguePlayer(kojoCtx: KojoCtx) {
     }
   }
   
-  def playMusicLoop(voice: core.Voice) {
+  def playMusicLoop(voice: core.Voice): Unit = {
 
-    def playLoop0() {
+    def playLoop0(): Unit = {
       Utils.runAsync {
         withLock(playLock) {
           if (stopBg) {
@@ -155,7 +155,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
     }       
   }
 
-  def stopMusic() {
+  def stopMusic(): Unit = {
     withLock(playLock) {
       if (currMusic.isDefined) {
         stopFg = true
@@ -175,7 +175,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
     }
   }
 
-  def stopBgMusic() {
+  def stopBgMusic(): Unit = {
     withLock(playLock) {
       if (currBgMusic.isDefined) {
         stopBg = true

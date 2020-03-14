@@ -108,19 +108,19 @@ object CroatianAPI {
   //  }
 
   //loops 
-  def ponovi(n: Int)(block: => Unit) {
+  def ponovi(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
 
-  def ponovii(n: Int)(block: Int => Unit) {
+  def ponovii(n: Int)(block: Int => Unit): Unit = {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def ponavljajDok(uvjet: => Boolean)(block: => Unit) {
+  def ponavljajDok(uvjet: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatWhile(uvjet) { block }
   }
 
-  def ponavljajZa[T](slijed: Iterable[T])(block: T => Unit) {
+  def ponavljajZa[T](slijed: Iterable[T])(block: T => Unit): Unit = {
     RepeatCommands.repeatFor(slijed) { block }
   }
 
@@ -145,7 +145,7 @@ object CroatianAPI {
 }
 
 object hrInit {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     CroatianAPI.builtins = builtins
     builtins match {

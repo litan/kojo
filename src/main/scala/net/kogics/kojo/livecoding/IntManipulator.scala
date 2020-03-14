@@ -35,7 +35,7 @@ class IntManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) {
     Array(targetStart, targetEnd)
   }
 
-  def activate(pane: JTextComponent, offset: Int) {
+  def activate(pane: JTextComponent, offset: Int): Unit = {
     activate(pane, offset, target, targetStart)
   }
 
@@ -59,7 +59,7 @@ class IntManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) {
       9 + math.round((n - ncenter) / delta).toInt
     }
 
-    def reConfigSlider(around: Int, delta0: Int, zoomB: JToggleButton) {
+    def reConfigSlider(around: Int, delta0: Int, zoomB: JToggleButton): Unit = {
       ncenter = around
       delta = delta0
       slider.setMinimum(0)

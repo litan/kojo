@@ -18,18 +18,18 @@ package net.kogics.kojo.core
 import scala.collection._
 
 trait VisualElement {
-  def hide()
-  def show()
-  def setColor(color: java.awt.Color)
+  def hide(): Unit
+  def show(): Unit
+  def setColor(color: java.awt.Color): Unit
 }
 
 trait Labelled extends VisualElement {
-  def showNameInLabel()
-  def showNameValueInLabel()
-  def showValueInLabel()
-  def hideLabel()
-  def showLabel()
-  def setLabel(label: String)
+  def showNameInLabel(): Unit
+  def showNameValueInLabel(): Unit
+  def showValueInLabel(): Unit
+  def hideLabel(): Unit
+  def showLabel(): Unit
+  def setLabel(label: String): Unit
 }
 
 object Point {
@@ -80,5 +80,5 @@ trait MoveablePoint {
 
 // a group of VisualElements
 trait VisualElements extends VisualElement {
-  def add(ves: VisualElement*)
+  def add(ves: VisualElement*): Unit
 }

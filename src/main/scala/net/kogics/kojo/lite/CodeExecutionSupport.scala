@@ -155,7 +155,7 @@ class CodeExecutionSupport(
   @volatile var verboseOutput = false
   setActivityListener()
 
-  def initPhase2(se: ScriptEditor) {
+  def initPhase2(se: ScriptEditor): Unit = {
     codeRunner.start()
     clearButton = se.clearButton
     setCodePane(se.codePane)
@@ -165,20 +165,20 @@ class CodeExecutionSupport(
   }
 
   class OutputWindowWriter extends Writer {
-    override def write(s: String) {
+    override def write(s: String): Unit = {
       showOutput(s)
     }
 
-    def write(cbuf: Array[Char], off: Int, len: Int) {
+    def write(cbuf: Array[Char], off: Int, len: Int): Unit = {
       write(new String(cbuf, off, len))
     }
 
-    def close() {}
-    def flush() {}
+    def close(): Unit = {}
+    def flush(): Unit = {}
   }
 
   class OutputWindowColoredWriter(c: Color) extends OutputWindowWriter {
-    override def write(s: String) {
+    override def write(s: String): Unit = {
       Log.severe("stderr> " + s)
       showOutput(s, c)
     }
@@ -188,23 +188,23 @@ class CodeExecutionSupport(
 
     private val buf = new Array[Byte](1)
 
-    override def close() {
+    override def close(): Unit = {
       writer.close()
     }
 
-    override def flush() {
+    override def flush(): Unit = {
       writer.flush()
     }
 
-    override def write(b: Array[Byte]) {
+    override def write(b: Array[Byte]): Unit = {
       writer.write(new String(b))
     }
 
-    override def write(b: Array[Byte], off: Int, len: Int) {
+    override def write(b: Array[Byte], off: Int, len: Int): Unit = {
       writer.write(new String(b, off, len))
     }
 
-    def write(b: Int) {
+    def write(b: Int): Unit = {
       synchronized {
         buf(0) = b.toByte
         write(buf)
@@ -212,16 +212,16 @@ class CodeExecutionSupport(
     }
   }
 
-  def setCodePane(cp: JTextArea) {
+  def setCodePane(cp: JTextArea): Unit = {
     codePane = cp
     codePane.getDocument.addDocumentListener(new DocumentListener {
-      def insertUpdate(e: DocumentEvent) {
+      def insertUpdate(e: DocumentEvent): Unit = {
         clearSButton.setEnabled(true)
         if (hasOpenFile) {
           kojoCtx.fileModified()
         }
       }
-      def removeUpdate(e: DocumentEvent) {
+      def removeUpdate(e: DocumentEvent): Unit = {
         if (codePane.getDocument.getLength == 0) {
           clearSButton.setEnabled(false)
         }
@@ -229,18 +229,18 @@ class CodeExecutionSupport(
           kojoCtx.fileModified()
         }
       }
-      def changedUpdate(e: DocumentEvent) {}
+      def changedUpdate(e: DocumentEvent): Unit = {}
     })
   }
 
-  def enableRunButton(enable: Boolean) {
+  def enableRunButton(enable: Boolean): Unit = {
     runButton.setEnabled(enable)
     runWorksheetButton.setEnabled(enable)
     traceButton.setEnabled(enable)
     compileButton.setEnabled(enable)
   }
 
-  def doWelcome() {
+  def doWelcome(): Unit = {
     if (kojoCtx.subKojo) {
       showOutput(Utils.loadString("S_OutputScratchpadWelcome") + "\n")
       showOutput(Utils.loadString("S_OutputScratchpadHistoryNotSave") + "\n", Color.red)
@@ -287,7 +287,7 @@ class CodeExecutionSupport(
     }
   }
 
-  def setScript(code: String) {
+  def setScript(code: String): Unit = {
     Utils.runInSwingThreadAndWait {
       closeFileAndClrEditor()
       codePane.setText(code)
@@ -361,7 +361,7 @@ class CodeExecutionSupport(
 
     def astStopPhase = kojoCtx.astStopPhase
 
-    def initInterp(interp: Interpreter) {
+    def initInterp(interp: Interpreter): Unit = {
       codingMode match {
         case TwMode =>
           interp.bind("predef", "net.kogics.kojo.lite.CodeExecutionSupport", CodeExecutionSupport.this)
@@ -388,7 +388,7 @@ class CodeExecutionSupport(
       LangInit.initPhase2(builtins)
     }
 
-    def onInterpreterStart(code: String) {
+    def onInterpreterStart(code: String): Unit = {
       resetErrInfo()
       if (verboseOutput || isSingleLine(code)) {
         suppressInterpOutput = false
@@ -403,23 +403,23 @@ class CodeExecutionSupport(
       runStart()
     }
 
-    def onCompileStart() {
+    def onCompileStart(): Unit = {
       resetErrInfo()
       showNormalCursor()
       enableRunButton(false)
     }
 
-    def onRunError() {
+    def onRunError(): Unit = {
       runDone()
       onError()
     }
 
-    def onCompileError() {
+    def onCompileError(): Unit = {
       compileDone()
       onError()
     }
 
-    private def onError() {
+    private def onError(): Unit = {
       Utils.runLaterInSwingThread {
         statusStrip.onError()
       }
@@ -428,14 +428,14 @@ class CodeExecutionSupport(
       storyTeller.storyAborted()
     }
 
-    def onCompileSuccess() {
+    def onCompileSuccess(): Unit = {
       compileDone()
       Utils.runInSwingThread {
         statusStrip.onSuccess()
       }
     }
 
-    private def compileDone() {
+    private def compileDone(): Unit = {
       codePane.requestFocusInWindow
       enableRunButton(true)
       //        Utils.schedule(0.2) {
@@ -453,7 +453,7 @@ class CodeExecutionSupport(
       }
     }
 
-    private def showInternalErrorMsg() {
+    private def showInternalErrorMsg(): Unit = {
       showError(Utils.loadString("S_ErrorProcessScript") + "\n")
       val logDir = Utils.locateLogDir().getPath
       showOutput(Utils.loadString(getClass, "S_OutputLogFileHint", logDir) + "\n")
@@ -469,7 +469,7 @@ class CodeExecutionSupport(
       onCompileError()
     }
 
-    def reportOutput(outText: String) {
+    def reportOutput(outText: String): Unit = {
       if (suppressInterpOutput) {
         return
       }
@@ -477,15 +477,15 @@ class CodeExecutionSupport(
       showOutput(outText)
     }
 
-    def reportError(errMsg: String) {
+    def reportError(errMsg: String): Unit = {
       showError(errMsg)
     }
 
-    def reportException(errText: String) {
+    def reportException(errText: String): Unit = {
       showException(errText)
     }
 
-    def reportSmartError(errText: String, line: Int, column: Int, offset: Int) {
+    def reportSmartError(errText: String, line: Int, column: Int, offset: Int): Unit = {
       showSmartError(errText, line, column, offset)
     }
 
@@ -505,7 +505,7 @@ class CodeExecutionSupport(
       }
     }
 
-    def reportWorksheetOutput(result: String, lineNum: Int) {
+    def reportWorksheetOutput(result: String, lineNum: Int): Unit = {
       appendToCodePaneLine(lineNum, result.trim.replaceAll("\r?\n", " | "))
     }
 
@@ -536,28 +536,28 @@ class CodeExecutionSupport(
 
   def isRunningEnabled = runButton.isEnabled
 
-  def setActivityListener() {
+  def setActivityListener(): Unit = {
     kojoCtx.setActivityListener(new core.AbstractSpriteListener {
       def interpreterDone = runButton.isEnabled
-      override def hasPendingCommands {
+      override def hasPendingCommands: Unit = {
         pendingCommands = true
         stopButton.setEnabled(true)
       }
-      override def pendingCommandsDone {
+      override def pendingCommandsDone: Unit = {
         pendingCommands = false
         if (interpreterDone && Utils.noMonitoredThreads) stopButton.setEnabled(false)
       }
     })
   }
 
-  def upload() {
+  def upload(): Unit = {
     val dlg = new codex.CodeExchangeForm(kojoCtx, true)
     dlg.setCanvas(tCanvas)
     dlg.setCode(codePane.getText())
     dlg.centerScreen()
   }
 
-  def clrOutput() {
+  def clrOutput(): Unit = {
     Utils.runInSwingThread {
       outputPane.clear()
       clearButton.setEnabled(false)
@@ -584,7 +584,7 @@ class CodeExecutionSupport(
           inputField.requestFocusInWindow()
         }
         inputField.addActionListener(new ActionListener {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             //          println("%s: %s" format (prompt, inputField.getText))
             input.set(inputField.getText)
             outputPane.removeInputPanel()
@@ -603,19 +603,19 @@ class CodeExecutionSupport(
   def showSmartError(errText: String, line: Int, column: Int, offset: Int) =
     outputPane.showSmartError(errText, line, column, offset)
 
-  def showWaitCursor() {
+  def showWaitCursor(): Unit = {
     val wc = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
     codePane.setCursor(wc)
     tCanvas.setCursor(wc)
   }
 
-  def showNormalCursor() {
+  def showNormalCursor(): Unit = {
     val nc = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
     codePane.setCursor(nc)
     tCanvas.setCursor(nc)
   }
 
-  def stopScript() {
+  def stopScript(): Unit = {
     if (traceRunning) {
       stopTraceScript()
     }
@@ -647,7 +647,7 @@ class CodeExecutionSupport(
   def parseCode(browseAst: Boolean) = compileParseCode(false, browseAst)
   def compileCode() = compileParseCode(true, false)
 
-  private def compileParseCode(check: Boolean, browseAst: Boolean) {
+  private def compileParseCode(check: Boolean, browseAst: Boolean): Unit = {
     val code = codePane.getText()
 
     if (invalidCode(code)) {
@@ -675,7 +675,7 @@ class CodeExecutionSupport(
     code.indexOf("#worksheet") != -1
   }
 
-  def runIpmCode(code: String) {
+  def runIpmCode(code: String): Unit = {
     stopScript()
     codeRunner.compileRunCode(code) // codeRunner.runCode(cleanWsOutput(code))
   }
@@ -684,7 +684,7 @@ class CodeExecutionSupport(
   lazy val traceListener = new trace.TraceListener {
     val tracingGUI = new trace.TracingGUI(scriptEditor, kojoCtx)
 
-    def onStart() {
+    def onStart(): Unit = {
       resetErrInfo()
       enableRunButton(false)
       stopButton.setEnabled(true)
@@ -692,15 +692,15 @@ class CodeExecutionSupport(
       tracingGUI.reset()
     }
 
-    def onMethodEnter(me: MethodEvent) {
+    def onMethodEnter(me: MethodEvent): Unit = {
       tracingGUI.addEnterEvent(me)
     }
 
-    def onMethodExit(me: MethodEvent) {
+    def onMethodExit(me: MethodEvent): Unit = {
       tracingGUI.addExitEvent(me)
     }
 
-    def onEnd() {
+    def onEnd(): Unit = {
       activateEditor()
       enableRunButton(true)
       stopButton.setEnabled(false)
@@ -710,7 +710,7 @@ class CodeExecutionSupport(
 
   lazy val tracer = new trace.Tracing(builtins, traceListener, runContext)
 
-  def traceCode() {
+  def traceCode(): Unit = {
     val code = codeToRun.code
     if (invalidCode(code)) {
       return
@@ -719,7 +719,7 @@ class CodeExecutionSupport(
     tracer.trace(code)
   }
 
-  def stopTraceScript() {
+  def stopTraceScript(): Unit = {
     tracer.stop()
   }
 
@@ -758,7 +758,7 @@ class CodeExecutionSupport(
   // code/worksheet running needs to happen on the Swing thread
   def runCode(code: String): Unit = runCode(CodeToRun(code, None))
 
-  private def runCode(code2run: CodeToRun) {
+  private def runCode(code2run: CodeToRun): Unit = {
     if (invalidCode(code2run.code)) {
       commandHistory.ensureLastEntryVisible()
       return
@@ -782,7 +782,7 @@ class CodeExecutionSupport(
 
   def compileRunCode(code: String): Unit = compileRunCode(CodeToRun(code, None))
 
-  private def compileRunCode(code2run: CodeToRun) {
+  private def compileRunCode(code2run: CodeToRun): Unit = {
     if (invalidCode(code2run.code)) {
       commandHistory.ensureLastEntryVisible()
       return
@@ -804,7 +804,7 @@ class CodeExecutionSupport(
     }
   }
 
-  def runWorksheet(code2run0: CodeToRun) {
+  def runWorksheet(code2run0: CodeToRun): Unit = {
     val code2run = extendSelection(code2run0)
     val cleanCode = removeWorksheetOutput(code2run.code)
     setWorksheetScript(cleanCode, code2run.selection)
@@ -882,7 +882,7 @@ class CodeExecutionSupport(
     }
   }
 
-  def preProcessCode(code: String) {
+  def preProcessCode(code: String): Unit = {
     // now that we use the proxy code runner, disable the run button right away and change
     // the cursor so that the user gets some feedback the first time he runs something
     // - relevant if the proxy is still loading the real runner
@@ -934,10 +934,10 @@ class CodeExecutionSupport(
   }
 
   var imanip: Option[InteractiveManipulator] = None
-  def addManipulator(im: InteractiveManipulator) {
+  def addManipulator(im: InteractiveManipulator): Unit = {
     imanip = Some(im)
   }
-  def removeManipulator(im: InteractiveManipulator) {
+  def removeManipulator(im: InteractiveManipulator): Unit = {
     imanip = None
   }
 
@@ -947,7 +947,7 @@ class CodeExecutionSupport(
 
   class HistoryManager {
 
-    def historyMoveBack {
+    def historyMoveBack: Unit = {
       // depend on history listener mechanism to move back
       val prevCode = commandHistory.previous
       hPrevButton.setEnabled(commandHistory.hasPrevious)
@@ -955,7 +955,7 @@ class CodeExecutionSupport(
       //      commandHistory.ensureLastEntryVisible()
     }
 
-    def historyMoveForward {
+    def historyMoveForward: Unit = {
       // depend on history listener mechanism to move forward
       val nextCode = commandHistory.next
       if (!nextCode.isDefined) {
@@ -965,7 +965,7 @@ class CodeExecutionSupport(
       //      commandHistory.ensureLastEntryVisible()
     }
 
-    def updateButtons(historyIdx: Int) {
+    def updateButtons(historyIdx: Int): Unit = {
       if (commandHistory.size > 0 && historyIdx != 0)
         hPrevButton.setEnabled(true)
       else
@@ -977,7 +977,7 @@ class CodeExecutionSupport(
         hNextButton.setEnabled(false)
     }
 
-    def setCode(historyIdx: Int) {
+    def setCode(historyIdx: Int): Unit = {
       updateButtons(historyIdx)
       val codeAtIdx = commandHistory.toPosition(historyIdx)
 
@@ -992,7 +992,7 @@ class CodeExecutionSupport(
     def codeRunError() = {
     }
 
-    def codeRun(code: String) {
+    def codeRun(code: String): Unit = {
       val tcode = code.trim()
       commandHistory.add(code, openedFile.map(f => "%s (%s)" format (f.getName, f.getParent)))
     }
@@ -1002,14 +1002,14 @@ class CodeExecutionSupport(
 
   @volatile var codingMode: CodingMode = AppMode.currentMode.defaultCodingMode
 
-  def activateTw() {
+  def activateTw(): Unit = {
     if (codingMode != TwMode) {
       codingMode = TwMode
       codeRunner.activateTw()
     }
   }
 
-  def activateVn() {
+  def activateVn(): Unit = {
     if (codingMode != VanillaMode) {
       codingMode = VanillaMode
       codeRunner.activateVn()

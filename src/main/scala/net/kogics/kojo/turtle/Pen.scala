@@ -35,9 +35,9 @@ trait Pen {
   def getColor: Paint
   def getFillColor: Paint
   def getThickness: Double
-  def setFontSize(n: Int)
-  def setFont(f: Font)
+  def setFontSize(n: Int): Unit
+  def setFont(f: Font): Unit
   def getFontSize: Int
   def getFont: Font
-  def write(text: String)
+  def write(text: String): Unit
 }

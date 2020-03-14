@@ -48,17 +48,17 @@ class Conversation {
 //    wc.setProxyServer(host, port)
 //  }
 
-  def go(relativeUrl: String) {
+  def go(relativeUrl: String): Unit = {
     val url = server + relativeUrl
     Log.info("[Thread %d] Going to page - %s" format(tid.get, url))
     response = wc.getResponse(url);
   }
 
-  def click(link: WebLink) {
+  def click(link: WebLink): Unit = {
     response = link.click()
   }
 
-  def find(regex: String) {
+  def find(regex: String): Unit = {
     Log.info("[Thread %d] Finding - %s" format(tid.get, regex))
     if (regex.r.findFirstIn(response.getText) == None) {
       throw new RuntimeException("[Thread %d] Not found - %s\nResponse Text:\n%s"
@@ -66,14 +66,14 @@ class Conversation {
     }
   }
 
-  def notFind(regex: String) {
+  def notFind(regex: String): Unit = {
     Log.info("[Thread %d] Not Finding - %s" format(tid.get, regex))
     if (regex.r.findFirstIn(response.getText) != None) {
       throw new RuntimeException("[Thread %d] Found - %s" format(tid.get, regex))
     }
   }
 
-  def url(regex: String) {
+  def url(regex: String): Unit = {
     Log.info("[Thread %d] Matching current URL - %s" format(tid.get, regex))
     val url = response.getURL.toString
     if (regex.r.findFirstIn(url) == None) {
@@ -81,7 +81,7 @@ class Conversation {
     }
   }
 
-  def title(regex: String) {
+  def title(regex: String): Unit = {
     Log.info("[Thread %d] Matching current Title - %s" format(tid.get, regex))
     val url = response.getTitle.toString
     if (regex.r.findFirstIn(url) == None) {
@@ -89,7 +89,7 @@ class Conversation {
     }
   }
 
-  def code(n: Int) {
+  def code(n: Int): Unit = {
     Log.info("[Thread %d] Checking current Code - %d" format(tid.get, n))
     val cd = response.getResponseCode
     if (cd != n) {
@@ -101,18 +101,18 @@ class Conversation {
 
   def form0 = response.getForms()(0)
 
-  def formSubmit() {
+  def formSubmit(): Unit = {
     Log.info("[Thread %d] Submitting Form" format(tid.get))
     form0.getButtons()(0).click()
     response = wc.getCurrentPage()
   }
 
-  def formField(name: String, value: String) {
+  def formField(name: String, value: String): Unit = {
     Log.info("[Thread %d] Setting Form Field: %s to %s" format(tid.get, name, value))
     form0.setParameter(name, value)
   }
 
-  def formField(name: String, value: java.io.File) {
+  def formField(name: String, value: java.io.File): Unit = {
     Log.info("[Thread %d] Setting Form Field: %s to %s" format(tid.get, name, value))
     form0.setParameter(name, value)
   }

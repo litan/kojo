@@ -102,7 +102,7 @@ class LatexView(elem: Element) extends View(elem) {
   val jl = new JLabel();
   jl.setForeground(color);
 
-  def output(msg: String) {
+  def output(msg: String): Unit = {
     println(msg)
   }
 
@@ -134,7 +134,7 @@ class LatexView(elem: Element) extends View(elem) {
     new Rectangle(0, 0, icon.getIconWidth, icon.getIconHeight)
   }
 
-  override def paint(g: Graphics, a: Shape) {
+  override def paint(g: Graphics, a: Shape): Unit = {
     icon.paintIcon(jl, g, a.getBounds.x, a.getBounds.y);
   }
 }

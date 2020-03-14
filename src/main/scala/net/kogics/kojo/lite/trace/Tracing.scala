@@ -91,7 +91,7 @@ class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunConte
   val listener = new CompilerOutputHandler(runCtx)
 
   val reporter = new Reporter {
-    override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
+    override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
 //      severity.count += 1
       lazy val line = position.line - lineNumOffset
       lazy val offset = position.startOrPoint - offsetDelta
@@ -141,7 +141,7 @@ def main(args: Array[String]) {
 }
 """
 
-  def stop() {
+  def stop(): Unit = {
     traceListener.onEnd()
     if (vmRunning) {
       try { currThread.virtualMachine.exit(1) } catch { case t: Throwable => }
@@ -226,7 +226,7 @@ def main(args: Array[String]) {
     }
   }
 
-  def realTrace(code: String) {
+  def realTrace(code: String): Unit = {
     try {
       traceListener.onStart()
       verboseTrace = if (System.getProperty("kojo.trace.verbose") == "true") true else false
@@ -348,7 +348,7 @@ that is not supported under Tracing.
     }
   }
 
-  def printFrameVarInfo(stkfrm: StackFrame) {
+  def printFrameVarInfo(stkfrm: StackFrame): Unit = {
     try {
       println(s"Visible Vars: ${stkfrm.visibleVariables}")
       println(s"Argument Values: ${stkfrm.getArgumentValues}")
@@ -367,7 +367,7 @@ that is not supported under Tracing.
       currEvtVec.remove(currThread.name)
   }
 
-  def handleHiddenEvent(me: MethodEvent, enter: Boolean) {
+  def handleHiddenEvent(me: MethodEvent, enter: Boolean): Unit = {
     if (verboseTrace) {
       handleOutputEvent(me, enter, "[> Method Enter]", "[< Method Exit]")
     }
@@ -382,7 +382,7 @@ that is not supported under Tracing.
     }
   }
 
-  def handleOutputEvent(me: MethodEvent, enter: Boolean, enterTag: String, exitTag: String) {
+  def handleOutputEvent(me: MethodEvent, enter: Boolean, enterTag: String, exitTag: String): Unit = {
     val prefix = s"${"  " * me.level}<${me.level}> ${if (enter) enterTag else exitTag}"
     print(s"$prefix ${me.rawName}${me.pargs}")
     if (!enter) {
@@ -391,7 +391,7 @@ that is not supported under Tracing.
     println(s" in ${me.declaringType}")
   }
 
-  def handleOutputUiEvent(me: MethodEvent, enter: Boolean) {
+  def handleOutputUiEvent(me: MethodEvent, enter: Boolean): Unit = {
     if (verboseTrace) {
       handleOutputEvent(me, enter, "[> UI Method Enter]", "[< UI Method Exit]")
     }
@@ -461,7 +461,7 @@ that is not supported under Tracing.
           callerLineNum <= codeLines.size)
   }
 
-  def handleMethodEntry(methodEnterEvt: MethodEntryEvent) {
+  def handleMethodEntry(methodEnterEvt: MethodEntryEvent): Unit = {
 
     def methodArgs(value: Value => String): collection.Seq[String] = try {
       if (methodEnterEvt.method.arguments.size > 0) {
@@ -558,7 +558,7 @@ that is not supported under Tracing.
     updateCurrentMethodEvent(Some(newEvt))
   }
 
-  def handleMethodExit(methodExitEvt: MethodExitEvent) {
+  def handleMethodExit(methodExitEvt: MethodExitEvent): Unit = {
     val stkfrm = currThread.frame(0)
     val methodObject = stkfrm.thisObject
     val methodObjectType = if (methodObject != null) methodObject.referenceType.name else ""
@@ -593,7 +593,7 @@ that is not supported under Tracing.
 
   var currPicture: Option[Picture] = None
 
-  def runPictureMethod(name: String, signature: String, methodObject: ObjectReference, methodObjectType: String, stkfrm: StackFrame, localArgs: List[LocalVariable]) {
+  def runPictureMethod(name: String, signature: String, methodObject: ObjectReference, methodObjectType: String, stkfrm: StackFrame, localArgs: List[LocalVariable]): Unit = {
     if (currPicture.isDefined) {
       return
     }
@@ -619,7 +619,7 @@ that is not supported under Tracing.
     }
   }
 
-  def runBuiltinsCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]) {
+  def runBuiltinsCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable]): Unit = {
     import builtins.TSCanvas
     import builtins.kojoCtx
     name match {
@@ -641,7 +641,7 @@ that is not supported under Tracing.
     }
   }
 
-  def runCanvasCommand(name: String, stkfrm: => StackFrame, localArgs: List[LocalVariable]) {
+  def runCanvasCommand(name: String, stkfrm: => StackFrame, localArgs: List[LocalVariable]): Unit = {
     import builtins.TSCanvas
     name match {
       case "clear" =>
@@ -672,7 +672,7 @@ that is not supported under Tracing.
     }
   }
 
-  def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], me: MethodEvent) {
+  def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], me: MethodEvent): Unit = {
     val caller = stkfrm.thisObject.uniqueID
     val turtle = if (currPicture.isDefined)
       currPicture.get.asInstanceOf[Pic].t
@@ -680,12 +680,12 @@ that is not supported under Tracing.
       turtles.getOrElse(caller, builtins.TSCanvas.turtle0)
     val createdTurtle = turtles.contains(caller)
 
-    def traceForward(me2: MethodEvent, step: Double) {
+    def traceForward(me2: MethodEvent, step: Double): Unit = {
       turtle.forward(step)
       me2.turtlePoints = turtle.lastLine
     }
 
-    def traceMoveTo(me2: MethodEvent, x: Double, y: Double) {
+    def traceMoveTo(me2: MethodEvent, x: Double, y: Double): Unit = {
       val t2 = turtle.asInstanceOf[net.kogics.kojo.turtle.Turtle]
       val d = Utils.runInSwingThreadAndWait {
         val newTheta = t2.towardsHelper(x, y)
@@ -695,14 +695,14 @@ that is not supported under Tracing.
       traceForward(me2, d)
     }
 
-    def traceArc2(r: Double, a: Double) {
+    def traceArc2(r: Double, a: Double): Unit = {
       if (a == 0) {
         return
       }
 
       def x(t: Double) = r * math.cos(t.toRadians)
       def y(t: Double) = r * math.sin(t.toRadians)
-      def makeArc() {
+      def makeArc(): Unit = {
         val head = turtle.heading
         if (r != 0) {
           val pos = turtle.position
@@ -883,7 +883,7 @@ that is not supported under Tracing.
     lpics.toList
   }
 
-  def handleMethodReturn(name: String, declaringType: String, signature: String, stkfrm: StackFrame, localArgs: List[LocalVariable], retVal: Value) {
+  def handleMethodReturn(name: String, declaringType: String, signature: String, stkfrm: StackFrame, localArgs: List[LocalVariable], retVal: Value): Unit = {
     name match {
       case "newTurtle" =>
         import builtins.TSCanvas
@@ -1005,7 +1005,7 @@ that is not supported under Tracing.
     arg.asInstanceOf[StringReference].value
   }
 
-  def watchThreadStarts() {
+  def watchThreadStarts(): Unit = {
     val evtReqMgr = currThread.virtualMachine.eventRequestManager
 
     val thrdStartVal = evtReqMgr.createThreadStartRequest
@@ -1015,7 +1015,7 @@ that is not supported under Tracing.
     evtReqs = evtReqs :+ thrdStartVal
   }
 
-  def createMethodRequests(excludes: Array[String], vm: VirtualMachine, thread: ThreadReference) {
+  def createMethodRequests(excludes: Array[String], vm: VirtualMachine, thread: ThreadReference): Unit = {
     val evtReqMgr = vm.eventRequestManager
 
     val mthdEnterVal = evtReqMgr.createMethodEntryRequest
@@ -1033,7 +1033,7 @@ that is not supported under Tracing.
     evtReqs = evtReqs :+ mthdExitVal
   }
 
-  def createExceptionRequest(excludes: Array[String], vm: VirtualMachine) {
+  def createExceptionRequest(excludes: Array[String], vm: VirtualMachine): Unit = {
     val evtReqMgr = vm.eventRequestManager
     val exceptionRequest = evtReqMgr.createExceptionRequest(null, true, true)
     excludes.foreach { exceptionRequest.addClassExclusionFilter(_) }
@@ -1042,7 +1042,7 @@ that is not supported under Tracing.
     evtReqs = evtReqs :+ exceptionRequest
   }
 
-  def createClassPrepareRequest(excludes: Array[String], vm: VirtualMachine) {
+  def createClassPrepareRequest(excludes: Array[String], vm: VirtualMachine): Unit = {
     val evtReqMgr = vm.eventRequestManager
     val request = evtReqMgr.createClassPrepareRequest
     excludes.foreach { request.addClassExclusionFilter(_) }
@@ -1050,7 +1050,7 @@ that is not supported under Tracing.
     request.enable()
   }
 
-  def createBreakpointRequest(wrapperType: ReferenceType, vm: VirtualMachine, thread: ThreadReference) {
+  def createBreakpointRequest(wrapperType: ReferenceType, vm: VirtualMachine, thread: ThreadReference): Unit = {
     val evtReqMgr = vm.eventRequestManager
     val realMain = wrapperType.methodsByName("_main").get(0)
     val request = evtReqMgr.createBreakpointRequest(realMain.location)

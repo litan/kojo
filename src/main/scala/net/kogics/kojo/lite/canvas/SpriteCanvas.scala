@@ -76,11 +76,11 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
   def pCanvas: PCanvas = this
 
-  def setUnitLength(ul: UnitLen) {
+  def setUnitLength(ul: UnitLen): Unit = {
     throw new UnsupportedOperationException("Use clearWithUL(unit) instead of setUnitLength(unit) and clear().")
   }
 
-  private def realSetUnitLength(ul: UnitLen) {
+  private def realSetUnitLength(ul: UnitLen): Unit = {
     unitLen = ul
   }
 
@@ -144,14 +144,14 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
   val panHandler = new PPanEventHandler() {
     setAutopan(false)
-    override def pan(event: PInputEvent) {
+    override def pan(event: PInputEvent): Unit = {
       super.pan(event)
       Utils.schedule(0.05) {
         updateAxesAndGrid()
       }
     }
 
-    override def dragActivityStep(event: PInputEvent) {
+    override def dragActivityStep(event: PInputEvent): Unit = {
       super.dragActivityStep(event)
       Utils.schedule(0.05) {
         updateAxesAndGrid()
@@ -160,7 +160,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   val zoomHandler = new PZoomEventHandler {
-    override def dragActivityStep(event: PInputEvent) {
+    override def dragActivityStep(event: PInputEvent): Unit = {
       if (event.isHandled) {
         return
       }
@@ -191,7 +191,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   addInputEventListener(new PBasicInputEventHandler {
     val popup = new Popup()
 
-    def showPopup(e: PInputEvent) {
+    def showPopup(e: PInputEvent): Unit = {
       if (e.isPopupTrigger) {
         val pos = e.getCanvasPosition
         popup.show(SpriteCanvas.this, pos.getX.toInt, pos.getY.toInt);
@@ -201,7 +201,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     override def mousePressed(e: PInputEvent) = showPopup(e)
     override def mouseReleased(e: PInputEvent) = showPopup(e)
 
-    override def mouseMoved(e: PInputEvent) {
+    override def mouseMoved(e: PInputEvent): Unit = {
       val pos = e.getPosition
       val prec0 = Math.round(getCamera.getViewTransformReference.getScale / camScale) - 1
       val prec = {
@@ -214,7 +214,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       kojoCtx.showStatusText(statusStr format (pos.getX, pos.getY));
     }
 
-    override def mouseWheelRotated(e: PInputEvent) {
+    override def mouseWheelRotated(e: PInputEvent): Unit = {
       // If wheelRotation is 10, zoomFactor is 0, which causes an exception in zoomBy
       // If wheelRotation is > 10, zoomFactor is < 0.  The fix is to limit 
       // wheelRotation to 9.
@@ -231,7 +231,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     case Cm    => Dpi / 2.54
   }
 
-  private def initCamera() {
+  private def initCamera(): Unit = {
     val size = getSize(null)
     val scale = camScale
     getCamera.getViewTransformReference.setToScale(scale, -scale)
@@ -240,7 +240,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     updateAxesAndGrid()
   }
 
-  def showGrid() {
+  def showGrid(): Unit = {
     Utils.runInSwingThreadAndWait {
       if (!_showGrid) {
         _showGrid = true
@@ -250,7 +250,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
-  def hideGrid() {
+  def hideGrid(): Unit = {
     Utils.runInSwingThreadAndWait {
       if (_showGrid) {
         _showGrid = false
@@ -260,7 +260,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
-  def showAxes() {
+  def showAxes(): Unit = {
     Utils.runInSwingThreadAndWait {
       if (!_showAxes) {
         _showAxes = true
@@ -270,7 +270,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
-  def hideAxes() {
+  def hideAxes(): Unit = {
     Utils.runInSwingThreadAndWait {
       if (_showAxes) {
         _showAxes = false
@@ -322,7 +322,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
-  def updateAxesAndGrid() {
+  def updateAxesAndGrid(): Unit = {
     if (!(_showGrid || _showAxes))
       return
 
@@ -525,7 +525,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     zoomXY(factor, factor, cx, cy)
   }
 
-  def zoomXY(xfactor0: Double, yfactor0: Double, cx: Double, cy: Double) {
+  def zoomXY(xfactor0: Double, yfactor0: Double, cx: Double, cy: Double): Unit = {
     require(xfactor0 != 0, "Zoom factor can't be 0.")
     require(yfactor0 != 0, "Zoom factor can't be 0.")
     Utils.runInSwingThreadAndWait {
@@ -542,7 +542,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
-  def scroll(x: Double, y: Double) {
+  def scroll(x: Double, y: Double): Unit = {
     Utils.runInSwingThreadAndWait {
       getCamera.getViewTransformReference.translate(-x, -y)
       updateAxesAndGrid()
@@ -558,7 +558,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     outfile
   }
 
-  private def exportImageToFile(outfile: File, width: Int, height: Int) {
+  private def exportImageToFile(outfile: File, width: Int, height: Int): Unit = {
     val image = getCamera.toImage(width, height, currentBackground)
     javax.imageio.ImageIO.write(image.asInstanceOf[java.awt.image.BufferedImage], "png", outfile)
   }
@@ -591,50 +591,50 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     (getWidth.toFloat / getHeight * height).toInt
   }
 
-  def forceClear() {
+  def forceClear(): Unit = {
     kojoCtx.stopScript()
     clear()
   }
 
-  def makeStagingVisible() {
+  def makeStagingVisible(): Unit = {
     kojoCtx.makeStagingVisible()
   }
 
-  def clearStaging() {
+  def clearStaging(): Unit = {
     realSetUnitLength(Pixel)
     realClearStaging()
   }
 
-  def clearStagingWul(ul: UnitLen) {
+  def clearStagingWul(ul: UnitLen): Unit = {
     realSetUnitLength(ul)
     realClearStaging()
   }
 
-  def clear() {
+  def clear(): Unit = {
     realSetUnitLength(Pixel)
     realClear()
   }
 
-  def clearStepDrawing() {
+  def clearStepDrawing(): Unit = {
     origTurtle.clear()
   }
 
-  def clearWithUL(ul: UnitLen) {
+  def clearWithUL(ul: UnitLen): Unit = {
     realSetUnitLength(ul)
     realClear()
   }
 
-  def realClearStaging() {
+  def realClearStaging(): Unit = {
     makeStagingVisible()
     clearHelper()
   }
 
-  def realClear() {
+  def realClear(): Unit = {
     kojoCtx.makeTurtleWorldVisible()
     clearHelper()
   }
 
-  private def clearHelper() {
+  private def clearHelper(): Unit = {
     // can't stop animation because it kills animations that run from within 
     // code blocks inside stories
     // kojoCtx.stopAnimation()  
@@ -663,7 +663,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     clearStage()
   }
 
-  def clearPuzzlers() {
+  def clearPuzzlers(): Unit = {
     stop()
     Utils.runInSwingThreadAndWait {
       puzzlers.foreach { t => t.remove() }
@@ -752,13 +752,13 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   var globalEl: PInputEventListener = _
-  def addGlobalEventListener(l: PInputEventListener) {
+  def addGlobalEventListener(l: PInputEventListener): Unit = {
     globalEl = l
     addInputEventListener(l)
   }
 
-  def activate() {
-    def grabFocus() {
+  def activate(): Unit = {
+    def grabFocus(): Unit = {
       requestFocusInWindow()
       getRoot.getDefaultInputManager.setKeyboardFocus(globalEl)
     }
@@ -815,22 +815,22 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   def animate(fn: => Unit): Future[PActivity] = figure0.refresh(fn)
   def animateActivity(a: PActivity) = getRoot.addActivity(a)
   def stopAnimation() = figure0.stopRefresh()
-  def stopAnimationActivity(a: Future[PActivity]) {
+  def stopAnimationActivity(a: Future[PActivity]): Unit = {
     figure0.stopAnimationActivity(a)
   }
-  def onAnimationStart(fn: => Unit) {
+  def onAnimationStart(fn: => Unit): Unit = {
     figure0.onStart(fn)
   }
-  def onAnimationStop(fn: => Unit) {
+  def onAnimationStop(fn: => Unit): Unit = {
     figure0.onStop(fn)
   }
-  def onRunStart() {
+  def onRunStart(): Unit = {
     figure0.onRunStart()
   }
-  def onRunDone() {
+  def onRunDone(): Unit = {
     figure0.onRunDone()
   }
-  def resetPanAndZoom() {
+  def resetPanAndZoom(): Unit = {
     initCamera()
   }
 
@@ -844,7 +844,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   @volatile var stageBot: Picture = _
   @volatile var stageArea: Picture = _
 
-  def clearStage() {
+  def clearStage(): Unit = {
     stage = noPic
     stageLeft = noPic
     stageTop = noPic
@@ -853,7 +853,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     stageArea = noPic
   }
 
-  def drawStage(fillc: Paint) {
+  def drawStage(fillc: Paint): Unit = {
     def left(size: Double) = picture.strokeWidth(0) -> picture.Pic { t =>
       t.forward(size)
     }
@@ -893,7 +893,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     val axesItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowAxes"))
     axesItem.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         if (axesItem.isSelected) {
           axesOn()
         }
@@ -906,7 +906,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     val gridItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowGrid"))
     gridItem.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         if (gridItem.isSelected) {
           gridOn()
         }
@@ -921,7 +921,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     val protItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowProtractor"))
     protItem.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         if (protItem.isSelected) {
           showProtractor()
         }
@@ -934,7 +934,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     val scaleItem = new JCheckBoxMenuItem(Utils.loadString("S_ShowScale"))
     scaleItem.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         if (scaleItem.isSelected) {
           showScale()
         }
@@ -948,7 +948,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     val saveAsImage = new JMenuItem(Utils.loadString("S_SaveAsImage"))
     saveAsImage.addActionListener(new ActionListener {
       val fchooser = new FileChooser(kojoCtx)
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         val file = fchooser.chooseFile(Utils.stripDots(Utils.loadString("S_SaveAs")), "PNG Image File", "png")
         if (file != null) {
           Utils.appProperty("export.image.dpi") match {
@@ -985,14 +985,14 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     val resetPanZoomItem = new JMenuItem(Utils.loadString("S_ResetPanZoom"))
     resetPanZoomItem.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         initCamera()
       }
     })
     add(resetPanZoomItem)
     val clearItem = new JMenuItem(Utils.loadString("S_Clear"))
     clearItem.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         forceClear()
       }
     })
@@ -1008,15 +1008,15 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     add("<html><em>%s</em></html>" format (Utils.loadString("S_MouseActions")))
     addPopupMenuListener(new PopupMenuListener {
-      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+      def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit = {
         axesItem.setState(_showAxes)
         gridItem.setState(_showGrid)
         protItem.setState(_showProt)
         scaleItem.setState(_showScale)
         kojoCtx.updateMenuItem(fullScreenItem, fsCanvasAction)
       }
-      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
-      def popupMenuCanceled(e: PopupMenuEvent) {}
+      def popupMenuWillBecomeInvisible(e: PopupMenuEvent): Unit = {}
+      def popupMenuCanceled(e: PopupMenuEvent): Unit = {}
     })
   }
 }

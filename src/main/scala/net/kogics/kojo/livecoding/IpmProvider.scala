@@ -36,7 +36,7 @@ class IpmProvider(mctx: ManipulationContext) {
     currManip.isDefined
   }
 
-  def performClickAction(pane: JTextComponent, offset: Int) {
+  def performClickAction(pane: JTextComponent, offset: Int): Unit = {
     currManip.foreach { _ activate (pane, offset) }
   }
 }

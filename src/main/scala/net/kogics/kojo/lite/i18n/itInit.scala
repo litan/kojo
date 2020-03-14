@@ -206,7 +206,7 @@ object ItalianAPI {
     def ultimaLinea = englishTurtle.lastLine
     def ultimaSvolta = englishTurtle.lastTurn
 
-    def square(steps: Double = 100, direction: Direction = Right) {
+    def square(steps: Double = 100, direction: Direction = Right): Unit = {
       RepeatCommands.repeat(4) {
         englishTurtle.forward(steps)
         direction match {
@@ -216,7 +216,7 @@ object ItalianAPI {
       }
     }
 
-    def quadrato(passi: Double = 100, direzione: Direzione = Destra) {
+    def quadrato(passi: Double = 100, direzione: Direzione = Destra): Unit = {
       square(passi, direzione match {
         case Destra   => Right
         case Sinistra => Left
@@ -224,7 +224,7 @@ object ItalianAPI {
       })
     }
 
-    def triangle(steps: Double, direction: Direction) {
+    def triangle(steps: Double, direction: Direction): Unit = {
       val angles = direction match {
         case Right => (180.0, 60.0)
         case Left  => (0.0, -240.0)
@@ -264,7 +264,7 @@ object ItalianAPI {
     def this() = this(0, 0)
 
     def fai(fn: Tartaruga => Unit) = Utils.runAsyncMonitored(fn(this))
-    def rifai(fn: Tartaruga => Unit) {
+    def rifai(fn: Tartaruga => Unit): Unit = {
       builtins.TSCanvas.animate {
         fn(this)
       }
@@ -297,19 +297,19 @@ object ItalianAPI {
   def gradiente(c1: Color, c2: Color) = builtins.TSCanvas.setBackgroundV(c1, c2)
 
   //loops
-  def ripeti(n: Int)(block: => Unit) {
+  def ripeti(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
 
-  def ripetizione(n: Int)(block: Int => Unit) {
+  def ripetizione(n: Int)(block: Int => Unit): Unit = {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def ripetiFinché(condizione: => Boolean)(block: => Unit) {
+  def ripetiFinché(condizione: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatWhile(condizione) { block }
   }
 
-  def ripetiPerOgniElementoDi[T](sequenza: Iterable[T])(block: T => Unit) {
+  def ripetiPerOgniElementoDi[T](sequenza: Iterable[T])(block: T => Unit): Unit = {
     RepeatCommands.repeatFor(sequenza) { block }
   }
 
@@ -335,7 +335,7 @@ object ItalianAPI {
   //speedTest
   def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
 
-  def conta(n: BigInt) {
+  def conta(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** conta da 1 fino a ... ")
     val startTid = systemtid
@@ -354,7 +354,7 @@ object ItalianAPI {
 
 
 object ItInit {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     ItalianAPI.builtins = builtins
     builtins match {

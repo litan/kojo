@@ -6,7 +6,7 @@ scalaVersion := "2.13.1"
 
 fork in run := true
 
-scalacOptions := Seq("-feature")
+scalacOptions := Seq("-feature", "-deprecation")
 javaOptions in run ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
 
 fork in Test := true

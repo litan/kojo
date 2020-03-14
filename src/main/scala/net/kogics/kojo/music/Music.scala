@@ -33,7 +33,7 @@ class Music(pattern: Pattern) {
   val player = new Player()
   val sequence = player.getSequence(pattern)
 
-  def play() {
+  def play(): Unit = {
     try {
       player.play(sequence)
     }
@@ -42,7 +42,7 @@ class Music(pattern: Pattern) {
     }
   }
 
-  def stop() {
+  def stop(): Unit = {
     if (player.isPlaying) {
       player.stop()
     }

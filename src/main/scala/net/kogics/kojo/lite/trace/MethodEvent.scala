@@ -90,12 +90,12 @@ Caller Source Line: $callerLine
 
   def ended = returnVal != null
 
-  def setParent(p: Option[MethodEvent]) {
+  def setParent(p: Option[MethodEvent]): Unit = {
     parent = p
     parent foreach { _.addChild(this) }
   }
 
-  private def addChild(c: MethodEvent) { subcalls = subcalls :+ c }
+  private def addChild(c: MethodEvent): Unit = { subcalls = subcalls :+ c }
 
   lazy val level: Int = parent match {
     case None    => 0

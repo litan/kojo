@@ -26,7 +26,7 @@ object PuzzleLoader {
   val puzzles = new ArrayList[String]
   var f: JarFile = _
 
-  def init() {
+  def init(): Unit = {
     val kd = Utils.installDir
     val pf = kd + "/../puzzles/puzzles.jar"
     try {

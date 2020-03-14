@@ -48,7 +48,7 @@ class MwTurtle(x: Double, y: Double, _Mw: MathWorld) extends core.RichTurtleComm
     case _ => Some(_lines.head)
   }
 
-  def init() {
+  def init(): Unit = {
     _penColor = Color.red
     _penThickness = 2
     _penIsDown = true
@@ -68,7 +68,7 @@ class MwTurtle(x: Double, y: Double, _Mw: MathWorld) extends core.RichTurtleComm
     setHeading(90)
   }
 
-  private def _forwardLine(p0: MwPoint, p1: MwPoint) {
+  private def _forwardLine(p0: MwPoint, p1: MwPoint): Unit = {
     setPosition(p1)
     if (_penIsDown) {
       val ls = lineSegment(p0, _position)
@@ -104,7 +104,7 @@ class MwTurtle(x: Double, y: Double, _Mw: MathWorld) extends core.RichTurtleComm
     }
   }
 
-  def forward(n: Double) {
+  def forward(n: Double): Unit = {
     Utils.runInSwingThread {
       val p0 = _position
       val xy = posAfterForward(p0.x, p0.y, _theta, n)
@@ -112,19 +112,19 @@ class MwTurtle(x: Double, y: Double, _Mw: MathWorld) extends core.RichTurtleComm
     }
   }
 
-  def turn(angle: Double) {
+  def turn(angle: Double): Unit = {
     Utils.runInSwingThread {
       setRotation(thetaAfterTurn(angle, _theta))
     }
   }
 
-  private def _updateHMarker() {
+  private def _updateHMarker(): Unit = {
     val xy = posAfterForward(_position.x, _position.y, _theta, _MarkerSize)
     _headingMarker.moveTo(xy._1, xy._2)
   }
 
   // should be called on swing thread
-  private def _setPos(p: MwPoint) {
+  private def _setPos(p: MwPoint): Unit = {
     _position = p
     _points = p :: _points
     if (_penIsDown) {
@@ -134,101 +134,101 @@ class MwTurtle(x: Double, y: Double, _Mw: MathWorld) extends core.RichTurtleComm
     }
   }
 
-  def setPosition(x: Double, y: Double) {
+  def setPosition(x: Double, y: Double): Unit = {
     setPosition(point(x, y))
   }
 
-  def setPosition(p: MwPoint) {
+  def setPosition(p: MwPoint): Unit = {
     Utils.runInSwingThread {
       _position.setColor(Color.blue)
       _setPos(p)
     }
   }
 
-  def setHeading(angle: Double) {
+  def setHeading(angle: Double): Unit = {
     Utils.runInSwingThread {
       setRotation(Utils.deg2radians(angle))
     }
   }
 
-  private def setRotation(angle: Double) {
+  private def setRotation(angle: Double): Unit = {
     _theta = angle
     _updateHMarker()
   }
 
-  def setPenColor(color: Color) {
+  def setPenColor(color: Color): Unit = {
     Utils.runInSwingThread {
       _penColor = color
     }
   }
 
-  def setPenThickness(t: Int) {
+  def setPenThickness(t: Int): Unit = {
     Utils.runInSwingThread {
       _penThickness = t
     }
   }
 
-  def moveTo(x: Double, y: Double) {
+  def moveTo(x: Double, y: Double): Unit = {
     moveTo(point(x, y))
   }
 
-  def moveTo(p: MwPoint) {
+  def moveTo(p: MwPoint): Unit = {
     Utils.runInSwingThread {
       setRotation(thetaTowards(_position.x, _position.y, p.x, p.y, _theta))
       _forwardLine(_position, p)
     }
   }
 
-  def penUp() {
+  def penUp(): Unit = {
     Utils.runInSwingThread {
       _penIsDown = false
     }
   }
 
-  def penDown() {
+  def penDown(): Unit = {
     Utils.runInSwingThread {
       _penIsDown = true
       _position.show()
     }
   }
 
-  def labelPosition(l: String) {
+  def labelPosition(l: String): Unit = {
     Utils.runInSwingThread {
       _position.setLabel(l)
     }
   }
 
-  def showAngles() {
+  def showAngles(): Unit = {
     Utils.runInSwingThread {
       _angleShow = true
     }
   }
 
-  def hideAngles() {
+  def hideAngles(): Unit = {
     Utils.runInSwingThread {
       _angleShow = false
     }
   }
 
-  def showExternalAngles() {
+  def showExternalAngles(): Unit = {
     Utils.runInSwingThread {
       _externalAngleShow = true
     }
   }
 
-  def hideExternalAngles() {
+  def hideExternalAngles(): Unit = {
     Utils.runInSwingThread {
       _externalAngleShow = false
     }
   }
 
-  def showLengths() {
+  def showLengths(): Unit = {
     Utils.runInSwingThread {
       _lengthShow = true
     }
   }
 
-  def hideLengths() {
+  def hideLengths(): Unit = {
     Utils.runInSwingThread {
       _lengthShow = false
     }
@@ -246,13 +246,13 @@ class MwTurtle(x: Double, y: Double, _Mw: MathWorld) extends core.RichTurtleComm
     }
   }
 
-  def beginPoly() {
+  def beginPoly(): Unit = {
     Utils.runInSwingThread {
       _polyPoints = List(_position)
     }
   }
 
-  def endPoly() {
+  def endPoly(): Unit = {
     Utils.runInSwingThread {
       if (_polyPoints.size > 2) {
         val pp = _polyPoints.reverse

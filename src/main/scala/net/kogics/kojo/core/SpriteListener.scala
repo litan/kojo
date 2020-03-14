@@ -36,7 +36,7 @@ object NoopSpriteListener extends AbstractSpriteListener {}
 
 class DelegatingSpriteListener extends SpriteListener {
   @volatile var realListener: SpriteListener = NoopSpriteListener
-  def setRealListener(l: SpriteListener) {
+  def setRealListener(l: SpriteListener): Unit = {
     realListener = l
   }
   def hasPendingCommands = realListener.hasPendingCommands()

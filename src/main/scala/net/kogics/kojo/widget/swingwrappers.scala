@@ -44,7 +44,7 @@ trait Focusable { self: JComponent =>
     }
     else {
       lazy val hl: HierarchyListener = new HierarchyListener {
-        def hierarchyChanged(e: HierarchyEvent) {
+        def hierarchyChanged(e: HierarchyEvent): Unit = {
           if ((e.getChangeFlags & HierarchyEvent.SHOWING_CHANGED) != 0 && isShowing) {
             Utils.schedule(0.1) { requestFocusInWindow() }
             Utils.schedule(0.9) { requestFocusInWindow() }
@@ -78,11 +78,11 @@ case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
 case class TextField[T](default: T)(implicit reader: Read[T]) extends JTextField(6) with Focusable {
   setText(default.toString)
   def value = reader.read(getText)
-  def value_=(t: T) { setValue(t) }
-  def setValue(t: T) { setText(t.toString) }
-  def onEnter(oe: T => Unit) {
+  def value_=(t: T): Unit = { setValue(t) }
+  def setValue(t: T): Unit = { setText(t.toString) }
+  def onEnter(oe: T => Unit): Unit = {
     addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         oe(value)
       }
     })
@@ -93,7 +93,7 @@ case class TextArea(default: String) extends JTextArea with Focusable {
   def value = getText
 }
 case class Label(label: String) extends JLabel(label) {
-  override def setText(t: String) {
+  override def setText(t: String): Unit = {
     super.setText(t)
     getParent match {
       case parent: JComponent =>
@@ -106,14 +106,14 @@ case class Label(label: String) extends JLabel(label) {
 }
 case class Button(label: String)(al: => Unit) extends JButton(label) {
   addActionListener(new ActionListener {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       al
     }
   })
 }
 case class ToggleButton(label: String)(al: Boolean => Unit) extends JToggleButton(label) {
   addActionListener(new ActionListener {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       al(isSelected)
     }
   })
@@ -124,16 +124,16 @@ case class DropDown[T](origOptions: T*)(implicit reader: Read[T]) extends JCombo
   setOptions(origOptions: _*)
   var options = origOptions
   def value: T = reader.read(getSelectedItem.asInstanceOf[String])
-  def onSelection(os: T => Unit) {
+  def onSelection(os: T => Unit): Unit = {
     addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         if (Constants.DropDownCanvasPadding != getSelectedItem) {
           os(value)
         }
       }
     })
   }
-  def setOptions(noptions: T*) {
+  def setOptions(noptions: T*): Unit = {
     var inCanvas = false
     if (getItemAt(getItemCount - 1) == Constants.DropDownCanvasPadding) {
       inCanvas = true

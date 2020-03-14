@@ -11,21 +11,21 @@ class DrawingCanvasHolder(val dc: SpriteCanvas, ctx: KojoCtx)
   extends BaseHolder("DC", Utils.loadString("CTL_SCanvasTopComponent"), dc) {
 
   this.addFocusListener(new CFocusListener {
-    override def focusGained(dockable: CDockable) {
+    override def focusGained(dockable: CDockable): Unit = {
       ctx.drawingCanvasActivated()
     }
 
-    override def focusLost(dockable: CDockable) {
+    override def focusLost(dockable: CDockable): Unit = {
     }
   })
 
-  def activate() {
+  def activate(): Unit = {
     toFront()
     dc.activate()
   }
   
   // called when only the canvas and not the holder needs to be activate (e.g when Fullscreen-ing)
-  def activateCanvas() {
+  def activateCanvas(): Unit = {
     dc.activate()
     ctx.drawingCanvasActivated()
   }

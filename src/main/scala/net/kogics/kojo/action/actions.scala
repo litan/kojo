@@ -30,7 +30,7 @@ import core.CodeExecutionSupport
 
 class ChooseColor(execSupport: CodeExecutionSupport) extends AbstractAction(Utils.loadString("S_ChooseColor")) {
   val ctx = execSupport.kojoCtx
-  def actionPerformed(e: ActionEvent) {
+  def actionPerformed(e: ActionEvent): Unit = {
     val sColor = JColorChooser.showDialog(execSupport.kojoCtx.frame, util.Utils.stripDots(e.getActionCommand), ctx.lastColor)
     if (sColor != null) {
       val cprint = execSupport.showOutput(_: String, _: Color)
@@ -53,10 +53,10 @@ class ChooseColor(execSupport: CodeExecutionSupport) extends AbstractAction(Util
 
 object CloseFile {
   var action: Action = _
-  def onFileOpen() {
+  def onFileOpen(): Unit = {
     action.setEnabled(true)
   }
-  def onFileClose() {
+  def onFileClose(): Unit = {
     action.setEnabled(false)
   }
 }
@@ -66,7 +66,7 @@ class CloseFile(fileSupport: EditorFileSupport)
   setEnabled(false)
   CloseFile.action = this
 
-  def actionPerformed(e: ActionEvent) {
+  def actionPerformed(e: ActionEvent): Unit = {
     try {
       fileSupport.closeFileAndClrEditor()
     }
@@ -81,7 +81,7 @@ class NewFile(fileSupport: EditorFileSupport)
 
   val saveAs = new SaveAs(fileSupport)
 
-  def actionPerformed(e: ActionEvent) {
+  def actionPerformed(e: ActionEvent): Unit = {
     try {
       fileSupport.closeFileAndClrEditor()
       saveAs.actionPerformed(e);

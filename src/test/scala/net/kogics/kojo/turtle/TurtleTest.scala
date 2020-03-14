@@ -55,7 +55,7 @@ class TurtleTest {
   }
 
   @Test
-  def testForward1 {
+  def testForward1: Unit = {
     turtle.forward(100)
     val p = turtle.position
 
@@ -64,7 +64,7 @@ class TurtleTest {
   }
 
   @Test
-  def testForward2 {
+  def testForward2: Unit = {
     turtle.turn(-90)
     turtle.forward(100)
     val p = turtle.position
@@ -74,7 +74,7 @@ class TurtleTest {
   }
 
   @Test
-  def testMotion1 {
+  def testMotion1: Unit = {
     turtle.turn(45)
     turtle.forward(100)
     val p = turtle.position
@@ -85,7 +85,7 @@ class TurtleTest {
   }
 
   @Test
-  def testMotion2 {
+  def testMotion2: Unit = {
     turtle.moveTo(-100, -100)
     turtle.turn(-45)
     turtle.forward(150)
@@ -96,7 +96,7 @@ class TurtleTest {
   }
 
   @Test
-  def testMotion3 {
+  def testMotion3: Unit = {
     turtle.moveTo(-100, -100)
     turtle.setHeading(90)
     turtle.turn(-45)
@@ -108,87 +108,87 @@ class TurtleTest {
   }
 
   @Test
-  def testTowards1 {
+  def testTowards1: Unit = {
     turtle.towards(100, 100)
     assertEquals(45, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowards2 {
+  def testTowards2: Unit = {
     turtle.towards(-100, 100)
     assertEquals(135, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowards3 {
+  def testTowards3: Unit = {
     turtle.towards(-100, -100)
     assertEquals(225, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowards4 {
+  def testTowards4: Unit = {
     turtle.towards(100, -100)
     assertEquals(315, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowardsRightLeft {
+  def testTowardsRightLeft: Unit = {
     turtle.jumpTo(100, 0)
     turtle.towards(0, 0)
     assertEquals(180, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowardsRightRight {
+  def testTowardsRightRight: Unit = {
     turtle.jumpTo(100, 0)
     turtle.towards(200, 0)
     assertEquals(0, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowardsLeftRight {
+  def testTowardsLeftRight: Unit = {
     turtle.jumpTo(-100, 0)
     turtle.towards(0, 0)
     assertEquals(0, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowardsLeftLeft {
+  def testTowardsLeftLeft: Unit = {
     turtle.jumpTo(-100, 0)
     turtle.towards(-200, 0)
     assertEquals(180, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowardsTopBottom {
+  def testTowardsTopBottom: Unit = {
     turtle.jumpTo(0, 100)
     turtle.towards(0, 0)
     assertEquals(270, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowardsTopTop {
+  def testTowardsTopTop: Unit = {
     turtle.jumpTo(0, 100)
     turtle.towards(0, 200)
     assertEquals(90, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowardsBottomTop {
+  def testTowardsBottomTop: Unit = {
     turtle.jumpTo(0, -100)
     turtle.towards(0, 0)
     assertEquals(90, turtle.heading, 0.001)
   }
 
   @Test
-  def testTowardsBottomBottom {
+  def testTowardsBottomBottom: Unit = {
     turtle.jumpTo(0, -100)
     turtle.towards(0, -200)
     assertEquals(270, turtle.heading, 0.001)
   }
 
   @Test
-  def testTurn {
+  def testTurn: Unit = {
     val theta0 = turtle.heading
     val turnSize = 30
     turtle.turn(turnSize)
@@ -197,7 +197,7 @@ class TurtleTest {
   }
 
   @Test
-  def testTurn2 {
+  def testTurn2: Unit = {
     val theta0 = turtle.heading
     // failing test from earlier scalacheck run. but works here??
     val turnSize = 2147483647
@@ -213,7 +213,7 @@ class TurtleTest {
   }
 
   @Test
-  def testManyForwards {
+  def testManyForwards: Unit = {
     val propForward = forAll { stepSize: Int =>
       val pos0 = turtle.position
       turtle.forward(stepSize)
@@ -225,7 +225,7 @@ class TurtleTest {
   }
 
   @Test
-  def testManyTurns {
+  def testManyTurns: Unit = {
     val propTurn = forAll { turnSize: Int =>
       val theta0 = turtle.heading
       turtle.turn(turnSize)
@@ -242,7 +242,7 @@ class TurtleTest {
   }
 
   @Test
-  def testManyTowardsQ1 {
+  def testManyTowardsQ1: Unit = {
     val propTowards = forAll { n: Double =>
       val x = math.abs(n)
       val y = x + 10
@@ -253,7 +253,7 @@ class TurtleTest {
   }
 
   @Test
-  def testManyTowardsQ2 {
+  def testManyTowardsQ2: Unit = {
     val propTowards = forAll { n: Double =>
       val x = -math.abs(n)
       val y = math.abs(n + 20)
@@ -264,7 +264,7 @@ class TurtleTest {
   }
 
   @Test
-  def testManyTowardsQ3 {
+  def testManyTowardsQ3: Unit = {
     val propTowards = forAll { n: Double =>
       val x = -math.abs(n) - 1
       val y = x - 30
@@ -275,7 +275,7 @@ class TurtleTest {
   }
 
   @Test
-  def testManyTowardsQ4 {
+  def testManyTowardsQ4: Unit = {
     val propTowards = forAll { n: Double =>
       val x = math.abs(n)
       val y = -x - 10
@@ -286,7 +286,7 @@ class TurtleTest {
   }
 
   @Test
-  def testManyMoveTos {
+  def testManyMoveTos: Unit = {
     val smallFloats = Gen.choose(-1000.0, 1000.0)
     val propMoveTo = forAll(smallFloats) { n: Double =>
       val x = n
@@ -300,47 +300,47 @@ class TurtleTest {
   }
 
   @Test
-  def testDistanceTo1 {
+  def testDistanceTo1: Unit = {
     assertEquals(100, turtle.distanceTo(100, 0), 0.001)
   }
 
   @Test
-  def testDistanceTo2 {
+  def testDistanceTo2: Unit = {
     assertEquals(100, turtle.distanceTo(0, 100), 0.001)
   }
 
   @Test
-  def testDistanceTo3 {
+  def testDistanceTo3: Unit = {
     turtle.changePos(10, 10)
     assertEquals(math.sqrt(90 * 90 * 2), turtle.distanceTo(100, 100), 0.001)
   }
 
   @Test
-  def testDistanceTo4 {
+  def testDistanceTo4: Unit = {
     turtle.changePos(-10, -10)
     assertEquals(math.sqrt(90 * 90 * 2), turtle.distanceTo(-100, -100), 0.001)
   }
 
   @Test
-  def testDelayFor1 {
+  def testDelayFor1: Unit = {
     turtle._animationDelay = 100
     assertEquals(100, turtle.delayFor(100))
   }
 
   @Test
-  def testDelayFor2 {
+  def testDelayFor2: Unit = {
     turtle._animationDelay = 100
     assertEquals(1000, turtle.delayFor(1000))
   }
 
   @Test
-  def testDelayFor3 {
+  def testDelayFor3: Unit = {
     turtle._animationDelay = 80
     assertEquals(240, turtle.delayFor(300))
   }
 
   @Test
-  def testDisallowNegativeAnimDelay {
+  def testDisallowNegativeAnimDelay: Unit = {
     try {
       turtle.setAnimationDelay(-1)
       fail("Negative Animation Delay Not Allowed")
@@ -351,7 +351,7 @@ class TurtleTest {
   }
 
   @Test
-  def testDisallowNegativePenThickness {
+  def testDisallowNegativePenThickness: Unit = {
     try {
       turtle.setPenThickness(-1)
       fail("Negative Pen Thickness Not Allowed")
@@ -364,7 +364,7 @@ class TurtleTest {
   val DefaultFont = new Font(new PText().getFont.getName, Font.PLAIN, 18)
 
   @Test
-  def testStyleSaveRestore {
+  def testStyleSaveRestore: Unit = {
     turtle.setPenThickness(1)
     turtle.setPenColor(Color.blue)
     turtle.setFillColor(Color.green)
@@ -383,7 +383,7 @@ class TurtleTest {
   }
 
   @Test
-  def testStyleSaveRestore2 {
+  def testStyleSaveRestore2: Unit = {
     turtle.setPenThickness(1)
     turtle.setPenColor(Color.blue)
     turtle.setFillColor(Color.green)
@@ -402,7 +402,7 @@ class TurtleTest {
   }
 
   @Test
-  def testStyleSaveRestore3 {
+  def testStyleSaveRestore3: Unit = {
     turtle.setPenThickness(1)
     turtle.setPenColor(Color.blue)
     turtle.setFillColor(Color.green)
@@ -423,7 +423,7 @@ class TurtleTest {
   }
 
   @Test
-  def testStyleSaveRestore4 {
+  def testStyleSaveRestore4: Unit = {
     turtle.setPenThickness(1)
     turtle.setPenColor(Color.blue)
     turtle.setFillColor(Color.green)
@@ -442,7 +442,7 @@ class TurtleTest {
     assertEquals(Style(Color.blue, 1, Color.green, newFont, true), turtle.style)
   }
 
-  def testForwardSeqHelper() {
+  def testForwardSeqHelper(): Unit = {
     turtle.forward(100)
     turtle.right(45)
     turtle.forward(100)
@@ -455,18 +455,18 @@ class TurtleTest {
   }
 
   @Test
-  def testFastForwardSeq() {
+  def testFastForwardSeq(): Unit = {
     turtle.setAnimationDelay(0)
     testForwardSeqHelper()
   }
 
   @Test
-  def testSlowForwardSeq() {
+  def testSlowForwardSeq(): Unit = {
     turtle.setAnimationDelay(100)
     testForwardSeqHelper()
   }
 
-  def testMoveToSeqHelper() {
+  def testMoveToSeqHelper(): Unit = {
     turtle.moveTo(0, 100)
     turtle.moveTo(50, 150)
     turtle.moveTo(100, 100)
@@ -477,19 +477,19 @@ class TurtleTest {
   }
 
   @Test
-  def testFastMoveToSeq() {
+  def testFastMoveToSeq(): Unit = {
     turtle.setAnimationDelay(0)
     testMoveToSeqHelper()
   }
 
   @Test
-  def testSlowMoveToSeq() {
+  def testSlowMoveToSeq(): Unit = {
     turtle.setAnimationDelay(100)
     testMoveToSeqHelper()
   }
 
   @Test
-  def testPosHeSaveRestore() {
+  def testPosHeSaveRestore(): Unit = {
     turtle.forward(100)
     turtle.right()
     turtle.forward(50)
@@ -511,7 +511,7 @@ class TurtleTest {
   }
 
   @Test
-  def testTurtleDistance1() {
+  def testTurtleDistance1(): Unit = {
     val t2 = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
     turtle.setPosition(10, 10)
     t2.setPosition(100, 10)
@@ -520,7 +520,7 @@ class TurtleTest {
   }
 
   @Test
-  def testTurtleDistance2() {
+  def testTurtleDistance2(): Unit = {
     val t2 = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
     turtle.setPosition(10, 10)
     t2.setPosition(-100, 10)
@@ -529,7 +529,7 @@ class TurtleTest {
   }
 
   @Test
-  def testTurtleDistance3() {
+  def testTurtleDistance3(): Unit = {
     val t2 = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
     turtle.setPosition(10, 10)
     t2.setPosition(10, 100)
@@ -538,7 +538,7 @@ class TurtleTest {
   }
 
   @Test
-  def testTurtleDistance4() {
+  def testTurtleDistance4(): Unit = {
     val t2 = new Turtle(spriteCanvas, "/images/turtle32.png", 0, 0)
     turtle.setPosition(10, 10)
     t2.setPosition(10, -100)
@@ -566,19 +566,19 @@ class TurtleTest {
   //  }
 
   @Test
-  def testPerimeter1() {
+  def testPerimeter1(): Unit = {
     assertEquals(0, turtle.perimeter, 0.001)
   }
 
   @Test
-  def testPerimeter2() {
+  def testPerimeter2(): Unit = {
     val stepSize = 10
     turtle.forward(stepSize)
     assertEquals(stepSize, turtle.perimeter, 0.001)
   }
 
   @Test
-  def testPerimeter3() {
+  def testPerimeter3(): Unit = {
     val stepSize = 10
     turtle.forward(stepSize)
     turtle.right()
@@ -587,7 +587,7 @@ class TurtleTest {
   }
 
   @Test
-  def testPerimeter4() {
+  def testPerimeter4(): Unit = {
     val stepSize = 10
     for (i <- 1 to 2) {
       turtle.forward(stepSize)
@@ -599,19 +599,19 @@ class TurtleTest {
   }
 
   @Test
-  def testArea1() {
+  def testArea1(): Unit = {
     doublesEqual(0, turtle.area, 0.001)
   }
 
   @Test
-  def testArea2() {
+  def testArea2(): Unit = {
     val stepSize = 10
     turtle.forward(stepSize)
     assertEquals(0, turtle.area, 0.001)
   }
 
   @Test
-  def testArea3() {
+  def testArea3(): Unit = {
     val stepSize = 10
     turtle.forward(stepSize)
     turtle.right()
@@ -620,7 +620,7 @@ class TurtleTest {
   }
 
   @Test
-  def testArea4() {
+  def testArea4(): Unit = {
     val stepSize = 10
     for (i <- 1 to 2) {
       turtle.forward(stepSize)

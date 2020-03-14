@@ -122,13 +122,13 @@ object PolishAPI {
     lazy val VK_Ń = 323
   }
   
-  def powtarzaj(n: Int)(blok: => Unit) {
+  def powtarzaj(n: Int)(blok: => Unit): Unit = {
     for (i <- 1 to n) blok
   }
-  def powtarzajZLicznikem(n: Int)(blok: Int => Unit) {
+  def powtarzajZLicznikem(n: Int)(blok: Int => Unit): Unit = {
     for (i <- 1 to n) blok(i)
   }
-  def dopóki(warunek: => Boolean)(blok: => Unit) {
+  def dopóki(warunek: => Boolean)(blok: => Unit): Unit = {
     while (warunek) blok
   }
   
@@ -153,7 +153,7 @@ object PolishAPI {
 }
 
 object PlInit {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     net.kogics.kojo.lite.i18n.PolishAPI.builtins = builtins
     builtins match {

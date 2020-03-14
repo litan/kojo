@@ -27,48 +27,48 @@ trait MwShape extends Labelled {
   val ggbApi: GgbAPI
   protected def geogebraElement: GeoElement
 
-  protected def ctorDone() {
+  protected def ctorDone(): Unit = {
 //    ggbApi.getApplication.storeUndoInfo()
     hide()
     hideLabel()
 //    repaint()
   }
 
-  def repaint() {
+  def repaint(): Unit = {
 //    geogebraElement.updateRepaint()
     geogebraElement.updateCascade()
     ggbApi.getKernel.notifyRepaint()
   }
 
-  def hide() {
+  def hide(): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setEuclidianVisible(false)
       repaint()
     }
   }
 
-  def show() {
+  def show(): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setEuclidianVisible(true)
       repaint()
     }
   }
 
-  def setColor(color: java.awt.Color) {
+  def setColor(color: java.awt.Color): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setObjColor(new GColorD(color))
       repaint()
     }
   }
 
-  def setLineThickness(t:  Int) {
+  def setLineThickness(t:  Int): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setLineThickness(t)
       repaint()
     }
   }
 
-  def showNameInLabel() {
+  def showNameInLabel(): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setLabelVisible(true)
       geogebraElement.setLabelMode(GeoElement.LABEL_NAME)
@@ -76,7 +76,7 @@ trait MwShape extends Labelled {
     }
   }
 
-  def showNameValueInLabel() {
+  def showNameValueInLabel(): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setLabelVisible(true)
       geogebraElement.setLabelMode(GeoElement.LABEL_NAME_VALUE)
@@ -84,7 +84,7 @@ trait MwShape extends Labelled {
     }
   }
 
-  def showValueInLabel() {
+  def showValueInLabel(): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setLabelVisible(true)
       geogebraElement.setLabelMode(GeoElement.LABEL_VALUE)
@@ -92,21 +92,21 @@ trait MwShape extends Labelled {
     }
   }
 
-  def hideLabel() {
+  def hideLabel(): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setLabelVisible(false)
       repaint()
     }
   }
 
-  def showLabel() {
+  def showLabel(): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setLabelVisible(true)
       repaint()
     }
   }
 
-  def setLabel(label: String) {
+  def setLabel(label: String): Unit = {
     Utils.runInSwingThread {
       geogebraElement.setLabelVisible(true)
       geogebraElement.setLabel(label)

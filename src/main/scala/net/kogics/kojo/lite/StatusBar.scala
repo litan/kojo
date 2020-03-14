@@ -20,11 +20,11 @@ class StatusBar extends JPanel {
   lineCol.setBorder(BorderFactory.createLineBorder(Color.lightGray))
   add(lineCol, BorderLayout.EAST)
 
-  def showText(text: String) {
+  def showText(text: String): Unit = {
     statusText.setText(text)
   }
 
-  def showCaretPos(line: Int, col: Int) {
+  def showCaretPos(line: Int, col: Int): Unit = {
     lineCol.setText(s"${" " * 12}$line | $col${" " * 12}")
   }
 }

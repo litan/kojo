@@ -35,7 +35,7 @@ import util.Utils.withLock
 trait Mp3Player {
   val pumpEvents: Boolean
   val kojoCtx: KojoCtx
-  def showError(msg: String)
+  def showError(msg: String): Unit
   lazy private val listener = kojoCtx.activityListener
 
   @volatile private var mp3Player: Option[Player] = None
@@ -46,7 +46,7 @@ trait Mp3Player {
   private var stopFg = false
   private var timer: Timer = _
 
-  private def startPumpingEvents() {
+  private def startPumpingEvents(): Unit = {
     if (pumpEvents && timer == null) {
       listener.hasPendingCommands()
       timer = Utils.scheduleRec(0.5) {
@@ -55,7 +55,7 @@ trait Mp3Player {
     }
   }
 
-  private def stopPumpingEvents() {
+  private def stopPumpingEvents(): Unit = {
     if (pumpEvents && bgmp3Player.isEmpty) {
       if (timer != null) {
         timer.stop()
@@ -68,7 +68,7 @@ trait Mp3Player {
     }
   }
 
-  private def playHelper(fname: String)(fn: (InputStream) => Unit) {
+  private def playHelper(fname: String)(fn: (InputStream) => Unit): Unit = {
     val is = getClass.getResourceAsStream(fname)
     if (is != null) {
       fn(is)
@@ -93,8 +93,8 @@ trait Mp3Player {
     }
   }
 
-  def playMp3(mp3File: String) {
-    def done() {
+  def playMp3(mp3File: String): Unit = {
+    def done(): Unit = {
       stopFg = false
       mp3Player = None
       stopPumpingEvents()
@@ -126,8 +126,8 @@ trait Mp3Player {
   }
 
   lazy val queuedRunner = new AsyncQueuedRunner {}
-  def playMp3Sound(mp3File: String) {
-    def done() {
+  def playMp3Sound(mp3File: String): Unit = {
+    def done(): Unit = {
       stopFg = false
       mp3Player = None
       stopped.signal()
@@ -156,9 +156,9 @@ trait Mp3Player {
     }
   }
 
-  def playMp3Loop(mp3File: String) {
+  def playMp3Loop(mp3File: String): Unit = {
 
-    def playLoop0() {
+    def playLoop0(): Unit = {
       Utils.runAsync {
         withLock(playLock) {
           if (stopBg) {
@@ -195,7 +195,7 @@ trait Mp3Player {
     }
   }
 
-  def stopMp3() {
+  def stopMp3(): Unit = {
     withLock(playLock) {
       if (mp3Player.isDefined) {
         stopFg = true
@@ -219,7 +219,7 @@ trait Mp3Player {
     }
   }
 
-  def stopMp3Loop() {
+  def stopMp3Loop(): Unit = {
     withLock(playLock) {
       if (bgmp3Player.isDefined) {
         stopBg = true

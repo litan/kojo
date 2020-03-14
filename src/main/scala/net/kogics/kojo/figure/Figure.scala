@@ -63,7 +63,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
   camera.addLayer(camera.getLayerCount - 1, fgLayer)
   init()
 
-  def init() {
+  def init(): Unit = {
     bgLayer.setOffset(initX, initY)
     fgLayer.setOffset(initX, initY)
     _lineColor = DefaultColor
@@ -83,12 +83,12 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     _lineStroke
   }
 
-  def repaint() {
+  def repaint(): Unit = {
     bgLayer.repaint()
     fgLayer.repaint()
   }
 
-  def clear() {
+  def clear(): Unit = {
     Utils.runInSwingThread {
       stop()
       bgLayer.removeAllChildren()
@@ -101,39 +101,39 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     }
   }
 
-  def fgClear() {
+  def fgClear(): Unit = {
     Utils.runInSwingThread {
       fgLayer.removeAllChildren()
       repaint()
     }
   }
 
-  def remove() {
+  def remove(): Unit = {
     Utils.runInSwingThread {
       camera.removeLayer(bgLayer)
       camera.removeLayer(fgLayer)
     }
   }
 
-  def setPenColor(color: Paint) {
+  def setPenColor(color: Paint): Unit = {
     Utils.runInSwingThread {
       _lineColor = color
     }
   }
 
-  def setPenThickness(t: Double) {
+  def setPenThickness(t: Double): Unit = {
     Utils.runInSwingThread {
       _lineStroke = new BasicStroke(t.toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND)
     }
   }
 
-  def setLineStroke(st: Stroke) {
+  def setLineStroke(st: Stroke): Unit = {
     Utils.runInSwingThread {
       _lineStroke = st
     }
   }
 
-  def setFillColor(color: Paint) {
+  def setFillColor(color: Paint): Unit = {
     Utils.runInSwingThread {
       _fillColor = color
     }
@@ -165,15 +165,15 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     currLayer.repaint
   }
 
-  def onRunStart() {}
+  def onRunStart(): Unit = {}
 
-  def handleStartFn() {
+  def handleStartFn(): Unit = {
     if (figAnimations.isEmpty && startFn.isDefined) {
       startFn.get.apply()
     }
   }
 
-  def onRunDone() {}
+  def onRunDone(): Unit = {}
 
   def refresh(fn: => Unit): Future[PActivity] = refresh(1000 / canvas.kojoCtx.fps, 0)(fn)
   def refresh(rate: Long, delay: Long)(fn: => Unit): Future[PActivity] = {
@@ -185,7 +185,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     Utils.runLaterInSwingThread {
       val _ = figAnimation // force a volatile read to trigger a StoreLoad memory barrier
       figAnimation = new PActivity(-1, rate, System.currentTimeMillis + delay) {
-        override def activityStep(elapsedTime: Long) {
+        override def activityStep(elapsedTime: Long): Unit = {
           currLayer = fgLayer
           try {
             staging.Inputs.activityStep
@@ -208,9 +208,9 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
       }
 
       figAnimation.setDelegate(new PActivityDelegate {
-        override def activityStarted(activity: PActivity) {}
-        override def activityStepped(activity: PActivity) {}
-        override def activityFinished(activity: PActivity) {
+        override def activityStarted(activity: PActivity): Unit = {}
+        override def activityStepped(activity: PActivity): Unit = {}
+        override def activityFinished(activity: PActivity): Unit = {
           listener.pendingCommandsDone()
         }
       })
@@ -225,7 +225,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
 
   def stopRefresh() = stop()
 
-  def stop() {
+  def stop(): Unit = {
     Utils.runInSwingThread {
       figAnimations.foreach { figAnimation =>
         figAnimation.terminate(PActivity.TERMINATE_AND_FINISH)
@@ -237,7 +237,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     }
   }
 
-  def stopAnimationActivity(f: Future[PActivity]) {
+  def stopAnimationActivity(f: Future[PActivity]): Unit = {
     Utils.runInSwingThread {
       val figAnimation = f.get
       figAnimation.terminate(PActivity.TERMINATE_AND_FINISH)
@@ -248,7 +248,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     }
   }
 
-  private[kojo] def setSpriteListener(l: SpriteListener) {
+  private[kojo] def setSpriteListener(l: SpriteListener): Unit = {
     listener = l
   }
 

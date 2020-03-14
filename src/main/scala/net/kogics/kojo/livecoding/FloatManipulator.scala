@@ -36,7 +36,7 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
     Array(targetStart, targetEnd)
   }
 
-  def activate(pane: JTextComponent, offset: Int) {
+  def activate(pane: JTextComponent, offset: Int): Unit = {
     activate(pane, offset, target, targetStart)
   }
 
@@ -73,7 +73,7 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
       if (uid.endsWith(".")) uid + "0" else uid
     }
 
-    def reConfigSlider(around: Double, delta0: Double, zoomB: JToggleButton) {
+    def reConfigSlider(around: Double, delta0: Double, zoomB: JToggleButton): Unit = {
       ncenter = around
       delta = delta0
       slider.setMinimum(0)

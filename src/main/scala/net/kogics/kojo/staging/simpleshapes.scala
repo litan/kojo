@@ -351,13 +351,13 @@ class Path(val origin: Point) extends StrokedShape {
   val path = new PPath
   moveTo(origin.x.toFloat, origin.y.toFloat)
 
-  def lineTo(x: Double, y: Double) {
+  def lineTo(x: Double, y: Double): Unit = {
     Utils.runInSwingThread {
       path.lineTo(x.toFloat, y.toFloat)
     }
   }
 
-  def moveTo(x: Double, y: Double) {
+  def moveTo(x: Double, y: Double): Unit = {
     Utils.runInSwingThread {
       path.moveTo(x.toFloat, y.toFloat)
     }

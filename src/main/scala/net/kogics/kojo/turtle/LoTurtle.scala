@@ -56,17 +56,17 @@ class LoTurtle(val t: core.Turtle) extends Dynamic {
     delay(math.max(math.min(Kmath.map(toD(n), 1, 10, 1000, 0), 1000), 0).toInt)
   }
 
-  def cmds(code: => LoTurtle) {
+  def cmds(code: => LoTurtle): Unit = {
     cmdsu.put(lastCmd, { x: Unit => code })
   }
-  def cmds(code: Any => LoTurtle) {
+  def cmds(code: Any => LoTurtle): Unit = {
     cmdsd.put(lastCmd, code)
   }
-  def cmds(code: (Any, Any) => LoTurtle) {
+  def cmds(code: (Any, Any) => LoTurtle): Unit = {
     cmdsdd.put(lastCmd, code)
   }
 
-  def cmds(code: (Any, Any, Any) => LoTurtle) {
+  def cmds(code: (Any, Any, Any) => LoTurtle): Unit = {
     cmdsddd.put(lastCmd, code)
   }
 

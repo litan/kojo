@@ -73,7 +73,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
 
   protected def realDraw(): Unit
 
-  def draw() {
+  def draw(): Unit = {
     realDraw()
     //    Need to do the following if we ever have turtle commands that modify the turtle's layer transform    
     //    Utils.runInSwingThread {
@@ -105,25 +105,25 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     _pgTransform = null
   }
 
-  def rotateAboutPoint(angle: Double, x: Double, y: Double) {
+  def rotateAboutPoint(angle: Double, x: Double, y: Double): Unit = {
     translate(x, y)
     rotate(angle)
     translate(-x, -y)
   }
 
-  def rotate(angle: Double) {
+  def rotate(angle: Double): Unit = {
     transformBy(AffineTransform.getRotateInstance(angle.toRadians))
   }
 
-  def scale(factor: Double) {
+  def scale(factor: Double): Unit = {
     transformBy(AffineTransform.getScaleInstance(factor, factor))
   }
 
-  def scale(x: Double, y: Double) {
+  def scale(x: Double, y: Double): Unit = {
     transformBy(AffineTransform.getScaleInstance(x, y))
   }
 
-  def translate(x: Double, y: Double) {
+  def translate(x: Double, y: Double): Unit = {
     transformBy(AffineTransform.getTranslateInstance(x, y))
   }
 
@@ -177,11 +177,11 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     tnode.setTransparency(o.toFloat)
   }
 
-  def flipX() {
+  def flipX(): Unit = {
     transformBy(AffineTransform.getScaleInstance(1, -1))
   }
 
-  def flipY() {
+  def flipY(): Unit = {
     transformBy(AffineTransform.getScaleInstance(-1, 1))
   }
 
@@ -305,7 +305,7 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def picLayer = canvas.pictures
   var reactions = Vector.empty[Future[PActivity]]
 
-  def react(fn: Picture => Unit) {
+  def react(fn: Picture => Unit): Unit = {
     if (!isDrawn) {
       throw new IllegalStateException("Ask picture to react after you draw it.")
     }
@@ -378,12 +378,12 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
 trait RedrawStopper extends Picture {
   @volatile var drawn = false
   def isDrawn = drawn
-  def checkDraw(msg: String) {
+  def checkDraw(msg: String): Unit = {
     if (drawn) {
       throw new RuntimeException(msg)
     }
   }
-  abstract override def draw() {
+  abstract override def draw(): Unit = {
     checkDraw("You can't redraw a picture")
     drawn = true
     super.draw()
@@ -428,7 +428,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
 
   def makeTnode = t.tlayer
 
-  def realDraw() {
+  def realDraw(): Unit = {
     painter(t)
     Utils.runInSwingThread {
       val tl = tnode
@@ -541,7 +541,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     }
   }
 
-  def foreachPolyLine(fn: PolyLine => Unit) {
+  def foreachPolyLine(fn: PolyLine => Unit): Unit = {
     val plines = Utils.runInSwingThreadAndPause { t.penPaths.toArray }
     plines.foreach { fn }
   }
@@ -552,7 +552,7 @@ object Pic0 {
 }
 
 class Pic0(painter: Painter)(implicit canvas0: SCanvas) extends Pic(painter) {
-  override def realDraw() {
+  override def realDraw(): Unit = {
     try {
       canvas.setDefTurtle(t)
       super.realDraw()
@@ -584,31 +584,31 @@ abstract class BasePicList(val pics: List[Picture])
     tnode.getFullBounds
   }
 
-  def hueMod(f: Double) {
+  def hueMod(f: Double): Unit = {
     pics.foreach { pic =>
       pic.hueMod(f)
     }
   }
 
-  def satMod(f: Double) {
+  def satMod(f: Double): Unit = {
     pics.foreach { pic =>
       pic.satMod(f)
     }
   }
 
-  def britMod(f: Double) {
+  def britMod(f: Double): Unit = {
     pics.foreach { pic =>
       pic.britMod(f)
     }
   }
 
-  def setPenColor(color: Paint) {
+  def setPenColor(color: Paint): Unit = {
     pics.foreach { pic =>
       pic.setPenColor(color)
     }
   }
 
-  def setPenThickness(th: Double) {
+  def setPenThickness(th: Double): Unit = {
     pics.foreach { pic =>
       pic.setPenThickness(th)
     }
@@ -620,7 +620,7 @@ abstract class BasePicList(val pics: List[Picture])
     }
   }
 
-  def setFillColor(color: Paint) {
+  def setFillColor(color: Paint): Unit = {
     pics.foreach { pic =>
       pic.setFillColor(color)
     }
@@ -632,7 +632,7 @@ abstract class BasePicList(val pics: List[Picture])
     }
   }
 
-  def foreachPolyLine(fn: PolyLine => Unit) {
+  def foreachPolyLine(fn: PolyLine => Unit): Unit = {
     pics.foreach { pic =>
       pic.foreachPolyLine(fn)
     }
@@ -653,7 +653,7 @@ abstract class BasePicList(val pics: List[Picture])
 
   protected def picsCopy: List[Picture] = pics.map { _.copy }
 
-  def dumpInfo() {
+  def dumpInfo(): Unit = {
     println("--- ")
     println("Pic List Bounds: " + bounds)
     println("Pic List Tnode: " + System.identityHashCode(tnode))
@@ -672,7 +672,7 @@ object HPics {
 }
 
 class HPics(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
+  def realDraw(): Unit = {
     var ox = 0.0
     pics.foreach { pic =>
       pic.translate(ox, 0)
@@ -684,7 +684,7 @@ class HPics(pics: List[Picture]) extends BasePicList(pics) {
 
   def copy = HPics(picsCopy).withGap(padding)
 
-  override def dumpInfo() {
+  override def dumpInfo(): Unit = {
     println(">>> HPics Start - " + System.identityHashCode(this))
     super.dumpInfo()
     println("<<< HPics End\n\n")
@@ -700,7 +700,7 @@ object HPics2 {
 }
 
 class HPics2(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
+  def realDraw(): Unit = {
     var prevPic: Option[Picture] = None
     pics.foreach { pic =>
       pic.invisible()
@@ -723,7 +723,7 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
 
   def copy = HPics2(picsCopy).withGap(padding)
 
-  override def dumpInfo() {
+  override def dumpInfo(): Unit = {
     println(">>> HPics2 Start - " + System.identityHashCode(this))
     super.dumpInfo()
     println("<<< HPics2 End\n\n")
@@ -739,7 +739,7 @@ object VPics {
 }
 
 class VPics(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
+  def realDraw(): Unit = {
     var oy = 0.0
     pics.foreach { pic =>
       pic.translate(0, oy)
@@ -751,7 +751,7 @@ class VPics(pics: List[Picture]) extends BasePicList(pics) {
 
   def copy = VPics(picsCopy).withGap(padding)
 
-  override def dumpInfo() {
+  override def dumpInfo(): Unit = {
     println(">>> VPics Start - " + System.identityHashCode(this))
     super.dumpInfo()
     println("<<< VPics End\n\n")
@@ -767,7 +767,7 @@ object VPics2 {
 }
 
 class VPics2(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
+  def realDraw(): Unit = {
     var prevPic: Option[Picture] = None
     pics.foreach { pic =>
       pic.invisible()
@@ -790,7 +790,7 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
 
   def copy = VPics2(picsCopy).withGap(padding)
 
-  override def dumpInfo() {
+  override def dumpInfo(): Unit = {
     println(">>> VPics2 Start - " + System.identityHashCode(this))
     super.dumpInfo()
     println("<<< VPics2 End\n\n")
@@ -806,7 +806,7 @@ object GPics {
 }
 
 class GPics(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
+  def realDraw(): Unit = {
     pics.foreach { pic =>
       pic.draw()
     }
@@ -814,7 +814,7 @@ class GPics(pics: List[Picture]) extends BasePicList(pics) {
 
   def copy = GPics(picsCopy).withGap(padding)
 
-  override def dumpInfo() {
+  override def dumpInfo(): Unit = {
     println(">>> GPics Start - " + System.identityHashCode(this))
     super.dumpInfo()
     println("<<< GPics End\n\n")
@@ -830,7 +830,7 @@ object GPics2 {
 }
 
 class GPics2(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
+  def realDraw(): Unit = {
     var prevPic: Option[Picture] = None
     pics.foreach { pic =>
       pic.invisible()
@@ -851,7 +851,7 @@ class GPics2(pics: List[Picture]) extends BasePicList(pics) {
 
   def copy = GPics2(picsCopy).withGap(padding)
 
-  override def dumpInfo() {
+  override def dumpInfo(): Unit = {
     println(">>> GPics2 Start - " + System.identityHashCode(this))
     super.dumpInfo()
     println("<<< GPics2 End\n\n")
@@ -867,7 +867,7 @@ object BatchPics {
 }
 
 class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
-  def realDraw() {
+  def realDraw(): Unit = {
     pics.head.draw()
     pics.tail.foreach { pic =>
       pic.draw()
@@ -896,7 +896,7 @@ class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
 
   def copy = BatchPics(picsCopy).withGap(padding)
 
-  override def dumpInfo() {
+  override def dumpInfo(): Unit = {
     println(">>> BatchPics Start - " + System.identityHashCode(this))
     super.dumpInfo()
     println("<<< BatchPics End\n\n")

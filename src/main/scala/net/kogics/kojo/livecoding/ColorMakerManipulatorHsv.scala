@@ -92,7 +92,7 @@ class ColorMakerManipulatorHsv(ctx: ManipulationContext) extends InteractiveMani
     Array(targetStart, targetEnd)
   }
 
-  def activate(pane: JTextComponent, offset: Int) {
+  def activate(pane: JTextComponent, offset: Int): Unit = {
     activate(pane, offset, target, targetStart)
   }
 
@@ -100,7 +100,7 @@ class ColorMakerManipulatorHsv(ctx: ManipulationContext) extends InteractiveMani
     showPopup(pane, offset)
   }
 
-  def showPopup(pane: JTextComponent, offset: Int) {
+  def showPopup(pane: JTextComponent, offset: Int): Unit = {
     close()
     ctx.addManipulator(this)
     val doc = pane.getDocument
@@ -157,7 +157,7 @@ class ColorMakerManipulatorHsv(ctx: ManipulationContext) extends InteractiveMani
     })
     panel.add(cc, BorderLayout.CENTER)
     val closeAction = new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         close()
         ctx.activateEditor()
       }
@@ -172,7 +172,7 @@ class ColorMakerManipulatorHsv(ctx: ManipulationContext) extends InteractiveMani
     colorPopup.setVisible(true)
   }
 
-  def close() {
+  def close(): Unit = {
     if (colorPopup != null) {
       colorPopup.setVisible(false)
       colorPopup = null

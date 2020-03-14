@@ -111,7 +111,7 @@ class ColorMakerManipulatorHexRgb(ctx: ManipulationContext) extends InteractiveM
     Array(targetStart, targetEnd)
   }
 
-  def activate(pane: JTextComponent, offset: Int) {
+  def activate(pane: JTextComponent, offset: Int): Unit = {
     activate(pane, offset, target, targetStart)
   }
 
@@ -119,7 +119,7 @@ class ColorMakerManipulatorHexRgb(ctx: ManipulationContext) extends InteractiveM
     showPopup(pane, offset)
   }
 
-  def showPopup(pane: JTextComponent, offset: Int) {
+  def showPopup(pane: JTextComponent, offset: Int): Unit = {
     close()
     ctx.addManipulator(this)
     val doc = pane.getDocument
@@ -172,7 +172,7 @@ class ColorMakerManipulatorHexRgb(ctx: ManipulationContext) extends InteractiveM
     })
     panel.add(cc, BorderLayout.CENTER)
     val closeAction = new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         close()
         ctx.activateEditor()
       }
@@ -187,7 +187,7 @@ class ColorMakerManipulatorHexRgb(ctx: ManipulationContext) extends InteractiveM
     colorPopup.setVisible(true)
   }
 
-  def close() {
+  def close(): Unit = {
     if (colorPopup != null) {
       colorPopup.setVisible(false)
       colorPopup = null

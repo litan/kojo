@@ -63,7 +63,7 @@ trait KojoCtx {
   def mwActivated(): Unit
   def d3Activated(): Unit
   def lastColor: Color
-  def lastColor_=(c: Color)
+  def lastColor_=(c: Color): Unit
   def knownColors: List[String]
   def knownColor(name: String): Color
   def knownColors2: List[String]
@@ -109,7 +109,7 @@ trait KojoCtx {
   def screenDpiFontDelta: Int
   def baseFontSize: Int
   def hiDpiFontIncrease: Int
-  def menuReady(m: JMenu)
+  def menuReady(m: JMenu): Unit
 
   var fps: Int
   var screenDPI: Int

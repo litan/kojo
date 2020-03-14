@@ -20,7 +20,7 @@ import java.util.concurrent.CountDownLatch
 import scala.tools.nsc.interpreter.Results
 
 trait CodeRunner {
-  def start()
+  def start(): Unit
   def interruptInterpreter(): Unit
   def runCode(code: String): Unit
   def runWorksheet(code: String): Unit
@@ -51,7 +51,7 @@ trait Interpreter {
 }
 
 trait RunContext {
-  def initInterp(interp: Interpreter)
+  def initInterp(interp: Interpreter): Unit
   def compilerPrefix: String
   def onInterpreterInit(): Unit
   def onInterpreterStart(code: String): Unit

@@ -51,26 +51,26 @@ class TraceTest extends Matchers {
   var tracer: Tracing = _
 
   @Before
-  def initTracer {
+  def initTracer: Unit = {
     incCounter
     mockTurtle = newMockTurtle
     startEvents = Vector[MethodEvent]()
     endEvents = Vector[MethodEvent]()
 
     traceListener = new TraceListener {
-      def onStart() {}
-      def onMethodEnter(me: MethodEvent) {
+      def onStart(): Unit = {}
+      def onMethodEnter(me: MethodEvent): Unit = {
         startEvents :+= me
       }
-      def onMethodExit(me: MethodEvent) {
+      def onMethodExit(me: MethodEvent): Unit = {
         endEvents :+= me
       }
-      def onEnd() {}
+      def onEnd(): Unit = {}
     }
 
     sCanvas = new NoOpSCanvas {
       override val turtle0 = mockTurtle
-      override def animateActivity(a: PActivity) {
+      override def animateActivity(a: PActivity): Unit = {
         a.getDelegate().activityFinished(a)
       }
     }
@@ -81,7 +81,7 @@ class TraceTest extends Matchers {
   }
 
   @Test
-  def movTest1 {
+  def movTest1: Unit = {
     //Rich Turtle Command functions
     val code = """clear()
 turn(10)
@@ -121,7 +121,7 @@ right()
   }
 
   @Test
-  def areaTest {
+  def areaTest: Unit = {
     //Rich Turtle Command functions
     val code = """clear()
 forward()
@@ -162,7 +162,7 @@ area
   }
 
   @Test
-  def movTest2 {
+  def movTest2: Unit = {
     //TurtleMover movement functions
     val code = """clear()
 forward()
@@ -257,7 +257,7 @@ perimeter
   }
 
   @Test
-  def styleTest1 {
+  def styleTest1: Unit = {
     //non-movement TurtleMover functions
     val code = """clear()
 setPenColor(black)
@@ -326,7 +326,7 @@ style
   }
 
   @Test
-  def costumeTest {
+  def costumeTest: Unit = {
     //Rich Turtle Command functions
     val code = """clear()
 setCostume(Background.trainTrack)

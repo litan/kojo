@@ -24,7 +24,7 @@ class PictureDraw(val b: Builtins) {
     _frozen = true
   }
 
-  def randomSeed(s: Long) {
+  def randomSeed(s: Long): Unit = {
     setRandomSeed(s)
   }
 
@@ -58,35 +58,35 @@ class PictureDraw(val b: Builtins) {
     _frozen = false
   }
 
-  def background(c: Color) {
+  def background(c: Color): Unit = {
     setBackground(c)
     TSCanvas.erasePictures()
   }
 
-  def background(n: Int) {
+  def background(n: Int): Unit = {
     setBackground(cm.rgb(n, n, n))
     TSCanvas.erasePictures()
   }
 
-  def background(r: Int, g: Int, b: Int) {
+  def background(r: Int, g: Int, b: Int): Unit = {
     setBackground(cm.rgb(r, g, b))
     TSCanvas.erasePictures()
   }
 
-  def noStroke() {
+  def noStroke(): Unit = {
     strokeThickness = 0
     strokeColor = noColor
   }
 
-  def noFill() {
+  def noFill(): Unit = {
     fillColor = null
   }
 
-  def fill(c: Color) {
+  def fill(c: Color): Unit = {
     fillColor = c
   }
 
-  def fill(r: Int, g: Int, b: Int) {
+  def fill(r: Int, g: Int, b: Int): Unit = {
     fillColor = cm.rgb(r, g, b)
   }
 
@@ -94,19 +94,19 @@ class PictureDraw(val b: Builtins) {
     fillColor = cm.rgba(n, n, n, a)
   }
 
-  def stroke(c: Color) {
+  def stroke(c: Color): Unit = {
     strokeColor = c
   }
 
-  def stroke(gray: Int, alpha: Int) {
+  def stroke(gray: Int, alpha: Int): Unit = {
     strokeColor = cm.rgba(gray, gray, gray, alpha)
   }
 
-  def strokeWeight(n: Double) {
+  def strokeWeight(n: Double): Unit = {
     strokeThickness = n
   }
 
-  private def applyState(p: Picture) {
+  private def applyState(p: Picture): Unit = {
     p.setPenColor(strokeColor)
     p.setPenThickness(strokeThickness)
     p.setPenCapJoin(penCap, penJoin)
@@ -150,11 +150,11 @@ class PictureDraw(val b: Builtins) {
     returnPic(x, y, Picture.fromTurtle(fn))
   }
 
-  def beginShape() {
+  def beginShape(): Unit = {
     shapeVertices = ArrayBuffer.empty[(Double, Double)]
   }
 
-  def vertex(x: Double, y: Double) {
+  def vertex(x: Double, y: Double): Unit = {
     shapeVertices.append((x, y))
   }
 
@@ -171,36 +171,36 @@ class PictureDraw(val b: Builtins) {
     drawPic(pic)
   }
 
-  def translate(x: Double, y: Double) {
+  def translate(x: Double, y: Double): Unit = {
     transform.translate(x, y)
   }
 
-  def rotate(angle: Double) {
+  def rotate(angle: Double): Unit = {
     transform.rotate(angle)
   }
 
-  def scale(f: Double) {
+  def scale(f: Double): Unit = {
     transform.scale(f, f)
   }
 
-  def scale(fx: Double, fy: Double) {
+  def scale(fx: Double, fy: Double): Unit = {
     transform.scale(fx, fy)
   }
 
-  def pushMatrix() {
+  def pushMatrix(): Unit = {
     matrices = transform.clone.asInstanceOf[AffineTransform] :: matrices
   }
 
-  def popMatrix() {
+  def popMatrix(): Unit = {
     transform.setTransform(matrices.head)
     matrices = matrices.tail
   }
 
-  def strokeCap(n: Int) {
+  def strokeCap(n: Int): Unit = {
     penCap = n
   }
 
-  def strokeJoin(n: Int) {
+  def strokeJoin(n: Int): Unit = {
     penJoin = n
   }
 

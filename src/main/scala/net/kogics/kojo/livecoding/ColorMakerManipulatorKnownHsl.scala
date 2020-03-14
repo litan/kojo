@@ -105,7 +105,7 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
     Array(targetStart, targetEnd)
   }
 
-  def activate(pane: JTextComponent, offset: Int) {
+  def activate(pane: JTextComponent, offset: Int): Unit = {
     activate(pane, offset, target, targetStart)
   }
 
@@ -113,7 +113,7 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
     showPopup(pane, offset)
   }
 
-  def showPopup(pane: JTextComponent, offset: Int) {
+  def showPopup(pane: JTextComponent, offset: Int): Unit = {
     close()
     ctx.addManipulator(this)
     val doc = pane.getDocument
@@ -171,7 +171,7 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
     })
     panel.add(cc, BorderLayout.CENTER)
     val closeAction = new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         close()
         ctx.activateEditor()
       }
@@ -186,7 +186,7 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
     colorPopup.setVisible(true)
   }
 
-  def close() {
+  def close(): Unit = {
     if (colorPopup != null) {
       colorPopup.setVisible(false)
       colorPopup = null

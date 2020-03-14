@@ -10,11 +10,11 @@ class ArithAerobicsHolder(ae: ArithAerobicsPane)
   extends BaseHolder("AE", Utils.loadString("CTL_ArithAerobicsTopComponent"), ae) {
 
   this.addFocusListener(new CFocusListener {
-    override def focusGained(dockable: CDockable) {
+    override def focusGained(dockable: CDockable): Unit = {
       ae.activated()
     }
 
-    override def focusLost(dockable: CDockable) {
+    override def focusLost(dockable: CDockable): Unit = {
     }
   })
 

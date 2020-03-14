@@ -35,7 +35,7 @@ object FullScreenSupport {
   lazy val sdev = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice()
   def isFullScreenOn = sdev.getFullScreenWindow != null
 
-  def updateMenuItem(mi: JCheckBoxMenuItem, action: FullScreenBaseAction) {
+  def updateMenuItem(mi: JCheckBoxMenuItem, action: FullScreenBaseAction): Unit = {
     if (isFullScreenOn) {
       if (action.isFullScreen) {
         mi.setState(true)
@@ -61,7 +61,7 @@ class FullScreenBaseAction(key: String, fsComp: => JComponent, fsCompHolder: => 
 
   def isFullScreen = fullScreen
 
-  def enterFullScreen() {
+  def enterFullScreen(): Unit = {
     fullScreen = true
     frame = new JFrame
     frame.setUndecorated(true)
@@ -72,7 +72,7 @@ class FullScreenBaseAction(key: String, fsComp: => JComponent, fsCompHolder: => 
     val escComp = frame.getMostRecentFocusOwner()
     if (escComp != null) {
       escComp.addKeyListener(new KeyAdapter {
-        override def keyPressed(event: KeyEvent) {
+        override def keyPressed(event: KeyEvent): Unit = {
           if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
             escComp.removeKeyListener(this)
             leaveFullScreen()
@@ -82,7 +82,7 @@ class FullScreenBaseAction(key: String, fsComp: => JComponent, fsCompHolder: => 
     }
   }
 
-  def leaveFullScreen() {
+  def leaveFullScreen(): Unit = {
     fullScreen = false
     sdev.setFullScreenWindow(null)
     frame.setVisible(false)
@@ -119,7 +119,7 @@ class FullScreenCanvasAction(dch: => DrawingCanvasHolder, kojoCtx: KojoCtx)
     dch.dc,
     dch
   ) {
-  override def enterFullScreen() {
+  override def enterFullScreen(): Unit = {
     dch.dc.setFocusable(true) // make canvas work with frame.getMostRecentFocusOwner()
     super.enterFullScreen()
     kojoCtx.activateDrawingCanvas()
@@ -142,7 +142,7 @@ class FullScreenOutputAction(owh: => OutputWindowHolder)
     owh.outputPane,
     owh
   ) {
-  override def enterFullScreen() {
+  override def enterFullScreen(): Unit = {
     super.enterFullScreen()
   }
 }

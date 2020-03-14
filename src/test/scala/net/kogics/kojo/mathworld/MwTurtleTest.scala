@@ -30,7 +30,7 @@ class MwTurtleTest {
   val t = Mw.turtle(0, 0)
 
   @Test
-  def testForward {
+  def testForward: Unit = {
     t.labelPosition("A")
     t.forward(1)
     t.labelPosition("B")
@@ -42,7 +42,7 @@ class MwTurtleTest {
   }
 
   @Test
-  def testTurn {
+  def testTurn: Unit = {
     t.showAngles()
     t.setPosition(1, 1)
     t.labelPosition("A")
@@ -62,7 +62,7 @@ class MwTurtleTest {
   }
 
   @Test
-  def testPoly {
+  def testPoly: Unit = {
     t.showAngles()
     t.beginPoly()
     t.labelPosition("A")

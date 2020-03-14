@@ -93,7 +93,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
     }
   }
 
-  def handleLinkEnterExit(url: URL, enter: Boolean) {
+  def handleLinkEnterExit(url: URL, enter: Boolean): Unit = {
     if (url.getHost.toLowerCase == "runhandler") {
       try {
         val d = handlerData(url.toString)
@@ -113,7 +113,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
     }
   }
 
-  def hyperlinkUpdate(e: HyperlinkEvent) {
+  def hyperlinkUpdate(e: HyperlinkEvent): Unit = {
     if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
       gotoUrl(e.getURL)
     }
@@ -128,7 +128,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
   }
 
   // for tests
-  private [story] def setStory(story: Story) {
+  private [story] def setStory(story: Story): Unit = {
     st.currStory = Some(story)
   }
 }

@@ -399,7 +399,7 @@ class API(canvas: SpriteCanvas) {
     Impl.canvas.turtle0.invisible()
   }
   def clear() = reset()
-  def clearWithUL(ul: UnitLen) {
+  def clearWithUL(ul: UnitLen): Unit = {
     Impl.canvas.clearStagingWul(ul)
     Impl.canvas.turtle0.invisible()
   }
@@ -417,7 +417,7 @@ class API(canvas: SpriteCanvas) {
   def mouseButton = Inputs.mouseBtn
   def mousePressed = Inputs.mousePressedFlag
 
-  def interpolatePolygon(pts1: Seq[Point], pts2: Seq[Point], n: Int) {
+  def interpolatePolygon(pts1: Seq[Point], pts2: Seq[Point], n: Int): Unit = {
     require(pts1.size == pts2.size, "The polygons don't match up.")
 
     var g0 = polygon(pts1)
@@ -457,28 +457,28 @@ trait Shape  extends InputAware {
   def node: PNode
   var sizeFactor = 1.0
 
-  def hide() {
+  def hide(): Unit = {
     Utils.runInSwingThread {
       node.setVisible(false)
     }
     Impl.canvas.repaint()
   }
-  def show() {
+  def show(): Unit = {
     Utils.runInSwingThread {
       node.setVisible(true)
     }
     Impl.canvas.repaint()
   }
-  def erase() {
+  def erase(): Unit = {
     Impl.figure0.removePnode(node)
   }
-  def fill_=(color: Paint) {
+  def fill_=(color: Paint): Unit = {
     Utils.runInSwingThread {
       node.setPaint(color)
       node.repaint()
     }
   }
-  def fill(color: Paint) {
+  def fill(color: Paint): Unit = {
     fill = color
   }
   def fill = Utils.runInSwingThreadAndWait {
@@ -503,11 +503,11 @@ trait Shape  extends InputAware {
     scale(size / sizeFactor)
   }
   
-  def translate(p: Point) {
+  def translate(p: Point): Unit = {
     translate(p.x, p.y)
   }
   
-  def offset(p: Point) {
+  def offset(p: Point): Unit = {
     offset(p.x, p.y)
   }
 
@@ -533,7 +533,7 @@ trait Shape  extends InputAware {
   import turtle.TurtleHelper._
   protected var _theta: Double = 0
 
-  def turn(angle: Double) {
+  def turn(angle: Double): Unit = {
     Utils.runInSwingThread {
       _theta = thetaAfterTurn(angle, _theta)
       node.setRotation(_theta)
@@ -563,11 +563,11 @@ trait Rounded {
 trait BaseShape extends Shape with core.RichTurtleCommands {
   val origin: Point
   import turtle.TurtleHelper._
-  def setPosition(p: Point) {
+  def setPosition(p: Point): Unit = {
     setPosition(p.x, p.y)
   }
 
-  def setPosition(x: Double, y: Double) {
+  def setPosition(x: Double, y: Double): Unit = {
     Utils.runInSwingThread {
       node.setOffset(x - origin.x, y - origin.y)
       node.repaint()
@@ -579,7 +579,7 @@ trait BaseShape extends Shape with core.RichTurtleCommands {
     Point(o.getX + origin.x, o.getY + origin.y)
   }  
   
-  def forward(n: Double) {
+  def forward(n: Double): Unit = {
     Utils.runInSwingThread {
       val pos = position
       val xy = posAfterForward(pos.x, pos.y, _theta, n)
@@ -587,7 +587,7 @@ trait BaseShape extends Shape with core.RichTurtleCommands {
     }
   }
   
-  def towards(x: Double, y: Double) {
+  def towards(x: Double, y: Double): Unit = {
     Utils.runInSwingThread {
       val pos = position
       _theta = thetaTowards(pos.x, pos.y, x, y, _theta)
@@ -601,7 +601,7 @@ trait StrokedShape extends BaseShape {
   val path: PPath
   def node = path
 
-  def stroke_=(color: Paint) {
+  def stroke_=(color: Paint): Unit = {
     Utils.runInSwingThread {
       node.setStrokePaint(color)
       node.repaint()
@@ -610,11 +610,11 @@ trait StrokedShape extends BaseShape {
   def stroke = Utils.runInSwingThreadAndWait {
     node.getStrokePaint
   }
-  def stroke(color: Paint) {
+  def stroke(color: Paint): Unit = {
     stroke = color
   }
 
-  def strokeWidth(w: Double) {
+  def strokeWidth(w: Double): Unit = {
     Utils.runInSwingThread {
       node.setStroke(new BasicStroke(w.toFloat, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND))
       node.repaint()
@@ -645,14 +645,14 @@ class Text(val text: String, val origin: Point) extends BaseShape {
   val tnode = Utils.textNode(text, origin.x, origin.y, Impl.canvas.camScale, 14)
   def node = tnode
 
-  def setPenColor(color: Paint) {
+  def setPenColor(color: Paint): Unit = {
     Utils.runInSwingThread {
       tnode.setTextPaint(color)
       tnode.repaint()
     }
   }
 
-  def setFontSize(s: Int) {
+  def setFontSize(s: Int): Unit = {
     Utils.runInSwingThread {
       val font = new Font(node.getFont.getName, Font.PLAIN, s)
       tnode.setFont(font)
@@ -660,7 +660,7 @@ class Text(val text: String, val origin: Point) extends BaseShape {
     }
   }
 
-  def setContent(content: String) {
+  def setContent(content: String): Unit = {
     Utils.runInSwingThread {
       tnode.setText(content)
       tnode.repaint()
@@ -753,13 +753,13 @@ object Style {
     new scala.collection.mutable.Stack[(Paint, Paint, java.awt.Stroke)]()
   val f = Impl.figure0
 
-  def save {
+  def save: Unit = {
     Utils.runInSwingThread {
       savedStyles push Tuple3(f.fillColor, f.lineColor, f.lineStroke)
     }
   }
 
-  def restore {
+  def restore: Unit = {
     Utils.runInSwingThread {
       if (savedStyles nonEmpty) {
         val (fc, sc, st) = savedStyles.pop
@@ -804,7 +804,7 @@ class Bounds(x1: Double, y1: Double, x2: Double, y2: Double) {
   def inset(dx: Double, dy: Double) = Utils.runInSwingThreadAndWait {
     bounds.inset(dx, dy)
   }
-  def setRect(x1: Double, y1: Double, x2: Double, y2: Double) {
+  def setRect(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
     Utils.runInSwingThread {
       bounds.setRect(x1, y1, x2 - x1, y2 - y1)
     }

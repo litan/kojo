@@ -38,11 +38,11 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
   lazy val _kernel = _app.getKernel
   lazy val casView = new CasView(this)
 
-  private def ensureVisible() {
+  private def ensureVisible(): Unit = {
     _kojoCtx.makeMathWorldVisible()
   }
 
-  def clear() {
+  def clear(): Unit = {
     Utils.runInSwingThreadAndWait {
       ensureVisible()
       _app.setSaved()
@@ -52,14 +52,14 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
   }
 
   // for unit tests
-  private[mathworld] def _clear2() {
+  private[mathworld] def _clear2(): Unit = {
     Utils.runInSwingThread {
       _app.setSaved()
       _app.fileNew()
     }
   }
 
-  def showAxes() {
+  def showAxes(): Unit = {
     Utils.runInSwingThread {
       val app = _ggbApi.getApplication()
       app.getSettings().getEuclidian(1).setShowAxes(true, true)
@@ -67,7 +67,7 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
     }
   }
 
-  def hideAxes() {
+  def hideAxes(): Unit = {
     Utils.runInSwingThread {
       val app = _ggbApi.getApplication()
       app.getSettings().getEuclidian(1).setShowAxes(false, false)
@@ -75,43 +75,43 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
     }
   }
 
-  def showGrid() {
+  def showGrid(): Unit = {
     Utils.runInSwingThread {
       _ggbApi.setGridVisible(true)
     }
   }
 
-  def hideGrid() {
+  def hideGrid(): Unit = {
     Utils.runInSwingThread {
       _ggbApi.setGridVisible(false)
     }
   }
 
-  def showAlgebraView() {
+  def showAlgebraView(): Unit = {
     Utils.runInSwingThread {
       _guim.setShowView(true, App.VIEW_ALGEBRA)
     }
   }
 
-  def hideAlgebraView() {
+  def hideAlgebraView(): Unit = {
     Utils.runInSwingThread {
       _guim.setShowView(false, App.VIEW_ALGEBRA)
     }
   }
 
-  def showCASView() {
+  def showCASView(): Unit = {
     Utils.runInSwingThread {
       _guim.setShowView(true, App.VIEW_CAS)
     }
   }
 
-  def hideCASView() {
+  def hideCASView(): Unit = {
     Utils.runInSwingThread {
       _guim.setShowView(false, App.VIEW_CAS)
     }
   }
 
-  def clearCASView() {
+  def clearCASView(): Unit = {
     casView.clear()
   }
 
@@ -122,7 +122,7 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
     asString(casParse(e1)) == asString(casParse(e2))
   }
 
-  def zoom(factor: Double, cx: Double, cy: Double) {
+  def zoom(factor: Double, cx: Double, cy: Double): Unit = {
     Utils.runInSwingThread {
       val view = _ggbApi.getApplication.getEuclidianView1
       val newZoom = factor * EuclidianView.SCALE_STANDARD
@@ -164,7 +164,7 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
   def perpendicular(l: MwLine, p: MwPoint): MwLine = _Algo.perpendicular(l, p)
   def parallel(l: MwLine, p: MwPoint): MwLine = _Algo.parallel(l, p)
 
-  def show(shapes: VisualElement*) {
+  def show(shapes: VisualElement*): Unit = {
     Utils.runInSwingThread {
       shapes.foreach { s => s.show }
     }
@@ -173,7 +173,7 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
   // quick and dirty stuff for now
   import geogebra.kernel._
 
-  def variable(name: String, value: Double, min: Double, max: Double, increment: Double, x: Int, y: Int) {
+  def variable(name: String, value: Double, min: Double, max: Double, increment: Double, x: Int, y: Int): Unit = {
     Throttler.throttle()
     Utils.runInSwingThread {
       val number = new GeoNumeric(_ggbApi.getConstruction)
@@ -191,7 +191,7 @@ class MathWorld(val _kojoCtx: KojoCtx, _ggbApi: GgbAPID, _ggbPanel: GeoGebraPane
     }
   }
 
-  def evaluate(cmd: String) {
+  def evaluate(cmd: String): Unit = {
     Throttler.throttle()
     Utils.runInSwingThread {
       _ggbApi.evalCommand(cmd)

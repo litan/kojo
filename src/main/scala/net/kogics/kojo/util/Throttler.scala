@@ -31,7 +31,7 @@ class Throttler(after: Int, sleepTime: Int) {
    * Meant to slow down runaway computation inside the interpreter, so that the
    * user can interrupt the runaway thread
    */
-  def throttle() {
+  def throttle(): Unit = {
     val nc = numCalls.get + 1
     if (nc > after) {
       numCalls.set(0)
@@ -42,7 +42,7 @@ class Throttler(after: Int, sleepTime: Int) {
     }
   }
 
-  def allowInterruption() {
+  def allowInterruption(): Unit = {
     Thread.sleep(sleepTime) // Throws interrupted exception if the thread has been interrupted
   }
 }

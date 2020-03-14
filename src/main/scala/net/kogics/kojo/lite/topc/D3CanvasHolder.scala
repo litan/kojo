@@ -17,7 +17,7 @@ class D3CanvasHolder(val d3: JComponent, ctx: KojoCtx)
   var added = false
 
   this.addFocusListener(new CFocusListener {
-    override def focusGained(dockable: CDockable) {
+    override def focusGained(dockable: CDockable): Unit = {
       ctx.d3Activated()
       if (!added) {
         add(d3)
@@ -25,7 +25,7 @@ class D3CanvasHolder(val d3: JComponent, ctx: KojoCtx)
       }
     }
 
-    override def focusLost(dockable: CDockable) {
+    override def focusLost(dockable: CDockable): Unit = {
       if (!dockable.isShowing) {
         remove(d3)
         added = false
@@ -33,7 +33,7 @@ class D3CanvasHolder(val d3: JComponent, ctx: KojoCtx)
     }
   })
 
-  def otherPaneActivated() {
+  def otherPaneActivated(): Unit = {
     if (added) {
       remove(d3)
       added = false

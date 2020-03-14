@@ -56,7 +56,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testAdd {
+  def testAdd: Unit = {
     assertEquals(0, commandHistory.size)
     commandHistory.add("12")
     assertEquals(1, commandHistory.size)
@@ -64,7 +64,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testAddListener {
+  def testAddListener: Unit = {
     val listener = (context.mock(classOf[HistoryListener])).asInstanceOf[HistoryListener]
     context.checking (new Expectations {
         one(listener).itemAdded
@@ -75,7 +75,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testPrev {
+  def testPrev: Unit = {
     commandHistory.add("12"); commandHistory.add("13"); commandHistory.add("14")
     assertEquals(3, commandHistory.size)
     assertEquals(3, commandHistory.hIndex)
@@ -87,7 +87,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testPrevListener {
+  def testPrevListener: Unit = {
     commandHistory.add("12"); commandHistory.add("13"); commandHistory.add("14")
 
     val listener = (context.mock(classOf[HistoryListener])).asInstanceOf[HistoryListener]
@@ -106,7 +106,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testToPosition {
+  def testToPosition: Unit = {
     commandHistory.add("12"); commandHistory.add("13"); commandHistory.add("14")
 
     var str = commandHistory.toPosition(1)
@@ -123,7 +123,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testToPositionListener {
+  def testToPositionListener: Unit = {
     commandHistory.add("12"); commandHistory.add("13"); commandHistory.add("14")
 
     val listener = (context.mock(classOf[HistoryListener])).asInstanceOf[HistoryListener]
@@ -143,7 +143,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testNext {
+  def testNext: Unit = {
     commandHistory.add("12"); commandHistory.add("13"); commandHistory.add("14")
     assertEquals(3, commandHistory.size)
     assertEquals(3, commandHistory.hIndex)
@@ -156,7 +156,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testNextListener {
+  def testNextListener: Unit = {
     commandHistory.add("12"); commandHistory.add("13"); commandHistory.add("14")
 
     val listener = (context.mock(classOf[HistoryListener])).asInstanceOf[HistoryListener]
@@ -175,7 +175,7 @@ class CommandHistoryTest {
   }
 
   @Test
-  def testEmptyPrev {
+  def testEmptyPrev: Unit = {
     assertEquals(None, commandHistory.previous)
   }
 

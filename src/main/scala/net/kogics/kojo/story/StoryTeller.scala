@@ -98,14 +98,14 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   var uc = new JPanel
   //  var ucSp = new JScrollPane(uc)
 
-  def removeOldUc() {
+  def removeOldUc(): Unit = {
     holder.remove(uc)
     if (mainPane.getComponentCount == 2) {
       mainPane.remove(1)
     }
   }
 
-  def addNewUc() {
+  def addNewUc(): Unit = {
     uc = new JPanel
     uc.setBackground(Color.white)
     holder.add(uc, 0)
@@ -149,7 +149,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     prevBut.setIcon(Utils.loadIcon("/images/back.png"))
     prevBut.setToolTipText("Previous View")
     prevBut.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         prevPage()
       }
     })
@@ -159,7 +159,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     stopBut.setIcon(Utils.loadIcon("/images/stop.png"))
     stopBut.setToolTipText("Stop Story")
     stopBut.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         stop()
       }
     })
@@ -169,7 +169,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     nextBut.setIcon(Utils.loadIcon("/images/forward.png"))
     nextBut.setToolTipText("Next View")
     nextBut.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         nextPage()
       }
     })
@@ -179,11 +179,11 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     (cp, prevBut, nextBut)
   }
 
-  def ensureVisible() {
+  def ensureVisible(): Unit = {
     kojoCtx.makeStoryTellerVisible()
   }
 
-  def updateCp() {
+  def updateCp(): Unit = {
     if (story.hasPrevView) {
       prevButton.setEnabled(true)
     }
@@ -199,7 +199,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  private def clearHelper() {
+  private def clearHelper(): Unit = {
     // needs to run on GUI thread
     newPage()
     displayContent(NoText)
@@ -211,7 +211,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     updateCp()
   }
 
-  private def prevPage() {
+  private def prevPage(): Unit = {
     // needs to run on GUI thread
     kojoCtx.stopInterpreter()
     newPage()
@@ -247,7 +247,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     nextButton.setEnabled(true)
   }
 
-  def viewPage(page: Int, view: Int) {
+  def viewPage(page: Int, view: Int): Unit = {
     // needs to run on GUI thread. Currently called only from link handler (in GUI thread)
     kojoCtx.stopInterpreter()
     newPage()
@@ -262,7 +262,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  private def newPage() {
+  private def newPage(): Unit = {
     // needs to run on GUI thread
     removeOldUc()
     addNewUc()
@@ -290,7 +290,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   def pageNumber(name: String): Option[Int] = story.pageNumber(name)
 
-  def onStop(story: Story, fn: => Unit) {
+  def onStop(story: Story, fn: => Unit): Unit = {
     story.onStop(fn)
   }
 
@@ -310,7 +310,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     Theme.currentTheme.loadDefaultPerspective(kojoCtx)
   }
 
-  private def scrollEp() {
+  private def scrollEp(): Unit = {
     if (currStory.isDefined) {
       if (story.scrollToEnd) {
         scrollToEnd()
@@ -324,14 +324,14 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  private def scrollToEnd() {
+  private def scrollToEnd(): Unit = {
     Utils.schedule(0.3) {
       val sb = sp.getVerticalScrollBar
       sb.setValue(sb.getMaximum)
     }
   }
 
-  private def scrollToBeginning() {
+  private def scrollToBeginning(): Unit = {
     Utils.schedule(0.3) {
       val sb = sp.getVerticalScrollBar
       sb.setValue(sb.getMinimum)
@@ -386,10 +386,10 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  def addButton(label: String)(fn: => Unit) {
+  def addButton(label: String)(fn: => Unit): Unit = {
     val but = new JButton(label)
     but.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         clearStatusBar()
         Utils.stopMonitoredThreads()
         Utils.runAsyncMonitored {
@@ -423,7 +423,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   }
 
   addComponentListener(new ComponentAdapter {
-    override def componentResized(e: ComponentEvent) {
+    override def componentResized(e: ComponentEvent): Unit = {
       statusBar.setPreferredSize(new Dimension(getSize().width - 6, 16))
     }
   })
@@ -443,7 +443,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  def showStatusMsg(msg: String, output: Boolean = true) {
+  def showStatusMsg(msg: String, output: Boolean = true): Unit = {
     Utils.runInSwingThread {
       statusBar.setForeground(Color.black)
       statusBar.setText(msg)
@@ -453,7 +453,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  def showStatusError(msg: String) {
+  def showStatusError(msg: String): Unit = {
     Utils.runInSwingThread {
       statusBar.setForeground(Color.red)
       statusBar.setText(msg)
@@ -471,12 +471,12 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     }
   }
 
-  def storyComing() {
+  def storyComing(): Unit = {
     ensureVisible()
     ep.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
   }
 
-  def storyAborted() {
+  def storyAborted(): Unit = {
     ep.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
   }
 
@@ -492,14 +492,14 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     story0.addLinkExitHandler(name)(hm)
   }
 
-  def handleLink(name: String, data: String) {
+  def handleLink(name: String, data: String): Unit = {
     story.handleLink(name, data)
   }
 
-  def handleLinkEnter(name: String, data: String) {
+  def handleLinkEnter(name: String, data: String): Unit = {
     story.handleLinkEnter(name, data)
   }
-  def handleLinkExit(name: String, data: String) {
+  def handleLinkExit(name: String, data: String): Unit = {
     if (currStory.isDefined) { // work around link exits showing up after story ends 
       story.handleLinkExit(name, data)
     }
@@ -507,7 +507,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   // mp3 player stuff
   val pumpEvents = false
-  override def playMp3(mp3File: String) {
+  override def playMp3(mp3File: String): Unit = {
     if (running) {
       super.playMp3(mp3File)
     }
@@ -515,7 +515,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       throw new IllegalStateException("Trying to play story music without a running story.")
     }
   }
-  override def playMp3Loop(mp3File: String) {
+  override def playMp3Loop(mp3File: String): Unit = {
     if (running) {
       super.playMp3Loop(mp3File)
     }

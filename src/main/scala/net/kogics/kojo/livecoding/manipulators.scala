@@ -26,9 +26,9 @@ trait ManipulationContext {
   def runIpmCode(code: String): Unit
   def codePane: JTextComponent
   def frame: JFrame
-  def addManipulator(im: InteractiveManipulator)
-  def removeManipulator(im: InteractiveManipulator)
-  def activateEditor()
+  def addManipulator(im: InteractiveManipulator): Unit
+  def removeManipulator(im: InteractiveManipulator): Unit
+  def activateEditor(): Unit
   def knownColors: List[String]
   def knownColor(name: String): Color
   def knownColors2: List[String]
@@ -42,5 +42,5 @@ trait InteractiveManipulator {
   def inSliderChange: Boolean
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean
   def getHyperlinkSpan(pane: JTextComponent, offset: Int): Array[Int]
-  def activate(pane: JTextComponent, offset: Int)
+  def activate(pane: JTextComponent, offset: Int): Unit
 }

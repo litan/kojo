@@ -64,26 +64,26 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
   def setOutputTextColor(color: Color) = {}
   def setOutputTextFontSize(size: Int) = {}
 
-  def playMp3Loop(mp3File: String) {
+  def playMp3Loop(mp3File: String): Unit = {
   }
 
-  def setBackground(c: Paint) {}
+  def setBackground(c: Paint): Unit = {}
   def stopActivity() = {}
-  def runInBackground(code: => Unit) { code }
+  def runInBackground(code: => Unit): Unit = { code }
 
   def isScratchPad = false
-  def setEditorTabSize(n: Int) {}
-  def setEditorFont(name: String) {}
-  def clearOutput() {}
+  def setEditorTabSize(n: Int): Unit = {}
+  def setEditorFont(name: String): Unit = {}
+  def clearOutput(): Unit = {}
   def readln(prompt: String): String = "Unsupported"
   def breakpoint(msg: Any): Unit = {}
   //  def readInt(prompt: String): Int = 0
   //  def readDouble(prompt: String): Double = 0
-  def addCodeTemplates(lang: String, templates: Map[String, String]) {}
-  def addHelpContent(lang: String, content: Map[String, String]) {}
+  def addCodeTemplates(lang: String, templates: Map[String, String]): Unit = {}
+  def addHelpContent(lang: String, content: Map[String, String]): Unit = {}
   def isTracing = true
   def kojoInterp = new TracingInterp // get reqT to work with tracing
-  def print(obj: Any) {}
+  def print(obj: Any): Unit = {}
   def println(obj: Any): Unit = print("%s\n" format (obj))
 
   def TexturePaint(file: String, x: Double, y: Double) = Color(247, 247, 247)
@@ -110,17 +110,17 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
   class TracingTurtle(canvas: SCanvas, costume: String, x: Double, y: Double)
     extends turtle.Turtle(canvas, costume, x, y) {
 
-    override def act(fn: Turtle => Unit) {
+    override def act(fn: Turtle => Unit): Unit = {
       fn(this)
     }
 
-    override def moveTo(x: Double, y: Double) {
+    override def moveTo(x: Double, y: Double): Unit = {
       towards(x, y)
       val d = Utils.runInSwingThreadAndWait { distanceTo(x, y) }
       forward(d)
     }
 
-    override def arc2(r: Double, a: Double) {
+    override def arc2(r: Double, a: Double): Unit = {
       // gets intercepted in the Kojo VM
     }
 
@@ -147,12 +147,12 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
       _newTurtle(x, y, "/images/turtle32.png").asInstanceOf[TurtleLike]
     }
 
-    override def animateActivity(a: PActivity) {
+    override def animateActivity(a: PActivity): Unit = {
       a.getDelegate().activityFinished(a)
     }
 
     override lazy val getCamera: PCamera = new PCamera
     override lazy val pictures: PLayer = new PLayer
-    def cleari() {}
+    def cleari(): Unit = {}
   }
 }

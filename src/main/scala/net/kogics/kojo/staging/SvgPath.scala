@@ -82,7 +82,7 @@ object SvgPath {
 
   trait MoveTo extends Coords {
     val pts: List[Point]
-    def foreach(fn: Point => Unit) {
+    def foreach(fn: Point => Unit): Unit = {
       pts.tail map (adjust(_)) foreach fn
       currentPoint = adjust(pts.last)
     }
@@ -107,7 +107,7 @@ object SvgPath {
 
   trait LineTo extends Coords {
     val pts: List[Point]
-    def foreach(fn: Point => Unit) {
+    def foreach(fn: Point => Unit): Unit = {
       pts map adjust foreach fn
       currentPoint = pts.last
     }
@@ -126,7 +126,7 @@ object SvgPath {
 
   trait HorizontalLine extends Coords {
     val xs: List[Float]
-    def foreach(fn: Point => Unit) {
+    def foreach(fn: Point => Unit): Unit = {
       xs foreach { case x0: Float =>
           t = complementY(x0)
           fn(t)
@@ -148,7 +148,7 @@ object SvgPath {
 
   trait VerticalLine extends Coords {
     val ys: List[Float]
-    def foreach(fn: Point => Unit) {
+    def foreach(fn: Point => Unit): Unit = {
       ys foreach { case y0: Float =>
           t = complementX(y0)
           fn(t)
@@ -170,7 +170,7 @@ object SvgPath {
 
   trait Curve extends Coords {
     val cs: List[CurvePointGroup]
-    def foreach(fn: CurvePointGroup => Unit) {
+    def foreach(fn: CurvePointGroup => Unit): Unit = {
       cs foreach {
         case (p1, p2, p) =>
           t1 = adjust(p1)
@@ -196,7 +196,7 @@ object SvgPath {
 
   trait SmoothCurve extends Coords {
     val cs: List[(Point, Point)]
-    def foreach(fn: CurvePointGroup => Unit) {
+    def foreach(fn: CurvePointGroup => Unit): Unit = {
       cs foreach {
         case (p2, p) =>
           t1 = reflectedControlPoint
@@ -222,7 +222,7 @@ object SvgPath {
 
   trait QuadBezier extends Coords {
     val cs: List[QuadPointGroup]
-    def foreach(fn: QuadPointGroup => Unit) {
+    def foreach(fn: QuadPointGroup => Unit): Unit = {
       cs foreach {
         case (p1: Point, p: Point) =>
           t1 = adjust(p1)
@@ -245,7 +245,7 @@ object SvgPath {
 
   trait SmoothQuadBezier extends Coords {
     val cs: List[Point]
-    def foreach(fn: QuadPointGroup => Unit) {
+    def foreach(fn: QuadPointGroup => Unit): Unit = {
       cs foreach {
         case p =>
           t1 = reflectedControlPoint

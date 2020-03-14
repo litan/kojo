@@ -254,26 +254,26 @@ object CodeCompletionUtils {
 
   @volatile var ExtraMethodTemplates: collection.Map[String, String] = TwMethodTemplates
 
-  def activateTw() {
+  def activateTw(): Unit = {
     ExtraMethodTemplates = TwMethodTemplates
     clearLangTemplates()
     Help.activateTw()
   }
 
-  def activateVn() {
+  def activateVn(): Unit = {
     ExtraMethodTemplates = VnMethodTemplates
     clearLangTemplates()
     Help.activateVn()
   }
 
   val langTemplates: collection.mutable.Map[String, Map[String, String]] = collection.mutable.Map()
-  def addTemplates(lang: String, templates: Map[String, String]) {
+  def addTemplates(lang: String, templates: Map[String, String]): Unit = {
 //    import util.Typeclasses._
 //    langTemplates +=  (lang -> (langTemplates.getOrElse(lang, Map()) |+| templates))
       langTemplates +=  (lang -> (langTemplates.getOrElse(lang, Map()) ++ templates))
   }
   
-  def clearLangTemplates() {
+  def clearLangTemplates(): Unit = {
     langTemplates.clear()
   }
   

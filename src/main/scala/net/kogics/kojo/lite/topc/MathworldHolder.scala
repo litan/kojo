@@ -13,7 +13,7 @@ class MathworldHolder(val mw: JComponent, ctx: KojoCtx)
   var added = false
 
   this.addFocusListener(new CFocusListener {
-    override def focusGained(dockable: CDockable) {
+    override def focusGained(dockable: CDockable): Unit = {
       ctx.mwActivated()
       if (!added) {
         add(mw)
@@ -21,7 +21,7 @@ class MathworldHolder(val mw: JComponent, ctx: KojoCtx)
       }
     }
 
-    override def focusLost(dockable: CDockable) {
+    override def focusLost(dockable: CDockable): Unit = {
       if (!dockable.isShowing) {
         remove(mw)
         added = false
@@ -29,7 +29,7 @@ class MathworldHolder(val mw: JComponent, ctx: KojoCtx)
     }
   })
 
-  def otherPaneActivated() {
+  def otherPaneActivated(): Unit = {
     if (added) {
       remove(mw)
       added = false

@@ -74,24 +74,24 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
   def kprintln(s: String) = print(s)
 
-  def runCode(code: String) {
+  def runCode(code: String): Unit = {
     // Runs on swing thread
     codeRunner ! RunCode(code)
   }
 
-  def runWorksheet(code: String) {
+  def runWorksheet(code: String): Unit = {
     codeRunner ! RunWorksheet(code)
   }
 
-  def compileRunCode(code: String) {
+  def compileRunCode(code: String): Unit = {
     codeRunner ! CompileRunCode(code)
   }
 
-  def compileCode(code: String) {
+  def compileCode(code: String): Unit = {
     codeRunner ! CompileCode(code)
   }
 
-  def parseCode(code: String, browseAst: Boolean) {
+  def parseCode(code: String, browseAst: Boolean): Unit = {
     codeRunner ! ParseCode(code, browseAst)
   }
 
@@ -139,11 +139,11 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     (this askCodeRunner TypeAtRequest(code, caretOffset)).asInstanceOf[String]
   }
 
-  def activateTw() {
+  def activateTw(): Unit = {
     codeRunner ! ActivateTw
   }
 
-  def activateVn() {
+  def activateVn(): Unit = {
     codeRunner ! ActivateVn
   }
 
@@ -237,7 +237,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       interpInited = actorState.interpInited
     }
 
-    def safeProcessResponse[T](default: T)(fn: => T) {
+    def safeProcessResponse[T](default: T)(fn: => T): Unit = {
       try {
         reply(fn)
       }
@@ -248,7 +248,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
     }
 
-    def safeProcessCompletionReq(fn: => (List[String], Int)) {
+    def safeProcessCompletionReq(fn: => (List[String], Int)): Unit = {
       try {
         reply(CompletionResponse(fn))
       }
@@ -259,7 +259,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
     }
 
-    def safeProcessCompletionReq2(fn: => (List[CompletionInfo], Int)) {
+    def safeProcessCompletionReq2(fn: => (List[CompletionInfo], Int)): Unit = {
       try {
         reply(CompletionResponse2(fn))
       }
@@ -270,7 +270,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
     }
 
-    def activateTurtleMode() {
+    def activateTurtleMode(): Unit = {
       // not the first turtle mode activation
       outputHandler.withOutputSuppressed {
         interp.interpret("import TSCanvas._")
@@ -464,7 +464,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
         realResetInterp()
     }
 
-    def runCode(code: String, asWorksheet: Boolean) {
+    def runCode(code: String, asWorksheet: Boolean): Unit = {
       try {
         Log.info("CodeRunner actor running code:\n---\n%s\n---\n" format (code))
         InterruptionManager.onInterpreterStart(interp)
@@ -516,18 +516,18 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       some(cmodeInit) |+| Utils.initCode(mode)
     }
 
-    def loadCompiler() {
+    def loadCompiler(): Unit = {
       compilerAndRunner = new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext)
       actorState.compilerAndRunner = compilerAndRunner
     }
 
-    def initInterp() {
+    def initInterp(): Unit = {
       outputHandler.withOutputSuppressed {
         runContext.initInterp(interp)
       }
     }
 
-    def printInitScriptsLoadMsg() {
+    def printInitScriptsLoadMsg(): Unit = {
       if (Utils.initScripts.size > 0) {
         kprintln(Utils.initScripts.mkString("\n---\nLoading Init Scripts (from initk):\n * ", "\n * ", "\n---\n"))
       }
@@ -537,7 +537,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
     }
 
-    def loadInitScripts(mode: CodingMode) {
+    def loadInitScripts(mode: CodingMode): Unit = {
       Utils.initCode(mode).foreach { code =>
         //println("\nRunning initk code...")
         println()
@@ -547,7 +547,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
     }
 
-    def loadInterp() {
+    def loadInterp(): Unit = {
       val iSettings = makeSettings()
 
       _interp = new KojoInterpreter(iSettings, new GuiPrintWriter())
@@ -620,7 +620,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       compilerAndRunner.compile(code)
     }
 
-    def showIncompleteCodeMsg(code: String) {
+    def showIncompleteCodeMsg(code: String): Unit = {
       val msg = """
       |error: Incomplete code fragment
       |You probably have a missing brace/bracket somewhere in your script
@@ -678,21 +678,21 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   }
 
   class GuiWriter extends Writer {
-    override def write(s: String) {
+    override def write(s: String): Unit = {
       outputHandler.showInterpOutput(s)
     }
 
-    def write(cbuf: Array[Char], off: Int, len: Int) {
+    def write(cbuf: Array[Char], off: Int, len: Int): Unit = {
       outputHandler.showInterpOutput(new String(cbuf, off, len))
     }
 
-    def close() {}
-    def flush() {}
+    def close(): Unit = {}
+    def flush(): Unit = {}
   }
 
   class GuiPrintWriter() extends PrintWriter(new GuiWriter(), false) {
 
-    override def write(s: String) {
+    override def write(s: String): Unit = {
       // intercept string writes and forward to the GuiWriter's string write() method
       out.write(s)
     }

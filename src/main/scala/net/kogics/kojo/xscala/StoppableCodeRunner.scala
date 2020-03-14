@@ -16,5 +16,5 @@
 package net.kogics.kojo.xscala
 
 trait StoppableCodeRunner {
-  def stop(interpThread: Thread)
+  def stop(interpThread: Thread): Unit
 }

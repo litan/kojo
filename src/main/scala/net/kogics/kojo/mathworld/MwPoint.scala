@@ -52,7 +52,7 @@ class MwPoint(val ggbApi: GgbAPI, val gPoint: GeoPoint) extends Point(gPoint.x, 
   def cx = gPoint.x
   def cy = gPoint.y
 
-  def moveTo(x: Double, y: Double) {
+  def moveTo(x: Double, y: Double): Unit = {
     Utils.runInSwingThread {
       gPoint.setCoords(x, y, 1)
       repaint()

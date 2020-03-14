@@ -175,7 +175,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   modeMenu.add(vnCb)
 
   val syntaxColoringAction = new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       e.getActionCommand match {
         case "Fast" =>
           codePane.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SCALA)
@@ -223,7 +223,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   var formatPrefs = makeFormatPrefs(tabSize)
 
   val formatAction = new AbstractAction(Utils.loadString("S_FormatSource")) {
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       val caretLine = codePane.getCaretLineNumber
       val posInLine = codePane.getCaretOffsetFromLineStart
       try {
@@ -283,9 +283,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     lazy val listener = new SearchListener {
       def getSelectedText = codePane.getSelectedText
 
-      def searchEvent(ev: SearchEvent) {
+      def searchEvent(ev: SearchEvent): Unit = {
         val searchContext = toolbar.getSearchContext
-        def find() {
+        def find(): Unit = {
           var found = SearchEngine.find(codePane, searchContext)
           if (found.getCount == 0) {
             val oldDot = codePane.getCaret.getDot
@@ -328,7 +328,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         super.addNotify()
       }
 
-      override def removeNotify() {
+      override def removeNotify(): Unit = {
         val searchContext = getSearchContext
         // toolbar closing; get rid of marks, if any
         searchContext.setMarkAll(false)
@@ -338,7 +338,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
 
     var toolbarAdded = false
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       //      dialog.setVisible(true)
       if (!toolbarAdded) {
         csp.addBottomComponent(toolbar)
@@ -363,7 +363,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   idx += 1
 
   val typeAtAction = new AbstractAction(Utils.loadString("S_ShowType")) {
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       val codePane = execSupport.codePane
       val offset = codePane.getCaretPosition
       val typeAt = execSupport.typeAt(offset)
@@ -395,7 +395,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   idx += 1
 
   val markOccurancesAction = new AbstractAction(Utils.loadString("S_MarkOccurances")) {
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       if (markOccurancesItem.isSelected()) {
         codePane.setMarkOccurrences(true)
       }
@@ -407,7 +407,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val markOccurancesItem: JCheckBoxMenuItem = new JCheckBoxMenuItem(markOccurancesAction)
 
   val markOccurancesKeyboardAction = new AbstractAction() {
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       if (markOccurancesItem.isSelected()) {
         markOccurancesItem.setSelected(false)
       }
@@ -466,7 +466,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val ctrlL = KeyStroke.getKeyStroke("control L")
   val clearAction = new AbstractAction(Utils.loadString("S_ClearEditor"), Utils.loadIcon("/images/24/clears.png")) {
     putValue(Action.ACCELERATOR_KEY, ctrlL)
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       closeFileAndClrEditorIgnoringCancel()
     }
   }
@@ -478,7 +478,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   var savedMenu: Option[JMenuBar] = None
   val toggleMenuAction = new AbstractAction(Utils.loadString("S_ToggleMenubar")) {
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       if (savedMenu.isEmpty) {
         savedMenu = Some(frame.getJMenuBar)
         frame.setJMenuBar(null)
@@ -500,7 +500,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   var interpPaneVisible = false
   val toggleInterpPaneAction = new AbstractAction(Utils.loadString("S_InterpPaneVisible")) {
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       if (interpPaneVisible) {
         interpPaneVisible = false
         hideInterpreterPane()
@@ -538,7 +538,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   actionMaps.foreach(_.put("toggle-interpreter-pane-focus", toggleInterpPaneFocusAction))
 
   val resetInterpAction = new AbstractAction(Utils.loadString("S_ResetInterpreter")) {
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       execSupport.codeRunner.resetInterpUI()
     }
   }
@@ -559,17 +559,17 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   idx += 1
 
   popup.addPopupMenuListener(new PopupMenuListener {
-    def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
+    def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit = {
       switcher.updateCb(twCb)
       switcher.updateCb(vnCb)
     }
-    def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
+    def popupMenuWillBecomeInvisible(e: PopupMenuEvent): Unit = {}
 
-    def popupMenuCanceled(e: PopupMenuEvent) {}
+    def popupMenuCanceled(e: PopupMenuEvent): Unit = {}
   })
 
   val focusRequestDelay = 0.3
-  def activate() {
+  def activate(): Unit = {
     Utils.schedule(focusRequestDelay) { codePane.requestFocusInWindow() }
   }
 
@@ -610,7 +610,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     val UploadCommand = "UploadCommand"
 
     val actionListener = new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         activateCodePane1()
         e.getActionCommand match {
           case RunScript =>
@@ -725,10 +725,10 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     (toolbar, runButton, runWorksheetButton, traceButton, compileButton, stopButton, hNextButton, hPrevButton, clearSButton, clearButton, cexButton)
   }
 
-  def addCodePaneListeners() {
+  def addCodePaneListeners(): Unit = {
     statusStrip.linkToPane()
     codePane.addKeyListener(new KeyAdapter {
-      override def keyPressed(evt: KeyEvent) {
+      override def keyPressed(evt: KeyEvent): Unit = {
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
@@ -770,7 +770,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
     })
     codePane.addCaretListener(new CaretListener {
-      def caretUpdate(e: CaretEvent) {
+      def caretUpdate(e: CaretEvent): Unit = {
         Utils.safeProcessSilent {
           val dot = e.getDot()
           val line = codePane.getLineOfOffset(dot)
@@ -783,7 +783,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     kojoCtx.showStatusCaretPos(1, 1)
 
     val mouseListener = new MouseAdapter {
-      override def mouseClicked(e: MouseEvent) {
+      override def mouseClicked(e: MouseEvent): Unit = {
         execSupport.imanip.foreach { _.close() }
         if (e.isControlDown || e.isMetaDown) {
           try {
@@ -800,7 +800,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         }
       }
 
-      override def mouseWheelMoved(e: MouseWheelEvent) {
+      override def mouseWheelMoved(e: MouseWheelEvent): Unit = {
         if (e.isControlDown) {
           val delta = e.getWheelRotation
           val action = if (delta < 0) increaseFontSizeAction else decreaseFontSizeAction
@@ -815,7 +815,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     codePane.addMouseWheelListener(mouseListener)
 
     codePane2.addKeyListener(new KeyAdapter {
-      override def keyPressed(evt: KeyEvent) {
+      override def keyPressed(evt: KeyEvent): Unit = {
         evt.getKeyCode match {
           case KeyEvent.VK_ENTER =>
             if (evt.isControlDown && (execSupport.isRunningEnabled || evt.isShiftDown)) {
@@ -875,7 +875,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     codePane.setFont(new Font(name, currFont.getStyle, currFont.getSize))
   }
 
-  def markTraceLine(line: Int) {
+  def markTraceLine(line: Int): Unit = {
     try {
       val lineStartOffset = codePane.getLineStartOffset(line - 1)
       Utils.scrollToOffset(lineStartOffset, codePane)
@@ -898,23 +898,23 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     setBackground(NeutralColor)
     setPreferredSize(new Dimension(StripWidth, 10))
 
-    def linkToPane() {
+    def linkToPane(): Unit = {
       codePane.getDocument.addDocumentListener(new DocumentListener {
         def insertUpdate(e: DocumentEvent) = onDocChange()
         def removeUpdate(e: DocumentEvent) = onDocChange()
-        def changedUpdate(e: DocumentEvent) {}
+        def changedUpdate(e: DocumentEvent): Unit = {}
       })
     }
 
-    def onSuccess() {
+    def onSuccess(): Unit = {
       setBackground(SuccessColor)
     }
 
-    def onError() {
+    def onError(): Unit = {
       setBackground(ErrorColor)
     }
 
-    def onDocChange() {
+    def onDocChange(): Unit = {
       if (execSupport.imanip.isEmpty) {
         if (getBackground != NeutralColor) setBackground(NeutralColor)
       }

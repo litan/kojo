@@ -10,14 +10,14 @@ trait EditorFileSupport { self: ScriptEditor =>
   private var fileData: String = _
   val kojoCtx = execSupport.kojoCtx
 
-  private def saveFileData(d: String) {
+  private def saveFileData(d: String): Unit = {
     fileData = execSupport.removeWorksheetOutput(d)
   }
   private def fileChanged = fileData != execSupport.removeWorksheetOutput(codePane.getText)
 
   def hasOpenFile = openedFile.isDefined
 
-  def openFileWithoutClose(file: java.io.File) {
+  def openFileWithoutClose(file: java.io.File): Unit = {
     import RichFile._
     val script = Utils.stripCR(file.readAsString)
     codePane.setText(script)
@@ -27,7 +27,7 @@ trait EditorFileSupport { self: ScriptEditor =>
     saveFileData(script)
   }
 
-  def openFile(file: java.io.File) {
+  def openFile(file: java.io.File): Unit = {
     try {
       closeFileIfOpen()
       openFileWithoutClose(file)
@@ -37,7 +37,7 @@ trait EditorFileSupport { self: ScriptEditor =>
     }
   }
 
-  def closeFileIfOpen() {
+  def closeFileIfOpen(): Unit = {
     if (openedFile.isDefined) {
       if (fileChanged) {
         val doSave = JOptionPane.showConfirmDialog(
@@ -55,7 +55,7 @@ trait EditorFileSupport { self: ScriptEditor =>
     }
   }
 
-  def closeFileAndClrEditorIgnoringCancel() {
+  def closeFileAndClrEditorIgnoringCancel(): Unit = {
     try {
       closeFileAndClrEditor()
     }
@@ -64,27 +64,27 @@ trait EditorFileSupport { self: ScriptEditor =>
     }
   }
 
-  def closeFileAndClrEditor() {
+  def closeFileAndClrEditor(): Unit = {
     closeFileIfOpen() // can throw runtime exception if user cancels
     this.codePane.setText(null)
     clearSButton.setEnabled(false)
     codePane.requestFocusInWindow
   }
 
-  def saveFile() {
+  def saveFile(): Unit = {
     saveTo(openedFile.get)
     kojoCtx.fileSaved()
   }
 
   import java.io.File
-  private def saveTo(file: File) {
+  private def saveTo(file: File): Unit = {
     import RichFile._
     val script = codePane.getText()
     file.write(script)
     saveFileData(script)
   }
 
-  def saveAs(file: java.io.File) {
+  def saveAs(file: java.io.File): Unit = {
     if (file.exists) {
       val doSave = JOptionPane.showConfirmDialog(
         null,
@@ -104,7 +104,7 @@ trait EditorFileSupport { self: ScriptEditor =>
     }
   }
 
-  def closing() {
+  def closing(): Unit = {
     if (openedFile.isDefined) {
       closeFileIfOpen()
     }

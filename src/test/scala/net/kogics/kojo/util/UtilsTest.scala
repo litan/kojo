@@ -14,7 +14,7 @@ class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
   val kojoCtx = new NoOpKojoCtx
   
   
-  @Test def loadLocalizedResourceExistingGerman(){
+  @Test def loadLocalizedResourceExistingGerman(): Unit ={
     //Given
     val existingRoot = "/samples/"
     val existingGermanFile = "tree1.kojo"
@@ -33,7 +33,7 @@ class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
     }
   }
   
-  @Test def loadLocalizedResourceExistingOnlyInBaseLanguage(){
+  @Test def loadLocalizedResourceExistingOnlyInBaseLanguage(): Unit ={
     //Given
     val existingRoot = "/samples/"
     val existingBaseFile = "some-notes.kojo"
@@ -52,7 +52,7 @@ class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
     }
   }
   
-  @Test def loadLocalizedResourceNotExisting(){
+  @Test def loadLocalizedResourceNotExisting(): Unit ={
     //Given
     val existingRoot = "/samples/"
     val notExistingFile = "a1b2c3d4e5.kojo"
@@ -70,7 +70,7 @@ class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
     }
   }
   
-  @Test def loadStringExisting(){
+  @Test def loadStringExisting(): Unit ={
     //Given
     val existingKey = "S_Kojo"
     //When
@@ -80,13 +80,13 @@ class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
     result should include ("Kojo")    
   }
   
-  @Test def loadStringNull(){
+  @Test def loadStringNull(): Unit ={
     intercept[NullPointerException]{
       Utils.loadString(null)
     }
   }
   
-  @Test def loadStringNotExisting(){
+  @Test def loadStringNotExisting(): Unit ={
     val notExistingKey = "a1b2c3d4e5f6g7"
     intercept[java.util.MissingResourceException]{(
       Utils.loadString(notExistingKey))

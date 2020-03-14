@@ -213,7 +213,7 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   })
   val cancel = new JButton(Utils.loadString("S_Cancel"))
   cancel.addActionListener(new ActionListener {
-    def actionPerformed(ev: ActionEvent) {
+    def actionPerformed(ev: ActionEvent): Unit = {
       setVisible(false)
     }
   })

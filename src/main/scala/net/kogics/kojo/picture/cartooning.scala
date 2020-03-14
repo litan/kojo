@@ -133,7 +133,7 @@ case class RichPicture(pic: Picture) {
   def morphTo(skel: Skeleton) = {
     pic.morph(skel.morpher)
   }
-  def printPicture() {
+  def printPicture(): Unit = {
     //as there is no elaborate toString on Pictures in Kojo
     //and we can't return a string as morph runs unsynched in another thread
     println("Picture(")
@@ -262,7 +262,7 @@ class Animator(canvas: SCanvas) {
   }
   def isAgendaEmpty = synchronized { agenda.isEmpty }
 
-  def schedule(w: AnimationStep) {
+  def schedule(w: AnimationStep): Unit = {
     addToAgenda(w)
   }
   
@@ -281,10 +281,10 @@ class Animator(canvas: SCanvas) {
 trait AnimClip extends AnimationStep { outer: AnimClip =>
   def name: String
   def animator: Animator
-  def apply(t: Long)
+  def apply(t: Long): Unit
   def schedule(step: AnimationStep) = animator.schedule(step)
 
-  def run() {
+  def run(): Unit = {
     schedule { t =>
       apply(t)
     }
@@ -295,14 +295,14 @@ trait AnimClip extends AnimationStep { outer: AnimClip =>
   }
 
   @volatile var doneFn: Option[AnimationStep] = None
-  def whenDone(fn: AnimationStep) {
+  def whenDone(fn: AnimationStep): Unit = {
     doneFn = Some(fn)
   }
 
   def ~(as2: AnimClip): AnimClip = new AnimClip {
     val name = outer.name + "~" + as2.name
     val animator = outer.animator
-    def apply(t: Long) {
+    def apply(t: Long): Unit = {
       outer.run()
       outer.whenDone { t =>
         as2.run()
@@ -316,7 +316,7 @@ trait AnimClip extends AnimationStep { outer: AnimClip =>
   def |(as2: AnimClip): AnimClip = new AnimClip {
     val name = outer.name + "!" + as2.name
     val animator = outer.animator
-    def apply(t: Long) {
+    def apply(t: Long): Unit = {
       outer.run()
       as2.run()
       var outerDone = false
@@ -369,7 +369,7 @@ trait SpeakBalloon { self: AnimClip =>
     restorePosHe()
   }
 
-  def hide() {
+  def hide(): Unit = {
     wi.pic.foreach(_.erase())
     wi.pic = None
   }
@@ -377,7 +377,7 @@ trait SpeakBalloon { self: AnimClip =>
   def speak(lines: String*) = new AnimClip { outer: AnimClip =>
     val name = "speaker"
     val animator = self.animator
-    def apply(t: Long) {
+    def apply(t: Long): Unit = {
       applyNoHide(t)
       Utils.schedule(showTimeMillis) {
         hide()
@@ -385,7 +385,7 @@ trait SpeakBalloon { self: AnimClip =>
       }
     }
 
-    def applyNoHide(t: Long) {
+    def applyNoHide(t: Long): Unit = {
       val fillColor = fill _
       val penColor = stroke _
       import staging.KColor._
@@ -399,7 +399,7 @@ trait SpeakBalloon { self: AnimClip =>
     override def ~(as2: AnimClip): AnimClip = new AnimClip {
       val name = outer.name + "~" + as2.name
       val animator = outer.animator
-      def apply(t: Long) {
+      def apply(t: Long): Unit = {
         outer.applyNoHide(t)
         Utils.schedule(showTimeMillis) {
           hide()
@@ -416,7 +416,7 @@ trait SpeakBalloon { self: AnimClip =>
 
 trait Movable {
   def pos: Point2D
-  def translate(x: Double, y: Double)
+  def translate(x: Double, y: Double): Unit
   def left(step: Double = 1) = translate(-step, 0)
   def right(step: Double = 1) = translate(step, 0)
   def up(step: Double = 1) = translate(0, step)

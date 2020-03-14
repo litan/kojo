@@ -28,7 +28,7 @@ object LangInit {
     font.deriveFont(Font.PLAIN, defaultSize + 4)
   }
 
-  def lookAndFeelReady() {
+  def lookAndFeelReady(): Unit = {
     System.getProperty("user.language") match {
       case "hi" =>
         val defaults = UIManager.getLookAndFeelDefaults
@@ -38,7 +38,7 @@ object LangInit {
     }
   }
 
-  def menuReady(m: JMenu) {
+  def menuReady(m: JMenu): Unit = {
     System.getProperty("user.language") match {
       case "hi" =>
         m.setFont(fontForHindi)
@@ -46,7 +46,7 @@ object LangInit {
     }
   }
 
-  def initPhase2(b: CoreBuiltins) {
+  def initPhase2(b: CoreBuiltins): Unit = {
     System.getProperty("user.language") match {
       case "sv" =>
         SvInit.init(b)
@@ -66,7 +66,7 @@ object LangInit {
     }
   }
 
-  def apply() {
+  def apply(): Unit = {
     val prefs = Preferences.userRoot().node("Kojolite-Prefs")
     init(prefs)
   }

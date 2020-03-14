@@ -96,7 +96,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   private var costumes: Option[Vector[Image]] = None
   private var currCostume = 0
 
-  private[turtle] def changePos(x: Double, y: Double) {
+  private[turtle] def changePos(x: Double, y: Double): Unit = {
     turtle.setOffset(x, y)
   }
 
@@ -108,7 +108,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     new Point(_positionX, _positionY)
   }
 
-  private[kojo] def changeHeading(newTheta: Double) {
+  private[kojo] def changeHeading(newTheta: Double): Unit = {
     _oldTheta = theta
     theta = newTheta
     turtle.setRotation(theta)
@@ -134,11 +134,11 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     delay.round
   }
 
-  def initTImage(costumeFile: String) {
+  def initTImage(costumeFile: String): Unit = {
     initTImage(Utils.loadImageC(costumeFile), costumeFile.endsWith("turtle32.png"))
   }
 
-  def initTImage(image: Image, translucent: Boolean) {
+  def initTImage(image: Image, translucent: Boolean): Unit = {
     turtleImage.setImage(image)
     turtleImage.getTransformReference(true).setToIdentity()
     turtleImage.getTransformReference(true).setToScale(1 / camScale, -1 / camScale)
@@ -152,7 +152,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  private[turtle] def init() {
+  private[turtle] def init(): Unit = {
     changePos(initX, initY)
     initTImage(costumeFile)
     layer.addChild(turtle)
@@ -208,14 +208,14 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     new Point2D.Double(p1._1, p1._2)
   }
 
-  private def endForwardMove(pf: Point2D.Double) {
+  private def endForwardMove(pf: Point2D.Double): Unit = {
     pen.endMove(pf.x, pf.y)
     changePos(pf.x, pf.y)
     turtle.repaint()
   }
 
   // to be called on swing thread
-  private def forwardNoAnim(n: Double) {
+  private def forwardNoAnim(n: Double): Unit = {
     endForwardMove(pointAfterForward(n))
   }
 
@@ -238,7 +238,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     else {
       val latch = new CountDownLatch(1)
       Utils.runInSwingThread {
-        def endAnim() {
+        def endAnim(): Unit = {
           forwardAnimation = null
           stopped = false
         }
@@ -249,7 +249,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
         pen.startMove(p0x, p0y)
 
         forwardAnimation = new PActivity(aDelay) {
-          override def activityStep(elapsedTime: Long) {
+          override def activityStep(elapsedTime: Long): Unit = {
             val frac = elapsedTime.toDouble / aDelay
             val currX = p0x * (1 - frac) + pf.x * frac
             val currY = p0y * (1 - frac) + pf.y * frac
@@ -260,9 +260,9 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
         }
 
         forwardAnimation.setDelegate(new PActivityDelegate {
-          override def activityStarted(activity: PActivity) {}
-          override def activityStepped(activity: PActivity) {}
-          override def activityFinished(activity: PActivity) {
+          override def activityStarted(activity: PActivity): Unit = {}
+          override def activityStepped(activity: PActivity): Unit = {}
+          override def activityFinished(activity: PActivity): Unit = {
             if (stopped) {
               val cpos = turtle.getOffset
               endForwardMove(cpos.asInstanceOf[Point2D.Double])
@@ -282,7 +282,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  private def realTurn(angle: Double) {
+  private def realTurn(angle: Double): Unit = {
     val newTheta = thetaAfterTurn(angle, theta)
     changeHeading(newTheta)
     turtle.repaint()
@@ -340,13 +340,13 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  private def jumpToHelper(x: Double, y: Double) {
+  private def jumpToHelper(x: Double, y: Double): Unit = {
     changePos(x, y)
     pen.updatePosition()
     turtle.repaint()
   }
 
-  def moveTo(x: Double, y: Double) {
+  def moveTo(x: Double, y: Double): Unit = {
     if (_animationDelay < 5) {
       Utils.runInSwingThread {
         val newTheta = towardsHelper(x, y)
@@ -365,7 +365,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  def setAnimationDelay(d: Long) {
+  def setAnimationDelay(d: Long): Unit = {
     if (d < 0) {
       throw new IllegalArgumentException("Negative delay not allowed")
     }
@@ -379,7 +379,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     pen.setColor(color)
   }
 
-  def setPenThickness(t: Double) {
+  def setPenThickness(t: Double): Unit = {
     if (t < 0) {
       throw new IllegalArgumentException("Negative thickness not allowed")
     }
@@ -388,7 +388,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  def setPenFontSize(n: Int) {
+  def setPenFontSize(n: Int): Unit = {
     if (n < 0) {
       throw new IllegalArgumentException("Negative font size not allowed")
     }
@@ -397,7 +397,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  def setPenFont(font: Font) {
+  def setPenFont(font: Font): Unit = {
     Utils.runInSwingThread {
       pen.setFont(font)
     }
@@ -442,7 +442,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     changeHeading(h)
   }
 
-  private def beamsOnWorker() {
+  private def beamsOnWorker(): Unit = {
     if (!areBeamsOn) {
       turtle.addChild(0, xBeam)
       turtle.addChild(1, yBeam)
@@ -451,7 +451,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  private def beamsOffWorker() {
+  private def beamsOffWorker(): Unit = {
     if (areBeamsOn) {
       turtle.removeChild(xBeam)
       turtle.removeChild(yBeam)
@@ -480,7 +480,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     showWorker()
   }
 
-  private def hideWorker() {
+  private def hideWorker(): Unit = {
     if (isVisible) {
       turtle.removeChild(turtleImage)
       beamsOffWorker()
@@ -489,7 +489,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  private def showWorker() {
+  private def showWorker(): Unit = {
     if (!isVisible) {
       turtle.addChild(turtleImage)
       turtle.repaint()
@@ -506,14 +506,14 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  override def arc2(r: Double, a: Double) {
+  override def arc2(r: Double, a: Double): Unit = {
     if (a == 0) {
       return
     }
 
     def x(t: Double) = r * math.cos(t.toRadians)
     def y(t: Double) = r * math.sin(t.toRadians)
-    def makeArc() {
+    def makeArc(): Unit = {
       val head = heading
       if (r != 0) {
         val pos = position
@@ -556,7 +556,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     Thread.sleep(1)
   }
 
-  def ellipse(r1: Double, r2: Double) {
+  def ellipse(r1: Double, r2: Double): Unit = {
     val pos = position
     val head = heading
     val trans = new java.awt.geom.AffineTransform()
@@ -596,7 +596,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     turtleImage.repaint()
   }
 
-  private def resetRotation() {
+  private def resetRotation(): Unit = {
     changeHeading(Utils.deg2radians(90))
   }
 
@@ -651,7 +651,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  def react(fn: core.Turtle => Unit) {
+  def react(fn: core.Turtle => Unit): Unit = {
     canvas.animate {
       fn(this)
     }
@@ -691,7 +691,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     Utils.roundDouble(a, 2)
   }
 
-  def dumpState() {
+  def dumpState(): Unit = {
     Utils.runInSwingThread {
       val cIter = layer.getChildrenReference.iterator
       println("Turtle Layer (%d children):\n" format (layer.getChildrenReference.size))
@@ -738,7 +738,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       (Cap, Join)
     }
 
-    def init() {
+    def init(): Unit = {
       lineColor = DefaultColor
       fillColor = DefaultFillColor
       lineCap = DefaultCap
@@ -757,13 +757,13 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       penPath
     }
 
-    protected def addNewPath() {
+    protected def addNewPath(): Unit = {
       val penPath = newPath()
       penPaths += penPath
       layer.addChild(layer.getChildrenCount - 1, penPath)
     }
 
-    protected def removeLastPath() {
+    protected def removeLastPath(): Unit = {
       val penPath = penPaths.last
       penPaths.remove(penPaths.size - 1)
       layer.removeChild(penPath)
@@ -775,7 +775,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     def getFontSize = font.getSize
     def getFont = font
 
-    private def rawSetAttrs(color: Paint, thickness: Double, fColor: Paint, font0: Font) {
+    private def rawSetAttrs(color: Paint, thickness: Double, fColor: Paint, font0: Font): Unit = {
       lineColor = color
       val (cap, join) = capJoin(thickness)
       lineStroke = new BasicStroke(thickness.toFloat, cap, join)
@@ -783,27 +783,27 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       font = font0
     }
 
-    def setColor(color: Paint) {
+    def setColor(color: Paint): Unit = {
       lineColor = color
       addNewPath()
     }
 
-    def setThickness(t: Double) {
+    def setThickness(t: Double): Unit = {
       val (cap, join) = capJoin(t)
       lineStroke = new BasicStroke(t.toFloat, cap, join)
       addNewPath()
     }
 
-    def setFontSize(n: Int) {
+    def setFontSize(n: Int): Unit = {
       setFont(new Font(font.getName, font.getStyle, n))
     }
 
-    def setFont(f: Font) {
+    def setFont(f: Font): Unit = {
       font = f
       addNewPath()
     }
 
-    def setFillColor(color: Paint) {
+    def setFillColor(color: Paint): Unit = {
       fillColor = color
       addNewPath()
     }
@@ -815,7 +815,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       addNewPath()
     }
 
-    def setStyle(style: Style) {
+    def setStyle(style: Style): Unit = {
       rawSetAttrs(style.penColor, style.penThickness, style.fillColor, style.font)
       addNewPath()
     }
@@ -830,28 +830,28 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   }
 
   class UpPen extends AbstractPen {
-    def startMove(x: Double, y: Double) {}
-    def move(x: Double, y: Double) {}
-    def endMove(x: Double, y: Double) { _lastLine = false }
-    def updatePosition() {}
-    def write(text: String) {}
+    def startMove(x: Double, y: Double): Unit = {}
+    def move(x: Double, y: Double): Unit = {}
+    def endMove(x: Double, y: Double): Unit = { _lastLine = false }
+    def updatePosition(): Unit = {}
+    def write(text: String): Unit = {}
   }
 
   class DownPen extends AbstractPen {
     var tempLine = new PPath
     val lineAnimationColor = Color.orange
 
-    def startMove(x: Double, y: Double) {
+    def startMove(x: Double, y: Double): Unit = {
       tempLine.setStroke(lineStroke)
       tempLine.setStrokePaint(lineAnimationColor)
       tempLine.moveTo(x.toFloat, y.toFloat)
       layer.addChild(layer.getChildrenCount - 1, tempLine)
     }
-    def move(x: Double, y: Double) {
+    def move(x: Double, y: Double): Unit = {
       tempLine.lineTo(x.toFloat, y.toFloat)
       tempLine.repaint()
     }
-    def endMove(x: Double, y: Double) {
+    def endMove(x: Double, y: Double): Unit = {
       layer.removeChild(tempLine)
       tempLine.reset()
       penPaths.last.lineTo(x, y)
@@ -859,11 +859,11 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       _lastLine = true
     }
 
-    def updatePosition() {
+    def updatePosition(): Unit = {
       addNewPath()
     }
 
-    def write(text: String) {
+    def write(text: String): Unit = {
       val ptext = Utils.textNode(text, _positionX, _positionY, canvas.camScale)
       ptext.setFont(font)
       ptext.setTextPaint(pen.getColor)

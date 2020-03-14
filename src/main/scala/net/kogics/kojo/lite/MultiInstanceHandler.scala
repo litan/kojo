@@ -31,7 +31,7 @@ object MultiInstanceManager {
   // we're trying to prevent the sporadic lack of activation of the first instance of Kojo from an nth instance 
   // and the accompanying 'Problem - no such object in table' message that shows up in the Java Console  
   val mih = new MultiInstanceHandlerImpl()
-  def run() {
+  def run(): Unit = {
     try {
       val sf = new RmiLocalhostSocketFactory
       val stub = UnicastRemoteObject.exportObject(mih, 0, sf, sf)
@@ -46,7 +46,7 @@ object MultiInstanceManager {
 }
 
 class MultiInstanceHandlerImpl extends MultiInstanceHandler {
-  def newInstance(args: Array[String]) {
+  def newInstance(args: Array[String]): Unit = {
     Utils.runInSwingThread {
       Main.frame.toFront()
       if (args.length > 0) {

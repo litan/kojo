@@ -157,7 +157,7 @@ object Main extends AppMenu with ScriptLoader { main =>
       splash.close()
 
       frame.addWindowListener(new WindowAdapter {
-        override def windowClosing(e: WindowEvent) {
+        override def windowClosing(e: WindowEvent): Unit = {
           appExit()
         }
       })
@@ -196,7 +196,7 @@ object Main extends AppMenu with ScriptLoader { main =>
   def scriptEditorHolder = kojoCtx.topcs.seh
   def outputPaneHolder = kojoCtx.topcs.owh
 
-  def appExit() {
+  def appExit(): Unit = {
     try {
       scriptEditorHolder.se.closing()
       frame.dispose()
@@ -207,7 +207,7 @@ object Main extends AppMenu with ScriptLoader { main =>
     }
   }
 
-  def setupLogging() {
+  def setupLogging(): Unit = {
     val logDir = Utils.locateLogDir()
     val logPath = new File(logDir, "kojo0.log").getPath
     if (kojoCtx.subKojo) {
@@ -225,7 +225,7 @@ object Main extends AppMenu with ScriptLoader { main =>
     rootLogger.addHandler(logHandler)
   }
 
-  def runMultiInstancehandler() {
+  def runMultiInstancehandler(): Unit = {
     MultiInstanceManager.run()
   }
 }

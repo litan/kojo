@@ -36,19 +36,19 @@ abstract class CompilerAndRunnerTestBase {
   var errOffset = 0
 
   val listener = new CompilerListener {
-    def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String) {
+    def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String): Unit = {
       errLine = line
       errColumn = column
       errOffset = offset
     }
 
-    def warning(msg: String, line: Int, column: Int) {
+    def warning(msg: String, line: Int, column: Int): Unit = {
     }
 
-    def info(msg: String, line: Int, column: Int) {
+    def info(msg: String, line: Int, column: Int): Unit = {
     }
 
-    def message(msg: String) {
+    def message(msg: String): Unit = {
     }
   }
 
@@ -57,14 +57,14 @@ abstract class CompilerAndRunnerTestBase {
   def makeRunner(): CompilerAndRunner
 
   @Before
-  def reset() {
+  def reset(): Unit = {
     errLine = 0
     errColumn = 0
     errOffset = 0
   }
 
   @Test
-  def testError1() {
+  def testError1(): Unit = {
     val code = """val x = 10y
       """
     runner.compile(code)
@@ -74,7 +74,7 @@ abstract class CompilerAndRunnerTestBase {
   }
 
   @Test
-  def testError2() {
+  def testError2(): Unit = {
     val code = """class BaseData {
     val baseList = List(1,2,3)
 }
@@ -97,7 +97,7 @@ val data = new Data()
   }
 
   @Test
-  def testError3() {
+  def testError3(): Unit = {
     val code = """def tree(distance: Double) {
     if (distance > 4) {
         setPenThickness(distance/7)
@@ -127,7 +127,7 @@ tree(90)
   }
 
   @Test
-  def testError4() {
+  def testError4(): Unit = {
     val code = """def border(t: Turtle, a: Double) {
     t.setAnimationDelay(200)
     t.setPenColor(black)
@@ -223,7 +223,7 @@ t10.invisible()
   }
 
   @Test
-  def testGood() {
+  def testGood(): Unit = {
     val code = """def border(t: Turtle, a: Double) {
     t.setAnimationDelay(200)
     t.setPenColor(black)
@@ -318,7 +318,7 @@ t10.invisible()
   }
 
   @Test
-  def testStaging() {
+  def testStaging(): Unit = {
     val code = """import Staging._
 import Staging.{clear, setPenColor, animate, circle}
 clear()

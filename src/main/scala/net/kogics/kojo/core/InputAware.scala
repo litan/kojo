@@ -27,7 +27,7 @@ trait InputAware {
 
   def onMousePress(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
-      override def mousePressed(event: PInputEvent) {
+      override def mousePressed(event: PInputEvent): Unit = {
         val pos = event.getPosition
         Utils.safeProcess {
           fn(pos.getX, pos.getY)
@@ -40,7 +40,7 @@ trait InputAware {
 
   def onMouseRelease(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
-      override def mouseReleased(event: PInputEvent) {
+      override def mouseReleased(event: PInputEvent): Unit = {
         val pos = event.getPosition
         Utils.safeProcess {
           fn(pos.getX, pos.getY)
@@ -53,7 +53,7 @@ trait InputAware {
 
   def onMouseClick(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
-      override def mouseClicked(event: PInputEvent) {
+      override def mouseClicked(event: PInputEvent): Unit = {
         val pos = event.getPosition
         Utils.safeProcess {
           fn(pos.getX, pos.getY)
@@ -66,7 +66,7 @@ trait InputAware {
 
   def onMouseDrag(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
-      override def mouseDragged(event: PInputEvent) {
+      override def mouseDragged(event: PInputEvent): Unit = {
         val pos = event.getPosition
         event.setHandled(true)
         Utils.safeProcess {
@@ -80,7 +80,7 @@ trait InputAware {
 
   def onMouseMove(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
-      override def mouseMoved(event: PInputEvent) {
+      override def mouseMoved(event: PInputEvent): Unit = {
         val pos = event.getPosition
         event.setHandled(true)
         Utils.safeProcess {
@@ -93,7 +93,7 @@ trait InputAware {
 
   def onMouseEnter(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
-      override def mouseEntered(event: PInputEvent) {
+      override def mouseEntered(event: PInputEvent): Unit = {
         val pos = event.getPosition
         event.setHandled(true)
         Utils.safeProcess {
@@ -106,7 +106,7 @@ trait InputAware {
 
   def onMouseExit(fn: (Double, Double) => Unit) = Utils.runInSwingThread {
     val h = new PBasicInputEventHandler {
-      override def mouseExited(event: PInputEvent) {
+      override def mouseExited(event: PInputEvent): Unit = {
         val pos = event.getPosition
         event.setHandled(true)
         Utils.safeProcess {

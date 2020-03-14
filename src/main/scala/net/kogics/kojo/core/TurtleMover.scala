@@ -69,7 +69,7 @@ trait TurtleMover extends RichTurtleCommands {
     setHeading(90)
   }
   def animationDelay: Long
-  def setAnimationDelay(d: Long)
+  def setAnimationDelay(d: Long): Unit
   def setSpeed(speed: Speed) = speed match {
     case Slow      => setAnimationDelay(1000)
     case Medium    => setAnimationDelay(100)
@@ -85,8 +85,8 @@ trait TurtleMover extends RichTurtleCommands {
   def invisible(): Unit
   def waitFor(): Unit = animationDelay
   def playSound(voice: Voice): Unit
-  def setPenFontSize(n: Int)
-  def setPenFont(font: Font)
+  def setPenFontSize(n: Int): Unit
+  def setPenFont(font: Font): Unit
   def arc2(r: Double, a: Double): Unit
   def circle(r: Double) = arc2(r, 360)
   def ellipse(r1: Double, r2: Double): Unit
@@ -99,7 +99,7 @@ trait TurtleMover extends RichTurtleCommands {
   def nextCostume(): Unit
   def scaleCostume(factor: Double): Unit
   def changePosition(x: Double, y: Double): Unit
-  def hop(n: Double) {
+  def hop(n: Double): Unit = {
     penUp()
     forward(n)
     penDown()

@@ -42,7 +42,7 @@ class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends 
     }
   }
   def unqualifiedIds = interp.unqualifiedIds
-  def stop(interpThread: Thread) {
+  def stop(interpThread: Thread): Unit = {
     interpThread.interrupt()
   }
   def reset() = interp.reset()

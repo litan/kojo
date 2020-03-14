@@ -20,19 +20,19 @@ import net.kogics.kojo.xscala.CodeCompletionUtils
 object UserCommand {
   val synopses = new scala.collection.mutable.StringBuilder
 
-  def addCompletion(name: String, args: String) {
+  def addCompletion(name: String, args: String): Unit = {
     CodeCompletionUtils.BuiltinsMethodTemplates(name) = name + args
   }
 
-  def addCompletion(name: String, args: Seq[String]) {
+  def addCompletion(name: String, args: Seq[String]): Unit = {
     addCompletion(name, args map ("${%s}" format _) mkString("(", ", ", ")"))
   }
 
-  def addSynopsisSeparator() { synopses.append("\n") }
+  def addSynopsisSeparator(): Unit = { synopses.append("\n") }
 
-  def addSynopsis(s: String) { synopses.append("\n  " + s) }
+  def addSynopsis(s: String): Unit = { synopses.append("\n  " + s) }
 
-  def addSynopsis(name: String, args: Seq[String], synopsis: String) {
+  def addSynopsis(name: String, args: Seq[String], synopsis: String): Unit = {
     addSynopsis(name + args.mkString("(", ", ", ")") + " - " + synopsis)
   }
 

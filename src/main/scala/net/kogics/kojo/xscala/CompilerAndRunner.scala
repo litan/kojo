@@ -47,10 +47,10 @@ import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.util.Utils
 
 trait CompilerListener {
-  def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String)
-  def warning(msg: String, line: Int, column: Int)
-  def info(msg: String, line: Int, column: Int)
-  def message(msg: String)
+  def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String): Unit
+  def warning(msg: String, line: Int, column: Int): Unit
+  def info(msg: String, line: Int, column: Int): Unit
+  def message(msg: String): Unit
 }
 
 // This class borrows code and ideas from scala.tools.nsc.Interpreter
@@ -115,7 +115,7 @@ class CompilerAndRunner(
   private def loadByName(s: String): Class[_] = (classLoader loadClass s)
 
   val reporter = new Reporter {
-    override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
+    override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
       //      severity.count += 1
       lazy val line = position.line - prefixLines - 1 // we added an extra line after the prefix in the code template. Take it off
       lazy val offset = position.startOrPoint - offsetDelta - 1 // we added an extra newline char after the prefix
@@ -212,7 +212,7 @@ class CompilerAndRunner(
     }
   }
 
-  def stop(interpThread: Thread) {
+  def stop(interpThread: Thread): Unit = {
     interpThread.interrupt()
   }
 
@@ -244,7 +244,7 @@ class CompilerAndRunner(
   }
 
   val preporter = new Reporter {
-    override def info0(position: Position, msg: String, severity: Severity, force: Boolean) {
+    override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
     }
   }
 

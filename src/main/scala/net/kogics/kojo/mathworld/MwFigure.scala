@@ -21,25 +21,25 @@ import util.Utils
 class MwFigure(name: String) extends core.VisualElements {
   val shapes = new collection.mutable.ArrayBuffer[core.VisualElement]()
 
-  def add(newshapes: core.VisualElement*) {
+  def add(newshapes: core.VisualElement*): Unit = {
     newshapes.foreach { shape =>
       shapes += shape
     }
   }
 
-  def show {
+  def show: Unit = {
     Utils.runInSwingThread {
       shapes.foreach {s => s.show}
     }
   }
 
-  def hide {
+  def hide: Unit = {
     Utils.runInSwingThread {
       shapes.foreach {s => s.hide}
     }
   }
 
-  def setColor(color: java.awt.Color) {
+  def setColor(color: java.awt.Color): Unit = {
     Utils.runInSwingThread {
       shapes.foreach {s => s.setColor(color)}
     }

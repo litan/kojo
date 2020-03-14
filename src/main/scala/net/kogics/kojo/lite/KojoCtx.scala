@@ -66,7 +66,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   Utils.kojoCtx = this
 
   val activityListener = new DelegatingSpriteListener
-  def setActivityListener(l: SpriteListener) {
+  def setActivityListener(l: SpriteListener): Unit = {
     activityListener.setRealListener(l)
   }
 
@@ -99,7 +99,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     val defaultFontSize = defaults.get("defaultFont").asInstanceOf[FontUIResource].getSize
     System.setProperty("kojo.baseFont.size", defaultFontSize.toString)
     if (screenDpiFontDelta > 0) {
-      def changeFontSize(key: String, delta: Int) {
+      def changeFontSize(key: String, delta: Int): Unit = {
         val f = defaults.get(key).asInstanceOf[FontUIResource]
         // if we use f.getName below, the 'Hindi' Language menu item does not show up right
         val f2 = new FontUIResource(Font.SANS_SERIF, f.getStyle, f.getSize + delta)
@@ -315,16 +315,16 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     tw.toFront()
   }
 
-  def drawingCanvasActivated() {
+  def drawingCanvasActivated(): Unit = {
 //    topcs.d3h.otherPaneActivated()
     topcs.mwh.otherPaneActivated()
   }
 
-  def mwActivated() {
+  def mwActivated(): Unit = {
 //    topcs.d3h.otherPaneActivated()
   }
 
-  def d3Activated() {
+  def d3Activated(): Unit = {
     topcs.mwh.otherPaneActivated()
   }
 
@@ -335,26 +335,26 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def stopInterpreter() = execSupport.stopInterpreter()
   def stopStory() = storyTeller.stop()
 
-  def scrollOutputToEnd() {
+  def scrollOutputToEnd(): Unit = {
     topcs.owh.scrollToEnd()
   }
 
   var fileName = ""
-  def fileOpened(file: File) {
+  def fileOpened(file: File): Unit = {
     fileName = file.getName
     topcs.seh.fileOpened(fileName)
     CloseFile.onFileOpen()
   }
 
-  def fileModified() {
+  def fileModified(): Unit = {
     topcs.seh.fileModified(fileName)
   }
 
-  def fileSaved() {
+  def fileSaved(): Unit = {
     topcs.seh.fileSaved(fileName)
   }
 
-  def fileClosed() {
+  def fileClosed(): Unit = {
     fileName = ""
     topcs.seh.fileClosed(fileName)
     CloseFile.onFileClose()
@@ -362,20 +362,20 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   @volatile var lastLoadStoreDir = prefs.get("lastLoadStoreDir", "")
   def getLastLoadStoreDir() = lastLoadStoreDir
-  def setLastLoadStoreDir(dir: String) {
+  def setLastLoadStoreDir(dir: String): Unit = {
     lastLoadStoreDir = dir
     prefs.put("lastLoadStoreDir", lastLoadStoreDir)
   }
 
   @volatile var _lastColor = new Color(Integer.parseInt(prefs.get("lastColor", Integer.toString(Color.red.getRGB()))), true)
   def lastColor: Color = _lastColor
-  def lastColor_=(c: Color) {
+  def lastColor_=(c: Color): Unit = {
     _lastColor = c
     prefs.put("lastColor", Integer.toString(_lastColor.getRGB()))
   }
 
   def userLanguage: String = _userLanguage
-  def userLanguage_=(lang: String) {
+  def userLanguage_=(lang: String): Unit = {
     _userLanguage = lang
     prefs.put("user.language", _userLanguage)
   }
@@ -390,7 +390,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     execSupport.verboseOutput == true
   }
 
-  def showVerboseOutput() {
+  def showVerboseOutput(): Unit = {
     execSupport.verboseOutput = true
   }
 
@@ -402,11 +402,11 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     execSupport.showCode == true
   }
 
-  def showScriptInOutput() {
+  def showScriptInOutput(): Unit = {
     execSupport.showCode = true
   }
 
-  def hideScriptInOutput() {
+  def hideScriptInOutput(): Unit = {
     execSupport.showCode = false
   }
 
@@ -421,7 +421,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def clickWorksheetRun() = execSupport.runWorksheet()
 
   @volatile var astStopPhase = "typer"
-  def setAstStopPhase(phase: String) {
+  def setAstStopPhase(phase: String): Unit = {
     astStopPhase = phase
   }
 
@@ -449,21 +449,21 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     topcs.seh.se.setFont(name)
   }
 
-  def showStatusText(text: String) {
+  def showStatusText(text: String): Unit = {
     statusBar.showText(text)
   }
 
-  def showStatusCaretPos(line: Int, col: Int) {
+  def showStatusCaretPos(line: Int, col: Int): Unit = {
     statusBar.showCaretPos(line, col)
   }
 
-  def showAppWaitCursor() {
+  def showAppWaitCursor(): Unit = {
     val gp = frame.getGlassPane()
     gp.setVisible(true)
     gp.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR))
   }
 
-  def hideAppWaitCursor() {
+  def hideAppWaitCursor(): Unit = {
     val gp = frame.getGlassPane()
     gp.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
     gp.setVisible(false)
@@ -477,7 +477,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     }
   }
 
-  def repaintCanvas() {
+  def repaintCanvas(): Unit = {
     topcs.dch.dc.repaint()
   }
 }

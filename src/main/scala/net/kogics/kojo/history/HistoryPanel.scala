@@ -78,7 +78,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
         case _ => false
       }
     }
-    override def setValueAt(value: Object, row: Int, col: Int) {
+    override def setValueAt(value: Object, row: Int, col: Int): Unit = {
       if (row < cmdh.size) {
         val hi = cmdh(row)
         col match {
@@ -118,7 +118,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
     }
   })
   table.getSelectionModel.addListSelectionListener(new ListSelectionListener {
-    override def valueChanged(event: ListSelectionEvent) {
+    override def valueChanged(event: ListSelectionEvent): Unit = {
       if (!event.getValueIsAdjusting) {
         execSupport.loadCodeFromHistory(table.getSelectedRow)
       }
@@ -145,7 +145,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
 
   var allowSearch = true
   val searcher = new ActionListener {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       if (allowSearch) {
         val searchText = searchField.getText
         execSupport.kojoCtx.showAppWaitCursor()
@@ -173,7 +173,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   searchBut.addActionListener(searcher)
   //  searchField.addActionListener(searcher)
   searchField.addKeyListener(new KeyAdapter {
-    override def keyTyped(e: KeyEvent) {
+    override def keyTyped(e: KeyEvent): Unit = {
       if (e.getKeyChar == KeyEvent.VK_ENTER && searchField.getText.length > 0) {
         searcher.actionPerformed(null)
       }
@@ -187,20 +187,20 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   add(searchPane, BorderLayout.SOUTH)
 
   cmdh.setListener(new HistoryListener {
-    def itemAdded {
+    def itemAdded: Unit = {
       tableModel.fireTableRowsInserted(cmdh.size - 1, cmdh.size - 1)
       table.setRowSelectionInterval(cmdh.size, cmdh.size)
     }
 
-    def selectionChanged(n: Int) {
+    def selectionChanged(n: Int): Unit = {
       table.setRowSelectionInterval(n, n)
     }
 
-    def ensureVisible(n: Int) {
+    def ensureVisible(n: Int): Unit = {
       table.scrollRectToVisible(table.getCellRect(n, 0, true))
     }
 
-    def historyReady() {
+    def historyReady(): Unit = {
       tableModel.fireTableDataChanged()
       table.setRowSelectionInterval(cmdh.size, cmdh.size)
       ensureVisible(cmdh.size)

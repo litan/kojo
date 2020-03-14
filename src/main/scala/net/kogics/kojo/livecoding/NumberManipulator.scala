@@ -88,7 +88,7 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
     }
   }
 
-  def close() {
+  def close(): Unit = {
     if (numberTweakPopup != null) {
       numberTweakPopup.hide()
       numberTweakPopup = null
@@ -104,7 +104,7 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
     slider0: JSlider,
     rightLabel: JLabel,
     zoomListener: JToggleButton => Unit,
-    stepListener: Option[(JTextField, JToggleButton) => Unit]) {
+    stepListener: Option[(JTextField, JToggleButton) => Unit]): Unit = {
     slider = slider0
     val factory = PopupFactory.getSharedInstance();
     val rect = ctx.codePane.modelToView(offset)
@@ -120,7 +120,7 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
     stepT.setToolTipText(Utils.loadString("CTL_Input"))
     zoomB.setToolTipText(Utils.loadString("CTL_Decrease"))
     zoomB.addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         zoomListener(zoomB)
         if (zoomB.isSelected) {
           zoomB.setToolTipText(Utils.loadString("CTL_Increase"))
@@ -149,7 +149,7 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
       stepB.setToolTipText(Utils.loadString("CTL_Change"))
       stepP.add(stepB)
       val al = new ActionListener {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           stepL(stepT, zoomB)
           focusSlider()
         }
@@ -166,7 +166,7 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
     panel.add(new JLabel(" " * 10))
 
     val closeAction = new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         close()
         ctx.activateEditor()
       }
@@ -181,11 +181,11 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
     }
   }
 
-  def focusSlider() {
+  def focusSlider(): Unit = {
     slider.requestFocusInWindow()
   }
 
-  def simulateStepButtonClick() {
+  def simulateStepButtonClick(): Unit = {
     stepB.getActionListeners.foreach { al =>
       al.actionPerformed(null)
     }

@@ -161,7 +161,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     CodeCompletionUtils.methodTemplate(completion)
   }
 
-  def addTemplateProposals(proposals: java.util.ArrayList[Completion], prefix: String, caretOffset: Int) {
+  def addTemplateProposals(proposals: java.util.ArrayList[Completion], prefix: String, caretOffset: Int): Unit = {
     CodeTemplates.templates.filter { kv => kv._1.startsWith(prefix) }.foreach { kv =>
       val name = kv._1; val value = kv._2
       proposals.add(

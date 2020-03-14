@@ -22,7 +22,7 @@ import org.junit.Assert._
 class StoryTest {
 
   @Test
-  def test1 {
+  def test1: Unit = {
     val html1 =
       <div style="color:green; font-size=18px">
         Page 1
@@ -37,7 +37,7 @@ class StoryTest {
   }
 
   @Test
-  def test2 {
+  def test2: Unit = {
     val para1 =
       <p>
         Para 1
@@ -67,7 +67,7 @@ class StoryTest {
   }
 
   @Test
-  def test3 {
+  def test3: Unit = {
     val para1 =
       <p >
         Para 1
@@ -122,7 +122,7 @@ class StoryTest {
   }
 
   @Test
-  def test4 {
+  def test4: Unit = {
     val para1 =
       <p >
         Para 1
@@ -195,7 +195,7 @@ class StoryTest {
   }
 
   @Test
-  def testLocation {
+  def testLocation: Unit = {
     val para1_1 =
       <p >
         Para 1

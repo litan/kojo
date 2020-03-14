@@ -20,24 +20,24 @@ import util.Read
 import util.Read._
 
 trait HandlerHolder[+T] {
-  def handle(data: String)
+  def handle(data: String): Unit
 }
   
 class IntHandlerHolder(handler: Int => Unit) extends HandlerHolder[Int] {
-  def handle(data: String) {
+  def handle(data: String): Unit = {
     handler(convertArg(data))
   }
   def convertArg(data: String): Int = implicitly[Read[Int]].read(data)
 }
 
 class StringHandlerHolder(handler: String => Unit) extends HandlerHolder[String] {
-  def handle(data: String) {
+  def handle(data: String): Unit = {
     handler(data)
   }
 }
 
 class VoidHandlerHolder(handler: () => Unit) extends HandlerHolder[Unit] {
-  def handle(data: String) {
+  def handle(data: String): Unit = {
     handler()
   }
 }

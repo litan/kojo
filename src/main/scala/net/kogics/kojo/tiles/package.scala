@@ -46,7 +46,7 @@ package object tiles {
     // Create list of layers for map
     val layers = (0 until world.layerCount).map { layerIdx => Layer(layerIdx, world) }
 
-    def draw() {
+    def draw(): Unit = {
       layers.foreach { layer =>
         layer.draw()
       }
@@ -78,7 +78,7 @@ package object tiles {
       }
     }
 
-    def draw() {
+    def draw(): Unit = {
       for (y <- 0 until world.height) {
         for (x <- 0 until world.width) {
           val tile = tiles(y)(x)
@@ -105,7 +105,7 @@ package object tiles {
   case class Tile(kx: Double, ky: Double, tx: Int, ty: Int, image: BufferedImage)(implicit canvas: SCanvas) {
     val tilePic = picture.image(image, None)
     tilePic.setPosition(kx, ky)
-    def draw() {
+    def draw(): Unit = {
       tilePic.draw()
     }
   }
@@ -197,7 +197,7 @@ package object tiles {
       tileUnder(pic, layerIdx) != null
     }
 
-    def moveToTileLeft(pic: Picture) {
+    def moveToTileLeft(pic: Picture): Unit = {
       val b = pic.bounds
       val picp = pic.position
       val delta = picp.x - b.x
@@ -210,7 +210,7 @@ package object tiles {
       pic.setPosition(b2xy.x - widthDiff + delta, b.y + delta)
     }
 
-    def moveToTileRight(pic: Picture) {
+    def moveToTileRight(pic: Picture): Unit = {
       val b = pic.bounds
       val picp = pic.position
       val delta = picp.x - b.x
@@ -219,7 +219,7 @@ package object tiles {
       pic.setPosition(b2xy.x + delta, b.y + delta)
     }
 
-    def moveToTileAbove(pic: Picture) {
+    def moveToTileAbove(pic: Picture): Unit = {
       val b = pic.bounds
       val picp = pic.position
       val delta = picp.x - b.x
@@ -228,7 +228,7 @@ package object tiles {
       pic.setPosition(b.x + delta, b2xy.y + delta)
     }
 
-    def moveToTileBelow(pic: Picture) {
+    def moveToTileBelow(pic: Picture): Unit = {
       val b = pic.bounds
       val picp = pic.position
       val delta = picp.x - b.x
@@ -250,11 +250,11 @@ package object tiles {
       currentLevel.layers(layerIdx).removeTileAt(txy)
     }
 
-    def step() {
+    def step(): Unit = {
     }
 
     // Draw level, player, overlay
-    def draw() {
+    def draw(): Unit = {
       currentLevel.draw()
     }
   }

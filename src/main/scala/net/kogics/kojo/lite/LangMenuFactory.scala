@@ -33,7 +33,7 @@ object LangMenuFactory {
   def createLangMenu()(implicit kojoCtx: core.KojoCtx) = {
     var langMenus: Seq[JCheckBoxMenuItem] = Vector()
     val langHandler = new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         val lang = e.getActionCommand
         kojoCtx.userLanguage = lang
         langMenus foreach {

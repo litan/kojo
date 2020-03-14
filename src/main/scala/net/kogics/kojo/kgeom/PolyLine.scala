@@ -42,23 +42,23 @@ class PolyLine extends PNode {
 
   def addPoint(x: Double, y: Double): Unit = addPoint(new Point2D.Double(x, y))
   def lineTo(x: Double, y: Double) = addPoint(new Point2D.Double(x, y))
-  def removeLastPoint() {
+  def removeLastPoint(): Unit = {
     points.remove(points.size-1)
     buildGeneralPath()
   }
 
   def size = points.size
 
-  def reset() {
+  def reset(): Unit = {
     points.clear()
     polyLinePath.reset()
   }
 
-  def setStroke(strk: Stroke) {
+  def setStroke(strk: Stroke): Unit = {
     stroke = strk.asInstanceOf[BasicStroke]
   }
 
-  def setStrokePaint(c: Paint) {
+  def setStrokePaint(c: Paint): Unit = {
     strokePaint = c
   }
 
@@ -88,11 +88,11 @@ class PolyLine extends PNode {
       None
   }
 
-  def close() {
+  def close(): Unit = {
     closed = true
   }
 
-  override def paint(paintContext: PPaintContext) {
+  override def paint(paintContext: PPaintContext): Unit = {
     val g2 = paintContext.getGraphics()
     g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
     val fillPaint = getPaint()
@@ -109,7 +109,7 @@ class PolyLine extends PNode {
     }
   }
 
-  def updateBounds() {
+  def updateBounds(): Unit = {
     // the line below significantly slows things down for things like 36 circles
 //    val b = stroke.createStrokedShape(polyLinePath).getBounds2D()
     val b = polyLinePath.getBounds2D()

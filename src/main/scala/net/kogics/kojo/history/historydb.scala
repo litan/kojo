@@ -78,7 +78,7 @@ class DBHistorySaver extends HistorySaver {
 
   import Control._
 
-  def createTableIfNeeded() {
+  def createTableIfNeeded(): Unit = {
     using(conn.createStatement) { statement =>
       statement.executeUpdate("""CREATE TABLE IF NOT EXISTS HISTORY(ID IDENTITY PRIMARY KEY, 
           SCRIPT CLOB, 
@@ -94,7 +94,7 @@ class DBHistorySaver extends HistorySaver {
     // CREATE INDEX IF NOT EXISTS IDXFILE ON HISTORY(FILE)
   }
 
-  def deleteTable() {
+  def deleteTable(): Unit = {
     using(conn.createStatement) { statement =>
       statement.executeUpdate("DROP TABLE IF EXISTS HISTORY")
     }
@@ -127,13 +127,13 @@ class DBHistorySaver extends HistorySaver {
     h
   }
   
-  def updateStar(hi: HistoryItem) {
+  def updateStar(hi: HistoryItem): Unit = {
     updateStars.setBoolean(1, hi.starred)
     updateStars.setLong(2, hi.id)
     updateStars.executeUpdate()
   }
   
-  def updateTags(hi: HistoryItem) {
+  def updateTags(hi: HistoryItem): Unit = {
     updateTags.setString(1, hi.tags)
     updateTags.setLong(2, hi.id)
     updateTags.executeUpdate()

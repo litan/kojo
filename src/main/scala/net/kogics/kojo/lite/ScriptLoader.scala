@@ -3,7 +3,7 @@ package net.kogics.kojo.lite
 import net.kogics.kojo.util.Utils
 
 trait ScriptLoader { self: Main.type =>
-  def _loadUrl(url: String)(postfn: => Unit = {}) {
+  def _loadUrl(url: String)(postfn: => Unit = {}): Unit = {
     Theme.currentTheme.loadDefaultPerspective(kojoCtx)
     codePane.setText("// Loading code from URL: %s ...\n" format (url))
     Utils.runAsyncMonitored {
