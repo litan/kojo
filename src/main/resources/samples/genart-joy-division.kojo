@@ -26,9 +26,9 @@ def linePic(l: Line) = penWidth(2) * penColor(white) * fillColor(Color(57, 57, 5
 
 var lines = Vector.empty[Line]
 
-repeatFor(cb.y + cb.height - 5 * stepy to cb.y by -stepy) { y =>
+repeatFor(rangeTo(cb.y + cb.height - 5 * stepy, cb.y, -stepy)) { y =>
     var linePts = Vector.empty[Point]
-    repeatFor(cb.x to cb.x + cb.width by stepx) { x =>
+    repeatFor(rangeTo(cb.x, cb.x + cb.width, stepx)) { x =>
         val f = math.abs(x / cb.width * 2)
         val f1 = (1 - f) * (1 - f) * 150
         linePts = linePts :+ Point(x, y + randomDouble(f1.toInt))
@@ -37,4 +37,3 @@ repeatFor(cb.y + cb.height - 5 * stepy to cb.y by -stepy) { y =>
 }
 
 draw(lines.map(linePic))
-
