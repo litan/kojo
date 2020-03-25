@@ -175,7 +175,7 @@ page = Page(
 
 pages += page
 
-val story = Story(pages: _*)
+val story = Story(pages.toSeq: _*)
 
 stClear()
 stPlayStory(story)
