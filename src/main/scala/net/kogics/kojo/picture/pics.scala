@@ -667,8 +667,7 @@ abstract class BasePicList(val pics: List[Picture])
 
 object HPics {
   def apply(pics: Picture*): HPics = new HPics(freshPics(pics.toList))
-  def apply(pics: List[Picture]): HPics = new HPics(freshPics(pics))
-  def apply(pics: Vector[Picture]): HPics = new HPics(freshPics(pics.toList))
+  def apply(pics: collection.Seq[Picture]): HPics = new HPics(freshPics(pics.toList))
 }
 
 class HPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -695,8 +694,7 @@ class HPics(pics: List[Picture]) extends BasePicList(pics) {
 
 object HPics2 {
   def apply(pics: Picture*): HPics2 = new HPics2(freshPics(pics.toList))
-  def apply(pics: List[Picture]): HPics2 = new HPics2(freshPics(pics))
-  def apply(pics: Vector[Picture]): HPics2 = new HPics2(freshPics(pics.toList))
+  def apply(pics: collection.Seq[Picture]): HPics2 = new HPics2(freshPics(pics.toList))
 }
 
 class HPics2(pics: List[Picture]) extends BasePicList(pics) {
@@ -734,8 +732,7 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
 
 object VPics {
   def apply(pics: Picture*): VPics = new VPics(freshPics(pics.toList))
-  def apply(pics: List[Picture]): VPics = new VPics(freshPics(pics))
-  def apply(pics: Vector[Picture]): VPics = new VPics(freshPics(pics.toList))
+  def apply(pics: collection.Seq[Picture]): VPics = new VPics(freshPics(pics.toList))
 }
 
 class VPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -762,8 +759,7 @@ class VPics(pics: List[Picture]) extends BasePicList(pics) {
 
 object VPics2 {
   def apply(pics: Picture*): VPics2 = new VPics2(freshPics(pics.toList))
-  def apply(pics: List[Picture]): VPics2 = new VPics2(freshPics(pics))
-  def apply(pics: Vector[Picture]): VPics2 = new VPics2(freshPics(pics.toList))
+  def apply(pics: collection.Seq[Picture]): VPics2 = new VPics2(freshPics(pics.toList))
 }
 
 class VPics2(pics: List[Picture]) extends BasePicList(pics) {
@@ -801,8 +797,7 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
 
 object GPics {
   def apply(pics: Picture*): GPics = new GPics(freshPics(pics.toList))
-  def apply(pics: List[Picture]): GPics = new GPics(freshPics(pics))
-  def apply(pics: Vector[Picture]): GPics = new GPics(freshPics(pics.toList))
+  def apply(pics: collection.Seq[Picture]): GPics = new GPics(freshPics(pics.toList))
 }
 
 class GPics(pics: List[Picture]) extends BasePicList(pics) {
@@ -825,8 +820,7 @@ class GPics(pics: List[Picture]) extends BasePicList(pics) {
 
 object GPics2 {
   def apply(pics: Picture*): GPics2 = new GPics2(freshPics(pics.toList))
-  def apply(pics: List[Picture]): GPics2 = new GPics2(freshPics(pics))
-  def apply(pics: Vector[Picture]): GPics2 = new GPics2(freshPics(pics.toList))
+  def apply(pics: collection.Seq[Picture]): GPics2 = new GPics2(freshPics(pics.toList))
 }
 
 class GPics2(pics: List[Picture]) extends BasePicList(pics) {
@@ -862,8 +856,7 @@ class GPics2(pics: List[Picture]) extends BasePicList(pics) {
 
 object BatchPics {
   def apply(pics: Picture*): BatchPics = new BatchPics(pics.toList)
-  def apply(pics: List[Picture]): BatchPics = new BatchPics(pics)
-  def apply(pics: Vector[Picture]): BatchPics = new BatchPics(pics.toList)
+  def apply(pics: collection.Seq[Picture]): BatchPics = new BatchPics(pics.toList)
 }
 
 class BatchPics(pics: List[Picture]) extends BasePicList(pics) {

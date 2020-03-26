@@ -212,8 +212,7 @@ trait CoreBuiltins extends Rationals {
   def scale(f: Double) = picture.scale(f)
   def scale(x: Double, y: Double) = picture.scale(x, y)
   def draw(pictures: Picture*) = pictures.foreach { _.draw() }
-  def draw(pictures: IndexedSeq[Picture]) = pictures.foreach { _.draw() }
-  def draw(pictures: List[Picture]) = pictures.foreach { _.draw() }
+  def draw(pictures: collection.Seq[Picture]) = pictures.foreach { _.draw() }
 
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
