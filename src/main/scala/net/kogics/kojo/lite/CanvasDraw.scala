@@ -25,6 +25,7 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
 
   var stroke = makeStroke(strokeThickness, penCap, penJoin)
   val tempEllipse = new java.awt.geom.Ellipse2D.Double
+  val tempArc = new java.awt.geom.Arc2D.Double
   val tempLine = new java.awt.geom.Line2D.Double
   val tempRect = new java.awt.geom.Rectangle2D.Double
   val tempPath = new java.awt.geom.GeneralPath
@@ -102,6 +103,13 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
   def ellipse(cx: Double, cy: Double, w: Double, h: Double): Unit = {
     tempEllipse.setFrame(cx - w / 2, cy - h / 2, w, h)
     drawShape(tempEllipse)
+  }
+
+  def arc(cx: Double, cy: Double, w: Double, h: Double, start: Double, extent: Double): Unit = {
+    tempArc.setAngleStart(start.toDegrees)
+    tempArc.setAngleExtent(extent.toDegrees)
+    tempArc.setFrame(cx - w / 2, cy - h / 2, w, h)
+    drawShape(tempArc)
   }
 
   def line(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
