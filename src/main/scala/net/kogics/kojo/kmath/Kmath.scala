@@ -33,4 +33,7 @@ object Kmath {
   def hcf(p: Long, q: Long) = MathUtils.gcd(p, q)
   def lcm(p: Int, q: Int) = MathUtils.lcm(p, q)
   def lcm(p: Long, q: Long) = MathUtils.lcm(p, q)
+
+  private lazy val log2_e = math.log(2)
+  def log2(n: Double) = math.log(n) / log2_e
 }
