@@ -793,7 +793,13 @@ object Utils {
                    |# library load path
                    |# library.path=
                    |
-                   |# Show internal keys for UI elements; for localization developers 
+                   |# python home (for jep/python bridge)
+                   |# python.home=
+                   |
+                   |# python version (for jep/python bridge)
+                   |# python.version=
+                   |
+                   |# Show internal keys for UI elements; for localization developers
                    |# i18n.string.showkey=true
                    |
                    |# Specify canvas image export options

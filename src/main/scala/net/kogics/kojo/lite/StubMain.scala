@@ -82,7 +82,7 @@ trait StubMain {
         javaHome + "/bin/java"
       }
     }
-    def extraCmds = {
+    val extraCmds = {
       if (Utils.isLinux && System.getProperty("java.version").startsWith("1.8")) {
         "-Dsun.java2d.xrender=false "
       }
@@ -90,32 +90,33 @@ trait StubMain {
         ""
       }
     }
-    def maxMem = {
+    val maxMem = {
       Utils.appProperty("memory.max") match {
         case Some(d) => d
         case None    => if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "768m"
       }
     }
-    def maybeMarlin =
+    val maybeMarlin =
       if (System.getProperty("java.vendor", "").toLowerCase.contains("jetbrains"))
         "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
 
-    def libPath = {
+    val libPath = {
       val libraryPath = new StringBuilder(Utils.libDir)
       Utils.appProperty("library.path") match {
         case Some(path) => libraryPath.append(File.pathSeparator + path)
         case None       =>
       }
+      val pythonVer = Utils.appProperty("python.version").getOrElse("3.8")
       Utils.appProperty("python.home") match {
         case Some(phome) =>
           libraryPath.append(File.pathSeparator + s"$phome/lib" +
-            File.pathSeparatorChar + s"$phome/lib/python3.8/site-packages/jep")
+            File.pathSeparatorChar + s"$phome/lib/python$pythonVer/site-packages/jep")
         case None =>
       }
       libraryPath.toString
     }
 
-    def extraEnv: Seq[(String, String)] = {
+    val extraEnv: Seq[(String, String)] = {
       if (Utils.isLinux) {
         val env = ArrayBuffer("LD_LIBRARY_PATH" -> libPath)
         Utils.appProperty("python.home") match {
