@@ -77,8 +77,8 @@ object CodeTemplates {
 }
 """,
     "canvasSketch" -> """cleari()
-setBackground(white)
 originBottomLeft()
+setBackground(white)
 
 class Sketch {
     var x = 0
