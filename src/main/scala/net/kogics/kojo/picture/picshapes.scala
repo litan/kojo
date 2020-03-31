@@ -445,12 +445,12 @@ class ImagePic(img: Image, envelope: Option[Picture])(implicit val canvas: SCanv
 }
 
 class FileImagePic(file: String, envelope: Option[Picture])(implicit canvas: SCanvas)
-  extends ImagePic(Utils.loadImageC(file), envelope) {
+  extends ImagePic(Utils.loadImage(file), envelope) {
   override def copy: net.kogics.kojo.core.Picture = new FileImagePic(file, envelope)
 }
 
 class UrlImagePic(url: URL, envelope: Option[Picture])(implicit canvas: SCanvas)
-  extends ImagePic(Utils.loadUrlImageC(url), envelope) {
+  extends ImagePic(Utils.loadUrlImage(url), envelope) {
   override def copy: net.kogics.kojo.core.Picture = new UrlImagePic(url, envelope)
 }
 
