@@ -879,12 +879,16 @@ Here's a partial list of the available commands:
                    }, scaleFactor: Double = 1): Unit = {
 
     @volatile var inited = false
+    @volatile var initStarted = false // to support breakpoints in setup
     @volatile var cd: CanvasDraw = null
     val pic = Picture.fromCanvas(cwidth * scaleFactor, cheight * scaleFactor) { g2d =>
       if (!inited) {
-        cd = new CanvasDraw(g2d, cwidth * scaleFactor, cheight * scaleFactor, builtins)
-        sketch.setup(cd)
-        inited = true
+        if (!initStarted) {
+          initStarted = true
+          cd = new CanvasDraw(g2d, cwidth * scaleFactor, cheight * scaleFactor, builtins)
+          sketch.setup(cd)
+          inited = true
+        }
       }
       else {
         sketch.drawLoop(cd)
