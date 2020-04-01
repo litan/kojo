@@ -107,9 +107,18 @@ trait CoreBuiltins extends Rationals {
 
   def setRandomSeed(seed: Long): Unit = { Random.setSeed(seed) }
   def random(upperBound: Int) = Random.nextInt(upperBound)
-  def random(lowerBound: Int, upperBound: Int): Int = lowerBound + random(upperBound - lowerBound)
-  def randomDouble(upperBound: Double) = Random.nextDouble * upperBound
-  def randomDouble(lowerBound: Double, upperBound: Double): Double = lowerBound + randomDouble(upperBound - lowerBound)
+  def random(lowerBound: Int, upperBound: Int): Int = {
+    if (lowerBound >= upperBound) lowerBound else
+      lowerBound + random(upperBound - lowerBound)
+  }
+  def randomDouble(upperBound: Double): Double = {
+    if ((upperBound == 0) || (upperBound != upperBound)) 0 else
+      Random.nextDouble * upperBound
+  }
+  def randomDouble(lowerBound: Double, upperBound: Double): Double = {
+    if (lowerBound >= upperBound) lowerBound else
+      lowerBound + randomDouble(upperBound - lowerBound)
+  }
   def randomNormalDouble = Random.nextGaussian()
   def randomBoolean = Random.nextBoolean
   def randomInt = Random.nextInt
