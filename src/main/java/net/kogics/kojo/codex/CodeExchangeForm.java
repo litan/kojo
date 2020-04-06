@@ -354,10 +354,14 @@ public class CodeExchangeForm extends javax.swing.JDialog {
     }//GEN-LAST:event_closeButtonActionPerformed
 
     private void registerLinkMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_registerLinkMouseClicked
+        String url = Talker.server() + "/register";
         try {
-            Desktop.getDesktop().browse(new URI(Talker.server() + "/register"));
+            Desktop.getDesktop().browse(new URI(url));
         } catch (Exception ex) {
-        	ex.printStackTrace();
+            System.out.println("Unable to open web-browser.");
+            System.out.println(ex.getMessage());
+            System.out.println("Please visit the following web-link to register:");
+            System.out.println(url);
         }
     }//GEN-LAST:event_registerLinkMouseClicked
 
