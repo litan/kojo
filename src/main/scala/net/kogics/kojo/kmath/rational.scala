@@ -5,8 +5,8 @@ import java.math.BigInteger
 
 import scala.language.implicitConversions
 
-import org.apache.commons.math.fraction.BigFraction
-import org.apache.commons.math.fraction.BigFractionFormat
+import org.apache.commons.math3.fraction.BigFraction
+import org.apache.commons.math3.fraction.BigFractionFormat
 
 trait Rationals {
   implicit def itor(n: Int) = Rational(new BigFraction(n))

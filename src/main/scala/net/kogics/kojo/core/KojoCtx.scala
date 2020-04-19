@@ -42,9 +42,7 @@ trait KojoCtx {
   def activateOutputPane(): Unit
   def makeStagingVisible(): Unit
   def makeTurtleWorldVisible(): Unit
-  def makeMathWorldVisible(): Unit
   def makeStoryTellerVisible(): Unit
-  def make3DCanvasVisible(): Unit
   def makeTraceWindowVisible(tw: DefaultSingleCDockable): Unit
   def baseDir: String
   def stopScript(): Unit
@@ -59,9 +57,6 @@ trait KojoCtx {
   def fileClosed(): Unit
   def getLastLoadStoreDir(): String
   def setLastLoadStoreDir(dir: String): Unit
-  def drawingCanvasActivated(): Unit
-  def mwActivated(): Unit
-  def d3Activated(): Unit
   def lastColor: Color
   def lastColor_=(c: Color): Unit
   def knownColors: List[String]

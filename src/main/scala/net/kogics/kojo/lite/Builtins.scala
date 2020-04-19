@@ -31,7 +31,6 @@ import scala.swing.Graphics2D
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
 
-import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.UserCommand
 import net.kogics.kojo.xscala.CodeCompletionUtils
@@ -53,7 +52,6 @@ class Builtins(
   val TSCanvas:    DrawingCanvasAPI,
   val Tw:          TurtleWorldAPI,
   val Staging:     staging.API,
-  val Mw:          MathWorld,
   storyTeller:     story.StoryTeller,
   mp3player:       music.KMp3,
   fuguePlayer:     music.FuguePlayer,

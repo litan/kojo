@@ -32,6 +32,7 @@ libraryDependencies ++= Seq(
     "org.piccolo2d" % "piccolo2d-extras" % "1.3.1",
     "com.vividsolutions" % "jts" % "1.13" intransitive(),
     "com.h2database" % "h2" % "1.3.168",
+    "org.apache.commons" % "commons-math3" % "3.6.1",
     "org.scalatest" % "scalatest_2.13" % "3.0.8" intransitive(),
     "org.scalactic" % "scalactic_2.13" % "3.0.8" intransitive(),
     "junit" % "junit" % "4.10" % "test",

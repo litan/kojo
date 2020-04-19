@@ -41,7 +41,6 @@ import net.kogics.kojo.lite.i18n.LangInit
 import net.kogics.kojo.lite.trace.MethodEvent
 import net.kogics.kojo.livecoding.InteractiveManipulator
 import net.kogics.kojo.livecoding.ManipulationContext
-import net.kogics.kojo.mathworld.MathWorld
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.FutureResult
 
@@ -98,7 +97,6 @@ class CodeExecutionSupport(
   TSCanvas:      DrawingCanvasAPI,
   Tw:            TurtleWorldAPI,
   Staging:       staging.API,
-  Mw:            MathWorld,
   storyTeller:   story.StoryTeller,
   mp3player:     music.KMp3,
   fuguePlayer:   music.FuguePlayer,
@@ -143,7 +141,6 @@ class CodeExecutionSupport(
     TSCanvas,
     Tw,
     Staging,
-    Mw,
     storyTeller,
     mp3player,
     fuguePlayer,

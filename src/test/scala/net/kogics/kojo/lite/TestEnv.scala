@@ -4,7 +4,6 @@ package lite
 import net.kogics.kojo.story.StoryTeller
 import javax.swing.JFrame
 import net.kogics.kojo.music.KMp3
-import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.music.FuguePlayer
@@ -17,7 +16,6 @@ object TestEnv {
     val Staging = new staging.API(spriteCanvas)
 
     val storyTeller = new StoryTeller(kojoCtx)
-    val ggbCanvas = new GeoGebraCanvas(kojoCtx)
 
     val mp3player = new KMp3(kojoCtx)
     val fuguePlayer = new FuguePlayer(kojoCtx)
@@ -27,7 +25,6 @@ object TestEnv {
       TSCanvas,
       Tw,
       Staging,
-      ggbCanvas.Mw,
       storyTeller,
       mp3player,
       fuguePlayer,

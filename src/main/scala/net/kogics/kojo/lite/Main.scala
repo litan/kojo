@@ -16,6 +16,7 @@ package net.kogics.kojo
 package lite
 
 import java.awt.BorderLayout
+import java.awt.Font
 import java.awt.Frame
 import java.awt.Toolkit
 import java.awt.event.WindowAdapter
@@ -27,6 +28,7 @@ import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
 
 import javax.swing.JFrame
+import javax.swing.UIManager
 import javax.swing.WindowConstants
 
 import scala.jdk.CollectionConverters._
@@ -38,11 +40,9 @@ import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.lite.topc.ArithAerobicsHolder
 import net.kogics.kojo.lite.topc.DrawingCanvasHolder
 import net.kogics.kojo.lite.topc.HistoryHolder
-import net.kogics.kojo.lite.topc.MathworldHolder
 import net.kogics.kojo.lite.topc.OutputWindowHolder
 import net.kogics.kojo.lite.topc.ScriptEditorHolder
 import net.kogics.kojo.lite.topc.StoryTellerHolder
-import net.kogics.kojo.mathworld.GeoGebraCanvas
 import net.kogics.kojo.music.FuguePlayer
 import net.kogics.kojo.music.KMp3
 import net.kogics.kojo.story.StoryTeller
@@ -85,8 +85,7 @@ object Main extends AppMenu with ScriptLoader { main =>
     }
 
     Utils.schedule(0.3) {
-      val ggbCanvas = new GeoGebraCanvas(kojoCtx)
-
+      updateDefaultFonts(12 + kojoCtx.screenDpiFontDelta)
       Theme.currentTheme.loadLookAndFeel()
       kojoCtx.lookAndFeelReady()
 
@@ -107,7 +106,6 @@ object Main extends AppMenu with ScriptLoader { main =>
         TSCanvas,
         Tw,
         Staging,
-        ggbCanvas.Mw,
         storyTeller,
         mp3player,
         fuguePlayer,
@@ -144,12 +142,11 @@ object Main extends AppMenu with ScriptLoader { main =>
       val scriptEditorH = new ScriptEditorHolder(scriptEditor)
       val outputPaneH = new OutputWindowHolder(execSupport.outputPane)
       val storyHolder = new StoryTellerHolder(storyTeller)
-      val mwHolder = new MathworldHolder(ggbCanvas, kojoCtx)
       //      val d3Holder = new D3CanvasHolder(canvas3d, kojoCtx)
       val historyHolder = new HistoryHolder(new HistoryPanel(execSupport))
       val arithAerobicsHolder = new ArithAerobicsHolder(new ArithAerobicsPane(frame, kojoCtx))
 
-      kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, mwHolder, null, historyHolder, arithAerobicsHolder)
+      kojoCtx.topcs = TopCs(drawingCanvasH, outputPaneH, scriptEditorH, storyHolder, historyHolder, arithAerobicsHolder)
       Theme.currentTheme.loadDefaultPerspective(kojoCtx)
 
       frame.setJMenuBar(menuBar)
@@ -228,4 +225,46 @@ object Main extends AppMenu with ScriptLoader { main =>
   def runMultiInstancehandler(): Unit = {
     MultiInstanceManager.run()
   }
+
+  private def updateDefaultFonts(size: Int) = {
+    val plain = new Font("SansSerif", 0, size)
+    UIManager.put("ColorChooser.font", plain)
+    UIManager.put("FileChooser.font", plain)
+    UIManager.put("Panel.font", plain)
+    UIManager.put("TextPane.font", plain)
+    UIManager.put("OptionPane.font", plain)
+    UIManager.put("OptionPane.messageFont", plain)
+    UIManager.put("OptionPane.buttonFont", plain)
+    UIManager.put("EditorPane.font", plain)
+    UIManager.put("ScrollPane.font", plain)
+    UIManager.put("TabbedPane.font", plain)
+    UIManager.put("ToolBar.font", plain)
+    UIManager.put("ProgressBar.font", plain)
+    UIManager.put("Viewport.font", plain)
+    UIManager.put("TitledBorder.font", plain)
+    UIManager.put("Button.font", plain)
+    UIManager.put("RadioButton.font", plain)
+    UIManager.put("ToggleButton.font", plain)
+    UIManager.put("ComboBox.font", plain)
+    UIManager.put("CheckBox.font", plain)
+    UIManager.put("Menu.font", plain)
+    UIManager.put("Menu.acceleratorFont", plain)
+    UIManager.put("PopupMenu.font", plain)
+    UIManager.put("MenuBar.font", plain)
+    UIManager.put("MenuItem.font", plain)
+    UIManager.put("MenuItem.acceleratorFont", plain)
+    UIManager.put("CheckBoxMenuItem.font", plain)
+    UIManager.put("RadioButtonMenuItem.font", plain)
+    UIManager.put("Label.font", plain)
+    UIManager.put("Table.font", plain)
+    UIManager.put("TableHeader.font", plain)
+    UIManager.put("Tree.font", plain)
+    UIManager.put("Tree.rowHeight", new Integer(plain.getSize + 5))
+    UIManager.put("List.font", plain)
+    UIManager.put("TextField.font", plain)
+    UIManager.put("PasswordField.font", plain)
+    UIManager.put("TextArea.font", plain)
+    UIManager.put("ToolTip.font", plain)
+  }
+
 }

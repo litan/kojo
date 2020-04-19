@@ -3,8 +3,8 @@ package kmath
 
 import scala.language.implicitConversions
 
-import org.apache.commons.math.stat.StatUtils
-import org.apache.commons.math.util.MathUtils
+import org.apache.commons.math3.stat.StatUtils
+import org.apache.commons.math3.util.ArithmeticUtils
 
 import net.kogics.kojo.core.Point
 
@@ -27,12 +27,12 @@ object Kmath {
   def angle(x1: Double, y1: Double, x2: Double, y2: Double): Double = math.atan2(y2 - y1, x2 - x1).toDegrees
   def angle(p1: Point, p2: Point): Double = angle(p1.x, p1.y, p2.x, p2.y)
 
-  def gcd(p: Int, q: Int) = MathUtils.gcd(p, q)
-  def gcd(p: Long, q: Long) = MathUtils.gcd(p, q)
-  def hcf(p: Int, q: Int) = MathUtils.gcd(p, q)
-  def hcf(p: Long, q: Long) = MathUtils.gcd(p, q)
-  def lcm(p: Int, q: Int) = MathUtils.lcm(p, q)
-  def lcm(p: Long, q: Long) = MathUtils.lcm(p, q)
+  def gcd(p: Int, q: Int) = ArithmeticUtils.gcd(p, q)
+  def gcd(p: Long, q: Long) = ArithmeticUtils.gcd(p, q)
+  def hcf(p: Int, q: Int) = ArithmeticUtils.gcd(p, q)
+  def hcf(p: Long, q: Long) = ArithmeticUtils.gcd(p, q)
+  def lcm(p: Int, q: Int) = ArithmeticUtils.lcm(p, q)
+  def lcm(p: Long, q: Long) = ArithmeticUtils.lcm(p, q)
 
   private lazy val log2_e = math.log(2)
   def log2(n: Double) = math.log(n) / log2_e
