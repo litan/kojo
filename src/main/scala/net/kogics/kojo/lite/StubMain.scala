@@ -39,17 +39,6 @@ trait StubMain {
   def main(args: Array[String]): Unit = {
     val javaVersion = System.getProperty("java.version")
     println(javaVersion)
-    if (javaVersion != null) {
-      if (!javaVersion.startsWith("1.8")) {
-        JOptionPane.showMessageDialog(
-          null,
-          "Incompatible Java version - Kojo requires Java 8.\nVisit www.kogics.net/kojo-download for more information.",
-          "Kojo startup error",
-          JOptionPane.ERROR_MESSAGE
-        )
-        System.exit(1)
-      }
-    }
 
     Utils.safeProcess {
       if (firstInstance) {
@@ -83,7 +72,7 @@ trait StubMain {
       }
     }
     val extraCmds = {
-      if (Utils.isLinux && System.getProperty("java.version").startsWith("1.8")) {
+      if (Utils.isLinux) {
         "-Dsun.java2d.xrender=false "
       }
       else {
@@ -133,7 +122,7 @@ trait StubMain {
     val cmdPart = s"-client -Xms128m -Xmx${maxMem} " +
       "-Xss1m -Dapple.laf.useScreenMenuBar=true " +
       s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}" +
-      "-Dapple.awt.graphics.UseQuartz=true -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled " +
+      "-Dapple.awt.graphics.UseQuartz=true " +
       extraCmds +
       "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
     val commandSeq =
