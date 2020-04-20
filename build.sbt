@@ -33,6 +33,8 @@ libraryDependencies ++= Seq(
     "com.vividsolutions" % "jts" % "1.13" intransitive(),
     "com.h2database" % "h2" % "1.3.168",
     "org.apache.commons" % "commons-math3" % "3.6.1",
+    "javax.xml.bind" % "jaxb-api" % "2.2",
+    "com.sun.xml.bind" % "jaxb-impl" % "2.2",
     "org.scalatest" % "scalatest_2.13" % "3.0.8" intransitive(),
     "org.scalactic" % "scalactic_2.13" % "3.0.8" intransitive(),
     "junit" % "junit" % "4.10" % "test",
