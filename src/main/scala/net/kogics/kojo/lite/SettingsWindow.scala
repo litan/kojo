@@ -141,14 +141,14 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
             case A0Landscape =>
               Builtins.instance.setDrawingCanvasToA0Landscape()
           }
-          Utils.runLaterInSwingThread {
+          Utils.schedule(0.3) {
             setCurrentAspectRatio()
           }
         case None =>
           try {
             val r = aspectTf.value.toDouble
             Builtins.instance.setDrawingCanvasAspectRatio(r)
-            Utils.runLaterInSwingThread {
+            Utils.schedule(0.3) {
               setCurrentAspectRatio()
             }
           }
