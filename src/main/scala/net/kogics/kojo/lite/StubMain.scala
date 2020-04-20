@@ -85,9 +85,20 @@ trait StubMain {
         case None    => if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "768m"
       }
     }
-    val maybeMarlin =
-      if (System.getProperty("java.vendor", "").toLowerCase.contains("jetbrains"))
-        "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
+    val maybeMarlin = {
+      //      if (System.getProperty("java.vendor", "").toLowerCase.contains("jetbrains"))
+      //        "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
+
+      ""
+    }
+
+    val reflective_access = {
+      //      "--add-opens java.desktop/sun.awt=ALL-UNNAMED " +
+      //        "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED " +
+      //        "--add-opens java.desktop/sun.swing=ALL-UNNAMED"
+
+      "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED "
+    }
 
     val libPath = {
       val libraryPath = new StringBuilder(Utils.libDir)
@@ -121,7 +132,7 @@ trait StubMain {
 
     val cmdPart = s"-client -Xms128m -Xmx${maxMem} " +
       "-Xss1m -Dapple.laf.useScreenMenuBar=true " +
-      s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}" +
+      s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}${reflective_access}" +
       "-Dapple.awt.graphics.UseQuartz=true " +
       extraCmds +
       "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
