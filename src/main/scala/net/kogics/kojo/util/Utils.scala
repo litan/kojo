@@ -22,6 +22,7 @@ import java.awt.Image
 import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.event.KeyEvent
 import java.awt.image.BufferedImage
 import java.io.BufferedInputStream
 import java.io.BufferedReader
@@ -49,6 +50,9 @@ import java.util.logging.Logger
 
 import javax.imageio.ImageIO
 import javax.swing.ImageIcon
+import javax.swing.JComponent
+import javax.swing.JDialog
+import javax.swing.KeyStroke
 import javax.swing.Timer
 import javax.swing.text.JTextComponent
 
@@ -875,6 +879,13 @@ object Utils {
   }
 
   def strFormat(format: String, args: Any*): String = {
-    String.format(Locale.ROOT, format, args.map(_.asInstanceOf[AnyRef]) : _*)
+    String.format(Locale.ROOT, format, args.map(_.asInstanceOf[AnyRef]): _*)
+  }
+
+  def closeOnEsc(dlg: JDialog): Unit = {
+    dlg.getRootPane.registerKeyboardAction(
+      _ => dlg.setVisible(false), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+      JComponent.WHEN_IN_FOCUSED_WINDOW
+    )
   }
 }

@@ -237,4 +237,5 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   getContentPane.add(d)
   pack()
   setLocationRelativeTo(owner)
+  Utils.closeOnEsc(this)
 }

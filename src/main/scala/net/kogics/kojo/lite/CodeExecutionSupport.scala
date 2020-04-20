@@ -549,6 +549,7 @@ class CodeExecutionSupport(
 
   def upload(): Unit = {
     val dlg = new codex.CodeExchangeForm(kojoCtx, true)
+    Utils.closeOnEsc(dlg)
     dlg.setCanvas(tCanvas)
     dlg.setCode(codePane.getText())
     dlg.centerScreen()

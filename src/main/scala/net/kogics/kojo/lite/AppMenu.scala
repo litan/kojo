@@ -77,6 +77,7 @@ trait AppMenu {
 
         urlGetter.setModal(true)
         urlGetter.getRootPane.setDefaultButton(ok)
+        Utils.closeOnEsc(urlGetter)
         urlGetter.getContentPane.add(urlPanel)
         urlGetter.setBounds(300, 300, 450, 300)
         urlGetter.pack()
@@ -523,6 +524,7 @@ trait AppMenu {
         aboutBox.pack()
         aboutBox.setLocationRelativeTo(frame)
         ok.requestFocusInWindow()
+        Utils.closeOnEsc(aboutBox)
         aboutBox.setVisible(true)
       }
     })
