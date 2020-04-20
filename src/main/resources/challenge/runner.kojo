@@ -116,7 +116,7 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                         setBackground(codePanelColor)
                     },
                     ColPanel(
-                        challengeCode.lines.toVector.map { line =>
+                        challengeCode.linesIterator.toVector.map { line =>
                             val tf = Label(" ")
                             tf.setFont(tfFont)
                             tfs += tf
@@ -134,7 +134,7 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                 uip
             })
 
-            val expectedCode = challengeCode.lines.toVector
+            val expectedCode = challengeCode.linesIterator.toVector
             val runButton = new Button("Run")({
                 val cb = canvasBounds
                 var mistakes = mistakesm.getOrElseUpdate(nm, 0)
