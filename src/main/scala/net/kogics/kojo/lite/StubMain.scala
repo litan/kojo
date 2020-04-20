@@ -133,7 +133,7 @@ trait StubMain {
     val cmdPart = s"-client -Xms128m -Xmx${maxMem} " +
       "-Xss1m -Dapple.laf.useScreenMenuBar=true " +
       s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}${reflective_access}" +
-      "-Dapple.awt.graphics.UseQuartz=true " +
+      "-Dapple.awt.graphics.UseQuartz=true -Dsun.java2d.uiScale.enabled=false " +
       extraCmds +
       "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
     val commandSeq =
