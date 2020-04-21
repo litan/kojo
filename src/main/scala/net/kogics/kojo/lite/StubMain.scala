@@ -69,7 +69,7 @@ trait StubMain {
     done()
   }
 
-  def realMain(args: Array[String]): Unit = {
+  def realMain(kojoArgs: Array[String]): Unit = {
     val javaHome = System.getProperty("java.home")
     log("[INFO] Java Home: " + javaHome)
     val javaExec = {
@@ -81,7 +81,7 @@ trait StubMain {
         javaHome + "/bin/java"
       }
     }
-    val extraCmds = {
+    val extraArgs = {
       if (Utils.isLinux) {
         "-Dsun.java2d.xrender=false "
       }
@@ -104,7 +104,7 @@ trait StubMain {
       "-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"
 
 
-    def reflective_access = {
+    def reflectiveAccess = {
       //      "--add-opens java.desktop/sun.awt=ALL-UNNAMED " +
       //        "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED " +
       //        "--add-opens java.desktop/sun.swing=ALL-UNNAMED"
@@ -120,7 +120,7 @@ trait StubMain {
         s"$maybeMarlin $cmsGC".trim
       }
       else {
-        s"$reflective_access $noScaling"
+        s"$reflectiveAccess $noScaling"
       }
     }
 
@@ -154,22 +154,22 @@ trait StubMain {
       }
     }
 
-    val cmdPart = s"-client -Xms128m -Xmx$maxMem " +
+    val cmdArgs = s"-client -Xms128m -Xmx$maxMem " +
       "-Xss1m -Dapple.laf.useScreenMenuBar=true " +
       s"-Dawt.useSystemAAFontSettings=lcd $javaVersionSpecificArgs " +
       "-Dapple.awt.graphics.UseQuartz=true " +
-      extraCmds +
-      s"net.kogics.kojo.lite.Main ${args.mkString(" ")}"
+      extraArgs +
+      s"net.kogics.kojo.lite.Main ${kojoArgs.mkString(" ")}"
 
-    val commandSeq =
+    val command =
       Seq(
         javaExec,
         "-cp", classpath,
         s"-Djava.library.path=$libPath"
-      ) ++ cmdPart.split(' ')
+      ) ++ cmdArgs.split(' ')
 
-    log(s"Java VM args: $cmdPart")
-    Process(commandSeq, None, extraEnv: _*)!
+    log(s"Java VM args: $cmdArgs")
+    Process(command, None, extraEnv: _*)!
   }
 
   def createCp(xs: List[String]): String = {
