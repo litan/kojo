@@ -40,6 +40,16 @@ trait StubMain {
     val javaVersion = System.getProperty("java.version")
     println(javaVersion)
 
+    if (!Utils.isJavaAtLeast(8)) {
+      JOptionPane.showMessageDialog(
+        null,
+        "Incompatible Java version - Kojo requires at least Java 8.\nVisit www.kogics.net/kojo-download for more information.",
+        "Kojo startup error",
+        JOptionPane.ERROR_MESSAGE
+      )
+      System.exit(1)
+    }
+
     Utils.safeProcess {
       if (firstInstance) {
         log(s"[INFO] Running first Kojo instance with args: ${args.mkString("[", ", ", "]")}")
@@ -85,19 +95,33 @@ trait StubMain {
         case None    => if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "768m"
       }
     }
-    val maybeMarlin = {
-      //      if (System.getProperty("java.vendor", "").toLowerCase.contains("jetbrains"))
-      //        "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine " else ""
-
-      ""
+    def maybeMarlin = {
+      if (System.getProperty("java.vendor", "").toLowerCase.contains("jetbrains"))
+        "-Dsun.java2d.renderer=sun.java2d.marlin.MarlinRenderingEngine" else ""
     }
 
-    val reflective_access = {
+    def cmsGC =
+      "-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"
+
+
+    def reflective_access = {
       //      "--add-opens java.desktop/sun.awt=ALL-UNNAMED " +
       //        "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED " +
       //        "--add-opens java.desktop/sun.swing=ALL-UNNAMED"
 
-      "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED "
+      "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED"
+    }
+
+    def noScaling =
+      "-Dsun.java2d.uiScale.enabled=false"
+
+    val javaVersionSpecificArgs = {
+      if (Utils.isJava8) {
+        s"$maybeMarlin $cmsGC".trim
+      }
+      else {
+        s"$reflective_access $noScaling"
+      }
     }
 
     val libPath = {
@@ -130,20 +154,21 @@ trait StubMain {
       }
     }
 
-    val cmdPart = s"-client -Xms128m -Xmx${maxMem} " +
+    val cmdPart = s"-client -Xms128m -Xmx$maxMem " +
       "-Xss1m -Dapple.laf.useScreenMenuBar=true " +
-      s"-Dawt.useSystemAAFontSettings=lcd ${maybeMarlin}${reflective_access}" +
-      "-Dapple.awt.graphics.UseQuartz=true -Dsun.java2d.uiScale.enabled=false " +
+      s"-Dawt.useSystemAAFontSettings=lcd $javaVersionSpecificArgs " +
+      "-Dapple.awt.graphics.UseQuartz=true " +
       extraCmds +
-      "net.kogics.kojo.lite.Main %s" format (args.mkString(" "))
+      s"net.kogics.kojo.lite.Main ${args.mkString(" ")}"
+
     val commandSeq =
       Seq(
         javaExec,
         "-cp", classpath,
-        s"-Djava.library.path=${libPath}"
+        s"-Djava.library.path=$libPath"
       ) ++ cmdPart.split(' ')
 
-    log(s"Java VM args: ${cmdPart}")
+    log(s"Java VM args: $cmdPart")
     Process(commandSeq, None, extraEnv: _*)!
   }
 

@@ -888,4 +888,15 @@ object Utils {
       JComponent.WHEN_IN_FOCUSED_WINDOW
     )
   }
+
+  lazy val javaMajorVersion = {
+    val version = System.getProperty("java.specification.version").split('.')
+    val major = if (version(0) == "1") version(1) // 1.8 is 8
+    else version(0) // later versions are 9, 10, etc
+    major.toInt
+  }
+
+  def isJava8 = javaMajorVersion == 8
+  def isJavaAtLeast(n: Int) = javaMajorVersion >= n
+
 }
