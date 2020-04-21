@@ -50,17 +50,17 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
     override def getColumnCount() = {
       colNames.size
     }
-    override def getValueAt(row: Int, col: Int) = {
+    override def getValueAt(row: Int, col: Int): Object = {
       if (row == cmdh.size) {
         col match {
-          case 0 => new java.lang.Boolean(false)
+          case 0 => java.lang.Boolean.valueOf(false)
           case _ => ""
         }
       }
       else {
         val hi = cmdh(row)
         col match {
-          case 0 => new java.lang.Boolean(hi.starred)
+          case 0 => java.lang.Boolean.valueOf(hi.starred)
           case 1 => hi.script.replaceAllLiterally("\n", " | ")
           case 2 => hi.tags
           case 3 => hi.file

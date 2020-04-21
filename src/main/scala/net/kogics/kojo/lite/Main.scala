@@ -259,7 +259,7 @@ object Main extends AppMenu with ScriptLoader { main =>
     UIManager.put("Table.font", plain)
     UIManager.put("TableHeader.font", plain)
     UIManager.put("Tree.font", plain)
-    UIManager.put("Tree.rowHeight", new Integer(plain.getSize + 5))
+    UIManager.put("Tree.rowHeight", plain.getSize + 5)
     UIManager.put("List.font", plain)
     UIManager.put("TextField.font", plain)
     UIManager.put("PasswordField.font", plain)
