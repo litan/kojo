@@ -1,15 +1,11 @@
 package net.kogics.kojo.lite
 
-import java.net.URLDecoder
+import java.io.File
 
 object NewKojoInstance extends StubMain {
    lazy val classpath = {
-    val urls = Thread.currentThread.getContextClassLoader match {
-      case cl: java.net.URLClassLoader => cl.getURLs.toList
-      case _                           => sys.error("classloader is not a URLClassLoader")
-    }
-    
-    createCp(urls map { URLDecoder decode _.getPath })
+     val cp = System.getProperty("java.class.path").split(File.pathSeparatorChar).toList
+     createCp(cp)
   }
 
   def firstInstance = true

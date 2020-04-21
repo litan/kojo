@@ -15,7 +15,6 @@
 package net.kogics.kojo.lite
 
 import java.io.File
-import java.net.URLDecoder
 
 object DesktopMain extends StubMain with RmiMultiInstance {
   lazy val classpath = {
