@@ -172,6 +172,7 @@ def main(args: Array[String]) {
     iSettings.usejavacp.value = true
     iSettings.outputDirs.setSingleOutput(tmpdir)
     iSettings.g.value = "notailcalls"
+    iSettings.nowarn.value = true
     iSettings
   }
 
@@ -188,9 +189,9 @@ def main(args: Array[String]) {
     val port = 8001 + builtins.random(1000)
 
     val cmdLine = if (System.getProperty("os.name").contains("Windows"))
-      s"""-Xrunjdwp:transport=dt_shmem,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" -client -Xms32m -Xmx768m -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled Wrapper"""
+      s"""-Xrunjdwp:transport=dt_shmem,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" -client -Xms32m -Xmx768m Wrapper"""
     else
-      s"""-Xrunjdwp:transport=dt_socket,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" -client -Xms32m -Xmx768m -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled Wrapper"""
+      s"""-Xrunjdwp:transport=dt_socket,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" -client -Xms32m -Xmx768m Wrapper"""
 
     val javaHome = System.getProperty("java.home")
     val javaExec =
