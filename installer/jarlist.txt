@@ -38,3 +38,4 @@
 ../dist/jaxb-api-2.2.jar -> jaxb-api.jar
 ../dist/jaxb-impl-2.2.jar -> jaxb-impl.jar
 ../dist/stax-api-1.0-2.jar -> stax-api.jar
+../dist/js.jar

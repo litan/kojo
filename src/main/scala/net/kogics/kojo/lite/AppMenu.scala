@@ -499,6 +499,7 @@ trait AppMenu {
               <li>Processing (https://processing.org/) for perlin noise</li>
               <li>Delaunay Triangulator (https://github.com/jdiemke/delaunay-triangulator) for triangulation of points</li>
               <li>Java implementation of HSLuv (https://github.com/hsluv/hsluv-java) for a perceptually uniform color space</li>
+              <li>Rhino (https://developer.mozilla.org/en-US/docs/Mozilla/Projects/Rhino) for the Code Exchange interface</li>
               </ul>
               </div>
               </body></html>
