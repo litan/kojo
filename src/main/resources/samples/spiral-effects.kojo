@@ -11,8 +11,8 @@ def spiralp = penColor(black) * fillColor(Color(255, 0, 204)) -> Picture {
 }
 clear()
 val cb = canvasBounds
-def bg = trans(cb.x, cb.y) * fillColor(Color(153, 0, 255)) -> PicShape.rect(cb.height, cb.width)
-val pic = GPics(
+def bg = trans(cb.x, cb.y) * fillColor(Color(153, 0, 255)) -> Picture.rectangle(cb.width, cb.height)
+val pic = picStack(
     weave(30, 5, 30, 5) -> bg,
     noise(80, 1) -> spiralp
 )
