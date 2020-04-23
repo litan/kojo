@@ -25,7 +25,7 @@ object LangInit {
     val font = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/i18n/gargi.ttf"))
     GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(font)
     val defaultSize = UIManager.getLookAndFeelDefaults.get("defaultFont").asInstanceOf[Font].getSize
-    font.deriveFont(Font.PLAIN, defaultSize + 4)
+    font.deriveFont(Font.PLAIN, defaultSize + 4.0f)
   }
 
   def lookAndFeelReady(): Unit = {

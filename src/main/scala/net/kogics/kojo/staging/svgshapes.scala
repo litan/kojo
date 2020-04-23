@@ -82,8 +82,11 @@ object SvgShape {
     val sc_? = matchStroke(ns)
     val sw_? = matchStrokeWidth(ns)
     Style.save
+
     fc_? foreach { fc => API.fill(ColorMaker.color(fc)) }
+
     sc_? foreach { sc => API.stroke(ColorMaker.color(sc)) }
+
     sw_? foreach { sw => API.strokeWidth(sw.toDouble) }
   }
 

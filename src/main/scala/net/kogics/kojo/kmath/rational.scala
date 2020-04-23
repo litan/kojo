@@ -43,7 +43,7 @@ trait Rationals {
     def toNumeric(scale: Int = 5) = rep.bigDecimalValue(scale, BigDecimal.ROUND_HALF_UP)
     def toDouble() = rep.doubleValue
     private def i2bi(n: Int): BigInteger = BigInteger.valueOf(n)
-    override def toString() = rep.toString.replaceAllLiterally(" ", "")
+    override def toString() = rep.toString.replace(" ", "")
     //    def ==(other: Rational): Boolean = equals(other)
     override def equals(other: Any) = other match {
       case r: Rational => rep == r.rep

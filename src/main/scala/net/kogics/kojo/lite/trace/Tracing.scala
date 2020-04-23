@@ -436,7 +436,7 @@ that is not supported under Tracing.
   def localToString(frameVal: Value) = String.valueOf(frameVal)
 
   def desugar(name0: String, methodObjectType: String) = {
-    val name = name0.replaceAllLiterally("$minus$greater", "->").replaceAllLiterally("$times", "*").replaceAllLiterally("_$eq", "")
+    val name = name0.replace("$minus$greater", "->").replace("$times", "*").replace("_$eq", "")
     val dindex = name.indexOf('$')
     val ret = if (dindex == -1) {
       name
@@ -446,7 +446,7 @@ that is not supported under Tracing.
       if (ret.length == 0) name else ret
     }
     if (ret == "apply")
-      methodObjectType.substring(methodObjectType.lastIndexOf(".") + 1).replaceAllLiterally("$", "")
+      methodObjectType.substring(methodObjectType.lastIndexOf(".") + 1).replace("$", "")
     else
       ret
   }

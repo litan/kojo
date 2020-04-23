@@ -69,7 +69,7 @@ class CustomHtmlFactory extends HTMLEditorKit.HTMLFactory {
 
 class LatexView(elem: Element) extends View(elem) {
   val srcAttr = elem.getAttributes().getAttribute(HTML.Attribute.SRC).asInstanceOf[String]
-  val size = elem.getAttributes().getAttribute(HTML.Attribute.HEIGHT).asInstanceOf[String].toInt
+  val size = elem.getAttributes().getAttribute(HTML.Attribute.HEIGHT).asInstanceOf[String].toFloat
   val latex = srcAttr.substring(CustomHtmlEditorKit.latexPrefix.length, srcAttr.length) // strip off latex prefix
   val defColor = new Color(30, 30, 30)
 
@@ -108,8 +108,8 @@ class LatexView(elem: Element) extends View(elem) {
 
   override def getPreferredSpan(axis: Int) = {
     axis match {
-      case View.X_AXIS => icon.getIconWidth
-      case View.Y_AXIS => icon.getIconHeight
+      case View.X_AXIS => icon.getIconWidth.toFloat
+      case View.Y_AXIS => icon.getIconHeight.toFloat
     }
   }
 

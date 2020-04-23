@@ -53,7 +53,7 @@ class FadeImageOp(n: Int) extends ImageOp {
     // draw initial image into new image
     g2.drawImage(img, 0, 0, null)
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN))
-    g2.setPaint(new GradientPaint(0, 0, new Color(0.0f, 0.0f, 0.0f, 1.0f), 0, n, new Color(0.0f, 0.0f, 0.0f, 0.0f)))
+    g2.setPaint(new GradientPaint(0, 0, new Color(0.0f, 0.0f, 0.0f, 1.0f), 0, n.toFloat, new Color(0.0f, 0.0f, 0.0f, 0.0f)))
     g2.fillRect(0, 0, width.toInt, n);
     g2.setPaint(new Color(0.0f, 0.0f, 0.0f, 0.0f))
     g2.fillRect(0, n, width.toInt, height - n);
@@ -64,7 +64,7 @@ class FadeImageOp(n: Int) extends ImageOp {
 
 class BlurImageOp(n: Int) extends ImageOp {
   def filter(img: BufferedImage): BufferedImage = {
-    val fltr = new GaussianFilter(n)
+    val fltr = new GaussianFilter(n.toFloat)
     fltr.filter(img, null)
   }
 }

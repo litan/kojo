@@ -34,7 +34,7 @@ class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends 
       interp.interpret(code)
     }
   }
-  def completions(id: String): List[String] = {
+  @annotation.nowarn def completions(id: String): List[String] = {
     interp.presentationCompile(id.length + 1, s"$id.") match {
       case Right(value) =>
         value.candidates(0)._2

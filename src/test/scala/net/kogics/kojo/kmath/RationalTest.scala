@@ -9,6 +9,7 @@ import org.scalatestplus.scalacheck.Checkers
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
+@annotation.nowarn
 class RationalTest extends FunSuite with Matchers with Rationals {
 
   test("addition") {

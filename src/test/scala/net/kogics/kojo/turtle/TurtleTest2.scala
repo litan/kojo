@@ -14,6 +14,7 @@ import org.scalacheck.Gen
 import org.scalatest.BeforeAndAfter
 
 @RunWith(classOf[JUnitRunner])
+@annotation.nowarn
 class TurtleTest2 extends FunSuite with Matchers with BeforeAndAfter {
   val kojoCtx = new NoOpKojoCtx
   val spriteCanvas = new SpriteCanvas(kojoCtx)

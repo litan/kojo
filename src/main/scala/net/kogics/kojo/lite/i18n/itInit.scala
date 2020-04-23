@@ -335,7 +335,7 @@ object ItalianAPI {
   //speedTest
   def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
 
-  def conta(n: BigInt): Unit = {
+  @annotation.nowarn def conta(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** conta da 1 fino a ... ")
     val startTid = systemtid

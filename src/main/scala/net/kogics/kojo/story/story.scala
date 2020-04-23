@@ -231,11 +231,11 @@ case class Story(pages: Viewable*) extends Viewable {
   
   @volatile var stopFn: Option[() => Unit] = None
   def onStop(fn: => Unit): Unit = {
-    stopFn = Some(fn _)
+    stopFn = Some(() => fn)
   }
   
   def stop(): Unit = {
-    stopFn.foreach(_.apply)
+    stopFn.foreach(_.apply())
   }
   
 }

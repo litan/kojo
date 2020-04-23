@@ -137,8 +137,8 @@ object SwedishAPI {
   
   //speedTest
   def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
-  
-  def räknaTill(n: BigInt): Unit = {
+
+  @annotation.nowarn def räknaTill(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** Räknar från 1 till ... ")
     val startTid = systemtid

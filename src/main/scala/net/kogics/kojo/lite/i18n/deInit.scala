@@ -233,7 +233,7 @@ object GermanAPI {
   def systemzeit = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
   
   //räknaTill
-  def zählzeitStoppen(bisZahl: BigInt): Unit = {
+  @annotation.nowarn def zählzeitStoppen(bisZahl: BigInt): Unit = {
     var c: BigInt = 1
     print("*** Zählen von 1 bis ... ")
     val startZeit = systemzeit

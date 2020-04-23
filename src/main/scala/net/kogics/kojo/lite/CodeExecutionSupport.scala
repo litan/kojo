@@ -330,12 +330,12 @@ class CodeExecutionSupport(
     else {
       if (block) {
         if (blankLine(dot)) {
-          codePane.insert("%s\n".format(code.replaceAllLiterally("${c}", "")), dot)
+          codePane.insert("%s\n".format(code.replace("${c}", "")), dot)
         }
         else {
           codePane.insert("\n", Utilities.getRowEnd(codePane, dot))
           dot = Utilities.getRowEnd(codePane, dot) + 1
-          codePane.insert("%s".format(code.replaceAllLiterally("${c}", "")), dot)
+          codePane.insert("%s".format(code.replace("${c}", "")), dot)
           // minimize chance of dot moving to previous line because of upcoming format action
           dot = Utilities.getRowEnd(codePane, dot)
         }
@@ -345,7 +345,7 @@ class CodeExecutionSupport(
         codePane.setCaretPosition(Utilities.getRowStart(codePane, dot) + leadingSpaces + cOffset)
       }
       else {
-        codePane.insert("%s ".format(code.replaceAllLiterally("${c}", "")), dot)
+        codePane.insert("%s ".format(code.replace("${c}", "")), dot)
         codePane.setCaretPosition(dot + cOffset)
       }
     }

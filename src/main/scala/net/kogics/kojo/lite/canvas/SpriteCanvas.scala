@@ -359,7 +359,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       val d = seedDelta
       val d0 = d / scale
       if (d0 > 10) {
-        math.round(d0 / 10) * 10
+        math.round(d0 / 10) * 10.0
       }
       else {
         val d2 = Utils.sanitizeDoubleString(deltaFinder.format(d0)).toDouble

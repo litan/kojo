@@ -140,7 +140,7 @@ object DutchAPI {
   //speedTest
   def systeemTijd() = BigDecimal(System.nanoTime()) / BigDecimal("1000000000") //seconds
 
-  def telTot(n: BigInt): Unit = {
+  @annotation.nowarn def telTot(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** Tel van 1 tot ... ")
     val startTime = systeemTijd()

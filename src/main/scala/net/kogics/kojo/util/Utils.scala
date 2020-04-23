@@ -76,12 +76,12 @@ object Utils {
 
   def absolutePath(fname0: String): String = {
     def expandHomeDir(fname: String): String =
-      if (fname.startsWith("~")) fname.replaceFirst("~", homeDir.replaceAllLiterally("\\", "/")) else fname
+      if (fname.startsWith("~")) fname.replaceFirst("~", homeDir.replace("\\", "/")) else fname
 
     val fname = expandHomeDir(fname0)
     val f = new java.io.File(fname)
     val path = if (f.isAbsolute) f.getAbsolutePath else kojoCtx.baseDir + fname
-    path.replaceAllLiterally("\\", "/")
+    path.replace("\\", "/")
   }
 
   def loadBufImage(fname: String): BufferedImage = {
@@ -289,7 +289,7 @@ object Utils {
             notFull.await()
           }
           val needDrainer = batchQ.isEmpty
-          batchQ.add(fn _)
+          batchQ.add(() => fn)
           if (needDrainer) {
             javax.swing.SwingUtilities.invokeLater(new Runnable {
               override def run: Unit = {
@@ -769,7 +769,7 @@ object Utils {
 
   def roundDouble(d: Double, n: Int) = {
     if (needsSanitizing)
-      s"%.${n}f".format(d).replaceAllLiterally(decimalSep, ".").toDouble
+      s"%.${n}f".format(d).replace(decimalSep, ".").toDouble
     else
       s"%.${n}f".format(d).toDouble
   }

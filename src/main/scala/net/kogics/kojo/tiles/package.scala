@@ -115,7 +115,7 @@ package object tiles {
     val absolutePath = {
       val p = Utils.absolutePath(fileName)
       // forward slashes don't work on Windows for linked tilesets (with Tiled loader)
-      if (File.separatorChar == '\\') p.replaceAllLiterally("/", "\\") else p
+      if (File.separatorChar == '\\') p.replace("/", "\\") else p
     }
 
     import org.mapeditor.io.TMXMapReader

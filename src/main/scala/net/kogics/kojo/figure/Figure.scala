@@ -253,11 +253,11 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
   }
 
   def onStart(fn: => Unit) = Utils.runInSwingThread {
-    startFn = Some(fn _)
+    startFn = Some(() => fn)
   }
 
   def onStop(fn: => Unit) = Utils.runInSwingThread {
-    stopFn = Some(fn _)
+    stopFn = Some(() => fn)
   }
 }
 

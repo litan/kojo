@@ -55,7 +55,7 @@ class MethodEvent {
     if (returnType == "void") "()" else ""
   }
   def assignArg = args(0).substring(args(0).indexOf('='), args(0).length)
-  def pret = returnVal.replaceAllLiterally("<void value>", "()")
+  def pret = returnVal.replace("<void value>", "()")
   def psubcalls = _psubcalls(subcalls)
   def _psubcalls(scs: Seq[MethodEvent]): String = scs match {
     case Seq()           => ""
