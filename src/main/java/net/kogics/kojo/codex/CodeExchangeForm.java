@@ -23,6 +23,7 @@ import java.net.URI;
 
 import javax.swing.JComboBox;
 
+import com.meterware.httpunit.HttpUnitOptions;
 import net.kogics.kojo.core.KojoCtx;
 import net.kogics.kojo.core.SCanvas;
 import net.kogics.kojo.util.Utils;
@@ -39,21 +40,22 @@ public class CodeExchangeForm extends javax.swing.JDialog {
     KojoCtx kojoCtx;
 
     public String email() {
-    	return "";
+    	return kojoCtx.codexId();
     }
 
     public String password() {
-    	return "";
+        return kojoCtx.codexPassword();
     }
     
     public void storeIdPass(String id, String pass) {
-    	
+    	kojoCtx.saveCodexIdPass(id, pass);
     }
     
     /** Creates new form CodeExchangeForm */
     public CodeExchangeForm(KojoCtx kojoCtx, boolean modal) {
         super(kojoCtx.frame(), modal);
         this.kojoCtx = kojoCtx;
+        HttpUnitOptions.setScriptingEnabled(false);
         initComponents();
         initLoginInfo(email(), password());
         catLabel.setVisible(false);

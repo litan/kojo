@@ -108,4 +108,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   var fps = 50
   var screenDPI = 72
   def subKojo: Boolean = false
+  def saveCodexIdPass(id: String, pass: String): Unit = {}
+  def codexId: String = ""
+  def codexPassword: String = ""
 }

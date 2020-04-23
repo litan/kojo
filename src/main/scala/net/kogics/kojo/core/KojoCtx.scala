@@ -109,4 +109,7 @@ trait KojoCtx {
   var fps: Int
   var screenDPI: Int
   def subKojo: Boolean
+  def saveCodexIdPass(id: String, pass: String): Unit
+  def codexId: String
+  def codexPassword: String
 }

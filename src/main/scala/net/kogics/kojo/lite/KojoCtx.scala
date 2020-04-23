@@ -443,4 +443,12 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def repaintCanvas(): Unit = {
     topcs.dch.dc.repaint()
   }
+
+  def saveCodexIdPass(id: String, pass: String): Unit = {
+    prefs.put("codex.id", id)
+    prefs.put("codex.password", pass)
+  }
+
+  def codexId = prefs.get("codex.id", "")
+  def codexPassword = prefs.get("codex.password", "")
 }
