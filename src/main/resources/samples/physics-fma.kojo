@@ -1,8 +1,8 @@
 // Shows the use of Newton's second law to calculate the motion of two balls
 cleari()
-val wall = fillColor(brown) * penColor(noColor) * trans(-45, -50) -> PicShape.rect(200, 20)
-val ball1 = fillColor(green) * penColor(noColor) -> PicShape.circle(25)
-val ball2 = fillColor(blue) * penColor(noColor) * trans(0, 100) -> PicShape.circle(25)
+val wall = fillColor(brown) * penColor(noColor) * trans(-45, -50) -> Picture.rectangle(20, 200)
+val ball1 = fillColor(green) * penColor(noColor) -> Picture.circle(25)
+val ball2 = fillColor(blue) * penColor(noColor) * trans(0, 100) -> Picture.circle(25)
 
 draw(wall, ball1, ball2)
 
