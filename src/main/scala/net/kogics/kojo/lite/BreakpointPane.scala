@@ -81,6 +81,7 @@ class BreakpointPane(owner: JFrame) extends JDialog(owner) {
     setVisible(false)
   }
   getRootPane.setDefaultButton(d)
+  Utils.closeOnEsc(this)
 
   val panel = ColPanel(sp, resumeCancelLabel, d)
   getContentPane.add(panel)
