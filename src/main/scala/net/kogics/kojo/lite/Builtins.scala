@@ -908,4 +908,11 @@ Here's a partial list of the available commands:
     setup(sketch.setup(PictureDraw))
     drawLoop(sketch.drawLoop(PictureDraw))
   }
+
+  def timeit(fn: => Unit) {
+    val t0 = epochTime
+    fn
+    val delta = epochTime - t0
+    println(f"Timed code took $delta%.3f seconds")
+  }
 }
