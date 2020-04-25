@@ -909,7 +909,7 @@ Here's a partial list of the available commands:
     drawLoop(sketch.drawLoop(PictureDraw))
   }
 
-  def timeit(fn: => Unit) {
+  def timeit(fn: => Unit): Unit = {
     val t0 = epochTime
     fn
     val delta = epochTime - t0
