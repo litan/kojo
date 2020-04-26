@@ -1,5 +1,5 @@
 clear()
-setAnimationDelay(0)
+setSpeed(superFast)
 setBackgroundH(cm.rgb(0, 0, 0), blue)
 setPenColor(cm.rgb(255, 102, 102))
 setPenThickness(2)

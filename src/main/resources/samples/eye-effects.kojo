@@ -1,5 +1,4 @@
 cleari()
-setAnimationDelay(0)
 setBackgroundH(cm.rgb(0, 0, 0), cm.rgb(51, 204, 255))
 val fill = cm.radialMultipleGradient(
     0, 0, 150,
