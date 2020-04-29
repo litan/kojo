@@ -34,9 +34,14 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
   val tempLine = new java.awt.geom.Line2D.Double
   val tempRect = new java.awt.geom.Rectangle2D.Double
   val tempPath = new java.awt.geom.GeneralPath
+  var loop = true
 
   def makeStroke(n: Double, cap: Int, join: Int) =
     new java.awt.BasicStroke(n.toFloat, cap, join)
+
+  def noLoop(): Unit = {
+    loop = false
+  }
 
   def noStroke(): Unit = {
     strokeColor = null

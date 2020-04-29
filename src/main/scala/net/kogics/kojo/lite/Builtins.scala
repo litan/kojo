@@ -896,6 +896,9 @@ Here's a partial list of the available commands:
     pic.scale(1 / scaleFactor)
     TSCanvas.animate {
       pic.update()
+      if (!cd.loop) {
+        stopAnimation()
+      }
     }
   }
 
