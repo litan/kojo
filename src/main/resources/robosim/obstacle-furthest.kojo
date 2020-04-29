@@ -25,8 +25,8 @@ repeatWhile(true) {
 def loop() {
     val d = robot.distanceToObstacle
 
-    // after getting close to an obstacle, the robot stops sweeps 90 degrees to left and right,
-    // determines the clearest path, and then moving forward along this path.
+    // after getting close to an obstacle, the robot stops and sweeps 90 degrees to left and right,
+    // determines the clearest path, and then moves forward along this path.
 
     val sweepAngle = 90
     if (d <= 6 || robot.collidesWith(allRooms)) {
