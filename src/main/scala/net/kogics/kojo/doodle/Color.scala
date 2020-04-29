@@ -308,7 +308,7 @@ object Color extends CommonColors {
   def linearGradient(x1: Double, y1: Double, c1: AwtColor, x2: Double, y2: Double, c2: AwtColor, cyclic: Boolean = false): GradientPaint =
     new GradientPaint(x1.toFloat, y1.toFloat, c1, x2.toFloat, y2.toFloat, c2, cyclic)
 
-  def radialMultipleGradient(x: Double, y: Double, radius: Double, distribution: Seq[Double], colors: Seq[AwtColor], cyclic: Boolean = false) = {
+  def radialMultipleGradient(x: Double, y: Double, radius: Double, distribution: collection.Seq[Double], colors: collection.Seq[AwtColor], cyclic: Boolean = false) = {
     val cycleMode = if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
     val floatD = ArrayBuffer.empty[Float]; distribution.foreach { n => floatD.append(n.toFloat) }
     new RadialGradientPaint(x.toFloat, y.toFloat, radius.toFloat, floatD.toArray, colors.toArray, cycleMode)
@@ -317,7 +317,7 @@ object Color extends CommonColors {
   def radialGradient(cx: Double, cy: Double, c1: AwtColor, radius: Double, c2: AwtColor, cyclic: Boolean = false) =
     radialMultipleGradient(cx, cy, radius, Seq(0, 1), Seq(c1, c2), cyclic)
 
-  def linearMultipleGradient(x1: Double, y1: Double, x2: Double, y2: Double, distribution: Seq[Double], colors: Seq[AwtColor], cyclic: Boolean = false) = {
+  def linearMultipleGradient(x1: Double, y1: Double, x2: Double, y2: Double, distribution: collection.Seq[Double], colors: collection.Seq[AwtColor], cyclic: Boolean = false) = {
     val cycleMode = if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
     val floatD = ArrayBuffer.empty[Float]; distribution.foreach { n => floatD.append(n.toFloat) }
     new LinearGradientPaint(x1.toFloat, y1.toFloat, x2.toFloat, y2.toFloat, floatD.toArray, colors.toArray, cycleMode)
