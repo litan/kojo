@@ -180,6 +180,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   }
 
   def ensureVisible(): Unit = {
+    kojoCtx.switchToDefaultPerspective()
     kojoCtx.makeStoryTellerVisible()
   }
 
