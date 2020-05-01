@@ -180,7 +180,6 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   }
 
   def ensureVisible(): Unit = {
-    kojoCtx.switchToDefaultPerspective()
     kojoCtx.makeStoryTellerVisible()
   }
 
@@ -282,6 +281,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       done()
     }
     clearHelper()
+    kojoCtx.switchToDefaultPerspective()
     ensureVisible()
     cp.setVisible(true)
     val doc = ep.getDocument.asInstanceOf[HTMLDocument]

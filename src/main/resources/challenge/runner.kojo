@@ -294,8 +294,8 @@ val levelPages = challengeLevels.zipWithIndex.map {
 }
 val story = Story(levelPages: _*)
 
-switchToStoryViewingPerspective()
-stSetStorytellerWidth(350)
 cleari()
 stClear()
 stPlayStory(story)
+switchToStoryViewingPerspective()
+stSetStorytellerWidth(350)
