@@ -160,9 +160,13 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     (tr.getScaleX, tr.getScaleY)
   }
 
-  def setScaleFactor(x: Double, y: Double) = Utils.runInSwingThread {
-    val tr = tnode.getTransformReference(true)
-    scale(x / tr.getScaleX, y / tr.getScaleY)
+  def setScaleFactor(x: Double, y: Double): Unit = {
+    throw new RuntimeException("use setScale(f) instead of setScaleFactor(x, y)")
+  }
+
+  def setScale(f: Double) = Utils.runInSwingThread {
+    tnode.setScale(f)
+    _pgTransform = null
   }
 
   def transform = Utils.runInSwingThreadAndPause {

@@ -71,6 +71,7 @@ trait Picture extends InputAware {
   def setRotation(angle: Double) = setHeading(angle)
   def scaleFactor: (Double, Double)
   def setScaleFactor(x: Double, y: Double): Unit
+  def setScale(f: Double): Unit
   def transform: AffineTransform
   def setPenColor(color: Paint): Unit
   def setPenThickness(th: Double): Unit
