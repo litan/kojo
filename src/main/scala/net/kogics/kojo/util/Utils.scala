@@ -515,7 +515,7 @@ object Utils {
 
   def filesInDir(dir: String, ext: String): List[String] = {
     val osDir = new File(dir)
-    if (osDir.exists) {
+    if (osDir.exists && osDir.isDirectory) {
       osDir.list(new FilenameFilter {
         override def accept(dir: File, name: String) = {
           name.endsWith("." + ext)
