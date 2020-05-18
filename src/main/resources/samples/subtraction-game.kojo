@@ -59,7 +59,7 @@ def numPanel = new ColPanel(
 
 def newUi() {
     ui.erase()
-    ui = trans(-150, 0) -> PicShape.widget(numPanel)
+    ui = trans(-150, 0) -> Picture.widget(numPanel)
     draw(ui)
     answerF.takeFocus()
 }
@@ -139,14 +139,14 @@ answerF.addKeyListener(new KeyAdapter {
 
 def drawMessage(m: String, c: Color) {
     val te = textExtent(m, 30)
-    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, 30)
+    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> Picture.text(m, 30)
     draw(pic)
 }
 
 def manageGameTime() {
     def score(c: Int, w: Int) = c - w
     var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, blue)
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> Picture.textu(gameTime, 20, blue)
     draw(timeLabel)
     timeLabel.forwardInputTo(stageArea)
 
@@ -173,7 +173,7 @@ def manageGameTime() {
 cleari()
 drawStage(bgColor)
 val cb = canvasBounds
-var ui: Picture = PicShape.hline(1)
+var ui: Picture = Picture.hline(1)
 newQuestion()
 newUi()
 manageGameTime()

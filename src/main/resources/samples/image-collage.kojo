@@ -1,10 +1,10 @@
 // A small collage with some images that are shipped with Kojo
 // This example is based on Kojo Pictures
-def woman = PicShape.image(Costume.womanWaving)
-def car = PicShape.image(Costume.car)
-def pencil = PicShape.image(Costume.pencil)
-def bat1 = PicShape.image(Costume.bat1)
-def bat2 = PicShape.image(Costume.bat2)
+def woman = Picture.image(Costume.womanWaving)
+def car = Picture.image(Costume.car)
+def pencil = Picture.image(Costume.pencil)
+def bat1 = Picture.image(Costume.bat1)
+def bat2 = Picture.image(Costume.bat2)
 def title = penColor(purple) -> Picture {
     setPenFont(Font("Serif", 18))
     write("Batmania!")

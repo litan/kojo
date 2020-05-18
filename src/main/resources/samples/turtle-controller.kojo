@@ -37,7 +37,7 @@ val cmd = Map(
 def eraseCmds(n: Int) =
     s"saveStyle(); setPenColor($sBgColor); setPenThickness(4); back($n); restoreStyle()"
 
-def button(forcmd: String) = PicShape.button(cmd(forcmd)) { action(cmd(forcmd)) }
+def button(forcmd: String) = Picture.button(cmd(forcmd)) { action(cmd(forcmd)) }
 
 val panel = trans(-width / 2, -height / 2) * scale(1.4) -> VPics(
     HPics(
@@ -45,14 +45,14 @@ val panel = trans(-width / 2, -height / 2) * scale(1.4) -> VPics(
         button("forward2"),
         button("right2"),
         button("hop2"),
-        PicShape.button(s"erase($fdStep2)") { action(eraseCmds(fdStep2)) }
+        Picture.button(s"erase($fdStep2)") { action(eraseCmds(fdStep2)) }
     ),
     HPics(
         button("left1"),
         button("forward1"),
         button("right1"),
         button("hop1"),
-        PicShape.button(s"erase($fdStep)") { action(eraseCmds(fdStep)) }
+        Picture.button(s"erase($fdStep)") { action(eraseCmds(fdStep)) }
     )
 )
 

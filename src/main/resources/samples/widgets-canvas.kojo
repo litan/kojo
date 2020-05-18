@@ -43,6 +43,6 @@ val panel = ColPanel(
     })
 )
 
-val pic = PicShape.widget(panel)
+val pic = Picture.widget(panel)
 cleari()
 draw(trans(canvasBounds.x, canvasBounds.y) -> pic)

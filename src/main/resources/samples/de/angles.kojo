@@ -16,37 +16,37 @@ val arcColor = gray
 import net.kogics.kojo.picture.rot
     
 def radius(a: Int) = penColor(radColor) * rot(a) -> GPics(
-    fillColor(radColor) -> PicShape.circle(3),
-    PicShape.hline(rLen),
-    trans(rLen, 0) * fillColor(radColor) -> PicShape.circle(3)
+    fillColor(radColor) -> Picture.circle(3),
+    Picture.hline(rLen),
+    trans(rLen, 0) * fillColor(radColor) -> Picture.circle(3)
 )
 
 def curvedRadius(start: Double, a: Double) = penColor(radColor) * rot(start) -> GPics(
-    trans(rLen, 0) * fillColor(radColor) -> PicShape.circle(3),
-    PicShape.arc(rLen, a),
-    rot(a) * trans(rLen, 0) * fillColor(radColor) -> PicShape.circle(3)
+    trans(rLen, 0) * fillColor(radColor) -> Picture.circle(3),
+    Picture.arc(rLen, a),
+    rot(a) * trans(rLen, 0) * fillColor(radColor) -> Picture.circle(3)
 )
 
-def arc(a: Int) = penColor(arcColor) -> PicShape.arc(rLen, a)
+def arc(a: Int) = penColor(arcColor) -> Picture.arc(rLen, a)
 
 def angle(start: Double, a: Double) = rot(start) -> GPics(
-    PicShape.hline(rLen),
-    rot(a) -> PicShape.hline(rLen),
-    PicShape.arc(rLen / 4, a)
+    Picture.hline(rLen),
+    rot(a) -> Picture.hline(rLen),
+    Picture.arc(rLen / 4, a)
 )
 
 var currArc = arc(0)
 var currRadius = radius(0)
-var rLabel = trans(rLen / 2, -5) -> PicShape.text("r", 20)
-var currAngle: Picture = PicShape.arc(0, 0)
-var aLabel: Picture = PicShape.text("", 20)
-var pointer: Picture = PicShape.hline(0)
-var pointer2: Picture = PicShape.hline(0)
+var rLabel = trans(rLen / 2, -5) -> Picture.text("r", 20)
+var currAngle: Picture = Picture.arc(0, 0)
+var aLabel: Picture = Picture.text("", 20)
+var pointer: Picture = Picture.hline(0)
+var pointer2: Picture = Picture.hline(0)
 
 def lineFrom(x1: Double, y1: Double, x2: Double, y2: Double) = {
     val distance = math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2))
     val angle = math.atan((y2 - y1) / (x2 - x1))
-    trans(x1, y1) * rot(angle.toDegrees) -> PicShape.hline(distance)
+    trans(x1, y1) * rot(angle.toDegrees) -> Picture.hline(distance)
 }
 def drawRadianAngle(e: Int) {
     def label = if (e == 1) s"$e radian" else s"$e radians"
@@ -61,7 +61,7 @@ def drawRadianAngle(e: Int) {
     aLabel.erase()
     pointer.erase()
     pointer2.erase()
-    aLabel = trans(-18, -rLen / 4) -> PicShape.text(label, 20)
+    aLabel = trans(-18, -rLen / 4) -> Picture.text(label, 20)
     draw(aLabel)
     if (e < 4) {
         pointer = lineFrom(0, -smallR, smallR - (smallR - smallR * math.cos(30.toRadians)), smallR * math.sin(30.toRadians))
@@ -83,7 +83,7 @@ def drawPiAngle(e: Int) {
     currAngle = penColor(angleColor) -> angle(0, (math.Pi * e).toDegrees)
     draw(currAngle)
     aLabel.erase()
-    aLabel = trans(-18, -rLen / 4) -> PicShape.text(label, 20)
+    aLabel = trans(-18, -rLen / 4) -> Picture.text(label, 20)
     draw(aLabel)
 }
 

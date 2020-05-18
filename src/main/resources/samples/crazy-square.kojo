@@ -53,13 +53,13 @@ animate {
 def drawMessage(m: String, c: Color) {
     val te = textExtent(m, 30)
     val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) ->
-        PicShape.text(m, 30)
+        Picture.text(m, 30)
     draw(pic)
 }
 
 def manageGameTime() {
     var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime,
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> Picture.textu(gameTime,
         20, blue)
     draw(timeLabel)
     timeLabel.forwardInputTo(stageArea)

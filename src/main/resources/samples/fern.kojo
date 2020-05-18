@@ -25,7 +25,7 @@ setAnimationDelay(10)
 setBackgroundV(Color(255, 255, 150), white)
 val pic = picCol(
       flipX -> (fade(230) * blur(2) -> fernp),
-      trans(-20, 0) * penColor(Color(234, 234, 234)) * penWidth(1) -> PicShape.hline(40),
+      trans(-20, 0) * penColor(Color(234, 234, 234)) * penWidth(1) -> Picture.hline(40),
       trans(0, 3) -> fernp
 )
 draw(pic)

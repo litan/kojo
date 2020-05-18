@@ -52,10 +52,10 @@ def mandel(xmin: Double, xmax: Double, ymin: Double, ymax: Double): Image = {
 }
 cleari()
 val cDelta = Point(-size / 2, -size / 2)
-var pic = trans(cDelta.x, cDelta.y) -> PicShape.image(mandel(-2, 1, -1.5, 1.5))
+var pic = trans(cDelta.x, cDelta.y) -> Picture.image(mandel(-2, 1, -1.5, 1.5))
 draw(pic)
 installMouseHandlers(pic)
-var dragSq: Picture = PicShape.rect(0, 0)
+var dragSq: Picture = Picture.rect(0, 0)
 
 def installMouseHandlers(p: Picture) {
     p.onMouseDrag { (x, y) =>
@@ -65,7 +65,7 @@ def installMouseHandlers(p: Picture) {
         val newx = pressxy._1 + del * delx.signum
         val newy = pressxy._2 + del * dely.signum
         dragSq.erase()
-        dragSq = trans(math.min(newx, pressxy._1), math.min(newy, pressxy._2)) -> PicShape.rect(del, del)
+        dragSq = trans(math.min(newx, pressxy._1), math.min(newy, pressxy._2)) -> Picture.rect(del, del)
         draw(dragSq)
         dragxy = (newx, newy)
     }
@@ -80,7 +80,7 @@ def installMouseHandlers(p: Picture) {
         val dely = (oymax - oymin) / 600
         dragSq.erase()
         pic.erase()
-        pic = trans(cDelta.x, cDelta.y) -> PicShape.image(mandel(oxmin + delx * bxmin, oxmin + delx * bxmax, oymin + dely * bymin, oymin + dely * bymax))
+        pic = trans(cDelta.x, cDelta.y) -> Picture.image(mandel(oxmin + delx * bxmin, oxmin + delx * bxmax, oymin + dely * bymin, oymin + dely * bymax))
         pic.draw()
         installMouseHandlers(pic)
     }

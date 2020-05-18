@@ -6,8 +6,8 @@ drawStage(black)
 // setRefreshRate(50)
 
 val cb = canvasBounds
-def obstacle(h: Int, w: Int) = PicShape.rect(h, w)
-val playerE = trans(49, 31) -> PicShape.circle(30)
+def obstacle(h: Int, w: Int) = Picture.rect(h, w)
+val playerE = trans(49, 31) -> Picture.circle(30)
 
 var obstacles = Set.empty[Picture]
 def createObstacle() {
@@ -24,8 +24,8 @@ val speed = -5
 val pspeed = 5
 val gravity = 0.1
 var fallSpeed = 0.0
-val pl1 = PicShape.image("/media/flappy-ball/ballwing1.png", playerE)
-val pl2 = PicShape.image("/media/flappy-ball/ballwing2.png", playerE)
+val pl1 = Picture.image("/media/flappy-ball/ballwing1.png", playerE)
+val pl2 = Picture.image("/media/flappy-ball/ballwing2.png", playerE)
 val player = picBatch(pl1, pl2)
 draw(player)
 drawAndHide(playerE)

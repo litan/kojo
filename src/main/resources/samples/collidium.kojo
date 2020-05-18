@@ -13,22 +13,22 @@ val ballDeltaBase = (obsDelta / 4).toInt
 def ballDelta = ballDeltaBase + random(ballDeltaBase)
 val ballSize = 20
 
-val ballE = penColor(red) * trans(ballSize, ballSize) -> PicShape.circle(ballSize)
-val ball1 = PicShape.image("/media/collidium/ball1.png", ballE)
-val ball2 = PicShape.image("/media/collidium/ball2.png", ballE)
-val ball3 = PicShape.image("/media/collidium/ball3.png", ballE)
-val ball4 = PicShape.image("/media/collidium/ball4.png", ballE)
+val ballE = penColor(red) * trans(ballSize, ballSize) -> Picture.circle(ballSize)
+val ball1 = Picture.image("/media/collidium/ball1.png", ballE)
+val ball2 = Picture.image("/media/collidium/ball2.png", ballE)
+val ball3 = Picture.image("/media/collidium/ball3.png", ballE)
+val ball4 = Picture.image("/media/collidium/ball4.png", ballE)
 
 val ball =
     trans(cb.x + ballDelta, cb.y + ballDelta) -> picBatch(ball1, ball2, ball3, ball4)
 
 val target = trans(-cb.x - ballDelta, -cb.y - ballDelta) *
     penColor(red) *
-    fillColor(red) -> PicShape.circle(ballSize / 4)
+    fillColor(red) -> Picture.circle(ballSize / 4)
 
 val wallTexture = TexturePaint("/media/collidium/bwall.png", 0, 0)
 val obstacles = (1 to 3).map { n =>
-    trans(cb.x + n * obsDelta, cb.y + cb.height / 4) * fillColor(wallTexture) * penColor(noColor) -> PicShape.rect(cb.height / 2, 12)
+    trans(cb.x + n * obsDelta, cb.y + cb.height / 4) * fillColor(wallTexture) * penColor(noColor) -> Picture.rect(cb.height / 2, 12)
 }
 
 draw(ball, target)
@@ -61,8 +61,8 @@ def line(ps: ArrayBuffer[Point], c: Color) = Picture {
     sq()
 }
 val slingPts = ArrayBuffer.empty[Point]
-var sling = PicShape.hline(1)
-var paddle = PicShape.hline(1)
+var sling = Picture.hline(1)
+var paddle = Picture.hline(1)
 var tempPaddle = paddle
 drawAndHide(paddle)
 ball.onMousePress { (x, y) =>
@@ -155,13 +155,13 @@ obstacles.foreach { o => o.forwardInputTo(stageArea) }
 
 def drawMessage(m: String, c: Color) {
     val te = textExtent(m, 30)
-    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> PicShape.text(m, 30)
+    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> Picture.text(m, 30)
     draw(pic)
 }
 
 def manageGameTime() {
     var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, blue)
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> Picture.textu(gameTime, 20, blue)
     draw(timeLabel)
     timeLabel.forwardInputTo(stageArea)
 

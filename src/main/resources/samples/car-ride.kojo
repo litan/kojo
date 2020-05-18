@@ -17,7 +17,7 @@ val carE = trans(2, 14) -> Picture {
         forward(18); right(45); forward(20); right(45)
     }
 }
-def car(img: String) = PicShape.image(img, carE)
+def car(img: String) = Picture.image(img, carE)
 
 val cars = collection.mutable.Map.empty[Picture, Vector2D]
 val carSpeed = 3
@@ -37,7 +37,7 @@ val markers = collection.mutable.Set.empty[Picture]
 def createMarker() {
     val mwidth = 20
     val m = fillColor(white) * penColor(white) *
-        trans(cb.x + cb.width / 2 - mwidth / 2, cb.y + cb.height) -> PicShape.rect(markerHeight, mwidth)
+        trans(cb.x + cb.width / 2 - mwidth / 2, cb.y + cb.height) -> Picture.rect(markerHeight, mwidth)
     draw(m)
     markers += m
 }
@@ -137,7 +137,7 @@ animate {
 
 var energyLevel = 0
 def energyText = s"Energy: $energyLevel"
-val energyLabel = trans(cb.x + 10, cb.y + cb.height - 10) -> PicShape.textu(energyText, 20, ColorMaker.aquamarine)
+val energyLabel = trans(cb.x + 10, cb.y + cb.height - 10) -> Picture.textu(energyText, 20, ColorMaker.aquamarine)
 def updateEnergyTick() {
     energyLevel += 2
     energyLabel.update(energyText)
@@ -157,7 +157,7 @@ def drawMessage(m: String, c: Color) {
 
 def manageGameScore() {
     var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, 20, ColorMaker.azure)
+    val timeLabel = trans(cb.x + 10, cb.y + 50) -> Picture.textu(gameTime, 20, ColorMaker.azure)
     draw(timeLabel)
     draw(energyLabel)
     timeLabel.forwardInputTo(stageArea)
