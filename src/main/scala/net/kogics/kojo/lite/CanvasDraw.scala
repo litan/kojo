@@ -1,12 +1,11 @@
 package net.kogics.kojo.lite
 
-class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b: Builtins) {
-  import b._
+import java.awt.geom.GeneralPath
 
-  sealed trait ShapeVertex
-  case class Vertex(x: Double, y: Double) extends ShapeVertex
-  case class QuadVertex(x1: Double, y1: Double, x2: Double, y2: Double) extends ShapeVertex
-  case class BezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double) extends ShapeVertex
+import net.kogics.kojo.core.VertexShapeSupport
+
+class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b: Builtins) extends VertexShapeSupport {
+  import b._
 
   def randomSeed(s: Long): Unit = {
     setRandomSeed(s)
@@ -23,7 +22,6 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
   var fillColor: Color = null
   var strokeColor: Color = cm.red
   var strokeThickness = 2.0
-  var shapeVertices: collection.mutable.ArrayBuffer[ShapeVertex] = null
   var matrices = List.empty[AffineTransform]
   var penCap = ROUND
   var penJoin = MITER
@@ -90,6 +88,10 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
       g2d.setStroke(stroke)
       g2d.draw(s)
     }
+  }
+
+  def drawPath(path: GeneralPath): Unit = {
+    drawShape(path)
   }
 
   def background(c: Color): Unit = {
@@ -163,38 +165,6 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
 
   def blendMode(c: java.awt.Composite): Unit = {
     g2d.setComposite(c)
-  }
-
-  def beginShape(): Unit = {
-    shapeVertices = ArrayBuffer.empty[ShapeVertex]
-  }
-
-  def vertex(x: Double, y: Double): Unit = {
-    shapeVertices.append(Vertex(x, y))
-  }
-
-  def quadraticVertex(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
-    shapeVertices.append(QuadVertex(x1, y1, x2, y2))
-  }
-
-  def bezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double): Unit = {
-    shapeVertices.append(BezierVertex(x1, y1, x2, y2, x3, y3))
-  }
-
-  def endShape() = {
-    val pt0 = shapeVertices.remove(0) match {
-      case v @ Vertex(x, y) => v
-      case v @ _            => shapeVertices.insert(0, v); Vertex(0, 0)
-    }
-    tempPath.moveTo(pt0.x, pt0.y)
-    shapeVertices.foreach {
-      case Vertex(x, y)                         => tempPath.lineTo(x, y)
-      case QuadVertex(x1, y1, x2, y2)           => tempPath.quadTo(x1, y1, x2, y2)
-      case BezierVertex(x1, y1, x2, y2, x3, y3) => tempPath.curveTo(x1, y1, x2, y2, x3, y3)
-    }
-    shapeVertices = null
-    drawShape(tempPath)
-    tempPath.reset()
   }
 
   def strokeCap(n: Int): Unit = {

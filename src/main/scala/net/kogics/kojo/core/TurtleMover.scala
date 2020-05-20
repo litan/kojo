@@ -14,10 +14,8 @@
  */
 package net.kogics.kojo.core
 
-import java.awt.Font
-import java.awt.Image
-import java.awt.Paint
-import java.awt.geom.Point2D
+import java.awt.{Font, Image, Paint}
+import java.awt.geom.{GeneralPath, PathIterator, Point2D}
 
 case class Style(penColor: Paint, penThickness: Double, fillColor: Paint, font: Font, down: Boolean)
 trait Speed
@@ -26,7 +24,7 @@ case object Medium extends Speed
 case object Fast extends Speed
 case object SuperFast extends Speed
 
-trait TurtleMover extends RichTurtleCommands {
+trait TurtleMover extends RichTurtleCommands with VertexShapeSupport {
   def forward(n: Double): Unit
   def forward(): Unit = forward(25)
   def turn(angle: Double): Unit
@@ -118,4 +116,21 @@ trait TurtleMover extends RichTurtleCommands {
   def area: Double
   def lastLine: Option[(Point2D.Double, Point2D.Double)]
   def lastTurn: Option[(Point2D.Double, Double, Double)]
+
+  def drawPath(path: GeneralPath): Unit = {
+    val iter = path.getPathIterator(null, 1)
+    val pts = new Array[Double](6)
+    var prevMoveTo: Option[Point2D.Double] = None
+    while (!iter.isDone) {
+      iter.currentSegment(pts) match {
+        case PathIterator.SEG_MOVETO =>
+          setPosition(pts(0), pts(1))
+        case PathIterator.SEG_LINETO =>
+          lineTo(pts(0), pts(1))
+        case unexpected =>
+          println(s"Warning: unexpected segment type - $unexpected - in path geometry")
+      }
+      iter.next()
+    }
+  }
 }
