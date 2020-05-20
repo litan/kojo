@@ -90,8 +90,9 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     }
   }
 
-  def drawPath(path: GeneralPath): Unit = {
+  def shapeDone(path: GeneralPath): Unit = {
     drawShape(path)
+    path.reset()
   }
 
   def background(c: Color): Unit = {

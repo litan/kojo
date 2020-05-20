@@ -14,8 +14,8 @@
  */
 package net.kogics.kojo.core
 
-import java.awt.{Font, Image, Paint}
 import java.awt.geom.{GeneralPath, PathIterator, Point2D}
+import java.awt.{Font, Image, Paint}
 
 case class Style(penColor: Paint, penThickness: Double, fillColor: Paint, font: Font, down: Boolean)
 trait Speed
@@ -117,8 +117,8 @@ trait TurtleMover extends RichTurtleCommands with VertexShapeSupport {
   def lastLine: Option[(Point2D.Double, Point2D.Double)]
   def lastTurn: Option[(Point2D.Double, Double, Double)]
 
-  def drawPath(path: GeneralPath): Unit = {
-    val iter = path.getPathIterator(null, 1)
+  def shapeDone(path: GeneralPath): Unit = {
+    val iter = path.getPathIterator(null, 0.5)
     val pts = new Array[Double](6)
     var prevMoveTo: Option[Point2D.Double] = None
     while (!iter.isDone) {
@@ -132,5 +132,6 @@ trait TurtleMover extends RichTurtleCommands with VertexShapeSupport {
       }
       iter.next()
     }
+    path.reset()
   }
 }

@@ -16,32 +16,22 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.Paint
-import java.awt.Toolkit
+import java.awt.{Paint, Toolkit}
 import java.awt.geom.GeneralPath
-import java.awt.image.BufferedImage
-import java.awt.image.BufferedImageOp
+import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.net.URL
-
-import javax.swing.JComponent
-
-import scala.language.implicitConversions
-import scala.swing.Graphics2D
 
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
-
+import javax.swing.JComponent
+import net.kogics.kojo.core.{RichPath, Voice}
+import net.kogics.kojo.picture.{DslImpl, PicCache, PicDrawingDsl}
 import net.kogics.kojo.turtle.TurtleWorldAPI
-import net.kogics.kojo.util.UserCommand
-import net.kogics.kojo.xscala.CodeCompletionUtils
-import net.kogics.kojo.xscala.Help
-import net.kogics.kojo.xscala.RepeatCommands
-import core.Voice
-import picture.DslImpl
-import picture.PicDrawingDsl
-import util.Throttler
-import util.Utils
-import net.kogics.kojo.picture.PicCache
+import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
+import net.kogics.kojo.xscala.{CodeCompletionUtils, Help, RepeatCommands}
+
+import scala.language.implicitConversions
+import scala.swing.Graphics2D
 
 // a static instance is needed for the compiler prefix code 
 object Builtins {
@@ -622,11 +612,7 @@ Here's a partial list of the available commands:
 
   val PShapes = Picture
   val PicShape = Picture
-  //  implicit def p2ep(p: Picture) = PicShape.effectablePic(p)
-  implicit class GeneralPathOps(path: GeneralPath) {
-    // enable using setPosition instead of moveTo - to be consistent with turtle usage.
-    def setPosition(x: Double, y: Double) = path.moveTo(x, y)
-  }
+
   def url(url: String) = new URL(url)
   object Picture {
     def text(content: Any, fontSize: Int = 15) = picture.textu(content, fontSize, red)
@@ -638,7 +624,7 @@ Here's a partial list of the available commands:
     def hline(l: Double) = picture.hline(l)
     def line(width: Double, height: Double) = picture.line(width, height)
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
-    def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.fromPath(path) }
+    def fromPath(fn: RichPath => Unit) = { val path = new GeneralPath(); fn(new RichPath(path)); picture.fromPath(path) }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
     def fromCanvas(width: Double, height: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(width, height, fn)
     def circle(radius: Double) = picture.circle(radius)
@@ -690,7 +676,7 @@ Here's a partial list of the available commands:
       val pic = Picture.line(x2 - x1, y2 - y1)
       placeAndDraw(pic, x1, y1)
     }
-    def fromPath(fn: GeneralPath => Unit) = {
+    def fromPath(fn: RichPath => Unit) = {
       val pic = Picture.fromPath(fn)
       placeAndDraw(pic, 0, 0)
     }
