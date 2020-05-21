@@ -38,6 +38,7 @@ trait VertexShapeSupport {
   private var curveCoordY: Array[Float] = _
   private var curveDrawX: Array[Float] = _
   private var curveDrawY: Array[Float] = _
+  private var firstVertex = true
 
   lazy val curveInit = {
     curveCoordX = new Array[Float](4)
@@ -48,6 +49,7 @@ trait VertexShapeSupport {
 
   def beginShape(): Unit = {
     shapeVertices = ArrayBuffer.empty[ShapeVertex]
+    firstVertex = true
   }
 
   def vertex(x: Double, y: Double): Unit = {
@@ -81,35 +83,49 @@ trait VertexShapeSupport {
 
     curveToBezierMatrix.mult(curveCoordX, curveDrawX)
     curveToBezierMatrix.mult(curveCoordY, curveDrawY)
+    if (firstVertex) {
+      gpath.moveTo(curveDrawX(0), curveDrawY(0))
+      firstVertex = false
+    }
     gpath.curveTo(curveDrawX(1), curveDrawY(1), curveDrawX(2), curveDrawY(2), curveDrawX(3), curveDrawY(3))
   }
 
   def endShape() = {
-    val tempPath = shapePath
-    val pt0 = shapeVertices(0) match {
-      case v @ Vertex(x, y) =>
-        shapeVertices.remove(0); v
-      case CurveVertex(x, y) => Vertex(x, y)
-      case _                 => Vertex(0, 0)
+    require(shapeVertices.length > 0, "A shape should have at least one vertex")
+
+    def checkCurveFirstVertex(): Unit = {
+      if (firstVertex) {
+        throw new RuntimeException("A curved shape should start with a vertex")
+      }
     }
-    tempPath.moveTo(pt0.x, pt0.y)
-    val curveVertexs = ArrayBuffer.empty[CurveVertex]
+
+    val tempPath = shapePath
+    val curveVertices = ArrayBuffer.empty[CurveVertex]
     shapeVertices.foreach {
-      case Vertex(x, y) => tempPath.lineTo(x, y)
+      case Vertex(x, y) =>
+        if (firstVertex) {
+          tempPath.moveTo(x, y)
+          firstVertex = false
+        }
+        else {
+          tempPath.lineTo(x, y)
+        }
       case cv @ CurveVertex(_, _) =>
-        curveVertexs.append(cv)
-        val cvlen = curveVertexs.length
+        curveVertices.append(cv)
+        val cvlen = curveVertices.length
         if (cvlen > 3) {
           curveVertexSegment(
             tempPath,
-            curveVertexs(cvlen - 4).x.toFloat, curveVertexs(cvlen - 4).y.toFloat,
-            curveVertexs(cvlen - 3).x.toFloat, curveVertexs(cvlen - 3).y.toFloat,
-            curveVertexs(cvlen - 2).x.toFloat, curveVertexs(cvlen - 2).y.toFloat,
-            curveVertexs(cvlen - 1).x.toFloat, curveVertexs(cvlen - 1).y.toFloat
+            curveVertices(cvlen - 4).x.toFloat, curveVertices(cvlen - 4).y.toFloat,
+            curveVertices(cvlen - 3).x.toFloat, curveVertices(cvlen - 3).y.toFloat,
+            curveVertices(cvlen - 2).x.toFloat, curveVertices(cvlen - 2).y.toFloat,
+            curveVertices(cvlen - 1).x.toFloat, curveVertices(cvlen - 1).y.toFloat
           )
         }
-      case QuadVertex(x1, y1, x2, y2)           => tempPath.quadTo(x1, y1, x2, y2)
-      case BezierVertex(x1, y1, x2, y2, x3, y3) => tempPath.curveTo(x1, y1, x2, y2, x3, y3)
+      case QuadVertex(x1, y1, x2, y2) =>
+        checkCurveFirstVertex(); tempPath.quadTo(x1, y1, x2, y2)
+      case BezierVertex(x1, y1, x2, y2, x3, y3) =>
+        checkCurveFirstVertex(); tempPath.curveTo(x1, y1, x2, y2, x3, y3)
     }
     shapeVertices = null
     shapeDone(tempPath)

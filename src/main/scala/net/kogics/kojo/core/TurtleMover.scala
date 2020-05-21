@@ -120,7 +120,6 @@ trait TurtleMover extends RichTurtleCommands with VertexShapeSupport {
   def shapeDone(path: GeneralPath): Unit = {
     val iter = path.getPathIterator(null, 0.5)
     val pts = new Array[Double](6)
-    var prevMoveTo: Option[Point2D.Double] = None
     while (!iter.isDone) {
       iter.currentSegment(pts) match {
         case PathIterator.SEG_MOVETO =>
