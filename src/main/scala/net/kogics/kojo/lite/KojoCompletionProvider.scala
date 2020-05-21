@@ -6,27 +6,12 @@ import java.util.List
 import java.util.logging.Logger
 
 import javax.swing.text.JTextComponent
-
-import org.fife.ui.autocomplete.Completion
-import org.fife.ui.autocomplete.CompletionCellRenderer
-import org.fife.ui.autocomplete.CompletionProviderBase
-import org.fife.ui.autocomplete.TemplateCompletion
-
 import net.kogics.kojo.core.CompletionInfo
-import net.kogics.kojo.xscala.CodeCompletionUtils
-import net.kogics.kojo.xscala.CodeTemplates
-import net.kogics.kojo.xscala.Help
+import net.kogics.kojo.util.Utils
+import net.kogics.kojo.xscala.{CodeCompletionUtils, CodeTemplates, Help}
+import org.fife.ui.autocomplete.{Completion, CompletionCellRenderer, CompletionProviderBase, TemplateCompletion}
 
-import core.MemberKind.Class
-import core.MemberKind.Def
-import core.MemberKind.Object
-import core.MemberKind.Package
-import core.MemberKind.PackageObject
-import core.MemberKind.Trait
-import core.MemberKind.Type
-import core.MemberKind.Val
-import core.MemberKind.Var
-import util.Utils
+import scala.collection.mutable
 
 class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends CompletionProviderBase {
   val Log = Logger.getLogger(getClass.getName)
@@ -161,21 +146,22 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     CodeCompletionUtils.methodTemplate(completion)
   }
 
-  def addTemplateProposals(proposals: java.util.ArrayList[Completion], prefix: String, caretOffset: Int): Unit = {
+  def addTemplateProposals(proposals: collection.mutable.ArrayBuffer[Completion], prefix: String, caretOffset: Int): Unit = {
     CodeTemplates.templates.filter { kv => kv._1.startsWith(prefix) }.foreach { kv =>
       val name = kv._1; val value = kv._2
-      proposals.add(
+      proposals.append(
         new TemplateCompletion(this, name, name, value, null, CodeTemplates.asString(name)) {
           setRelevance(TEMPLATE)
           override def getIcon = kindIcon(TEMPLATE)
-        })
+        }
+      )
     }
   }
 
   var (objid: Option[String], prefix: Option[String]) = (None, None)
 
   def complete(comp: JTextComponent): List[Completion] = {
-    val proposals = new java.util.ArrayList[Completion]
+    val proposals = collection.mutable.ArrayBuffer.empty[Completion]
     val caretOffset = comp.getCaretPosition
     execSupport.kojoCtx.showAppWaitCursor()
 
@@ -184,7 +170,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
         val (varCompletions, voffset) = execSupport.varCompletions(prefix)
         varCompletions.foreach { completion =>
           if (!completion.contains("$")) {
-            proposals.add(proposal(caretOffset - voffset, completion,
+            proposals.append(proposal(caretOffset - voffset, completion,
               VARIABLE,
               methodTemplate(completion)))
           }
@@ -193,7 +179,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
         val (memberCompletions, coffset) = execSupport.memberCompletions(caretOffset, null, prefix)
         memberCompletions.foreach { completion =>
           try {
-            proposals.add(proposal2(caretOffset - coffset, completion))
+            proposals.append(proposal2(caretOffset - coffset, completion))
           }
           catch {
             case t: Throwable =>
@@ -203,7 +189,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
 
         val (keywordCompletions, koffset) = execSupport.keywordCompletions(prefix)
         keywordCompletions.foreach { completion =>
-          proposals.add(proposal(caretOffset - koffset, completion,
+          proposals.append(proposal(caretOffset - koffset, completion,
             KEYWORD,
             CodeCompletionUtils.keywordTemplate(completion)))
         }
@@ -213,7 +199,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       else {
         val (memberCompletions, coffset) = execSupport.memberCompletions(caretOffset, objid.get, prefix)
         memberCompletions.foreach { completion =>
-          proposals.add(proposal2(caretOffset - coffset, completion))
+          proposals.append(proposal2(caretOffset - coffset, completion))
         }
       }
     }
@@ -222,7 +208,55 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
         /*Log.warning*/ println("Completion Problem 2: " + t.getMessage())
     }
     execSupport.kojoCtx.hideAppWaitCursor()
-    proposals
+    val proposals2 = new java.util.ArrayList[Completion]
+    val filterMap = mutable.HashMap.empty[String, TemplateCompletion]
+
+    def bareName(c: TemplateCompletion) = {
+      val name = c.getInputText
+      val bn = name.split("""\(""")(0)
+      //      if (name == bn)
+      //        name.split(""":""")(0)
+      //      else
+      //        bn
+      bn
+    }
+
+    def hasHelp(c: TemplateCompletion) = {
+      c.getSummary != null && c.getInputText != c.getSummary
+    }
+
+    def isInterpCompletion(c: TemplateCompletion) = {
+      !c.getInputText.contains("(")
+    }
+
+    proposals.foreach { p =>
+      val pp = p.asInstanceOf[TemplateCompletion]
+      //      println("---")
+      //      println(pp.getInputText)
+      //      println(pp.getSummary)
+      val bName = bareName(pp)
+
+      filterMap.get(bName) match {
+        case Some(c) =>
+          // there is a previous proposal
+          // does it have help?
+          if (hasHelp(c)) {
+            // don't add current proposal  
+          }
+          else {
+            // no help
+            if (isInterpCompletion(c)) {
+              proposals2.remove(c)
+            }
+            proposals2.add(p)
+            filterMap(bName) = pp
+          }
+        case None =>
+          proposals2.add(p)
+          filterMap(bName) = pp
+      }
+    }
+    proposals2
   }
 
   override def getAlreadyEnteredText(comp: JTextComponent) = {
