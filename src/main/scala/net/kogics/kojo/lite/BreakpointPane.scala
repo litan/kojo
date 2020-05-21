@@ -94,7 +94,8 @@ class BreakpointPane(owner: JFrame) extends JDialog(owner) {
     resumeCancelLabel.setText(resumeMsg + ", Escape to stop")
     pack()
     val sz = getSize
-    setSize(500, sz.height)
+    val padding = 10
+    setSize(500, sz.height + padding)
     setLocationRelativeTo(owner)
     setVisible(true)
     if (btnPressed) 1 else 0
