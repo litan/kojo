@@ -27,11 +27,11 @@ trait VertexShapeSupport {
   def shapeDone(path: GeneralPath): Unit
   def shapePath = new java.awt.geom.GeneralPath
 
-  sealed trait ShapeVertex
-  case class Vertex(x: Double, y: Double) extends ShapeVertex
-  case class CurveVertex(x: Double, y: Double) extends ShapeVertex
-  case class QuadVertex(x1: Double, y1: Double, x2: Double, y2: Double) extends ShapeVertex
-  case class BezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double) extends ShapeVertex
+  private sealed trait ShapeVertex
+  private case class Vertex(x: Double, y: Double) extends ShapeVertex
+  private case class CurveVertex(x: Double, y: Double) extends ShapeVertex
+  private case class QuadVertex(x1: Double, y1: Double, x2: Double, y2: Double) extends ShapeVertex
+  private case class BezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double) extends ShapeVertex
 
   private var shapeVertices: collection.mutable.ArrayBuffer[ShapeVertex] = _
   private var curveCoordX: Array[Float] = _
@@ -40,7 +40,7 @@ trait VertexShapeSupport {
   private var curveDrawY: Array[Float] = _
   private var firstVertex = true
 
-  lazy val curveInit = {
+  private lazy val curveInit = {
     curveCoordX = new Array[Float](4)
     curveCoordY = new Array[Float](4)
     curveDrawX = new Array[Float](4)
