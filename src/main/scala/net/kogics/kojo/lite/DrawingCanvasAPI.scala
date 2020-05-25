@@ -29,6 +29,8 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   
   def scroll(x: Double, y: Double) = tCanvas.scroll(x, y)
 
+  def viewRotate(a: Double): Unit = tCanvas.viewRotate(a)
+
 //  def showScale = tCanvas.
   def showGrid() = tCanvas.showGrid()
   UserCommand("gridOn", Nil, "Shows a grid on the canvas.")

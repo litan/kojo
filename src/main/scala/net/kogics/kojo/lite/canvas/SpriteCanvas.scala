@@ -550,6 +550,14 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
+  def viewRotate(a: Double): Unit = {
+    Utils.runInSwingThreadAndWait {
+      getCamera.getViewTransformReference.rotate(a.toRadians)
+      updateAxesAndGrid()
+      repaint()
+    }
+  }
+
   import java.io.File
   private def exportImageHelper(filePrefix: String, width: Int, height: Int): java.io.File = {
     val outfile = File.createTempFile(filePrefix + "-", ".png")

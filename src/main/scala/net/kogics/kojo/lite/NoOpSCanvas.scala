@@ -32,6 +32,7 @@ class NoOpSCanvas extends SCanvas {
   def zoom(factor: Double, cx: Double, cy: Double): Unit = {}
   def zoomXY(xfactor: Double, yfactor: Double, cx: Double, cy: Double): Unit = {}
   def scroll(x: Double, y: Double): Unit = {}
+  def viewRotate(a: Double): Unit = {}
   def exportImage(filePrefix: String): java.io.File = null
   def exportImage(filePrefix: String, width: Int, height: Int): java.io.File = null
   def exportImageH(filePrefix: String, height: Int): java.io.File = null
