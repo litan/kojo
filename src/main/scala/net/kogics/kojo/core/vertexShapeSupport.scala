@@ -76,6 +76,13 @@ trait VertexShapeSupport {
     shapeVertices.append(CurveVertex(x, y))
   }
 
+  def curveVertexRt(r: Double, theta: Double): Unit = {
+    val t = theta.toRadians
+    val x = r * math.cos(t)
+    val y = r * math.sin(t)
+    curveVertex(x, y)
+  }
+
   private def curveVertexSegment(gpath: GeneralPath, x1: Float, y1: Float, x2: Float, y2: Float, x3: Float, y3: Float, x4: Float, y4: Float): Unit = {
     import VertexShapeSupport.curveToBezierMatrix
     curveInit
