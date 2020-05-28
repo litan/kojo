@@ -47,24 +47,32 @@ trait VertexShapeSupport {
     curveDrawY = new Array[Float](4)
   }
 
+  private def checkBegin(): Unit = {
+    require(shapeVertices != null, "Do a beginShape() before adding vertices to a shape")
+  }
+
   def beginShape(): Unit = {
     shapeVertices = ArrayBuffer.empty[ShapeVertex]
     firstVertex = true
   }
 
   def vertex(x: Double, y: Double): Unit = {
+    checkBegin()
     shapeVertices.append(Vertex(x, y))
   }
 
   def quadraticVertex(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
+    checkBegin()
     shapeVertices.append(QuadVertex(x1, y1, x2, y2))
   }
 
   def bezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double): Unit = {
+    checkBegin()
     shapeVertices.append(BezierVertex(x1, y1, x2, y2, x3, y3))
   }
 
   def curveVertex(x: Double, y: Double): Unit = {
+    checkBegin()
     shapeVertices.append(CurveVertex(x, y))
   }
 
@@ -132,13 +140,7 @@ trait VertexShapeSupport {
   }
 }
 
-// RichPath adds vertex shape support to GeneralPath
-object RichPath {
-  implicit def rp2p(rp: RichPath): GeneralPath = rp.path
-}
-class RichPath(val path: GeneralPath) extends VertexShapeSupport {
-  // enable using setPosition instead of moveTo - to be consistent with turtle usage.
-  def setPosition(x: Double, y: Double) = path.moveTo(x, y)
+class VertexShape(val path: GeneralPath) extends VertexShapeSupport {
   def shapeDone(path2: GeneralPath): Unit = {}
   override def shapePath: GeneralPath = path
 }

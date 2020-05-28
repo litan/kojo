@@ -24,7 +24,7 @@ import java.net.URL
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
 import javax.swing.JComponent
-import net.kogics.kojo.core.{RichPath, Voice}
+import net.kogics.kojo.core.{VertexShape, Voice}
 import net.kogics.kojo.picture.{DslImpl, PicCache, PicDrawingDsl}
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
@@ -624,7 +624,8 @@ Here's a partial list of the available commands:
     def hline(l: Double) = picture.hline(l)
     def line(width: Double, height: Double) = picture.line(width, height)
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
-    def fromPath(fn: RichPath => Unit) = { val path = new GeneralPath(); fn(new RichPath(path)); picture.fromPath(path) }
+    def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.fromPath(path) }
+    def fromVertexShape(fn: VertexShape => Unit) = { val path = new GeneralPath(); fn(new VertexShape(path)); picture.fromPath(path) }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
     def fromCanvas(width: Double, height: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(width, height, fn)
     def circle(radius: Double) = picture.circle(radius)
@@ -676,8 +677,12 @@ Here's a partial list of the available commands:
       val pic = Picture.line(x2 - x1, y2 - y1)
       placeAndDraw(pic, x1, y1)
     }
-    def fromPath(fn: RichPath => Unit) = {
+    def fromPath(fn: GeneralPath => Unit) = {
       val pic = Picture.fromPath(fn)
+      placeAndDraw(pic, 0, 0)
+    }
+    def fromVertexShape(fn: VertexShape => Unit) = {
+      val pic = Picture.fromVertexShape(fn)
       placeAndDraw(pic, 0, 0)
     }
   }
