@@ -146,7 +146,7 @@ package object picture {
 
   def line(x: Double, y: Double)(implicit canvas: SCanvas) = new LinePic(x, y)
 
-  def fromPath(path: GeneralPath)(implicit canvas: SCanvas) = new PathPic(path)
+  def fromPath(path: => GeneralPath)(implicit canvas: SCanvas) = new PathPic(path)
 
   def arc(r: Double, angle: Double)(implicit canvas: SCanvas) = new ArcPic(r, angle)
 

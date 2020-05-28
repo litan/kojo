@@ -624,8 +624,14 @@ Here's a partial list of the available commands:
     def hline(l: Double) = picture.hline(l)
     def line(width: Double, height: Double) = picture.line(width, height)
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
-    def fromPath(fn: GeneralPath => Unit) = { val path = new GeneralPath(); fn(path); picture.fromPath(path) }
-    def fromVertexShape(fn: VertexShape => Unit) = { val path = new GeneralPath(); fn(new VertexShape(path)); picture.fromPath(path) }
+    def fromPath(fn: GeneralPath => Unit) = picture.fromPath {
+      val path = new GeneralPath(); fn(path)
+      path
+    }
+    def fromVertexShape(fn: VertexShape => Unit) = picture.fromPath {
+      val path = new GeneralPath(); fn(new VertexShape(path))
+      path
+    }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
     def fromCanvas(width: Double, height: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(width, height, fn)
     def circle(radius: Double) = picture.circle(radius)

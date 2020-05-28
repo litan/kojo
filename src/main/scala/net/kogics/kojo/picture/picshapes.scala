@@ -295,8 +295,9 @@ class LinePic(x: Double, y: Double)(implicit val canvas: SCanvas) extends Pictur
   def copy: net.kogics.kojo.core.Picture = new LinePic(x, y)
 }
 
-class PathPic(path: GeneralPath)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+class PathPic(pathMaker: => GeneralPath)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
   with TNodeCacher with RedrawStopper with PicShapeOps {
+  lazy val path = pathMaker
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {
     val cab = new ArrayBuffer[Coordinate]
     val iter = path.getPathIterator(null, 1)
