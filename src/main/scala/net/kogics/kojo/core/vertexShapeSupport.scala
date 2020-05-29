@@ -76,11 +76,21 @@ trait VertexShapeSupport {
     shapeVertices.append(CurveVertex(x, y))
   }
 
-  def curveVertexRt(r: Double, theta: Double): Unit = {
+  private def rtToXy(r: Double, theta: Double): Point = {
     val t = theta.toRadians
     val x = r * math.cos(t)
     val y = r * math.sin(t)
-    curveVertex(x, y)
+    Point(x, y)
+  }
+
+  def vertexRt(r: Double, theta: Double): Unit = {
+    val p = rtToXy(r, theta)
+    vertex(p.x, p.y)
+  }
+
+  def curveVertexRt(r: Double, theta: Double): Unit = {
+    val p = rtToXy(r, theta)
+    curveVertex(p.x, p.y)
   }
 
   private def curveVertexSegment(gpath: GeneralPath, x1: Float, y1: Float, x2: Float, y2: Float, x3: Float, y3: Float, x4: Float, y4: Float): Unit = {
