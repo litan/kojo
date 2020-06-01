@@ -15,6 +15,7 @@
 
 package net.kogics.kojo.codex
 
+import com.meterware.httpunit.HttpNotFoundException
 import net.kogics.swill.Conversation
 import net.kogics.kojo.util.Utils
 
@@ -88,7 +89,10 @@ class Talker(email: String, password: String, listener: TalkListener) {
             conv.go("/login")
           }
           catch {
-            case t: Throwable => fireProblem(t.getMessage)
+            case _: HttpNotFoundException =>
+              fireProblem(s"The Code Exchange seems to be down.\nUnable to upload at this time.")
+            case t: Throwable =>
+              fireProblem(s"There's a problem logging into the Code Exchange:\n${t.getMessage}")
           }
 
           checkCancel()
