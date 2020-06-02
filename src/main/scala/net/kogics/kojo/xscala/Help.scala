@@ -1898,7 +1898,9 @@ repeat(5) {{
         <code>endShape()</code> - Finishes the definition of a shape made out of vertices, <strong>and draws the shape</strong>.
         A shape definition is started with a <code>beginShape()</code>, and vertices are added to the shape using the
         various vertex commands described in the help for the <code>beginShape()</code>command.
-      </div>
+      </div>,
+    "Kmath.lerp" -> "mathx.lerp(start, stop, amt) - interpolates between start and stop by the given amount.",
+    "Kmath.map" -> "mathx.map(value, start1, stop1, start2, stop2) - maps the given value from the range (start1, stop1) to the range(start2, stop2)."
   )
   
   val VnContent = Map[String, String]()

@@ -17,8 +17,8 @@ object Kmath {
   def variance(nums: Array[Double], mean: Double) = StatUtils.variance(nums, mean)
 
   def constrain(value: Double, min: Double, max: Double) = util.Math.constrain(value, min, max)
-  def map(value: Double, low1: Double, high1: Double, low2: Double, high2: Double) = util.Math.map(value, low1, high1, low2, high2)
-  def lerp(value1: Double, value2: Double, amt: Double) = util.Math.lerp(value1, value2, amt)
+  def map(value: Double, start1: Double, stop1: Double, start2: Double, stop2: Double) = util.Math.map(value, start1, stop1, start2, stop2)
+  def lerp(start: Double, stop: Double, amt: Double) = util.Math.lerp(start, stop, amt)
 
   def distance(x1: Double, y1: Double, x2: Double, y2: Double): Double =
     math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2))

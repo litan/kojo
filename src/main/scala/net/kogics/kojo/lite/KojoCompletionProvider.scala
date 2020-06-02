@@ -64,7 +64,8 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       "Picture",
       "TraversableLike",
       "IterableLike",
-      "VertexShapeSupport"
+      "VertexShapeSupport",
+      "Kmath"
     )
 
     lazy val ownerName = {
