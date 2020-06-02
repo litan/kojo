@@ -63,7 +63,8 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       "InputAware",
       "Picture",
       "TraversableLike",
-      "IterableLike"
+      "IterableLike",
+      "VertexShapeSupport"
     )
 
     lazy val ownerName = {
@@ -107,7 +108,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       if (knownCompletion) {
         var help = Help(qualifiedName)
         if (help != null) Some(help) else {
-          if (ownerName startsWith "Turtle") {
+          if (ownerName.startsWith("Turtle") || ownerName.startsWith("VertexShapeSupport")) {
             help = Help(completion.name)
             if (help != null) Some(help) else None
           }

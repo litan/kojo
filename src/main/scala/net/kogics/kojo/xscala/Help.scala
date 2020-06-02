@@ -1880,7 +1880,25 @@ repeat(5) {{
     "stRunCode" -> "stRunCode(code) - Runs the supplied code (without copying it to the script editor).",
     "stClickRunButton" -> "stClickRunButton() - Simulates a click of the run button.",
     "stShowStatusError" -> "stShowStatusError(msg) - Shows the specified error message in the Story Teller status bar.",
-    "stNext" -> "stNext() - Moves the story to the next page/view."
+    "stNext" -> "stNext() - Moves the story to the next page/view.",
+    "beginShape" ->
+      <div>
+        <code>beginShape()</code> - Starts the definition of a shape made out of vertices. Vertices can be added to the shape using the following commands:<br/>
+        <ul>
+          <li><code>vertex(x, y)</code> - adds a vertex for the shape at the given (x, y).</li>
+          <li><code>vertexRt(r, theta)</code> - adds a vertex to the shape at the given (r, theta).</li>
+          <li><code>curveVertex(x, y)</code> - adds a curve-vertex to the shape at the given (x, y).</li>
+          <li><code>curveVertexRt(r, theta)</code> - adds a curve-vertex to the shape at the given (r, theta).</li>
+          <li><code>quadraticVertex(cx, cy, x2, y2)</code> - adds a quadratic-bezier curve-vertex to the shape using the given control and second vertex coordinates (with one control point).</li>
+          <li><code>bezierVertex(cx1, cy1, cx2, cy2, x2, y2)</code> - adds a bezier curve-vertex to the shape using the given control and second vertex coordinates (with two control points).</li>
+        </ul>
+      </div>,
+    "endShape" ->
+      <div>
+        <code>endShape()</code> - Finishes the definition of a shape made out of vertices, <strong>and draws the shape</strong>.
+        A shape definition is started with a <code>beginShape()</code>, and vertices are added to the shape using the
+        various vertex commands described in the help for the <code>beginShape()</code>command.
+      </div>
   )
   
   val VnContent = Map[String, String]()

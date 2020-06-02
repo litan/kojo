@@ -61,14 +61,14 @@ trait VertexShapeSupport {
     shapeVertices.append(Vertex(x, y))
   }
 
-  def quadraticVertex(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
+  def quadraticVertex(cx: Double, cy: Double, x2: Double, y2: Double): Unit = {
     checkBegin()
-    shapeVertices.append(QuadVertex(x1, y1, x2, y2))
+    shapeVertices.append(QuadVertex(cx, cy, x2, y2))
   }
 
-  def bezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double): Unit = {
+  def bezierVertex(cx1: Double, cy1: Double, cx2: Double, cy2: Double, x2: Double, y2: Double): Unit = {
     checkBegin()
-    shapeVertices.append(BezierVertex(x1, y1, x2, y2, x3, y3))
+    shapeVertices.append(BezierVertex(cx1, cy1, cx2, cy2, x2, y2))
   }
 
   def curveVertex(x: Double, y: Double): Unit = {
