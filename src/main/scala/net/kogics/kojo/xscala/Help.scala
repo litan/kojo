@@ -1885,7 +1885,7 @@ repeat(5) {{
       <div>
         <code>beginShape()</code> - Starts the definition of a shape made out of vertices. Vertices can be added to the shape using the following commands:<br/>
         <ul>
-          <li><code>vertex(x, y)</code> - adds a vertex for the shape at the given (x, y).</li>
+          <li><code>vertex(x, y)</code> - adds a vertex to the shape at the given (x, y).</li>
           <li><code>vertexRt(r, theta)</code> - adds a vertex to the shape at the given (r, theta).</li>
           <li><code>curveVertex(x, y)</code> - adds a curve-vertex to the shape at the given (x, y).</li>
           <li><code>curveVertexRt(r, theta)</code> - adds a curve-vertex to the shape at the given (r, theta).</li>
