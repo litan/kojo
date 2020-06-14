@@ -126,6 +126,7 @@ trait CoreBuiltins extends Rationals {
   def randomLong = Random.nextLong
   def randomFrom[T](seq: collection.Seq[T]) = seq(random(seq.length))
   def randomFrom[T](seq: collection.Seq[T], weights: Seq[Int]): T = randomFrom(seq, weights map (_.toDouble))
+  def randomFrom[T](seq: collection.Seq[T], weights: collection.mutable.Seq[Int]): T = randomFrom(seq, weights map (_.toDouble))
   def randomFrom[T](seq: collection.Seq[T], weights: collection.Seq[Double]): T = {
     val sum = weights.sum
     val probabilities = if (Utils.doublesEqual(sum, 1.0, 1e-3)) {
