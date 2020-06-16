@@ -534,8 +534,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       val size = getSize(null)
       getCamera.getViewTransformReference.setToScale(xfactor, -yfactor)
       getCamera.getViewTransformReference.setOffset(
-        size.getWidth / 2d - cx * xfactor.abs,
-        size.getHeight / 2d + cy * yfactor.abs
+        size.getWidth / 2d - cx * xfactor,
+        size.getHeight / 2d + cy * yfactor
       )
       updateAxesAndGrid()
       repaint()
