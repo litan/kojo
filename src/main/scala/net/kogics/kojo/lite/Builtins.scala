@@ -841,7 +841,7 @@ Here's a partial list of the available commands:
 
   def originTopLeft(): Unit = {
     val (w, h) = wh
-    def work = TSCanvas.zoomXY(1, -1, w / 2, -h / 2)
+    def work = TSCanvas.zoomXY(1, -1, w / 2, h / 2)
     work
     Utils.schedule(0.5) {
       work
