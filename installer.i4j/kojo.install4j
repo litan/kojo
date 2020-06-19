@@ -29,6 +29,7 @@
         <module name="jdk.management" />
         <module name="jdk.unsupported" />
         <module name="jdk.xml.dom" />
+        <module name="jdk.crypto.ec" />
       </modules>
     </jreBundles>
   </application>
