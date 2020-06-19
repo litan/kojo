@@ -27,7 +27,7 @@ trait TalkListener {
 
 object Talker {
   private val envS = System.getenv("CODEX_SERVER")
-  val server = if (envS != null) envS else "http://www.kogics.net"
+  val server = if (envS != null) envS else "https://codex.kogics.net"
 //  val server = "http://localhost"
   val Competition = "Competition"
 }
