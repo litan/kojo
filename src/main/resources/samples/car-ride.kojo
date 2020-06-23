@@ -4,7 +4,7 @@
 // You win if you stay alive for a minute
 switchToDefault2Perspective()
 cleari()
-drawStage(darkGray)
+drawStage(black)
 // setRefreshRate(50)
 
 val cb = canvasBounds
@@ -29,7 +29,8 @@ val bplayer = newMp3Player
 val cplayer = newMp3Player
 
 def createCar() {
-    val c = trans(player.position.x + randomNormalDouble * cb.width / 10, cb.y + cb.height) -> car("/media/car-ride/car2.png")
+    val c = trans(player.position.x + randomNormalDouble * cb.width / 10, cb.y + cb.height) ->
+        car("/media/car-ride/car2.png")
     draw(c)
     cars += c -> Vector2D(0, -carSpeed)
 }
@@ -57,15 +58,15 @@ animate {
     if (enabled) {
         if (isKeyPressed(Kc.VK_LEFT)) {
             pVel = Vector2D(-pResponse, 0)
-            player.transv(pVel)
+            player.translate(pVel)
         }
         if (isKeyPressed(Kc.VK_RIGHT)) {
             pVel = Vector2D(pResponse, 0)
-            player.transv(pVel)
+            player.translate(pVel)
         }
         if (isKeyPressed(Kc.VK_UP)) {
             pVel = Vector2D(0, pResponse)
-            player.transv(pVel)
+            player.translate(pVel)
             if (!isMp3Playing) {
                 playMp3Sound("/media/car-ride/car-accel.mp3")
             }
@@ -75,7 +76,7 @@ animate {
         }
         if (isKeyPressed(Kc.VK_DOWN)) {
             pVel = Vector2D(0, -pResponse)
-            player.transv(pVel)
+            player.translate(pVel)
             if (!bplayer.isMp3Playing) {
                 bplayer.playMp3Sound("/media/car-ride/car-brake.mp3")
             }
@@ -85,23 +86,23 @@ animate {
         }
     }
     else {
-        player.transv(pVel)
+        player.translate(pVel)
     }
 
     if (player.collidesWith(stageLeft) || player.collidesWith(stageRight)) {
         cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
         player.setOpacity(0.5)
-        drawMessage("You Crashed!", red)
+        drawCenteredMessage("You Crashed!", red, 20)
         stopAnimation()
     }
     else if (player.collidesWith(stageTop)) {
         pVel = Vector2D(0, -pResponse)
-        player.transv(pVel * 2)
+        player.translate(pVel * 2)
         disabledTime = epochTimeMillis
     }
     else if (player.collidesWith(stageBot)) {
         pVel = Vector2D(0, pResponse)
-        player.transv(pVel * 2)
+        player.translate(pVel * 2)
         disabledTime = epochTimeMillis
     }
 
@@ -111,15 +112,15 @@ animate {
         if (player.collidesWith(c)) {
             cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
             pVel = bouncePicVectorOffPic(player, pVel - vel, c) / 2
-            player.transv(pVel * 3)
-            c.transv(-pVel * 3)
+            player.translate(pVel * 3)
+            c.translate(-pVel * 3)
             disabledTime = epochTimeMillis
             updateEnergyCrash()
         }
         else {
             val newVel = Vector2D(vel.x + randomDouble(1) / 2 - 0.25, vel.y)
             cars += c -> newVel
-            c.transv(newVel)
+            c.translate(newVel)
         }
         if (c.position.y + carHeight < cb.y) {
             c.erase()
@@ -137,7 +138,8 @@ animate {
 
 var energyLevel = 0
 def energyText = s"Energy: $energyLevel"
-val energyLabel = trans(cb.x + 10, cb.y + cb.height - 10) -> Picture.textu(energyText, 20, ColorMaker.aquamarine)
+val energyLabel = Picture.textu(energyText, 20, ColorMaker.aquamarine)
+energyLabel.translate(cb.x + 10, cb.y + cb.height - 10)
 def updateEnergyTick() {
     energyLevel += 2
     energyLabel.update(energyText)
@@ -146,18 +148,15 @@ def updateEnergyCrash() {
     energyLevel -= 10
     energyLabel.update(energyText)
     if (energyLevel < 0) {
-        drawMessage("You're out of energy! You Lose", red)
+        drawCenteredMessage("You're out of energy! You Lose", red, 20)
         stopAnimation()
     }
 }
 
-def drawMessage(m: String, c: Color) {
-    drawCenteredMessage(m, c, 30)
-}
-
 def manageGameScore() {
     var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> Picture.textu(gameTime, 20, ColorMaker.azure)
+    val timeLabel = Picture.textu(gameTime, 20, ColorMaker.azure)
+    timeLabel.translate(cb.x + 10, cb.y + 50)
     draw(timeLabel)
     draw(energyLabel)
     timeLabel.forwardInputTo(stageArea)
@@ -168,7 +167,7 @@ def manageGameScore() {
         updateEnergyTick()
 
         if (gameTime == 60) {
-            drawMessage("Time up! You Win", green)
+            drawCenteredMessage("Time up! You Win", green, 20)
             stopAnimation()
         }
     }

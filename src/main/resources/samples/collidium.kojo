@@ -19,8 +19,8 @@ val ball2 = Picture.image("/media/collidium/ball2.png", ballE)
 val ball3 = Picture.image("/media/collidium/ball3.png", ballE)
 val ball4 = Picture.image("/media/collidium/ball4.png", ballE)
 
-val ball =
-    trans(cb.x + ballDelta, cb.y + ballDelta) -> picBatch(ball1, ball2, ball3, ball4)
+val ball = picBatch(ball1, ball2, ball3, ball4)
+ball.translate(cb.x + ballDelta, cb.y + ballDelta)
 
 val target = trans(-cb.x - ballDelta, -cb.y - ballDelta) *
     penColor(red) *
@@ -55,7 +55,7 @@ def line(ps: ArrayBuffer[Point], c: Color) = Picture {
     left(90)
     sq()
     right(90)
-    jumpTo(ps(0).x, ps(0).y)
+    setPosition(ps(0).x, ps(0).y)
     hop(-sqsz / 2)
     left(90)
     sq()
@@ -65,6 +65,7 @@ var sling = Picture.hline(1)
 var paddle = Picture.hline(1)
 var tempPaddle = paddle
 drawAndHide(paddle)
+
 ball.onMousePress { (x, y) =>
     slingPts += Point(ball.position.x + ballSize, ball.position.y + ballSize)
 }
@@ -88,7 +89,7 @@ ball.onMouseRelease { (x, y) =>
         Vector2D(slingPts(0).x - slingPts(1).x, slingPts(0).y - slingPts(1).y).limit(7)
 
     animate {
-        ball.transv(vel)
+        ball.translate(vel)
         ball.showNext()
         if (ball.collidesWith(stageBorder)) {
             playMp3Sound("/media/collidium/hit.mp3")
@@ -97,12 +98,12 @@ ball.onMouseRelease { (x, y) =>
         else if (ball.collidesWith(paddle)) {
             playMp3Sound("/media/collidium/hit.mp3")
             vel = bouncePicVectorOffPic(ball, vel, paddle)
-            ball.transv(vel)
+            ball.translate(vel)
         }
         else if (ball.collidesWith(target)) {
             target.setPenColor(green)
             target.setFillColor(green)
-            drawMessage("Yaay! You Win", green)
+            drawCenteredMessage("Yaay! You Win", green, 20)
             stopAnimation()
             playMp3Sound("/media/collidium/win.mp3")
         }
@@ -112,13 +113,13 @@ ball.onMouseRelease { (x, y) =>
                 playMp3Sound("/media/collidium/hit.mp3")
                 vel = bouncePicVectorOffPic(ball, vel, obstacle)
                 while (ball.collidesWith(obstacle)) {
-                    ball.transv(vel)
+                    ball.translate(vel)
                 }
             case None =>
         }
 
     }
-    manageGameTime()
+    showGameTime(60, "Time up! You Lose", cm.lightBlue, 20)
 }
 
 val paddlePts = ArrayBuffer.empty[Point]
@@ -152,28 +153,4 @@ stageArea.onMouseRelease { (x, y) =>
 
 target.forwardInputTo(stageArea)
 obstacles.foreach { o => o.forwardInputTo(stageArea) }
-
-def drawMessage(m: String, c: Color) {
-    val te = textExtent(m, 30)
-    val pic = penColor(c) * trans(cb.x + (cb.width - te.width) / 2, 0) -> Picture.text(m, 30)
-    draw(pic)
-}
-
-def manageGameTime() {
-    var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> Picture.textu(gameTime, 20, blue)
-    draw(timeLabel)
-    timeLabel.forwardInputTo(stageArea)
-
-    timer(1000) {
-        gameTime += 1
-        timeLabel.update(gameTime)
-
-        if (gameTime == 60) {
-            drawMessage("Time up! You Lose", red)
-            stopAnimation()
-        }
-    }
-}
-
 // Game idea and sounds from https://github.com/shadaj/collidium
