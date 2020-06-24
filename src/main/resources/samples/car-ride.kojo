@@ -92,7 +92,7 @@ animate {
     if (player.collidesWith(stageLeft) || player.collidesWith(stageRight)) {
         cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
         player.setOpacity(0.5)
-        drawCenteredMessage("You Crashed!", red, 20)
+        drawCenteredMessage("You Crashed!", red, 30)
         stopAnimation()
     }
     else if (player.collidesWith(stageTop)) {
@@ -148,7 +148,7 @@ def updateEnergyCrash() {
     energyLevel -= 10
     energyLabel.update(energyText)
     if (energyLevel < 0) {
-        drawCenteredMessage("You're out of energy! You Lose", red, 20)
+        drawCenteredMessage("You're out of energy! You Lose", red, 30)
         stopAnimation()
     }
 }
@@ -167,7 +167,7 @@ def manageGameScore() {
         updateEnergyTick()
 
         if (gameTime == 60) {
-            drawCenteredMessage("Time up! You Win", green, 20)
+            drawCenteredMessage("Time up! You Win", green, 30)
             stopAnimation()
         }
     }
