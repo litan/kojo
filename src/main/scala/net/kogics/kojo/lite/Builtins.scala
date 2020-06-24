@@ -535,39 +535,13 @@ Here's a partial list of the available commands:
     Help.addContent(lang, content)
   }
 
-  def bounceVecOffStage(v: Vector2D, p: Picture): Vector2D = {
-    import TSCanvas._
-
-    val topCollides = p.collidesWith(stageTop)
-    val leftCollides = p.collidesWith(stageLeft)
-    val botCollides = p.collidesWith(stageBot)
-    val rightCollides = p.collidesWith(stageRight)
-
-    val c = v.magnitude / math.sqrt(2)
-    if (topCollides && leftCollides)
-      Vector2D(c, -c)
-    else if (topCollides && rightCollides)
-      Vector2D(-c, -c)
-    else if (botCollides && leftCollides)
-      Vector2D(c, c)
-    else if (botCollides && rightCollides)
-      Vector2D(-c, c)
-    else if (topCollides)
-      Vector2D(v.x, -v.y)
-    else if (botCollides)
-      Vector2D(v.x, -v.y)
-    else if (leftCollides)
-      Vector2D(-v.x, v.y)
-    else if (rightCollides)
-      Vector2D(-v.x, v.y)
-    else
-      v
-  }
+//  def bounceVecOffStage(v: Vector2D, p: Picture): Vector2D =
+//    picture.bounceVecOffStage(v, p)
   def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, TSCanvas.stageBorder)
   def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D =
     picture.bouncePicVectorOffPic(pic, v, obstacle, Random)
 
-  def bouncePicOffStage(pic: Picture, vel: Vector2D): Vector2D = bouncePicVectorOffPic(pic, vel, TSCanvas.stageBorder)
+  def bouncePicOffStage(pic: Picture, vel: Vector2D): Vector2D = picture.bounceVecOffStage(vel, pic)
   def bouncePicOffPic(pic: Picture, vel: Vector2D, obstacle: Picture): Vector2D =
     picture.bouncePicVectorOffPic(pic, vel, obstacle, Random)
 

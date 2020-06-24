@@ -340,6 +340,35 @@ package object picture {
     coord
   }
 
+  def bounceVecOffStage(v: Vector2D, p: Picture)(implicit canvas: SCanvas): Vector2D = {
+    import canvas._
+
+    val topCollides = p.collidesWith(stageTop)
+    val leftCollides = p.collidesWith(stageLeft)
+    val botCollides = p.collidesWith(stageBot)
+    val rightCollides = p.collidesWith(stageRight)
+
+    val c = v.magnitude / math.sqrt(2)
+    if (topCollides && leftCollides)
+      Vector2D(c, -c)
+    else if (topCollides && rightCollides)
+      Vector2D(-c, -c)
+    else if (botCollides && leftCollides)
+      Vector2D(c, c)
+    else if (botCollides && rightCollides)
+      Vector2D(-c, c)
+    else if (topCollides)
+      Vector2D(v.x, -v.y)
+    else if (botCollides)
+      Vector2D(v.x, -v.y)
+    else if (leftCollides)
+      Vector2D(-v.x, v.y)
+    else if (rightCollides)
+      Vector2D(-v.x, v.y)
+    else
+      v
+  }
+
   def bouncePicVectorOffPic(pic: Picture, vel: Vector2D, obstacle: Picture, rg: Random): Vector2D = {
     // returns points on the obstacle that contain the given collision coordinate
     def obstacleCollPoints(c: Coordinate): Option[Array[Coordinate]] = {
