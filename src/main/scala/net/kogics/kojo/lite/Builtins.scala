@@ -889,4 +889,6 @@ Here's a partial list of the available commands:
     val delta = epochTime - t0
     println(f"Timed code took $delta%.3f seconds")
   }
+
+  def joystick(radius: Double) = new JoyStick(radius)(this)
 }
