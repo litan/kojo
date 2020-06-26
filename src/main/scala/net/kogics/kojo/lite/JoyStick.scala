@@ -48,4 +48,40 @@ class JoyStick(radius: Double)(builtins: Builtins) {
   }
 
   def currentVector = currentVec
+
+  def movePlayer(player: Picture, scaleVelocity: Double = 1): Unit = {
+    import builtins.TSCanvas._
+    val vel = currentVector * scaleVelocity
+    player.offset(vel)
+
+    def handlePossibleCollision(stagePart: Picture, vel: Vector2D): Unit = {
+      if (player.collidesWith(stagePart)) {
+        val StageRight = stageRight; val StageLeft = stageLeft; val StageTop = stageTop; val StageBot = stageBot
+        val (stagePart2, stagePart3, velPart) = stagePart match {
+          case StageRight => (stageTop, stageBot, Vector2D(0, vel.y))
+          case StageLeft  => (stageTop, stageBot, Vector2D(0, vel.y))
+          case StageTop   => (stageLeft, stageRight, Vector2D(vel.x, 0))
+          case StageBot   => (stageLeft, stageRight, Vector2D(vel.x, 0))
+        }
+
+        val vel2 = -vel.normalize
+        while (player.collidesWith(stagePart)) {
+          player.offset(vel2)
+        }
+        player.offset(velPart)
+        repeatFor(Seq(stagePart2, stagePart3)) { stagePartX =>
+          if (player.collidesWith(stagePartX)) {
+            val vel2 = -velPart.normalize
+            while (player.collidesWith(stagePartX)) {
+              player.offset(vel2)
+            }
+          }
+        }
+      }
+    }
+    handlePossibleCollision(stageRight, vel)
+    handlePossibleCollision(stageLeft, vel)
+    handlePossibleCollision(stageTop, vel)
+    handlePossibleCollision(stageBot, vel)
+  }
 }
