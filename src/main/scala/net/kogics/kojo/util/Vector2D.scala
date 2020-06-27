@@ -43,6 +43,10 @@ case class Vector2D(x: Double, y: Double) {
   def /(factor: Double): Vector2D = vec.divide(factor)
 
   def dot(other: Vector2D): Double = vec.dot(other)
+
+  // project this vector onto other
+  def project(other: Vector2D): Vector2D = other * (other.dot(this) / other.magSquared)
+
   def lerp(other: Vector2D, frac: Double): Vector2D = vec.weightedSum(other, frac)
   def distance(other: Vector2D): Double = vec.distance(other)
 
