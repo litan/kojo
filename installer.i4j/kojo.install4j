@@ -6,7 +6,7 @@
       <registry />
       <envVar name="JAVA_HOME" />
     </searchSequence>
-    <jreBundles jdkProviderId="JBR" release="11.0.6-b765.25">
+    <jreBundles jdkProviderId="JBR" release="11.0.7-b765.53">
       <modules>
         <module name="java.base" />
         <module name="java.compiler" />
@@ -602,4 +602,8 @@ return console.askYesNo(message, true);
       <jreBundle jdkProviderId="JBR" release="11.0.6-b765.25" jreBundleSource="generated" />
     </windows>
   </mediaSets>
+  <buildIds>
+    <mediaSet refId="508" />
+    <mediaSet refId="514" />
+  </buildIds>
 </install4j>
