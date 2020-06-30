@@ -1,45 +1,48 @@
 // A Game of Pong
 // Player on right uses Up/Down Arrow keys to control paddle
 // Player on left uses A/Z keys to control paddle
-// Press 'Esc' to quit
-switchToDefault2Perspective()
 cleari()
-drawStage(Color(0, 0, 250, 20))
+drawStage(cm.darkGreyClassic)
 
-val glevel = 1
 val PaddleH = 100
 val PaddleW = 25
 val BallR = 15
 val Height = canvasBounds.height
 val Width = canvasBounds.width
 val PaddleSpeed = 5
+val pScaleFactor = 1.01
 val BallSpeed = 5
+val bScaleFactor = 1.001
 
-def paddle = penColor(darkGray) * fillColor(red) -> Picture.rect(PaddleH, PaddleW)
-def vline = penColor(darkGray) -> Picture.vline(Height)
-def ball = penColor(lightGray) * penWidth(1) * fillColor(Color(0, 230, 0)) -> Picture.circle(BallR)
-def levelFactor = math.pow(1.1, glevel)
+def paddle = penColor(darkGray) * fillColor(red) -> Picture.rectangle(PaddleW, PaddleH)
+def vline = penColor(white) -> Picture.vline(Height)
+def ball = penColor(cm.rgb(0, 230, 0)) * fillColor(cm.rgb(0, 230, 0)) -> Picture.circle(BallR)
 
-case class PaddleS(speed: Double, lastUp: Boolean) { outer =>
-    def incrSpeed(i: Double) = copy(speed = outer.speed + i)
-    def scaleSpeed(f: Double) = copy(speed = outer.speed * f)
+class PaddleVelocity(speed0: Double, lastUp0: Boolean) {
+    var speed = speed0
+    var lastUp = lastUp0
+
+    def reset(lu: Boolean) {
+        speed = speed0
+        lastUp = lu
+    }
+
+    def incrSpeed(i: Double) { speed = speed + i }
+    def scaleSpeed(f: Double) { speed = speed * f }
 }
 
-case class Score(score: Int, left: Boolean) { outer =>
+class Score(score0: Int, left0: Boolean) {
+    var score = score0
+    var left = left0
     val xt = if (left) -50 else 50
-    val pScore = trans(xt, Height / 2 - 10) * penColor(black) -> Picture.textu(score, 20)
-    def incrScore = copy(score = outer.score + 1)
+    val pScore = Picture.textu(score, 20)
+    pScore.translate(xt, Height / 2 - 10)
+    pScore.setPenColor(cm.lightSteelBlue)
+    def incrScore() {
+        score += 1
+        pScore.update(score)
+    }
 }
-
-case class Level(num: Int, vel: Vector2D) {
-    val pLevel = trans(-60, -Height / 2 + 40) * penColor(black) -> Picture.textu(s"Level: $num", 20)
-}
-
-case class World(
-    ballVel:    Vector2D,
-    level:      Level,
-    paddleInfo: Map[Picture, PaddleS],
-    scores:     Map[Picture, Score])
 
 val topbot = Seq(stageTop, stageBot)
 val paddle1 = trans(-Width / 2, 0) -> paddle
@@ -53,78 +56,68 @@ val gameBall = ball
 
 draw(paddle1, paddle2, centerLine, leftGutter, rightGutter, gameBall)
 
-val ballVel = Vector2D(BallSpeed * levelFactor, 3)
-var world = World(
-    ballVel,
-    Level(glevel, ballVel),
-    Map(
-        paddle1 -> PaddleS(PaddleSpeed * levelFactor, true),
-        paddle2 -> PaddleS(PaddleSpeed * levelFactor, true)),
-    Map(
-        paddle1 -> Score(0, true),
-        paddle2 -> Score(0, false)))
+val ballVel = Vector2D(BallSpeed, 3)
+var currBallVel: Vector2D = ballVel
 
-draw(world.scores(paddle1).pScore)
-draw(world.scores(paddle2).pScore)
-draw(world.level.pLevel)
+val paddleVelocity = Map(
+    paddle1 -> new PaddleVelocity(PaddleSpeed, true),
+    paddle2 -> new PaddleVelocity(PaddleSpeed, true))
+
+val scores = Map(
+    paddle1 -> new Score(0, true),
+    paddle2 -> new Score(0, false))
+
+draw(scores(paddle1).pScore)
+draw(scores(paddle2).pScore)
 
 animate {
-    gameBall.translate(world.ballVel)
+    gameBall.translate(currBallVel)
+
     if (gameBall.collision(paddles).isDefined) {
-        world = world.copy(
-            ballVel = Vector2D(-world.ballVel.x, world.ballVel.y))
+        currBallVel = Vector2D(-currBallVel.x, currBallVel.y)
     }
     else if (gameBall.collision(topbot).isDefined) {
-        world = world.copy(
-            ballVel = Vector2D(world.ballVel.x, -world.ballVel.y))
+        currBallVel = Vector2D(currBallVel.x, -currBallVel.y)
     }
     else if (gameBall.collidesWith(leftGutter)) {
         gameBall.setPosition(0, 0)
-        world.scores(paddle2).pScore.erase()
-        world = world.copy(
-            ballVel = Vector2D(-world.level.vel.x.abs, world.level.vel.y),
-            scores = world.scores + (paddle2 -> world.scores(paddle2).incrScore))
-        draw(world.scores(paddle2).pScore)
+        currBallVel = Vector2D(-ballVel.x, ballVel.y)
+        scores(paddle2).incrScore()
     }
     else if (gameBall.collidesWith(rightGutter)) {
         gameBall.setPosition(0, 0)
-        world.scores(paddle1).pScore.erase()
-        world = world.copy(
-            ballVel = Vector2D(world.level.vel.x.abs, world.level.vel.y),
-            scores = world.scores + (paddle1 -> world.scores(paddle1).incrScore))
-        draw(world.scores(paddle1).pScore)
+        currBallVel = Vector2D(ballVel.x, ballVel.y)
+        scores(paddle1).incrScore()
     }
     else {
-        world = world.copy(
-            ballVel = (world.ballVel * 1.001).limit(10))
+        currBallVel = (currBallVel * bScaleFactor).limit(11)
     }
     paddleBehavior(paddle1, Kc.VK_A, Kc.VK_Z)
     paddleBehavior(paddle2, Kc.VK_UP, Kc.VK_DOWN)
 }
 
 def paddleBehavior(paddle: Picture, upkey: Int, downkey: Int) {
-    val pstate = world.paddleInfo(paddle)
+    val pVel = paddleVelocity(paddle)
     if (isKeyPressed(upkey) && !paddle.collidesWith(stageTop)) {
-        paddle.translate(0, pstate.speed)
-        if (pstate.lastUp) {
-            world = world.copy(
-                paddleInfo = world.paddleInfo + (paddle -> pstate.incrSpeed(0.1)))
+        if (pVel.lastUp) {
+            pVel.scaleSpeed(pScaleFactor)
         }
         else {
-            world = world.copy(
-                paddleInfo = world.paddleInfo + (paddle -> PaddleS(PaddleSpeed, true)))
+            pVel.reset(!pVel.lastUp)
         }
+        paddle.translate(0, pVel.speed)
     }
-    if (isKeyPressed(downkey) && !paddle.collidesWith(stageBot)) {
-        paddle.translate(0, -pstate.speed)
-        if (!pstate.lastUp) {
-            world = world.copy(
-                paddleInfo = world.paddleInfo + (paddle -> pstate.incrSpeed(0.1)))
+    else if (isKeyPressed(downkey) && !paddle.collidesWith(stageBot)) {
+        if (!pVel.lastUp) {
+            pVel.scaleSpeed(pScaleFactor)
         }
         else {
-            world = world.copy(
-                paddleInfo = world.paddleInfo + (paddle -> PaddleS(PaddleSpeed, false)))
+            pVel.reset(!pVel.lastUp)
         }
+        paddle.translate(0, -pVel.speed)
+    }
+    else {
+        pVel.reset(pVel.lastUp)
     }
 }
 activateCanvas()
