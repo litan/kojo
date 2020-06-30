@@ -38,7 +38,7 @@ class PictureCollisionTest extends FunSuite with Matchers with xscala.RepeatComm
     import t._
     repeat(4) {
       forward(n)
-      right
+      right()
     }
   }
 

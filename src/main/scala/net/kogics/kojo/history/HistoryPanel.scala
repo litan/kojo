@@ -159,7 +159,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
       }
       else {
         execSupport.kojoCtx.showAppWaitCursor()
-        cmdh.loadAll
+        cmdh.loadAll()
         execSupport.kojoCtx.hideAppWaitCursor()
         tableModel.fireTableDataChanged()
         table.setRowSelectionInterval(cmdh.size, cmdh.size)

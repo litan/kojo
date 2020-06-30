@@ -23,7 +23,7 @@ import net.kogics.kojo.util.Utils
 
 class NoopHistorySaver extends HistorySaver {
   def save(code: String, file: Option[String]) = HistoryItem(code, file.getOrElse(""))
-  def readAll(): Seq[HistoryItem] = Seq()
+  def readAll: Seq[HistoryItem] = Seq()
   def readSome(filter: String): Seq[HistoryItem] = Seq()
   def updateStar(hi: HistoryItem): Unit = {}
   def updateTags(hi: HistoryItem): Unit = {}

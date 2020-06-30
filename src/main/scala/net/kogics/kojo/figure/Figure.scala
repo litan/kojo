@@ -188,7 +188,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
         override def activityStep(elapsedTime: Long): Unit = {
           currLayer = fgLayer
           try {
-            staging.Inputs.activityStep
+            staging.Inputs.activityStep()
             fn
             if (isStepping) {
               listener.hasPendingCommands()

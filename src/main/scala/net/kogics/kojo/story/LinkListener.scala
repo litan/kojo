@@ -63,7 +63,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
           case ex: IllegalArgumentException =>
             st.showStatusError("Invalid page/view in Link - " + url.toString)
           case t: Throwable =>
-            st.showStatusError("Problem handling Url - %s: %s" format(url.toString, t.getMessage))
+            st.showStatusError("Problem handling Url - %s: %s".format(url.toString, t.getMessage))
         }
       }
       else if (url.getHost.toLowerCase == "runhandler")  {
@@ -75,7 +75,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
           case ex: IllegalArgumentException =>
             st.showStatusError("Invalid RunHandler Url - " + url.toString)
           case t: Throwable =>
-            st.showStatusError("Problem handling Url - %s: %s" format(url.toString, t.getMessage))
+            st.showStatusError("Problem handling Url - %s: %s".format(url.toString, t.getMessage))
         }
       }
       else {
@@ -84,7 +84,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
         }
         catch {
           case t: Throwable =>
-            st.showStatusError("Problem browsing Url - %s: %s" format(url.toString, t.getMessage))
+            st.showStatusError("Problem browsing Url - %s: %s".format(url.toString, t.getMessage))
         }
       }
     }
@@ -108,7 +108,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
         case ex: IllegalArgumentException =>
           st.showStatusError("Invalid RunHandler Url - " + url.toString)
         case t: Throwable =>
-          st.showStatusError("Problem handling Url - %s: %s" format (url.toString, t.getMessage))
+          st.showStatusError("Problem handling Url - %s: %s".format(url.toString, t.getMessage))
       }
     }
   }

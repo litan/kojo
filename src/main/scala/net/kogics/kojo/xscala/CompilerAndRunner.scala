@@ -72,7 +72,7 @@ class CompilerAndRunner(
   val prefixHeader = "object Wrapper"
   val prefix0 = runContext.compilerPrefix
 
-  def prefix = "%s%s\n" format (prefix0, initCode.getOrElse(""))
+  def prefix = "%s%s\n".format(prefix0, initCode.getOrElse(""))
 
   var includedLines: Int = 0
   def prefixLines = prefix.linesIterator.size + includedLines
@@ -136,7 +136,7 @@ class CompilerAndRunner(
     new Global(settings, reporter)
   }
 
-  def pfxWithCounter = "%s%d%s" format (prefixHeader, counter, prefix)
+  def pfxWithCounter = "%s%d%s".format(prefixHeader, counter, prefix)
 
   def compilerCode(code00: String): Option[String] = {
     try {
@@ -144,7 +144,7 @@ class CompilerAndRunner(
       val pfx = pfxWithCounter
       includedLines = inclLines
       offsetDelta = pfx.length + includedChars
-      Some(codeTemplate format (pfx, code0))
+      Some(codeTemplate.format(pfx, code0))
     }
     catch {
       case t: Throwable =>
@@ -163,7 +163,7 @@ class CompilerAndRunner(
       }
 
       val run = new compiler.Run
-      reporter.reset
+      reporter.reset()
       run.compileSources(List(new BatchSourceFile("scripteditor", code)))
       //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
       if (reporter.hasErrors) IR.Error else IR.Success
@@ -224,7 +224,7 @@ class CompilerAndRunner(
         compiler.settings.browse.value = stopPhase()
       }
       val run = new compiler.Run
-      reporter.reset
+      reporter.reset()
       run.compileSources(List(new BatchSourceFile("scripteditor", code)))
 
       if (reporter.hasErrors) {
@@ -268,7 +268,7 @@ class CompilerAndRunner(
 
       val signature =
         if (sym.isMethod) {
-          "%s: %s" format (
+          "%s: %s".format(
             name +
             (if (!sym.typeParams.isEmpty) sym.typeParams.map { _.name }.mkString("[", ",", "]") else "") +
             tpe.paramss.map(_.map(_.tpe.toString).mkString("(", ", ", ")")).mkString,
@@ -369,7 +369,7 @@ class CompilerAndRunner(
   def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     import interactive._
     val augmentedCode0 =
-      "%s ;} // %s" format (code0.substring(0, offset), code0.substring(offset))
+      "%s ;} // %s".format(code0.substring(0, offset), code0.substring(offset))
 
     compilerCode(augmentedCode0) map { code =>
       classLoader.asContext {

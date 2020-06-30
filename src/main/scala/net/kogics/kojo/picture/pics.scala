@@ -664,7 +664,7 @@ abstract class BasePicList(val pics: List[Picture])
     println("--- ")
 
     pics.foreach { pic =>
-      pic.dumpInfo
+      pic.dumpInfo()
     }
   }
 }

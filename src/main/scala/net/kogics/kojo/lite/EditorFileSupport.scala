@@ -42,7 +42,7 @@ trait EditorFileSupport { self: ScriptEditor =>
       if (fileChanged) {
         val doSave = JOptionPane.showConfirmDialog(
           null,
-          Utils.loadString("S_FileChanged") format (openedFile.get.getName, openedFile.get.getName))
+          Utils.loadString("S_FileChanged").format(openedFile.get.getName, openedFile.get.getName))
         if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
           throw new RuntimeException("Cancel File Close")
         }

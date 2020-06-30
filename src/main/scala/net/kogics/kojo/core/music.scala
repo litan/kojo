@@ -23,7 +23,7 @@ trait Voice {
 
 case class Melody(instrument: String, music: String) extends Voice {
   def pattern(n: Int) = {
-    val p = new Pattern("I[%s] %s" format(instrument, music))
+    val p = new Pattern("I[%s] %s".format(instrument, music))
     val ret = new Pattern()
     ret.add(p, n)
     ret
@@ -34,8 +34,8 @@ case class Rhythm(instrument: String, duration: String, beat: String) extends Vo
   def pattern(n: Int) = {
     val rhy = new JFRhythm()
     rhy.setLayer(1, beat)
-    rhy.addSubstitution(beatChar(beat), "[%s]%s" format(instrument, duration))
-    rhy.addSubstitution('.', "R%s" format(duration))
+    rhy.addSubstitution(beatChar(beat), "[%s]%s".format(instrument, duration))
+    rhy.addSubstitution('.', "R%s".format(duration))
     val ret = new Pattern()
     ret.add(rhy.getPattern, n)
     ret
@@ -54,13 +54,13 @@ case class Score(voices: Voice *) extends Voice {
     var rLayer = 1
     voices.foreach { voice => voice match {
         case Melody(i, m) =>
-          val p = new Pattern("V%d I[%s] %s" format(idx, i, m))
+          val p = new Pattern("V%d I[%s] %s".format(idx, i, m))
           score.add(p, n)
 
         case rv @ Rhythm(i, d, b) =>
           rhy.setLayer(rLayer, b)
-          rhy.addSubstitution(rv.beatChar(b), "[%s]%s" format(i, d))
-          rhy.addSubstitution('.', "R%s" format(d))
+          rhy.addSubstitution(rv.beatChar(b), "[%s]%s".format(i, d))
+          rhy.addSubstitution('.', "R%s".format(d))
           rLayer += 1
       }
                     idx += 1

@@ -28,7 +28,7 @@ trait SpriteListener {
 }
 
 abstract class AbstractSpriteListener extends SpriteListener {
-  def hasPendingCommands: Unit = {}
+  def hasPendingCommands(): Unit = {}
   def pendingCommandsDone(): Unit = {}
 }
 
@@ -39,7 +39,7 @@ class DelegatingSpriteListener extends SpriteListener {
   def setRealListener(l: SpriteListener): Unit = {
     realListener = l
   }
-  def hasPendingCommands = realListener.hasPendingCommands()
+  def hasPendingCommands() = realListener.hasPendingCommands()
   def pendingCommandsDone() = realListener.pendingCommandsDone()
 }
 

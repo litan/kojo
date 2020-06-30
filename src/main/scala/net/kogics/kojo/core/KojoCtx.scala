@@ -55,7 +55,7 @@ trait KojoCtx {
   def fileModified(): Unit
   def fileSaved(): Unit
   def fileClosed(): Unit
-  def getLastLoadStoreDir(): String
+  def getLastLoadStoreDir: String
   def setLastLoadStoreDir(dir: String): Unit
   def lastColor: Color
   def lastColor_=(c: Color): Unit

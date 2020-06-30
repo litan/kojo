@@ -32,11 +32,11 @@ class IpmProvider(mctx: ManipulationContext) {
   var currManip: Option[InteractiveManipulator] = None
 
   def isHyperlinkPoint(pane: JTextComponent, offset: Int): Boolean = {
-    currManip = manips.find { _ isHyperlinkPoint (pane, offset) }
+    currManip = manips.find { _.isHyperlinkPoint(pane, offset) }
     currManip.isDefined
   }
 
   def performClickAction(pane: JTextComponent, offset: Int): Unit = {
-    currManip.foreach { _ activate (pane, offset) }
+    currManip.foreach { _.activate(pane, offset) }
   }
 }

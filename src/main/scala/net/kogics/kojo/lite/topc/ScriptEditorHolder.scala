@@ -16,15 +16,15 @@ class ScriptEditorHolder(val se: ScriptEditor)
   }
 
   def fileOpened(fileName: String): Unit = {
-    setTitleText("%s - %s" format (title, fileName))
+    setTitleText("%s - %s".format(title, fileName))
   }
 
   def fileModified(fileName: String): Unit = {
-    setTitleText("%s - %s*" format (title, fileName))
+    setTitleText("%s - %s*".format(title, fileName))
   }
 
   def fileSaved(fileName: String): Unit = {
-    setTitleText("%s - %s" format (title, fileName))
+    setTitleText("%s - %s".format(title, fileName))
   }
 
   def fileClosed(fileName: String): Unit = {
@@ -33,7 +33,7 @@ class ScriptEditorHolder(val se: ScriptEditor)
 
   def setNoFileTitle(): Unit = {
     if (se.kojoCtx.subKojo) {
-      setTitleText("%s ( %s )" format (title, scratch))
+      setTitleText("%s ( %s )".format(title, scratch))
     }
     else {
       setTitleText(title)

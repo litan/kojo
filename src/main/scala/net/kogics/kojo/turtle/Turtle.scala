@@ -80,7 +80,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   private var font: Font = _
 
-  private val pens = makePens
+  private val pens = makePens()
   private val DownPen = pens._1
   private val UpPen = pens._2
   private[kojo] var pen: Pen = _

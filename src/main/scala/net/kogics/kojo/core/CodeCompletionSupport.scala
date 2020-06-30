@@ -77,7 +77,7 @@ case class CompletionInfo(
       case Var => s"$name$params: $returnType"
       case _   => s"$name: $owner"
     }
-    if (ret endsWith ": ") ret substring (0, ret.length - 2) else ret
+    if (ret endsWith ": ") ret.substring(0, ret.length - 2) else ret
   }
 }
 

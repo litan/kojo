@@ -84,8 +84,8 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
       addToken(segment.array, segStartOffset, segEndOffset, convertTokenType(t.tokenType), docStartOffset)
     }
 
-    debug("\n---\nGetting tokens for Line. Doc Offset: %d, Seg Offset: %d, Length: %d"
-      format (docOffset, segment.offset, segment.length))
+    debug("\n---\nGetting tokens for Line. Doc Offset: %d, Seg Offset: %d, Length: %d".
+      format(docOffset, segment.offset, segment.length))
     debug("Line Text:" + segment.toString)
 
     resetTokenList()
@@ -287,7 +287,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
   def showTiming(t0: Long, mod: String): Unit = {
     if (timingOn) {
-      println("Doc lexing [%s] took: %2.4f secs" format (mod, (System.currentTimeMillis - t0) / 1000.0))
+      println("Doc lexing [%s] took: %2.4f secs".format(mod, (System.currentTimeMillis - t0) / 1000.0))
     }
   }
 

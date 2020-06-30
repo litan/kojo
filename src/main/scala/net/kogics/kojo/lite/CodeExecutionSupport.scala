@@ -992,7 +992,7 @@ class CodeExecutionSupport(
 
     def codeRun(code: String): Unit = {
       val tcode = code.trim()
-      commandHistory.add(code, openedFile.map(f => "%s (%s)" format (f.getName, f.getParent)))
+      commandHistory.add(code, openedFile.map(f => "%s (%s)".format(f.getName, f.getParent)))
     }
   }
 

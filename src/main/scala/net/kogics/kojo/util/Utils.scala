@@ -410,7 +410,7 @@ object Utils {
   }
 
   def replAssertEquals(a: Any, b: Any): Unit = {
-    if (a != b) println("Not Good. First: %s, Second: %s" format (a.toString, b.toString))
+    if (a != b) println("Not Good. First: %s, Second: %s".format(a.toString, b.toString))
     else println("Good")
   }
 
@@ -570,7 +570,7 @@ object Utils {
     case Nil => None
     case files => Some(
       files.map { file =>
-        "// File: %s\n%s\n" format (file, readStream(new FileInputStream(scriptDir + File.separatorChar + file)))
+        "// File: %s\n%s\n".format(file, readStream(new FileInputStream(scriptDir + File.separatorChar + file)))
       }.mkString("\n")
     )
   }

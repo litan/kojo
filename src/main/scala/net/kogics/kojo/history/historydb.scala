@@ -100,7 +100,7 @@ class DBHistorySaver extends HistorySaver {
     }
   }
 
-  def readAll() = {
+  def readAll = {
     queryEach(conn, "SELECT * FROM HISTORY ORDER BY AT DESC LIMIT 1000") { rs =>
       HistoryItem(rs.getString("SCRIPT"), rs.getString("FILE"), rs.getLong("ID"), rs.getBoolean("STARRED"), rs.getString("TAGS"), rs.getTimestamp("AT"))
     }

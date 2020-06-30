@@ -50,7 +50,7 @@ class PictureTest extends FunSuite with Matchers with xscala.RepeatCommands {
     setAnimationDelay(0)
     repeat(4) {
       forward(psize)
-      right
+      right()
     }
   }
 

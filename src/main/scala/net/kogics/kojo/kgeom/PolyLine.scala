@@ -124,11 +124,11 @@ class PolyLine extends PNode {
 
     val piter = points.iterator
     if (piter.hasNext) {
-      var point = piter.next
+      var point = piter.next()
       val point0 = point
       polyLinePath.moveTo(point.x, point.y)
       while (piter.hasNext) {
-        point = piter.next
+        point = piter.next()
         polyLinePath.lineTo(point.x, point.y)
       }
       if (closed) polyLinePath.lineTo(point0.x, point0.y)

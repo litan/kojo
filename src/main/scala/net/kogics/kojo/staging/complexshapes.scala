@@ -168,7 +168,7 @@ class QuadStripShape(val points: Seq[Point]) extends PolyShape with StrokedShape
   val path = new PPath
 
   def init = {
-    points sliding(4, 2) foreach {
+    points.sliding(4, 2).foreach {
       case Nil =>
       case Seq(Point(x0, y0), Point(x1, y1), Point(x2, y2), Point(x3, y3)) =>
         path.moveTo(x0.toFloat, y0.toFloat)

@@ -49,7 +49,7 @@ class NoOpKojoCtx extends core.KojoCtx {
   def fileSaved(): Unit = {}
   def fileClosed(): Unit = {}
   var llsdir = ""
-  def getLastLoadStoreDir() = llsdir
+  def getLastLoadStoreDir = llsdir
   def setLastLoadStoreDir(dir: String): Unit = { llsdir = dir }
   def drawingCanvasActivated(): Unit = {}
   def mwActivated(): Unit = {}

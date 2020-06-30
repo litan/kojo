@@ -502,7 +502,7 @@ class TurtleTest {
     turtle.forward(50)
     turtle.left(45)
 
-    turtle.restorePosHe
+    turtle.restorePosHe()
 
     val p = turtle.position
     assertEquals(50, p.x, 0.001)

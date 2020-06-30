@@ -324,7 +324,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   }
 
   @volatile var lastLoadStoreDir = prefs.get("lastLoadStoreDir", "")
-  def getLastLoadStoreDir() = lastLoadStoreDir
+  def getLastLoadStoreDir = lastLoadStoreDir
   def setLastLoadStoreDir(dir: String): Unit = {
     lastLoadStoreDir = dir
     prefs.put("lastLoadStoreDir", lastLoadStoreDir)

@@ -142,7 +142,7 @@ trait CoreBuiltins extends Rationals {
     val it = seq.zip(probabilities).iterator
     var accum = 0.0
     while (it.hasNext) {
-      val (item, itemProb) = it.next
+      val (item, itemProb) = it.next()
       accum += itemProb
       if (accum >= p)
         return item // return so that we don't have to search through the whole distribution

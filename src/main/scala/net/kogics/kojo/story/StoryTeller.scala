@@ -258,7 +258,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       updateCp()
     }
     else {
-      showStatusError("Nonexistent page#view - %d#%d" format (page, view))
+      showStatusError("Nonexistent page#view - %d#%d".format(page, view))
     }
   }
 
@@ -302,7 +302,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   private def done() = {
     // call in gui thread
-    currStory foreach { _.stop }
+    currStory foreach { _.stop() }
     currStory = None
     clearHelper()
     stopMp3Loop()
@@ -372,7 +372,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
         }
         catch {
           case ex: Exception =>
-            showStatusError("Unable to convert value - %s - to required type %s" format (svalue, reader.typeName))
+            showStatusError("Unable to convert value - %s - to required type %s".format(svalue, reader.typeName))
             throw ex
         }
       }
@@ -437,7 +437,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   def storyLocation = {
     if (currStory.isDefined) {
-      "Pg %d#%d" format (story.location._1, story.location._2)
+      "Pg %d#%d".format(story.location._1, story.location._2)
     }
     else {
       ""

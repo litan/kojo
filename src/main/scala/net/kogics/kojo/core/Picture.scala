@@ -19,7 +19,7 @@ trait Picture extends InputAware {
   def pnode = tnode
   def draw(): Unit
   def erase(): Unit
-  def isDrawn(): Boolean
+  def isDrawn: Boolean
   def bounds: PBounds
   def rotate(angle: Double): Unit
   def rotateAboutPoint(angle: Double, x: Double, y: Double): Unit

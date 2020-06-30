@@ -42,7 +42,7 @@ class Point(val x: Double, val y: Double) {
   def unary_- = new Point(-x, -y)
   def onX() = new Point(x, 0)
   def onY() = new Point(0, y)
-  override def toString = "Point(%.2f , %.2f)" format(x, y)
+  override def toString = "Point(%.2f , %.2f)".format(x, y)
   // Martin says (Programming in Scala, 1st ed, ch 28):
   override def hashCode: Int = 41 * (41 + x.hashCode) + y.hashCode
   override def equals(other: Any) = other match {
@@ -64,7 +64,7 @@ class Text(val content: String)
 class Rectangle(val bLeft: Point, val tRight: Point) {
   val width = tRight.x - bLeft.x
   val height = tRight.y - bLeft.y
-  override def toString = "Rectangle(%.2f , %.2f , %.2f , %.2f)" format(bLeft.x, bLeft.y, tRight.x, tRight.y)
+  override def toString = "Rectangle(%.2f , %.2f , %.2f , %.2f)".format(bLeft.x, bLeft.y, tRight.x, tRight.y)
 }
 class RoundRectangle(
   override val bLeft: Point,

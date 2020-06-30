@@ -38,10 +38,10 @@ class ChooseColor(execSupport: CodeExecutionSupport) extends AbstractAction(Util
       print("Selected Color:   ")
       cprint("\u2588" * 6 + "\n", sColor)
       val color = if (sColor.getAlpha < 255) {
-        "Color(%d, %d, %d, %d)" format (sColor.getRed, sColor.getGreen, sColor.getBlue, sColor.getAlpha)
+        "Color(%d, %d, %d, %d)".format(sColor.getRed, sColor.getGreen, sColor.getBlue, sColor.getAlpha)
       }
       else {
-        "Color(%d, %d, %d)" format (sColor.getRed, sColor.getGreen, sColor.getBlue)
+        "Color(%d, %d, %d)".format(sColor.getRed, sColor.getGreen, sColor.getBlue)
       }
       println(color)
       println("Example usage: setPenColor(%s)" format (color))

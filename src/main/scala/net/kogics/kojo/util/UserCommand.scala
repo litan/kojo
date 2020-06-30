@@ -25,7 +25,7 @@ object UserCommand {
   }
 
   def addCompletion(name: String, args: Seq[String]): Unit = {
-    addCompletion(name, args map ("${%s}" format _) mkString("(", ", ", ")"))
+    addCompletion(name, args.map("${%s}" format _).mkString("(", ", ", ")"))
   }
 
   def addSynopsisSeparator(): Unit = { synopses.append("\n") }

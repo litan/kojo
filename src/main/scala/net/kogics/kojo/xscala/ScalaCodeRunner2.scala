@@ -214,7 +214,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   class InterpActor extends Actor {
 
     def reply(m: Any): Unit = {
-      sender ! m
+      sender() ! m
     }
 
     def interp: KojoInterpreter = {
@@ -401,7 +401,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
             println("Code runner actor - Interrupted")
           case t: Throwable =>
             Log.log(Level.SEVERE, "CompilerAndRunner Problem", t)
-            runContext.onRunInterpError
+            runContext.onRunInterpError()
         }
         finally {
           Log.info("CodeRunner actor doing final handling for code.")
@@ -487,7 +487,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       catch {
         case t: Throwable =>
           Log.log(Level.SEVERE, "Interpreter Problem", t)
-          runContext.onRunInterpError
+          runContext.onRunInterpError()
       }
       finally {
         Log.info("CodeRunner actor doing final handling for code.")

@@ -30,7 +30,7 @@ trait ScriptLoader { self: Main.type =>
     }
     else {
       val msg2 = if (onStartup) "\n// Please wait, this might take a few seconds as Kojo starts up..." else ""
-      codePane.insert("// Running code loaded from URL: %s%s\n\n" format (url, msg2), 0)
+      codePane.insert("// Running code loaded from URL: %s%s\n\n".format(url, msg2), 0)
       codePane.setCaretPosition(0)
       execSupport.compileRunCode()
     }

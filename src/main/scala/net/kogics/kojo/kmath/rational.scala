@@ -41,7 +41,7 @@ trait Rationals {
     def **(n: Double): Double = rep.pow(n)
     def **(n: Rational): Double = rep.pow(n.toDouble)
     def toNumeric(scale: Int = 5) = rep.bigDecimalValue(scale, BigDecimal.ROUND_HALF_UP)
-    def toDouble() = rep.doubleValue
+    def toDouble = rep.doubleValue
     private def i2bi(n: Int): BigInteger = BigInteger.valueOf(n)
     override def toString() = rep.toString.replace(" ", "")
     //    def ==(other: Rational): Boolean = equals(other)
@@ -58,12 +58,12 @@ trait Rationals {
       if (n.compareTo(d) > 0) {
         val rem = n.mod(d)
         if (rem.compareTo(i2bi(0)) == 0)
-          "%s" format (n.divide(d))
+          "%s".format(n.divide(d))
         else
-          "%s  %s/%s" format (n.divide(d), rem, d)
+          "%s  %s/%s".format(n.divide(d), rem, d)
       }
       else {
-        "%s/%s" format (n, d)
+        "%s/%s".format(n, d)
       }
     }
   }

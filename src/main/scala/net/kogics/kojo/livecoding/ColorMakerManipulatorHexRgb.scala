@@ -155,10 +155,10 @@ class ColorMakerManipulatorHexRgb(ctx: ManipulationContext) extends InteractiveM
             inSliderChange = true
             doc.remove(targetStart, target.length())
             target = if (newColor.getAlpha == 255) {
-              "ColorMaker.rgb(%d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue)
+              "ColorMaker.rgb(%d, %d, %d)".format(newColor.getRed, newColor.getGreen, newColor.getBlue)
             }
             else {
-              "ColorMaker.rgba(%d, %d, %d, %d)" format (newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
+              "ColorMaker.rgba(%d, %d, %d, %d)".format(newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
             }
             doc.insertString(targetStart, target, null);
             inSliderChange = false

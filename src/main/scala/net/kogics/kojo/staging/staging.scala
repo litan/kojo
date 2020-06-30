@@ -425,7 +425,7 @@ class API(canvas: SpriteCanvas) {
       val pts = (pts1 zip pts2) map { case(p1, p2) =>
           point(lerp(p1.x, p2.x, amt), lerp(p1.y, p2.y, amt))
       }
-      g0.hide
+      g0.hide()
       g0 = polygon(pts)
       for (i <- 0 to 10) {
         net.kogics.kojo.util.Throttler.throttle()
@@ -762,7 +762,7 @@ object Style {
   def restore: Unit = {
     Utils.runInSwingThread {
       if (savedStyles nonEmpty) {
-        val (fc, sc, st) = savedStyles.pop
+        val (fc, sc, st) = savedStyles.pop()
         f.setFillColor(fc)
         f.setPenColor(sc)
         f.setLineStroke(st)

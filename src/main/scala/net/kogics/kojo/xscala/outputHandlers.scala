@@ -89,7 +89,7 @@ class InterpOutputHandler(ctx: RunContext) {
 
   def flushWorksheetError(): Unit = {
     firstWorksheetError foreach { msg =>
-      worksheetLineNum foreach { reportWorksheetOutput(msg.linesIterator.next, _) }
+      worksheetLineNum foreach { reportWorksheetOutput(msg.linesIterator.next(), _) }
       ctx.reportError(msg)
     }
     firstWorksheetError = None
@@ -125,8 +125,8 @@ class InterpOutputHandler(ctx: RunContext) {
 
 class CompilerOutputHandler(ctx: RunContext) extends CompilerListener {
   def error(msg: String, line: Int, column: Int, offset: Int, lineContent: String): Unit = {
-    ctx.reportError("Error[%d,%d]: %s\n" format (line, column, msg))
-    ctx.reportSmartError("%s\n" format (lineContent), line, column, offset)
+    ctx.reportError("Error[%d,%d]: %s\n".format(line, column, msg))
+    ctx.reportSmartError("%s\n".format(lineContent), line, column, offset)
     ctx.reportError(" " * (column - 1) + "^\n")
   }
 

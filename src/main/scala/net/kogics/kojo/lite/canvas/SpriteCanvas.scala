@@ -211,7 +211,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       }
       val mousePositionName = Utils.loadString("S_MousePosition")
       val statusStr = s"$mousePositionName: (%.${prec}f, %.${prec}f)"
-      kojoCtx.showStatusText(statusStr format (pos.getX, pos.getY));
+      kojoCtx.showStatusText(statusStr.format(pos.getX, pos.getY));
     }
 
     override def mouseWheelRotated(e: PInputEvent): Unit = {
@@ -681,9 +681,9 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
   def stop() = {
     Utils.runInSwingThreadAndWait {
-      puzzlers.foreach { t => t.stop }
-      turtles.foreach { t => t.stop }
-      figures.foreach { f => f.stop }
+      puzzlers.foreach { t => t.stop() }
+      turtles.foreach { t => t.stop() }
+      figures.foreach { f => f.stop() }
       staging.Inputs.removeMouseKeyHandlers()
       kojoCtx.activityListener.pendingCommandsDone()
       Utils.schedule(0.5) {
@@ -692,7 +692,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     }
   }
 
-  def wipe = {
+  def wipe() = {
     Utils.runInSwingThread {
       pictures.removeAllChildren()
     }

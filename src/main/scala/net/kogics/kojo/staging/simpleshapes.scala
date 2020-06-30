@@ -152,7 +152,7 @@ class Cross(val origin: Point,
             val crossWidth: Double,
             val ratio: Double,
             val greek: Boolean) extends SimpleShape with CrossShape {
-  val pts = crossDims(width, height, crossWidth, ratio, greek) points
+  val pts = crossDims(width, height, crossWidth, ratio, greek).points()
   val path = PPath.createPolyline((pts map { case Point(x, y) =>
           new java.awt.geom.Point2D.Double(x + origin.x, y + origin.y)
       }).toArray)
@@ -176,7 +176,7 @@ class CrossOutline(val origin: Point,
                    val crossWidth: Double,
                    val ratio: Double,
                    val greek: Boolean) extends SimpleShape with CrossShape {
-  val pts = crossDims(width, height, crossWidth, ratio, greek) outlinePoints
+  val pts = crossDims(width, height, crossWidth, ratio, greek).outlinePoints()
   val path = PPath.createPolyline((pts map { case Point(x, y) =>
           new java.awt.geom.Point2D.Double(x + origin.x, y + origin.y)
       }).toArray)

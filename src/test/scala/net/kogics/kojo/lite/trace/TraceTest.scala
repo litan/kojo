@@ -289,10 +289,10 @@ style
       oneOf(mockTurtle).setPenThickness(10.0)
       oneOf(mockTurtle).setFillColor(Color.black)
       oneOf(mockTurtle).setFillColor(new Color(10, 10, 10))
-      oneOf(mockTurtle).saveStyle
-      oneOf(mockTurtle).restoreStyle
-      oneOf(mockTurtle).savePosHe
-      oneOf(mockTurtle).restorePosHe
+      oneOf(mockTurtle).saveStyle()
+      oneOf(mockTurtle).restoreStyle()
+      oneOf(mockTurtle).savePosHe()
+      oneOf(mockTurtle).restorePosHe()
       oneOf(mockTurtle).setAnimationDelay(10)
       oneOf(mockTurtle).beamsOn()
       oneOf(mockTurtle).beamsOff()

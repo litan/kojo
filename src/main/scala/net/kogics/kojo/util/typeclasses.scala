@@ -64,7 +64,7 @@ object Semigroup {
 
 trait Identity[A]  {
   def value: A
-  def |+|(a: => A)(implicit s: Semigroup[A]): A = s append (value, a)
+  def |+|(a: => A)(implicit s: Semigroup[A]): A = s.append(value, a)
 }
 
 trait Identitys {

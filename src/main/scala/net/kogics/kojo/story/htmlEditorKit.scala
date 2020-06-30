@@ -94,7 +94,7 @@ class LatexView(elem: Element) extends View(elem) {
   }
   catch {
     case pe: ParseException =>
-      output("Incorrect formula - %s.\nProblem: %s" format(latex, pe.getMessage))
+      output("Incorrect formula - %s.\nProblem: %s".format(latex, pe.getMessage))
       new TeXFormula("\\text{Incorrect Formula. See output for details}")
   }
   val icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, size)

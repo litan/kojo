@@ -71,7 +71,7 @@ import net.kogics.kojo.xscala.CompilerOutputHandler
 
 class Tracing(builtins: Builtins, traceListener: TraceListener, runCtx: RunContext) {
   @volatile var currThread: ThreadReference = _
-  val tmpdir = "%s/kojo_%s" format (System.getProperty("java.io.tmpdir"), System.getProperty("user.name"))
+  val tmpdir = "%s/kojo_%s".format(System.getProperty("java.io.tmpdir"), System.getProperty("user.name"))
   val tmpDirOnDisk = new File(tmpdir)
   if (!tmpDirOnDisk.exists()) {
     tmpDirOnDisk.mkdirs()
@@ -123,7 +123,7 @@ object UserCode {
   }
 """
 
-  val prefix = "%s%s\n" format (prefix0, Utils.initCode(TwMode).getOrElse(""))
+  val prefix = "%s%s\n".format(prefix0, Utils.initCode(TwMode).getOrElse(""))
   val prefixLines = prefix.linesIterator.size
   @volatile var includedLines = 0
   def lineNumOffset = prefixLines + includedLines
@@ -153,10 +153,10 @@ def main(args: Array[String]) {
       val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
       includedLines = inclLines
       offsetDelta = prefix.length + includedChars
-      val code = codeTemplate format (prefix, code0)
+      val code = codeTemplate.format(prefix, code0)
       val codeFile = new BatchSourceFile("scripteditor", code)
       val run = new compiler.Run
-      reporter.reset
+      reporter.reset()
       run.compileSources(List(codeFile))
       !reporter.hasErrors
     }
@@ -235,7 +235,7 @@ def main(args: Array[String]) {
       turtles.clear()
       pictures.clear()
       evtReqs = Vector[EventRequest]()
-      currEvtVec.clear
+      currEvtVec.clear()
       hiddenEventCount = 0
       codeLines = code.linesIterator.toVector
 
@@ -320,7 +320,7 @@ that is not supported under Tracing.
               case vmDcEvt: VMDisconnectEvent =>
                 vmRunning = false
                 stop()
-                println("#"); break
+                println("#"); break()
 
               case vmStartEvt: VMStartEvent =>
                 vmRunning = true

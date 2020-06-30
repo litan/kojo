@@ -19,7 +19,7 @@ trait HistoryListener {
 
 trait HistorySaver {
   def save(code: String, file: Option[String]): HistoryItem
-  def readAll(): Seq[HistoryItem]
+  def readAll: Seq[HistoryItem]
   def readSome(filter: String): Seq[HistoryItem]
   def updateStar(hi: HistoryItem): Unit
   def updateTags(hi: HistoryItem): Unit
