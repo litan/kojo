@@ -120,7 +120,7 @@ def badBehavior(self: Picture) {
     var newv = velocities(self).rotate(randomDouble(10) - 5)
     self.transv(newv)
     if (self.collidesWith(stage)) {
-        newv = bounceVecOffStage(newv, self)
+        newv = bouncePicOffStage(self, newv)
         self.transv(newv)
     }
     velocities += self -> newv
