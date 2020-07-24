@@ -23,12 +23,12 @@ import javax.swing._
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.text.html.HTMLEditorKit
-
 import net.kogics.kojo.action.CloseFile
 import net.kogics.kojo.action.LoadFrom
 import net.kogics.kojo.action.NewFile
 import net.kogics.kojo.action.Save
 import net.kogics.kojo.action.SaveAs
+import net.kogics.kojo.appexport.WebAppExporter
 import net.kogics.kojo.lite.action.FullScreenCanvasAction
 import net.kogics.kojo.lite.action.FullScreenOutputAction
 import net.kogics.kojo.lite.action.FullScreenSupport
@@ -126,6 +126,12 @@ trait AppMenu {
     fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_Settings")) {
       def actionPerformed(e: ActionEvent): Unit = {
         new SettingsWindow(frame).setVisible(true)
+      }
+    }))
+
+    fileMenu.add(new JMenuItem(new AbstractAction(Utils.loadString("S_ExportWebApp")) {
+      def actionPerformed(e: ActionEvent): Unit = Utils.runAsync {
+        WebAppExporter.run(scriptEditor.codePane.getText)
       }
     }))
 
