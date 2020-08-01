@@ -4,6 +4,8 @@ import java.io.{BufferedOutputStream, File, FileInputStream, FileOutputStream, I
 import java.net.{HttpURLConnection, URL}
 import java.util.zip.{ZipEntry, ZipInputStream}
 
+import scala.reflect.io.Directory
+
 object Unzipper {
 
   def unzip(zipFilePath: String, destDirectory: String): Unit = {
@@ -24,6 +26,20 @@ object Unzipper {
     val destDir = new File(outDir)
     if (!destDir.exists) {
       destDir.mkdirs()
+    }
+    else {
+      val dirWrapper = new Directory(destDir)
+      val cleaned = dirWrapper.deleteRecursively()
+      if (cleaned) {
+        destDir.mkdirs()
+      }
+      else {
+        println("***")
+        println(s"Unable to delete old export folder - ${destDir.getCanonicalPath}")
+        println("Delete the above folder manually and then re-export the Web-App for a clean export.")
+        println("Proceeding with export for now...")
+        println("***")
+      }
     }
 
     val zin = new ZipInputStream(inputStream)

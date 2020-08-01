@@ -36,7 +36,6 @@ $script
   // $$FiddleEnd
 }
 """
-    val postData = postDataStr.getBytes(StandardCharsets.UTF_8)
 
     var con: HttpURLConnection = null
     try {
@@ -51,8 +50,9 @@ $script
       con.setRequestProperty("Accept-Encoding", "gzip")
 
       println("Sending script...")
+      val scriptBytes = postDataStr.getBytes(StandardCharsets.UTF_8)
       Using(new DataOutputStream(con.getOutputStream())) { wr =>
-        wr.write(postData)
+        wr.write(scriptBytes)
       }
 
       println("Reading response...")
@@ -69,16 +69,20 @@ $script
         }
       }
       println("Script compilation done.")
+
+      @annotation.nowarn def parseJson(json: String) = JSON.parseFull(json)
+
       println("Parsing response...")
-      val parsed = JSON.parseFull(content.toString)
+      val parsed = parseJson(content.toString)
       println("Parsing done.")
       parsed match {
-        case Some(e: Map[Any, Any]) =>
-          val jsCodeSeq = e("jsCode").asInstanceOf[List[String]]
+        case Some(parsedData) =>
+          val parsedMap = parsedData.asInstanceOf[Map[Any, Any]]
+          val jsCodeSeq = parsedMap("jsCode").asInstanceOf[List[String]]
           if (jsCodeSeq.length > 0) {
             val home = System.getProperty("user.home")
             val exportDir = s"$home/kojo-export"
-            println(s"Downloading and extracting Web-App template to $exportDir ...")
+            println(s"Downloading and extracting Web-App template to $exportDir...")
             val templateUrl = new URL("https://github.com/litan/kojo/blob/master/src/main/resources/export/webapp.zip?raw=true")
             Unzipper.unzipUrl(templateUrl, exportDir)
             println("Template downloading and extracting done.")
@@ -89,15 +93,22 @@ $script
             bw.write(jsCodeSeq.head)
             bw.close()
             println("Export done.")
+            println("---")
             println(s"The exported Web-App is available at $exportDir/webapp")
+            println("---")
+            println("For information on what to do next, check out - https://docs.kogics.net/howtos/webapp-export.html")
           }
           else {
             println("Compilation error:")
-            println(e("log"))
-            println("Make sure the program works in iKojo before trying to export it")
+            println(parsedMap("log"))
+            println("Make sure the program works in iKojo before trying to export it.")
           }
         case None => println("Error in response.")
       }
+    }
+    catch {
+      case t: Throwable =>
+        println(s"Problem: ${t.getClass.getName} - ${t.getMessage}")
     }
     finally {
       con.disconnect()
