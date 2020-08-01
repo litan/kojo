@@ -82,7 +82,8 @@ $script
           if (jsCodeSeq.length > 0) {
             val home = System.getProperty("user.home")
             val exportDir = s"$home/kojo-export"
-            println(s"Downloading and extracting Web-App template to $exportDir...")
+            val displayExportDir = new File(exportDir).getCanonicalPath
+            println(s"Downloading and extracting Web-App template to $displayExportDir...")
             val templateUrl = new URL("https://github.com/litan/kojo/blob/master/src/main/resources/export/webapp.zip?raw=true")
             Unzipper.unzipUrl(templateUrl, exportDir)
             println("Template downloading and extracting done.")
@@ -94,7 +95,7 @@ $script
             bw.close()
             println("Export done.")
             println("---")
-            println(s"The exported Web-App is available at $exportDir/webapp")
+            println(s"The exported Web-App is available at $displayExportDir")
             println("---")
             println("For information on what to do next, check out - https://docs.kogics.net/howtos/webapp-export.html")
           }
