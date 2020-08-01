@@ -1,6 +1,7 @@
 package net.kogics.kojo.util
 
 import java.io.{BufferedOutputStream, File, FileInputStream, FileOutputStream, InputStream}
+import java.net.{HttpURLConnection, URL}
 import java.util.zip.{ZipEntry, ZipInputStream}
 
 object Unzipper {
@@ -11,6 +12,11 @@ object Unzipper {
 
   def unzipResource(zipFileResource: String, destDirectory: String): Unit = {
     unzip(getClass.getResourceAsStream(zipFileResource), destDirectory)
+  }
+
+  def unzipUrl(zipFileUrl: URL, destDirectory: String): Unit = {
+    val con = zipFileUrl.openConnection().asInstanceOf[HttpURLConnection]
+    unzip(con.getInputStream, destDirectory)
   }
 
   def unzip(inputStream: InputStream, outDir: String): Unit = {

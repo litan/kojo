@@ -77,8 +77,9 @@ $script
           if (jsCodeSeq.length > 0) {
             val home = System.getProperty("user.home")
             val exportDir = s"$home/kojo-export"
-            println(s"Extracting Web-App template to $exportDir")
-            Unzipper.unzipResource("/export/webapp.zip", exportDir)
+            println(s"Downloading and Extracting Web-App template to $exportDir")
+            val templateUrl = new URL("https://github.com/litan/kojo/blob/master/src/main/resources/export/webapp.zip?raw=true")
+            Unzipper.unzipUrl(templateUrl, exportDir)
             println("Done")
 
             println("Writing JavaScript file")
