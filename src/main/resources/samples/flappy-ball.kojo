@@ -29,16 +29,13 @@ val pl2 = Picture.image("/media/flappy-ball/ballwing2.png", playerE)
 val player = picBatch(pl1, pl2)
 draw(player)
 drawAndHide(playerE)
-createObstacle()
-var lastObsCreateTime = epochTime
+// createObstacle()
+
+timer(1000) {
+    createObstacle()
+}
 
 animate {
-    val currTime = epochTime
-    if (currTime - lastObsCreateTime > 1) {
-        createObstacle()
-        lastObsCreateTime = currTime
-    }
-
     obstacles foreach { obs =>
         if (obs.position.x + 60 < cb.x) {
             obs.erase()
@@ -53,9 +50,7 @@ animate {
             }
         }
     }
-}
 
-player.react { self =>
     player.showNext()
     if (isKeyPressed(Kc.VK_UP)) {
         fallSpeed = 0
