@@ -14,8 +14,7 @@
  */
 package net.kogics.kojo.lite
 
-import java.awt.Component
-import java.awt.Dimension
+import java.awt.{Component, Dimension, Insets}
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 
@@ -514,6 +513,7 @@ trait AppMenu {
         aboutText.setPreferredSize(new Dimension(650, 300))
         aboutText.setMaximumSize(new Dimension(650, 300))
         aboutText.setCaretPosition(0)
+        aboutText.setMargin(new Insets(15, 20, 15, 20))
         aboutPanel.add(new JScrollPane(aboutText))
         val ok = new JButton(Utils.loadString("S_OK"))
         ok.setAlignmentX(Component.CENTER_ALIGNMENT)
