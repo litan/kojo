@@ -17,7 +17,7 @@ object Unzipper {
   }
 
   def unzipUrl(zipFileUrl: URL, destDirectory: String): Unit = {
-    val con = zipFileUrl.openConnection().asInstanceOf[HttpURLConnection]
+    val con = zipFileUrl.openConnection()
     unzip(con.getInputStream, destDirectory)
   }
 
