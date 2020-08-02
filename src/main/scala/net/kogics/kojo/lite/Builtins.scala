@@ -16,9 +16,9 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.{Paint, Toolkit}
 import java.awt.geom.GeneralPath
 import java.awt.image.{BufferedImage, BufferedImageOp}
+import java.awt.{Paint, Toolkit}
 import java.net.URL
 
 import com.jhlabs.image.AbstractBufferedImageOp
@@ -535,8 +535,8 @@ Here's a partial list of the available commands:
     Help.addContent(lang, content)
   }
 
-//  def bounceVecOffStage(v: Vector2D, p: Picture): Vector2D =
-//    picture.bounceVecOffStage(v, p)
+  //  def bounceVecOffStage(v: Vector2D, p: Picture): Vector2D =
+  //    picture.bounceVecOffStage(v, p)
   def bouncePicVectorOffStage(p: Picture, v: Vector2D): Vector2D = bouncePicVectorOffPic(p, v, TSCanvas.stageBorder)
   def bouncePicVectorOffPic(pic: Picture, v: Vector2D, obstacle: Picture): Vector2D =
     picture.bouncePicVectorOffPic(pic, v, obstacle, Random)
@@ -615,8 +615,22 @@ Here's a partial list of the available commands:
     // def ellipse(x: Double, y: Double, rx: Double, ry: Double) = picture.offset(x, y) -> picture.ellipse(rx, ry)
     def arc(radius: Double, angle: Double) = picture.arc(radius, angle)
     def point = picture.trans(0, -0.01 / 2) -> line(0, 0.01)
-    def image(fileName: String) = picture.image(fileName, None)
-    def image(fileName: String, envelope: Picture) = picture.image(fileName, Some(envelope))
+    def image(fileName: String): Picture = {
+      if (fileName.startsWith("http")) {
+        image(url(fileName))
+      }
+      else {
+        picture.image(fileName, None)
+      }
+    }
+    def image(fileName: String, envelope: Picture): Picture = {
+      if (fileName.startsWith("http")) {
+        image(url(fileName), envelope)
+      }
+      else {
+        picture.image(fileName, Some(envelope))
+      }
+    }
     def image(url: URL) = picture.image(url, None)
     def image(url: URL, envelope: Picture) = picture.image(url, Some(envelope))
     def image(image: Image) = picture.image(image, None)

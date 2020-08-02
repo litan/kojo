@@ -16,21 +16,16 @@
 package net.kogics.kojo
 package music
 
-import java.io.File
-import java.io.FileInputStream
-import java.io.InputStream
+import java.io.{File, FileInputStream, InputStream}
+import java.net.URL
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
 
 import javax.swing.Timer
-
-import net.kogics.kojo.core.KojoCtx
-
 import javazoom.jl.player.Player
-import util.AsyncQueuedRunner
-import util.Utils
-import util.Utils.giveupLock
-import util.Utils.withLock
+import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.util.{AsyncQueuedRunner, Utils}
+import net.kogics.kojo.util.Utils.{giveupLock, withLock}
 
 trait Mp3Player {
   val pumpEvents: Boolean
@@ -69,20 +64,26 @@ trait Mp3Player {
   }
 
   private def playHelper(fname: String)(fn: (InputStream) => Unit): Unit = {
-    val is = getClass.getResourceAsStream(fname)
-    if (is != null) {
+    if (fname.startsWith("http")) {
+      val is = new URL(fname).openConnection().getInputStream
       fn(is)
     }
     else {
-      val mp3File = Utils.absolutePath(fname)
-      val f = new File(mp3File)
-      if (f.exists) {
-        val is = new FileInputStream(f)
+      val is = getClass.getResourceAsStream(fname)
+      if (is != null) {
         fn(is)
-        //      is.close() - player closes the stream
       }
       else {
-        showError("MP3 file does not exist - %s" format (f.getAbsolutePath))
+        val mp3File = Utils.absolutePath(fname)
+        val f = new File(mp3File)
+        if (f.exists) {
+          val is = new FileInputStream(f)
+          fn(is)
+          //      is.close() - player closes the stream
+        }
+        else {
+          showError("MP3 file does not exist - %s" format (f.getAbsolutePath))
+        }
       }
     }
   }
