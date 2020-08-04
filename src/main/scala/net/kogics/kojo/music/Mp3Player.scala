@@ -86,11 +86,9 @@ trait Mp3Player {
 
     val byteArray = streamCache.get(fname)
     if (byteArray != null) {
-      println(s"Stream for $fname found in cache")
       new ByteArrayInputStream(byteArray)
     }
     else {
-      println(s"Stream for $fname not in cache, loading...")
       val byteArrayIs = try {
         if (fname.startsWith("http")) {
           val is = new URL(fname).openConnection().getInputStream
