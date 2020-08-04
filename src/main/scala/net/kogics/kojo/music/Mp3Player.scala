@@ -16,16 +16,16 @@
 package net.kogics.kojo
 package music
 
-import java.io.{File, FileInputStream, InputStream}
+import java.io._
 import java.net.URL
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
+import java.util.concurrent.{ConcurrentHashMap, TimeUnit}
 
 import javax.swing.Timer
 import javazoom.jl.player.Player
 import net.kogics.kojo.core.KojoCtx
-import net.kogics.kojo.util.{AsyncQueuedRunner, Utils}
 import net.kogics.kojo.util.Utils.{giveupLock, withLock}
+import net.kogics.kojo.util.{AsyncQueuedRunner, Utils}
 
 trait Mp3Player {
   val pumpEvents: Boolean
@@ -63,34 +63,87 @@ trait Mp3Player {
     }
   }
 
+  val streamCache = new ConcurrentHashMap[String, Array[Byte]]()
+  private def obtainStream(fname: String): InputStream = {
+    def inputStreamToByteArray(is: InputStream): Array[Byte] = {
+      import java.io.ByteArrayOutputStream
+      val buff = new Array[Byte](8192)
+      val bao = new ByteArrayOutputStream
+      val in = new BufferedInputStream(is)
+      var read = in.read(buff)
+      while (read != -1) {
+        bao.write(buff, 0, read)
+        read = in.read(buff)
+      }
+      in.close()
+      bao.toByteArray
+    }
+
+    def updateCacheAndObtainInputStream(ba: Array[Byte]): InputStream = {
+      streamCache.put(fname, ba)
+      new ByteArrayInputStream(ba)
+    }
+
+    val byteArray = streamCache.get(fname)
+    if (byteArray != null) {
+      println(s"Stream for $fname found in cache")
+      new ByteArrayInputStream(byteArray)
+    }
+    else {
+      println(s"Stream for $fname not in cache, loading...")
+      val byteArrayIs = try {
+        if (fname.startsWith("http")) {
+          val is = new URL(fname).openConnection().getInputStream
+          val ba = inputStreamToByteArray(is)
+          updateCacheAndObtainInputStream(ba)
+        }
+        else {
+          val is = getClass.getResourceAsStream(fname)
+          if (is != null) {
+            val ba = inputStreamToByteArray(is)
+            updateCacheAndObtainInputStream(ba)
+          }
+          else {
+            val mp3File = Utils.absolutePath(fname)
+            val f = new File(mp3File)
+            if (f.exists) {
+              val is = new FileInputStream(f)
+              val ba = inputStreamToByteArray(is)
+              updateCacheAndObtainInputStream(ba)
+            }
+            else {
+              null
+            }
+          }
+        }
+      }
+      catch {
+        case t: Throwable => null
+      }
+      byteArrayIs
+    }
+  }
+
   private def playHelper(fname: String)(fn: (InputStream) => Unit): Unit = {
-    if (fname.startsWith("http")) {
-      val is = new URL(fname).openConnection().getInputStream
+    val is = obtainStream(fname)
+    if (is != null) {
       fn(is)
     }
     else {
-      val is = getClass.getResourceAsStream(fname)
-      if (is != null) {
-        fn(is)
-      }
-      else {
-        val mp3File = Utils.absolutePath(fname)
-        val f = new File(mp3File)
-        if (f.exists) {
-          val is = new FileInputStream(f)
-          fn(is)
-          //      is.close() - player closes the stream
-        }
-        else {
-          showError("MP3 file does not exist - %s" format (f.getAbsolutePath))
-        }
-      }
+      showError("MP3 file does not exist - %s" format (fname))
     }
   }
 
   def isMp3Playing: Boolean = {
     withLock(playLock) {
       mp3Player.isDefined
+    }
+  }
+
+  def preloadMp3(mp3File: String): Unit = {
+    val is = obtainStream(mp3File)
+    if (is != null) {
+      is.close()
     }
   }
 

@@ -504,6 +504,10 @@ Here's a partial list of the available commands:
   type Vector2D = util.Vector2D
   val Vector2D = util.Vector2D
 
+  def preloadMp3(mp3File: String): Unit = {
+    mp3player.preloadMp3(mp3File)
+  }
+
   def playMp3(mp3File: String): Unit = {
     mp3player.playMp3(mp3File)
   }
