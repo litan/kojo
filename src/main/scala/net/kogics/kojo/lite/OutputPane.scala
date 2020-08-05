@@ -116,6 +116,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
         }
       }
     })
+    verboseOutput.setEnabled(false)
     add(verboseOutput)
 
     val showCode = new JCheckBoxMenuItem(Utils.loadString("S_ShowScriptInOutput"))
@@ -129,6 +130,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
         }
       }
     })
+    showCode.setEnabled(false)
     add(showCode)
 
     addSeparator()
