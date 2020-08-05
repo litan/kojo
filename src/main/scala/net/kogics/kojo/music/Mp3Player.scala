@@ -27,7 +27,12 @@ import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.util.Utils.{giveupLock, withLock}
 import net.kogics.kojo.util.{AsyncQueuedRunner, Utils}
 
+object Mp3Player {
+  val streamCache = new ConcurrentHashMap[String, Array[Byte]]()
+}
+
 trait Mp3Player {
+  import Mp3Player.streamCache
   val pumpEvents: Boolean
   val kojoCtx: KojoCtx
   def showError(msg: String): Unit
@@ -63,7 +68,6 @@ trait Mp3Player {
     }
   }
 
-  val streamCache = new ConcurrentHashMap[String, Array[Byte]]()
   private def obtainStream(fname: String): InputStream = {
     def inputStreamToByteArray(is: InputStream): Array[Byte] = {
       import java.io.ByteArrayOutputStream
