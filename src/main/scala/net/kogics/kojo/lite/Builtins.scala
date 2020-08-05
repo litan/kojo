@@ -283,6 +283,8 @@ Here's a partial list of the available commands:
     scalaCodeRunner.runCode(code)
   }
 
+  def eval(expr: String) = scalaCodeRunner.evalExpression(expr)
+
   def resetInterpreter(): Unit = {
     scalaCodeRunner.resetInterp()
   }

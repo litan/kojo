@@ -23,6 +23,7 @@ trait CodeRunner {
   def start(): Unit
   def interruptInterpreter(): Unit
   def runCode(code: String): Unit
+  def evalExpression(expr: String): Option[Any]
   def runWorksheet(code: String): Unit
   def parseCode(code: String, browseAst: Boolean): Unit
   def compileCode(code: String): Unit

@@ -56,6 +56,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     actor
   }
 
+  // its fine to access kojoInterpreter from within a Kojo script
+  // as the script runs within an actor thread with appropriate Java Memory Model safety
   def kojoInterpreter = actorState.interpreter
 
   def start() = {
@@ -77,6 +79,19 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   def runCode(code: String): Unit = {
     // Runs on swing thread
     codeRunner ! RunCode(code)
+  }
+
+  def evalExpression(expr: String): Option[Any] = {
+    try {
+      val str = s"val ans = $expr"
+      kojoInterpreter.interp.interpret(str)
+      kojoInterpreter.interp.valueOfTerm("ans")
+    }
+    catch {
+      case t: Throwable =>
+        println(t.getMessage)
+        None
+    }
   }
 
   def runWorksheet(code: String): Unit = {
