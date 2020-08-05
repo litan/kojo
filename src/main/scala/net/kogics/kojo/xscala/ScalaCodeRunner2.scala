@@ -83,7 +83,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
   def evalExpression(expr: String): Option[Any] = {
     try {
-      val str = s"val ans = $expr"
+      val str = s"val ans = { $expr }"
       kojoInterpreter.interp.interpret(str)
       kojoInterpreter.interp.valueOfTerm("ans")
     }
