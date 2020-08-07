@@ -24,6 +24,7 @@ import java.util.concurrent.{ConcurrentHashMap, TimeUnit}
 import javax.swing.Timer
 import javazoom.jl.player.Player
 import net.kogics.kojo.core.KojoCtx
+import net.kogics.kojo.lite.LoadProgress
 import net.kogics.kojo.util.Utils.{giveupLock, withLock}
 import net.kogics.kojo.util.{AsyncQueuedRunner, Utils}
 
@@ -143,7 +144,9 @@ trait Mp3Player {
   }
 
   def preloadMp3(mp3File: String): Unit = {
+    LoadProgress.showLoading()
     val is = obtainStream(mp3File)
+    LoadProgress.hideLoading()
     if (is != null) {
       is.close()
     }

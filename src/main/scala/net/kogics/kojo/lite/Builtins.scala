@@ -911,4 +911,10 @@ Here's a partial list of the available commands:
   }
 
   def joystick(radius: Double) = new JoyStick(radius)(this)
+  LoadProgress.init(this)
+  def preloadImage(file: String): Unit = {
+    LoadProgress.showLoading()
+    Utils.loadUrlImageC(url(file))
+    LoadProgress.hideLoading()
+  }
 }

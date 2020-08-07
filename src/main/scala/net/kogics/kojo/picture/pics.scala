@@ -253,7 +253,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     }
   }
 
-  def isVisible() = Utils.runInSwingThreadAndPause { tnode.getVisible() }
+  def isVisible = Utils.runInSwingThreadAndPause { tnode.getVisible }
 
   protected def initGeom(): Geometry
   def picGeom: Geometry = Utils.runInSwingThreadAndWait {
