@@ -515,6 +515,10 @@ trait AppMenu {
         aboutText.setCaretPosition(0)
         aboutText.setMargin(new Insets(15, 20, 15, 20))
         aboutPanel.add(new JScrollPane(aboutText))
+
+        val verticalSpaceDim = new Dimension(1, 10)
+        aboutPanel.add(Box.createRigidArea(verticalSpaceDim))
+
         val ok = new JButton(Utils.loadString("S_OK"))
         ok.setAlignmentX(Component.CENTER_ALIGNMENT)
         aboutBox.getRootPane.setDefaultButton(ok)
@@ -524,6 +528,8 @@ trait AppMenu {
           }
         })
         aboutPanel.add(ok)
+
+        aboutPanel.add(Box.createRigidArea(verticalSpaceDim))
 
         aboutBox.setModal(true)
         aboutBox.getContentPane.add(aboutPanel)
