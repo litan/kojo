@@ -84,8 +84,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   def evalExpression(expr: String): Option[Any] = {
     try {
       val str = s"val ans = { $expr }"
-      kojoInterpreter.interp.interpret(str)
-      kojoInterpreter.interp.valueOfTerm("ans")
+      val result = kojoInterpreter.interp.interpret(str)
+      if (result == IR.Success) kojoInterpreter.interp.valueOfTerm("ans") else None
     }
     catch {
       case t: Throwable =>
