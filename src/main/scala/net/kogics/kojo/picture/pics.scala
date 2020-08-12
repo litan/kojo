@@ -901,3 +901,43 @@ class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
 
   override def toString() = s"Picture Batch (Id: ${System.identityHashCode(this)})"
 }
+
+class PicScreen {
+  val pics = ArrayBuffer.empty[Picture]
+  var drawn = false
+
+  def add(ps: Picture*) {
+    ps.foreach { pics.append(_) }
+  }
+
+  def add(ps: collection.Seq[Picture]) {
+    ps.foreach { pics.append(_) }
+  }
+
+  private def draw() {
+    pics.foreach { _.draw() }
+  }
+
+  def hide() {
+    pics.foreach { _.invisible() }
+  }
+
+  private def unhide() {
+    pics.foreach { _.visible() }
+  }
+
+  def show() {
+    if (!drawn) {
+      draw()
+      drawn = true
+    }
+    else {
+      unhide()
+    }
+  }
+
+  def erase() {
+    pics.foreach { _.erase() }
+  }
+}
+

@@ -219,6 +219,7 @@ trait CoreBuiltins extends Rationals {
   val GPics2 = picture.GPics2
   type BatchPics = picture.BatchPics
   val BatchPics = picture.BatchPics
+  type PicScreen = picture.PicScreen
   val trans = picture.trans _
   val rot = picture.rot _
   def id = picture.trans(0, 0)
