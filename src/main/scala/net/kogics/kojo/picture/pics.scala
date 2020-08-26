@@ -906,27 +906,27 @@ class PicScreen {
   val pics = ArrayBuffer.empty[Picture]
   var drawn = false
 
-  def add(ps: Picture*) {
+  def add(ps: Picture*): Unit = {
     ps.foreach { pics.append(_) }
   }
 
-  def add(ps: collection.Seq[Picture]) {
+  def add(ps: collection.Seq[Picture]): Unit = {
     ps.foreach { pics.append(_) }
   }
 
-  private def draw() {
+  private def draw(): Unit = {
     pics.foreach { _.draw() }
   }
 
-  def hide() {
+  def hide(): Unit = {
     pics.foreach { _.invisible() }
   }
 
-  private def unhide() {
+  private def unhide(): Unit = {
     pics.foreach { _.visible() }
   }
 
-  def show() {
+  def show(): Unit = {
     if (!drawn) {
       draw()
       drawn = true
@@ -936,8 +936,7 @@ class PicScreen {
     }
   }
 
-  def erase() {
+  def erase(): Unit = {
     pics.foreach { _.erase() }
   }
 }
-
