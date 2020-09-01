@@ -144,6 +144,25 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   searchPane.add(searchBut)
 
   var allowSearch = true
+
+  def scrollToEnd(): Unit = {
+    table.scrollRectToVisible(table.getCellRect(cmdh.size, 0, true))
+  }
+
+  def clearSearch(): Unit = {
+    if (!allowSearch) {
+      execSupport.kojoCtx.showAppWaitCursor()
+      cmdh.loadAll()
+      execSupport.kojoCtx.hideAppWaitCursor()
+      tableModel.fireTableDataChanged()
+      table.setRowSelectionInterval(cmdh.size, cmdh.size)
+      allowSearch = true
+      searchBut.setText(searchButtonName)
+      searchField.setText("")
+      scrollToEnd()
+    }
+  }
+
   val searcher = new ActionListener {
     def actionPerformed(e: ActionEvent): Unit = {
       if (allowSearch) {
@@ -158,14 +177,7 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
         // searchBut.requestFocusInWindow()
       }
       else {
-        execSupport.kojoCtx.showAppWaitCursor()
-        cmdh.loadAll()
-        execSupport.kojoCtx.hideAppWaitCursor()
-        tableModel.fireTableDataChanged()
-        table.setRowSelectionInterval(cmdh.size, cmdh.size)
-        allowSearch = true
-        searchBut.setText(searchButtonName)
-        searchField.setText("")
+        clearSearch()
         searchField.requestFocusInWindow()
       }
     }
@@ -206,6 +218,5 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
       ensureVisible(cmdh.size)
     }
   })
-  table.scrollRectToVisible(table.getCellRect(cmdh.size, 0, true))
-
+  scrollToEnd()
 }
