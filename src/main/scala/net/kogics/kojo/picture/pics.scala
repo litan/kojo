@@ -904,7 +904,9 @@ class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
 
 class PicScreen {
   val pics = ArrayBuffer.empty[Picture]
-  var drawn = false
+  @volatile var drawn = false
+  @volatile var showCmd: Option[() => Unit] = None
+  @volatile var hideCmd: Option[() => Unit] = None
 
   def add(ps: Picture*): Unit = {
     ps.foreach { pics.append(_) }
@@ -920,6 +922,9 @@ class PicScreen {
 
   def hide(): Unit = {
     pics.foreach { _.invisible() }
+    hideCmd.foreach { c =>
+      c()
+    }
   }
 
   private def unhide(): Unit = {
@@ -934,9 +939,21 @@ class PicScreen {
     else {
       unhide()
     }
+
+    showCmd.foreach { c =>
+      c()
+    }
   }
 
   def erase(): Unit = {
     pics.foreach { _.erase() }
+  }
+
+  def onShow(cmd: => Unit): Unit = {
+    showCmd = Some(() => cmd)
+  }
+
+  def onHide(cmd: => Unit): Unit = {
+    hideCmd = Some(() => cmd)
   }
 }
