@@ -74,7 +74,7 @@ trait KojoCtx {
   def readInput(prompt: String): String
   def setAstStopPhase(phase: String): Unit
   def astStopPhase: String
-  def setScript(code: String): Unit
+  def setScript(code: String, caretAtEnd: Boolean): Unit
   def insertCodeInline(code: String): Unit
   def insertCodeBlock(code: String): Unit
   def clickRun(): Unit

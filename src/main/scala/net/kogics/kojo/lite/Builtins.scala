@@ -196,7 +196,7 @@ class Builtins(
   }
   UserCommand("stShowStatusMsg", List("msg"), "Shows the specified message in the Story Teller status bar.")
 
-  def stSetScript(code: String) = kojoCtx.setScript(code)
+  def stSetScript(code: String, caretAtEnd: Boolean = false) = kojoCtx.setScript(code, caretAtEnd)
   UserCommand("stSetScript", List("code"), "Copies the supplied code to the script editor.")
 
   def stRunCode(code: String) = interpret(code)

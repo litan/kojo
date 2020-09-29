@@ -376,7 +376,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def clearOutput() = execSupport.clrOutput()
   def kprintln(outText: String) = execSupport.showOutput(outText)
   def readInput(prompt: String): String = execSupport.readInput(prompt)
-  def setScript(code: String) = execSupport.setScript(code)
+  def setScript(code: String, caretAtEnd: Boolean) = execSupport.setScript(code, caretAtEnd)
   def insertCodeInline(code: String) = execSupport.insertCodeInline(code)
   def insertCodeBlock(code: String) = execSupport.insertCodeBlock(code)
   def clickRun() = execSupport.compileRunCode()

@@ -284,11 +284,16 @@ class CodeExecutionSupport(
     }
   }
 
-  def setScript(code: String): Unit = {
+  def setScript(code: String, caretAtEnd: Boolean): Unit = {
     Utils.runInSwingThreadAndWait {
       closeFileAndClrEditor()
       codePane.setText(code)
-      codePane.setCaretPosition(0)
+      if (caretAtEnd) {
+        codePane.setCaretPosition(code.length)
+      }
+      else {
+        codePane.setCaretPosition(0)
+      }
     }
   }
 
