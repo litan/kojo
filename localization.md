@@ -12,6 +12,13 @@ The first step is to fork and then clone the kojo repo. You can then make the re
 Tanslate the following file:  
 https://github.com/litan/kojo/blob/master/src/main/resources/net/kogics/kojo/lite/Bundle.properties
 
+Add your language code to the list here:  
+https://github.com/litan/kojo/blob/master/src/main/scala/net/kogics/kojo/lite/LangMenuFactory.scala#L31
+
+Add your language (localized) name to the map here:  
+https://github.com/litan/kojo/blob/master/src/main/scala/net/kogics/kojo/lite/LangMenuFactory.scala#L75
+
+
 ### Level 2
 Tanslate the following file:  
 https://github.com/litan/kojo/blob/master/l10n-level2/level2.properties
