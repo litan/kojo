@@ -2,7 +2,7 @@
 
 * The [Kojo home-page][1] provides user-level information about Kojo.
 * The [Kojo issue-tracker][3] let's you file bug reports.
-* The [Kojo Localization][5] page tells you how to translate Kojo to your language.
+* The [Kojo Localization](localization.md) page tells you how to translate Kojo to your language.
 
 **To start hacking:**
 
