@@ -84,7 +84,7 @@ object LangMenuFactory {
     "de" -> "Deutsch (German)",
     "ru" -> "Русский (Russian)",
     "hr" -> "Hrvatski (Croatian)",
-    "tr" -> "Turkish"
+    "tr" -> "Türkçe (Turkish)"
   )
 
   /** If the language code is not in this map, then the country defaults to same code as the language. */
