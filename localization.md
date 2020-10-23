@@ -8,9 +8,11 @@ The following are the steps that need to be followed to do the localization:
 
 The first step is to fork and then clone the kojo repo. You can then make the required localization enhancements in your repo and send pull requests.
 
+In the discussion below, let's assume that the language code for the target language is `xx`.
+
 ### Level 1
-Tanslate the following file:  
-https://github.com/litan/kojo/blob/master/src/main/resources/net/kogics/kojo/lite/Bundle.properties
+Create `Bundle_xx.properties` by tanslating the following file:  
+https://github.com/litan/kojo/blob/master/src/main/resources/net/kogics/kojo/lite/Bundle.properties  
 
 Add your language code to the list here:  
 https://github.com/litan/kojo/blob/master/src/main/scala/net/kogics/kojo/lite/LangMenuFactory.scala#L31
@@ -18,10 +20,21 @@ https://github.com/litan/kojo/blob/master/src/main/scala/net/kogics/kojo/lite/La
 Add your language (localized) name to the map here:  
 https://github.com/litan/kojo/blob/master/src/main/scala/net/kogics/kojo/lite/LangMenuFactory.scala#L75
 
+Then send a pull request.
 
 ### Level 2
-Tanslate the following file:  
+Create `level2_xx.properties` by translating the following file:  
 https://github.com/litan/kojo/blob/master/l10n-level2/level2.properties
+
+Then send a pull request.
+
+FYI, with the help of `level2_xx.properties`, the following files will be modified by a Kojo core-developer to wire in the level-2 changes:
+* xxInit.scala (generated from the above properties file).
+* xx.tw.scala
+* LangInit.scala
+
+Here's an example checkin for a wiring-in:  
+https://github.com/litan/kojo/commit/852c18a6124fe773063f846db8fda9b7b705ab4c
 
 ### Level 3
 This is best explained with an example:
