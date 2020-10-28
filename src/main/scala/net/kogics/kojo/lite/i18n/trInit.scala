@@ -109,19 +109,19 @@ object TurkishAPI {
   //  }
 
   //loops
-  def yinele(n: Int)(block: => Unit) {
+  def yinele(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
 
-  def yineleDizinli(n: Int)(block: Int => Unit) {
+  def yineleDizinli(n: Int)(block: Int => Unit): Unit = {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def yineleDogruysa(koşul: => Boolean)(block: => Unit) {
+  def yineleDogruysa(koşul: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatWhile(koşul) { block }
   }
 
-  def yineleKere[T](dizi: Iterable[T])(block: T => Unit) {
+  def yineleKere[T](dizi: Iterable[T])(block: T => Unit): Unit = {
     RepeatCommands.repeatFor(dizi) { block }
   }
 
@@ -146,7 +146,7 @@ object TurkishAPI {
 }
 
 object TurkishInit {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     TurkishAPI.builtins = builtins
     builtins match {

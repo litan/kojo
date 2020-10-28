@@ -2,7 +2,7 @@
 
 * The [Kojo home-page][1] provides user-level information about Kojo.
 * The [Kojo issue-tracker][3] let's you file bug reports.
-* The [Kojo Localization](localization.md) page tells you how to translate Kojo to your language.
+* The [Kojo Localization](localization.md) file tells you how to translate Kojo to your language.
 
 **To start hacking:**
 
@@ -34,5 +34,4 @@ For running Kojo from within an IDE, the main class is `net.kogics.kojo.lite.Des
 
   [1]: http://www.kogics.net/kojo
   [3]: https://github.com/litan/kojo/issues
-  [5]: https://bitbucket.org/lalit_pant/kojo/wiki/Kojo%20Localization
   
