@@ -49,11 +49,21 @@ class JoyStick(radius: Double)(builtins: Builtins) {
 
   def currentVector = currentVec
 
-  def movePlayer(player: Picture, scaleVelocity: Double = 1, directionConstraint: net.kogics.kojo.util.Vector2D = null): Unit = {
-    import builtins.TSCanvas._
+  def movePlayerHelper(player: Picture, scaleVelocity: Double = 1, directionConstraint: net.kogics.kojo.util.Vector2D = null) = {
     val vel = if (directionConstraint == null)
       currentVector * scaleVelocity else currentVector.project(directionConstraint) * scaleVelocity
     player.offset(vel)
+    vel
+  }
+
+  def movePlayer(player: Picture, scaleVelocity: Double = 1, directionConstraint: net.kogics.kojo.util.Vector2D = null): Unit = {
+    movePlayerHelper(player, scaleVelocity, directionConstraint)
+  }
+
+  def movePlayerWithinStage(player: Picture, scaleVelocity: Double = 1, directionConstraint: net.kogics.kojo.util.Vector2D = null): Unit = {
+    import builtins.TSCanvas._
+
+    val vel = movePlayerHelper(player, scaleVelocity, directionConstraint)
 
     def handlePossibleCollision(stagePart: Picture, vel: Vector2D): Unit = {
       if (player.collidesWith(stagePart)) {
