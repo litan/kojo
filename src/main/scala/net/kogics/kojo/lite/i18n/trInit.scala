@@ -137,11 +137,11 @@ object TurkishAPI {
     math.round(sayı.doubleValue * faktor).toLong / faktor
   }
   def rasgele(üstSınır: Int) = builtins.random(üstSınır)
-  def rasgeleÇift(üstSınır: Int) = builtins.randomDouble(üstSınır)
+  def rasgeleKesir(üstSınır: Int) = builtins.randomDouble(üstSınır)
 
   //some type aliases in Swedish
-  type Doğal = Int
-  type Çift = Double
+  type Sayı = Int
+  type Kesir = Double
   type Dizi = String
 }
 
@@ -218,7 +218,7 @@ object TurkishInit {
     "satıroku" -> "satıroku(${istem})",
     "yuvarla" -> "yuvarla(${sayı},${basamaklar})",
     "rasgele" -> "rasgele(${üstSınır})",
-    "rasgeleÇift" -> "rasgeleÇift(${üstSınır})",
+    "rasgeleKesir" -> "rasgeleKesir(${üstSınır})",
     "giysiKur" -> "giysiKur(${dostaAdı})",
     "giysileriKur" -> "giysileriKur(${dostaAdı1},${dostaAdı2})",
     "birsonrakiGiysi" -> "birsonrakiGiysi()"
@@ -270,7 +270,7 @@ object TurkishInit {
     "satıroku" -> <div><strong>satıroku</strong>(istemDizisi) - Bu komut verilen istem dizisini çıktı penceresine yazar ve arkasından sizin yazdığınız bir satırı okur. </div>.toString,
     "yuvarla" -> <div><strong>yuvarla</strong>(sayı, basamak) - Bu komut verilen sayıyı noktadan sonra verilen basamak sayısına kadar yuvarlar. </div>.toString,
     "rasgele" -> <div><strong>rasgele</strong>(üstsınır) - Bu komut verilen üst sınırdan küçük rastgele bir doğal sayı verir. Sıfırdan küçük sayılar vermez. </div>.toString,
-    "rasgeleÇift" -> <div><strong>rasgeleÇift</strong>() - Bu komut verilen üst sınırdan küçük rastgele bir kesirli sayı (çift çözünürlüklü) verir. Sıfırdan küçük sayılar vermez. </div>.toString,
+    "rasgeleKesir" -> <div><strong>rasgeleÇift</strong>() - Bu komut verilen üst sınırdan küçük rastgele bir kesirli sayı (çift çözünürlüklü) verir. Sıfırdan küçük sayılar vermez. </div>.toString,
     "giysiKur" -> <div><strong>giysiKur</strong>(giysiDosyası) - Kaplumbağanın görünüşünü verilen dosyadaki resimle değiştirir. </div>.toString,
     "giysileriKur" -> <div><strong>giysilerKur</strong>(giysiDosyası1, giysiDosyası2, ...) - Kaplumbağa için bir dizi giysi belirler ve giysiDosyası1 resmini giydirir. <tt>birSonrakiGiysi()</tt> komutuyla dizideki bir sonraki giysiyi giydirebiliriz. </div>.toString,
     "birsonrakiGiysi" -> <div><strong>birSonrakiGiysi</strong>() - Kaplumbağaya <tt>giysilerKur()</tt> komutuyla girilen giysi dizisindeki bir sonraki resmi giydirir. </div>.toString
