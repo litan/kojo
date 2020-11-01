@@ -16,23 +16,24 @@ package net.kogics.kojo
 
 import java.awt.image.BufferedImage
 import java.io.File
+import java.net.URL
 
-import scala.collection.mutable.ArrayBuffer
-
-import org.mapeditor.core.MapLayer
-import org.mapeditor.core.TileLayer
-import org.mapeditor.core.{Tile => MapTile}
-
-import net.kogics.kojo.core.Picture
-import net.kogics.kojo.core.Point
-import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.core.{Picture, Point, SCanvas}
 import net.kogics.kojo.util.Utils
+import org.mapeditor.core.{MapLayer, TileLayer, Tile => MapTile}
 
 package object tiles {
 
   case class SpriteSheet(fileName: String, tileX: Int, tileY: Int) {
     import java.awt.image.BufferedImage
-    val sheet = Utils.loadBufImage(fileName)
+    val sheet = {
+      if (fileName.startsWith("http")) {
+        Utils.loadUrlImageC(new URL(fileName))
+      }
+      else {
+        Utils.loadBufImage(fileName)
+      }
+    }
 
     def imageAt(x: Int, y: Int): BufferedImage = {
       sheet.getSubimage(x * tileX, y * tileY, tileX, tileY)

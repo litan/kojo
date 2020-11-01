@@ -108,19 +108,19 @@ object $$lang$API {
   //  }
 
   //loops 
-  def $$repeat$(n: Int)(block: => Unit) {
+  def $$repeat$(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
 
-  def $$repeati$(n: Int)(block: Int => Unit) {
+  def $$repeati$(n: Int)(block: Int => Unit): Unit = {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def $$repeatWhile$($$condition$: => Boolean)(block: => Unit) {
+  def $$repeatWhile$($$condition$: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatWhile($$condition$) { block }
   }
 
-  def $$repeatFor$[T]($$sequence$: Iterable[T])(block: T => Unit) {
+  def $$repeatFor$[T]($$sequence$: Iterable[T])(block: T => Unit): Unit = {
     RepeatCommands.repeatFor($$sequence$) { block }
   }
 
@@ -145,7 +145,7 @@ object $$lang$API {
 }
 
 object $$lang$Init {
-  def init(builtins: CoreBuiltins) {
+  def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     $$lang$API.builtins = builtins
     builtins match {

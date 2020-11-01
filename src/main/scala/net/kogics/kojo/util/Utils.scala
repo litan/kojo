@@ -70,7 +70,7 @@ import edu.umd.cs.piccolo.event.PInputEvent
 
 object Utils {
   lazy val Log = Logger.getLogger("Utils")
-  lazy val imageCache = new HashMap[String, Image]
+  lazy val imageCache = new HashMap[String, BufferedImage]
   lazy val iconCache = new HashMap[String, ImageIcon]
   val GuiTimeout = 10000
 
@@ -115,10 +115,10 @@ object Utils {
   }
 
   def loadImageC(fname: String): Image = {
-    imageCache.getOrElseUpdate(fname, loadImage(fname))
+    imageCache.getOrElseUpdate(fname, loadBufImage(fname))
   }
 
-  def loadUrlImageC(url: URL): Image = {
+  def loadUrlImageC(url: URL): BufferedImage = {
     imageCache.getOrElseUpdate(url.toExternalForm, loadUrlImage(url))
   }
 
