@@ -25,13 +25,23 @@ import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.xscala.RepeatCommands
 
 object TurkishAPI {
+  // some type aliases in Turkish -- Ctrl-t to return type info will also be in turkish
+  type Birim = Unit
+  type Her   = Any
+  type Hiç   = Nothing
+
   import net.kogics.kojo.core.Turtle
   import java.awt.Color
+  type Renk = Color
+
+  import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast}
+  type Hız  = Speed
+
   var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
 
   trait TurkishTurtle {
     def englishTurtle: Turtle
-    def sil() = englishTurtle.clear()
+    def sil(): Birim = englishTurtle.clear()  // bbx: does this do anything? See sil def below..
     def görünür() = englishTurtle.visible()
     def görünmez() = englishTurtle.invisible()
     def ileri(adım: Double) = englishTurtle.forward(adım)
@@ -65,8 +75,8 @@ object TurkishAPI {
     def kalemiİndir() = englishTurtle.penDown()
     def kalemiKaldır() = englishTurtle.penUp()
     def kalemİnikMi = englishTurtle.style.down
-    def kalemRenginiKur(renk: java.awt.Color) = englishTurtle.setPenColor(renk)
-    def boyamaRenginiKur(renk: java.awt.Color) = englishTurtle.setFillColor(renk)
+    def kalemRenginiKur(renk: Renk) = englishTurtle.setPenColor(renk)
+    def boyamaRenginiKur(renk: Renk) = englishTurtle.setFillColor(renk)
     def kalemKalınlığınıKur(n: Double) = englishTurtle.setPenThickness(n)
     def biçimleriBelleğeYaz() = englishTurtle.saveStyle()
     def biçimleriGeriYükle() = englishTurtle.restoreStyle()
@@ -77,6 +87,7 @@ object TurkishAPI {
     def giysiKur(dostaAdı: String) = englishTurtle.setCostume(dostaAdı)
     def giysileriKur(dostaAdı: String*) = englishTurtle.setCostumes(dostaAdı: _*)
     def birsonrakiGiysi() = englishTurtle.nextCostume()
+    def hızıKur(hız: Hız) = englishTurtle.setSpeed(hız)
   }
   class Kaplumbağa(override val englishTurtle: Turtle) extends TurkishTurtle {
     def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
@@ -87,8 +98,8 @@ object TurkishAPI {
     override def englishTurtle: Turtle = t0
   }
   object kaplumbağa extends Kaplumbağa0(builtins.TSCanvas.turtle0)
-  def sil() = builtins.TSCanvas.clear()
-  def çıktıyıSil() = builtins.clearOutput()
+  def sil(): Birim = builtins.TSCanvas.clear()
+  def çıktıyıSil(): Birim = builtins.clearOutput()
   lazy val mavi = builtins.blue
   lazy val kırmızı = builtins.red
   lazy val sarı = builtins.yellow
@@ -99,8 +110,18 @@ object TurkishAPI {
   lazy val siyah = builtins.black
   lazy val beyaz = builtins.white
   lazy val renksiz = builtins.noColor
-  def arkaplanıKur(c: Color) = builtins.setBackground(c)
-  def arkaplanıKurDik(c1: Color, c2: Color) = builtins.TSCanvas.setBackgroundV(c1, c2)
+  lazy val gri = builtins.gray
+  lazy val koyuGri = builtins.darkGray
+  lazy val açıkGri = builtins.lightGray
+  lazy val turuncu = builtins.orange
+  lazy val morumsu = builtins.magenta
+  lazy val camgöbeği = builtins.cyan
+
+  // TODO: other Color* constructors -- and Help Content
+  def Renk(r: Int, g: Int, b: Int, o: Int = 255): Renk = new Color(r, g, b, o)
+  def arkaplanıKur(r: Renk) = builtins.setBackground(r)
+  def arkaplanıKurDik  (r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
+  def arkaplanıKurYatay(r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundH(r1, r2)
 
   //  object KcSwe { //Key codes for Swedish keys
   //    lazy val VK_Å = 197
@@ -117,12 +138,20 @@ object TurkishAPI {
     RepeatCommands.repeati(n) { i => block(i) }
   }
 
-  def yineleDogruysa(koşul: => Boolean)(block: => Unit): Unit = {
+  def yineleDoğruysa(koşul: => Boolean)(block: => Unit): Unit = {
     RepeatCommands.repeatWhile(koşul) { block }
+  }
+
+  def yineleOlanaKadar(koşul: => Boolean)(block: => Unit): Unit = {
+    RepeatCommands.repeatUntil(koşul) { block }
   }
 
   def yineleKere[T](dizi: Iterable[T])(block: T => Unit): Unit = {
     RepeatCommands.repeatFor(dizi) { block }
+  }
+
+  def yineleİlktenSona(ilk: Int, son: Int)(block: Int => Unit): Unit = {
+    RepeatCommands.repeatFor(ilk to son) { block }
   }
 
   //simple IO
@@ -130,6 +159,7 @@ object TurkishAPI {
 
   def satıryaz(data: Any) = println(data) //Transferred here from sv.tw.kojo.
   def satıryaz() = println()
+  def yaz(data: Any) = print(data)
 
   //math functions
   def yuvarla(sayı: Number, basamaklar: Int = 0): Double = {
@@ -139,10 +169,32 @@ object TurkishAPI {
   def rasgele(üstSınır: Int) = builtins.random(üstSınır)
   def rasgeleKesir(üstSınır: Int) = builtins.randomDouble(üstSınır)
 
-  //some type aliases in Swedish
-  type Sayı = Int
+  // some more type aliases in Turkish
+  //
+  // Ref: https://docs.scala-lang.org/overviews/scala-book/built-in-types.html
+  type İkil = Boolean
+  val (doğru, yanlış) = (true, false)
+
+  // We have Byte/Short/Int/Long which all default to Int and BigInt
+  // val n = 1
+  // Sayma sayıları
+  type Lokma   = Byte
+  type Kısa    = Short
+  type Sayı    = Int
+  type Uzun    = Long
+  type İriSayı = BigInt
+  // We have Float/Double which default to Double and BigDecimal
+  //   val x = 1.0
+  // Kesirli sayılar
+  type UfakKesir = Float
   type Kesir = Double
+  type İriKesir = BigDecimal
+  // Yazı
+  type Harf = Char
   type Dizi = String
+
+  // 
+  val (yavaş, orta, hızlı, çokHızlı) = (Slow, Medium, Fast, SuperFast)
 }
 
 object TurkishInit {
@@ -212,8 +264,10 @@ object TurkishInit {
     "arkaplanıKurDik" -> "arkaplanıKurDik(${renk1},${renk2})",
     "yinele" -> "yinele(${say}) {\n    ${cursor}\n}",
     "yineleDizinli" -> "yineleDizinli(${say}) { i =>\n    ${cursor}\n}",
-    "yineleDogruysa" -> "yineleDogruysa(${koşul}) {\n    ${cursor}\n}",
+    "yineleDoğruysa" -> "yineleDoğruysa(${koşul}) {\n    ${cursor}\n}",
+    "yineleOlanaKadar" -> "yineleOlanaKadar(${koşul}) {\n    ${cursor}\n}",
     "yineleKere" -> "yineleKere(${dizi}) { ${e} =>\n    ${cursor}\n}",
+    "yineleİlktenSona" -> "yineleİlktenSona(${ilk},${son}) { i => \n    ${cursor}\n}",
     "satıryaz" -> "satıryaz(${yazı})",
     "satıroku" -> "satıroku(${istem})",
     "yuvarla" -> "yuvarla(${sayı},${basamaklar})",
@@ -259,13 +313,15 @@ object TurkishInit {
     "ışınlarıAç" -> <div><strong>ışınlarıAç</strong>() - Bu komut kaplumbağanın önünü, arkasını, sağını ve solunu bir artı çizerek daha kolay seçmemizi sağlar.</div>.toString,
     "ışınlarıKapat" -> <div><strong>ışınlarıKapat</strong>() - Bu komut <tt>ışınlarıAç()</tt> komutuyla kaplumbağanın üstüne çizilen artıyı siler.</div>.toString,
     "sil" -> <div><strong>sil</strong>() - Bu komut kaplumbağanın tuvalini temizler, kaplumbağayı başlangıç konumuna geri getirir ve kuzey doğrultusuna çevirir.</div>.toString,
-    "çıktıyıSil" -> <div><strong>çıktıyıSil</strong>() - Bu komut çıktı penceresindeki bütün çıktıları silerek temizler. </div>.toString,
-    "arkaplanıKur" -> <div> <strong>arkaplanıKur</strong>(renk) - Bu komutla tuval verilen renge boyanır. Kojo'nun bildiği sarı, mavi ve siyah gibi renkleri kullanabilirsiniz ya da <tt>Color</tt>, <tt>ColorHSB</tt> ve <tt>ColorG</tt> komutlarını kullanarak kendi renklerinizi yaratabilirsiniz. </div> .toString,
-    "arkaplanıKurDik" -> <div><strong>arkaplanıKurDik</strong>(renk1, renk2) - Bu komutla tuval aşağıdan yukarı doğru birinci renkten ikinci renge derece derece değişerek boyanır. </div>.toString,
+    "arkaplanıKur" -> <div> <strong>arkaplanıKur</strong>(renk) - Bu komutla tuval verilen renge boyanır. Kojo'nun bildiği sarı, mavi ve siyah gibi renkleri kullanabilirsiniz ya da <tt>Renk</tt>, <tt>ColorHSB</tt> ve <tt>ColorG</tt> komutlarını kullanarak kendi renklerinizi yaratabilirsiniz. </div> .toString,
+    "arkaplanıKurDik"   ->   <div><strong>arkaplanıKurDik</strong>(renk1, renk2) - Bu komutla tuval aşağıdan yukarı doğru birinci renkten ikinci renge derece derece değişerek boyanır. </div>.toString,
+    "arkaplanıKurYatay" -> <div><strong>arkaplanıKurYatay</strong>(renk1, renk2) - Bu komutla tuval soldan sağa doğru birinci renkten ikinci renge derece derece değişerek boyanır. </div>.toString,
     "yinele" -> <div><strong>yinele</strong>(sayı){{ }} - Bu komut küme içine alınan komutları verilen sayı kadar tekrar tekrar çağırır. <br/></div>.toString,
     "yineleDizinli" -> <div><strong>yineleDizinli</strong>(sayı) {{i => }} - Bu komut, küme içine alılan komutları verilen sayı kadar tekrar tekrar çağırır. Kaçıncı yineleme olduğunu <tt>i</tt> değişkenini küme içinde kullanarak görebiliriz. </div>.toString,
-    "yineleDogruysa" -> <div><strong>yineleDogruysa</strong>(koşul) {{ }} - Bu komut küme içine alılan komutları verilen koşul doğru oldukça tekrar çağırır. <br/></div>.toString,
+    "yineleDoğruysa" -> <div><strong>yineleDoğruysa</strong>(koşul) {{ }} - Bu komut küme içine alılan komutları verilen koşul doğru oldukça tekrar çağırır. <br/></div>.toString,
+    "yineleOlanaKadar" -> <div><strong>yineleOlanaKadar</strong>(koşul) {{ }} - Bu komut küme içine alılan komutları verilen koşul sağlanana kadar tekrar çağırır. <br/></div>.toString,
     "yineleKere" -> <div><strong>yineleKere</strong>(dizi){{ }} - Bu komut küme içine alılan komutları verilen dizideki her eleman için birer kere çağırır. <br/></div>.toString,
+    "yineleİlktenSona" -> <div><strong>yineleİlktenSona</strong>(ilk, son){{ }} - Bu komut küme içine alınan komutları ilk sayıdan son sayıya kadar tekrar çağırır.</div>.toString,
     "satıryaz" -> <div><strong>satıryaz</strong>(obj) - Bu komut verilen nesneyi harf dizisi olarak çıktı penceresine yazar ve yeni satıra geçer. </div>.toString,
     "satıroku" -> <div><strong>satıroku</strong>(istemDizisi) - Bu komut verilen istem dizisini çıktı penceresine yazar ve arkasından sizin yazdığınız bir satırı okur. </div>.toString,
     "yuvarla" -> <div><strong>yuvarla</strong>(sayı, basamak) - Bu komut verilen sayıyı noktadan sonra verilen basamak sayısına kadar yuvarlar. </div>.toString,
@@ -273,6 +329,7 @@ object TurkishInit {
     "rasgeleKesir" -> <div><strong>rasgeleÇift</strong>() - Bu komut verilen üst sınırdan küçük rastgele bir kesirli sayı (çift çözünürlüklü) verir. Sıfırdan küçük sayılar vermez. </div>.toString,
     "giysiKur" -> <div><strong>giysiKur</strong>(giysiDosyası) - Kaplumbağanın görünüşünü verilen dosyadaki resimle değiştirir. </div>.toString,
     "giysileriKur" -> <div><strong>giysilerKur</strong>(giysiDosyası1, giysiDosyası2, ...) - Kaplumbağa için bir dizi giysi belirler ve giysiDosyası1 resmini giydirir. <tt>birSonrakiGiysi()</tt> komutuyla dizideki bir sonraki giysiyi giydirebiliriz. </div>.toString,
-    "birsonrakiGiysi" -> <div><strong>birSonrakiGiysi</strong>() - Kaplumbağaya <tt>giysilerKur()</tt> komutuyla girilen giysi dizisindeki bir sonraki resmi giydirir. </div>.toString
+    "birsonrakiGiysi" -> <div><strong>birSonrakiGiysi</strong>() - Kaplumbağaya <tt>giysilerKur()</tt> komutuyla girilen giysi dizisindeki bir sonraki resmi giydirir. </div>.toString,
+    "çıktıyıSil" -> <div><strong>çıktıyıSil</strong>() - Bu komut çıktı penceresindeki bütün çıktıları silerek temizler. </div>.toString
   )
 }
