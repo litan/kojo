@@ -31,8 +31,9 @@ object TurkishAPI {
   type Hiç   = Nothing
 
   import net.kogics.kojo.core.Turtle
-  import java.awt.Color
+  import java.awt.{Color, Paint}
   type Renk = Color
+  type Boya = Paint
 
   import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast}
   type Hız  = Speed
@@ -76,7 +77,7 @@ object TurkishAPI {
     def kalemiKaldır() = englishTurtle.penUp()
     def kalemİnikMi = englishTurtle.style.down
     def kalemRenginiKur(renk: Renk) = englishTurtle.setPenColor(renk)
-    def boyamaRenginiKur(renk: Renk) = englishTurtle.setFillColor(renk)
+    def boyamaRenginiKur(boya: Paint) = englishTurtle.setFillColor(boya)
     def kalemKalınlığınıKur(n: Double) = englishTurtle.setPenThickness(n)
     def biçimleriBelleğeYaz() = englishTurtle.saveStyle()
     def biçimleriGeriYükle() = englishTurtle.restoreStyle()
@@ -99,6 +100,8 @@ object TurkishAPI {
   }
   object kaplumbağa extends Kaplumbağa0(builtins.TSCanvas.turtle0)
   def sil(): Birim = builtins.TSCanvas.clear()
+  def silVeSakla(): Birim = { builtins.TSCanvas.clear(); kaplumbağa.görünmez() }
+  def çizimiSil(): Birim = builtins.TSCanvas.clearStepDrawing()
   def çıktıyıSil(): Birim = builtins.clearOutput()
   lazy val mavi = builtins.blue
   lazy val kırmızı = builtins.red
@@ -333,3 +336,4 @@ object TurkishInit {
     "çıktıyıSil" -> <div><strong>çıktıyıSil</strong>() - Bu komut çıktı penceresindeki bütün çıktıları silerek temizler. </div>.toString
   )
 }
+// todo: add doc on silVeSakla and çizimiSil
