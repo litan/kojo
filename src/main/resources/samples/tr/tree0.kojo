@@ -1,7 +1,7 @@
-def ağaç(uzaklık: Çift) {
+def ağaç(uzaklık: Kesir) {
     if (uzaklık > 4) {
         kalemKalınlığınıKur(uzaklık/7)
-        kalemRenginiKur(cm.rgb(uzaklık.toInt, math.abs(255-uzaklık*3).toInt, 125))
+        kalemRenginiKur(Renk(uzaklık.toInt, math.abs(255-uzaklık*3).toInt, 125))
         ileri(uzaklık)
         sağ(25)
         ağaç(uzaklık*0.8-2)
@@ -13,7 +13,6 @@ def ağaç(uzaklık: Çift) {
 }
 
 sil()
-// hızıKur(hızlı)
-setSpeed(fast)
+hızıKur(hızlı)
 zıpla(-200)
 ağaç(90)
