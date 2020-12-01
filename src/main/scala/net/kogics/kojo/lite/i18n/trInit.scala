@@ -177,6 +177,7 @@ object TurkishAPI {
   // Ref: https://docs.scala-lang.org/overviews/scala-book/built-in-types.html
   type İkil = Boolean
   val (doğru, yanlış) = (true, false)
+  // Bit? Parçacık olsun mu adı?
 
   // We have Byte/Short/Int/Long which all default to Int and BigInt
   // val n = 1
@@ -195,6 +196,11 @@ object TurkishAPI {
   // Yazı
   type Harf = Char
   type Dizi = String
+
+  type Dizin[A] = List[A]
+  object Dizin {
+    def apply[A](elems: A*): List[A] = List.from(elems)
+  }
 
   // 
   val (yavaş, orta, hızlı, çokHızlı) = (Slow, Medium, Fast, SuperFast)
