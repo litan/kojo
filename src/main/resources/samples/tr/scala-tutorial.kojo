@@ -119,15 +119,10 @@ class SHtm (var s:String){
 // **********  Start of Tutorial  *************
 pages += Page(
   name = "Menu",
-  body =
-    <body style={pageStyle}>
-      <div style={pageStyle+centerStyle}>
-      <h1>Scala'ya Hızlı Giriş</h1>
-      </div>
-      
-  <div style={pageStyle}>
-    <p>Bu kılavuz simplyscala.com'dan Kojo'ya uyarlanarak yazılmıştır. Kılavuzda ileri veya geri gitmek için en aşağıdaki üçgenlere tıkla. Ya da istediğin bölüme atlamak için aşağıdaki başlıklardan birine tıkla.</p>
-    <br/>
+  body = <body style={pageStyle}>
+    <div style={pageStyle+centerStyle}> <h1>Scala'ya Hızlı Giriş</h1> </div>
+    <div style={pageStyle}>
+    <p>Bu kılavuz simplyscala.com'dan Kojo'ya uyarlanarak yazılmıştır. Kılavuzda ileri veya geri gitmek için en aşağıdaki üçgenlere tıkla. Ya da istediğin bölüme atlamak için aşağıdaki başlıklardan birine tıkla.</p> <br/>
     <a href={link("GS")}>Başlayalım</a> <br/>
     <a href={link("Flow")}>Program Akışı If, Else ve While Komutları</a> <br/>
     <a href={link("Literals")}>Değişmezler, Sayılar, Kesirler ve Diziler</a> <br/>
@@ -158,9 +153,9 @@ pages += Page(
     "Kılavuzumuzda pek çok yazılımcık örneği bulunuyor. Onları buradan kolaylıkla çalıştırabilirsin. Herhangi birinin üstüne tıkladığında o örnek yazılımcık Kojo Yazılımcık Düzenleyicisine taşınır ve çalışır. Yani hepsini yazmana gerek yok. Hatta yazılımcığı çalıştırma düğmesine bile tıklamaya gerek kalmıyor. Ayrıca, işin bir de güzel yanı şu: istediğin değişiklileri orada yapıp tekrar çalıştırabilirsin. Bunu için düzenleyicinin hemen üzerindeki yeşil üçgene tıklaman yeter. Haydi şimdi bunu deneyelim. Aşağıdaki mesajı Bülent yerine kendi adını yazıp tekrar çalıştırıver. Bu arada benim adım Bülent. Bu satırları siz Türkçe severler için severek çevirdim.".p,
     """satıryaz("merhaba dünya! kaplumbacık ve Bülent'ten hepinize selamlar, sevgiler")""".c,
     "Yaptığın değişikliğin sonucunu Çıktı Gözünde ya da Çizim Tuvalinde hemen göreceksin.".p,
-    "Bu kılavuz ilk sayfada gördüğün bölümlerden oluşuyor. Bir sonraki bölüme geçmek için, ya da bir önceki bölüme dönmek için bu pencerenin altındaki sağa ve sola bakan mavi daire içindeki beyaz üçgenlere tıkla. İlgini çeken bölüme de kolaylıkla atlayabilirsin istersen. Bunun için ilk sayfaya geri dönüp ordaki mavi ve altı çizili başlıklardan herhangi birine tıklayabilirsin. İlk sayfaya dönmek için en üstte solda menü yazıyor ya, ona tıklayıver. En alttaki mavi daire içindeki kareye basarsan bu kılavuzdan çıkıp Kojo'ya dönebilirsin. Çıkınca kılavuzda son seçtiğin yazılımcık kapanmaz. Onun üzerinde değişikler yapıp çalıştırmaya odaklanabilirsin".p,
-    "Daha önce çalışan bir yazılıma dönmek de kolay: yazılım düzenleyicinin üst kısmındaki menünün ortasında sağa ve sola bakan mavi oklara tıkla. Seçtiğin yazılımı düzenlemeye kaldığın yerden devam edebilirsin. Her örneği deneyebilir, istediğine geri dönüp değişiklikler yapıp tekrar çalıştırabilirsin. Değişik fikirler dener, programlama dilini daha iyi tanıyıp yazım, gramer kurallarını daha çabuk öğrenebilirsin. Yazılımcık düzenleyicideki programları diske kaydedebilir ve sonra oradan geri yükleyebilirsin. Bunun için Dosya menüsüdeki komutları kullan.".p,
-    "Şu anda kullandığın Kojo ortamı, çok gelişmiş ve uzman bilgisayar mühendislerinin favori dili olan Scala programlama dilini öğrenmene yardımcı olmak için hem çok faydalı hem de eğlendiren özellikler ve beceriler içeriyor. Müzik çalan programlar yazabilir, ileri matematik kavramlarını resimler ve grafikler çizerek inceleyebilir, değişik tür oyunları hem oynayabilir hem de nasıl yazıldıklarını kolayca öğrenebilir, hatta fizik deneyleri bile yapabilirsin! En güzeli Kojo'nun kaplumbağaları var! Onlara yol göstererek çizimler yaptırabilirsin. Küçük ve tek kaplumbağalı bir örnekle başlayalım".p,
+    "Bu kılavuz ilk sayfada gördüğün bölümlerden oluşuyor. Bir sonraki bölüme geçmek için, ya da bir önceki bölüme dönmek için bu pencerenin altındaki sağa ve sola bakan mavi daire içindeki beyaz üçgenlere tıkla. İlgini çeken bölüme de kolaylıkla atlayabilirsin istersen. Bunun için ilk sayfaya geri dönüp ordaki mavi ve altı çizili başlıklardan herhangi birine tıklayabilirsin. İlk sayfaya dönmek için en üstte solda menü yazıyor ya, ona tıklayıver. En alttaki mavi daire içindeki kareye basarsan bu kılavuzdan çıkıp Kojo'ya dönebilirsin. Çıkınca kılavuzda son seçtiğin yazılımcık kapanmaz. Onun üzerinde değişikler yapıp çalıştırmaya odaklanabilirsin.".p,
+    "Daha önce çalışan bir yazılıma dönmek de kolay: yazılım düzenleyicisinin üst kısmındaki menünün ortasında sağa ve sola bakan mavi oklara tıkla. Seçtiğin yazılımı düzenlemeye kaldığın yerden devam edebilirsin. Her örneği deneyebilir, istediğine geri dönüp değişiklikler yapıp tekrar çalıştırabilirsin. Değişik fikirler dener, programlama dilini daha iyi tanıyıp yazım, gramer kurallarını daha çabuk öğrenebilirsin. Yazılımcık düzenleyicisindeki programları diske kaydedebilir ve sonra oradan geri yükleyebilirsin. Bunun için Dosya menüsüdeki komutları kullan.".p,
+    "Şu anda kullandığın Kojo öğrenim ortamı, çok gelişmiş ve uzman bilgisayar mühendislerinin en sevdikleri dillerin önde gelenlerinden Scala programlama dilini öğrenmene yardımcı olmak için hem çok faydalı hem de eğlendirici özellikler ve beceriler içeriyor. Müzik çalan programlar yazabilir, ileri matematik kavramlarını resimler ve grafikler çizerek inceleyip daha iyi öğrenir, değişik tür oyunları hem oynayabilir hem de nasıl yazıldıklarını kolayca öğrenebilir, hatta fizik deneyleri bile yapabilirsin! En güzeli Kojo'nun kaplumbağaları var! Onlara yol göstererek çizimler yaptırabilirsin. Küçük hemen anlayıp seveceğin tek kaplumbağalı bir örnekle başlayalım mı? Kaplumbağa yürüsün ve bir taraftan da bir üçgen çizsin istersen, bu yazılımcığa tıklaman yeter:".p,
     """
   sil
   ileri(100)
@@ -171,11 +166,10 @@ pages += Page(
   sağ(120)
 """.c,
     "Bu kılavuzun kaplumbağacığın kullanılışı başlıklı (sondan üçüncü) bölümünde daha pek çok örnek yazılımcık ve kaplumbağanın anladığı komutların bir listesini bulabilirsin.".p,
-    "Scala dili tam anlamıyla genel ve güçlü bir programla dili. Özelliklerinin çoğunluğu uzman programcılara ve bilgisayar mühendislerine tanıdık gelecektir. Bu kılavucuktan faydalanmak için programlama dili bilmesen de olur, ama elbette daha önce başka bir programlama diliyle deneyimin olduysa daha hızlı ilerleyebilirsiniz. Onun için anladığın yerleri ve bölümleri hızlı geçmen hatta atlaman bile doğal olur.".p,
+    "Scala dili tam anlamıyla genel ve güçlü bir bilgisayar programla dilidir. Özelliklerinin çoğunluğu uzman programcılara ve bilgisayar mühendislerine tanıdık gelecektir. Bu kılavuzcuktan faydalanmak için programlama dili bilmesen de olur, ama elbette daha önce başka bir programlama diliyle deneyimin olduysa daha hızlı ilerleyebilirsin. Onun için anladığın yerleri ve bölümleri hızlı geçmen hatta atlaman bile doğal olur.".p,
     "Öyleyse, başlayalım mı artık?".p,
     "Deyişler".h2,
-    "Basit matematiksel deyişler pek şaşırtıcı gelmeyecektir. Tanıdık matematik işlemleri ve öncelikleri Scala'da da geçerlidir. İşlemleri daha açık açık sıralamak için parantez kullanılır.".p
-      ,
+    "Basit matematiksel deyişler pek şaşırtıcı gelmeyecektir. Tanıdık matematik işlemleri ve öncelikleri Scala'da da geçerlidir. İşlemleri daha açık açık sıralamak için parantez kullanılır.".p,
     "1+2".c,
     "3+4*(2-3)".c,
     """23%5  // Tabanlı aritmetik işlemi yani tabana bölünce ne kalıyorsa onu verir""".c,
@@ -184,126 +178,128 @@ pages += Page(
     "6/4.0".c,
     "Biraz daha uzun bir işlem yapalım:".p,
     "3.5*9.4+7/5".c,
-    """Scala tam ve kesirli gibi değişik sayı tiplerini tanır. Yukarıdaki iki örnekten 4.0 ve 3.5 kesir (İngilizcesi Double), 4 ve 6 ise birer tam sayıdır (İngilizcede Integer, kısaca Int). Eğer bir deyiş bir kaç sayı türü içiriyorsa Scala dili mümkünse sayının türünü biraz zorlayarak değiştirebilir.""".p,
-    """Bir deyişin sonucunu bir değişken kullanarak kaydedip daha sonra yine kullanabiliriz. Değişken isimleri (ve sonra göreceğimiz başka tür isimler) harf, sayı ve * / + - : = ! < > & ^ | gibi semboller kullanarak yazılır. Örneğin, "TenisTopu1", "yardımHattı", "*+" and "Res4" (Result yani sonuç)...""".p,
-    """Bunun için iki yöntem vardır: "var" ve "val" komut sözcükleri. "val" (İngilizce value sözcüğünün kısaltması) ile sabit ve hiç değişmeyecek değerleri ve sonuçları saklayabiliriz. Ya neden bir de "var" (ingilizce variable sözcüğünün kısaltması) komutu var (var var ama varı kullanma!)? Aşağıda bir örnekle farklarını hemen anlayacağız. "val" ile tanımlanan değerlerin sabit olması (ingilizcede özel terimle immutable value) aslında çok önemli bir işlevsel programlama kavramıdır, ama bunu daha sonra yeri gelince daha iyi anlayacağız. Şimdilik mümkün oldukça 'var' yerine 'val' komutunu kullanmaya dikkat edelim. Bu sayede programın başka bir yerindeki değişkenleri de yanlışlıkla bozmayız.""".p,
-    "val pixel=34+5".c,
-    """Bir ya da daha fazla sayıda işlemin sonucunu 'satıryaz(deyiş1, deyiş2, deyişn)' komutuyla çıktı gözüne de yazabiliriz. Deyişler arasına virgül koymayı unutmayalım. İstersek gerekmese de boşluk da bırakabiliriz.""".p,
+    """Scala tam ve kesirli gibi değişik bir kaç sayı tipini tanır. Hepsinin bir tür adı var. Örneğin Sayı, Uzun, İriSayı, Kesir, vb. Bunları ileride detaylı olarak inceleyeceğiz. Yukarıdaki iki örnekten 4.0 ve 3.5 kesir (İngilizcesi Double), 4 ve 6 ise birer tam sayıdır (İngilizcede Integer, kısaca Int). Eğer bir matematiksel deyiş bir kaç tür sayı içiriyorsa Scala derleyicisi mümkünse sayının türünü biraz zorlayarak değiştirebilir.""".p,
+    """Bir deyişin sonucunu bir değişken kullanarak kaydedip daha sonra yine kullanabiliriz. Değişken isimleri (ve sonra göreceğimiz başka tür isimler) harf, sayı ve * / + - : = ! < > & ^ | gibi semboller kullanarak yazılır. Örneğin, "FutbolTopu", "BilardoTopuBeyaz1", "yardımHattı", "*+" and "Res4" (Result yani sonuç)...""".p,
+    """Bunun için iki yöntem vardır: "var" ve "val" komut sözcükleri. "val" (İngilizce value sözcüğünün kısaltması) ile sabit ve hiç değişmeyecek değerleri ve sonuçları saklayabiliriz. Ya neden bir de "var" (ingilizce variable sözcüğünün kısaltması) komutu var (var var ama varı kullanma! 8-)? Aşağıda bir örnekle ikisinin farkını hemen anlayacağız. "val" ile tanımlanan değerlerin sabit olması (ingilizcede 'immutable value') aslında çok önemli bir işlevsel programlama (functional programming) kavramıdır, ama bunu daha sonra yeri gelince daha iyi anlayacağız. Şimdilik mümkün oldukça 'var' yerine 'val' komutunu kullanmaya dikkat edelim. Bu sayede programın başka bir yerindeki değişkenleri yanlışlıkla bozamayız.""".p,
+    "val noktaSayısı=34+5".c,
+    """Bir ya da daha fazla sayıda işlemin sonucunu çıktı gözüne 'satıryaz(deyiş1, deyiş2, deyişn)' komutunu kullanarak yazabiliriz. Deyişler arasına virgül koymayı unutmayalım. Gerekmez ama istersek virgülden sonra boşluk bırakarak yazılımın okunuşu biraz daha kolaylaştırabiliriz. Ama çıktı da durum başka. Orada boşluk bırakmak nasıl olur yakında göreceğiz.""".p,
     """
-satıryaz(pixel,3+2,pixel/2, 3.9/2.3)
-var boy=pixel+4
+satıryaz(noktaSayısı,3+2,noktaSayısı/2, 3.9/2.3)
+var boy=noktaSayısı+4
 satıryaz(boy)""".c,
-    "Farkettiniz mi, çıktı gözü her deyişin sadece değerini değil hemen arkasından da o değerin türünü de yazar, Int (Sayı), Double (Kesir) vb. Şimdi deneyelim,".p,
-    """pixel=10 // bu hata verir. sabit değişkenlerin değerleri değiştirilemez""".c,
-    """boy+=4 // yani boyunu 4 pixel uzatalım
+    "Farkettiniz mi, çıktı gözü her değerin adını ve değerini yazmakla kalmıyor ikisinin arasında o değerin türünü de yazıyor, Int (Sayı), Double (Kesir) vb. Şimdi deneyelim,".p,
+    """noktaSayısı=10 // bu hata verir. val ile tanımlanan değişkenlerin değerleri değiştirilemez""".c,
+    """'error' hata demek. Scala derleyicisi (compiler), 'reassignment to val' yani sabit bir değeri değiştirmek hata olur diyor ve izin vermiyor.""".p,
+    """boy+=4 // yani boyunu 4 nokta uzatalım
 satıryaz(boy)""".c,
-    """Okuyanları bilgilendirmek ve kendimize anımsatmak için satır sonlarına // yani iki taksim ya da bölüm işaretinden sonra bir açıklama yazabiliriz. Bir satıra sığmıyorsa /* ile başlayıp */ ile biten daha uzun açıklamalar ekleyebiliriz. Scala dili sayesinde bilgisayar bunları dikkate almaz.""".p,
+    """Okuyanları bilgilendirmek ve kendimize anımsatmak için satır sonlarına // yani iki taksim ya da bölüm işaretinden sonra bir açıklama yazabiliriz. Bir satıra sığmıyorsa /* ile başlayıp */ ile biten daha uzun açıklamalar ekleyebiliriz. Scala derleyicisi bunları göz ardı eder ve bu sayesede bilgisayarın kafası karışmaz 8-).""".p,
     """
 /*
-  Example of multi-line comments
-  Centigrade to Farenheit
+  Çok satırlı bir açıklama örneği
+  Fahrenayttan santigrata çevirelim
 */
-val tempf = 98.4
-// A single line comment
-println( "tempc",(tempf-32)*5/9)  // more comments on the line
+val dereceF = 98.4
+// Tek satırda açıklama: 0S = 32F. 9F artış 5C artışa denk
+satıryaz(dereceF, "derece Fahrenayt", (dereceF-32)*5/9, "derece Santigrat")  // satır sonu açıklama
 """.c,
-    "'satıryaz' komutuyla yazı da yazabiliriz. En başta gördüğümüz gibi çift tırnaklar içine alınan yazıların türüne Dizi (İngilizcesi String) diyoruz. Bu tür sadece yazı yazmak için değil yazılarla işlemler yapmak için de kullanılabilir:".p,
+    "'satıryaz' komutuyla yazı da yazdık yukarıda gördüğün gibi. Böyle çift tırnaklar içine alınan yazıların türüne Dizi (İngilizcesi String) diyoruz. Bu tür, sadece yazı yazmak için değil, yazılarla işlemler yapmak için de kullanılabilir:".p,
     """val adım = "Mustafa Kemal"
 val mesaj = "Merhaba " + adım
 satıryaz(mesaj)
 """.c,
-    "Dizi türüyle daha neler yazılabilir neler! İki bölüm sonra başka örnekler de göreceğiz".p,
-    "Biliyor musunuz, bilgisayar sayıları aslında sıfır ve bir dizileri olarak kaydeder. Bunların her birine ingilizcede bit denir. Biz parçacık diyelim istersen. Sayıların parçacıkalrını teker teker işlemek de mümkün Scala ile.".p,
-    """3&2 // mantıksal ve (and) işlemi de denir. Sadece 1 ve 1 sonuç olarak 1 verir. 1 ve 0 işleminin sonucu 0 olur.""".c,
-    """1|2 // mantıksal veya (or). Sadece 0 ve 0 sonuç olarak 0 verir. Biri 1 olursa sonuç da 1 olur. """.c,
-    """1^2 // mantıksal xor (exclusive or) sadece biri 1 öbürü 0 olunca 1 verir. """.c,
-    """1<<2 // parçacıkları sola kaydır """.c,
-    """-24>>2 // sağa kaydır ama eksiyse eksi kalsın.""".c,
-    """-14>>>2 // sağa kaydırıyor ama ben anlamadım vallahi""".c,
-    "Farkında mısınız? Bu kadarcık bilgiyle bile artık çok güçlü bir hesap makinemiz oldu. Ama bir sonraki bölümde program akışını düzenlemeyi öğrenecek ve yazılımcıklarımızı çok daha becerikli hale getireceğiz.".p
+    "Toplama işareti sanki toplama yaparmış gibi yazıları birbirine ekleyiveriyor. Mantıklı değil mi? Dizi türüyle daha neler yazılabilir neler! İki bölüm sonra başka örnekler de göreceğiz.".p,
+    "Duymuşsundur eminim, bilgisayar devreleri aslında 2, 3, 4 gibi sayıları bile bilmez. Onun yerine sadece 0 ve 1 sayılarını tanır. Hatta tanımak dedik de aslında sadece voltaj değerlerini ve elektrik akımlarını tanır onlar. Bu uzun, ilginç ve çok keyifli bir öyküdür. Benim gibi elektrik mühendisi olmak istersen, bana emaille selam ve sorularını yollayabilirsin. Neyse, konumuza dönelim. Daha büyük sayılarla işlemler yapmak için bilgisayar onları bir 0 ve 1 dizisi olarak ele alır ve içindeki sayısız mantık devreleri sayesinde toplama, çıkarma, çarpma, bölme ve hatta türev ve integral alma gibi daha ileri matematik işlemlerini kolayca ve hiç üşenmeden halleder. Bunların detayı bilgisayar uzmanlarının işi. Biz 0 ve 1 dizilerine dönelim, çünkü herşey onlarla başlıyor! İngilizcede 'binary arithmetic' denir. Biz çift tabanlı sayma diyelim. Her sayı, 0 ve 1'lerden oluşan bir dizi olduğu için, direk onun parçacıkları üzerinde de işlemler yapabiliriz. Bu işlemlere 'bitwise' yani parçacık işlemi denir. Bu 0 ve 1 dizilerinin her bir elemanına İngilizcede 'bit' denir. Saçlarımızda yaşayan ve zararsız küçük böcekcikler değil elbet! İngilizcede azıcık, küçücük anlamlarına geliyor. Biz parçacık diyelim istersen. Çok uzattık. Kusura kalma. Şimdi parçacıkları teker teker nasıl işleme sokarız bir kaç örnek görelim:".p,
+    """3&2 // mantıksal 've' işlemi de denir (ingilizcesi 'logic and'). Sadece 1 ve 1 sonuç olarak 1 verir. Girdilerden biri 0 olursa sonucu da 0 olur.""".c,
+    """1|2 // mantıksal veya (or) işlemi. Sadece 0 veya 0 sonuç olarak 0 verir. Biri 1 olursa sonuç da 1 olur. """.c,
+    """1^2 // mantıksal dışlayan veya işlemi (xor yani exclusive or). Sadece biri 1 öbürü 0 olunca 1 verir. """.c,
+    """1<<2 // parçacıkları iki kere sola kaydır """.c,
+    """-24>>2 // sağa kaydır ama eksiyse eksi kalsın """.c,
+    """-14>>>2 // sağa kaydırıyor ama sonuca bakın! Ben anlamadım vallahi """.c,
+    "Bakın bu çok ilginç. Parçacıkları sola kaydırmak ikiyle çarpmaya denk! Sola kaydırmaksa ikiye bölmeye benzemiyor mu? Bu daha önce de dediğim gibi uzmanlık konusu. Üzerinde yazılmış pekçok bilimsel makale ve ders kitapları var. Hatta bazıları çok azımızın anlayabileceği yüksek ihtisas kitapları! Bugünlük bu kadarı fazla bile. Ama sen istersen bu yazılımcığı kurcala. Dene. Bakarsın uzman olmak istersin. Neden olmasın?".p,
+    "Farkında mısınız? Bu kadarcık bilgiyle bile artık çok güçlü bir hesap makinemiz oldu. Ama dahası var! Bir sonraki bölümde program akışı nasıl düzenlenir öğrenecek ve yazılımcıklarımızı çok daha becerikli hale getireceğiz.".p
   )
 )
 
 pages += Page(
-    name = "Flow",
-    body = tPage("Program Akışı If, Else ve While Komutları",
-                 "Up until now you have written programs which start at the begining and execute all of the lines or expressions in order. Flow control means that you can control the order in which some or all of the code is executed based on some condition. This allows you to repeat some lines or skip over lines during the program execution.".p,
-                 " You can specify a block of code by enclosing it in curly brackets {}. This block may contain any number of code lines or further sub-blocks of code. The last expression executed in a block determines the value of that block.".p, 
-                 "There are a number of different flow control structures that enable you to control your programs flow.".p,"if".h3,      
-                 """"if (cond) block/expression else block/expression" is the first. If the condition is true the first block or expression will be evaluated while if it is false the block or expression following the 'else' will.""".p,
-                 """if(true) println("True") else println("Untrue")""".c,
-                 """A shorter version of this expression can be created.'if' returns a value which is then printed.""".p,
-                 """println(if(true) "True" else "Untrue")""".c,
-                 """The condition must be an expression that yields a boolean result, namely true or false. There are a number of comparison operators that do just that. Here are some of them that are useful with numbers. Later you will learn about others that are appropriate for other types of things.""".p,
-                 """1>2 // greater than""".c,
-                 """1<2 // less than""".c,
-                 """1==2 // equals""".c,
-                 """1>=2 // greater than or equal""".c,
-                 """1!=2 // not equal""".c,
-                 """1<=2 // less than or equal""".c,
-                 "With the if statement if the condition is true then the expression before the else is evaluated otherwise the expression after it is evaluated. Unlike in some languages the if else evaluates to a value. To make the comparisons clear integer numbers have been used but these can be replaced by any valid expression.".p,
-                 """if(1>2) 4 else 5 // greater than""".c,
-                 """if (1<2) 6 else 7 // less than""".c,
-                 """val try1=if (1==2) 8 else 9 // equals""".c,
-                 """val isBook = 6>=3
-val price=16
-val vol=10
-val sale=if (isBook)price*vol else {
-  val pv = price/vol // a block of expressions enclosed in {}
-  pv*3  // this, the blocks last expression gives the blocks return value
-  }
-  """.c,
-                 "You may need to combine individual conditions in some way. There are two operators which do this for you. && meaning And. || meaning Or. These combine boolean values and are not equivalent to & | which combines bit values.".p,
-                 """val isBook = 6>=3
-val price=16
-val vol=10
-val sale=if (((isBook)&&(price>5))||(vol>30))price*vol else price/vol""".c,
-                 "while".h2,
-                 """"while (cond) block/exp" allows you to repeat a block of code or an expression while the condition is true. First an expression.""".p,
-                 """var total=18
-while(total < 17) total+=3""".c,
-                 """"do block/exp while (cond)" allows you to repeat a block of code or an expression while the condition is true.  The condition is evaluated after doing each iteration.""".p,
-                 """var total=18
-do{
-  total+=3
-  }while (total < 17)""".c,
-                 "Notice in this case that total end up as 21 rather than 18 in the previous example with the while. Here is while being used to calculate the Greatest Common Divisor or GCD.".p,
-
-                 """// find the greatest common divisor
+  name = "Flow",
+  body = tPage("Program Akışı If, Else ve While Komutları",
+    "Şu ana kadar yazdığımız yazılımcıkların komutları, baştan sona kadar, sırayla, satır satır ve teker teker çalıştılar. Ama pek çok durumda program akışını değiştirmek isteriz. Yani komutların çalışma sırasını duruma göre değiştiririz. Bu sayede, bazı komutları yineler, bazılarını atlarız.".p,
+    "İlk önce bir komut dizisi oluşturuz. Bunun için komutları kıvrık parantezler, yani {} içine alıyoruz. Bu komut dizisi istediğimiz kadar satır ve hatta başka komut dizileri de içerebilir. Dizinin içindeki son komut dizinin değerini belirler.".p,
+    "Program akışını değiştirmek için kullandığımız bir kaç değişik yöntem var. Gelin en önemlilerinden biri olan, eğer/yoksa anlamına gelen, koşullar oluşturmaya yarayan 'if' ve 'else' yapısıyla başlayalım.".p,"if".h3,
+    """Genel olarak şöyle yazarız: "if (koşul) dizi1/deyiş1 else dizi2/deyiş2". Eğer koşul doğruysa ilk kısım yani dizi1/deyiş1 çalışır. Yoksa 'else' sözcüğünden sonra gelenler çalışır.""".p,
+    """if(doğru) satıryaz("Doğru") else satıryaz("Doğru değil")""".c,
+    """Bunu daha kısa da yazabiliriz. 'if/else' deyişi hep bir değer verir. Bakın bunu da satıryaz komutuyla yazıyoruz.""".p,
+    """satıryaz(if(doğru) "Doğru" else "Doğru değil")""".c,
+    """Kulladığımız koşulun geçerli olması için 'doğru' ya da 'yanlış' (İngilizcede 'true' veya 'false') değerlerinden birini vermesi gerekir. Bu değerlerin türüne biz İkil deriz (İngilizcesi Boolean). Bu koşulu sağlayan işlemlere karşılaştırma işlemi deriz. Bunlar matematiksel işlemler ya da benzerleri olabilir. İlk önce matematiksel olanları, yani sayıları karşılaştıran işlemleri görelim. Başka tür değerleri (örneğin sözcükleri) karşılaştırmayı sonraya bırakalım.""".p,
+    """1>2 // büyüktür""".c,
+    """1<2 // küçüktür""".c,
+    """1==2 // eşittir""".c,
+    """1>=2 // büyük ya da eşittir""".c,
+    """1!=2 // eşit değil""".c,
+    """1<=2 // küçük ya da eşittir""".c,
+    "if/else yapısının nasıl çalıştığını anlamak çok kolay. Koşul doğruysa 'else' sözcüğünden önceki komutlar çalıştırılırlar. Yok, eğer koşul doğru değilse, o halde 'else' sözcüğünden sonraki komutlar çalıştırılır. Scala ve diğer işlevsel dillere benzemeyen programlama dilleri (örneğin, C, Java, Python), if/else yapısını sadece akışı belirlemek için kullanırlar. Ama Scala, Haskell ve diğer işlevsel diller gibi, if/else yapısından bir değer beklerler. Onun için 'if' genelde tek başına kullanılamaz. Arkasından hemen 'else' gelir ve iki durumda da bir değer geri bildirilir. Bunun bir istisnası da vardır, ama onu da sonraya bırakalım. Bakın bu örneklerde koşul olarak hep yalın sayıları karşılaştırıyoruz. Ama elbette başka 'val' değerler ve komutlar da kullanabiliriz. Yeter ki bir İkil, yani doğru ya da yanlış değeri olsun.".p,
+    """if(1>2) 4 else 5 // büyüktür""".c,
+    """if (1<2) 6 else 7 // küçüktür""".c,
+    """val deneme1=if (1==2) 8 else 9 // eşittir""".c,
+    """val kitapsa = 6>=3
+val değer=16
+val sayı=10
+val satış=if (kitapsa)değer*sayı else {
+  val birim = değer/sayı // a block of expressions enclosed in {}
+  birim*3  // this, the blocks last expression gives the blocks return value
+}""".c,
+    "Gerçek hayatta da olduğu gibi bazen bir kaç koşul bir araya gelir. Bu durumda iki tane mantıksal işlem kullanırız. Bunlardan birincisi '&&' mantıksal 'Ve' anlamına gelir. İkincisi de '||'  mantıksal 'Veya' anlamına gelir. Bunları sakın parçacıkları işleyen '&' ve '|' işlemleriyle karıştırmayalım. Aslında ilişkili ve benzer kavramlar. Ama dikkat edelim. Çok uzatmadan birkaç örnek görelim, göreceksin çok doğal gelecek. Ne de olsa mantık hepimizde var. ".p,
+    """val kitapsa = 6>=3
+val değer=16
+val sayı=10
+val satış=if (((kitapsa)&&(değer>5))||(sayı>30))değer*sayı else değer/sayı""".c,
+    "while".h2,
+    """İngilizce'de pek çok farklı anlama gelen 'while' sözcüğünü Türkçemize 'o halde' ya da 'o sırada' diye çevirebiliriz. Bu yapı programlama dillerinde çok kullanılır. Genel olarak, "while (koşul) dizi/deyiş" yapısı kullanarak komut dizisini tekrar tekrar çalıştırabiliriz. Koşul sağlandığı sürece yineleme devam eder. Koşul değişince, yani artık doğru olmadığında yineleme son bulur. Bir örnekle anlamak çok daha kolay olacak. Ama ilk önce bir değişkenle başlayalım:""".p,
+    """var toplam=18
+while(toplam < 15) toplam += 5
+yaz(toplam)
+""".c,
+    """Kolay değil mi? Sizce kaç kere yinelenecek komut? Sonunda toplam kaç olacak? Bu biraz hileli bir soru oldu. Aslında yinelenecek mi, toplam değişecek mi diye mi sormalıydık? Toplamın ilk değerini ya da koşulu değiştirip tekrar çalıştırabiliriz elbet. Bu 'while' yapısını tersine de çevirebiliriz: "do dizi/deyiş while (koşul)" 'do' İngilizce'de de doremi gibi nota adıdır, ama daha yaygın anlamı 'Yap' ya da 'Yapmak' demek. Hatta emir kipi. Yani lütfen yap yani çalıştır diyoruz. Bakın burada ilk önce komut dizisi çalıştırılır sonra koşula bakılır. Doğruysa komut dizisi yinelenir:""".p,
+    """var toplam=18
+do toplam += 5
+while (toplam < 15)
+yaz(toplam)
+""".c,
+    "Gördük ki bu sefer toplam 23 oldu. Bir önceki örnekteki halbuki 18 olmuştu. Bakın bu yapıyı iki sayının ortak paydalarının en büyüğünü hesaplamak için kullanalım:".p,
+    """// en büyük ortak paydayı bulalım
 var x = 36
 var y = 99
 while (x != 0) {
-    val temp = x
+    val yardımcı = x
     x = y % x
-    y = temp
-    }
-println("gcd is",y)
+    y = yardımcı
+}
+satıryaz("ortak paydaların en büyüğü: " + y)
 """.c,
-
-                 "for".h2,
-                 """"for (range) block/exp" allows you to repeat a block of code for all the values in a range or iterate through the members of a collection.""".p,
-                 """for(i <- 1 to 4) println("hi five")""".c,
-                 "The value of i takes all the values from 1 to 4. If you want the end range value not to be included the until version should be used.".p,
-                 """for(i <- 1 until 4) {
-  val sqr = i*i
-  println(i,sqr)
-  }""".c,
-                 "Multi-dimensional iterations are elegantly handled using multiple ranges. Notice that the two ranges are separated by a semi-colon.".p,
-                 "for(i <- 1 until 4 ; j <- 1 to 3) println(i,j)".c,
-                 """"for" may also be used to iterate through collections. A string is a collection of characters so "for"  may be used to iterate through it.""".p,
-                 """for(c<-"hello")println(c)""".c,
-                 "Now use the Turtle canvas plotting capabilities of Kojo to display a graph of a*x^2+b*x+c using 'for'".p,
-                 """
-sil
-def poly(x:Double)=0.001*x*x+0.5*x+10
-gridOn();axesOn()
-val range=200
-setPosition(-range,poly(-range))
-for(x <- -range+10 to range; if (x % 10 == 0)) lineTo(x, poly(x))
+    "for".h2,
+    """Komut dizilerini kolayca yinelemek için kullanabileceğimiz bir yöntem daha var ki belki de en faydalısı. "for (aralık) dizi/deyiş" sayesinde verilen aralıktaki her bir değer için dizi/deyiş yinelenir. 'for' elbet yine ingilizce bir sözcük. Anlamı 'için' demek ("for you" senin için demek). Aralık da nedir mi? Hemen bir örnek görelim:""".p,
+    """for(i <- 1 to 4) yaz("merhaba!")""".c,
+    "'to' sözcüğü de bizim yapım/çekim ekimiz gibi, birden dörde kadar derken dörde sözcüğündeki '-e' anlamında. İngilizceyle Türkçe ne kadar çok farklı sanki, değil mi? Bir de bana sorun. 22 yaşında ilk defa yaşamak için Amerika'ya gittiğimde o kadar zorluk çektim ki! Güya iyi biliyordum hem de İngilizceyi! İşimize dönelim: Aralık burada birden dörde kadar olan sayılar elbet. 'i' değişkeni 1 değeriyle başlıyor ve her tekrarda bir artıyor. Son sayı burada 4. Ama sonuncu sayıya gelmeden hemen önce durmak istersek 'to' yerine 'until' sözcüğünü kullanıyoruz, yani kadar anlamına gelen İngilizce sözcük:".p,
+    """for (i <- 1 until 12) {
+  val kare = i*i
+  satıryaz(i, kare)
+}""".c,
+    "Biliyor musun, bu yineleme işlemlerini birden çok boyutta yapmak bilgisayarla çok kolay. Birden fazla aralık vereceğiz ve her aralık için de bir değişken. Tek dikkat etmemiz gereken ikisi arasına bir noktalı virgül koymak. Bakın ne kolay!".p,
+    """for(i <- 1 until 5 ; j <- "abc") satıryaz(i, j)""".c,
+    """Bakın şu işe! Sayı yerine harfler kullandık! "for" yapısı içinde kullandığımız kümeler illa da sayılardan oluşmak zorunda değil yani. Genel olarak biz bunlara küme tekerleme diyebiliriz (İngilizcesi: iterating through a set or collection) yani teker teker her küme elemanını ele alıyoruz. "abc" yazısı da aslında bir harf kümesi ya da kolleksiyonu. Bakın hep küme ya da kolleksiyon dedim. Bu kavramlar yakın ama ufak farklılıkları var. Daha sonra bunlara verilen anlamı daha iyi anlayacağız. Şu anda çok da önemli değil gerçekten. Neyse. Harflerle tekerlemeye bir örnek daha verelim ve devam edelim:""".p,
+    """for(c<-"merhaba!") satıryaz(c)""".c,
+    "Şimdi de matematik, bilhassa kartezyen geometrisi sevenlere bir süprizimiz var. Kaplumbağacığı kullanarak bir eğri çizelim. Neyin eğrisi? İki boyutlu bir poligon. Genel olarak a*x^2 + b*x + c diye yazabiliriz. Yine bu çok faydalı olan 'for' yapısıyla:".p,
+    """sil
+def eğri(x:Double) = 0.001 * x * x + 0.5 * x + 10   // 'def' define yani tanımla demek. Bunu daha sonra daha iyi anlatacağız. 
+gridOn();axesOn() // kare çizgileri ve x ve y eksenlerini çizelim
+val aralık = 200
+atla(-aralık,eğri(-aralık))
+for(x <- -aralık+10 to aralık; if (x % 10 == 0)) lineTo(x, eğri(x))
 """.c,
-                 "Now turn off axes.".p,
-                 "sil()".c
-    ))
+    "Eksenleri silelim. Ve bir sonraki bölüme devam edelim!".p,
+    "axesOff(); gridOff()".c
+  )
+)
 
 pages += Page(
     name = "Literals",
@@ -333,7 +329,7 @@ pages += Page(
                  """0xcb17 //hex = 51991 dec""".c,
                  """By default these will be created as type Int. You can force them to type Long by adding the letter "l" or "L".""".p,
                  """0XFAF1L // hex long = 64241""".c,
-                 "You can assign literals to Short or Byte variables. However, the value must be in the appropriate range for that type.".p,
+                 "You can assign literals to Short or Byte variables. However, the value must be in the appropriate aralık for that type.".p,
                  "val abyte: Byte = 27".c,
                  "val ashort: Short = 1024".c,
                  """val errbyte: Byte = 128 // Error - not in range -128 to 127""".c,
@@ -364,7 +360,7 @@ pages += Page(
         ),
                  """val someEsc = "\\\"\'" """.c,
                  "Scala includes a special syntax to avoid these multiple escape characters. if you start and end a string with triple quotes (\"\"\") then all the characters such as newlines, quotation marks, and special characters are treated just like others.".p,
-                 "println(\"\"\"Welcome to Kojo.\n\"Turtle\" graphics \\Turtle section\\ for more information.\"\"\")".c,
+                 "satıryaz(\"\"\"Welcome to Kojo.\n\"Turtle\" graphics \\Turtle section\\ for more information.\"\"\")".c,
                  "Boolean".h3,
                  "The Boolean type has two possible values and the literals are true or false:".p,
                  "val isBig = true".c,
@@ -386,7 +382,7 @@ pages += Page(
                  "Typically a function will return a value of some type. However, for some functions no return value is expected; they are only used to cause a side effect, printing or writing to a file for example. In this case the return will often be of type 'Unit' meaning no value or void. This type of function is called a procedure and here are some examples you may have already seen.".p,
                  """sil
 ileri(100)
-println("a procedure")
+satıryaz("a procedure")
 """.c,
 "Functions that have no side-effects are called pure functions, and closely resemble mathematical functions. Pure functions provide the basis for a style of programming called functional programming.".p,
 "Recursive Functions".h3, 
@@ -397,7 +393,7 @@ println("a procedure")
 """.c,
                  """Compare this to the earlier version written with a "while" loop.""".p,
                  "gcd(96,128)".c,
-                 "Now here is another recursive function, it calls itself twice to create the branches of a rather pretty binary tree using the Turtle. The recursions stop when the distance is less than or equal to 4.".p,
+                 "Now here is another recursive function, it calls itself twice to create the branches of a rather pretty binary tree using the Turtle. The recursions stop when the distance is küçüktür or equal to 4.".p,
                  """def tree(distance: Double) {
     if (distance > 4) {
         setPenThickness(distance/7)
@@ -445,11 +441,11 @@ var y=0
 p.y=4
 """.c,
                  "You can retrieve the state in the same way.".p,
-                 "println(p.x,p.y)".c,
+                 "satıryaz(p.x,p.y)".c,
                  "Setting the variables individually each time an instance of a new point is created is time consuming. Scala simplifies this by letting you specify the initial field values as parameters to the class definition. When you construct a new point you just provide the field values you want for that instance.".p,
                  "class Point( var x:Int,var y:Int)".c,
 
-                 "And then create a point. Test it with println as before".p,
+                 "And then create a point. Test it with satıryaz as before".p,
                  "val p=new Point(3,4)".c,
                  "Now suppose you would like to add two points together to create a new point. The equivalent of vector addition. Then you may add an appropriate method to do so. This is just a function like any other except that the function can access the class instance field values directly.".p,
                  """class Point(var x:Int,var y:Int){
@@ -462,7 +458,7 @@ p.y=4
                  """val p1=new Point(3,4)
 val p2=new Point(7,2)
 val p3=p1.vectorAdd(p2)
-println(p3.x,p3.y)
+satıryaz(p3.x,p3.y)
 """.c,
 
                  """So far this looks pretty much as a Java programmer would expect. However,it would be more natural to write "p1+p2". In Scala you can do so. Method names are identifiers and can be composed using almost all of the non-alphanumeric symbols as described before for variable names. A few combinations are reserved and you will get an error if you try to use them. So the class can be rewritten to use "+" and a method for "-" created too.""".p,
@@ -480,7 +476,7 @@ val p2=new Point(7,2)
 val p3=new Point(-2,2)
 """.c,
                  """val p4=p1+p2-p3
-println(p4.x,p4.y)
+satıryaz(p4.x,p4.y)
 """.c,
                  "With this arrangement you can create a very natural looking vector calculus and a whole lot more readable than the traditional equivalent.".p,
                  "In Scala all classes are created with a default 'toString' method which produces a string representation of the object, by default its reference. You can override that method to give a more user friendly representation as has been done with Point above.".p,  
@@ -516,10 +512,10 @@ pages += Page(
 
                 """def  decode(n:Int){
   n match {
-    case 1 => println("One")
-    case 2 => println("Two")
-    case 5 => println("Five")
-    case _ => println("Error")
+    case 1 => satıryaz("One")
+    case 2 => satıryaz("Two")
+    case 5 => satıryaz("Five")
+    case _ => satıryaz("Error")
   }
 }
 """.c, 
@@ -527,7 +523,7 @@ pages += Page(
                 "The '=>' symbol is used to separate the match pattern from the expression or block to be evaluated. The '_' symbol is used in Scala to mean wild-card or in this case match anything. The last case statement behaves like default in the classical switch. 'match', like most other functions returns a value so the above function could be written more concisely.".p,
 
                 """def  decode(n:Int){
-  println(n match {
+  satıryaz(n match {
     case 1 => "One"
     case 2 => "Two"
     case 5 => "Five"
@@ -540,7 +536,7 @@ pages += Page(
                 "decode(3)".c,
                 "Unlike the traditional Java 'switch' the above mapping can easily be reversed.".p,
                 """def  encode(s:String){
-  println(s match {
+  satıryaz(s match {
     case "One" => 1
     case "Two" => 2 
     case "Five" => 5
@@ -559,7 +555,7 @@ pages += Page(
     }
  }
 
-println(whatIs("text"),whatIs(2),whatIs(2F)) // the F makes the 2 a type Float""".c
+satıryaz(whatIs("text"),whatIs(2),whatIs(2F)) // the F makes the 2 a type Float""".c
 
     )
 )
@@ -643,11 +639,11 @@ pages += Page(
                  "val lst=List(1,7,2,8,5,6,3,9,14,12,4,10)".c,
                  "Let's get started by using just three List methods - 'head', 'tail' and '::'. You will find more in the section 'Using Lists'.".p,
                  "'head' returns the first or leftmost item, '1' in our list above.".p,
-                "println(lst.head)".c,
+                "satıryaz(lst.head)".c,
 "'tail' returns the list with the first item, the '1', removed.".p,
-                "println(lst.tail)".c,
+                "satıryaz(lst.tail)".c,
 "'::' returns a new list with an item added.".p,
-                "println(23::lst)".c,
+                "satıryaz(23::lst)".c,
 "Notice that the methods do not change or mutate the original list but return a new one. For this reason Lists are called immutable data structures.".p,
 "With these three basic methods, you can create other ones to do almost anything you need with lists.  For example, here is how you find all the odd integers in a list:".p,
 
@@ -692,10 +688,10 @@ pages += Page(
   else filter(inLst.tail,cond)
 }""".c,
                  "filter(lst,(v:Int)=> v%2==0)".c,
-                 "Then you can try using this generic version of filter with a list of Doubles to find all the elements greater than 5.".p,
+                 "Then you can try using this generic version of filter with a list of Doubles to find all the elements büyüktür 5.".p,
                  """val lstd=List(1.5,7.4,2.3,8.1,5.6,6.2,3.5,9.2,14.6,12.91,4.23,10.04)
 filter(lstd,(v:Double)=> v>5)""".c,
-                 "Or with a list of strings to find those with a length greater than 3".p, 
+                 "Or with a list of strings to find those with a length büyüktür 3".p, 
                  """val lsts=List("It's","a","far","far","better","thing","I","do","now")
 filter(lsts,(v:String)=> v.length>3)""".c,
                  "In the reference you will find that lists have a filter function so you could equally write.".p, 
@@ -760,9 +756,9 @@ def myrepeat(rc:Int,rb: =>Any){
 "Earlier you used the fold function, which employs this same technique to provide a more readable syntax.".p,  
 "You will find that this ability to treat functions as objects is very useful in all sorts of programming tasks - for example - passing callback functions in event driven IO, passing tasks to Actors in concurrent processing environments, or in scheduling work loads. This often results in far more concise code, as you just saw.".p, 
 "Repeated Arguments in a Function".h4,
-"Sometimes it is useful to define a function that can accept any number of arguments. 'println' is one that has already been used extensively in this kılavuz. Here is a function to sum any number of integer arguments.".p,
+"Sometimes it is useful to define a function that can accept any number of arguments. 'satıryaz' is one that has already been used extensively in this kılavuz. Here is a function to sum any number of integer arguments.".p,
 """def sumInt(n:Int*)=n.reduce(_ + _)
-println(sumInt(1,2,3),sumInt(4,5,6,7,8))
+satıryaz(sumInt(1,2,3),sumInt(4,5,6,7,8))
 """.c,
 "The * after the parameter definition indicates that the function expects any number of this type of argument. The parameter n is defined as a sequence of the parameter type. This means that you can use list style methods to transform the sequence. In this case 'reduce' is used to sum the items.".p,
 "Other single parameters can preceed the repeated parameter. The repeated one must come last".p                 
@@ -776,8 +772,8 @@ pages += Page(
                  "It is often useful to return more than one value from a function or make up collections of things with more than one value for each item. You can of course always create a class to do this but the typing overhead of making the definition becomes onerous. Scala allows you to create what are in effect objects with anonymous fields - inline, using Tuples. A tuple is simply a set of values enclosed in paretheses. A tuple can contain a mixture of types.".p,
                  "(3,'c')".c,  
                  "The Tuple is an object, and so can be accessed using the dot notation; but since tuple fields have no names they are accessed using a name created with an underscore followed by the position index.".p, 
-                 """println((3,'c')._1)
-println((3,'c')._2)""".c,
+                 """satıryaz((3,'c')._1)
+satıryaz((3,'c')._2)""".c,
                  "However, tuple deconstruction is more frequently used to access the fields of a Tuple. In an assignment involving a tuple, the Scala compiler associates or binds the variable names in the left of the assignemnt with the corresponding values in the tuple. For example,".p,
                  "val (i,c)=(3,'a')".c,
                  "You will see how this is used in the following program to create a letter frequency table from a words list. First create the list.".p,
@@ -876,8 +872,8 @@ pages += Page(
                  "Integer Related Methods".h3,
                  "The following methods translate floating point values to integer values, although these values may still be stored in a double.".p,
                  table(
-            row("floor(3.12)".c,"closest integer-valued double which is equal to or less than P1."),
-            row("ceil(3.12)".c,"closest integer-valued double which is equal to or greater than P1."),
+            row("floor(3.12)".c,"closest integer-valued double which is equal to or küçüktür P1."),
+            row("ceil(3.12)".c,"closest integer-valued double which is equal to or büyüktür P1."),
             row("rint(3.51)".c,"closest integer-valued double to P1."),
             row("round(3.48)".c,"long which is closest in value to the double P1."),
             row("round(2.6F)".c,"int which is closest in value to the float P1.")
@@ -919,11 +915,11 @@ pages += Page(
         """val a = "Big"
 val b = "Bang"
 val c = a + " " + b        
-println( a,b,c)
+satıryaz( a,b,c)
 """.c,
 "Nearly all objects have a toString method to create a character representation.".p,
 """val x = (2).toString + " " + (3.1F).toString
-println(x)
+satıryaz(x)
 """.c, 
                  "Length".h3,
                  table(
