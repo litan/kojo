@@ -202,8 +202,15 @@ object TurkishAPI {
     def apply[A](elems: A*): List[A] = List.from(elems)
   }
 
+  // Used in Conway's game of life code in the tutorial
+  type Sayılar = Vector[Sayı]
+  object Sayılar {
+    def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
+  }
+
   // 
   val (yavaş, orta, hızlı, çokHızlı) = (Slow, Medium, Fast, SuperFast)
+
 }
 
 object TurkishInit {

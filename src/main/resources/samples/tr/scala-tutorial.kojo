@@ -122,7 +122,7 @@ pages += Page(
   body = <body style={pageStyle}>
     <div style={pageStyle+centerStyle}> <h1>Scala'ya Hızlı Giriş</h1> </div>
     <div style={pageStyle}>
-    <p>Bu kılavuz simplyscala.com'dan Kojo'ya uyarlanarak yazılmıştır. Kılavuzda ileri veya geri gitmek için en aşağıdaki üçgenlere tıkla. Ya da istediğin bölüme atlamak için aşağıdaki başlıklardan birine tıkla.</p> <br/>
+    <p>Bu kılavuzcuk simplyscala.com'dan Kojo'ya uyarlanarak yazılmıştır. Kılavuzda ileri veya geri gitmek için en aşağıdaki üçgenlere tıkla. Ya da istediğin bölüme atlamak için aşağıdaki başlıklardan birine tıkla.</p> <br/>
     <a href={link("GS")}>Başlayalım</a> <br/>
     <a href={link("Flow")}>Program Akışı If, Else ve While Komutları</a> <br/>
     <a href={link("Literals")}>Değişmezler, Sayılar, Kesirler ve Diziler</a> <br/>
@@ -141,7 +141,7 @@ pages += Page(
     <a href={link("GAG")}>Çizim ve Oyun</a> <br/>
     <a href={link("LM")}>Daha Çok Öğrenelim</a> <br/>
     <br/>
-    <p> Not: Anthony Bagwell'in simplyscala.com sitesi artık yaşamıyor. Arşivini şurada bulabilirsin: <a href="http://web.archive.org/web/20130305041026/http://www.simplyscala.com">simplyscala.com from web.archive.org</a>. </p>
+    <p>Not: Anthony Bagwell'in simplyscala.com sitesi artık yaşamıyor. Arşivini şurada bulabilirsin: <a href="http://web.archive.org/web/20130305041026/http://www.simplyscala.com">simplyscala.com from web.archive.org</a>.</p>
     </div>
     </body>
 )
@@ -150,10 +150,10 @@ pages += Page(
   name = "GS",
   body = tPage("Başlayalım",
     "Başlayalım".h2,
-    "Kılavuzumuzda pek çok yazılımcık örneği bulunuyor. Onları buradan kolaylıkla çalıştırabilirsin. Herhangi birinin üstüne tıkladığında o örnek yazılımcık Kojo Yazılımcık Düzenleyicisine taşınır ve çalışır. Yani hepsini yazmana gerek yok. Hatta yazılımcığı çalıştırma düğmesine bile tıklamaya gerek kalmıyor. Ayrıca, işin bir de güzel yanı şu: istediğin değişiklileri orada yapıp tekrar çalıştırabilirsin. Bunu için düzenleyicinin hemen üzerindeki yeşil üçgene tıklaman yeter. Haydi şimdi bunu deneyelim. Aşağıdaki mesajı Bülent yerine kendi adını yazıp tekrar çalıştırıver. Bu arada benim adım Bülent. Bu satırları siz Türkçe severler için severek çevirdim.".p,
+    "Kılavuzcuğumuzda pek çok yazılımcık örneği bulacaksın. Onları buradan kolaylıkla çalıştırabilirsin. Herhangi birinin üstüne tıkladığında o örnek, yazılımcık düzenleyicisine taşınır ve çalışır. Yani hepsini yazmana gerek yok. Hatta yazılımcığı çalıştırma düğmesine bile tıklamaya gerek kalmıyor. Ayrıca, işin bir de güzel yanı şu: istediğin değişiklileri orada yapıp tekrar çalıştırabilirsin. Bunu için düzenleyicinin hemen üzerindeki yeşil üçgene tıklaman yeter. Haydi şimdi bunu deneyelim. Aşağıdaki mesajı Bülent yerine kendi adını yazıp tekrar çalıştırıver. Bu arada benim adım Bülent. Bu satırları siz Türkçe severler için severek çevirdim.".p,
     """satıryaz("merhaba dünya! kaplumbacık ve Bülent'ten hepinize selamlar, sevgiler")""".c,
     "Yaptığın değişikliğin sonucunu Çıktı Gözünde ya da Çizim Tuvalinde hemen göreceksin.".p,
-    "Bu kılavuz ilk sayfada gördüğün bölümlerden oluşuyor. Bir sonraki bölüme geçmek için, ya da bir önceki bölüme dönmek için bu pencerenin altındaki sağa ve sola bakan mavi daire içindeki beyaz üçgenlere tıkla. İlgini çeken bölüme de kolaylıkla atlayabilirsin istersen. Bunun için ilk sayfaya geri dönüp ordaki mavi ve altı çizili başlıklardan herhangi birine tıklayabilirsin. İlk sayfaya dönmek için en üstte solda menü yazıyor ya, ona tıklayıver. En alttaki mavi daire içindeki kareye basarsan bu kılavuzdan çıkıp Kojo'ya dönebilirsin. Çıkınca kılavuzda son seçtiğin yazılımcık kapanmaz. Onun üzerinde değişikler yapıp çalıştırmaya odaklanabilirsin.".p,
+    "Bu kılavuzcuk ilk sayfada gördüğün bölümlerden oluşuyor. Bir sonraki bölüme geçmek için, ya da bir önceki bölüme dönmek için bu pencerenin altındaki sağa ve sola bakan mavi daire içindeki beyaz üçgenlere tıkla. İlgini çeken bölüme de kolaylıkla atlayabilirsin istersen. Bunun için ilk sayfaya geri dönüp ordaki mavi ve altı çizili başlıklardan herhangi birine tıklayabilirsin. İlk sayfaya dönmek için en üstte solda menü yazıyor ya, ona tıklayıver. En alttaki mavi daire içindeki kareye basarsan bu kılavuzcuktan çıkıp Kojo'nun normal düzenine dönebilirsin. Çıkınca kılavuzcukta son seçtiğin yazılımcık kapanmaz. Onun üzerinde değişikler yapıp çalıştırmaya odaklanabilirsin.".p,
     "Daha önce çalışan bir yazılıma dönmek de kolay: yazılım düzenleyicisinin üst kısmındaki menünün ortasında sağa ve sola bakan mavi oklara tıkla. Seçtiğin yazılımı düzenlemeye kaldığın yerden devam edebilirsin. Her örneği deneyebilir, istediğine geri dönüp değişiklikler yapıp tekrar çalıştırabilirsin. Değişik fikirler dener, programlama dilini daha iyi tanıyıp yazım, gramer kurallarını daha çabuk öğrenebilirsin. Yazılımcık düzenleyicisindeki programları diske kaydedebilir ve sonra oradan geri yükleyebilirsin. Bunun için Dosya menüsüdeki komutları kullan.".p,
     "Şu anda kullandığın Kojo öğrenim ortamı, çok gelişmiş ve uzman bilgisayar mühendislerinin en sevdikleri dillerin önde gelenlerinden Scala programlama dilini öğrenmene yardımcı olmak için hem çok faydalı hem de eğlendirici özellikler ve beceriler içeriyor. Müzik çalan programlar yazabilir, ileri matematik kavramlarını resimler ve grafikler çizerek inceleyip daha iyi öğrenir, değişik tür oyunları hem oynayabilir hem de nasıl yazıldıklarını kolayca öğrenebilir, hatta fizik deneyleri bile yapabilirsin! En güzeli Kojo'nun kaplumbağaları var! Onlara yol göstererek çizimler yaptırabilirsin. Küçük hemen anlayıp seveceğin tek kaplumbağalı bir örnekle başlayalım mı? Kaplumbağa yürüsün ve bir taraftan da bir üçgen çizsin istersen, bu yazılımcığa tıklaman yeter:".p,
     """
@@ -165,7 +165,7 @@ pages += Page(
   ileri(100)
   sağ(120)
 """.c,
-    "Bu kılavuzun kaplumbağacığın kullanılışı başlıklı (sondan üçüncü) bölümünde daha pek çok örnek yazılımcık ve kaplumbağanın anladığı komutların bir listesini bulabilirsin.".p,
+    "Bu kılavuzcuğun kaplumbağacığın kullanılışı başlıklı (sondan üçüncü) bölümünde daha pek çok örnek yazılımcık ve kaplumbağanın anladığı komutların bir listesini bulabilirsin.".p,
     "Scala dili tam anlamıyla genel ve güçlü bir bilgisayar programla dilidir. Özelliklerinin çoğunluğu uzman programcılara ve bilgisayar mühendislerine tanıdık gelecektir. Bu kılavuzcuktan faydalanmak için programlama dili bilmesen de olur, ama elbette daha önce başka bir programlama diliyle deneyimin olduysa daha hızlı ilerleyebilirsin. Onun için anladığın yerleri ve bölümleri hızlı geçmen hatta atlaman bile doğal olur.".p,
     "Öyleyse, başlayalım mı artık?".p,
     "Deyişler".h2,
@@ -214,7 +214,7 @@ satıryaz(mesaj)
     """1^2 // mantıksal dışlayan veya işlemi (xor yani exclusive or). Sadece biri 1 öbürü 0 olunca 1 verir. """.c,
     """1<<2 // parçacıkları iki kere sola kaydır """.c,
     """-24>>2 // sağa kaydır ama eksiyse eksi kalsın """.c,
-    """-14>>>2 // sağa kaydırıyor ama sonuca bakın! Ben anlamadım vallahi """.c,
+    """-14>>>2 // sağa kaydırıyor ama sonuca bakın! Ben anlamadım vallahi. Ya sen?""".c,
     "Bakın bu çok ilginç. Parçacıkları sola kaydırmak ikiyle çarpmaya denk! Sola kaydırmaksa ikiye bölmeye benzemiyor mu? Bu daha önce de dediğim gibi uzmanlık konusu. Üzerinde yazılmış pekçok bilimsel makale ve ders kitapları var. Hatta bazıları çok azımızın anlayabileceği yüksek ihtisas kitapları! Bugünlük bu kadarı fazla bile. Ama sen istersen bu yazılımcığı kurcala. Dene. Bakarsın uzman olmak istersin. Neden olmasın?".p,
     "Farkında mısınız? Bu kadarcık bilgiyle bile artık çok güçlü bir hesap makinemiz oldu. Ama dahası var! Bir sonraki bölümde program akışı nasıl düzenlenir öğrenecek ve yazılımcıklarımızı çok daha becerikli hale getireceğiz.".p
   )
@@ -756,7 +756,7 @@ def myrepeat(rc:Int,rb: =>Any){
 "Earlier you used the fold function, which employs this same technique to provide a more readable syntax.".p,  
 "You will find that this ability to treat functions as objects is very useful in all sorts of programming tasks - for example - passing callback functions in event driven IO, passing tasks to Actors in concurrent processing environments, or in scheduling work loads. This often results in far more concise code, as you just saw.".p, 
 "Repeated Arguments in a Function".h4,
-"Sometimes it is useful to define a function that can accept any number of arguments. 'satıryaz' is one that has already been used extensively in this kılavuz. Here is a function to sum any number of integer arguments.".p,
+"Sometimes it is useful to define a function that can accept any number of arguments. 'satıryaz' is one that has already been used extensively in this kılavuzcuk. Here is a function to sum any number of integer arguments.".p,
 """def sumInt(n:Int*)=n.reduce(_ + _)
 satıryaz(sumInt(1,2,3),sumInt(4,5,6,7,8))
 """.c,
@@ -1096,8 +1096,8 @@ sol()
 pages += Page(
     name = "GAG",
     body = tPage("Çizim ve Oyun",
-                 "Peter Lewerin has contributed 'Staging' to Kojo. Staging gives you some neat graphics and the potential to make games. These Staging features originated in a Java project called Processing and were ported to Kojo by Peter. This capability is worth a whole kılavuz in itself. However to give you a taste of what is possible and a starting point for experimentation, here are a couple examples.".p,
-                 "The section on Staging will be expanded in a later version of the Kılavuz. You can find a more complete list of Staging features and examples at:".p,
+                 "Peter Lewerin has contributed 'Staging' to Kojo. Staging gives you some neat graphics and the potential to make games. These Staging features originated in a Java project called Processing and were ported to Kojo by Peter. This capability is worth a whole kılavuzcuk in itself. However to give you a taste of what is possible and a starting point for experimentation, here are a couple examples.".p,
+                 "The section on Staging will be expanded in a later version of the kılavuzcuk. You can find a more complete list of Staging features and examples at:".p,
                  "Commands or Methods".link("lewerin.se/peter/kojo/staging.html"),
                  "Examples and Description".link("code.google.com/p/kojo/wiki/StagingModule"),
                  "The package contains commands and functions that allow you to draw sophisticated shapes and images, and a frame loop that allows you to animate the graphics.".p,
@@ -1212,72 +1212,138 @@ animate{
 }
 """.c,
 
-                 "Conway's Game of Life".h3,
-                 "The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970".p,
-"See Wikipeadia entry".link("""http://en.wikipedia.org/wiki/Conway's_Game_of_Life"""),
-"The idea is that cells grow or die according to a simple set of rules.".p,
-table(row("Any live cell with fewer than two live neighbours dies, as if caused by under-population."),
-  row("Any live cell with two or three live neighbours lives on to the next generation."),
-  row("Any live cell with more than three live neighbours dies, as if by overcrowding."),
-  row("Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.")
-  ),
-  "This implementation illustrates how the 'foldLeft' method can be used in place of the 'for' method to iterate over the cell population.".p,
-"You can choose the starting pattern from a number of well known ones by changing the init line in the program. Different starting patterns are to be found at the end of the program. Try modifying the start patterns to see what happens.".p, 
+      "Conway'in Yaşam Oyunu".h3,
+      """İngilizce adıyla "The Game of Life" o kadar meşhur ki, bilgisayarcılar arasında basitçe Life yani yaşam adıyla tanınır! Aslında o bir hücresel otomaton yani basit hücrelerden oluşan ve onların yerel etkileşimleri sayesinde kendi kendine devinen en basit program türlerinden biri. İngiltere doğumlu Amerika'da Princeton üniversitesinde matematik araştırmaları yapan John Horton Conway tarafından 1970 yılında icat edilmiş. Belki de keşfedilmiş demek lazım. Kimbilir. Sen nedersin?""".p,
+      "Wikipedia ansiklopedisinden bakabilirsin".link("""tr.wikipedia.org/wiki/Conway%27in_Hayat_Oyunu"""),
+      "Ana fikir çok basit. Basit bir avuç kurala göre hücreler canlanır ya da can verir. Her hücrenin sekiz komşusu var. Doğru mu? Canlı olanlara arkadaş diyelim. Bakın dört kural var:".p,
+      table(row("Canlı bir hücrenin ikiden az arkadaşı varsa canı çıkar. Canı sıkılmış sanki."),
+        row("Eğer iki ya da üç arkadaşı varsa hayatta kalır."),
+        row("Eğer başına üçten fazla arkadaş toplanırsa canı çıkar! Bilmem neden. Sanki çok kalabalık olmuş gibi."),
+        row("Cansız bir hücrenin tam üç tane arkadaşı varsa kendisi de canlanır. Allah'ın hakkı üç denir ya!")
+      ),
+      "Bu yazılımcık 'foldLeft' adlı metodu kullanarak çok önemli bir kavram olan üst derece işlevlere örnek oluyor. Ne demek üst derece işlev? Başka işlevleri girdi olarak kabul eden onları kullanarak akıl almaz derecede becerikli olan komutlar. En başlarda kullandığımız 'for' yerine 'foldLeft' kullanarak bütün dünyayı baştan çiziveriyoruz. 'foldLeft' soldan katla gibi bir anlama geliyor. Dünyayı temsil eden hücrelerin kümesindeki elemanları teker teker işleyiveriyor.".p,
+      "Bu yaşam ya da hayat oyunu sıfır oyuncuyla oynanıyor! Çok sıkıcı mı dedin? Yok, çok ilginç aslında. Aslında sen çok önemlisin. Çünkü bu oyunun başlaması için en başta canlı hücrelere gerek var. Bunları sen belirleyebilirsin. Ama önce hazır bazı desenlerle başlamak daha kolay olur. 'başlangıç' adlı komudu bul. Onun ikinci girdisi 'desen'. Deseni seçmek için yapman gereken tek şey 'seç' adındaki değeri değiştirmek. Birinciyle başlıyoruz. Ama sıfırdan ona kadar hepsini deneyebilirsin. Sonra hatta kendin de yeni desenler ekleyebilirsin.".p,
 
-"The time per generation can changed by modifying the 'mod' value on t in the animate function.".p,  
-                 """import Staging._
-import Staging.{circle, clear, animate, setFillColor, wipe} // explicitly import names that clash
-clear()
-setFillColor(blue)
-// ES is edge size of 'world' 
-val ES=128; val AS=ES*ES
-// Initialize vector to all dead cells
-var v = (0 until AS).foldLeft(Vector[Int]())((x,y)=> x :+ 0 )
+"Bu simulasyonun hızını 'oran' değerini değiştirerek ayarlayabilirsin.".p,  
+                 """import Staging._ // Staging birimindeki komutları kullanmak için çağıralım.
+// Farklı birimlerin bazı benzer komutları oluyor ve aynı adı kullanıyorlar.
+// Onun için hangisini kullanmak istiyoruz açık açık belirtmemiz gerek:
+import Staging.{ animate, circle, clear, setFillColor, wipe }
 
-v=init(v,glider) // Choose initial pattern from those below
+çıktıyıSil; clear(); gridOn(); axesOn(); setFillColor(mavi)
 
-// animation is about 30 frames per second or 32 milliseconds per frame
-var t=0
+// bu yazılımcıkta hızıKur gibi kaplumba komutları bir işe yaramıyor,
+// çünkü çizimleri yapan kaplumba değil Staging biriminin komutları
+
+// bu oyunun dünyası yani tahtası büyük bir kare. Kenarı KU uzunluğunda olsun
+// Nasıl satranç tahtası 8x8, bu tahta 128x128 kare.
+val KU = 128
+// karenın kenarı kaplumbanın on adımına denk
+
+// ilk önce, bütün kareler cansız olmalı
+var dünya = (0 until KU * KU).foldLeft(Sayılar())((x, y) => x :+ 0)
+satıryaz(s"Dünyamızda $KU'in karesi yani ${dünya.size} tane hane var.")
+yaz(s"Ekranımız ${(canvasBounds.width / 10).toInt} kare eninde ")
+satıryaz(s"ve ${(canvasBounds.height / 10).toInt} kare boyunda.")
+
+val oran = 5 // canlandırmayı yavaşlatmak için bunu arttır.
+// En hızlısı 1. 40'a eşitlersen saniyede bir nesil ilerliyor yaklaşık olarak.
+// Nasıl mı? Canlandırma komutu (adı animate) bir saniyede 30 kere çalıştırılıyor. 
+
+val gösterVeDur = yanlış // bunu doğru yaparsan deseni gösterip dururuz
+val sonundaDur = doğru   // her desenin bir durağı var. Ondan sonra fazla bir şey değişmiyor.
+// Ama, yine de çalışmaya devam etsin isterse, bunu yanlışa çevir.
+
+// deseni seçelim:
+val seç = 1
+// block1 ve block2 bir kaç füze yolluyor ve sonra 1000. nesil civarı gibi duruyor.
+val (desen, adı, durak) = seç match {
+    case 0 => (üçlüler, "üçlüler", 20)
+    case 1 => (kayGit, "kayGit", 500) /* makineli tüfek gibi */
+    case 2 => (esaslı, "esaslı", 1111) /* Yaklaşık 1000 nesil canlı sonra peryodik */
+    case 3 => (dokuzcanlı, "dokuzcanlı", 130) /* 131 nesil sonra can kalmıyor */
+    case 4 => (blok1, "block1", 1200) //
+    case 5 => (blok2, "block2", 1200) //
+    case 6 => (küçücük, "tiny", 700) // küçücük
+    case 7 => (ü2a, "ü2a", 60) // üçlülere ek
+    case 8 => (ü2b, "ü2b", 60) // benzeri
+    case 9 => (dörtlü, "dörtlü", 30) // üçlü üretiyor
+    case _ => (tohum, "tohum", 2200) // ne muhteşem bir meşe palamudu!
+}
+
+dünya = başlangıç(dünya, desen)
+
+yaz(s"$seç. desende ${desen.size} tane canlı kare var. Adı $adı.\nNesilleri sayalım: ")
+
+var zaman = 0
+val z0 = epochTime // şimdiki zamanı (geçmişte bir ana göre) anımsayalım
 animate {
-   if(t%5 == 0){
-     wipe()
-     disp(v)
-     v = (0 until AS).foldLeft(Vector[Int]())((x,y)=>x :+ ns(v,y)) 
-   }  
-   t+=1
+    val nesil = zaman / oran + 1
+    if (zaman % oran == 0) {
+        wipe() // sil
+        çiz(dünya)
+        dünya = (0 until KU * KU).foldLeft(Sayılar())((x, y) => x :+ yeniNesil(dünya, y))
+        yaz(s"$nesil ")
+        if (gösterVeDur) stopAnimation
+    }
+    zaman += 1
+    if (sonundaDur && nesil == durak) {
+        val z1 = epochTime - z0
+        satıryaz(s"\n${round(z1, 2)} saniye geçti. Durduk.")
+        stopAnimation()
+    }
 }
-// New generation
-def ns(v:Vector[Int],ix:Int)={
- val rule=Vector(0,0,0,1,1,0,0,0,0,0) // life rules
- val x=ix/ES ; val y=ix%ES
- val t = (0 until 3).foldLeft(0)((st,i)=>{
-     st + (0 until 3).foldLeft(0)((s,j)=>{
-            val xt=x+i-1 ; val yt=y+j-1
-            s+(if((xt<0)||(xt>=ES)||(yt<0)||(yt>=ES)) 0 else v(xt*ES+yt))   
-            })
-     })
-   if(v(ix)==1) rule(t) else {if (t==3) 1 else 0}
-}
-// display cells
-def disp(v:Vector[Int])= for(i<- 0 until AS)
-    if(v(i)==1)circle((i/ES)*10-ES*5,(i%ES)*10-ES*5, 5)
-// set up starting pattern   
-def init(v:Vector[Int],p:List[(Int,Int)]) = p.foldLeft(v)((x,y)=> x.updated( (y._1 + ES/2)* ES+y._2 + ES/2,1))
 
-// Some well known starting patterns  
-def fpent=List((0,1),(1,0),(1,1),(1,2),(2,2))
-def diehard=List((0,1),(1,0),(1,1),(5,0),(6,0),(7,0),(6,2))
-def acorn=List((0,0),(1,0),(1,2),(3,1),(4,0),(5,0),(6,0))
-def glider=List((-18,3),(-18,4),(-17,3),(-17,4),(-8,2),(-8,3),(-8,4),(-7,1),(-7,5),
-    (-6,0),(-6,6),(-5,0),(-5,6),(-4,3),(-3,1),(-3,5),(-2,2),(-2,3),(-2,4),
-    (-1,3),(2,4),(2,5),(2,6),(3,4),(3,5),(3,6),(4,3),(4,7),
-    (6,2),(6,3),(6,7),(6,8),(16,5),(16,6),(17,5),(17,6))
-def block1=List((0,0),(2,0),(2,1),(4,2),(4,3),(4,4),(6,3),(6,4),(6,5),(7,4)) 
-def block2=List((0,0),(0,3),(0,4),(1,1),(1,4),(2,0),(2,1),(2,4),(3,2),(4,0),
-            (4,1),(4,2),(4,4))
-def tiny=List((-18,0),(-17,0),(-16,0),(-15,0),(-14,0),(-13,0),(-12,0),(-11,0),(-9,0),(-8,0),
-        (-7,0),(-6,0),(-5,0),(-1,0),(0,0),(1,0),(8,0),(9,0),(10,0),
-    (11,0),(12,0),(13,0),(14,0),(16,0),(17,0),(18,0),(19,0),(20,0))    
+// deseni kuralım
+def başlangıç(v: Sayılar, desen: Dizin[(Sayı, Sayı)]) = desen.foldLeft(v)((x, y) => x.updated((y._1 + KU / 2) * KU + y._2 + KU / 2, 1))
+
+// yeni nesli bulalım
+def yeniNesil(v: Sayılar, ix: Sayı) = {
+    val kural = Vector(0, 0, 0, 1, 1, 0, 0, 0, 0, 0) // oyunun kuralları
+    val x = ix / KU; val y = ix % KU
+    val t = (0 until 3).foldLeft(0)((st, i) => {
+        st + (0 until 3).foldLeft(0)((s, j) => {
+            val xt = x + i - 1; val yt = y + j - 1
+            s + (if ((xt < 0) || (xt >= KU) || (yt < 0) || (yt >= KU)) 0 else v(xt * KU + yt))
+        })
+    })
+    if (v(ix) == 1) kural(t) else { if (t == 3) 1 else 0 }
+}
+// canlı kareleri çizelim. Can mavi çember içi kırmızı daire. Yarıçapı 5
+val yarıçap = 5
+def çiz(v: Sayılar) = for (i <- 0 until KU * KU)
+    if (v(i) == 1) circle(
+        (i / KU) * 2 * yarıçap - KU * yarıçap,
+        (i % KU) * 2 * yarıçap - KU * yarıçap, yarıçap)
+
+// Meşhur olmuş desenlerden birkaçı
+def esaslı = Dizin((0, 1), (1, 0), (1, 1), (1, 2), (2, 2)) // orijinal adı: fpent
+// İki küçücük grup var ve kolay kolay ölmüyor
+def dokuzcanlı = Dizin((0, 1), (1, 0), (1, 1), (5, 0), (6, 0), (7, 0), (6, 2)) // diehard
+def tohum = Dizin((0, 0), (1, 0), (1, 2), (3, 1), (4, 0), (5, 0), (6, 0))
+// glider adlı meşhur üretken desen
+def kayGit = Dizin((-18, 3), (-18, 4), (-17, 3), (-17, 4), (-8, 2), (-8, 3), (-8, 4), (-7, 1), (-7, 5),
+    (-6, 0), (-6, 6), (-5, 0), (-5, 6), (-4, 3), (-3, 1), (-3, 5), (-2, 2), (-2, 3), (-2, 4),
+    (-1, 3), (2, 4), (2, 5), (2, 6), (3, 4), (3, 5), (3, 6), (4, 3), (4, 7),
+    (6, 2), (6, 3), (6, 7), (6, 8), (16, 5), (16, 6), (17, 5), (17, 6))
+def blok1 = Dizin((0, 0), (2, 0), (2, 1), (4, 2), (4, 3), (4, 4), (6, 3), (6, 4), (6, 5), (7, 4))
+def blok2 = Dizin((0, 0), (0, 3), (0, 4), (1, 1), (1, 4), (2, 0), (2, 1), (2, 4), (3, 2), (4, 0),
+    (4, 1), (4, 2), (4, 4))
+def küçücük = Dizin((-18, 0), (-17, 0), (-16, 0), (-15, 0), (-14, 0), (-13, 0), (-12, 0), (-11, 0), (-9, 0), (-8, 0),
+    (-7, 0), (-6, 0), (-5, 0), (-1, 0), (0, 0), (1, 0), (8, 0), (9, 0), (10, 0),
+    (11, 0), (12, 0), (13, 0), (14, 0), (16, 0), (17, 0), (18, 0), (19, 0), (20, 0))
+def üçlüler = Dizin((0, 2), (0, 3), (0, 4), (0, -2), (0, -3), (0, -4),
+    (-2, 0), (-3, 0), (-4, 0), (2, 0), (3, 0), (4, 0))
+// üçlülerden dikey olanları bağlayalım
+def ü2a = Dizin((0, 0), (0, 1), (0, -1)) ++ üçlüler
+// öbür türlü, yani yatay olanları bağlayalım
+def ü2b = Dizin((0, 0), (1, 0), (-1, 0)) ++ üçlüler
+def dörtlü = Dizin((0, 0), (1, 0), (-1, 0), (0, 2)) // dokuzcanlı'nın altkümesi
+
+// sepet sepet yumurta
+// sakın beni unutma
+// şimdilik bu kadar
+// yaşamın tadını çıkar
 """.c,
     
 "Tangle".h3,
@@ -1351,7 +1417,7 @@ pages += Page(
     body = tPage("Daha Çok Öğrenelim",
 
                  "Next Steps".h2,
-                 "This kılavuz has covered part of what is a very deep language. By now, you are familiar with the essential Scala language features. Already you can write quite sophisticated programs in Scala and have fun with the graphical environment offered by Kojo.".p,
+                 "This kılavuzcuk has covered part of what is a very deep language. By now, you are familiar with the essential Scala language features. Already you can write quite sophisticated programs in Scala and have fun with the graphical environment offered by Kojo.".p,
                  "If you are already a Java programmer you can no doubt already see how you can use Scala with all the libraries from your existing Java environment too. Scala and Java integrate seamlessly.".p,
 
                  "To learn more a good book is invaluable. Programming in Scala by Martin Odersky, Lex Spoon and Bill Venners is one excellent place to continue.".p,
@@ -1362,7 +1428,7 @@ pages += Page(
 "They can be found here.".link("typesafe.com"),
 "The Netbeans IDE also has good Scala support (and Kojo itself has been written, in Scala, using Netbeans).".p,
 "More information here".link("wiki.netbeans.org/Scala"),
-"A small subset of the Scala library functions have been used in this kılavuz".p,
+"A small subset of the Scala library functions have been used in this kılavuzcuk".p,
 "Click here to see a complete list of all the Scala library available.".link("www.scala-lang.org/api/current/index.html"),
 "We wish you lots of fun using Scala!".p
                                   
