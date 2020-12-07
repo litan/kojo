@@ -489,10 +489,11 @@ val p3=Point(-2,2)
                 "Everything is an object. As such, you may have wondered why the example above was not written more in Java style.".p,
                 "p1.+(p2.-(p3)) // p1.+(p2).-(p3) ?".c,
                 "This is one of the nice syntactic features of Scala that helps to give clarity and uniformity to your code. You may leave out the parentheses and dots as Scala can infer where they belong. It is this carefully thought out syntax that allows you to implement Domain Specific Languages (DSLs). So all objects, including numbers are just objects with methods. For example you can perform the + method on the number 1 with the extended syntax too. In Scala the mathematical operators like '+' , '-' , '*' and '/' are just methods too.".p,
-                "(1).+(2)".c,
+                "1.+(2)".c,
                 "All the base types are in fact objects too that can be used and extended just like any other object.".p, 
-
-                """Note the first set of parentheses around the "1" are required here to remove an ambiguity. "1." is a type Double and the result would be type Double rather than Int. Try making the change.""".p
+                """Note that the Scala compiler is now smart enough and does not confuse the method syntax "1." with 1.0, a Double. Otherwise, we would need to use one more pair of parantheses:""".p,
+                "(1).+(2)".c,
+                """That might have been the case in an earlier version of Scala. And, some other languages still suffer from this ambiguity. Just so you know.""".p
     )
 )
 
