@@ -26,6 +26,7 @@ import net.kogics.kojo.xscala.RepeatCommands
 
 object TurkishAPI {
   // some type aliases in Turkish -- Ctrl-t to return type info will also be in turkish
+  type Nesne = Object
   type Birim = Unit
   type Her   = Any
   type Hiç   = Nothing
@@ -195,12 +196,13 @@ object TurkishAPI {
   type İriKesir = BigDecimal
   // Yazı
   type Harf = Char
-  type Dizi = String
+  type Yazı = String
 
   type Dizin[A] = List[A]
   object Dizin {
     def apply[A](elems: A*): List[A] = List.from(elems)
   }
+  val Boş = scala.collection.immutable.Nil
 
   // Used in Conway's game of life code in the tutorial
   type Sayılar = Vector[Sayı]
@@ -278,8 +280,8 @@ object TurkishInit {
     "çıktıyıSil" -> "çıktıyıSil()",
     "arkaplanıKur" -> "arkaplanıKur(${renk})",
     "arkaplanıKurDik" -> "arkaplanıKurDik(${renk1},${renk2})",
-    "yinele" -> "yinele(${say}) {\n    ${cursor}\n}",
-    "yineleDizinli" -> "yineleDizinli(${say}) { i =>\n    ${cursor}\n}",
+    "yinele" -> "yinele(${sayı}) {\n    ${cursor}\n}",
+    "yineleDizinli" -> "yineleDizinli(${sayı}) { i =>\n    ${cursor}\n}",
     "yineleDoğruysa" -> "yineleDoğruysa(${koşul}) {\n    ${cursor}\n}",
     "yineleOlanaKadar" -> "yineleOlanaKadar(${koşul}) {\n    ${cursor}\n}",
     "yineleKere" -> "yineleKere(${dizi}) { ${e} =>\n    ${cursor}\n}",
