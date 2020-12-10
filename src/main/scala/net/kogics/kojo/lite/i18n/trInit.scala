@@ -36,8 +36,47 @@ object TurkishAPI {
   type Renk = Color
   type Boya = Paint
 
-  import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast}
+  import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast, Point}
   type Hız  = Speed
+  type Nokta = Point
+
+  // Ref: https://docs.scala-lang.org/overviews/scala-book/built-in-types.html
+  type İkil = Boolean
+  val (doğru, yanlış) = (true, false)
+  // Bit? Parçacık olsun mu adı?
+
+  // We have Byte/Short/Int/Long which all default to Int and BigInt
+  // val n = 1
+  // Sayma sayıları
+  type Lokma   = Byte
+  type Kısa    = Short
+  type Sayı    = Int
+  type Uzun    = Long
+  type İriSayı = BigInt
+  // We have Float/Double which default to Double and BigDecimal
+  //   val x = 1.0
+  // Kesirli sayılar
+  type UfakKesir = Float
+  type Kesir = Double
+  type İriKesir = BigDecimal
+  // Yazı
+  type Harf = Char
+  type Yazı = String
+
+  type Dizin[A] = List[A]
+  object Dizin {
+    def apply[A](elems: A*): List[A] = List.from(elems)
+  }
+  val Boş = scala.collection.immutable.Nil
+
+  // Used in Conway's game of life code in the tutorial
+  type Sayılar = Vector[Sayı]
+  object Sayılar {
+    def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
+  }
+
+  // 
+  val (yavaş, orta, hızlı, çokHızlı) = (Slow, Medium, Fast, SuperFast)
 
   var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
 
@@ -73,10 +112,10 @@ object TurkishAPI {
     def yazıBoyunuKur(boyutKur: Int) = englishTurtle.setPenFontSize(boyutKur)
     def yay(yarıçap: Double, açı: Double) = englishTurtle.arc(yarıçap, math.round(açı).toInt)
     def daire(yarıçap: Double) = englishTurtle.circle(yarıçap)
-    def konum = englishTurtle.position
+    def konum: Nokta = englishTurtle.position
     def kalemiİndir() = englishTurtle.penDown()
     def kalemiKaldır() = englishTurtle.penUp()
-    def kalemİnikMi = englishTurtle.style.down
+    def kalemİnikMi: İkil = englishTurtle.style.down
     def kalemRenginiKur(renk: Renk) = englishTurtle.setPenColor(renk)
     def boyamaRenginiKur(boya: Paint) = englishTurtle.setFillColor(boya)
     def kalemKalınlığınıKur(n: Double) = englishTurtle.setPenThickness(n)
@@ -127,6 +166,9 @@ object TurkishAPI {
   def arkaplanıKurDik  (r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
   def arkaplanıKurYatay(r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundH(r1, r2)
 
+  def buAn: Uzun = builtins.epochTimeMillis
+  def buSaniye: Kesir = builtins.epochTime
+
   //  object KcSwe { //Key codes for Swedish keys
   //    lazy val VK_Å = 197
   //    lazy val VK_Ä = 196
@@ -172,47 +214,6 @@ object TurkishAPI {
   }
   def rasgele(üstSınır: Int) = builtins.random(üstSınır)
   def rasgeleKesir(üstSınır: Int) = builtins.randomDouble(üstSınır)
-
-  // some more type aliases in Turkish
-  //
-  // Ref: https://docs.scala-lang.org/overviews/scala-book/built-in-types.html
-  type İkil = Boolean
-  val (doğru, yanlış) = (true, false)
-  // Bit? Parçacık olsun mu adı?
-
-  // We have Byte/Short/Int/Long which all default to Int and BigInt
-  // val n = 1
-  // Sayma sayıları
-  type Lokma   = Byte
-  type Kısa    = Short
-  type Sayı    = Int
-  type Uzun    = Long
-  type İriSayı = BigInt
-  // We have Float/Double which default to Double and BigDecimal
-  //   val x = 1.0
-  // Kesirli sayılar
-  type UfakKesir = Float
-  type Kesir = Double
-  type İriKesir = BigDecimal
-  // Yazı
-  type Harf = Char
-  type Yazı = String
-
-  type Dizin[A] = List[A]
-  object Dizin {
-    def apply[A](elems: A*): List[A] = List.from(elems)
-  }
-  val Boş = scala.collection.immutable.Nil
-
-  // Used in Conway's game of life code in the tutorial
-  type Sayılar = Vector[Sayı]
-  object Sayılar {
-    def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
-  }
-
-  // 
-  val (yavaş, orta, hızlı, çokHızlı) = (Slow, Medium, Fast, SuperFast)
-
 }
 
 object TurkishInit {
@@ -331,9 +332,10 @@ object TurkishInit {
     "ışınlarıAç" -> <div><strong>ışınlarıAç</strong>() - Bu komut kaplumbağanın önünü, arkasını, sağını ve solunu bir artı çizerek daha kolay seçmemizi sağlar.</div>.toString,
     "ışınlarıKapat" -> <div><strong>ışınlarıKapat</strong>() - Bu komut <tt>ışınlarıAç()</tt> komutuyla kaplumbağanın üstüne çizilen artıyı siler.</div>.toString,
     "sil" -> <div><strong>sil</strong>() - Bu komut kaplumbağanın tuvalini temizler, kaplumbağayı başlangıç konumuna geri getirir ve kuzey doğrultusuna çevirir.</div>.toString,
-    "arkaplanıKur" -> <div> <strong>arkaplanıKur</strong>(renk) - Bu komutla tuval verilen renge boyanır. Kojo'nun bildiği sarı, mavi ve siyah gibi renkleri kullanabilirsiniz ya da <tt>Renk</tt>, <tt>ColorHSB</tt> ve <tt>ColorG</tt> komutlarını kullanarak kendi renklerinizi yaratabilirsiniz. </div> .toString,
+    "arkaplanıKur" -> <div> <strong>arkaplanıKur</strong>(renk) - Bu komutla tuval verilen renge boyanır. Kojonun tanıdığı sarı, mavi ve siyah gibi renkleri kullanabilirsiniz ya da <tt>Renk</tt>, <tt>ColorHSB</tt> ve <tt>ColorG</tt> komutlarını kullanarak kendi renklerinizi yaratabilirsiniz. </div>.toString,
     "arkaplanıKurDik"   ->   <div><strong>arkaplanıKurDik</strong>(renk1, renk2) - Bu komutla tuval aşağıdan yukarı doğru birinci renkten ikinci renge derece derece değişerek boyanır. </div>.toString,
     "arkaplanıKurYatay" -> <div><strong>arkaplanıKurYatay</strong>(renk1, renk2) - Bu komutla tuval soldan sağa doğru birinci renkten ikinci renge derece derece değişerek boyanır. </div>.toString,
+    "konum" -> <div><strong>konum</strong> - Bu komut kaplumbağacığın bulunduğu konumu nokta (Point) olarak bildirir. <tt>konum.x</tt> ve <tt>konum.y</tt> ile de x ve y koordinatları okunabilir. </div>.toString,
     "yinele" -> <div><strong>yinele</strong>(sayı){{ }} - Bu komut küme içine alınan komutları verilen sayı kadar tekrar tekrar çağırır. <br/></div>.toString,
     "yineleDizinli" -> <div><strong>yineleDizinli</strong>(sayı) {{i => }} - Bu komut, küme içine alılan komutları verilen sayı kadar tekrar tekrar çağırır. Kaçıncı yineleme olduğunu <tt>i</tt> değişkenini küme içinde kullanarak görebiliriz. </div>.toString,
     "yineleDoğruysa" -> <div><strong>yineleDoğruysa</strong>(koşul) {{ }} - Bu komut küme içine alılan komutları verilen koşul doğru oldukça tekrar çağırır. <br/></div>.toString,
@@ -348,7 +350,12 @@ object TurkishInit {
     "giysiKur" -> <div><strong>giysiKur</strong>(giysiDosyası) - Kaplumbağanın görünüşünü verilen dosyadaki resimle değiştirir. </div>.toString,
     "giysileriKur" -> <div><strong>giysilerKur</strong>(giysiDosyası1, giysiDosyası2, ...) - Kaplumbağa için bir dizi giysi belirler ve giysiDosyası1 resmini giydirir. <tt>birSonrakiGiysi()</tt> komutuyla dizideki bir sonraki giysiyi giydirebiliriz. </div>.toString,
     "birsonrakiGiysi" -> <div><strong>birSonrakiGiysi</strong>() - Kaplumbağaya <tt>giysilerKur()</tt> komutuyla girilen giysi dizisindeki bir sonraki resmi giydirir. </div>.toString,
-    "çıktıyıSil" -> <div><strong>çıktıyıSil</strong>() - Bu komut çıktı penceresindeki bütün çıktıları silerek temizler. </div>.toString
+    "çıktıyıSil" -> <div><strong>çıktıyıSil</strong>() - Bu komut çıktı penceresindeki bütün çıktıları silerek temizler. </div>.toString,
+    "silVeSakla" -> <div><strong>silVeSakla</strong>() - Bu komut tuvaldeki çizimleri siler ve kaplumbağayı görünmez kılar. </div>.toString,
+    "çizimiSil" -> <div><strong>çizimiSil</strong>() - Bu komut tuvaldeki çizimleri siler. </div>.toString,
+    "buAn" -> <div><strong>buAn</strong>() - Bu komut evrensel zamana (UTC) göre 1 Ocak 1970 tam geceyarısından bu ana kadar geçen zamanı kesirsiz milisaniye olarak verir.</div>.toString,
+    "buSaniye" -> <div><strong>buSaniye</strong>() - Bu komut evrensel zamana (UTC) göre 1 Ocak 1970 tam geceyarısından bu ana kadar geçen zamanı kesirli saniye olarak verir.</div>.toString
   )
 }
-// todo: add doc on silVeSakla and çizimiSil
+
+
