@@ -61,6 +61,7 @@ class JoyStick(radius: Double)(builtins: Builtins) {
     control.draw()
   }
 
+  def setPosition(x: Double, y: Double): Unit = setPostiion(x, y)
   def setPostiion(x: Double, y: Double): Unit = {
     perimeter.setPosition(x, y)
     control.setPosition(x, y)
