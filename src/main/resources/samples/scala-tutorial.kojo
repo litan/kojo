@@ -121,7 +121,7 @@ pages += Page(
             </div>
         
             <div style={pageStyle}>
-        <p>This tutorial was adapted for Kojo from the simplyscala.com version by Anthony Bagwell. You can move through the tutorial by clicking on the forward/next button on the bottom of this window. Or jump directly to a tutorial page through the following menu.</p>
+        <p>This tutorial was adapted for Kojo from Anthony Bagwell's simplyscala.com. You can move through the tutorial by clicking on the forward/next button on the bottom of this window. Or jump directly to a tutorial page through the following menu.</p>
                 <br/>
         <a href={link("GS")}>Getting Started</a> <br/>
                 <a href={link("Flow")}>Flow Control If, Else and While</a> <br/>
@@ -140,6 +140,8 @@ pages += Page(
         <a href={link("UT")}>Using the Turtle</a> <br/>
         <a href={link("GAG")}>Graphics and Games</a> <br/>
         <a href={link("LM")}>Learning More</a> <br/>
+        <br/>
+        <p>Note: simplyscala.com is no more. Please see an archived version at <a href="http://web.archive.org/web/20130305041026/http://www.simplyscala.com">simplyscala.com from web.archive.org</a>.</p>
             </div>
         </body>       
 )
@@ -487,10 +489,11 @@ val p3=Point(-2,2)
                 "Everything is an object. As such, you may have wondered why the example above was not written more in Java style.".p,
                 "p1.+(p2.-(p3)) // p1.+(p2).-(p3) ?".c,
                 "This is one of the nice syntactic features of Scala that helps to give clarity and uniformity to your code. You may leave out the parentheses and dots as Scala can infer where they belong. It is this carefully thought out syntax that allows you to implement Domain Specific Languages (DSLs). So all objects, including numbers are just objects with methods. For example you can perform the + method on the number 1 with the extended syntax too. In Scala the mathematical operators like '+' , '-' , '*' and '/' are just methods too.".p,
-                "(1).+(2)".c,
+                "1.+(2)".c,
                 "All the base types are in fact objects too that can be used and extended just like any other object.".p, 
-
-                """Note the first set of parentheses around the "1" are required here to remove an ambiguity. "1." is a type Double and the result would be type Double rather than Int. Try making the change.""".p
+                """Note that the Scala compiler is now smart enough and does not confuse the method syntax "1." with 1.0, a Double. Otherwise, we would need to use one more pair of parantheses:""".p,
+                "(1).+(2)".c,
+                """That might have been the case in an earlier version of Scala. And, some other languages still suffer from this ambiguity. Just so you know.""".p
     )
 )
 
@@ -1202,7 +1205,7 @@ animate{
 
                  "Conway's Game of Life".h3,
                  "The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970".p,
-"See Wikipeadia entry".link("""http://en.wikipedia.org/wiki/Conway's_Game_of_Life"""),
+"See Wikipeadia entry".link("en.wikipedia.org/wiki/Conway's_Game_of_Life"),
 "The idea is that cells grow or die according to a simple set of rules.".p,
 table(row("Any live cell with fewer than two live neighbours dies, as if caused by under-population."),
   row("Any live cell with two or three live neighbours lives on to the next generation."),
@@ -1272,7 +1275,7 @@ def tiny=List((-18,0),(-17,0),(-16,0),(-15,0),(-14,0),(-13,0),(-12,0),(-11,0),(-
 "Here is a game that illustrates how you can use the Scala collections and mouse drag-and-drop to create a fun game to play.".p,
 "The game was based on a game called Planarity. The idea is to use the mouse to re-arrange the circles so that none of the joining lines cross one and other. Press the left mouse button on a circle to drag it. A new game is started by clicking on the red square.".p,
 "You can increase the difficulty of the game by changing the value ES in the program. Larger values make it more difficult.".p,
-"The inspiration for Tangle is Planarity".link("http://www.planarity.net/"),
+"The inspiration for Tangle is Planarity".link("en.wikipedia.org/wiki/Planarity"),
                  
 """import Staging._
 import Staging.{circle, clear, animate} // explicitly import names that clash
