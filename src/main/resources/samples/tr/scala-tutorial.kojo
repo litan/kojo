@@ -667,13 +667,13 @@ bul2(ağaç, "c")  // 0
 pages += Page(
   name = "STI",
   body = tPage("Dingin Türleme ve Tür Çıkarımı",
-    "Scala is a statically typed language, all the variables and functions have types that are fully defined at compile time. Using a variable or a function in a way inappropriate for the type will give compiler type errors. This means that the compiler can find many unintended programming errors for you before execution. However, you will have noticed that in the examples there are few type definitions. This is because Scala can usually infer what type a variable must be from the way you have used it.".p,
+    """Scala dingin türleme (static typing) yapan bir dil. Bu ne demek? Bütün değişkenlerin ve işlevlerin türü, program çalışmadan önce, yani derleme sırasında belirleniyor. Bütün diller böyle değil. Örneğin pek çok yazılımcının favorilerinden olan Python ve Ruby, devingen türlemeli diller (dynamically typed languages). Dingin türleme sayesinde pek çok yazım ve mantık hatası programı çalıştırmadan önce yani derleme sırasında yakalanır. Örneğin, yanlışlıkla bir işleve uygun olmayan tür bir nesneyi girdi olarak sokarsak, derleyici hemen yakalar ve bizden hatayı düzeltmemizi ister. Kısaca, her değerin türünün önceden belli olması hem faydalı hem de gerekli. Ama, buna rağmen yazılımcık örneklerimizde tür tanımlarının pek az olduğunu farketmiş olabilirsin. Bu nasıl oluyor? Çünkü Scala tür çıkarımında çok becerikli. Tür çıkarımı (type inference) bir değerin türünü kullanıldığı yere bakarak belirlemek demek.""".p,
 
-    "For example, if you write 'val x=3' then the compiler infers that 'x' must be type Sayı as '3' is a integer literal. In a few situations the compiler will not be able to decide what you intended and will generate a type ambiguity error. In these cases you simply add the intended type annotation.".p,
+    """Örneğin, 'val x = 3' yazalım. Derleyici elbette 3'ün yalın bir değer olduğunu ve ayrıca ne tür bir sayı olduğunu biliyor. 3 (kesirsiz bir) Sayı. Onun için derleyici 'x' değişkeninin türünün de Sayı olması gerektiği çıkarımında bulunuyor ve elbette yanılmıyor. Az da olsa bir kaç durum var ki derleyici tür çıkarımını beceremiyebiliyor. İşte o zaman, kafam karıştı der ve bir hata verir. Hatanın türü "type ambiguity" gibi birşeylerdir, yani tür belirsizliği. O durumda gerekli tür bilgisini yazılımcığa ekleyiverirsin.""".p,
 
-    "In general you must define function parameter types; however the compiler can usually infer the return type - so it can usually be omitted. The exception to this rule is if you define recursive functions, ones that call themselves. For these, you must define the return type.".p,
+    "Genelde işlevlerin girdilerinin türünü tanımlarız. Ama çıktının türünü belirtmek gerekmez. Çünkü derleyici işlevin tanımından çıktının türünün çıkarımını yapıverir. Bunun istisnası özyineleyen, yani kendi kendini çağıran işlevler. Pek çok örneğini gördük elbet. Onların çıktısının türünü hep belirttik.".p,
 
-    "Type inferencing dramatically reduces the amount of typing you must do and gives a great deal more clarity to the code. It is this type inferencing that gives Scala the feel of being dynamically typed.".p
+    "Tür çıkarımı sayesinde programın çalışması için yazmamız gereken sözcük ve harf sayısı epey azalır. Bu da elbette çok işimize yarar. Ayrıca yazılım daha okunur hale gelir ve anlaşılması da kolaylaşır. Bu becerisi sayesinde Scala da Python ve Ruby gibi diller gibi sade ve yalın gelir göze.".p
 
   )
 )
