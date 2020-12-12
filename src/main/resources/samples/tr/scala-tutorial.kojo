@@ -129,7 +129,7 @@ pages += Page(
     <a href={link("Functions")}>İşlevler</a> <br/>
     <a href={link("OandC")}>Nesneler ve Sınıflar</a> <br/>
     <a href={link("PMS")}>Örüntü Eşleme ve Switch ve Case Komutları</a> <br/>
-    <a href={link("BTree")}>İleri Eşleme Yöntemleri - İkili Ağaç</a> <br/>
+    <a href={link("BTree")}>İleri Eşleme Yöntemleri - İkil Ağaç</a> <br/>
     <a href={link("STI")}>Dingin Türleme ve Tür Çıkarımı</a> <br/>
     <a href={link("FAO")}>İşlevler Birer Nesnedir</a> <br/>
     <a href={link("Tup")}>Sıralamalar (Tuple)</a> <br/>
@@ -291,7 +291,7 @@ satıryaz("ortak paydaların en büyüğü: " + y)
     """for(c<-"merhaba!") satıryaz(c)""".c,
     "Şimdi de matematik, bilhassa kartezyen geometrisi sevenlere bir süprizimiz var. Kaplumbağacığı kullanarak bir eğri çizelim. Neyin eğrisi? İki boyutlu bir poligon. Genel olarak a*x^2 + b*x + c diye yazabiliriz. Yine bu çok faydalı olan 'for' yapısıyla:".p,
     """sil
-def eğri(x:Double) = 0.001 * x * x + 0.5 * x + 10   // 'def' define yani tanımla demek. Bunu daha sonra daha iyi anlatacağız. 
+def eğri(x: Kesir) = 0.001 * x * x + 0.5 * x + 10   // 'def' define yani tanımla demek. Bunu daha sonra daha iyi anlatacağız. 
 gridOn();axesOn() // kare çizgileri ve x ve y eksenlerini çizelim
 val aralık = 200
 atla(-aralık,eğri(-aralık))
@@ -466,7 +466,7 @@ n.y = 4
     "Bu biraz zahmetli oldu yanlız. Her yeni nokta için x ve y değerlerini bu şekilde belirlememiz fazla zamanımızı alıyor. Bunun daha kolay bir yolu var. Nesneyi oluştururken noktanın koordinatlarını girmek daha kullanışlı olurdu. Bunun için yapmamız gereken değişiklik küçük:".p,
     "class Nokta(var x: Sayı, var y: Sayı)".c,
     "Sonrada yeni bir nokta tanımlayalım:".p,
-    "val p = new Nokta(3, 4)".c,
+    "val n = new Nokta(3, 4)".c,
     "Bakın ilk nokta tanımda 0 değerini vererek x ve y'nin Sayı türünde olduğunu belirlemiştik aslında. İkinci tanımda ise tür bilgisini açık açık verdik. Mantıklı, değil mi? Derleyici ne yapması gerektiğini biliyor iki durumda da. Herneyse, bu biraz ileri bir programlama kavramı oldu. Biz noktalara dönelim. Her nokta aslında iki boyutlu bir vektör demektir. İki noktayı toplamak demek iki vektörü birbirine eklemek demek. Nasıl yapacağız? Nokta sınıfına yeni bir metod eklemek en mantıklısı. Deneyelim:".p,
     """class Nokta(var x:Sayı, var y:Sayı) {
     def vektörToplama(yeniNokta: Nokta): Nokta = {
@@ -546,113 +546,123 @@ pages += Page(
   name = "PMS",
   body =tPage("Örüntü Eşleme ve Switch ve Case Komutları",
     "Örüntü Eşleme".h2,
-    "You may already be familiar with the 'switch' with 'case' form used in many languages to allow multi-way branching based on a value. In Scala this concept is extended to provide full algebraic pattern matching using 'match'. However, the simple switch on value can also be represented easily with match.".p,
-
-    """def  decode(n: Sayı){
-  n match {
-    case 1 => satıryaz("One")
-    case 2 => satıryaz("Two")
-    case 5 => satıryaz("Five")
-    case _ => satıryaz("Error")
+    "Program akışını değiştirmenin bazı yollarını görmüştük. Bilhassa if/else yapısıyla akış nasıl dallandırılır biliyorsun. Şimdi de switch/case yapısıyla akışı aynı anda birden fazla dala ayırmayı görelim. C ve Java gibi daha eski dillerde de vardır switch/case. Scala bu kavramı daha da geneller ve cebirsel örüntülü eşleme yapmayı sağlar! Bunu böyle anlamak mümkün değil elbet! Gelin birkaç örnekle gizemi çözüverelim. İlk önce geleneksel ve daha basit kullanışıyla başlayalım: ".p,
+    """def sayıdanYazıya(s: Sayı){
+  s match {
+    case 1 => satıryaz("Bir")
+    case 2 => satıryaz("İki")
+    case 5 => satıryaz("Beş")
+    case _ => satıryaz("Hata")
   }
-}
-""".c, 
-    "decode(2)".c,
-    "The '=>' symbol is used to separate the match pattern from the expression or block to be evaluated. The '_' symbol is used in Scala to mean wild-card or in this case match anything. The last case statement behaves like default in the classical switch. 'match', like most other functions returns a value so the above function could be written more concisely.".p,
-
-    """def  decode(n: Sayı){
-  satıryaz(n match {
-    case 1 => "One"
-    case 2 => "Two"
-    case 5 => "Five"
-    case _ => "Error"
-    }
-  )
+}""".c, 
+    "sayıdanYazıya(5)".c,
+    """Burada her 'case' satırında kullandığımız '=>' iminin adı kalın ok imi olsun. Bu imden önce gelen örüntü sonra gelen komut dizisi ya da deyişle eşleşiyor. Son örneğimizde 1 sayısı "Bir" yazısıyla eşleşiyor. Son örüntü olarak kullandığımız '_' imi herşey demek. Yani 's' sayısı ne olursa olsun artık eşini buluyor. Bu yapıda kullandığımız 'match' anahtar sözcüğü hemen hemen bütün işlevler gibi bir değere sahip. Onun için son örneği daha da kısa ve öz bir şekilde yazalım:""".p,
+    """
+def sayıdanYazıya(s: Sayı) {
+  satıryaz(s match {
+    case 1 => "Bir"
+    case 2 => "İki"
+    case 5 => "Beş"
+    case _ => "Hata"
+  })
 }
 """.c,
-
-    "decode(3)".c,
-    "Unlike the traditional Java 'switch' the above mapping can easily be reversed.".p,
-    """def  encode(s: String){
-  satıryaz(s match {
-    case "One" => 1
-    case "Two" => 2 
-    case "Five" => 5
+    "sayıdanYazıya(3)".c,
+    "İşin güzel tarafı yukarıdaki eşleşmeyi tam tersine çevirmek de mümkün (Java ve C'deyse yapamazdık bunu):".p,
+    """def yazıdanSayıya(y: Yazı) {
+  satıryaz(y match {
+    case "Bir" => 1
+    case "İki" => 2 
+    case "Beş" => 5
     case _ => 0
     }
   )
 }
 """.c, 
-    """encode("Five")""".c,
-    "Pattern matching provide a safe way to take actions based on the type of an object. This ability is extremely useful for working with case classes and will be illustrated in the next section.".p,
-    """def whatIs(a: Her):String = {a match{
-    case x:Sayı => "An Sayı"
-    case x:String => "A String"
-    case x:Double => "A Double"
-    case _ => "Unknown Type"
+    """yazıdanSayıya("Beş")""".c,
+    """İngilizce'de açık açık okuyabildiğimiz bir yazıyı sayıya çevirmeye "encoding", tersine de "decoding" derler. Son örnekle encoding, ondan öncekiyle de decoding yapmış olduk. Haberin olsun. Örüntü eşlemeyle bir nesnenin türüne göre de farklı işlemler yapmak kolaylaşır. Hemen bir örnek görelim:""".p,
+    """
+def nedir(a: Her): Yazı = {
+    a match {
+        case x: Sayı  => "Bir Sayı"
+        case x: Yazı  => "Bir Yazı"
+        case x: Kesir => "Bir Kesir"
+        case _        => "Kim bilir ne türdür?"
     }
- }
+}
 
-satıryaz(whatIs("text"),whatIs(2),whatIs(2F)) // the F makes the 2 a type Float""".c
-
+/* 
+ * Aşağıda üç örnek var. Son örnek kesir
+ * olsun diye sonuna F koyduk. 
+ * Anımsadın mı? Float KısaKesir demek.
+ */
+satıryaz(nedir("text"), nedir(2), nedir(2F))
+""".c,
+    "Bakın bu yöntem 'case class' kullanarak yarattığımız türleri işlemekte o kadar faydalıdır ki, bir sonraki bölümü tamamen ona ayırdık.".p
   )
 )
 
 pages += Page(
   name = "BTree",
-  body =tPage("İleri Eşleme Yöntemleri - İkili Ağaç",
-    "The next example, a binary tree, shows you how to construct a tree for storing and looking up integer values for string keys. The design has internal nodes for the upper tree and leaf nodes for the the key/value pairs. A function will be created to find the value in the tree associated with the given key. In this design the internal nodes contain pointers to two children and a key. While leaf nodes contain no pointers but just the key and its related value.".p,
+  body =tPage("İleri Eşleme Yöntemleri - İkil Ağaç",
+    """Şimdiki örneğimizin adı ikil ağaç (binary tree). Neden böyle deniyor çok yakında anlayacağız. Ağaç diye adlandırdığımız veri yapılarının bilgisayar mühendisliğinde önemi büyük. Çünkü verileri saklamak ve hızlı bulmak için bire birler. İlk önce veri ile ne demek istiyoruz onu görelim. Pek çok tür veri olabilir elbet. Çok yaygın olan anahtar/değer çiftleri bu örneğimizde bizim işimizi görecek. Örneğin ("a" -> 30) "a" anahtarıyla saklayıp sonra da arayıp bulacağımız 30 değeri. Ağacın tasarımında iki gereksinim olacak: 1) ağacın çatallanarak dallanmasını sağlamak, 2) ağacın yapraklarıyla verileri saklamak. Unutmayalım ki arama işleminin çabuk çalışmasını istiyoruz. Bunun için de her seferinde bütün yapraklara bakmak yerine daha verimli bir düzen istiyoruz. Arama işlemini yapacak elbette bir işlevimiz olacak. Ağacı gezerken anahtara göre hangi dala gitmesi faydalı olur nasıl bilebilir bu işlev? Düşündüğünden kolay olacak. Bak gör! Çatalların özelliği iki dala ayrılmaları (onun için ikil dedik!) ve de bir anahtar tutmaları. Diyelim ki sağ daldaki veriler sözlükte hep bu anahtardan önce gelsin. O zaman daha sonra gelen bir anahtar arıyorsak sadece sol dala bakmamız yeter! O sayede arama hızlı çalışacak. Yapraklara gelince, durum daha basit. Her yaprak sadece bir anahtar ve onunla saklanan değeri tutacak (boş yere anahtar/değer çifti demedik).""".p,
     """
-/*       [b]
-         / \
-       [a] c,3
-       / \
-     a,1 b,2 
-*/     
+/*
+ *           [b]
+ *          /  \
+ *        [a]  c,20
+ *       /  \
+ *     a,30  b,10       
+ */     
 """.c,                
-    "The first task is to create classes that describe the node objects. Immediately we see a problem with the internal node at the top of the tree. The pointer to the sub-tree may be either an internal node type or a leaf node type. We want to say that the pointer is one of these two types but not any other. It could not be an Sayı for example. In Scala you can do this by creating a class hierarchy. First a general tree node class is specified and then each of the possible nodes types is derived from it using the 'extends' keyword. The sub-class is said to inherit the properties of the parent class.".p,
-    """class TreeN
-case class InterN(key:String,left:TreeN,right:TreeN) extends TreeN
-case class LeafN(key:String,value:Sayı) extends TreeN
-""".c,
-    "The 'extend' means that the newly defined class inherits all the fields and methods from the parent class, also called super class, as well as defining it's own. It also becomes a sub-type of that class, meaning that a sub-type object can be saved in a super-type variable as the following example illustrates.".p,
-    """val tn:TreeN=LeafN("abc",13)""".c,
-    "Now we can see how the internal node can be defined using the type 'TreeN' to mean either a 'InterN' or 'LeafN' type.".p,
-    "Next we need to create the search function for such a tree. This is where pattern matching provides a type safe solution for finding what type of node we are dealing with and therefore take the appropriate action.".p,
-    "In the 'find' function that follows, see how pattern matching with the case classes defined above is used to determine the node type and bind names to the parameters, the lower case letters k,l,r and v. These are called pattern variables.".p,
+    "İlk görevimiz çatal ve yaprak türlerini tanımlamak. Şimdi sorun şu. Her çatal iki dala ayrılıyor ama her iki dal da ya başka bir çatal olabilir ya da bir yaprak olabilir! Yani çatalın iki çocuğu olmalı ve bu çocuklar sadece bu iki türden biri olmalılar, ya bir çatal ya da bir yaprak, ama başka da hiç bir tür olmamalılar. Yanlışlıkla bir sayı, yazı ya da dizin olursa başımız derdfe girer (buna type unsafe, yani tür güvensizliği derler ve eski çağlarda bilgisayar programcılarını çok terletmiştir). Scala bu zorluğu sınıf hiyerarşisi dediğimiz yöntemle çözer. İlk önce genel bir ağaç türü ya da sınıfı oluşturalım sonra da buna iki tane alt tür ekleyelim. Bakın nasıl da kolay:".p,
     """
-def find(t:TreeN,key:String):Sayı={
-     t match {
-         case InterN(k,l,r) => find((if(k>=key)l else r),key)
-         case LeafN(k,v) => if(k==key) v else 0
-    }
-}
-// create a binary tree
-val t=InterN("b",InterN("a",LeafN("a",1),LeafN("b",2)),LeafN("c",3)) 
-/*       [b]
-         / \
-       [a] c,3
-       / \
-     a,1 b,2 
-*/     
+class Ağaç
+case class Çatal(anahtar: Yazı, sol: Ağaç, sağ: Ağaç) extends Ağaç
+case class Yaprak(anahtar: Yazı, değer: Sayı) extends Ağaç
 """.c,
-    "Note the use of the case class constructor to efficiently create a test binary tree. Now you can try the find.".p,
-    """find(t,"a")""".c,
-    """find(t,"c")""".c,
-    "You may like to try wrapping this up into a Binary tree class, including member methods for adding, finding and deleting entries.".p,
-    "Patterns may also be constants, indicated by a starting uppercase letter or a literal. Constant patterns match values that are equal to them.".p,
-    "Suppose, for some reason, you would like to hide the key 'c' during the find. A simple modification to the find function does this nicely, and also illustrates the use of a constant pattern.".p,
-    """def find(t:TreeN,key:String):Sayı={
-     t match {
-         case InterN(k,l,r) => find((if(k>=key)l else r),key)
-         case LeafN("c",_) => 0
-         case LeafN(k,v) => if(k==key) v else 0
-    }
+    """Çatal ve Yaprak için Ağaç türünün alt türü deriz. Bunu uzatmak anlamına gelen 'extend' özel sözcüğüyle belirliyoruz. Ağaç da üst tür olarak bilinecek bundan sonra. Çatal ve Yaprak alt türlerine ataları olan Ağaç üst türünün bütün özellikleri miras kalır, hem de Ağaç daha ölmeden! :-) Bakın çok ilginç birşey daha göreceğiz hemen şimdi. Bir değerin türü Ağaç olsun diyeceğiz ama onun gerçek değeri bir Yaprak ya da Çatal olabilecek:""".p,
+    """val ağaç1: Ağaç = Yaprak("c", 24)""".c,
+    "Bu nasıl oluyor? Yaprak Ağaç'ın uzantısıydı ya. O sayede Ağaç deyince genel olarak ya Çatal ya da Yaprak demiş oluyoruz. Bu sayede Çatal'ın tanımındaki sol ve sağ değerlerinin türü neden Ağaç oldu anladık değil mi? Ama tersini yapamayız ona göre. Neden? Çünkü Yaprak dedik mi artık yeterince özelleşmiş oluyor ve anahtar ve değeri olarak bir sayı gerekiyor. Ne Ağaç ne de Çatal'da bir sayı yok, değil mi?".p,
+    "Şimdi en başta bahsettiğimiz arama işlevine geldi sıra. Örüntü eşleme değil mi bu kısmın adı?".p,
+    "Bakın bu işlev ağacımızı alacak ve özyineleme yöntemiyle verimli arama işlemini gerçekleştirecek. Yani bir çatala geldiğinde kendi kendini sağ ya da sol küçük ağaç ile tekrar çağıracak. Ama eğer bir yaprak görürse elbette yineleme duracak. Örüntü nerede o zaman? Küçük ağaç bir çatal mı yoksa yaprak mı onu belirleyecek örüntülerimiz. Çok lafa gerek yok. Yazılımcık yalın ve kendi kendini anlatıveriyor:".p,
+    """
+def bul(ağaç: Ağaç, anahtar: Yazı): Sayı = {
+  ağaç match {
+    case Yaprak(a, değer)   => if (a == anahtar) değer else 0
+    case Çatal(a, sol, sağ) => bul((if (a >= anahtar) sol else sağ), anahtar)
+  }
 }
-""".c,
 
-    "Notice the use of '_' as a wild card to match any value and remember that the case statements are evaluated in order.".p,
-    "Inheritance and class heirarchy is one of the fundemental concepts that underpins Object Oriented programming. Pattern matching gives you a type safe way of dealing with objects created in that way.".p)
+// Bir örnek gerek. İkil ağacımızı şöyle olsun:
+val ağaç = Çatal("b", Çatal("a", Yaprak("a", 30), Yaprak("b", 10)), Yaprak("c", 20))
+/*
+ *           [b]
+ *          /  \
+ *        [a]  c,20
+ *       /  \
+ *     a,30  b,10       
+ */     
+""".c,
+    "'case class' sayesinde Çatal ve Yaprak nesnelerini kolayca tanımladık. Haydi şimdi yapalım bir iki arama:".p,
+    """bul(ağaç, "a")  // 30""".c,
+    """bul(ağaç, "c")  // 20""".c,
+    "Bu kadarla kalmaz elbet. Ağaca yeni anahtar/değer çiftleri eklemek için de bir işlev iyi olur. Ha, bir de yaprağı koparmak gerekebilir. Bütün bu işlevleri yeni bir İkilAğaç sınıfı tanımlayıp içine koymaya ne dersin? Onu sana bırakıyorum. Biraz düşün, Kojo'da birşeyler yazıp çiziştir bakalım. Çok daha iyi öğreneceksin o sayede. Kolay gelsin!".p,
+    "Bu arada örüntüler yukarda gördüğümüz gibi değişken olmak zorunda değil. Yalın bir değer de kullanabiliriz örüntü olarak. Bir önceki bölümde de görmüştük hani sayıdan yazıya ve tersini yaparken.".p,
+    "Bir örnek daha verelim yine de. Diyelim ki (c -> 20) çiftinin bulunmasını istemiyoruz. Nedense. Bakın nasıl kolay:".p,
+    """
+def bul2(ağaç: Ağaç, anahtar: String): Sayı = {
+  ağaç match {
+    case Çatal(a, sol, sağ) => bul2(if (a >= anahtar) sol else sağ, anahtar)
+    case Yaprak("c", _)     => 0
+    case Yaprak(a, değer)   => if (a == anahtar) değer else 0
+  }
+}
+
+bul2(ağaç, "c")  // 0
+""".c,
+    "Burada yine '_' imini joker gibi kullanarak bütün değerlerle eşleşmesini sağladık. Ayrıca bilelim ki bu eşleştirme işlemi yukarıdan aşağıya sırayla gidiyor. İlk eşleşme ile iş bitiyor. Bariz tabii ama yine de benden söylemesi.".p,
+    "Burada örneğini gördüğümüz sınıf hierarşisi ve alt türlerin üst türü uzatması, OOP, yani nesneye yönelik programlamadaki en temel kavramlardan. Örüntü eşleme yöntemi sayesinde alt türleri birbirinden ayırıp gereğini yapabiliyoruz. Ne dahice, değil mi?!".p)
 )
 pages += Page(
   name = "STI",
@@ -714,7 +724,7 @@ pages += Page(
     "filter(lst,(v:Sayı)=> v%2==0)".c,
     "This filter function now does just what was required.".p,
     "A Taste of Generic Programming".h3,
-    "Suppose you now want to create a filter for type Double. You could go through the code and simply replace all the type definitions of Sayı with Double. You would perhaps then call the new function filterD. For each new type you would go through the same exercise and end up with many versions of the same thing.".p,
+    "Suppose you now want to create a filter for type Kesir. You could go through the code and simply replace all the type definitions of Sayı with Kesir. You would perhaps then call the new function filterD. For each new type you would go through the same exercise and end up with many versions of the same thing.".p,
 
     "In Scala you can avoid this duplicated effort nicely by using a generic type in place of the actual ones. It is like using a variable to represent the type instead of an actual type. The actual types get filled in later by the compiler where you make a call to the function.".p,
 
@@ -726,19 +736,19 @@ pages += Page(
   else filter(inLst.tail,cond)
 }""".c,
     "filter(lst,(v:Sayı)=> v%2==0)".c,
-    "Then you can try using this generic version of filter with a list of Doubles to find all the elements büyüktür 5.".p,
+    "Then you can try using this generic version of filter with a list of Kesirs to find all the elements büyüktür 5.".p,
     """val lstd=Dizin(1.5,7.4,2.3,8.1,5.6,6.2,3.5,9.2,14.6,12.91,4.23,10.04)
-filter(lstd,(v:Double)=> v>5)""".c,
+filter(lstd,(v:Kesir)=> v>5)""".c,
     "Or with a list of strings to find those with a length büyüktür 3".p,
     """val lsts=Dizin("It's","a","far","far","better","thing","I","do","now")
-filter(lsts,(v:String)=> v.length>3)""".c,
+filter(lsts,(v:Yazı)=> v.length>3)""".c,
     "In the reference you will find that lists have a filter function so you could equally write.".p,
-    "lsts.filter((v:String)=> v.length>3)".c,
+    "lsts.filter((v:Yazı)=> v.length>3)".c,
     "Generics will be explored more later but now, more about functions as objects.".p,
     "More on 'Functions are objects'".h3,
     "The ability to carry out comprehensions, namely applying a function(s) for all members of a collection, is very powerful and leads to some very compact coding.".p,
 
-    "Many times you will want to pass quite simple functions as arguments and Scala has some nice shorthand that you will find useful. You have already seen that inferencing can help. The lst.filter example can be simplified as the compiler knows the argument must be a function with a String type. This allows you to drop the parentheses and type annotation.".p,
+    "Many times you will want to pass quite simple functions as arguments and Scala has some nice shorthand that you will find useful. You have already seen that inferencing can help. The lst.filter example can be simplified as the compiler knows the argument must be a function with a Yazı type. This allows you to drop the parentheses and type annotation.".p,
     "lsts.filter(v=>v.length>3)".c,
     "Since binary operators are frequently used, Scala provides you with an even nicer shorthand. The anonymous function '(x,y)=>x+y' can be replaced by '_+_' . Similarly 'v=>v.Method' can be replaced by '_.Method'. The _ acts as a place holder for the arguments and you are saved the chore of inventing repetitive boiler plate names. So once more lst.filter can be simplified to.".p,
     "lsts.filter(_.length>3)".c,
@@ -918,7 +928,7 @@ pages += Page(
     ),
     "Random Numbers".h3,
     table(
-      row("random".c,"returns a Double pseudo-random number between 0.0 and 1.0")
+      row("random".c,"returns a Kesir pseudo-random number between 0.0 and 1.0")
     )
   )
 )
@@ -939,9 +949,9 @@ pages += Page(
 
 pages += Page(
   name = "US",
-  body = tPage("Using Strings",
-    "Strings".h2,
-    "String manipulation is a frequent task. Here are some useful functions and definitions. You will find that other sequences like lists have similar methods.".p,
+  body = tPage("Using Yazıs",
+    "Yazıs".h2,
+    "Yazı manipulation is a frequent task. Here are some useful functions and definitions. You will find that other sequences like lists have similar methods.".p,
     "Note once again that - in the descriptions that follow, all the function parameters are labeled in order, and so will be of the form P1.functionName(P2, P3...).".p,
     "Escape characters for strings.".h3,
     table(
@@ -949,7 +959,7 @@ pages += Page(
       row("""\r""", "carriage return","""\" """, "double quote", """\'""", "single quote","""\\""", "backslash")
     ),
     "Concatenation".h3,
-    "Strings can be concatenated using the + symbol. The original strings are left unaffected. Strings are immutable.".p,
+    "Yazıs can be concatenated using the + symbol. The original strings are left unaffected. Yazıs are immutable.".p,
     """val a = "Big"
 val b = "Bang"
 val c = a + " " + b        
@@ -977,8 +987,8 @@ satıryaz(x)
     """Note: All "indexOf" methods return -1 if the string/char is not found. Indexes are all zero base.""".p,
     table(
       row(""""rerender".contains("ren")""".c,"True if P2 can be found in P1."),
-      row(""""rerender".indexOf("nd")""".c,"index of the first occurrence of String P2 in P1."),
-      row(""""rerender".indexOf("er",5)""".c,"index of String P2 at or after position P3 in P1."),
+      row(""""rerender".indexOf("nd")""".c,"index of the first occurrence of Yazı P2 in P1."),
+      row(""""rerender".indexOf("er",5)""".c,"index of Yazı P2 at or after position P3 in P1."),
       row(""""rerender".indexOf('r')""".c,"index of the first occurrence of char P2 in P1."),
       row(""""rerender".indexOf('r',4)""".c,"index of char P2 at or after position i in P1."),
       row(""""rerender".lastIndexOf('e')""".c,"index of last occurrence of P2 in P1."),
@@ -994,15 +1004,15 @@ satıryaz(x)
     ),
     "Creating a new string from the original".h3,
     table(
-      row(""""Toni".toLowerCase""".c,"new String with all chars lowercase"),
-      row(""""Toni".toUpperCase""".c,"new String with all chars uppercase"),
-      row(""""  Toni   ".trim""".c,"new String with whitespace deleted from front and back"),
-      row(""""similar".replace('i','e')""".c,"new String with all P2 characters replaced by character P3."),
-      row(""""ToniHanson".replace("on","er")""".c,"new String with all P2 substrings replaced by P3.")
+      row(""""Toni".toLowerCase""".c,"new Yazı with all chars lowercase"),
+      row(""""Toni".toUpperCase""".c,"new Yazı with all chars uppercase"),
+      row(""""  Toni   ".trim""".c,"new Yazı with whitespace deleted from front and back"),
+      row(""""similar".replace('i','e')""".c,"new Yazı with all P2 characters replaced by character P3."),
+      row(""""ToniHanson".replace("on","er")""".c,"new Yazı with all P2 substrings replaced by P3.")
     ),
-    "Methods for Converting to String".h3,
+    "Methods for Converting to Yazı".h3,
     table(
-      row("String.valueOf(Dizin(1,2,3))".c,"Converts P1 to String, where P1 is any value (primitive or object).")
+      row("String.valueOf(Dizin(1,2,3))".c,"Converts P1 to Yazı, where P1 is any value (primitive or object).")
     )
   )
 )
@@ -1018,9 +1028,9 @@ pages += Page(
     
     table(
       row("""val lst = "Tempus" :: "fugit" ::
-  "irreparabile" :: Boş""".c,"""Creates a new Dizin[String] with the three values "Tempus", "fugit", and "irreparabile" """), 
+  "irreparabile" :: Boş""".c,"""Creates a new Dizin[Yazı] with the three values "Tempus", "fugit", and "irreparabile" """), 
       row("Dizin()".c,"or use Boş for the empty Dizin"),
-      row("""Dizin("Time", "flys", "irrecoverably")""".c,"""Creates a new Dizin[String] with the three entries "Time", "flys", and "irrecoverably" """),
+      row("""Dizin("Time", "flys", "irrecoverably")""".c,"""Creates a new Dizin[Yazı] with the three entries "Time", "flys", and "irrecoverably" """),
       row("""Dizin("tick", "tock") ::: Dizin("cuk", "oo")""".c,"Operator that concatenates two lists"),
       row("lst(2)".c,"Returns the item at 0 based index 2 in lst"),
       row("lst.count(str => str.length == 5)".c,"Counts the string elements in lst that are of length 5"),
@@ -1405,10 +1415,10 @@ var e=line(n1.x,n1.y,n2.x,n2.y)
 // edges is all the edges, initially empty
 var edges=Vector[EdgeP]()
 // Node is a circle which is dragable. Redraws edges when dragged
-case class NodeP(var x:Double,var y:Double){
+case class NodeP(var x:Kesir,var y:Kesir){
   val n=circle(x,y,Ra)
   n.setFillColor(blue)
-  def goTo(gx:Double,gy:Double){
+  def goTo(gx:Kesir,gy:Kesir){
    x=gx ; y=gy
    n.setPosition(gx,gy)   
   }
