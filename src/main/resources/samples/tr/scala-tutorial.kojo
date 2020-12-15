@@ -131,7 +131,7 @@ pages += Page(
     <a href={link("PMS")}>Örüntü Eşleme ve Switch ve Case Komutları</a> <br/>
     <a href={link("BTree")}>İleri Eşleme Yöntemleri - İkil Ağaç</a> <br/>
     <a href={link("STI")}>Dingin Türleme ve Tür Çıkarımı</a> <br/>
-    <a href={link("FAO")}>İşlevler Birer Nesnedir</a> <br/>
+    <a href={link("FAO")}>İşlevler de Birer Nesnedir</a> <br/>
     <a href={link("Tup")}>Sıralamalar (Tuple)</a> <br/>
     <a href={link("MF")}>Matematiksel İşlevler</a> <br/>
     <a href={link("OPA")}>İşlem Önceliği ve Birleşmeliği</a> <br/>
@@ -156,8 +156,7 @@ pages += Page(
     "Bu kılavuzcuk ilk sayfada gördüğün bölümlerden oluşuyor. Bir sonraki bölüme geçmek için, ya da bir önceki bölüme dönmek için bu pencerenin altındaki sağa ve sola bakan mavi daire içindeki beyaz üçgenlere tıkla. İlgini çeken bölüme de kolaylıkla atlayabilirsin istersen. Bunun için ilk sayfaya geri dönüp ordaki mavi ve altı çizili başlıklardan herhangi birine tıklayabilirsin. İlk sayfaya dönmek için en üstte solda menü yazıyor ya, ona tıklayıver. En alttaki mavi daire içindeki kareye basarsan bu kılavuzcuktan çıkıp Kojo'nun normal düzenine dönebilirsin. Çıkınca kılavuzcukta son seçtiğin yazılımcık kapanmaz. Onun üzerinde değişikler yapıp çalıştırmaya odaklanabilirsin.".p,
     "Daha önce çalışan bir yazılıma dönmek de kolay: yazılım düzenleyicisinin üst kısmındaki menünün ortasında sağa ve sola bakan mavi oklara tıkla. Seçtiğin yazılımı düzenlemeye kaldığın yerden devam edebilirsin. Her örneği deneyebilir, istediğine geri dönüp değişiklikler yapıp tekrar çalıştırabilirsin. Değişik fikirler dener, programlama dilini daha iyi tanıyıp yazım, gramer kurallarını daha çabuk öğrenebilirsin. Yazılımcık düzenleyicisindeki programları diske kaydedebilir ve sonra oradan geri yükleyebilirsin. Bunun için Dosya menüsüdeki komutları kullan.".p,
     "Şu anda kullandığın Kojo öğrenim ortamı, çok gelişmiş ve uzman bilgisayar mühendislerinin en sevdikleri dillerin önde gelenlerinden Scala programlama dilini öğrenmene yardımcı olmak için hem çok faydalı hem de eğlendirici özellikler ve beceriler içeriyor. Müzik çalan programlar yazabilir, ileri matematik kavramlarını resimler ve grafikler çizerek inceleyip daha iyi öğrenir, değişik tür oyunları hem oynayabilir hem de nasıl yazıldıklarını kolayca öğrenebilir, hatta fizik deneyleri bile yapabilirsin! En güzeli Kojo'nun kaplumbağaları var! Onlara yol göstererek çizimler yaptırabilirsin. Küçük hemen anlayıp seveceğin tek kaplumbağalı bir örnekle başlayalım mı? Kaplumbağa yürüsün ve bir taraftan da bir üçgen çizsin istersen, bu yazılımcığa tıklaman yeter:".p,
-    """
-  sil
+    """sil
   ileri(100)
   sağ(120)
   ileri(100)
@@ -183,8 +182,7 @@ pages += Page(
     """Bunun için iki yöntem vardır: "var" ve "val" komut sözcükleri. "val" (İngilizce value sözcüğünün kısaltması) ile sabit ve hiç değişmeyecek değerleri ve sonuçları saklayabiliriz. Ya neden bir de "var" (ingilizce variable sözcüğünün kısaltması) komutu var (var var ama varı kullanma! 8-)? Aşağıda bir örnekle ikisinin farkını hemen anlayacağız. "val" ile tanımlanan değerlerin sabit olması (ingilizcede 'immutable value') aslında çok önemli bir işlevsel programlama (functional programming) kavramıdır, ama bunu daha sonra yeri gelince daha iyi anlayacağız. Şimdilik mümkün oldukça 'var' yerine 'val' komutunu kullanmaya dikkat edelim. Bu sayede programın başka bir yerindeki değişkenleri yanlışlıkla bozamayız.""".p,
     "val noktaSayısı=34+5".c,
     """Bir ya da daha fazla sayıda işlemin sonucunu çıktı gözüne 'satıryaz(deyiş1, deyiş2, deyişn)' komutunu kullanarak yazabiliriz. Deyişler arasına virgül koymayı unutmayalım. Gerekmez ama istersek virgülden sonra boşluk bırakarak yazılımın okunuşu biraz daha kolaylaştırabiliriz. Ama çıktı da durum başka. Orada boşluk bırakmak nasıl olur yakında göreceğiz.""".p,
-    """
-satıryaz(noktaSayısı,3+2,noktaSayısı/2, 3.9/2.3)
+    """satıryaz(noktaSayısı,3+2,noktaSayısı/2, 3.9/2.3)
 var boy=noktaSayısı+4
 satıryaz(boy)""".c,
     "Farkettiniz mi, çıktı gözü her değerin adını ve değerini yazmakla kalmıyor ikisinin arasında o değerin türünü de yazıyor, Int (Sayı), Double (Kesir) vb. Şimdi deneyelim,".p,
@@ -193,8 +191,7 @@ satıryaz(boy)""".c,
     """boy+=4 // yani boyunu 4 nokta uzatalım
 satıryaz(boy)""".c,
     """Okuyanları bilgilendirmek ve kendimize anımsatmak için satır sonlarına // yani iki taksim ya da bölüm işaretinden sonra bir açıklama yazabiliriz. Bir satıra sığmıyorsa /* ile başlayıp */ ile biten daha uzun açıklamalar ekleyebiliriz. Scala derleyicisi bunları göz ardı eder ve bu sayesede bilgisayarın kafası karışmaz 8-).""".p,
-    """
-/*
+    """/*
   Çok satırlı bir açıklama örneği
   Fahrenayttan santigrata çevirelim
 */
@@ -413,7 +410,7 @@ satıryaz("bunu yazan işleve yöntem de deriz")
 def enbop(x: Uzun, y: Uzun): Uzun = if (y == 0) x else enbop(y, x % y)
 """.c,
     """Bu tanımı daha önce "while" komutuyla yaptığımız tanımla karşılaştırmanda fayda var.""".p,
-    "enbop(96,128)".c,
+    "enbop(96, 128)".c,
     "Şimdi de daha renkli bir özyineleme görelim. Bu işlev kendini iki kere çagırarak kaplumbağacığa bir ağacın dallarını çizdiriyor. Bu tür ağaçlara ikil ağaç (binary tree) deriz. Sen de beğendin mi? Özyineleme nasıl duruyor? Yukarıdaki 'enbop' işlevinde y'nin değeri sıfır olunca. Aşagıda ise uzaklık dört ya da daha küçük olduğunda.".p,
     """def ağaç(uzaklık: Kesir) {
     if (uzaklık > 4) {
@@ -501,7 +498,7 @@ val n2 = Dizin(9, 99)
 satıryaz(n2.toString())
 // bu 'case class' nedir birazdan göreceğiz!
 case class AkıllıSayı(val sayı: Sayı) {
-    override def toString() = "sayımız: " + sayı
+    override def toString() = "Ben bir sayıyım. Değerim de " + sayı + "'dur."
 }
 
 val n3 = AkıllıSayı(99)
@@ -557,8 +554,7 @@ pages += Page(
 }""".c, 
     "sayıdanYazıya(5)".c,
     """Burada her 'case' satırında kullandığımız '=>' iminin adı kalın ok imi olsun. Bu imden önce gelen örüntü sonra gelen komut dizisi ya da deyişle eşleşiyor. Son örneğimizde 1 sayısı "Bir" yazısıyla eşleşiyor. Son örüntü olarak kullandığımız '_' imi herşey demek. Yani 's' sayısı ne olursa olsun artık eşini buluyor. Bu yapıda kullandığımız 'match' anahtar sözcüğü hemen hemen bütün işlevler gibi bir değere sahip. Onun için son örneği daha da kısa ve öz bir şekilde yazalım:""".p,
-    """
-def sayıdanYazıya(s: Sayı) {
+    """def sayıdanYazıya(s: Sayı) {
   satıryaz(s match {
     case 1 => "Bir"
     case 2 => "İki"
@@ -581,8 +577,7 @@ def sayıdanYazıya(s: Sayı) {
 """.c, 
     """yazıdanSayıya("Beş")""".c,
     """İngilizce'de açık açık okuyabildiğimiz bir yazıyı sayıya çevirmeye "encoding", tersine de "decoding" derler. Son örnekle encoding, ondan öncekiyle de decoding yapmış olduk. Haberin olsun. Örüntü eşlemeyle bir nesnenin türüne göre de farklı işlemler yapmak kolaylaşır. Hemen bir örnek görelim:""".p,
-    """
-def nedir(a: Her): Yazı = {
+    """def nedir(a: Her): Yazı = {
     a match {
         case x: Sayı  => "Bir Sayı"
         case x: Yazı  => "Bir Yazı"
@@ -606,8 +601,7 @@ pages += Page(
   name = "BTree",
   body =tPage("İleri Eşleme Yöntemleri - İkil Ağaç",
     """Şimdiki örneğimizin adı ikil ağaç (binary tree). Neden böyle deniyor çok yakında anlayacağız. Ağaç diye adlandırdığımız veri yapılarının bilgisayar mühendisliğinde önemi büyük. Çünkü verileri saklamak ve hızlı bulmak için bire birler. İlk önce veri ile ne demek istiyoruz onu görelim. Pek çok tür veri olabilir elbet. Çok yaygın olan anahtar/değer çiftleri bu örneğimizde bizim işimizi görecek. Örneğin ("a" -> 30) "a" anahtarıyla saklayıp sonra da arayıp bulacağımız 30 değeri. Ağacın tasarımında iki gereksinim olacak: 1) ağacın çatallanarak dallanmasını sağlamak, 2) ağacın yapraklarıyla verileri saklamak. Unutmayalım ki arama işleminin çabuk çalışmasını istiyoruz. Bunun için de her seferinde bütün yapraklara bakmak yerine daha verimli bir düzen istiyoruz. Arama işlemini yapacak elbette bir işlevimiz olacak. Ağacı gezerken anahtara göre hangi dala gitmesi faydalı olur nasıl bilebilir bu işlev? Düşündüğünden kolay olacak. Bak gör! Çatalların özelliği iki dala ayrılmaları (onun için ikil dedik!) ve de bir anahtar tutmaları. Diyelim ki sağ daldaki veriler sözlükte hep bu anahtardan önce gelsin. O zaman daha sonra gelen bir anahtar arıyorsak sadece sol dala bakmamız yeter! O sayede arama hızlı çalışacak. Yapraklara gelince, durum daha basit. Her yaprak sadece bir anahtar ve onunla saklanan değeri tutacak (boş yere anahtar/değer çifti demedik).""".p,
-    """
-/*
+    """/*
  *           [b]
  *          /  \
  *        [a]  c,20
@@ -616,8 +610,7 @@ pages += Page(
  */     
 """.c,                
     "İlk görevimiz çatal ve yaprak türlerini tanımlamak. Şimdi sorun şu. Her çatal iki dala ayrılıyor ama her iki dal da ya başka bir çatal olabilir ya da bir yaprak olabilir! Yani çatalın iki çocuğu olmalı ve bu çocuklar sadece bu iki türden biri olmalılar, ya bir çatal ya da bir yaprak, ama başka da hiç bir tür olmamalılar. Yanlışlıkla bir sayı, yazı ya da dizin olursa başımız derdfe girer (buna type unsafe, yani tür güvensizliği derler ve eski çağlarda bilgisayar programcılarını çok terletmiştir). Scala bu zorluğu sınıf hiyerarşisi dediğimiz yöntemle çözer. İlk önce genel bir ağaç türü ya da sınıfı oluşturalım sonra da buna iki tane alt tür ekleyelim. Bakın nasıl da kolay:".p,
-    """
-class Ağaç
+    """class Ağaç
 case class Çatal(anahtar: Yazı, sol: Ağaç, sağ: Ağaç) extends Ağaç
 case class Yaprak(anahtar: Yazı, değer: Sayı) extends Ağaç
 """.c,
@@ -626,8 +619,7 @@ case class Yaprak(anahtar: Yazı, değer: Sayı) extends Ağaç
     "Bu nasıl oluyor? Yaprak Ağaç'ın uzantısıydı ya. O sayede Ağaç deyince genel olarak ya Çatal ya da Yaprak demiş oluyoruz. Bu sayede Çatal'ın tanımındaki sol ve sağ değerlerinin türü neden Ağaç oldu anladık değil mi? Ama tersini yapamayız ona göre. Neden? Çünkü Yaprak dedik mi artık yeterince özelleşmiş oluyor ve anahtar ve değeri olarak bir sayı gerekiyor. Ne Ağaç ne de Çatal'da bir sayı yok, değil mi?".p,
     "Şimdi en başta bahsettiğimiz arama işlevine geldi sıra. Örüntü eşleme değil mi bu kısmın adı?".p,
     "Bakın bu işlev ağacımızı alacak ve özyineleme yöntemiyle verimli arama işlemini gerçekleştirecek. Yani bir çatala geldiğinde kendi kendini sağ ya da sol küçük ağaç ile tekrar çağıracak. Ama eğer bir yaprak görürse elbette yineleme duracak. Örüntü nerede o zaman? Küçük ağaç bir çatal mı yoksa yaprak mı onu belirleyecek örüntülerimiz. Çok lafa gerek yok. Yazılımcık yalın ve kendi kendini anlatıveriyor:".p,
-    """
-def bul(ağaç: Ağaç, anahtar: Yazı): Sayı = {
+    """def bul(ağaç: Ağaç, anahtar: Yazı): Sayı = {
   ağaç match {
     case Yaprak(a, değer)   => if (a == anahtar) değer else 0
     case Çatal(a, sol, sağ) => bul((if (a >= anahtar) sol else sağ), anahtar)
@@ -650,8 +642,7 @@ val ağaç = Çatal("b", Çatal("a", Yaprak("a", 30), Yaprak("b", 10)), Yaprak("
     "Bu kadarla kalmaz elbet. Ağaca yeni anahtar/değer çiftleri eklemek için de bir işlev iyi olur. Ha, bir de yaprağı koparmak gerekebilir. Bütün bu işlevleri yeni bir İkilAğaç sınıfı tanımlayıp içine koymaya ne dersin? Onu sana bırakıyorum. Biraz düşün, Kojo'da birşeyler yazıp çiziştir bakalım. Çok daha iyi öğreneceksin o sayede. Kolay gelsin!".p,
     "Bu arada örüntüler yukarda gördüğümüz gibi değişken olmak zorunda değil. Yalın bir değer de kullanabiliriz örüntü olarak. Bir önceki bölümde de görmüştük hani sayıdan yazıya ve tersini yaparken.".p,
     "Bir örnek daha verelim yine de. Diyelim ki (c -> 20) çiftinin bulunmasını istemiyoruz. Nedense. Bakın nasıl kolay:".p,
-    """
-def bul2(ağaç: Ağaç, anahtar: String): Sayı = {
+    """def bul2(ağaç: Ağaç, anahtar: String): Sayı = {
   ağaç match {
     case Çatal(a, sol, sağ) => bul2(if (a >= anahtar) sol else sağ, anahtar)
     case Yaprak("c", _)     => 0
@@ -673,143 +664,162 @@ pages += Page(
 
     "Genelde işlevlerin girdilerinin türünü tanımlarız. Ama çıktının türünü belirtmek gerekmez. Çünkü derleyici işlevin tanımından çıktının türünün çıkarımını yapıverir. Bunun istisnası özyineleyen, yani kendi kendini çağıran işlevler. Pek çok örneğini gördük elbet. Onların çıktısının türünü hep belirttik.".p,
 
-    "Tür çıkarımı sayesinde programın çalışması için yazmamız gereken sözcük ve harf sayısı epey azalır. Bu da elbette çok işimize yarar. Ayrıca yazılım daha okunur hale gelir ve anlaşılması da kolaylaşır. Bu becerisi sayesinde Scala da Python ve Ruby gibi diller gibi sade ve yalın gelir göze.".p
+    "Tür çıkarımı sayesinde programların doğru çalışması için yazmamız gereken sözcük ve harf sayısı epey azalır. Bu da elbette çok işimize yarar. Ayrıca yazılım daha okunur hale gelir ve anlaşılması da kolaylaşır. Bu becerisi sayesinde Scala da Python ve Ruby gibi diller gibi sade ve yalın gelir göze.".p
 
   )
 )
 
 pages += Page(
   name = "FAO",
-  body = tPage("İşlevler Birer Nesnedir",
+  body = tPage("İşlevler de Birer Nesnedir",
     "İşlevler de Birer Nesnedir".h2,
-    "In Scala everything is an object and so are functions. They may be passed as arguments, returned from other functions or stored in variables. This feature of Scala enables some very concise and elegant solutions to common programming problems as well as allowing extremely flexible program flow control structures.  The Scala Actors make heavy use of this capability for supporting concurrent programming. However, list manipulation provides a good starting point for an introduction. ".p,
-    "Dizins are a very natural and common way people think about working with things. Scala provides a type of object called a Dizin that allows you to represent lists of objects very easily. Dizins keep things in a sequential order and provide a large number of methods or commands to enable you to create and manipulate lists. One way to create a list is to use the class constructor as we did for Nokta earlier. The constructor accepts any number of arguments and creates a Dizin object containing those items. Here is an example that creates an integer list. The type will be designated by Dizin[Sayı] - the [] encloses the element type information. Because each of the elements is an Sayı, Scala infers that the type of 'lst' is Dizin[Sayı] - and you do not have to specify this explicitly.".p,
-    "val lst=Dizin(1,7,2,8,5,6,3,9,14,12,4,10)".c,
-    "Let's get started by using just three Dizin methods - 'head', 'tail' and '::'. You will find more in the section 'Using Dizins'.".p,
-    "'head' returns the first or leftmost item, '1' in our list above.".p,
-    "satıryaz(lst.head)".c,
-    "'tail' returns the list with the first item, the '1', removed.".p,
-    "satıryaz(lst.tail)".c,
-    "'::' returns a new list with an item added.".p,
-    "satıryaz(23::lst)".c,
-    "Notice that the methods do not change or mutate the original list but return a new one. For this reason Dizins are called immutable data structures.".p,
-    "With these three basic methods, you can create other ones to do almost anything you need with lists.  For example, here is how you find all the odd integers in a list:".p,
-
-    """def odd(inLst:Dizin[Sayı]):Dizin[Sayı]={
-  if(inLst==Boş) Boş 
-  else if(inLst.head%2==1) inLst.head::odd(inLst.tail) 
-  else odd(inLst.tail)
+    """Scala dilinde herşey bir nesnedir demiştik. İşlevler de aynen öyle! Bir işlevi başka işlevlere girdi yapabiliriz. Bir işlevin çıktısı da bir işlev olabilir. Ayrıca değişkenlerin değeri de bir işlevin kendisi olabilir. Bunların örneklerini biraz sonra göreceğiz. Bu özellikler Scala dilinin çok faydalı bir becerisidir. Karşımıza sık sık çıkan bazı zorlukları çok kısa ve güzel bir şekilde çözmemizi sağlarlar. Bunlar arasında program akışını yönlendirme teknikleri de var. Örneğin, Scala dilinde yazılmış eski adı "Actors" yeni adıyla "Akka" birimi (İngilizce'de module ya da library denen ve başka yazılımlar tarafından kullanılan bir yazılım bütününe birim denir) işlevleri nesne olarak kullanma yöntemini kullanarak eşzamanlı programlamayı destekler. Ama biz dizinlerin kullanılmasıyla başlayalım. Bakın göreceksiniz işlevlerin nesne olarak kullanılmasına güzel bir giriş olacak.""".p,
+    """Nesneleri bir dizi olarak ele almak çok doğal ve faydalı, değil mi? Ne tür örnekler geliyor senin aklına? Her sözcük, örneğin, bir dizi harften oluşur. Gün içersinde yaptığımız şeyleri bir dizi eylem olarak düşünebiliriz. Scala dili Dizin adını verdiğimiz bir tür tanımlamıştır. Bunu daha önce pek görmedik. Ama aslında çok basit bir kavram. Dizin türü bir dizi nesneyi ele almayı ve işlemeyi çok kolaylaştırır ve hemen hemen her yazılımcık ve daha büyük yazılımlarda sık sık kullanılır. Dizin içindeki nesnelerin belli bir sırası vardır. Dizin türünün sunduğu pek çok metod ve komut sayesinde Dizin tanımlamak ve işlemek kolaylaşır. Daha önce Nokta sınıfıyla gördüğümüz gibi Dizin oluşturmanın bir yolu Dizin sınıfının yapıcı metodunu (constructor) kullanmak. Bu yapıcı metoda bir ya da daha çok girdi sokarız ve yapıcı o girdilerin oluşturduğu bir Dizin yapıverir. İlk örneğimizle hemen başlayalım. Bir dizi sayı oluşturalım. Bu dizinin türü "Dizin[Sayı]" olacak. Buradaki köşeli parantezler dizinin içindeki elemanların türünü belirliyor, yani Sayı. Her eleman bir Sayı olduğu için Scala tür çıkarımı yaparak 'dzn' değişkeninin türünü Dizin[Sayı] olarak belirler. Yani bizim bunu açık açık yazmak için zahmet etmemiz gerekmez.""".p,
+    "val dzn = Dizin(1, 7, 2, 8, 5, 6, 3, 9, 14, 12, 4, 10)".c,
+    "Tamam, şimdi elimizde bir dizin var. Dizinleri kullanmanın üç temel metodu var. Onları görelim. Her dizinin bir başı olduğu için 'head' yani İngilizcede baş anlamına gelen metod bize ilk elemanı verir. 'tail' kuyruk anlamına gelir, dizinin başı hariç diğer elemanlarından oluşan kısmını verir. Ve son olarak da çift iki nokta üstüste yani '::' bir dizinin başına yeni bir eleman, yani yeni bir baş ekler. Bu baş ve kuyruk deyişi sana yılanları anımsattıysa haklısın. Dizinler yılanlara benziyor: hep başından tutmakta fayda var! Şaka bir yana Dizin türü çok gelişmiştir ve daha pek çok kullanışlı metodu vardır. 'Dizinlerin Kullanılışı' kısmında daha pek çok Dizin metodu göreceğiz.".p,
+    "'head' ilk yani en soldaki elemanı verir. dzn örneğinde bu '1' olacak.".p,
+    "satıryaz(dzn.head)".c,
+    "'tail' başı yani ilk elemanı atlar ve dizinin gerisini verir. Bakın en baştaki 1 sayısı yok kuyrukta:".p,
+    "satıryaz(dzn.tail)".c,
+    "'::' soldaki elemanı sağdaki dizinin başına ekleyerek oluşan yeni dizini verir.".p,
+    "satıryaz(23 :: dzn)".c,
+    "Burada önemli bir gözlem yapalım. Bu metodlar dzn dizisini değiştirmez! Hep yeni bir Dizin üretirler. Bunun için Dizin türüne değişmez (immutable) bir veri yapısı da denir.".p,
+    "Bu üç temel metodla aklına gelen her dizini tanımlayabilir ve dizinlerle yapılabilecek ne varsa yapabilirsin. Bir örnek olarak gel bizim örnek dizinimizin içindeki tek sayıları bulalım:".p,
+    """def tek(girdi: Dizin[Sayı]): Dizin[Sayı] = {
+    if (girdi == Boş) Boş
+    else if (girdi.head % 2 == 1) girdi.head :: tek(girdi.tail)
+    else tek(girdi.tail)
+}
+""".c,
+    "Farkettin mi? Bu işlev dizinin başına bakar ve duruma göre kuyrukla özyineler, yani kendi kendini çağırır. Bunu yaparken 'tail' yani kuyruğu veren metodu kullar ve bu sayede dizinin elemanlarını teker teker ele alır. 'Boş' özel bir değer ve içi boş olan diziyi belirtiyor. Unutmadan, içi boş olan tek dizi var aynı yegane boş küme gibi. Boş yerine şöyle de yazabilirdik: Dizin[Sayı](). Neyseki Boş tanımlanmış. Daha kısa ve anlaşılır oldu değil mi? Dizinin sonuna gelince özyineleme son bulur ve tek sayılardan oluşan yeni bir Dizin çıkar ortaya.".p,
+    "Haydi deneyelim.".p,
+    "tek(dzn)".c,
+    "Ne kadar yalın bir çözüm, değil mi? Tek yerine çift sayıları bulmak da artık çok kolay:".p,
+    """def çift(girdi: Dizin[Sayı]): Dizin[Sayı] = {
+    if (girdi == Boş) Boş
+    else if (girdi.head % 2 == 0) girdi.head :: çift(girdi.tail)
+    else çift(girdi.tail)
 }""".c,
-    "Notice how recursion and 'tail' are used to walk down the list to examine each item. 'Boş' represents the empty list and can also be written as Dizin[Sayı]() in this case. Once the end of the list is reached the recursion is stopped and the list of odd items constructed and passed back to the caller.".p,
-    "Now try it".p,
-    "odd(lst)".c,
-    "That's a simple solution, and to change this to return a list of the even integers is also simple.".p,
-    """def even(inLst:Dizin[Sayı]):Dizin[Sayı]={
-  if(inLst==Boş) Boş 
-  else if(inLst.head%2==0) inLst.head::even(inLst.tail) 
-  else even(inLst.tail)
-}""".c,
-    "even(lst)".c,
-    "However, there is duplication here (do you see it?). A more general solution appears by passing a function that encapsulates the filtering condition as an argument.".p,
-    "First the filter condition function is defined.".p,
-    "def isodd(v:Sayı)= v%2==1".c,
-    "And then the modified filter function itself is defined, with an extra parameter to pass the filter condition function, just like any other object. Notice the form of the type declaration. The type is a function that takes one Sayı parameter and returns a Boolean. Only functions of this type can be passed as arguments. In the function body 'cond' is used just like any other function.".p,
-    """def filter(inLst:Dizin[Sayı],cond:(Sayı)=>Boolean):Dizin[Sayı]={
-  if(inLst==Boş) Boş 
-  else if(cond(inLst.head)) inLst.head::filter(inLst.tail,cond) 
-  else filter(inLst.tail,cond)
-}""".c,
-    "filter(lst,isodd)".c,
-    "Although the even case can be added in the same way, a more concise version can be created using Anonymous functions. The def and name are dropped, creating an anonymous function definition that can be used directly as an argument. Notice the use of the => to separate the function parameter list from the body of the function.".p,
-    "filter(lst,(v:Sayı)=> v%2==0)".c,
-    "This filter function now does just what was required.".p,
-    "A Taste of Generic Programming".h3,
-    "Suppose you now want to create a filter for type Kesir. You could go through the code and simply replace all the type definitions of Sayı with Kesir. You would perhaps then call the new function filterD. For each new type you would go through the same exercise and end up with many versions of the same thing.".p,
+    "çift(dzn)".c,
+    "Ama, dur, burada epey bir tekrarlama oldu. Görüyor musun? 'tek' ve 'çift' işlevleri neredeyse aynı. İkisi arasındaki farklılıkları bulalım: Elbette işlevlerin adı farklı. Tek ve çift. Onun dışındaki tek fark eleme için kullandığımız koşul. == iminin sağında 0 ya da 1 var. Bu farkı işlevin içinden çekip çıkarsak ortaya daha genel ve daha sade bir çözüm çıkıverecek! Onun için tek mi, çift mi sorusunu bir girdi olarak düşünelim.".p,
+    "Bu eleme koşulunu bir işlev olarak tanımlamak çok basit:".p,
+    "def tekMi(s: Sayı): İkil = s % 2 == 1".c,
+    "% imini anımsadın umarım. Burada sayıyı ikiye bölüp kalanı buluyor.".p,
+    "tekMi(13)".c,
+    "tekMi(24)".c,
+    "Bu arada tekMi adlı işlevin çıktı türünü 'İkil' diye açık açık belirtmeye gerek yok aslında. Sadece Türkçesini görmen ve anımsaman için yazdım. Neyse, biz bu işlevi şimdi nesne olarak nasıl kullanacağız onu görelim. Bunun için yeni bir işlev tanımlayacağız. Adı elemek sözcüğünün kökü olsun. Elemanları eleyerek bize istediğimiz elemanları versin. Ama neye göre eleyecek? Tabii ki yukarıdaki tekMi işlevi gibi bir işlevi kullanarak! Nasıl kullanacak? Yeni bir girdi olarak! İşte başta da bahsettiğimiz konuya geldik. Bir işlev başka bir işleve girdi olacak şimdi.".p,
+    """def ele(girdi: Dizin[Sayı], koşul: (Sayı) => İkil): Dizin[Sayı] = {
+    if (girdi == Boş) Boş
+    else if (koşul(girdi.head)) girdi.head :: ele(girdi.tail, koşul)
+    else ele(girdi.tail, koşul)
+}
+""".c,
+    "ele(dzn, tekMi)".c,
+    """'ele' işlevinin ilk girdisinin adı girdi ve bu bizim sayı dizimiz. İkinci arguman ise eleme koşulumuz, yani yeni tanımladığımız işlev. Türünü nasıl yazdık farkedelim: koşulun türü bir sayıyı girdi olarak alıp bir İkil veren, yani koşul sağlanıyorsa doğru yoksa da yanlış diyen bir işlev. 'ele' adlı metodumuz her işlevi girdi olarak kabul etmez. Sadece Sayı alıp İkil veren işlev türü ile çalışır. 'ele' metodunun içinde de 'koşul' adlı değeri aynı diğer işlevler gibi kullandık. Bu ele adlı işlevi daha önceki tek ve çift işlevleriyle karşılaştırmanı öneririm. Genellemenin nasıl yapıldığını iyice özümsemende fayda var. Bu genelleme günlük hayattaki istisnası bol onun için de bizi sık sık yanıltan genellemelere benzemez. Zararı yok sayılır (ikinci bir girdi girmemiz gerekiyor, yani zahmeti biraz arttı) ama kazancı çok. Birazdan bir kaç örnek daha görünce daha iyi anlayacaksın. Bu arada, eğer çok istersek bu zararı iyice yok edebiliriz. Örneğin, bu işlevi sık sık tek sayıları bulmak için kullanacaksak, şöyle yapalım ki iyice kolaylaylaşsın kullanımı:""".p,
+    """def ele(girdi: Dizin[Sayı], koşul: (Sayı) => İkil = tekMi): Dizin[Sayı] = {
+    if (girdi == Boş) Boş
+    else if (koşul(girdi.head)) girdi.head :: ele(girdi.tail, koşul)
+    else ele(girdi.tail, koşul)
+}
+""".c,
+    """Bak bu sayede, eğer işlev girdisi vermezsek, ele işlevi tekMi koşulunu kullanacak. Yani varsayılan koşul tekMi ile ifade ettiğimiz tek sayı olmak olacak.""".p,
+    """val ilkOnSayı = (1 to 10).toList""".c,
+    """ele(ilkOnSayı)""".c,
+    """Ama, ele işlevi hala genel. İstersek ikinci arguman olarak başka bir koşul girer, başka tür bir eleme yaparız. Hemen geliyor bir örnek!""".p,
+    "Çift sayıları bulmak için de benzer bir yöntem kullanabiliriz elbet. Yani çiftMi diye yeni bir işlev tanımlar ve sonra kullanırız. Ama adsız (anonymous) bir işlev kullanarak çok daha kısaca ifade edebiliriz dileğimizi. Ne demek adsız? Yani 'def' özel sözcüğünü kullanmadan ve işlevin adını vermeden bir işlev tanımlayacağız. Bu işlev basitçe girdiyi alacak ve onu değerlendirecek. Bu özel yöntemde '=>' imini kullanıyoruz. Solunda girdiler, sağında da işlevin eylemleri gelecek.".p,
+    "ele(dzn, (v: Sayı) => v % 2 == 0)".c,
+    "'ele' komutunu böyle çağırarak çift sayıları buluverdik. Yeni bir çiftMi işlevi tanımlamamıza gerek kalmadı. Adsız işlevler hep böyle kullanılır ve işimizi çok kolaylaştırırlar. O kadar faydalılar ki özel bir adları bile var. 'lambda kalkülüsü' (lambda calculus). Bilgisayar bilimi okumak istersen ilerde görür ve daha iyi öğrenirsin.".p,
+    "Genelleyici Programlamanın Tadına Bakalım".h3,
+    "Şimdi diyelim ki yeni bir eleme koşulu tanımlamak istiyorsun, çünkü tam sayılarla yetinmek olmaz, kesirli sayıları da herhangi bir koşula göre eleyebilmek istiyorsun. Yukarıda 'def' ile tanımladığımız kısacık 'ele' işlevini kopyalar ve basitçe her gördüğün 'Sayı' sözcüğünü 'Kesir' sözcüğüyle değiştirirsin olur biter. Sonra da adını eleKesir gibi birşey koyarsın. Tabii Kesir de yetmez. Başka her hangi bir tür için eleHerneyse dersin ve bu sayede birbirine çok benzeyen, daha doğrusu neredeyse apaynı bir sürü işlevin olur: ele, eleKesir, eleYazı, vb.. Ne güzel, değil mi? Hiç de güzel değil! Çok tekrar oldu. Nerede çokluk orada çok ayıp...".p,
 
-    "In Scala you can avoid this duplicated effort nicely by using a generic type in place of the actual ones. It is like using a variable to represent the type instead of an actual type. The actual types get filled in later by the compiler where you make a call to the function.".p,
+    "Scala'yla yazarken bu kadar tekrara, bu zahmete girmeye hiç gerek yok. İşi iyi bilenlerin yaptığı gibi bir 'tür değişkeni' (type variable ya da generic type diye de bilinir) kullanarak genel bir çözüm sayesinde işler kolaylaşıverir. Tür değişkenleri diğer 'val' değişkenlerine benzer. Gerçek değer yerine değişkenin adını kullanırız her yerde. Sonra Scala derleyicisi gerekli yerleştirmeleri yapıverir".p,
 
-    "Here 'T' is used, though any letters will do, in place of Sayı in filter and the function name is annotated with [T] to indicate that this is a generic function. Then the example becomes".p,
+    "Aşağıda 'T' harfini kullanacağız Tür anlamında. Ama başka her hangi bir harf ya da sözcük de olur elbette. Nerede Sayı varsa onun yerine T gelecek. Bir de işlevin adının hemen arkasında [T] gelecek. Bu da yeni işlevimizin genelleyici bir işlev olduğunu belirtiyor. Peki o halde yeni halini görelim:".p,
 
-    """def filter[T](inLst:Dizin[T],cond:(T)=>Boolean):Dizin[T]={
-  if(inLst==Boş) Boş 
-  else if(cond(inLst.head)) inLst.head::filter(inLst.tail,cond) 
-  else filter(inLst.tail,cond)
-}""".c,
-    "filter(lst,(v:Sayı)=> v%2==0)".c,
-    "Then you can try using this generic version of filter with a list of Kesirs to find all the elements büyüktür 5.".p,
-    """val lstd=Dizin(1.5,7.4,2.3,8.1,5.6,6.2,3.5,9.2,14.6,12.91,4.23,10.04)
-filter(lstd,(v:Kesir)=> v>5)""".c,
-    "Or with a list of strings to find those with a length büyüktür 3".p,
-    """val lsts=Dizin("It's","a","far","far","better","thing","I","do","now")
-filter(lsts,(v:Yazı)=> v.length>3)""".c,
-    "In the reference you will find that lists have a filter function so you could equally write.".p,
-    "lsts.filter((v:Yazı)=> v.length>3)".c,
-    "Generics will be explored more later but now, more about functions as objects.".p,
-    "More on 'Functions are objects'".h3,
-    "The ability to carry out comprehensions, namely applying a function(s) for all members of a collection, is very powerful and leads to some very compact coding.".p,
+    """def ele[T](girdi: Dizin[T], koşul: (T) => İkil): Dizin[T] = {
+    if (girdi == Boş) Boş
+    else if (koşul(girdi.head)) girdi.head :: ele(girdi.tail, koşul)
+    else ele(girdi.tail, koşul)
+}
+""".c,
+    "ele(dzn, (v: Sayı) => v % 2 == 0)".c,
+    "Aynı eskisi gibi çalıştı! Ama işin iyi tarafı çok daha genel oldu bu haliyle. Bak şimdi kesirli sayılar arasından sadece beşten büyük olanları seçmek de çok kolay olacak:".p,
+    """val kesirler = Dizin(1.5, 7.4, 2.3, 8.1, 5.6, 6.2, 3.5, 9.2, 14.6, 12.91, 4.23, 10.04)""".c,
+    """ele(kesirler, (v: Kesir) => v > 5)""".c,
+    "Ya da bir cümle içindeki uzunca sözcükleri seçmek için de kullanabiliriz aynı genellenmiş ele adlı işlevimizi:".p,
+    """val dizinler = Dizin("Bugün", "sizi", "gördüğüme", "çok", "memnun", "oldum", "Nasılsınız")""".c,
+    """ele(dizinler, (v: Yazı) => v.length > 4)""".c,
+    "length uzunluk demek İngilizce'de. Yazı türünün metodu olarak kaç harf olduğunu gösterir. Dizinlerle ilgili bölümde de göreceğimiz gibi Dizin türünün 'filter' adlı bir metodu var. Onu kullanarak da benzer eleme işlemlerini yapabiliriz:".p,
+    "dizinler.filter((v: Yazı) => v.length < 5)".c,
+    "Bu genelleyici işlevlere daha sonra yine bakacağız ve başka özelliklerini keşfedeceğiz. Ama şimdilik konumuza dönelim ve işlevleri nesne olarak kullanmaya bakalım.".p,
+    "'İşlevler De Birer Nesnedir' Hakkında Başka Birkaç Şey Daha".h3,
+    "Biraz önce örneklerini gördüğümüz yönteme 'kapsamalar' (comprehensions) deniyor. Yani, dizin gibi bir sürü elemandan oluşan bir kümenin bütün elemanlarına bir işlevi uygulayıvermek. Kapsamaların ne kadar becerikli olduklarını ve onlar sayesinde kısacık ama çok iş beceren yazılımlar yapabildiğimizi bir kaç örnek daha görerek pekiştireceğiz şimdi.".p,
 
-    "Many times you will want to pass quite simple functions as arguments and Scala has some nice shorthand that you will find useful. You have already seen that inferencing can help. The lst.filter example can be simplified as the compiler knows the argument must be a function with a Yazı type. This allows you to drop the parentheses and type annotation.".p,
-    "lsts.filter(v=>v.length>3)".c,
-    "Since binary operators are frequently used, Scala provides you with an even nicer shorthand. The anonymous function '(x,y)=>x+y' can be replaced by '_+_' . Similarly 'v=>v.Method' can be replaced by '_.Method'. The _ acts as a place holder for the arguments and you are saved the chore of inventing repetitive boiler plate names. So once more lst.filter can be simplified to.".p,
-    "lsts.filter(_.length>3)".c,
-    "Reading other peoples Scala code you will come across these short forms quite often. Sometimes you must use the longer forms.".p,
+    "Yazılımcıklar yazdıkça, bazı çok basit ve çoğunlukla adı olmayan işlevleri başka işlevlere girdi yapmak isteyeceksin. O durumlarda bazı kısa yollar bilmende fayda olacak. Daha önce de üzerinde durduğumuz gibi tür çıkarımı bize fayda sağlıyor. Bakın bir önceki dizinler.filter örneğini tür çıkarımı sayesinde sadeleştirelim. Derleyici adsız işlevin girdisinin Yazı türünde olması gerektiğini biliyor (nasıl biliyor? Adı dizinler olan val değerinin türünden!). O sayede parantezleri ve tür bilgisini yazmaktan kurtuluyoruz.".p,
+    "dizinler.filter(v => v.length > 3)".c,
+    "Bu adsız işlev gibi iki ve ya bir girdili işlevler çok yaygın olduğu için, Scala dili bize bir kısa yol daha sunuyor. '(x, y) => x + y' adsız işlevini şöyle yazabiliyoruz: '_ + _'. Benzer şekilde 's=>s.Method' yerine '_.Method' da yazabiliriz. _ imi girdi yerine kullanılıyor yani. O sayede adsız işlevler içinde isimler uydurmak ve kullanmaktan kurtuluyoruz. Bu sayede, son örneğin en kısa halini görelim:".p,
+    "dizinler.filter(_.length > 3)".c,
+    "Başkalarının yazdığı kodları okumak çok faydalıdır. O durumlarda burada gördüğümüz kısa yolları görünce artık şaşırmazsın. Ama bazı durumlarda uzun ve açık hallerini kullanmak gerekir. Onları da sonra göreceğiz.".p,
     
-    "Here are some more examples of list manipulations with functions as arguments taken from the Reference section.".p,
+    "Bir kaç tane daha yaygın kullanımı olan örnekler görelim. Bunlar dizinleri işlemekte çok faydalı olurlar. Sen de yakında göreceksin.".p,
     "flatMap".h4,
-    "lsts.flatMap(_.toList)".c,
-    "You see that flatMap takes a list and uses your given function to create a new list. In this case it 'flattens' your list of words into characters and concatenates these sublists to produce the result.".p,
+    "dizinler.flatMap(_.toList)".c,
+    "Flat İngilizce'de kat kat olmayan yani düz anlamında kullanılır. Bu örnekte bizim yazı dizinimizi aldık, içindeki her bir yazıyı ilk önce toList metodunu kullanarak birer harf dizisine çevirdik ve onlarin hepsini birleştirdik. Sonucunu gördün, değil mi? flatMap yerine map metodunu kullanarak aradaki farkı daha iyi anlarsın. map İngilizce'de hem harita hem de eşlemek anlamlarına gelir. Burada ikinci anlamını kullanıyoruz:".p,
+    "dizinler.map(_.toList)".c,
     "sort".h4,
-    "The words could be sorted in ascending order using the sort method.".p,
-    "lsts.sortWith(_<_)".c,
-    "Or descending order".p,
-    "lsts.sortWith(_>_)".c,
-    "Or ignoring the case of the characters.".p,
-    "lsts.sortWith(_.toUpperCase<_.toUpperCase)".c,
-    "By passing the appropriate function you can create a whole family of sorts without having to re-code the sort itself. This is a really neat way to vary behavior without rewriting the whole method.".p,
+    "Sort da sıraya dizmek anlamına gelir. sortWith yani kendi girdiğimiz bir koşul ile sıralıyoruz. Sözcükleri a'dan z'ye sıralayalım:".p,
+    "dizinler.sortWith(_ < _)".c,
+    "Bir de ters sıraya sokalım:".p,
+    "dizinler.sortWith(_ > _)".c,
+    "Farkettiysen büyük harfliler başta geliyor. Onun yerine harflerin büyük küçük olduğuna bakmadan sıralamak istersek şöyle yaparız:".p,
+    "dizinler.sortWith(_.toUpperCase < _.toUpperCase)".c,
+    "Yani hepsini büyük harfe çeviriverdik karşılaştırmadan önce. İştediğimiz koşulu girerek istediğimiz şekilde sıralama yapıverdik. Yani sıralama metodunu baştan yazmamız gerekmedi. İşte işlevlerin nesne olmasının faydaları!".p,
     "fold".h4,
-    "foldLeft and foldRight allow you to combine adjacent list elements using an arbitrary function that you pass in. The process either starts from the left of the list or the right, and you provide a starting value. The option to start left or right allows you to choose which order you want to pass through the list.".p,
-    "Fold takes two arguments but the Scala syntax allows these to be passed individually for clarity. See the section below on 'Creating your own flow control' for more details on the syntax.".p,
-    "Now starting with the list.".p,
-    """val lst=Dizin(1,7,2,8,5,6,3,9,14,12,4,10)
-lst.foldLeft(0)(_+_)""".c,
-    "With the passed '_+_' function the foldLeft function starts with 0 adds 1 to it. Next 7 is then added to this result and so on through the rest of the list.".p,
-    "removeDuplicates".h4,
-    "Suppose you wish to know the unique letters that are in a list of words such as:-".p,
-    """val lstw=Dizin("Once","more","unto","the","breach")
-lstw.flatMap(_.toList).map(_.toUpper).distinct.sortWith(_<_)""".c,
-    "'flatMap' flattens all the words into a list of letters. 'map' converts them all to uppercase. All the duplicates are then removed and the result sorted into ascending order.".p,
+    "fold İngilizce'de katlamak demek. Soldan ve sağdan katlamak anlamına gelen foldLeft ve foldRight bir dizinin elemanlarını bir araya getirmekte kullanılan çok yaygın ve faydalı metodlardır. Elemanları nasıl bir araya getirmek istediğimizi iki girdi alan bir işlev girerek belirtiriz. Bu birleştirme işlemi soldan ya da sağdan başlar. Ve başlarken de yine girdiğimiz bir değer kullanır. Yani iki tane girdisi var bu fold metodlarının.".p,
+    "Bu iki girdiyi daha kolay okunsun diye iki parantez grubuyla gireriz. Birazdan bunu 'def' ile işlevi tanımlarken nasıl yapıldığını göreceğiz.".p,
+    "Yeni bir örnekle başlayalım.".p,
+    """val dzn = Dizin(1, 7, 2, 8, 5, 6, 3, 9, 14, 12, 4, 10)""".c,
+    """dzn.foldLeft(0)(_ + _)""".c,
+    "Soldan işleyeceğiz. İkinci girdimiz adsız bir işlev ve iki sayıyı topluyor: '_+_'. Bunun kapsama olduğunu da biliyoruz, yani dizinin içindeki bütün elemanların üstünden geçecek. İlk önce ilk girdisi olan 0 ile dizinin başındaki 1'i toplar ve 1 bulur. Sonra ona ikinci eleman olan 7'yi ekler ve böylece sonuna kadar gider.".p,
+    "Tekrarlardan Kurtulalım".h4,
+    "Diyelim ki bir cümlemiz var ve içinde hangi harfleri kullandığımızı bulmak istiyoruz. Örneğin,".p,
+    """val dilek = Dizin("Haydi", "gelin", "bir", "oyun", "oynayalım", "hep", "beraber")""".c,
+    """dilek.flatMap(_.toList).map(_.toUpper).distinct.sortWith(_ < _)""".c,
+    "'flatMap' sözcüklerin bütün harflerini tek bir dizine sokuyor. Daha önce de gördüğümüz 'map' harfleri büyük harfe çeviriyor. distinct farklı demek, yani sadece farklı harfleri veriyor, tekrarları vermiyor. En sonunda da a'dan z'ye sıralıyoruz.".p,
     
-    "Creating your own flow control".h4,
-    "The ability to pass functions or blocks of code as arguments to functions gives you the ability to create your own flow control structures. For example, to draw a box it would be nice to be able repeat a set of Turtle commands. This could be done using 'for' ".p,
+    "Kendi akış yöntemimizi tanımlayalım".h4,
+    "İşlevlere girdi olarak adlı ya da adsız başka işlevler girebildiğimiz gibi bir dizi komut da girebiliriz. Bu sayede kendi akış yöntemlerimizi yaratabiliriz. Örneğin, bir kare çizmek için kaplumbağa komutlarını yineleyebilmek iyi olur, değil mi? Daha önce gördüğümüz 'for' yapısını kullanabiliriz:".p,
     """sil
-for(i<- 1 to 4){ileri(100);sağ()}
+for (i <- 1 to 4) { ileri(100); sağ() }
 """.c,
-    "However it would be much nicer to write something like,".p,
-    "repeat(4){ileri(115);sağ()}".c,
-    "'repeat' is not a built in Scala flow control structure like 'if' or 'while' but just a function provided for you by Kojo. You can define a function to do just that too. The first step is as follows.".p,
-    """
-def myrepeat(rc:Sayı,rb: =>Her){
-  for(i<-1 to rc)rb      
+    "Ama, aşağıdaki gibi yazabilsek çok daha iyi olmaz mı?".p,
+    "yinele(4) { ileri(115); sağ() }".c,
+    "Scala dili 'if/else' ve 'while' gibi yapılar sunar ama 'yinele' yapısı Kojo tarafından tanımlanmıştır. Bunu sen de Scala ile yapabilirsin. Şöyle başlayalım:".p,
+    """def yinele2(ys: Sayı, dk: => Her) {
+    for (i <- 1 to ys) dk
 }
 """.c,
-    "Up until now all the functions we have defined have been 'pass by value'. This means that arguments to the functions are evaluated before the function is called. The => symbol in the above function definition specifies a 'call by name'. This means that the argument to the function is not evaluated until it is actually needed within the function body. In our repeat function, the for loop will cause the expression passed as an argument to be evaluated the repeat count number of times".p,
-    "myrepeat(4,{ileri(130);sağ()})".c,
-    "This is close to what we wanted, but there are still two extra brackets and a comma that we can get rid of. Scala provides a way of defining functions where the arguments can be passed in one at a time. This is called a curried function and allows the definition to be changed as follows.".p,
-    """def myrep(rc:Sayı)(rb: =>Her){
-  for(i<-1 to rc)rb      
+    "ys yineleme sayısının kısaltması. dk de dizi komut anlamında.".p,
+    "Şu ana kadar işlevlere girdiğimiz bütün girdiler değer olarak yollandı (pass by value denir İngilizce). Yani işlev çağrılmadan önce değer hesaplanır ve işleve yollanır. yinele2 tanımında kullandığımız kalın ok yani => imi durumu değiştiriyor. dk yani dizi komut olduğu gibi (call by name denir) yollanıyor yinele2 işlevine. Yani dizi komutların değerlendirilmesi geciktirilir. Ancak işlevin işleme sırası geldiğinde işlevin içine girilince dizi komut çalıştırılır. Bu yinele2 işlevimizde for döngüsü ys sayısı kadar çalışacak ve her seferinde dk yani girilen dizi komut çalıştırılacak.".p,
+    "yinele2(4, { ileri(130); sağ() })".c,
+    "Hiç fena değil. Neredeyse istediğimiz hale geldi. Tek sorun 4 sayısından sonra gelen virgül. Scala istersek her girdiyi kendi parantezi içinde girmemizi destekler. Buna 'curried işlev' de denir. Haskell Curry adında bir matematikçi buna esin kaynağı olduğu için. Bakın şöyle değiştirelim tanımı:".p,
+    """def yinele3(ys: Sayı)(dk: => Her) {
+    for (i <- 1 to ys) dk
 }
 """.c,
-    "Now you can write the concise style you wanted:".p,
-    "myrep(4) {ileri(160);sağ()}".c,
-    "Earlier you used the fold function, which employs this same technique to provide a more readable syntax.".p,
-    "You will find that this ability to treat functions as objects is very useful in all sorts of programming tasks - for example - passing callback functions in event driven IO, passing tasks to Actors in concurrent processing environments, or in scheduling work loads. This often results in far more concise code, as you just saw.".p,
-    "Repeated Arguments in a Function".h4,
-    "Sometimes it is useful to define a function that can accept any number of arguments. 'satıryaz' is one that has already been used extensively in this kılavuzcuk. Here is a function to sum any number of integer arguments.".p,
-    """def sumSayı(n:Sayı*)=n.reduce(_ + _)
-satıryaz(sumSayı(1,2,3),sumSayı(4,5,6,7,8))
-""".c,
-    "The * after the parameter definition indicates that the function expects any number of this type of argument. The parameter n is defined as a sequence of the parameter type. This means that you can use list style methods to transform the sequence. In this case 'reduce' is used to sum the items.".p,
-    "Other single parameters can preceed the repeated parameter. The repeated one must come last".p
+    "Bu sayede tam istediğimiz gibi yazabiliriz:".p,
+    "yinele3(4) { ileri(160); sağ() }".c,
+    "Biraz önce foldLeft örneğinde de bu tekniği kullanmıştık. Daha okunur hale geldi değil mi?".p,
+    "Yazılıma hobi ya da işin olarak devam edersen işlevlerin nesne gibi kullanılabilmesinin daha pek çok programlama problemini çözmede faydalı olduğunu göreceksin. Başka yolları da var elbet ama buradaki örneklerde de gördüğümüz gibi bu teknikle kodumuz epey kısa ve okunur hale geldi. Daha kapsamlı ve tasarlaması, yazması ve idare etmesi esaslı bir iş olan bazı örnekleri de şimdiden duymuş olman için kısa bir liste vereyim. Merak ettikçe, yeri geldikçe incelersin. Kusura bakma bunlar önce İngilizce olsun: (1) passing callback functions in event driven IO, (2) passing tasks to Akka Actors in concurrent processing environments, (3) in scheduling work loads. Yani, (1) olgu güdümlü girdi/çıktı idaresinde geriçağırım yapan işlevleri dağıtmak (2) eşzamanlı işlemler olan ortamlarda, yani aynı anda birden fazla işlemin paralel yani yanyana çalışması durumunda bağımsız aktörlere yeni işlevler verilmesi, (3) uzun işlerin sıralamasını düzenlerken işlevleri dağıtmak. Bilgisayar bilimi ve mühendisliği artık o kadar gerekli bir hale geldi ki, bu temeli iyi bilmek ilerde çok helal kazanç kazanmana faydalı olacaktır. Tabii eğer gönlünü bu işe verirsen.".p,
+    "Bir Tür Girdiyi Yinelemek".h4,
+    "Bazen işlevimize kaç tane girdi gireceğini bilemeyiz. Daha doğrusu kaç tane girilirse girilsin çalışmasını isteriz. Örneğin bu kılavuzcukta çok kullandığımız 'satıryaz' komutu öyledir. Bir, iki, üç... ne sayıda girdi girersek girelim işini yapar. Bunun yolu da çok kolay:".p,
+    """def topla(s: Sayı*) = s.reduce(_ + _)""".c,
+    """topla(1, 2, 3)""".c,
+    """topla(4, 5, 6, 7, 8, 9, 10)""".c,
+    "Girdinin türünden sonra gelen yıldız imi, yani '*' sayesinde 's' girdisi tek bir sayı değil bir dizi sayı oluveriyor. Onun için de 'reduce' metodunu kullandık. Bu foldLeft metoduna benzer ama daha basittir. Bakın girilen bütün sayıları toplamak bu kadar kolay. Bazı istisnalara da bakalım, ne olacak?".p,
+    """topla(99) // pek toplamaya gerek olmasa da yine de tek değerle de çalışması güzel!""".c,
+    """topla() // Bak ne oldu? Bunu tamir edebilir misin?""".c,
+    "Bu yıldızlı girdiden önce yıldızsız yani normal girdiler de tanımlayabiliriz. Ama yıldızlı yani yinelenen girdi en son gelmelidir.".p
   )
 )
 
@@ -835,8 +845,7 @@ satıryaz((3,'c')._2)""".c,
     "val ltrs=wl.flatMap(_.toList).map(_.toUpper).sortWith(_<_)".c,
     "Now the fold. The initial condition is an empty output frequency table, a list of tuples. The fold will expect a function that takes a list of tuples combines with a Char, the next character in the list, and returns a list of tuples.".p,
 
-    """
-ltrs.foldLeft(Dizin[(Char,Sayı)]()){
+    """ltrs.foldLeft(Dizin[(Char,Sayı)]()){
     case ((prevchr, cnt) :: tl, chr) if(prevchr==chr) => (prevchr,cnt+1) :: tl
     case (tbl, chr) => (chr, 1) :: tbl
 }
@@ -1017,7 +1026,6 @@ satıryaz(x)
   )
 )
 
-
 pages += Page(
   name = "UL",
   body = tPage("Dizinlerin (List) Kullanılışı",
@@ -1027,42 +1035,43 @@ pages += Page(
     "Note:  _+_ is a shorthand for an anonymous function x,y=>x+y. Since binary operators are frequently used, this is a nice abbreviation. Similarly _.method is a shorthand for v => v.method. When there is more than one argument, the first underscore represents the first argument, the second underscore the second one, and so on.".p,
     
     table(
-      row("""val lst = "Tempus" :: "fugit" ::
+      row("""val dzn = "Tempus" :: "fugit" ::
   "irreparabile" :: Boş""".c,"""Creates a new Dizin[Yazı] with the three values "Tempus", "fugit", and "irreparabile" """), 
       row("Dizin()".c,"or use Boş for the empty Dizin"),
       row("""Dizin("Time", "flys", "irrecoverably")""".c,"""Creates a new Dizin[Yazı] with the three entries "Time", "flys", and "irrecoverably" """),
       row("""Dizin("tick", "tock") ::: Dizin("cuk", "oo")""".c,"Operator that concatenates two lists"),
-      row("lst(2)".c,"Returns the item at 0 based index 2 in lst"),
-      row("lst.count(str => str.length == 5)".c,"Counts the string elements in lst that are of length 5"),
-      row("""lst.exists(str => str == "irreparabile")""".c,"""Determines whether a string element exists in lst that has the value "irreparabile" """),
-      row("lst.drop(2)".c,"""Returns lst without the first 2 elements (returns Dizin("irreparabile"))"""),
-      row("lst.dropRight(2)".c,"""Returns lst without the rightmost 2 elements (returns Dizin("Tempus"))"""),
-      row("lst.filter(str => str.length == 5)".c,"Returns a list of all elements, in order, from lst that have length 5"),
-      row("lst.flatMap(_.toList)".c,"Applies the given function f to each element of this list, then concatenates the results"),
-      row("""lst.forall(str =>str.endsWith("e"))""".c,"""true if all elements in lst end with the letter "e" else false"""),
-      row("lst.foreach(str => print(str))".c,"Executes the print function for each of the strings in the lst"),
-      row("lst.foreach(print)".c,"Same as the previous, but more concise"),
-      row("lst.head".c,"Returns the first item in lst"),
-      row("lst.tail".c,"Returns a list that is lst without its first item"),
-      row("lst.init".c,"Returns a list of all but the last element in lst"),
-      row("lst.isEmpty".c,"true if lst is empty"),
-      row("lst.last".c,"Returns the last item in lst"),
-      row("lst.length".c,"Returns the number of items in the lst"),
-      row("""lst.map(str => str + "?")""".c,"""Returns a list created by adding "?" to each string item in lst"""),
-      row("""lst.mkString(", ")""".c,"Makes a string with the elements of the list"),
-      row("lst.filterNot(str => str.length == 4)".c,"Returns a list of all items in lst, in order, excepting any of length 4"),
+      row("dzn(2)".c,"Returns the item at 0 based index 2 in dzn"),
+      row("dzn.count(str => str.length == 5)".c,"Counts the string elements in dzn that are of length 5"),
+      row("""dzn.exists(str => str == "irreparabile")""".c,"""Determines whether a string element exists in dzn that has the value "irreparabile" """),
+      row("dzn.drop(2)".c,"""Returns dzn without the first 2 elements (returns Dizin("irreparabile"))"""),
+      row("dzn.dropRight(2)".c,"""Returns dzn without the rightmost 2 elements (returns Dizin("Tempus"))"""),
+      row("dzn.filter(str => str.length == 5)".c,"Returns a list of all elements, in order, from dzn that have length 5"),
+      row("dzn.flatMap(_.toList)".c,"Applies the given function f to each element of this list, then concatenates the results"),
+      row("""dzn.forall(str =>str.endsWith("e"))""".c,"""true if all elements in dzn end with the letter "e" else false"""),
+      row("dzn.foreach(str => print(str))".c,"Executes the print function for each of the strings in the dzn"),
+      row("dzn.foreach(print)".c,"Same as the previous, but more concise"),
+      row("dzn.head".c,"Returns the first item in dzn"),
+      row("dzn.tail".c,"Returns a list that is dzn without its first item"),
+      row("dzn.init".c,"Returns a list of all but the last element in dzn"),
+      row("dzn.isEmpty".c,"true if dzn is empty"),
+      row("dzn.last".c,"Returns the last item in dzn"),
+      row("dzn.length".c,"Returns the number of items in the dzn"),
+      row("""dzn.map(str => str + "?")""".c,"""Returns a list created by adding "?" to each string item in dzn"""),
+      row("""dzn.mkString(", ")""".c,"Makes a string with the elements of the list"),
+      row("dzn.filterNot(str => str.length == 4)".c,"Returns a list of all items in dzn, in order, excepting any of length 4"),
       row("Dizin(1,6,2,1,6,3).distinct".c,"Removes redundant elements from the list. Uses the method == to decide. "),
-      row("lst.reverse".c,"Returns a list containing all elements of the lst list in reverse order"),
-      row("lst.sortWith((str, t) => str.toLowerCase < t.toLowerCase)".c,"Returns a list containing all items of lst in alphabetical order in lowercase.")
+      row("dzn.reverse".c,"Returns a list containing all elements of the dzn list in reverse order"),
+      row("dzn.sortWith((str, t) => str.toLowerCase < t.toLowerCase)".c,"Returns a list containing all items of dzn in alphabetical order in lowercase.")
     ),
     "Some more useful list operations. First define a list of integers to use.".p,
-    "val lsti=Dizin(1,7,2,8,5,6,3,9,14,12,4,10)".c,
+    "val sayılar=Dizin(1,7,2,8,5,6,3,9,14,12,4,10)".c,
     table(
-      row("lsti.foldLeft(0)(_+_)".c,"Combines elements of list using a binary function starting from left, initial one with a 0 in this case."),
-      row("lsti.foldRight(0x20)(_|_)".c,"Combines elements of list using a binary function starting from Right, initial one with a hex 20 in this case.")
+      row("sayılar.foldLeft(0)(_+_)".c,"Combines elements of list using a binary function starting from left, initial one with a 0 in this case."),
+      row("sayılar.foldRight(0x20)(_|_)".c,"Combines elements of list using a binary function starting from Right, initial one with a hex 20 in this case.")
     )
   )
 )
+
 pages += Page(
   name = "UT",
   body = tPage("Kamplumbağacığın Kullanılışı",
@@ -1101,8 +1110,7 @@ sol()
   triangle()
   """.c, "Specifies the fill color of the figures drawn by the turtle."),
 
-      row("""
-  sil()
+      row("""sil()
   setPenThickness(10)
   triangle()
   setPenThickness(1)
@@ -1116,8 +1124,7 @@ sol()
   turn(120)
   ileri(100)""".c, "invisible hides the turtle while visible makes it visible again."),
       row("""write("hello world")""".c, "Makes the turtle write the specified object as a string at its current location."),
-      row("""
-  sil()
+      row("""sil()
   ileri(-100)
   setAnimationDelay(10)
   turn(120)
@@ -1127,8 +1134,7 @@ sol()
       row("newTurtle(50, 50)".c, "Makes a new turtle located at the point (x, y)."),
       row("turtle0".c, "Gives you a handle to the default turtle."),
       row("sil()".c, "Clears the screen, and brings the turtle to the center of the window."),
-      row("""
-  sil()
+      row("""sil()
   triangle()
   zoom(0.5, 10, 10)
   """.c, "Zooms in by the given factor, and positions (cx, cy) at the center of the turtle canvas."),
