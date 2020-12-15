@@ -722,13 +722,17 @@ pages += Page(
     else ele(girdi.tail, koşul)
 }
 """.c,
-    """Bak bu sayede, eğer işlev girdisi vermezsek, ele işlevi tekMi koşulunu kullanacak. Yani varsayılan koşul tekMi ile ifade ettiğimiz tek sayı olmak olacak.""".p,
+    """Bak bu sayede, eğer işlev girdisi vermezsek, ele adlı işlev tekMi koşulunu kullanacak. Yani varsayılan koşul tekMi ile ifade ettiğimiz tek sayı olmak olacak. Yeni bir örnek iyi olacak:""".p,
     """val ilkOnSayı = (1 to 10).toList""".c,
+    """İngilizce 'toList' dilimizde dizine çevir anlamına gelir. Ama dizine çevrilebilen '(1 to 10)' nedir diye merak ediyor olabilirsin. 1'den 10'a kadar sayılar anlamına geliyor. Daha önce görmediğimiz ama çok faydalı olan bu türün İngilizce adı 'Range'. Genel hali şu: '(a to b by c)' yani a sayısından b sayısına kadar c adımlarıyla sayıyoruz. Örneğin:""".p,
+    "(3 to 22 by 3)".c,
+    "(30 to -33 by -5)".c,
+    "Sonuna .toList ekle bakalım ne olacak. Aralıkları araya sıkıştırdık, umarım kafa karıştırmadık. Hemen konumuza dönelım. Nerede kalmıştık? Bir sayı dizisı içinden herhangi bir koşula göre bazı sayıları seçmek istiyorduk. Ama tek sayıları seçmek varsayılan koşulumuz olsun dedik. Deneyelim hemen:".p,
     """ele(ilkOnSayı)""".c,
-    """Ama, ele işlevi hala genel. İstersek ikinci arguman olarak başka bir koşul girer, başka tür bir eleme yaparız. Hemen geliyor bir örnek!""".p,
+    """Aynı 'tek' adını verdiğimiz işlev gibi çalıştı, değil mi? Ama, ele adlı işlevimiz hala daha genel. İstersek ikinci arguman olarak başka bir koşul girer, başka tür bir eleme yaparız. Hemen geliyor bir örnek!""".p,
     "Çift sayıları bulmak için de benzer bir yöntem kullanabiliriz elbet. Yani çiftMi diye yeni bir işlev tanımlar ve sonra kullanırız. Ama adsız (anonymous) bir işlev kullanarak çok daha kısaca ifade edebiliriz dileğimizi. Ne demek adsız? Yani 'def' özel sözcüğünü kullanmadan ve işlevin adını vermeden bir işlev tanımlayacağız. Bu işlev basitçe girdiyi alacak ve onu değerlendirecek. Bu özel yöntemde '=>' imini kullanıyoruz. Solunda girdiler, sağında da işlevin eylemleri gelecek.".p,
     "ele(dzn, (v: Sayı) => v % 2 == 0)".c,
-    "'ele' komutunu böyle çağırarak çift sayıları buluverdik. Yeni bir çiftMi işlevi tanımlamamıza gerek kalmadı. Adsız işlevler hep böyle kullanılır ve işimizi çok kolaylaştırırlar. O kadar faydalılar ki özel bir adları bile var. 'lambda kalkülüsü' (lambda calculus). Bilgisayar bilimi okumak istersen ilerde görür ve daha iyi öğrenirsin.".p,
+    "'ele' komutunu böyle çağırarak çift sayıları buluverdik. Yeni bir çiftMi işlevi tanımlamamıza gerek kalmadı. Adsız işlevler hep böyle kullanılır ve işimizi çok kolaylaştırırlar. O kadar faydalılar ki özel bir adları ve matematik ve bilgisayar biliminde özel bir yerleri bile var. 'lambda kalkülüsü' (lambda calculus) diye bilinir. Bilgisayar bilimi okumak istersen ilerde görür ve daha iyi öğrenirsin.".p,
     "Genelleyici Programlamanın Tadına Bakalım".h3,
     "Şimdi diyelim ki yeni bir eleme koşulu tanımlamak istiyorsun, çünkü tam sayılarla yetinmek olmaz, kesirli sayıları da herhangi bir koşula göre eleyebilmek istiyorsun. Yukarıda 'def' ile tanımladığımız kısacık 'ele' işlevini kopyalar ve basitçe her gördüğün 'Sayı' sözcüğünü 'Kesir' sözcüğüyle değiştirirsin olur biter. Sonra da adını eleKesir gibi birşey koyarsın. Tabii Kesir de yetmez. Başka her hangi bir tür için eleHerneyse dersin ve bu sayede birbirine çok benzeyen, daha doğrusu neredeyse apaynı bir sürü işlevin olur: ele, eleKesir, eleYazı, vb.. Ne güzel, değil mi? Hiç de güzel değil! Çok tekrar oldu. Nerede çokluk orada çok ayıp...".p,
 
@@ -827,65 +831,101 @@ pages += Page(
   name = "Tup",
   body = tPage("Sıralamalar (Tuple)",
     "Sıralamalar (Tuple)".h3,
-    "It is often useful to return more than one value from a function or make up collections of things with more than one value for each item. You can of course always create a class to do this but the typing overhead of making the definition becomes onerous. Scala allows you to create what are in effect objects with anonymous fields - inline, using Tuples. A tuple is simply a set of values enclosed in paretheses. A tuple can contain a mixture of types.".p,
-    "(3,'c')".c,
-    "The Tuple is an object, and so can be accessed using the dot notation; but since tuple fields have no names they are accessed using a name created with an underscore followed by the position index.".p,
-    """satıryaz((3,'c')._1)
-satıryaz((3,'c')._2)""".c,
-    "However, tuple deconstruction is more frequently used to access the fields of a Tuple. In an assignment involving a tuple, the Scala compiler associates or binds the variable names in the left of the assignemnt with the corresponding values in the tuple. For example,".p,
-    "val (i,c)=(3,'a')".c,
-    "You will see how this is used in the following program to create a letter frequency table from a words list. First create the list.".p,
-    """val wl=Dizin("kojo","is","a","great","way","to","learn","scala")""".c,
-    "The approach taken is to first flatten 'wl', convert to upper case and then sort the the list of characters.".p,
-    "Then a fold will be used to count the duplicate letters. You have already seen that a fold takes an input value and combines it successively with each list element to produce a new input value. In our case while the characters are the same a count needs to be incremented and when they differ the character and count need to be added to the freqency table.".p,
-
-    "The objective is to produce a list of tuples with two entries - a letter, and a count. This is our frequency table.".p,
-    "First create a sorted list of characters.".p,
-    
-    "val ltrs=wl.flatMap(_.toList).map(_.toUpper).sortWith(_<_)".c,
-    "Now the fold. The initial condition is an empty output frequency table, a list of tuples. The fold will expect a function that takes a list of tuples combines with a Char, the next character in the list, and returns a list of tuples.".p,
-
-    """ltrs.foldLeft(Dizin[(Char,Sayı)]()){
-    case ((prevchr, cnt) :: tl, chr) if(prevchr==chr) => (prevchr,cnt+1) :: tl
-    case (tbl, chr) => (chr, 1) :: tbl
-}
+    "Diyelim ki bir işlevimiz var ve birden çok çıktısı olsun istiyoruz. Ya da bir koleksiyon oluşturacağız ama her elemanı birden fazla değer tutsun istiyoruz. Sözle anlamak zor, sabır, hemen örnek vereceğiz aşagıda. Bu tür durumlarda yeni bir tür tanımlamak zor olmaz elbet. Yeni bir sınıf nasıl oluşturulur gördük. Ama biraz zahmetli elbette. Epey kod yazmak gerekebiliyor, 'case class' bile olsa. Sadece kod yazmak değil esas zorluk anlamlı isimler bulmak ve onları uzun uzun kullanmak aslında. Gerçekten gerekmedikçe yeni adlar üretmek zorunda kalmasak çok iyi olur, değil mi? Uzun lafın kısası, Scala dili, adsız değerleri gerektiği anda ve gerektiği yerde sıralamamıza izin vererek bu sorunu güzelce çözer. Sıralama dedik ya, İngilizce'si 'tuple' parantez içinde virgülle ayrılan bir ya da daha çok değerin bir araya gelmesinden ibaret. İşin güzel tarafı değerlerin türleri aynı olmak zorunda değil. Örneğin:".p,
+    "(3, 'c')".c,
+    """(3.14, "pi sayısının yaklaşık değeri, 22/7 olarak da bilinir")""".c,
+    """(22/7, 22/7.0, 3.14, "pi")""".c,
+    """Sıralamalar da birer nesnedir desem artık şaşırmazsın değil mi? Onun için nokta koyup arkasından içinden istediğimiz değere ulaşabiliriz. Ama bir sorun var. Bu iç değerlerin bir adı yok! Sorun değil. Sıralarını biliyoruz. Birinci elemanı okumak için "._1" dememiz yeter. İkinci için "._2" varsa üçüncü için "._3" vb... Hemen deneyelim.""".p,
+    """satıryaz((3, 'c')._1)
+satıryaz((3, 'c')._2)""".c,
+    "Böyle birşey yapmak gereksiz geldi mi size de? Tabii genelde elimizde val değişkenler olur. Örneğin:".p,
+    """val sıralıDörtlü = ("En sevdiğim sayı", 5, "karesi", 25)
+""".c,
+    "sıralıDörtlü._1".c,
+    "sıralıDörtlü._2".c,
+    "sıralıDörtlü._3".c,
+    "sıralıDörtlü._4".c,
+    "sıralıDörtlü._5".c,    
+    """Biraz fazla gittik! Hata verdi. "error: value _5 is not a member of (String, Int, String, Int)" yani 5. eleman yok ki sıralamada diyor bizim akıllı derleyici.""".p,
+    "Bunları bilmekte fayda var ama esas sıralamaların içindeki değerleri toptan çözümlemeyle (tuple deconstruction) okumak çok daha yaygın ve faydalıdır. Örneğin:".p,
+    "val (i, c) = (3, 'a')".c,
+    "Birazdan bir yazılımcık yazacağız ve onun içinde bu çözümleme yöntemi nasıl işe yarıyor göreceğiz. Diyelim ki bir yazının içinde hangi harften kaçtane var bulmak istiyoruz. İlk önce bir dizi sözcük oluşturalım bir tümceden:".p,
+    """val yazı = "Kojo ile oyun oynayarak Scala dilini öğrenmek ve hatta işlevsel ve nesneye yönelik programlama becerisi edinmek harika değil mi """".c,
+    """val sözcükDizini = yazı.split(" ").toList""".c,
+    "Bu hesaplamayı yapmak için uygulamayı düşündüğümüz yöntem şu: ilk önce harfleri büyültelim sonra da sıraya sokalım.".p,
+    "Ondan sonra da katlama (fold) metodunu kullanarak arka arkaya tekrar eden harfleri sayıvereceğiz. Daha önce ne görmüştük? Katlama işlevi iki girdi alıyor: bir başlangıç değeri, bir de bir dizin, yani bizim sıraya sokulmuş harf dizimiz. Katlama ilk başlangıç değerini dizinin ilk elemanıyla bir işleme sokacak. Ne işlemi mi? Biz ne istersek o! Burada teker teker ele aldığımız harfler değişmedikçe sayısını bir artıracağımız bir sayacımız olacak. Yeni gelen harf değişik olursa yeni bir sayaç tanımlayacağız. Her sayaç tabii ki birden başlayacak. Karmaşık mı geldi biraz? Çok doğal. Görüp biraz üstünde düşününce daha anlaşılır olacak. Ne de olsa ileri programlama tekniği bu!".p,
+    "Kısaca söylemek gerekirse amacımız ikili sıralamalardan oluşan bir dizin oluşturmak. Her ikilinin birinci alanında bir harf ikinci alanında da kaç tane olduğunu tutan sayacı olacak. Bu dizin harflerin sıklığını sunacak bize.".p,
+"""// Tek satırda epey iş var. Teker teker bak istersen
+// flat: düz, map: eşleme, toList: dizine çevir, toUpper: yüksek harfe çevir, sortWith: işlev ile sırala
+val harfler = sözcükDizini.flatMap(_.toList).map(_.toUpper).sortWith(_ < _)
+// Yani şöyle yapabilirsin:
+val g1 = sözcükDizini.flatMap(_.toList); satıryaz("g1", g1)
+val g2 = g1.map(_.toUpper); satıryaz("g2", g2)
 """.c,
 
-    "To understand what is happening here, some new pieces of Scala syntax need to be understood.".p,
+    """Şimdi de katlama yöntemimiz gelsin bakalım. Başladığımızda sunum boş olacak elbet. Nasıl tanımlarız istediğimiz boş dizini? "Dizin[(Harf, Sayı)]()" yani bir dizi (harf, sayaç) çifti. Katlama metodumuz (foldLeft) ikinci girdi olarak ne bekler anımsadın mı? Bir işlev! Nasıl bir işlev gerekiyor biraz daha iyi tahmin edebilirsin belki şimdi. Adsız işlev olacak, bir. İki tane girdisi olacak, iki. İlk girdisi bizim çift dizinimiz, ikinci girdi de harflerden biri.""".p,
 
-    "First, a sequence of cases (i.e. alternatives) in curly braces can be used anywhere a function literal can be used. It acts as a function with input parameter(s) and an implied match at the begining of the block. You can consider this as a convenient shorthand for the standard anonymous function form which would have been:".p,
-    "(a,b)=>(a,b) match {case ...}".p,
+"""val sıklık = harfler.foldLeft(Dizin[(Harf, Sayı)]()) {
+    case ((önceki, sayaç) :: kuyruk, harf) if (önceki == harf) => (önceki, sayaç + 1) :: kuyruk
+    case (sunum, harf)                                         => (harf, 1) :: sunum
+}
+""".c,
+    "Bunu anlayamadım diye üzülme sakın! Daha önce görmediğimiz bir kaç becerisi var Scala derleyicisinin burada!".p,
 
-    "Second, you saw earlier that case is used to pattern match. Here that pattern matching is used to deconstruct our arguments and the list of tuples. '(prevchr,cnt)::tl' matches a list with a head element and tail and associates the names with those items. While 'chr' refers to the second fold arguement, the next list character.".p,
+    "1) adsız işlevimizi tanımlarken 'case' yani örüntü eşleme yapısı kullanabiliriz. Bunun için normal parantez yerine kıvrık parantez kullanmamız yeter. 'match' özel sözcüğüne gerek kalmadı. Ondan önce gelen değişkenlere de! Yani bu epey faydalı bir kısa yol oluyor ve bunu iyi bilmekte fayda var! Normal, yani kısaltılmamış halini anımsayalım hemen:".p,
+    "(a, b) => (a, b) match {case ... => ...; case ... => ...}".p,
+    "match ve ondan önceki hiç birşeye gerek kalmıyor!".p,
 
-    "Third, case syntactic pattern matches may not be a precise constraint, as is the case here so a pattern guard can be used. The guard starts with an if and can contain an arbitrary boolean expression. In this case the guard is used to restrict the case to just those calls where the previous character is the same as the current one.".p,
+    "2) örüntülü eşleme yapmak için kullanmıştık bu 'case' yöntemini. Burada da 'case' sözcüğünden hemen sonra gelen kısımda elimizdeki iki girdiyi çözümlüyoruz. Biraz önce de dediğimiz gibi ilk girdi ufak ufak oluşturduğumuz yeni dizinimiz. '(önceki, sayaç) :: kuyruk' yeni kurduğumuz dizinin başı ve kuyruğuyla eşleşiyor ve onların üçüne de isim takıveriyor. kuyruk bariz. baş eleman da bir önceki harf ve ondan şu ana kadar kaç tane saydığımızı tutan sayaç. 'kuyruk' değerinden sonra gelen 'harf' ise katlama işlemini yaptığımız 'harfler' dizinindeki harflerden biri. Katlama işlevi her harfin üstünden teker teker geçecek elbet.".p,
 
-    "So now we can read the expression as: For each character in the (sorted) input list, if there is already an entry for it in the head of the frequency table, replace the head with a new head with the count incremented. In the other case simply add a new entry to the frequency table with a count of one.".p,
+    "3) ve son! İlk örüntü eşleme satırında bir de koşul girdik 'if' diyerek. Bu çok önemli. Yeni bir harfe geçip geçmediğimize dikkat etmemiz gerek! Eğer en son saydığımız harften aynısı geldiyse sayaçı arttırmalıyız. Yoksa yeni bir sayaç başlatmalı.".p,
 
-    "Pretty neat and powerful, right?".p,
+    "Şimdi, bilgisayın Scala derleyicisi sayesinde anladığı bu epey karmaşık görünen işlemi okuyalım bakalım daha iyi anlamış mıyız: esas girdimiz olan sıralanmış harfler dizisindeki her harf için teker teker şunu yapalım: eğer sıfırdan oluşturduğumuz sunum adlı yeni çift dizisinin başındaki çiftin harfi ile aynıysa, dizinin başını sayaçın bir arttığı yeni bir başla değiştirelim. Yoksa, sunum dizisine elimizdeki harf icin yeni bir baş ekleyelim ve harfin sayacını bire eşitleyelim. Çok da karmaşık değilmiş, öyle mi?".p,
 
-    "Of course you could always use a more Java like approach too.".p,
+    "İki üç satırda ifade edebildiğimiz bu işlem hem epey düzgün hem de epey etkileyici bence. Ya sen ne dersin?".p,
 
-    """def iFreqCount(in:Dizin[Char]):Dizin[(Char,Sayı)]={
-  var Tbl=Dizin[(Char,Sayı)]()
-  if(in.isEmpty)Tbl
-  else{
-    var prevChr=in.head
-    var nxt=in.tail
-    var Cnt=1
-    while (!nxt.isEmpty){
-      if(nxt.head==prevChr)Cnt+=1
-      else {
-        Tbl=(prevChr,Cnt)::Tbl
-        Cnt=1
-        prevChr=nxt.head
+    "Sonucu okunur bir halde yazalım bakalım ne bulduk:".p,
+
+    """satıryaz(sıklık.map{p => s"${p._1}:${p._2}"}.mkString(" "))""".c,
+
+    "Elbette ki isteyen daha eski dillerde yapıldığı gibi yazabilir, Basic, Fortran, C, C++, Java örneğin. Yani:".p,
+
+"""def harfSıklığı(girdi: Dizin[Harf]): Dizin[(Harf, Sayı)] = {
+    var sunum = Dizin[(Char, Sayı)]()
+    if (girdi.isEmpty) sunum
+    else {
+        var önceki = girdi.head
+        var kuyruk = girdi.tail
+        var sayaç = 1
+        while (!kuyruk.isEmpty) {
+            if (kuyruk.head == önceki) sayaç += 1
+            else {
+                sunum = (önceki, sayaç) :: sunum
+                sayaç = 1
+                önceki = kuyruk.head
+            }
+            kuyruk = kuyruk.tail
         }
-      nxt=nxt.tail
-      }
-    (prevChr,Cnt)::Tbl
-  }
-}""".c,
-    "iFreqCount(ltrs)".c
+        (önceki, sayaç) :: sunum
+    }
+}
+
+satıryaz(harfSıklığı(harfler))""".c,
+
+    "Bu da çalıştı elbette. Ama bilmem sen hangisini daha çok beğendin. Bak biraz önce işlevsel programlama esaslarını kullanarak nasıl yaptığımızı hepsi bir arada tekrar görelim ve iki farklı yöntemi yan yana karşılaştıralım:".p,
+    """val harfSıklığı = "Kojo ile oyun oynayarak Scala dilini öğrenmek ve hatta işlevsel ve nesneye yönelik programlama becerisi edinmek harika değil mi".
+    split(" ").toList.flatMap(_.toList).map(_.toUpper).sortWith(_ < _).
+    foldLeft(Dizin[(Harf, Sayı)]()) {
+        case ((önceki, sayaç) :: kuyruk, harf) if (önceki == harf) => (önceki, sayaç + 1) :: kuyruk
+        case (sunum, harf)                                         => (harf, 1) :: sunum
+    }
+
+satıryaz(harfSıklığı.
+    sortBy(p => p._2).reverse.
+    map { p => s"${p._1}:${p._2}" }.
+    mkString(" "))
+""".c,
+    "Bilmem farkettin mi ama sadece iki komut dizisi yeterli oldu. Yerilen cümlenin harflerinin sıklığını hesapladık ve sıraya sokup yazdırdık. Yukarıda adlarını saydığımız daha eski ve daha az becerikli dillerle bilgisayara istediğini yaptırmanın ne kadar zor olduğunu bilenlere bu kısacık yazılım o kadar etkileyi olur ki anlatamam!".p
 
   )
 )
