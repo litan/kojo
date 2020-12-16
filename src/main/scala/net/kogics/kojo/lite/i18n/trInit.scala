@@ -39,6 +39,10 @@ object TurkishAPI {
   import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast, Point}
   type Hız  = Speed
   type Nokta = Point
+  object Nokta {
+    def apply(x: Kesir, y: Kesir) = new Point(x, y)
+    def unapply(p: Nokta) = Some((p.x, p.y))
+  }
 
   // Ref: https://docs.scala-lang.org/overviews/scala-book/built-in-types.html
   type İkil = Boolean
@@ -87,6 +91,8 @@ object TurkishAPI {
     def görünmez() = englishTurtle.invisible()
     def ileri(adım: Kesir) = englishTurtle.forward(adım)
     def ileri() = englishTurtle.forward(25)
+    def geri(adım: Kesir) = englishTurtle.back(adım)
+    def geri() = englishTurtle.back(25)
     def sağ(açı: Kesir) = englishTurtle.right(açı)
     def sağ() = englishTurtle.right(90)
     def sol(açı: Kesir) = englishTurtle.left(açı)
@@ -101,17 +107,23 @@ object TurkishAPI {
     def zıpla(): Birim = zıpla(25)
     def ev() = englishTurtle.home()
     def noktayaDön(x: Kesir, y: Kesir) = englishTurtle.towards(x, y)
+    def noktayaGit(x: Kesir, y: Kesir) = englishTurtle.lineTo(x, y)
+    def noktayaGit(n: Nokta) = englishTurtle.lineTo(n)
     def açıyaDön(açı: Kesir) = englishTurtle.setHeading(açı)
     def doğrultu = englishTurtle.heading
     def doğu() = englishTurtle.setHeading(0)
     def batı() = englishTurtle.setHeading(180)
     def kuzey() = englishTurtle.setHeading(90)
     def güney() = englishTurtle.setHeading(-90)
-    def canlandırmaHızınıKur(n: Long) = englishTurtle.setAnimationDelay(n)
+    def canlandırmaHızınıKur(n: Uzun) = englishTurtle.setAnimationDelay(n)
+    def canlandırmaHızı: Uzun = englishTurtle.animationDelay
     def yazı(t: Her) = englishTurtle.write(t)
     def yazıBoyunuKur(boyutKur: Sayı) = englishTurtle.setPenFontSize(boyutKur)
     def yay(yarıçap: Kesir, açı: Kesir) = englishTurtle.arc(yarıçap, math.round(açı).toInt)
+    def dön(açı: Kesir, yarıçap: Kesir) = englishTurtle.turn(açı, yarıçap)
+    def dön(açı: Kesir) = englishTurtle.turn(açı)
     def daire(yarıçap: Kesir) = englishTurtle.circle(yarıçap)
+    def konumuKur(x: Kesir, y: Kesir) = englishTurtle.setPosition(x, y)
     def konum: Nokta = englishTurtle.position
     def kalemiİndir() = englishTurtle.penDown()
     def kalemiKaldır() = englishTurtle.penUp()
@@ -245,7 +257,10 @@ object TurkishInit {
   }
 
   val codeTemplates = Map(
+    "ileri" -> "ileri()",
     "ileri" -> "ileri(${adım})",
+    "geri" -> "geri()",
+    "geri" -> "geri(${adım})",
     "sağ" -> "sağ(${açı})",
     "sol" -> "sol(${açı})",
     "atla" -> "atla(${x},${y})",

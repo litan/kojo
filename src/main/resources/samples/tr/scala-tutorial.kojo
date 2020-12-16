@@ -157,12 +157,12 @@ pages += Page(
     "Daha önce çalışan bir yazılıma dönmek de kolay: yazılım düzenleyicisinin üst kısmındaki menünün ortasında sağa ve sola bakan mavi oklara tıkla. Seçtiğin yazılımı düzenlemeye kaldığın yerden devam edebilirsin. Her örneği deneyebilir, istediğine geri dönüp değişiklikler yapıp tekrar çalıştırabilirsin. Değişik fikirler dener, programlama dilini daha iyi tanıyıp yazım, gramer kurallarını daha çabuk öğrenebilirsin. Yazılımcık düzenleyicisindeki programları diske kaydedebilir ve sonra oradan geri yükleyebilirsin. Bunun için Dosya menüsüdeki komutları kullan.".p,
     "Şu anda kullandığın Kojo öğrenim ortamı, çok gelişmiş ve uzman bilgisayar mühendislerinin en sevdikleri dillerin önde gelenlerinden Scala programlama dilini öğrenmene yardımcı olmak için hem çok faydalı hem de eğlendirici özellikler ve beceriler içeriyor. Müzik çalan programlar yazabilir, ileri matematik kavramlarını resimler ve grafikler çizerek inceleyip daha iyi öğrenir, değişik tür oyunları hem oynayabilir hem de nasıl yazıldıklarını kolayca öğrenebilir, hatta fizik deneyleri bile yapabilirsin! En güzeli Kojo'nun kaplumbağaları var! Onlara yol göstererek çizimler yaptırabilirsin. Küçük hemen anlayıp seveceğin tek kaplumbağalı bir örnekle başlayalım mı? Kaplumbağa yürüsün ve bir taraftan da bir üçgen çizsin istersen, bu yazılımcığa tıklaman yeter:".p,
     """sil
-  ileri(100)
-  sağ(120)
-  ileri(100)
-  sağ(120)
-  ileri(100)
-  sağ(120)
+ileri(100)
+sağ(120)
+ileri(100)
+sağ(120)
+ileri(100)
+sağ(120)
 """.c,
     "Bu kılavuzcuğun kaplumbağacığın kullanılışı başlıklı (sondan üçüncü) bölümünde daha pek çok örnek yazılımcık ve kaplumbağanın anladığı komutların bir listesini bulabilirsin.".p,
     "Scala dili tam anlamıyla genel ve güçlü bir bilgisayar programla dilidir. Özelliklerinin çoğunluğu uzman programcılara ve bilgisayar mühendislerine tanıdık gelecektir. Bu kılavuzcuktan faydalanmak için programlama dili bilmesen de olur, ama elbette daha önce başka bir programlama diliyle deneyimin olduysa daha hızlı ilerleyebilirsin. Onun için anladığın yerleri ve bölümleri hızlı geçmen hatta atlaman bile doğal olur.".p,
@@ -846,7 +846,7 @@ satıryaz((3, 'c')._2)""".c,
     "sıralıDörtlü._3".c,
     "sıralıDörtlü._4".c,
     "sıralıDörtlü._5".c,    
-    """Biraz fazla gittik! Hata verdi. "error: value _5 is not a member of (String, Int, String, Int)" yani 5. eleman yok ki sıralamada diyor bizim akıllı derleyici.""".p,
+    """Biraz fazla gittik! Hata verdi. "error: value _5 is not a member of (String, Int, String, Int)" yani 5. elemanı yok ki sıralamanın diyor bizim akıllı derleyici.""".p,
     "Bunları bilmekte fayda var ama esas sıralamaların içindeki değerleri toptan çözümlemeyle (tuple deconstruction) okumak çok daha yaygın ve faydalıdır. Örneğin:".p,
     "val (i, c) = (3, 'a')".c,
     "Birazdan bir yazılımcık yazacağız ve onun içinde bu çözümleme yöntemi nasıl işe yarıyor göreceğiz. Diyelim ki bir yazının içinde hangi harften kaçtane var bulmak istiyoruz. İlk önce bir dizi sözcük oluşturalım bir tümceden:".p,
@@ -934,50 +934,50 @@ pages += Page(
   name = "MF",
   body = tPage("Matematiksel İşlevler",
     "Matematik"h3,
-    "Here are some useful Maths functions. Remember to import them before using.".p,
+    "Matematik fonksiyonları bazen işimize çok yararlar. Birkaç tanesini görelim. Önce matematik birimindeki komutları çağırmak gerekiyor:".p,
     "import math._".c,
-    "Math Constants".h3,
-    "Two common constants are defined in the math class.".p,
+    "Değişmez (sabit) Değerler".h3,
+    "Matematik sınıfında iki çok meşhur sabit var:".p,
     table(
-      row("E".c,"Value of e, 2.718282..., base of the natural logarithms."),
-      row("Pi".c,"Value of pi, 3.14159265 ....")
+      row("E".c,"e, meşhur matematikçi Euler'den gelir adı 2.718282... değerindedir, doğal logaritmanın da tabanıdır."),
+      row("Pi".c,"pi sayısı, 3.14159265 .... yani yarıçapı 1 olan dairenin çevre uzunluğunun yarısıdır.")
     ),
-    "Trigonometric Methods".h3,
-    "All trigonometric method parameters are measured in radians, the normal mathematical system of angles, and not in degrees, the normal human angular measurement system. Use the toRadians or toDegrees methods to convert between these systems, or use the fact that there are 2*PI radians in 360 degrees. In addition to the methods below, the arc methods are also available.".p,
-    "Note - in the descriptions that follow, all the function parameters are labeled in order, and will be of the form functionName(P1, P2...).".p,
+    "Trigonometri fonksiyonları".h3,
+    "Trigonometrik işlevler girdi olarak radyan birimi kullanırlar. Radyan kavramını anlatan çok güzel bir örneğimiz var Kojo'da. Örnekler menüsünde en altta Matematik Öğrenme Birimleri menüsü var. Onun en altında 'Açı Nedir?' var. Ona tıklayıver. Günlük hayatta biz 90 derece, 180 derece gibi bize daha doğal gelen derece birimini kullanırız açıları ifade etmek için. Radyandan dereceye çevirmek için 'toDegrees' metodunu, tersini yapmak için de 'toRadians' metodunu kullanabiliriz. Bilmemiz gereken tek şey şu: 2*PI radyan 360 dereceye eşittir. Aşağıda sıraladığımız metodlardan başka yay metodları da var. İngilizce arc diye geçer.".p,
+    "Kısa not: aşağıdaki tanımlarda G1, G2, ... ile fonksiyona girilen değerleri ifade ediyoruz kısaca. Yani işlevAdı(G1, G2, G3, ...). ".p,
     table(
-      row("sin(Pi/6)".c,"sine of P1."),
-      row("cos(Pi/6)".c,"cosine of P1."),
-      row("tan(Pi/6)".c,"tangent of P1."),
-      row("toRadians(45)".c,"P1 (angle in degrees) converted to radians."),
-      row("toDegrees(Pi/2)".c,"P1 (angle in radians) converted to degrees.")
+      row("sin(Pi/6)".c,"G1 girdisinin yani burada Pi/6 değerinin sinüsü."),
+      row("cos(Pi/6)".c,"G1 girdisinin cosinüsü."),
+      row("tan(Pi/6)".c,"G1 girdisinin tanjantı."),
+      row("toRadians(45)".c,"G1 (derece olsun) girdisini radyana çevirir."),
+      row("toDegrees(Pi/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir.")
     ),
-    "Exponential Methods".h3,
-    "The two basic functions for logarithms and power are available. These both use the base e (Math.E) as is the usual case in mathematics.".p,
+    "Üst bulma metodları".h3,
+    "Logaritma ve üst bulmak için iki temel işlev var. İkisi de E tabanını kullanır (Math.E)".p,
     table(
-      row("exp(Pi)".c,"e (2.71...) to the power P1."),
-      row("pow(6,3)".c,"P1 raised to P2."),
-      row("log(10)".c,"logarithm of P1 to base e.")
+      row("exp(Pi)".c,"e (2.71...) sayısının G1 üssünü hesaplar."),
+      row("pow(6,3)".c,"G1 girdisinin G2 üssünü bulur."),
+      row("log(10)".c,"G1'in E tabanina göre logaritmasını verir.")
     ),
-    "Misc Methods".h3,
+    "Başka bazı fonksiyonlar".h3,
     table(
-      row("sqrt(225)".c,"square root of P1."),
-      row("abs(-7)".c,"absolute value of P1 with same type as the parameter: int, long, float, or double."),
-      row("max(8,3)".c,"maximum of P1 and P2 with same type as the parameter: int, long, float, or double."),
-      row("min(8,3)".c,"minimum of P1 and P2 with same type as the parameter: int, long, float, or double.")
+      row("sqrt(225)".c,"G1'in karekökü."),
+      row("abs(-7)".c,"abs absolute sözcüğünün kısaltması. Mutlak değeri verir. Girdinin türü neyse, çıktı da aynı tür sayı olur, Sayı, Uzun, KısaKesir, Kesir."),
+      row("max(8,3)".c,"maximum sözcüğünden. G1 ve G2 arasında büyük olanı bulur."),
+      row("min(8,3)".c,"minimum sözcüğünden. G1 ve G2 arasında küçük olanı bulur.")
     ),
-    "Integer Related Methods".h3,
-    "The following methods translate floating point values to integer values, although these values may still be stored in a double.".p,
+    "Sayı türüyle ilgili metodlar".h3,
+    "Bu işlevler kesirli sayıları tam yani kesirsiz sayıya çevirir. Ama dikkat, çıktı türü hala Kesir olabilir.".p,
     table(
-      row("floor(3.12)".c,"closest integer-valued double which is equal to or küçüktür P1."),
-      row("ceil(3.12)".c,"closest integer-valued double which is equal to or büyüktür P1."),
-      row("rint(3.51)".c,"closest integer-valued double to P1."),
-      row("round(3.48)".c,"long which is closest in value to the double P1."),
-      row("round(2.6F)".c,"int which is closest in value to the float P1.")
+      row("floor(3.12)".c,"Yer anlamına gelir. G1 girdisinden küçük ya da ona eşit olan en büyük tam sayıyı hesabeder."),
+      row("ceil(3.12)".c,"Tavan anlamına gelir. G1 girdisinden büyük ya da ona eşit olan en küçük tam sayıyı verir."),
+      row("rint(3.51)".c,"RoundInteger'dan. G1 değerine en yakın tam sayıyı Kesir türünde bir çıktı olarak verir."),
+      row("round(3.48)".c,"G1 kesirine en yakın sayıyı Uzun türünde çıktı olarak verir."),
+      row("round(2.6F)".c,"G1 KısaKesir'ine en yakın sayıyı Sayı türünde çıktı olarak verir.")
     ),
-    "Random Numbers".h3,
+    "Rasgele (Random) sayılar".h3,
     table(
-      row("random".c,"returns a Kesir pseudo-random number between 0.0 and 1.0")
+      row("random".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rasgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
     )
   )
 )
@@ -998,10 +998,10 @@ pages += Page(
 
 pages += Page(
   name = "US",
-  body = tPage("Using Yazıs",
-    "Yazıs".h2,
-    "Yazı manipulation is a frequent task. Here are some useful functions and definitions. You will find that other sequences like lists have similar methods.".p,
-    "Note once again that - in the descriptions that follow, all the function parameters are labeled in order, and so will be of the form P1.functionName(P2, P3...).".p,
+  body = tPage("Yazıların (String) Kullanılışı",
+    "Yazı Türü".h2,
+    "Ekrana yazı yazmak bilgisayar programlamada epey sık karşılaşılan bir sorun! Here are some useful functions and definitions. You will find that other sequences like lists have similar methods.".p,
+    "Note once again that - in the descriptions that follow, all the function parameters are labeled in order, and so will be of the form G1.functionName(G2, G3...).".p,
     "Escape characters for strings.".h3,
     table(
       row("""\n""", "line feed","""\b""", "backspace","""\t""",      "tab","""\f""", "form feed"),
@@ -1020,48 +1020,48 @@ satıryaz(x)
 """.c, 
     "Length".h3,
     table(
-      row(""""four".length""".c,"length of the string P1.")
+      row(""""four".length""".c,"length of the string G1.")
     ),
     "Comparison".h3,
     table(
-      row(""""high".compareTo("higher")""".c,"compares to P1. returns <0 if P1 < P2, 0 if ==, >0 if P1>P2"),
+      row(""""high".compareTo("higher")""".c,"compares to G1. returns <0 if G1 < G2, 0 if ==, >0 if G1>G2"),
       row(""""high".compareToIgnoreCase("High")""".c,"same as above, but upper and lower case are same"),
       row(""""book".equals("loot")""".c,"true if the two strings have equal values"),
       row(""""book".equalsIgnoreCase("BOOK")""".c,"same as above ignoring case"),
-      row(""""book".startsWith("bo")""".c,"true if P1 starts with P2"),
-      row(""""bookkeeper".startsWith("keep",4)""".c,"true if P2 occurs starting at index P3"),
-      row(""""bookmark".endsWith("ark")""".c,"true if P1 ends with P2")
+      row(""""book".startsWith("bo")""".c,"true if G1 starts with G2"),
+      row(""""bookkeeper".startsWith("keep",4)""".c,"true if G2 occurs starting at index G3"),
+      row(""""bookmark".endsWith("ark")""".c,"true if G1 ends with G2")
     ),
     "Searching".h3,
     """Note: All "indexOf" methods return -1 if the string/char is not found. Indexes are all zero base.""".p,
     table(
-      row(""""rerender".contains("ren")""".c,"True if P2 can be found in P1."),
-      row(""""rerender".indexOf("nd")""".c,"index of the first occurrence of Yazı P2 in P1."),
-      row(""""rerender".indexOf("er",5)""".c,"index of Yazı P2 at or after position P3 in P1."),
-      row(""""rerender".indexOf('r')""".c,"index of the first occurrence of char P2 in P1."),
-      row(""""rerender".indexOf('r',4)""".c,"index of char P2 at or after position i in P1."),
-      row(""""rerender".lastIndexOf('e')""".c,"index of last occurrence of P2 in P1."),
-      row(""""rerender".lastIndexOf('e',4)""".c,"index of last occurrence of P2 on or before position P3 in P1."),
-      row(""""rerender".lastIndexOf("er")""".c,"index of last occurrence of P2 in P1."),
-      row(""""rerender".lastIndexOf("er",5)""".c,"index of last occurrence of P2 on or before position P3 in P1.")
+      row(""""rerender".contains("ren")""".c,"True if G2 can be found in G1."),
+      row(""""rerender".indexOf("nd")""".c,"index of the first occurrence of Yazı G2 in G1."),
+      row(""""rerender".indexOf("er",5)""".c,"index of Yazı G2 at or after position G3 in G1."),
+      row(""""rerender".indexOf('r')""".c,"index of the first occurrence of char G2 in G1."),
+      row(""""rerender".indexOf('r',4)""".c,"index of char G2 at or after position i in G1."),
+      row(""""rerender".lastIndexOf('e')""".c,"index of last occurrence of G2 in G1."),
+      row(""""rerender".lastIndexOf('e',4)""".c,"index of last occurrence of G2 on or before position G3 in G1."),
+      row(""""rerender".lastIndexOf("er")""".c,"index of last occurrence of G2 in G1."),
+      row(""""rerender".lastIndexOf("er",5)""".c,"index of last occurrence of G2 on or before position G3 in G1.")
     ),
     "Getting parts".h3,
     table(
-      row(""""polarbear".charAt(3)""".c,"char at position P2 in P1."),
-      row(""""polarbear".substring(5)""".c,"substring from index P2 to the end of P1."),
-      row(""""polarbear".substring(3,5)""".c,"substring from index P2 to BEFORE index P3 of P1.")
+      row(""""polarbear".charAt(3)""".c,"char at position G2 in G1."),
+      row(""""polarbear".substring(5)""".c,"substring from index G2 to the end of G1."),
+      row(""""polarbear".substring(3,5)""".c,"substring from index G2 to BEFORE index G3 of G1.")
     ),
     "Creating a new string from the original".h3,
     table(
       row(""""Toni".toLowerCase""".c,"new Yazı with all chars lowercase"),
       row(""""Toni".toUpperCase""".c,"new Yazı with all chars uppercase"),
       row(""""  Toni   ".trim""".c,"new Yazı with whitespace deleted from front and back"),
-      row(""""similar".replace('i','e')""".c,"new Yazı with all P2 characters replaced by character P3."),
-      row(""""ToniHanson".replace("on","er")""".c,"new Yazı with all P2 substrings replaced by P3.")
+      row(""""similar".replace('i','e')""".c,"new Yazı with all G2 characters replaced by character G3."),
+      row(""""ToniHanson".replace("on","er")""".c,"new Yazı with all G2 substrings replaced by G3.")
     ),
     "Methods for Converting to Yazı".h3,
     table(
-      row("String.valueOf(Dizin(1,2,3))".c,"Converts P1 to Yazı, where P1 is any value (primitive or object).")
+      row("String.valueOf(Dizin(1,2,3))".c,"Converts G1 to Yazı, where G1 is any value (primitive or object).")
     )
   )
 )
@@ -1114,10 +1114,10 @@ pages += Page(
 
 pages += Page(
   name = "UT",
-  body = tPage("Kamplumbağacığın Kullanılışı",
+  body = tPage("Kaplumbağacığın Kullanılışı",
     "The Turtle can be moved with a set of commands, many of which are listed below. Just try them out to see what they make the Turtle do. You can clear the Turtle Canvas at any time by right-clicking on it and then clicking Clear".p,
     "The following example defines a procedure (or command) that draws a triangle. This will be used in other examples further on, so try it first. Notice that multiple commands can be used on one line if they are separated by a semi-colon. Also 'repeat' is a useful command for carrying out the same set of commands a number of times.".p,
-    """def üçgen()= yinele(3){ ileri(100);sağ(120) }
+    """def üçgen() = yinele(3){ ileri(100); sağ(120) }
 sil()
 üçgen()
 sol()
@@ -1125,60 +1125,56 @@ sol()
 """.c,
     table(
       row("ileri(100)".c, "Moves the turtle ileri( a 100 steps."),
-      row("back(50)".c,"Moves the turtle back 50 steps."),
-      row("setPosition(100, 100)".c, "Sends the turtle to the point (x, y) without drawing a line. The turtle's heading is not changed."),
-      row("lineTo(20, 30)".c, "Turns the turtle towards (x, y) and moves the turtle to that point."),
-      row("turn(30)".c, "Turns the turtle through a specified angle. Angles are positive for counter-clockwise turns."),
+      row("geri(50)".c,"Moves the turtle back 50 steps."),
+      row("konumuKur(100, 100)".c, "Sends the turtle to the point (x, y) without drawing a line. The turtle's heading is not changed."),
+      row("noktayaGit(20, 30)".c, "Turns the turtle towards (x, y) and moves the turtle to that point."),
+      row("dön(30)".c, "Turns the turtle through a specified angle. Angles are positive for counter-clockwise turns."),
       row("sağ()".c, "Turns the turtle 90 degrees right (clockwise)."),
       row("sağ(60)".c, "Turns the turtle 60 degrees right (clockwise)."),
-      row("left()".c, "Turns the turtle 90 degrees left (counter-clockwise)."),
-      row("left(30)".c, "Turns the turtle angle degrees left (counter-clockwise)."),
-      row("towards(40, 60)".c, "Turns the turtle towards the point (x, y)."),
-      row("setHeading(30)".c, "Sets the turtle's heading to angle (0 is towards the right side of the screen ('east'), 90 is up ('north'))."),
-      row("heading".c, "Queries the turtle's heading (0 is towards the right side of the screen ('east'), 90 is up ('north"),
-      row("home()".c, "Moves the turtle to its original location, and makes it point north."),
-      row("position".c, "Queries the turtle's position."),
+      row("sol()".c, "Turns the turtle 90 degrees left (counter-clockwise)."),
+      row("sol(30)".c, "Turns the turtle angle degrees left (counter-clockwise)."),
+      row("noktayaDön(40, 60)".c, "Turns the turtle towards the point (x, y)."),
+      row("açıyaDön(30)".c, "Sets the turtle's heading to angle (0 is towards the right side of the screen ('east'), 90 is up ('north'))."),
+      row("doğrultu".c, "Queries the turtle's heading (0 is towards the right side of the screen ('east'), 90 is up ('north"),
+      row("ev()".c, "Moves the turtle to its original location, and makes it point north."),
+      row("konum".c, "Queries the turtle's position."),
 
-      row("""penUp()
-  ileri(100)
-  penDown()
-  ileri(100)""".c, "penDown makes the turtle draw lines as it moves while with penUp the Turtle moves without drawing a line."), 
-      row("""setPenColor(blue)
-  triangle()""".c, "Specifies the color of the pen that the turtle draws with."),
+      row("""kalemiKaldır()
+ileri(100)
+kalemiİndir()
+ileri(100)""".c, "penDown makes the turtle draw lines as it moves while with penUp the Turtle moves without drawing a line."), 
+      row("""kalemRenginiKur(mavi)
+üçgen()""".c, "Specifies the color of the pen that the turtle draws with."),
       row("""sil()
-  setFillColor(red)
-  triangle()
-  """.c, "Specifies the fill color of the figures drawn by the turtle."),
-
+boyamaRenginiKur(kırmızı)
+üçgen()
+""".c, "Specifies the fill color of the figures drawn by the turtle."),
       row("""sil()
-  setPenThickness(10)
-  triangle()
-  setPenThickness(1)
+kalemKalınlığınıKur(10)
+üçgen()
+kalemKalınlığınıKur(1)
   """.c, "Specifies the width of the pen that the turtle draws with."),
-      row("beamsOn()".c, "Shows crossbeams centered on the turtleto help with solving puzzles."),
-      row("beamsOff()".c, "Hides the turtle crossbeams."),
+      row("ışınlarıAç()".c, "Shows crossbeams centered on the turtleto help with solving puzzles."),
+      row("ışınlarıKapat()".c, "Hides the turtle crossbeams."),
       row("""sil()
-  invisible()
-  ileri(100)
-  visible()
-  turn(120)
-  ileri(100)""".c, "invisible hides the turtle while visible makes it visible again."),
-      row("""write("hello world")""".c, "Makes the turtle write the specified object as a string at its current location."),
+görünmez()
+ileri(100)
+görünür()
+dön(120)
+ileri(100)""".c, "görünmez hides the turtle while görünür makes it görünür again."),
+      row("""yazı("Merhaba Kardeş!")""".c, "Makes the turtle write the specified object as a string at its current location."),
       row("""sil()
-  ileri(-100)
-  setAnimationDelay(10)
-  turn(120)
-  ileri(100)""".c, "Sets the turtle's speed. The specified delay is the amount of time (in milliseconds) taken by the turtle to move through a distance of one hundred steps. The default is 1000."),
-      row("animationDelay".c, "Queries the turtle's delay setting."),
-
+ileri(-100)
+canlandırmaHızınıKur(10)
+dön(120)
+ileri(100)""".c, "Sets the turtle's speed. The specified delay is the amount of time (in milliseconds) taken by the turtle to move through a distance of one hundred steps. The default is 1000."),
+      row("canlandırmaHızı".c, "Queries the turtle's delay setting."),
       row("newTurtle(50, 50)".c, "Makes a new turtle located at the point (x, y)."),
       row("turtle0".c, "Gives you a handle to the default turtle."),
       row("sil()".c, "Clears the screen, and brings the turtle to the center of the window."),
       row("""sil()
-  triangle()
-  zoom(0.5, 10, 10)
-  """.c, "Zooms in by the given factor, and positions (cx, cy) at the center of the turtle canvas."),
-
+üçgen()
+zoom(0.5, 10, 10)""".c, "Zooms in by the given factor, and positions (cx, cy) at the center of the turtle canvas."),
       row("gridOn()".c, "Shows a grid on the canvas."),
       row("gridOff()".c, "Hides the grid."),
       row("axesOn()".c, "Shows the X and Y axes on the canvas."),
@@ -1254,7 +1250,7 @@ animate {
     "It is very useful in games to use the keyboard to get player commands. Here is a simple example that allows you to draw using the left/right/up/down arrows to steer the Turtle.".p,
 
     "Run the example by clicking on the following. The example associates a set of actions to keyboard events. Don't forget to click on the Turtle canvas to give it focus first.".p,
-    """sil(); visible(); setAnimationDelay(100)
+    """sil(); görünür(); setAnimationDelay(100)
 onKeyPress{ k  => k match {
         case Kc.VK_LEFT => setHeading(180)
         case Kc.VK_RIGHT => setHeading(0)
