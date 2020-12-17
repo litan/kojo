@@ -122,7 +122,7 @@ pages += Page(
   body = <body style={pageStyle}>
     <div style={pageStyle+centerStyle}> <h1>Scala'ya Hızlı Giriş</h1> </div>
     <div style={pageStyle}>
-    <p>Bu kılavuzcuk simplyscala.com'dan Kojo'ya uyarlanarak yazılmıştır. Kılavuzda ileri veya geri gitmek için en aşağıdaki üçgenlere tıkla. Ya da istediğin bölüme atlamak için aşağıdaki başlıklardan birine tıkla.</p> <br/>
+    <p>Scala diline hoşgeldin! Skala diye oku, olur mu? Kılavuzcukta ileri veya geri gitmek için en aşağıdaki üçgenlere tıkla. Ya da istediğin bölüme atlamak için aşağıdaki başlıklardan birine tıkla. </p> <br/>
     <a href={link("GS")}>Başlayalım</a> <br/>
     <a href={link("Flow")}>Program Akışı If, Else ve While Komutları</a> <br/>
     <a href={link("Literals")}>Yalın Değerler, Sayılar, Kesirler ve Yazılar</a> <br/>
@@ -137,11 +137,11 @@ pages += Page(
     <a href={link("OPA")}>İşlem Önceliği ve Birleşmeliği</a> <br/>
     <a href={link("US")}>Yazıların (String) Kullanılışı</a> <br/>
     <a href={link("UL")}>Dizinlerin (List) Kullanılışı</a> <br/>
-    <a href={link("UT")}>Kamplumbağacığın Kullanılışı</a> <br/>
+    <a href={link("UT")}>Kaplumbağacığın Kullanılışı</a> <br/>
     <a href={link("GAG")}>Çizim ve Oyun</a> <br/>
     <a href={link("LM")}>Daha Çok Öğrenelim</a> <br/>
     <br/>
-    <p>Not: Anthony Bagwell'in simplyscala.com sitesi artık yaşamıyor. Arşivini şurada bulabilirsin: <a href="http://web.archive.org/web/20130305041026/http://www.simplyscala.com">web.archive.org'dan simplyscala.com</a>.</p>
+    <p>Not: Bu kılavuzcuk Anthony Bagwell'in simplyscala.com sitesinden Kojo'ya uyarlanarak yazılmıştır. O sites ne yazık ki artık çalışmıyor. Arşivini şurada bulabilirsin: <a href="http://web.archive.org/web/20130305041026/http://www.simplyscala.com">web.archive.org'dan simplyscala.com</a>.</p>
     </div>
     </body>
 )
@@ -412,26 +412,26 @@ def enbop(x: Uzun, y: Uzun): Uzun = if (y == 0) x else enbop(y, x % y)
     """Bu tanımı daha önce "while" komutuyla yaptığımız tanımla karşılaştırmanda fayda var.""".p,
     "enbop(96, 128)".c,
     "Şimdi de daha renkli bir özyineleme görelim. Bu işlev kendini iki kere çagırarak kaplumbağacığa bir ağacın dallarını çizdiriyor. Bu tür ağaçlara ikil ağaç (binary tree) deriz. Sen de beğendin mi? Özyineleme nasıl duruyor? Yukarıdaki 'enbop' işlevinde y'nin değeri sıfır olunca. Aşagıda ise uzaklık dört ya da daha küçük olduğunda.".p,
-    """def ağaç(uzaklık: Kesir) {
-    if (uzaklık > 4) {
-        kalemKalınlığınıKur(uzaklık/7)
-        // toInt metodu kesirli sayıyı tam sayıya çeviriyor 
-        // yani uzaklık 1.75 olsa uzaklık.toInt 1 oluyor
-        kalemRenginiKur(Renk(uzaklık.toInt, math.abs(255-uzaklık*3).toInt, 125))
-        ileri(uzaklık)
+    """def ağaç(boy: Kesir) {
+    // toInt metodu kesirli sayıyı tam sayıya çeviriyor
+    // yani boy 1.75 olursa boy.toInt 1 oluyor
+    def renk = Renk(boy.toInt % 255, math.abs(255 - boy * 3).toInt % 255, 125)
+    if (boy > 4) {
+        kalemKalınlığınıKur(boy / 7)
+        kalemRenginiKur(renk)
+        ileri(boy)
         sağ(25)
-        ağaç(uzaklık*0.8-2)
-        left(45)
-        ağaç(uzaklık-10)
+        ağaç(boy * 0.8 - 2)
+        sol(45)
+        ağaç(boy - 10)
         sağ(20)
-        ileri(-uzaklık)
+        ileri(-boy)
     }
 }
-
 sil()
 hızıKur(hızlı)
-zıpla(-200)
-ağaç(90)
+konumuKur(100, -200)
+ağaç(90) // 100, 120 ve 150 gibi boyları da dene!
 """.c
   )
 )
@@ -986,13 +986,106 @@ pages += Page(
   name = "OPA",
   body = tPage("İşlem Önceliği ve Birleşmeliği",
     "İşlem Önceliği".h3,
-    "Operators are any valid identifier, but their precedence within expressions is according to the table below, highest precedence first. The precedence of multi-character operators is defined by the first character. For example an operator +* would have the precedence given by the + sign.".p,
-    "(all other special characters)".p,
-    """( * / % , + - : , = ! , < > , & , ^ , | ) highest precedence on left""".p,
-    "(all letters)".p,
-    "(all assignment operators) eg = += -= *= /= etc".p,
+    "Scala'nin işlemleri de birer nesne dersem artık hiç şaşırmazsın değil mi? Belki de şaşırman doğal aslında. Ben de hala hayret ediyorum biraz. Şöyle anımsayalım: Scala'nın sunduğu bütün işlemler de aslında birer metod, onun için de birer işlev, onun için de birer nesne! Dolayısıyla işlemlerin adı olarak da her hangi bir ad kullanabiliriz. Yeter ki geçerli bir ad olsun. Geçersiz adlar nasıl olur?".p,
+    """val 0abc = "olur mu canım?" """.c,
+    """val *olmaz = "bu da yanlış!" """.c,
+    "Yani harf ya da özel bir karakterle başlamaması gerek. Ama bu kuralın da istisnaları var.".p,
+    """val _0abc = "bak bu oldu" """.c,
+    """val a*b = "yok yok bu hala problem" """.c,
+    """val _a$b__c_ = "bak bunlar da oldu" """.c,
+    "Gördüğümüz gibi bazı özel karakterleri değişken adlarında kullanamıyoruz. Matematik işlemlerinin imleri hiç olmuyor. Ama aşağıdaki yazılımda bir istisna daha göreceğiz.".p,
+    "Peki geçerli ve geçersiz bazı adları görmemiz iyi oldu da esas konumuza dönelim, yani öncelik meselesi. Bakın aşagıdaki tablo öncelik sırasını gösteriyor. Üsttekiler önce geliyor. Eğer bir işlem iminde birden fazla karakter varsa o durumda da ilk karakter önem kazanıyor. Örneğin +* diye bir işlem tanımlarsak, onun önceliği + imininkiyle aynı olur.".p,
+    "(diğer bütün özel karakterler)".p,
+    """( * / % , + - : , = ! , < > , & , ^ , | ) Soldakiler sağdakilerden önce gelir.""".p,
+    "(bütün harfler) O halde a, b'den önce gelir. Ya büyük A?".p,
+    "(eşitlik işlemleri) örneğin = += -= *= /= etc".p,
     "İşlem Birleşmeliği".h3,
-    "The associativity of an operator in Scala is determined by its last character. Any method that ends in a ':' character is invoked on its right operand, passing in the left operand. Methods that end in any other character are the other way around. They are invoked on their left operand, passing in the right operand. So a * b yields a.*(b), but a ::: b yields b.:::(a).".p
+    "Birkaç örnekle daha kolay olacak bu konuyu işlemek:".p,
+    """3 * 5 * 7""".c,
+    """(3 * 5) * 7""".c,
+    """3 :: 5 :: Boş""".c,
+    """3 :: (5 :: Boş)""".c,
+    """(3 :: 5) :: Boş""".c,
+    "Ne oldu? Burada iki değişik işlemle karşı karşıyayız. * imi ile :: imi farklı çalışıyor. Son örneğimiz çalışmadı çünkü :: yani bir dizinin kuyruğuyla başını birleştirip yeni bir dizin oluşturan birleştirme işlemi sağdaki değeri temel alıp onun metodu olan :: işlemine soldaki değeri girdi olarak giriyor ve sonunda yeni bir dizin çıktısı veriyor. Son örnekteki hata nereden kaynaklandı şimdi daha iyi anladık. Ama * işlemi öbür taraftan çalışıyor, yani soldaki değer temel alınıyor onun metodu olarak * çagırılıyor ve ona sağdaki değer girdi oluyor. Scala bu durumu düzenlemek ve programcıya iki seçenek de sunmak için şunu yapıyor: işlemin adına bakıyor ve son karakteri seçiyor. Eğer son karakter ':' ise, yani iki nokta üstüste ise, sağdan birleşme yapıyor ve sağdaki değerin üzerindeki metodu çağırıyor ve soldaki değeri giriyor o metoda. Adlarının son karakteri ':' olmayan metodlarsa öbür türlü çalışıyor, yani yukarıda gördüğümüz * örneğindeki gibi soldaki değerin metodu çağrılıyor ve sağdaki değer girdi oluyor. Yani a * b yazarsak derleyici a.*(b) görmüş gibi çalışıyor, ama a *: b yazarsak b.*:(a) gibi çalışıyor. Bir örnekle alıştırma yapalım ki tam pekişsin. Diyelim ki iki sayıyı önce toplayıp sonra toplamını ikinci sayıyla çarpmak istiyoruz. Bunu da çok yapacağız. O zaman bir nesne türü yani sınıf tanımlayıverelim:".p,
+    """case class Deneme(s: Sayı) {
+    def +*(x: Deneme) = (s + x.s) * x.s
+    def +:(x: Deneme) = (s + x.s) * x.s
+}
+val (a,b) = (Deneme(5), Deneme(3))""".c,
+    "Şimdi de bütün seçenekleri deneyelim:".p,
+    "(a +* b, b +* a, a +: b, b +: a)".c,    
+    "Umarım faydalı olmuştur. Sen de birşeyler dene, hem parmakların hem de beynin daha iyi öğrensin!".p,
+    "Bu vesileyle daha büyük bir örnek görelim ve bilgisayarın temeli olan mantığa giriş yapalım. Mantık nedir bilir misin? Belki iyi tanımazsın ama bildiğinden eminim çünkü mantık bizim altıncı hissimiz gibidir. Mantıksızlık hiç hoşumuza gitmez. Bak şöyle yazabiliriz mantık işlemlerinin temelini. Bunu okurken + * x ve ! gibi imlerin tanımlarını nasıl yaptığımıza da dikkat!".p,
+    """case class Önerge(doğruMu: İkil) {
+    val bu = this
+    def tersi: Önerge = Önerge(!doğruMu)
+    def ve(öbürü: Önerge): Önerge = if (doğruMu) öbürü else bu
+    def veya(öbürü: Önerge): Önerge = if (doğruMu) bu else öbürü
+    def yada(öbürü: Önerge) = (bu veya öbürü) ve (bu ve öbürü).tersi
+    override def toString = if (doğruMu) "doğru" else "yanlış"
+    def eşittir(öbürü: Önerge) = doğruMu == öbürü.doğruMu
+    def ==(öbürü: Önerge) = doğruMu == öbürü.doğruMu
+    def unary_!(): Önerge = bu.tersi
+    def *(öbürü: Önerge) = bu ve öbürü
+    def +(öbürü: Önerge) = bu veya öbürü
+    def x(öbürü: Önerge) = bu yada öbürü
+    def to01 = if (doğruMu) "1" else "0"
+}
+
+def tersi(x: Önerge) = x.tersi
+def ve(x: Önerge, y: Önerge) = x ve y
+def veya(x: Önerge, y: Önerge) = x veya y
+def yada(x: Önerge, y: Önerge) = x yada y
+
+def deneme() = {
+    def çizgi = satıryaz("-" * 34)
+    def çift = {çizgi; çizgi}
+    val ara = " " * 10
+    çift
+    val (d, y) = (Önerge(doğru), Önerge(yanlış))
+    val (dt, yt) = (tersi(d), tersi(y))
+    satıryaz(s"  $d'nun tersi == $dt")
+    satıryaz(s"  $y'ın tersi == $yt")
+    çizgi
+    satıryaz(s"$ara !${d.to01} == ${(!d).to01}")
+    satıryaz(s"$ara !${y.to01} == ${(!y).to01}")
+    çift
+    val seçenek = Dizin(d, y)
+    for ((bağlam, adı) <- Dizin((ve _, "ve"), (veya _, "veya"), (yada _, "ya da"))) {
+        for (a <- seçenek; b <- seçenek) {
+            satıryaz(f"  $a%6s $adı%6s $b%6s == ${bağlam(a, b)}")
+        }
+        çizgi
+    }
+    çizgi
+    for ((bağlam, adı) <- Dizin((ve _, "*"), (veya _, "+"), (yada _, "x"))) {
+        çizgi
+        for (a <- seçenek; b <- seçenek) {
+            val c = bağlam(a, b)
+            satıryaz(f"$ara ${a.to01}%s $adı%s ${b.to01}%s == ${c.to01}")
+        }
+    }
+    çizgi
+    for (a <- seçenek; b <- seçenek) {
+        çizgi
+        val (ab, a_b, axb) = (a ve b, a veya b, a yada b)
+        satıryaz(s"  $a   ve   $b == $ab")
+        satıryaz(s"  $a  veya  $b == $a_b")
+        satıryaz(s"  $a ya da  $b == $axb")
+    }
+    çizgi
+    for (a <- seçenek; b <- seçenek) {
+        çizgi
+        val (ab, a_b, axb) = (a * b, a + b, a x b)
+        satıryaz(s"$ara ${a.to01} * ${b.to01} == ${ab.to01}")
+        satıryaz(s"$ara ${a.to01} + ${b.to01} == ${a_b.to01}")
+        satıryaz(s"$ara ${a.to01} x ${b.to01} == ${axb.to01}")
+    }
+    çift
+}
+çıktıyıSil
+deneme
+""".c
   )
 )
 
@@ -1115,8 +1208,8 @@ pages += Page(
 pages += Page(
   name = "UT",
   body = tPage("Kaplumbağacığın Kullanılışı",
-    "The Turtle can be moved with a set of commands, many of which are listed below. Just try them out to see what they make the Turtle do. You can clear the Turtle Canvas at any time by right-clicking on it and then clicking Clear".p,
-    "The following example defines a procedure (or command) that draws a triangle. This will be used in other examples further on, so try it first. Notice that multiple commands can be used on one line if they are separated by a semi-colon. Also 'repeat' is a useful command for carrying out the same set of commands a number of times.".p,
+    "Kaplumbağacığı hareket ettirerek ona çizgi çizdirten pek çok komutumuz var. Çoğunu aşağıdaki tabloda bulacaksın. Onlara tıklayıver ki kaplumbağacık neler yapabiliyor göresin. Tablodaki sırayı izlemene gerek yok. İstediklerine birkaç defa tıklayabilirsin. Tuvalimizi silmek için sağ tıklayıp Temizle komutuna tıkla.".p,
+    "Aşağıdaki ilk örnekte üçgen adında bir işlev (ya da komut) tanımlıyoruz (def define yani tanımla demek). Ne yaptığını anladın mı? Tıklayınca göreceksin. Bir üçgen çiziyor. Bu komutu ilerdeki örneklerde de kullanacağız. Henüz tıklamadıysan şimdi tıkla. Farkettin mi bir satırda birden çok komut da çağırabiliyoruz. Aralarına noktalı virgül koymamız gerekiyor sadece. 'yinele' komutumuz da bir komut dizisini tekrar tekrar çağırmakta çok faydalı olur.".p,
     """def üçgen() = yinele(3){ ileri(100); sağ(120) }
 sil()
 üçgen()
@@ -1124,61 +1217,64 @@ sol()
 üçgen()
 """.c,
     table(
-      row("ileri(100)".c, "Moves the turtle ileri( a 100 steps."),
-      row("geri(50)".c,"Moves the turtle back 50 steps."),
-      row("konumuKur(100, 100)".c, "Sends the turtle to the point (x, y) without drawing a line. The turtle's heading is not changed."),
-      row("noktayaGit(20, 30)".c, "Turns the turtle towards (x, y) and moves the turtle to that point."),
-      row("dön(30)".c, "Turns the turtle through a specified angle. Angles are positive for counter-clockwise turns."),
-      row("sağ()".c, "Turns the turtle 90 degrees right (clockwise)."),
-      row("sağ(60)".c, "Turns the turtle 60 degrees right (clockwise)."),
-      row("sol()".c, "Turns the turtle 90 degrees left (counter-clockwise)."),
-      row("sol(30)".c, "Turns the turtle angle degrees left (counter-clockwise)."),
-      row("noktayaDön(40, 60)".c, "Turns the turtle towards the point (x, y)."),
-      row("açıyaDön(30)".c, "Sets the turtle's heading to angle (0 is towards the right side of the screen ('east'), 90 is up ('north'))."),
-      row("doğrultu".c, "Queries the turtle's heading (0 is towards the right side of the screen ('east'), 90 is up ('north"),
-      row("ev()".c, "Moves the turtle to its original location, and makes it point north."),
-      row("konum".c, "Queries the turtle's position."),
+      row("ileri(100)".c, "100 adım ilerler"),
+      row("geri(50)".c,"50 adım geriye gider"),
+      row("konumuKur(150, 100)".c, "Çizgi çizmeden koordinatları verilen (x, y) noktasına gider. Ama baktığı doğrultu değişmez"),
+      row("noktayaGit(20, 30)".c, "Doğrultusunu koordinatları verilen noktaya çevirir ve o noktaya kadar ilerier"),
+      row("dön(30)".c, "Saat yönünün tersine doğru 30 derece döner. Eksi girersen saat yönünde döner"),
+      row("sağ()".c, "Sağa döner. Yani saat yönünde 90 derece döner"),
+      row("sağ(60)".c, "Sağa doğru 60 derece döner"),
+      row("sol()".c, "Sola döner. Yani saat yönünün tersinde 90 derece döner"),
+      row("sol(30)".c, "Sola doğru 30 derece döner"),
+      row("noktayaDön(40, 60)".c, "Doğrultusunu koordinatları verilen (x, y) noktasına çevirir"),
+      row("açıyaDön(30)".c, "Diyelim ki 0 derece ekranın sağı, 90 derece ekranın üstü olsun. Verilen açıya döner"),
+      row("doğrultu".c, "Şu anda baktığımız doğrultuyu açı olarak çıktıyla bildirir. 180 sola bakıyor demek. 270 de aşağıya"),
+      row("ev()".c, "Evine yani (0, 0) noktasına döner ve 90 dereceye yani yukarı bakar"),
+      row("konum".c, "Şu andaki konumu çıktı olarak bildirir"),
 
       row("""kalemiKaldır()
 ileri(100)
 kalemiİndir()
-ileri(100)""".c, "penDown makes the turtle draw lines as it moves while with penUp the Turtle moves without drawing a line."), 
+ileri(100)""".c, "kalem kalkıkken hareket ederse çizim yapmaz. Kalem inince çizmeye devam eder"), 
       row("""kalemRenginiKur(mavi)
-üçgen()""".c, "Specifies the color of the pen that the turtle draws with."),
+üçgen()""".c, "Ne renk çizmesini istiyoruz"),
       row("""sil()
 boyamaRenginiKur(kırmızı)
 üçgen()
-""".c, "Specifies the fill color of the figures drawn by the turtle."),
+""".c, "Çizdiği şekillerin içini boyamasını istersek rengini seçiyoruz"),
       row("""sil()
 kalemKalınlığınıKur(10)
 üçgen()
 kalemKalınlığınıKur(1)
-  """.c, "Specifies the width of the pen that the turtle draws with."),
-      row("ışınlarıAç()".c, "Shows crossbeams centered on the turtleto help with solving puzzles."),
-      row("ışınlarıKapat()".c, "Hides the turtle crossbeams."),
+  """.c, "Çizim yaptığı kalem kalınlığını giriyoruz"),
+      row("ışınlarıAç()".c, "Dör yönü belirten farlar yansın"),
+      row("ışınlarıKapat()".c, "Farları söndürelim"),
       row("""sil()
 görünmez()
 ileri(100)
 görünür()
 dön(120)
-ileri(100)""".c, "görünmez hides the turtle while görünür makes it görünür again."),
-      row("""yazı("Merhaba Kardeş!")""".c, "Makes the turtle write the specified object as a string at its current location."),
+ileri(100)""".c, "görünmez ve görünür komutları da böyle"),
+      row("""yazı("Merhaba Kardeş!"); ileri(); yazı(Dizin(3, 1, 4, 1, 5))""".c, "Bulunduğu noktaya yazı yazdırabiliriz"),
       row("""sil()
 ileri(-100)
 canlandırmaHızınıKur(10)
 dön(120)
-ileri(100)""".c, "Sets the turtle's speed. The specified delay is the amount of time (in milliseconds) taken by the turtle to move through a distance of one hundred steps. The default is 1000."),
-      row("canlandırmaHızı".c, "Queries the turtle's delay setting."),
-      row("newTurtle(50, 50)".c, "Makes a new turtle located at the point (x, y)."),
-      row("turtle0".c, "Gives you a handle to the default turtle."),
-      row("sil()".c, "Clears the screen, and brings the turtle to the center of the window."),
+ileri(100)""".c, "Kaplumbağacığın hızını belirlemek için bir süre giriyoruz. 100 adımı girdiğimiz kadar milisaniyede atıveriyor. Epey hızlı canım! Başlangıçta 1000milisaniye, yani bir saniye alıyor 100 adım atmak. "),
+      row("canlandırmaHızı".c, "100 adımı şu anda kaç milisaniyede attığını bildirir"),
+      row("""newTurtle(50, 50)
+val yk1 = newTurtle(100, 100)
+yk1.back(180)""".c, "Verilen (x, y) noktasında yeni bir kaplumbağa canlandırır. Ne yazık ki henüz türkçe bilmiyor :-(. Geri git yerine 'back' demek gerekiyor."),
+      row("turtle0".c, "Başlangıçtaki kaplumbağamızın adı"),
+      row("turtle0.back(10)".c, "Onu İngilizce komutlarla da çağırabiliriz böyle"),
+      row("sil()".c, "Tuvali temizler ve başlangıç noktasına döndürür"),
       row("""sil()
 üçgen()
-zoom(0.5, 10, 10)""".c, "Zooms in by the given factor, and positions (cx, cy) at the center of the turtle canvas."),
-      row("gridOn()".c, "Shows a grid on the canvas."),
-      row("gridOff()".c, "Hides the grid."),
-      row("axesOn()".c, "Shows the X and Y axes on the canvas."),
-      row("axesOff()".c, "Hides the X and Y axes.")
+zoom(0.5, 10, 10)""".c, "(oran, x, y) Tuvali verilen oran kadar büyültür ya da küçültür ve verilen noktayı tam tuvalin merkezine getirir"),
+      row("gridOn()".c, "Tuvalin gridini çizer"),
+      row("gridOff()".c, "Gridi gizler"),
+      row("axesOn()".c, "X ve Y eksenlerini gösterir"),
+      row("axesOff()".c, "Eksenleri saklar")
     )
   )
 )

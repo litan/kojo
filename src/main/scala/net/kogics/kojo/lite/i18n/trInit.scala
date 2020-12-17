@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013
+ * Copyright (C) 2013-2021
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
  *   Lalit Pant <pant.lalit@gmail.com>
  *   Bulent Basaran <bulent2k2@gmail.com>

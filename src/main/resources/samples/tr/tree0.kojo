@@ -1,18 +1,20 @@
-def ağaç(uzaklık: Kesir) {
-    if (uzaklık > 4) {
-        kalemKalınlığınıKur(uzaklık/7)
-        kalemRenginiKur(Renk(uzaklık.toInt, math.abs(255-uzaklık*3).toInt, 125))
-        ileri(uzaklık)
+def ağaç(boy: Kesir) {
+    // toInt metodu kesirli sayıyı tam sayıya çeviriyor
+    // yani boy 1.75 olursa boy.toInt 1 oluyor
+    def renk = Renk(boy.toInt % 255, math.abs(255 - boy * 3).toInt % 255, 125)
+    if (boy > 4) {
+        kalemKalınlığınıKur(boy / 7)
+        kalemRenginiKur(renk)
+        ileri(boy)
         sağ(25)
-        ağaç(uzaklık*0.8-2)
-        left(45)
-        ağaç(uzaklık-10)
+        ağaç(boy * 0.8 - 2)
+        sol(45)
+        ağaç(boy - 10)
         sağ(20)
-        ileri(-uzaklık)
+        ileri(-boy)
     }
 }
-
 sil()
 hızıKur(hızlı)
-zıpla(-200)
-ağaç(90)
+konumuKur(100, -200)
+ağaç(90) // 100, 120 ve 150 gibi boyları da dene!
