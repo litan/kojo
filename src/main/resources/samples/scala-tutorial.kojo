@@ -904,12 +904,16 @@ pages += Page(
             row("""\r""", "carriage return","""\" """, "double quote", """\'""", "single quote","""\\""", "backslash")
         ),
         "Concatenation".h3,
-        "Strings can be concatenated using the + symbol. The original strings are left unaffected. Strings are immutable.".p,
-        """val a = "Big"
+        "Strings can be concatenated using the + symbol. The original strings are left unaffected. Immutable Strings (with val) generally get the job done. But we can use var, if we are compelled to, and mutate our Strings, too".p,
+        """clearOutput
+val a = "Big"
 val b = "Bang"
 val c = a + " " + b        
 println( a,b,c)
-""".c,
+clear
+var why = "we won't need this\n"
+why += "the pun frog thinks"
+write(why)""".c,
 "Nearly all objects have a toString method to create a character representation.".p,
 """val x = (2).toString + " " + (3.1F).toString
 println(x)
