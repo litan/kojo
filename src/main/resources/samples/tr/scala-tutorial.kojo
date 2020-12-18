@@ -947,7 +947,7 @@ pages += Page(
     "Kısa not: aşağıdaki tanımlarda G1, G2, ... ile fonksiyona girilen değerleri ifade ediyoruz kısaca. Yani işlevAdı(G1, G2, G3, ...). ".p,
     table(
       row("sin(Pi/6)".c,"G1 girdisinin yani burada Pi/6 değerinin sinüsü."),
-      row("cos(Pi/6)".c,"G1 girdisinin cosinüsü."),
+      row("cos(Pi/6)".c,"G1 girdisinin kosinüsü."),
       row("tan(Pi/6)".c,"G1 girdisinin tanjantı."),
       row("toRadians(45)".c,"G1 (derece olsun) girdisini radyana çevirir."),
       row("toDegrees(Pi/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir.")
@@ -995,10 +995,12 @@ pages += Page(
     """val _a$b__c_ = "bak bunlar da oldu" """.c,
     "Gördüğümüz gibi bazı özel karakterleri değişken adlarında kullanamıyoruz. Matematik işlemlerinin imleri hiç olmuyor. Ama aşağıdaki yazılımda bir istisna daha göreceğiz.".p,
     "Peki geçerli ve geçersiz bazı adları görmemiz iyi oldu da esas konumuza dönelim, yani öncelik meselesi. Bakın aşagıdaki tablo öncelik sırasını gösteriyor. Üsttekiler önce geliyor. Eğer bir işlem iminde birden fazla karakter varsa o durumda da ilk karakter önem kazanıyor. Örneğin +* diye bir işlem tanımlarsak, onun önceliği + imininkiyle aynı olur.".p,
-    "(diğer bütün özel karakterler)".p,
-    """( * / % , + - : , = ! , < > , & , ^ , | ) Soldakiler sağdakilerden önce gelir.""".p,
-    "(bütün harfler) O halde a, b'den önce gelir. Ya büyük A?".p,
-    "(eşitlik işlemleri) örneğin = += -= *= /= etc".p,
+    table(
+      row("diğer bütün özel karakterler","""Örneğin @  {  }  (  ) vb..."""),
+      row("""*  /  %  +  -  :  =  !  <  >  &  ^  |""","""Soldakiler sağdakilerden önce gelir."""),
+      row("bütün harfler","""O halde a, b'den önce gelir. Ya büyük A?"""),
+      row("eşitlik işlemleri","""Örneğin =  +=  -=  *=  /= vb...""")
+    ),
     "İşlem Birleşmeliği".h3,
     "Birkaç örnekle daha kolay olacak bu konuyu işlemek:".p,
     """3 * 5 * 7""".c,
@@ -1018,17 +1020,19 @@ val (a,b) = (Deneme(5), Deneme(3))""".c,
     "Bu vesileyle daha büyük bir örnek görelim ve bilgisayarın temeli olan mantığa giriş yapalım. Mantık nedir bilir misin? Belki iyi tanımazsın ama bildiğinden eminim çünkü mantık bizim altıncı hissimiz gibidir. Mantıksızlık hiç hoşumuza gitmez. Bak şöyle yazabiliriz mantık işlemlerinin temelini. Bunu okurken + * x ve ! gibi imlerin tanımlarını nasıl yaptığımıza da dikkat!".p,
     """case class Önerge(doğruMu: İkil) {
     val bu = this
-    def tersi: Önerge = Önerge(!doğruMu)
-    def ve(öbürü: Önerge): Önerge = if (doğruMu) öbürü else bu
-    def veya(öbürü: Önerge): Önerge = if (doğruMu) bu else öbürü
+    def tersi = Önerge(!doğruMu)
+    def ve(öbürü: Önerge) = if (doğruMu) öbürü else bu
+    def veya(öbürü: Önerge) = if (doğruMu) bu else öbürü
     def yada(öbürü: Önerge) = (bu veya öbürü) ve (bu ve öbürü).tersi
-    override def toString = if (doğruMu) "doğru" else "yanlış"
     def eşittir(öbürü: Önerge) = doğruMu == öbürü.doğruMu
-    def ==(öbürü: Önerge) = doğruMu == öbürü.doğruMu
+
     def unary_!(): Önerge = bu.tersi
     def *(öbürü: Önerge) = bu ve öbürü
     def +(öbürü: Önerge) = bu veya öbürü
     def x(öbürü: Önerge) = bu yada öbürü
+    def ==(öbürü: Önerge) = doğruMu == öbürü.doğruMu
+
+    override def toString = if (doğruMu) "doğru" else "yanlış"
     def to01 = if (doğruMu) "1" else "0"
 }
 
@@ -1036,6 +1040,7 @@ def tersi(x: Önerge) = x.tersi
 def ve(x: Önerge, y: Önerge) = x ve y
 def veya(x: Önerge, y: Önerge) = x veya y
 def yada(x: Önerge, y: Önerge) = x yada y
+def eşittir(x: Önerge, y: Önerge) = x eşittir y
 
 def deneme() = {
     def çizgi = satıryaz("-" * 34)
@@ -1059,29 +1064,29 @@ def deneme() = {
     }
     çizgi
     for ((bağlam, adı) <- Dizin((ve _, "*"), (veya _, "+"), (yada _, "x"))) {
-        çizgi
         for (a <- seçenek; b <- seçenek) {
             val c = bağlam(a, b)
             satıryaz(f"$ara ${a.to01}%s $adı%s ${b.to01}%s == ${c.to01}")
         }
+        çizgi
     }
     çizgi
     for (a <- seçenek; b <- seçenek) {
-        çizgi
         val (ab, a_b, axb) = (a ve b, a veya b, a yada b)
-        satıryaz(s"  $a   ve   $b == $ab")
-        satıryaz(s"  $a  veya  $b == $a_b")
-        satıryaz(s"  $a ya da  $b == $axb")
+        satıryaz(f"  $a%6s ve    $b%6s == $ab")
+        satıryaz(f"  $a%6s veya  $b%6s == $a_b")
+        satıryaz(f"  $a%6s ya da $b%6s == $axb")
+        çizgi
     }
     çizgi
     for (a <- seçenek; b <- seçenek) {
-        çizgi
         val (ab, a_b, axb) = (a * b, a + b, a x b)
         satıryaz(s"$ara ${a.to01} * ${b.to01} == ${ab.to01}")
         satıryaz(s"$ara ${a.to01} + ${b.to01} == ${a_b.to01}")
         satıryaz(s"$ara ${a.to01} x ${b.to01} == ${axb.to01}")
+        çizgi
     }
-    çift
+    çizgi
 }
 çıktıyıSil
 deneme
@@ -1093,114 +1098,131 @@ pages += Page(
   name = "US",
   body = tPage("Yazıların (String) Kullanılışı",
     "Yazı Türü".h2,
-    "Ekrana yazı yazmak bilgisayar programlamada epey sık karşılaşılan bir sorun! Here are some useful functions and definitions. You will find that other sequences like lists have similar methods.".p,
-    "Note once again that - in the descriptions that follow, all the function parameters are labeled in order, and so will be of the form G1.functionName(G2, G3...).".p,
-    "Escape characters for strings.".h3,
+    "Ekrana yazı yazmak bilgisayar programlamada epey sık karşılaşılan bir sorun! Bu bölümde bazı tanımlar ve yazı türünün faydalı metodlarından bazılarını göreceğiz. Bu metodların benzerleri Dizin türünde ve ona benzeyen sıra sıra elemanlar içeren başka türlerde de var (Array, Vector, Seq gibi hafifçe başkalaşmış ama benzer türler). Bir sonraki bölümde Dizin metodlarını görünce benzerliği farkedeceksin.".p,
+    "Aşağıdaki tanımlarda G1, G2, ... ile fonksiyonlara girilen değerleri ifade ediyoruz kısaca. Yani G1.işlevAdı(G2, G3, ...).".p,
+    "Yazılar için kaçış karakterleri".h3,
     table(
-      row("""\n""", "line feed","""\b""", "backspace","""\t""",      "tab","""\f""", "form feed"),
-      row("""\r""", "carriage return","""\" """, "double quote", """\'""", "single quote","""\\""", "backslash")
+      row("""\n""", "yeni satır","""\b""", "geri adım","""\t""", "büyük ara","""\f""", "bir sayfa at"),
+      row("""\r""", "satır başı","""\" """, "çift tırnak", """\'""", "tek tırnak","""\\""", "geri taksim işareti")
     ),
-    "Concatenation".h3,
-    "Yazıs can be concatenated using the + symbol. The original strings are left unaffected. Yazıs are immutable.".p,
-    """val a = "Big"
-val b = "Bang"
-val c = a + " " + b        
-satıryaz( a,b,c)
-""".c,
-    "Nearly all objects have a toString method to create a character representation.".p,
+    "Ekleme".h3,
+    "Yazıları aynı toplama yapıyormuş gibi + imiyle ekleyebiliriz. Girdi olan yazılar değişmez. Yeni bir çıktı oluşur sadece. Yazı değerlerini hep 'val' kullanarak sabit tutmakta fayda var. Ama çok istersek 'var' özel sözcüğü kullanarak değerini değiştirebileceğimiz yazı değişkenleri de tanımlayabiliriz.".p,
+    """çıktıyıSil
+val a = "Büyük"
+val b = "Patlama"
+val c = a + " " + b
+satıryaz(a, b, c)
+sil
+var gerekYokAslında = "böyle değişkenlere\n"
+gerekYokAslında += "pek de gerek yok"
+yazı(gerekYokAslında)""".c,
+    "Sanırım hemen hemen bütün nesnelerin toString diye bir metodu var. Bu metod nesnenin neye benzediğini yazı olarak ortaya koyar ve çok faydalıdır. Mantık önermeleri için tanımladığımız sınıfı anımsadın mı? Bir önceki bölüme bakıver istersen. Orada kendi toString metodumuzu tanımlamış ve kullanmıştık.".p,
     """val x = (2).toString + " " + (3.1F).toString
 satıryaz(x)
 """.c, 
-    "Length".h3,
+    "Uzunluk veya Boy (length)".h3,
     table(
-      row(""""four".length""".c,"length of the string G1.")
+      row(""""dört".length""".c,"G1 yazısının uzunluğu yani kaç karakterden oluştuğunu bildirir.")
     ),
-    "Comparison".h3,
+    "Karşılaştırma".h3,
     table(
-      row(""""high".compareTo("higher")""".c,"compares to G1. returns <0 if G1 < G2, 0 if ==, >0 if G1>G2"),
-      row(""""high".compareToIgnoreCase("High")""".c,"same as above, but upper and lower case are same"),
-      row(""""book".equals("loot")""".c,"true if the two strings have equal values"),
-      row(""""book".equalsIgnoreCase("BOOK")""".c,"same as above ignoring case"),
-      row(""""book".startsWith("bo")""".c,"true if G1 starts with G2"),
-      row(""""bookkeeper".startsWith("keep",4)""".c,"true if G2 occurs starting at index G3"),
-      row(""""bookmark".endsWith("ark")""".c,"true if G1 ends with G2")
+      row(""""uzun".compareTo("uzuner")""".c,"G1 ile G2'yi karşılaştırır. Eğer G1 G2'den önce geliyorsa eksi bir sayı, aynıysa sıfır, sonra geliyorsa artı bir sayı verir. A ile a'yı karşılaştır istersen"),
+      row(""""uzun".compareToIgnoreCase("Uzun")""".c,"Karşılaştırma yaparken harflerin büyük ya da küçük olmasını göz ardı eder"),
+      row(""""kitap".equals("film")""".c,"İki yazı aynı ise doğru der, yoksa yanlış"),
+      row(""""kitap".equalsIgnoreCase("KITAP")""".c,"Eşitliğe bakarken harflerin büyük ya da küçük olmasını göz ardı eder"),
+      row(""""kitaplık".startsWith("kitap")""".c,"G1 yazısının başında G2 var mı?"),
+      row(""""kalınkitap".startsWith("kitap", 5)""".c,"G1 yazısının G3. harfinden itibaren G2 geliyor mu?"),
+      row(""""kitaparası".endsWith("arası")""".c,"G1'in sonunda G2 var mı?")
     ),
-    "Searching".h3,
-    """Note: All "indexOf" methods return -1 if the string/char is not found. Indexes are all zero base.""".p,
+    "Aramak ve bulmak".h3,
+    """"Bir yazı içinde başka bir harfi ya da yazıyı arayıp bulmak için kullanabileceğimiz metodlar bunlar. Eğer aradığımızı bulamazsa -1 çıkar. İlk harfin konumu 0 kabul edilir. Gariptir biraz ama bilgisayarda hep sıfırdan saymaya başlarız.""".p,
     table(
-      row(""""rerender".contains("ren")""".c,"True if G2 can be found in G1."),
-      row(""""rerender".indexOf("nd")""".c,"index of the first occurrence of Yazı G2 in G1."),
-      row(""""rerender".indexOf("er",5)""".c,"index of Yazı G2 at or after position G3 in G1."),
-      row(""""rerender".indexOf('r')""".c,"index of the first occurrence of char G2 in G1."),
-      row(""""rerender".indexOf('r',4)""".c,"index of char G2 at or after position i in G1."),
-      row(""""rerender".lastIndexOf('e')""".c,"index of last occurrence of G2 in G1."),
-      row(""""rerender".lastIndexOf('e',4)""".c,"index of last occurrence of G2 on or before position G3 in G1."),
-      row(""""rerender".lastIndexOf("er")""".c,"index of last occurrence of G2 in G1."),
-      row(""""rerender".lastIndexOf("er",5)""".c,"index of last occurrence of G2 on or before position G3 in G1.")
+      row(""""imrendim".contains("ren")""".c,"G2, G1'in içinde geçiyor mu?"),
+      row(""""imrendim".indexOf("nd")""".c,"G2, G1'in içinde kaçıncı konumda? Birden fazla varsa, ilk konumu verir."),
+      row(""""imrendirdim".indexOf("di", 7)""".c,"G2, G1'in G3'üncü harfinden sonra hangi konumda?"),
+      row(""""imrendirdi".indexOf('r')""".c,"G2 karakterinin G1 içindeki ilk konumu?"),
+      row(""""imrendirdik".indexOf('r', 4)""".c,"G2, G1'in G3'üncü harfinden sonra hangi konumda?"),
+      row(""""imrendiler".lastIndexOf('e')""".c,"G2'nin G1 içindeki son konumu nedir?"),
+      row(""""imrenerek".lastIndexOf('e', 6)""".c,"G2'nin G1 içindeki G3. harf veya daha önceki son konumu nedir?"),
+      row(""""dipdirildi".lastIndexOf("di")""".c,"G2'n'n G1 içindeki son konumu"),
+      row(""""dipdirildi".lastIndexOf("di", 5)""".c,"G2'n'n G1 içindeki G3. harf ya da daha önceki son konumu")
     ),
-    "Getting parts".h3,
+    "Yazıdan parça çıkarmak".h3,
     table(
-      row(""""polarbear".charAt(3)""".c,"char at position G2 in G1."),
-      row(""""polarbear".substring(5)""".c,"substring from index G2 to the end of G1."),
-      row(""""polarbear".substring(3,5)""".c,"substring from index G2 to BEFORE index G3 of G1.")
+      row(""""aslangibi".charAt(3)""".c,"G1'in G2 konumundaki harfi"),
+      row(""""aslangibi".substring(3)""".c,"G1'in G2 konumundaki harfinden sonuna kadar olan parçası"),
+      row(""""aslangibi".substring(3, 5)""".c,"G1'in G2 konumundan G3'e kadarki parçası. G3. harf hariç.")
     ),
-    "Creating a new string from the original".h3,
+    "Yazıdan başka bir yazı türetmek".h3,
     table(
-      row(""""Toni".toLowerCase""".c,"new Yazı with all chars lowercase"),
-      row(""""Toni".toUpperCase""".c,"new Yazı with all chars uppercase"),
-      row(""""  Toni   ".trim""".c,"new Yazı with whitespace deleted from front and back"),
-      row(""""similar".replace('i','e')""".c,"new Yazı with all G2 characters replaced by character G3."),
-      row(""""ToniHanson".replace("on","er")""".c,"new Yazı with all G2 substrings replaced by G3.")
+      row(""""Merhaba Kardeş".toLowerCase""".c,"Bütün harfleri küçük olacak şekilde G1'in yeni bir kopyası"),
+      row(""""Merhaba Kardeş".toUpperCase""".c,"Bütün harfleri büyük olacak şekilde G1'in yeni bir kopyası"),
+      row(""""  Merhaba Kardeş   ".trim""".c,"G1'in başındaki ve sonundaki boşlukların silinmiş kopyası"),
+      row(""""Savar".replace('a', 'e')""".c,"G1'in içindeki bütün G2 harflerinin G3 ile değiştirilmiş kopyası"),
+      row(""""Saye saye".replace("ay", "ev")""".c,"G1'in içindeki bütün G2 yazılarının G3 ile değiştirilmiş kopyası")
     ),
-    "Methods for Converting to Yazı".h3,
+    "Yazıya çeviren metodlar".h3,
     table(
-      row("String.valueOf(Dizin(1,2,3))".c,"Converts G1 to Yazı, where G1 is any value (primitive or object).")
+      row("String.valueOf(Dizin(1,2,3))".c,"G1'i yazıya çevirir. G1 herhangi temel bir tür ya da herhangi bir sınıfın nesnesi olabilir."),
+      row("""Dizin(1,3,3,1).mkString("-ve-")""".c, "G1 dizisinin elemanlarını aralarına G2 ekleyerek yazıya çevirir"),
+      row("""Set(1, 3, 5, 3, 1).mkString("{", " ", "}")""".c, "Bir öncekinde olduğu gibi G1'in elemanlarınının aralarına G3'ü ekleyerek yazıya çevirir ama en başa G2, en sona da G4 yazılarını ekler.")
     )
   )
 )
+
+Set(1, 3, 3, 1).mkString("{", " ", "}")
 
 pages += Page(
   name = "UL",
   body = tPage("Dizinlerin (List) Kullanılışı",
     "Dizinler".h2,
-    "Dizins provide a common sequence structure that is used for many functional style algorithms. The following functions enable Dizins to be manipulated easily and effectively. The first example creates the Dizin that is used for other examples.".p,
-    
-    "Note:  _+_ is a shorthand for an anonymous function x,y=>x+y. Since binary operators are frequently used, this is a nice abbreviation. Similarly _.method is a shorthand for v => v.method. When there is more than one argument, the first underscore represents the first argument, the second underscore the second one, and so on.".p,
-    
+    "Dizinler, algoritmaların işlevsel olarak tanımlanmasında en çok kullanılan veri yapısıdır. Bu bölümde dizinleri kolaylıkla tanımlamak ve kullanmak için en faydalı olan metodları göreceğiz. En başta bir örnek Dizin tanımlıyacağız. Sonra da onu diğer örnek yazılımcıklarda kullanacağız.".p,
+    "Daha önce görmüştük ama anımsatmakta fayda var: sık sık göreceğimiz üç im:  _ + _  şu adsız işlevin kısa yolu: x,y => x + y. Böyle iki girdili işlemler çok yaygın. Onun için bu kısa yol işimize yarayacak. Tabii toplama olması şart değil. Çarpma da olur: _ * _. Benzer şekilde _.metod ile de e => e.metod adsız işlemini kısaca ifade ediyoruz. Bu kısa yollarda kullandığımız alt çizginin her biri yeni bir girdiye karşılık geliyor. Birinci altçizgi ilk girdiyi, varsa ikinci altçizgi ikinci girdiyi, üçüncü altçizgi üçüncü girdiyi, vb.".p,
     table(
-      row("""val dzn = "Tempus" :: "fugit" ::
-  "irreparabile" :: Boş""".c,"""Creates a new Dizin[Yazı] with the three values "Tempus", "fugit", and "irreparabile" """), 
-      row("Dizin()".c,"or use Boş for the empty Dizin"),
-      row("""Dizin("Time", "flys", "irrecoverably")""".c,"""Creates a new Dizin[Yazı] with the three entries "Time", "flys", and "irrecoverably" """),
-      row("""Dizin("tick", "tock") ::: Dizin("cuk", "oo")""".c,"Operator that concatenates two lists"),
-      row("dzn(2)".c,"Returns the item at 0 based index 2 in dzn"),
-      row("dzn.count(str => str.length == 5)".c,"Counts the string elements in dzn that are of length 5"),
-      row("""dzn.exists(str => str == "irreparabile")""".c,"""Determines whether a string element exists in dzn that has the value "irreparabile" """),
-      row("dzn.drop(2)".c,"""Returns dzn without the first 2 elements (returns Dizin("irreparabile"))"""),
-      row("dzn.dropRight(2)".c,"""Returns dzn without the rightmost 2 elements (returns Dizin("Tempus"))"""),
-      row("dzn.filter(str => str.length == 5)".c,"Returns a list of all elements, in order, from dzn that have length 5"),
-      row("dzn.flatMap(_.toList)".c,"Applies the given function f to each element of this list, then concatenates the results"),
-      row("""dzn.forall(str =>str.endsWith("e"))""".c,"""true if all elements in dzn end with the letter "e" else false"""),
-      row("dzn.foreach(str => print(str))".c,"Executes the print function for each of the strings in the dzn"),
-      row("dzn.foreach(print)".c,"Same as the previous, but more concise"),
-      row("dzn.head".c,"Returns the first item in dzn"),
-      row("dzn.tail".c,"Returns a list that is dzn without its first item"),
-      row("dzn.init".c,"Returns a list of all but the last element in dzn"),
-      row("dzn.isEmpty".c,"true if dzn is empty"),
-      row("dzn.last".c,"Returns the last item in dzn"),
-      row("dzn.length".c,"Returns the number of items in the dzn"),
-      row("""dzn.map(str => str + "?")""".c,"""Returns a list created by adding "?" to each string item in dzn"""),
-      row("""dzn.mkString(", ")""".c,"Makes a string with the elements of the list"),
-      row("dzn.filterNot(str => str.length == 4)".c,"Returns a list of all items in dzn, in order, excepting any of length 4"),
-      row("Dizin(1,6,2,1,6,3).distinct".c,"Removes redundant elements from the list. Uses the method == to decide. "),
-      row("dzn.reverse".c,"Returns a list containing all elements of the dzn list in reverse order"),
-      row("dzn.sortWith((str, t) => str.toLowerCase < t.toLowerCase)".c,"Returns a list containing all items of dzn in alphabetical order in lowercase.")
+      row("""val dzn = "Gün" :: "bu gün" :: "." ::
+  "An" :: "bu an" :: "." :: Boş""".c,"""İçinde "Gün", "bu an", "." gibi 6 tane değer olan yeni bir Dizin[Yazı] tanımladık"""), 
+      row("Dizin()".c,"Bomboş bir Dizin. Ya da bir önceki örnekteki Boş değerini de kullanabilirsin"),
+      row("""Dizin("Zaman", "ok", "gibi", "uçar mı?")""".c,"""İçinde "Zaman" "ok" "gibi" ve "uçar mı?" elemanları olan yani dört elemanlı bir Dizin[Yazı] tanımladık" """),
+      row("""Dizin("tik", "tok") ::: Dizin("ding", "dong")""".c,"Üç tane iki nokta üstüste işlemi dizinleri birleştirerek yeni bir dizin türetiyor. :: ile karşılaştır"),
+      row("dzn(3)".c,"Dizinin 3. elemanını verir (sıfırdan başlarsak üçüncü.)"),
+      row("dzn.count(söz => söz.length == 1)".c,"Dizinin içinde tek harften oluşan kaç sözcük var?"),
+      row("""dzn.exists(söz => söz == "bu an")""".c,"""Dizinin içinde "bu an" elemanı var mı?"""),
+      row("dzn.drop(3)".c,"""Dizinin ilk üç elemanı düşmüş kopyasını verir"""),
+      row("dzn.dropRight(4)".c,"""Dizinin son dört elemanı düşmüş kopyasını verir"""),
+      row("dzn.filter(söz => 1 < söz.length && söz.length < 4)".c,"Dizinin 2 veya 3 harfli elemanlarını verir"),
+      row("dzn.flatMap(_.toList)".c,"Verilen işlevi dizinin elemanlarına uygular sonra da hepsini birleştirir"),
+      row("""dzn.forall(söz => söz.endsWith("."))""".c,"""Dizinin bütün elemanları noktayla bitiyor olsaydı doğru derdi"""),
+      row("dzn.foreach(söz => yaz(söz))".c,"Dizinin elemanlarını sırayla yazar"),
+      row("dzn.foreach(yaz)".c,"Bir öncekinin kısa hali"),
+      row("dzn.head".c,"İlk elemanı verir"),
+      row("dzn.tail".c,"İlk eleman hariç gerisini verir"),
+      row("dzn.init".c,"Son eleman hariç gerisini verir"),
+      row("dzn.isEmpty".c,"boş olsaydı doğru derdi"),
+      row("dzn.last".c,"Son elemanı verir"),
+      row("dzn.length".c,"Kaç eleman olduğunu söyler"),
+      row("""dzn.map(söz => söz + "?")""".c,"""dizinin her sözcüğünün sonuna soru işareti ekleyerek yeni bir dizi oluşturur"""),
+      row("""dzn.map { söz =>
+    söz match {
+        case "." => "?"
+        case s   => s
+    }
+}.foreach(println)""".c,"""Bir önceki gibi ama noktaları soru işaretiyle değiştirip yazalım."""),
+      row("""dzn.map {
+    case "." => "?"
+    case s   => s
+}.foreach(println)""".c, "Bir öncekinin kısa yazılışı"),
+      row("""dzn.mkString(", ")""".c,"Diziden elemanları arasına virgül koyarak bir yazı yapar"),
+      row("dzn.filterNot(söz => söz.length == 1)".c,"Dizinin bir kopyasını verir ama bir harfli elemanları atlar"),
+      row("Dizin(1,6,2,1,6,3).distinct".c,"Tekrar eden elemanları atlar. Tekrarları bulmak için == işlemini kullanır"),
+      row("dzn.reverse".c,"Elemanlarını ters sırada olan bir kopya verir"),
+      row("dzn.sortWith((söz, t) => söz.toLowerCase < t.toLowerCase)".c,"A'dan Z'ye sıraya sokulmuş bir kopya verir ama büyük küçük harf ayırımı yapmadan")
     ),
-    "Some more useful list operations. First define a list of integers to use.".p,
+    "Katlama işlemleri de çok işe yarar! Bu sefer sayı dizisi kuralım:".p,
     "val sayılar=Dizin(1,7,2,8,5,6,3,9,14,12,4,10)".c,
     table(
-      row("sayılar.foldLeft(0)(_+_)".c,"Combines elements of list using a binary function starting from left, initial one with a 0 in this case."),
-      row("sayılar.foldRight(0x20)(_|_)".c,"Combines elements of list using a binary function starting from Right, initial one with a hex 20 in this case.")
+      row("sayılar.foldLeft(-81)(_ + _)".c,"Soldan sağa elemanları topluyoruz. Başlangıçta soldan -81 giriyoruz"),
+      row("sayılar.sum".c, "Sağlamasını yapalım"),
+      row("sayılar.foldRight(0x20)(_ | _)".c,"Şimdi de sağdan sola mantıksal veya işlemiyle birleştiriyoruz sayıların parçacıklarını. Başlangıçta en sağdan onaltılık tabanda 20 giriyoruz")
     )
   )
 )
@@ -1208,7 +1230,7 @@ pages += Page(
 pages += Page(
   name = "UT",
   body = tPage("Kaplumbağacığın Kullanılışı",
-    "Kaplumbağacığı hareket ettirerek ona çizgi çizdirten pek çok komutumuz var. Çoğunu aşağıdaki tabloda bulacaksın. Onlara tıklayıver ki kaplumbağacık neler yapabiliyor göresin. Tablodaki sırayı izlemene gerek yok. İstediklerine birkaç defa tıklayabilirsin. Tuvalimizi silmek için sağ tıklayıp Temizle komutuna tıkla.".p,
+    "Kaplumbağacığı hareket ettirerek ona çizgi çizdirten pek çok komutumuz var. Çoğunu aşağıdaki tabloda bulacaksın. Onlara tıklayıver ki kaplumbağacık neler yapabiliyor göresin. Tablodaki sırayı izlemene gerek yok (sadece ilk örnek hariç. Ona ileride gerek olacak çünkü üçgen işlevini tanımlıyor). İstediklerine birkaç defa tıklayabilirsin. Tuvalimizi silmek için sağ tıklayıp Temizle komutuna tıkla.".p,
     "Aşağıdaki ilk örnekte üçgen adında bir işlev (ya da komut) tanımlıyoruz (def define yani tanımla demek). Ne yaptığını anladın mı? Tıklayınca göreceksin. Bir üçgen çiziyor. Bu komutu ilerdeki örneklerde de kullanacağız. Henüz tıklamadıysan şimdi tıkla. Farkettin mi bir satırda birden çok komut da çağırabiliyoruz. Aralarına noktalı virgül koymamız gerekiyor sadece. 'yinele' komutumuz da bir komut dizisini tekrar tekrar çağırmakta çok faydalı olur.".p,
     """def üçgen() = yinele(3){ ileri(100); sağ(120) }
 sil()
@@ -1232,7 +1254,8 @@ sol()
       row("ev()".c, "Evine yani (0, 0) noktasına döner ve 90 dereceye yani yukarı bakar"),
       row("konum".c, "Şu andaki konumu çıktı olarak bildirir"),
 
-      row("""kalemiKaldır()
+      row("""sil
+kalemiKaldır()
 ileri(100)
 kalemiİndir()
 ileri(100)""".c, "kalem kalkıkken hareket ederse çizim yapmaz. Kalem inince çizmeye devam eder"), 
