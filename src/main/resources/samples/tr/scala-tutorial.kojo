@@ -1307,7 +1307,7 @@ pages += Page(
   body = tPage("Çizim ve Oyun",
     "Peter Lewerin has contributed 'Staging' to Kojo. Staging gives you some neat graphics and the potential to make games. These Staging features originated in a Java project called Processing and were ported to Kojo by Peter. This capability is worth a whole kılavuzcuk in itself. However to give you a taste of what is possible and a starting point for experimentation, here are a couple examples.".p,
     "The section on Staging will be expanded in a later version of the kılavuzcuk. You can find a more complete list of Staging features and examples at:".p,
-    "Commands or Methods".link("lewerin.se/peter/kojo/staging.html"),
+    // TODO: THIS LINK IS BROKEN "Commands or Methods".link("lewerin.se/peter/kojo/staging.html"),
     "Examples and Description".link("code.google.com/p/kojo/wiki/StagingModule"),
     "The package contains commands and functions that allow you to draw sophisticated shapes and images, and a frame loop that allows you to animate the graphics.".p,
     "In the first example you can see that a Staging environment is initialized, and the screen cleared. A ball is created, and then the ball bouncing movement is defined in the animation loop. Staging causes this loop to be executed every 20 to 32 milli-seconds giving a frame rate of around 30 to 50 frames per second depending on your computer performance. Using these principles you can create sophisticated animated graphics.".p,
@@ -1365,7 +1365,7 @@ animate {
 }
 """.c,
     "Now that you have the basics, try adding more balls, randomising their speed or changing the paddle size. Also see if you can fix the bug - sometimes the ball appears to pass through the paddle.".p,
-    "Keyboard Input".h3,
+    "Klavye ve tuşlarla komut girişi".h3,
     "It is very useful in games to use the keyboard to get player commands. Here is a simple example that allows you to draw using the left/right/up/down arrows to steer the Turtle.".p,
 
     "Run the example by clicking on the following. The example associates a set of actions to keyboard events. Don't forget to click on the Turtle canvas to give it focus first.".p,
@@ -1383,7 +1383,7 @@ activateCanvas()
 """.c,
     "You can modify the actions and re-run to see what happens. Type Kc. to find out what other key events can be recognised.".p,
 
-    "Clock".h3,
+    "Saat".h3,
     "Here is a short example that illustrates how to use the staging graphics to display a clock.".p,
     "The Date library functions are used to find current time and date.".p,
     """import Staging._
@@ -1555,7 +1555,7 @@ def dörtlü = Dizin((0, 0), (1, 0), (-1, 0), (0, 2)) // dokuzcanlı'nın altkü
 // yaşamın tadını çıkar
 """.c,
     
-    "Tangle".h3,
+    "Düğüm açma oyunu".h3,
     "Here is a game that illustrates how you can use the Scala collections and mouse drag-and-drop to create a fun game to play.".p,
     "The game was based on a game called Planarity. The idea is to use the mouse to re-arrange the circles so that none of the joining lines cross one and other. Press the left mouse button on a circle to drag it. A new game is started by clicking on the red square.".p,
     "You can increase the difficulty of the game by changing the value ES in the program. Larger values make it more difficult.".p,
@@ -1624,23 +1624,25 @@ def drawEdges(ev:Vector[EdgeP]){
 pages += Page(
   name = "LM",
   body = tPage("Daha Çok Öğrenelim",
+    "Bundan sonra neler yapabilirsin".h2,
 
-    "Next Steps".h2,
-    "This kılavuzcuk has covered part of what is a very deep language. By now, you are familiar with the essential Scala language features. Already you can write quite sophisticated programs in Scala and have fun with the graphical environment offered by Kojo.".p,
-    "If you are already a Java programmer you can no doubt already see how you can use Scala with all the libraries from your existing Java environment too. Scala and Java integrate seamlessly.".p,
+    "Bu kılavuzcukda, daha çok şeylere kadir, profesyönel yazılımcılar ve bilgisayar mühendislerinin de kulladığı ve çok derin bir programlama dili olan Scala'nın bazı temel becerilerini gördük. Artık bu dilin temellerini tanıyorsun. Oldukça sofistike, yani acemilerin kolay kolay anlayamayacağı programlar yazabilir, Kojo'nun görsel ortamında çizimler ve oyunlarla iyi vakit geçirebilirsin.".p,
 
-    "To learn more a good book is invaluable. Programming in Scala by Martin Odersky, Lex Spoon and Bill Venners is one excellent place to continue.".p,
-    "It can be found by clicking here.".link("www.artima.com/shop/programming_in_scala"),
-    "The Scala community site has a lot of good material and references to other learning materials.".p,
-    "Click here to go to Scala-lang.org.".link("www.scala-lang.org"),
-    "For the professional programmer, you can also download Scala, Akka, and the Eclipse IDE.".p,
-    "They can be found here.".link("typesafe.com"),
-    "The Netbeans IDE also has good Scala support (and Kojo itself has been written, in Scala, using Netbeans).".p,
-    "More information here".link("wiki.netbeans.org/Scala"),
-    "A small subset of the Scala library functions have been used in this kılavuzcuk".p,
-    "Click here to see a complete list of all the Scala library available.".link("www.scala-lang.org/api/current/index.html"),
-    "We wish you lots of fun using Scala!".p
-      
+    "Aranızda Java diliyle program yazmış olanlar varsa, Java'da kullandığınız birimleri (Java libraries), hatta Minecraft birimlerini de Scala kullanarak geliştirebilirsin. Scala ve Java'yı entegre etmek, yani birleştirmek işten değil.".p,
+
+    "Daha iyi, daha çok öğrenmek için bence iyi bir kitap gibisi yoktur. İngilizce bilenler için çok iyi bir kitap olarak şunu öneririm: Programming in Scala. Yazarları Martin Odersky, Lex Spoon ve Bill Venners.".p,
+    "Bu linke tıklayarak daha çok bilgi edinebilirsin.".link("www.artima.com/shop/programming_in_scala"),
+    "Çok yeni ve yine çok güzel bir e-kitap da şu: Hands-on Scala Programming. Yazarı genç ama usta programcı Haoyi Li. Pratik ve proje-temelli bir yol izliyor. Ben ikisini de çok beğendim.".p,
+    "O da burada.".link("www.handsonscala.com"), 
+    "Scala'nın bir ailesi ve topluluğu var ve onlar da senin gibi yeni öğrenenlere yardımcı olmayı çok severler".p,
+    "Buna tıklayarak scala-lang.org sitesinin belgelerine, bedava kitaplarına, dokümanlarına ulaşabilirsin".link("docs.scala-lang.org"),
+    "Bu işin uzmanları, para kazanmak için yapanlar Scala, Akka ve Eclipse IDE (birleşik geliştirme ortamı) ve diğer açık kaynaklara bakabilirler.".p,
+    "Hepsi burada.".link("www.lightbend.com/open-source"),
+    "Netbeans IDE de Scala'yı destekliyor. Hatta Kojo'nun yazarı Lalit Pant, Kojo'yu Scala ile Netbeans kullanarak yazdı!".p,
+    "Bu konuda daha çok bilgi ararsan buna tıkla.".link("wiki.netbeans.org/Scala"),
+    "Bu kılavuzcukla Scala'nın kütüphanesinin çok küçük bir altkümesini gördük.".p,
+    "Bütün kitaplığı görmek istemez misin? Buna tıklayıver.".link("www.scala-lang.org/api/current/index.html"),
+    "Scala kullanırken hep çok keyif alman, güzel anlar, güzel günler yaşaman ve yaşatman dileğiyle!".p
   )
 )
 
