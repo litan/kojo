@@ -1305,119 +1305,126 @@ zoom(0.5, 10, 10)""".c, "(oran, x, y) Tuvali verilen oran kadar büyültür ya d
 pages += Page(
   name = "GAG",
   body = tPage("Çizim ve Oyun",
-    "Peter Lewerin has contributed 'Staging' to Kojo. Staging gives you some neat graphics and the potential to make games. These Staging features originated in a Java project called Processing and were ported to Kojo by Peter. This capability is worth a whole kılavuzcuk in itself. However to give you a taste of what is possible and a starting point for experimentation, here are a couple examples.".p,
-    "The section on Staging will be expanded in a later version of the kılavuzcuk. You can find a more complete list of Staging features and examples at:".p,
+    "Staging adlı birimi Kojo'ya kazandıran Peter Lewerin adlı bilgisayar aşığı. Staging birimi sayesinde bilgisayar oyunları yazman ve güzel bilgisayar çizimleri yapman çok daha kolay. Staging biriminin becerilerinin tarihçesi Processing adlı bir Java projesine kadar uzanır. Processing birimini de Kojo'ya Peter eklemişti. Bu Staging birimi o kadar becerikli ki sırf onun üzerine büyük bir kılavuz bile yazılabilir. Burada bir kaç örnekle neler yapılabilir görelim ve tadında bırakalım istersen.".p,
+    "Eğer ilgilenip daha çok örnek görme istersen, şu bağlantıya bakabilirsin:".p,
     // TODO: THIS LINK IS BROKEN "Commands or Methods".link("lewerin.se/peter/kojo/staging.html"),
-    "Examples and Description".link("code.google.com/p/kojo/wiki/StagingModule"),
-    "The package contains commands and functions that allow you to draw sophisticated shapes and images, and a frame loop that allows you to animate the graphics.".p,
-    "In the first example you can see that a Staging environment is initialized, and the screen cleared. A ball is created, and then the ball bouncing movement is defined in the animation loop. Staging causes this loop to be executed every 20 to 32 milli-seconds giving a frame rate of around 30 to 50 frames per second depending on your computer performance. Using these principles you can create sophisticated animated graphics.".p,
-    
+    "Örnekler ve açıklamalar burada".link("code.google.com/p/kojo/wiki/StagingModule"),
+    "Bu birim birçok komut, işlem ve bir de çizim döngüsü sunuyor bize. Bunları kullanarak epey gelişmiş şekiller, resimler ve grafikler çizebiliriz. Çizim dönğüsünü kullanarak grafikleri canlandırabilir ve istersek oyuna çevirebiliriz.".p,
+    "İlk örnekle başlayalım. Ortamı hazırlar ve ekranı temizleriz ilk önce. Sonra bir top çizer ve canlandırma döngüsünün içinde topun nasıl hareket edeceğini tanımlarız. Birim, bu döngüyü her yirmi ile 32 milisaniye içinde çalıştırıyor. Bilgisayarın hızına göre saniyede en az 30 en çok 50 kere tekrar tekrar resim çizebilecek yani. Bu da bizim gözümüzün değişiklikleri görme hızından fazla olduğu için bize canlı ve harektli gibi görünecek. Bu temel kavramları ve komutları kullanarak pekçok ilginç canlı, hareketli grafik çizilebilir.".p,
     """import Staging._
-import Staging.{circle, clear, animate} // explicitly import names that clash
+// Farklı birimlerin bazı benzer komutları oluyor ve aynı adları kullanabiliyorlar.
+// Onun için hangisini kullanmak istediğimizi açık açık belirtmemiz gerek.
+// Bizim kaplumbağa'nın komutlarıyla çelişen komutlar bu üçü:
+import Staging.{ circle, clear, animate }
 clear()
-gridOn()
-val ball = circle(-200, -100, 5)
+gridOn(); axesOn
+val top = circle(-200, -100, 10) // topu bir daire olarak çizelim
 
-var y = 0 ; var x = 0 // ball position
-var dy = 10; var dx = 3 // ball speed
-// animation is around 30 - 50 frames per second depending on the computer system 
+var y = 0; var x = 0 // topun konumunu bu değişkenlerle belirleyeceğiz
+var dx = 5 // topun hızı x ve y'deki değişimle belirlenecek
+var dy = 10 // Yani aşağıdaki döngünün her yinelenmesinde y x'ten daha çok artacak
+// Bunları değiştirip tekrar çalıştır. Hemen anlarsın ne oluyor.
+
+// İşte döngümüz. Saniyede en az 30 en çok 50 kere yinelenir bunun içindeki komutlar.
 animate {
-    ball.setPosition(x,y)
-    // update ball position, detect end of bounce area
-    dx =  if(x < 0 || x > 200) -dx else dx
+    top.setPosition(x, y)
+    // topun konumunu yani x ve y'yi günceliyoruz:
+    // Zıplama alanının dışına çıkmasın diye sınıra gelince
+    // konum değişimini tersine çeviriyoruz:
+    dx = if (x < -200 || x > 200) -dx else dx
     x += dx
-    dy =  if(y < 0 || y > 100) -dy else dy
-    y += dy  
-}
-""".c,
-    "The next example is a simple game - a single player version of what must be one of the oldest games ever played on computers called 'Pong'. The idea is to hit the ball back with a paddle which you can move with the mouse. Each of your misses will be recorded. Have fun!".p,
-    """import Staging._
-import Staging.{circle, clear, animate, setFillColor, wipe, mouseX, mouseY} // explicitly import names that clash
-clear()
-var x = 0 ; var y = 0  // ball position
-var dy = 10 ; var dx = 3 // ball speed
-var padx = 0.0 ; var pady = 0.0 // paddle position
-val padl = 80 // paddle length
-var miss = 0
-// Court
-line(-200,-100,-200,100)
-line(-200,-100,200,-100)
-line(-200,100,200,100)
-// the ball
-setFillColor(blue)
-val ball=circle(-200, -100, 5) 
-// animation is about 30 frames per second or 32 milliseconds per frame
-animate {
-    wipe()
-    padx=mouseX; pady=mouseY
-    line(padx, pady, padx, pady+padl) // the paddle
-    // detect a hit
-    dx =if((dx>0)&&(padx-x<15)&&(x-padx<15)&&(y>pady)&&(y<pady+padl)) -dx else dx
-    ball.setPosition(x,y)
-    // update ball position and check for walls
-    dx =  if(x+dx < -200) -dx else dx
-    if(x+dx>200){x= -200;miss+=1}  // a miss
-    x += dx
-    dy =  if((y+dy < -100 )|| (y + dy > 100)) -dy else dy
+    dy = if (y < -50 || y > 100) -dy else dy
     y += dy
-    // Keep Score
-    text(miss.toString + " missed",0,0)
 }
 """.c,
-    "Now that you have the basics, try adding more balls, randomising their speed or changing the paddle size. Also see if you can fix the bug - sometimes the ball appears to pass through the paddle.".p,
+    "İkinci örneğimiz küçük ve basit bir oyun. Duydun mu en eski bilgisayar oyunlarından olan pinpon (İngilizce adıyla Pong) oyunu. Tek kişilik bir oyun. Yapmamız gereken topa raketle vurup geri yollamak. Raketi fareyle yönetiyoruz. Top kaçarsa bir puan kaybediyorsun. İyi eğlenceler!".p,
+    """import Staging._
+import Staging.{ circle, clear, animate, setFillColor, wipe, mouseX, mouseY }
+clear()
+var x = 0; var y = 0 // topun konumu
+var dy = 10; var dx = 3 // topun hızı
+var rx = 0.0; var ry = 0.0 // raketin konumu
+val rb = 80 // raketin boyu
+var ıska = 0 // top kaç kere kaçtı, sayalım
+// Üç duvar çizelim
+line(-200, -100, -200, 100)
+line(-200, -100, 200, -100)
+line(-200, 100, 200, 100)
+setFillColor(mavi) // topun rengi
+val top = circle(-200, -100, 5)
+animate {
+    wipe() // herşeyi sil
+    rx = mouseX; ry = mouseY // fare nerede raket de orada olsun
+    line(rx, ry, rx, ry + rb) // raketi çiz
+    // top rakete çarptı mı?
+    dx = if ((dx > 0) && (rx - x < 15) && (x - rx < 15) &&
+        (y > ry) && (y < ry + rb)) -dx else dx
+    top.setPosition(x, y)
+    // topun konumunu güncelleyelim, duvarlara bakalım
+    dx = if (x + dx < -200) -dx else dx
+    if (x + dx > 200) { x = -200; ıska += 1 } // ıskaladı
+    x += dx
+    dy = if ((y + dy < -100) || (y + dy > 100)) -dy else dy
+    y += dy
+    // kaç kaç?
+    if (ıska > 0)
+        text(ıska.toString + " kere ıskaladın", -50, 150)
+}""".c,
+    "Temel kavramlar ve komutlarla artık tanıştın. Bir kaç tane daha top eklemeye ne dersin? Topların hızını rastgele değiştirerek oyunu daha eğlenceli kılabilirsin istersen. Raketin boyunu kısaltabilir ya da uzatabilirsin. Bir de programımızın bir hatası var! İngilizce'de bug yani böcek denir. Ama nerden çıktı deme. Programı yazanın hatası de. Sen de yapacaksın bol bol hata. Hiç dert etme. Her hata aslında daha usta olmak için bir fırsat. Fırsatları hiç kaçırma! Hatayı farkettin mi? Bazen top raketin içinden geçiyor sanki elektron tünelleme yapıyormuş gibi (kuvantum mekaniği değil ki bu)! Bakalım yazılımcığın içinde nerede? Sen bulup düzeltebilecek misin?".p,
     "Klavye ve tuşlarla komut girişi".h3,
-    "It is very useful in games to use the keyboard to get player commands. Here is a simple example that allows you to draw using the left/right/up/down arrows to steer the Turtle.".p,
+    "Pekçok oyun klaveyeden komut bekler. Minecraft oynadın mı hiç? Hem fare hem de klavye komutları oyunu iyice eğlenceli kılar. Bak bu küçük oyun sağ/sol/yukarı ve aşağı ok olan tuşlarla kaplumbağacığa yön veriyor.".p,
 
-    "Run the example by clicking on the following. The example associates a set of actions to keyboard events. Don't forget to click on the Turtle canvas to give it focus first.".p,
+    "Her zamanki gibi aşağıdaki yazılımcığa tıkla ki çalışsın. Sonra da tuvale tıkla ki klavyeye bastığın zaman farketsin kaplumbağa ve söz dinlesin, senin komutlarını yerine getirsin.".p,
     """sil(); görünür(); setAnimationDelay(100)
-onKeyPress{ k  => k match {
-        case Kc.VK_LEFT => setHeading(180)
-        case Kc.VK_RIGHT => setHeading(0)
-        case Kc.VK_UP => setHeading(90)
-        case Kc.VK_DOWN => setHeading(270)
-        case _ => // Any other character just move ileri(
+onKeyPress { k =>
+    k match {
+        case Kc.VK_LEFT  => setHeading(180)  // sola git
+        case Kc.VK_RIGHT => setHeading(0)    // sağa git
+        case Kc.VK_UP    => setHeading(90)   // yukarı
+        case Kc.VK_DOWN  => setHeading(270)  // aşağı
+        case _           => // diğer tuşlar sadece ilerletsin
     }
-    ileri(20)            
+    ileri(20)
 }
-activateCanvas()
-""".c,
-    "You can modify the actions and re-run to see what happens. Type Kc. to find out what other key events can be recognised.".p,
+activateCanvas()""".c,
+    "Hayal gücünü kullan, yazılımcığı değiştir (örneğin 45 derece döndürmek için komut ekleyebilirsin), tekrar çalıştır. Yazılımcık düzenleme ekranında Kc. yazdıktan sonra control tuşunu basık tutup büyük boşluk tuşuna bas ki başka hangi tuşları kullanabileceğini gör.".p,
 
     "Saat".h3,
-    "Here is a short example that illustrates how to use the staging graphics to display a clock.".p,
-    "The Date library functions are used to find current time and date.".p,
+    "Bir saat yapalım mı?".p,
+    "Java'nın Date yani tarih adlı kütüphane birimini kullanacağız.".p,
     """import Staging._
-import Staging.{circle, clear, animate, wipe, setPenColor} // explicitly import names that clash
+import Staging.{ circle, clear, animate, wipe, setPenColor }
 clear
-val Sc=100
-val Pi2=2.0*math.Pi // 2*Pi radians in a circle
-def clkFace={
-  circle(0,0,Sc)
-  for(i<-0 to 59){
-    val ra=Pi2*i/60
-    val x=Sc*sin(ra);val y=Sc*cos(ra)
-    val tks=if(i%5==0) 0.9 else 0.95
-    line(tks*x,tks*y,x,y)
+val Sc = 100 // saatin boyu. Büyültmek ister misin?
+val Pi2 = 2.0 * math.Pi // 2*Pi radyan tam 360 derece dönüş demek
+// saati çizelim
+def saat = {
+    circle(0, 0, Sc)  // daire
+    for (i <- 0 to 59) {
+        val ra = Pi2 * i / 60
+        val x = Sc * sin(ra); val y = Sc * cos(ra)
+        val tks = if (i % 5 == 0) 0.9 else 0.95
+        line(tks * x, tks * y, x, y)  // dakika ve saat çentikleri
     }
 }
-// the animate function runs around 30-50 times a second
-animate{
-  var d=new java.util.Date
-  wipe
-  setPenColor(red)
-  clkFace
-  setPenColor(blue)
+// saniyede 30 ile 50 kere tekrar eder bu döngü
+animate {
+    var d = new java.util.Date
+    wipe
+    setPenColor(kırmızı)
+    saat
+    setPenColor(mavi)
 
-  val s=Pi2*d.getSeconds/60
-  line(0,0,0.9*Sc*sin(s),0.9*Sc*cos(s))
-
-  val m=Pi2*d.getMinutes/60
-  line(0,0,0.8*Sc*sin(m),0.8*Sc*cos(m))
-  
-  val h=Pi2*d.getHours/12+m/12
-  line(0,0,0.6*Sc*sin(h),0.6*Sc*cos(h))
-  
-  text(d.toString, -Sc, -Sc-20)
+    val s = Pi2 * d.getSeconds / 60 // saniye kolu
+    line(0, 0, 0.9 * Sc * sin(s), 0.9 * Sc * cos(s))
+    setPenColor(yeşil)
+    val m = Pi2 * d.getMinutes / 60 // dakika kolu
+    line(0, 0, 0.8 * Sc * sin(m), 0.8 * Sc * cos(m))
+    setPenColor(turuncu)
+    val h = Pi2 * d.getHours / 12 + m / 12 // saat kolu
+    line(0, 0, 0.6 * Sc * sin(h), 0.6 * Sc * cos(h))
+    setPenColor(siyah)
+    text(d.toString, -Sc, -Sc - 20)
 }
 """.c,
 
@@ -1556,67 +1563,70 @@ def dörtlü = Dizin((0, 0), (1, 0), (-1, 0), (0, 2)) // dokuzcanlı'nın altkü
 """.c,
     
     "Düğüm açma oyunu".h3,
-    "Here is a game that illustrates how you can use the Scala collections and mouse drag-and-drop to create a fun game to play.".p,
-    "The game was based on a game called Planarity. The idea is to use the mouse to re-arrange the circles so that none of the joining lines cross one and other. Press the left mouse button on a circle to drag it. A new game is started by clicking on the red square.".p,
-    "You can increase the difficulty of the game by changing the value ES in the program. Larger values make it more difficult.".p,
-    "The inspiration for Tangle is Planarity".link("en.wikipedia.org/wiki/Planarity"),
+    "Bu oyun bize iki şey gösterecek: 1) Scala'nın bize sunduğu veri yapılarından Vector ne işlere yarıyor. 2) Fareye tıklayıp bırakmadan sürüklerse neler yapabiliyoruz. Tabii daha da güzeli eğlenceli bir oyun yazabiliyoruz bu sayede.".p,
+    "Bu oyunu internetteki eski bir oyundan esinlenerek yazdık. Oyunun adı Planarity yani düzlemsellik. Mavi toplardan herhangi birinin üzerine tıklayıp bırakmadan tuvalde başka bir yere taşı. Göreceksin ki bağlı olduğu iki çizgi sanki lastik gibi hareket ediyor ve topu bırakmıyor. Bu bulmacanın amacı topları güzelce yerleştirerek çizgilerin birbirini kesmesine engel olmak. Yani bu düğümü çözmek. Çok zor sayılmaz. Biraz dene kolaylaşacak. Kırmızı kareye tıklarsan yeni bir düğüm oluşur.".p,
+    "Yazılımcığa bakarsa ES adında bir değişken göreceksin. Onu değiştirerek oyunun zorluğunu ayarlayabilirsin. Ne kadar büyütürsen o kadar zorlaşır!".p,
+    "Bize ilham veren oyunun adı Planarity. Daha çok bilgi için buna tıkla".link("en.wikipedia.org/wiki/Planarity"),
     
-    """import Staging._
-import Staging.{circle, clear, animate} // explicitly import names that clash
-import math.pow,math.random
-// Tangle based on Planarity
-clear()
-// ES sets difficulty level
-val ES=4;val AS=ES*ES
-val Ra=10
-// Edge is a line between two nodes
-case class EdgeP(n1:NodeP,n2:NodeP){
-var e=line(n1.x,n1.y,n2.x,n2.y)
-}
-// edges is all the edges, initially empty
-var edges=Vector[EdgeP]()
-// Node is a circle which is dragable. Redraws edges when dragged
-case class NodeP(var x:Kesir,var y:Kesir){
-  val n=circle(x,y,Ra)
-  n.setFillColor(blue)
-  def goTo(gx:Kesir,gy:Kesir){
-   x=gx ; y=gy
-   n.setPosition(gx,gy)   
-  }
-  n.onMouseDrag{(mx, my) => {n.setPosition(mx, my);x=mx;y=my;drawEdges(edges)}}
-}
-// Create and link all nodes topologically in a square 
-val p=(0 until AS).foldLeft(Vector[NodeP]())((v,i)=>{v :+ NodeP(0,0)})
+    """import Staging._ // şu komutlar gelsin bakalım: line, circle, square
+import Staging.{ circle, clear } // bu komut adları çatışıyor
+import math.pow, math.random
 
-// Create all edges, link to adjacent nodes   
-edges=(0 until AS).foldLeft(Vector[EdgeP]())(
-    (ev,i)=>{
-        val x=i/ES; val y=i%ES 
-        val te=if(y<ES-1) {ev :+ EdgeP(p(i),p(i+1))} else ev
-        if(x<ES-1) {te :+ EdgeP(p(i),p(i+ES))} else te
+// KS arttıkça oyun zorlaşır. Bir kenarda kaç tane nokta olsun?
+val KS = 4; val AS = KS * KS
+val YÇ = 20 // bu da noktaların yarıçapı
+// her çizgi iki noktayı bağlar
+case class Çizgi(n1: Nokta, n2: Nokta) {
+    var çizgi = line(n1.x, n1.y, n2.x, n2.y) // bir doğru çizer
+}
+// bütün çizgiler. boş küme olarak başlarız
+var çizgiler = Vector[Çizgi]()
+// Noktayı tuvalde kaydıracağız. Yeri değişince ona bağlı çizgileri tekrar çizmemiz gerek
+case class Nokta(var x: Kesir, var y: Kesir) {
+    val n = circle(x, y, YÇ) // verilen x ve y coordinatı merkezimiz. yarıçap belli.
+    n.setFillColor(mavi) // rengi mavi olsun
+    def yeniKonum(yeniX: Kesir, yeniY: Kesir) {
+        x = yeniX; y = yeniY
+        n.setPosition(yeniX, yeniY)
+    }
+    // fareye tıklayıp çekince bu çalışacak
+    n.onMouseDrag { (mx, my) => { n.setPosition(mx, my); x = mx; y = my; çizelim(çizgiler) } }
+}
+// Bütün noktaları (0,0) yani orijine üştüste koyalım. Merak etme birazdan dağıtacağız
+clear()
+val noktalar = (0 until AS).foldLeft(Vector[Nokta]())((v, i) => { v :+ Nokta(0, 0) })
+
+// çizgileri tanımlar ve noktalara bağlarız. Bir balık ağı gibi. KS * KS düğümlü
+çizgiler = (0 until AS).foldLeft(Vector[Çizgi]())(
+    (çv, i) => {
+        val (x, y) = (i / KS, i % KS)
+        val çzg = if (y < KS - 1) { çv :+ Çizgi(noktalar(i), noktalar(i + 1)) } else çv
+        if (x < KS - 1) { çzg :+ Çizgi(noktalar(i), noktalar(i + KS)) } else çzg
     })
-// draw all edges
-putRand(p)
-// Button for new game
-val b=square(-ES*35,-ES*35, 20)
+serpiştir(noktalar) // noktaları yerleştir ve çizgileri çiz
+
+// noktaları rasgele yerleştir
+def serpiştir(hepsi: Vector[Nokta]) {
+    hepsi.foreach(nkt => nkt.yeniKonum(KS * YÇ * 6 * (random - 0.5), KS * YÇ * 6 * (random - 0.5)))
+    çizelim(çizgiler)
+}
+
+// noktalar arasındaki çizgileri çizelim. Her çizgi, iki noktasının çemberine kadar gelsin
+def çizelim(hepsi: Vector[Çizgi]) {
+    hepsi.foreach(çzg => {
+        val (x1, y1) = (çzg.n1.x, çzg.n1.y)
+        val (x2, y2) = (çzg.n2.x, çzg.n2.y)
+        val boy = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2))
+        val (xr, yr) = (YÇ / boy * (x2 - x1), YÇ / boy * (y2 - y1))
+        çzg.çizgi.erase
+        çzg.çizgi = line(x1 + xr, y1 + yr, x2 - xr, y2 - yr)
+    })
+}
+
+// kırmızı kareye basınca yeni bir düğümle baştan başlarız
+val b = square(-KS * 35, -KS * 35, 20)
 b.setFillColor(red)
-b.onMouseClick { (x, y) =>putRand(p)}
-// randomise node positions
-def putRand(p:Vector[NodeP]){
-   p.foreach(tn=>tn.goTo(ES*Ra*6*(random - 0.5),ES*Ra*6*(random - 0.5)))    
-   drawEdges(edges) 
-   }    
-//draw edges between nodes and start line from circumference of circle
-def drawEdges(ev:Vector[EdgeP]){ 
-   ev.foreach(te=>{
-     val x1=te.n1.x ; val y1=te.n1.y
-     val x2=te.n2.x ; val y2=te.n2.y
-     val len=sqrt(pow(x2-x1,2) + pow(y2-y1,2))
-     val xr=Ra/len*(x2-x1) ; val yr=Ra/len*(y2-y1) 
-     te.e.erase;
-     te.e=line(x1+xr,y1+yr,x2-xr,y2-yr)
-     }) 
-   }
+b.onMouseClick { (x, y) => serpiştir(noktalar) }
 """.c
   )
 )
