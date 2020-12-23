@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013
+ * Copyright (C) 2013-2021
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
  *   Lalit Pant <pant.lalit@gmail.com>
  *   Bulent Basaran <bulent2k2@gmail.com>
@@ -39,6 +39,10 @@ object TurkishAPI {
   import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast, Point}
   type Hız  = Speed
   type Nokta = Point
+  object Nokta {
+    def apply(x: Kesir, y: Kesir) = new Point(x, y)
+    def unapply(p: Nokta) = Some((p.x, p.y))
+  }
 
   // Ref: https://docs.scala-lang.org/overviews/scala-book/built-in-types.html
   type İkil = Boolean
@@ -85,54 +89,62 @@ object TurkishAPI {
     def sil(): Birim = englishTurtle.clear()  // bbx: does this do anything? See sil def below..
     def görünür() = englishTurtle.visible()
     def görünmez() = englishTurtle.invisible()
-    def ileri(adım: Double) = englishTurtle.forward(adım)
+    def ileri(adım: Kesir) = englishTurtle.forward(adım)
     def ileri() = englishTurtle.forward(25)
-    def sağ(açı: Double) = englishTurtle.right(açı)
+    def geri(adım: Kesir) = englishTurtle.back(adım)
+    def geri() = englishTurtle.back(25)
+    def sağ(açı: Kesir) = englishTurtle.right(açı)
     def sağ() = englishTurtle.right(90)
-    def sol(açı: Double) = englishTurtle.left(açı)
+    def sol(açı: Kesir) = englishTurtle.left(açı)
     def sol() = englishTurtle.left(90)
-    def atla(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
-    def ilerle(x: Double, y: Double) = englishTurtle.moveTo(x, y)
-    def zıpla(n: Double) = {
+    def atla(x: Kesir, y: Kesir) = englishTurtle.jumpTo(x, y)
+    def ilerle(x: Kesir, y: Kesir) = englishTurtle.moveTo(x, y)
+    def zıpla(n: Kesir) = {
       englishTurtle.saveStyle() //to preserve pen state
       englishTurtle.hop(n) //hop change state to penDown after hop
       englishTurtle.restoreStyle()
     }
-    def zıpla(): Unit = zıpla(25)
+    def zıpla(): Birim = zıpla(25)
     def ev() = englishTurtle.home()
-    def noktayaDön(x: Double, y: Double) = englishTurtle.towards(x, y)
-    def açıyaDön(açı: Double) = englishTurtle.setHeading(açı)
+    def noktayaDön(x: Kesir, y: Kesir) = englishTurtle.towards(x, y)
+    def noktayaGit(x: Kesir, y: Kesir) = englishTurtle.lineTo(x, y)
+    def noktayaGit(n: Nokta) = englishTurtle.lineTo(n)
+    def açıyaDön(açı: Kesir) = englishTurtle.setHeading(açı)
     def doğrultu = englishTurtle.heading
     def doğu() = englishTurtle.setHeading(0)
     def batı() = englishTurtle.setHeading(180)
     def kuzey() = englishTurtle.setHeading(90)
     def güney() = englishTurtle.setHeading(-90)
-    def canlandırmaHızınıKur(n: Long) = englishTurtle.setAnimationDelay(n)
-    def yazı(t: Any) = englishTurtle.write(t)
-    def yazıBoyunuKur(boyutKur: Int) = englishTurtle.setPenFontSize(boyutKur)
-    def yay(yarıçap: Double, açı: Double) = englishTurtle.arc(yarıçap, math.round(açı).toInt)
-    def daire(yarıçap: Double) = englishTurtle.circle(yarıçap)
+    def canlandırmaHızınıKur(n: Uzun) = englishTurtle.setAnimationDelay(n)
+    def canlandırmaHızı: Uzun = englishTurtle.animationDelay
+    def yazı(t: Her) = englishTurtle.write(t)
+    def yazıBoyunuKur(boyutKur: Sayı) = englishTurtle.setPenFontSize(boyutKur)
+    def yay(yarıçap: Kesir, açı: Kesir) = englishTurtle.arc(yarıçap, math.round(açı).toInt)
+    def dön(açı: Kesir, yarıçap: Kesir) = englishTurtle.turn(açı, yarıçap)
+    def dön(açı: Kesir) = englishTurtle.turn(açı)
+    def daire(yarıçap: Kesir) = englishTurtle.circle(yarıçap)
+    def konumuKur(x: Kesir, y: Kesir) = englishTurtle.setPosition(x, y)
     def konum: Nokta = englishTurtle.position
     def kalemiİndir() = englishTurtle.penDown()
     def kalemiKaldır() = englishTurtle.penUp()
     def kalemİnikMi: İkil = englishTurtle.style.down
     def kalemRenginiKur(renk: Renk) = englishTurtle.setPenColor(renk)
-    def boyamaRenginiKur(boya: Paint) = englishTurtle.setFillColor(boya)
-    def kalemKalınlığınıKur(n: Double) = englishTurtle.setPenThickness(n)
+    def boyamaRenginiKur(boya: Boya) = englishTurtle.setFillColor(boya)
+    def kalemKalınlığınıKur(n: Kesir) = englishTurtle.setPenThickness(n)
     def biçimleriBelleğeYaz() = englishTurtle.saveStyle()
     def biçimleriGeriYükle() = englishTurtle.restoreStyle()
     def konumVeYönüBelleğeYaz() = englishTurtle.savePosHe()
     def konumVeYönüGeriYükle() = englishTurtle.restorePosHe()
     def ışınlarıAç() = englishTurtle.beamsOn()
     def ışınlarıKapat() = englishTurtle.beamsOff()
-    def giysiKur(dostaAdı: String) = englishTurtle.setCostume(dostaAdı)
-    def giysileriKur(dostaAdı: String*) = englishTurtle.setCostumes(dostaAdı: _*)
+    def giysiKur(dostaAdı: Yazı) = englishTurtle.setCostume(dostaAdı)
+    def giysileriKur(dostaAdı: Yazı*) = englishTurtle.setCostumes(dostaAdı: _*)
     def birsonrakiGiysi() = englishTurtle.nextCostume()
     def hızıKur(hız: Hız) = englishTurtle.setSpeed(hız)
   }
   class Kaplumbağa(override val englishTurtle: Turtle) extends TurkishTurtle {
-    def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
-    def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
+    def this(startX: Kesir, startY: Kesir, costumeFileName: Yazı) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
+    def this(startX: Kesir, startY: Kesir) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
   }
   class Kaplumbağa0(t0: => Turtle) extends TurkishTurtle { //by-name construction as turtle0 is volatile }
@@ -161,7 +173,7 @@ object TurkishAPI {
   lazy val camgöbeği = builtins.cyan
 
   // TODO: other Color* constructors -- and Help Content
-  def Renk(r: Int, g: Int, b: Int, o: Int = 255): Renk = new Color(r, g, b, o)
+  def Renk(r: Sayı, g: Sayı, b: Sayı, o: Sayı = 255): Renk = new Color(r, g, b, o)
   def arkaplanıKur(r: Renk) = builtins.setBackground(r)
   def arkaplanıKurDik  (r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
   def arkaplanıKurYatay(r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundH(r1, r2)
@@ -176,44 +188,44 @@ object TurkishAPI {
   //  }
 
   //loops
-  def yinele(n: Int)(block: => Unit): Unit = {
-    RepeatCommands.repeat(n) { block }
+  def yinele(n: Sayı)(diziKomut: => Birim): Birim = {
+    RepeatCommands.repeat(n) { diziKomut }
   }
 
-  def yineleDizinli(n: Int)(block: Int => Unit): Unit = {
-    RepeatCommands.repeati(n) { i => block(i) }
+  def yineleDizinli(n: Sayı)(diziKomut: Sayı => Birim): Birim = {
+    RepeatCommands.repeati(n) { i => diziKomut(i) }
   }
 
-  def yineleDoğruysa(koşul: => Boolean)(block: => Unit): Unit = {
-    RepeatCommands.repeatWhile(koşul) { block }
+  def yineleDoğruysa(koşul: => İkil)(diziKomut: => Birim): Birim = {
+    RepeatCommands.repeatWhile(koşul) { diziKomut }
   }
 
-  def yineleOlanaKadar(koşul: => Boolean)(block: => Unit): Unit = {
-    RepeatCommands.repeatUntil(koşul) { block }
+  def yineleOlanaKadar(koşul: => İkil)(diziKomut: => Birim): Birim = {
+    RepeatCommands.repeatUntil(koşul) { diziKomut }
   }
 
-  def yineleKere[T](dizi: Iterable[T])(block: T => Unit): Unit = {
-    RepeatCommands.repeatFor(dizi) { block }
+  def yineleKere[T](dizi: Iterable[T])(diziKomut: T => Birim): Birim = {
+    RepeatCommands.repeatFor(dizi) { diziKomut }
   }
 
-  def yineleİlktenSona(ilk: Int, son: Int)(block: Int => Unit): Unit = {
-    RepeatCommands.repeatFor(ilk to son) { block }
+  def yineleİlktenSona(ilk: Sayı, son: Sayı)(diziKomut: Sayı => Birim): Birim = {
+    RepeatCommands.repeatFor(ilk to son) { diziKomut }
   }
 
   //simple IO
-  def satıroku(istem: String = "") = builtins.readln(istem)
+  def satıroku(istem: Yazı = "") = builtins.readln(istem)
 
-  def satıryaz(data: Any) = println(data) //Transferred here from sv.tw.kojo.
+  def satıryaz(data: Her) = println(data) //Transferred here from sv.tw.kojo.
   def satıryaz() = println()
-  def yaz(data: Any) = print(data)
+  def yaz(data: Her) = print(data)
 
   //math functions
-  def yuvarla(sayı: Number, basamaklar: Int = 0): Double = {
+  def yuvarla(sayı: Number, basamaklar: Sayı = 0): Kesir = {
     val faktor = math.pow(10, basamaklar).toDouble
     math.round(sayı.doubleValue * faktor).toLong / faktor
   }
-  def rasgele(üstSınır: Int) = builtins.random(üstSınır)
-  def rasgeleKesir(üstSınır: Int) = builtins.randomDouble(üstSınır)
+  def rasgele(üstSınır: Sayı) = builtins.random(üstSınır)
+  def rasgeleKesir(üstSınır: Sayı) = builtins.randomDouble(üstSınır)
 }
 
 object TurkishInit {
@@ -245,7 +257,10 @@ object TurkishInit {
   }
 
   val codeTemplates = Map(
+    "ileri" -> "ileri()",
     "ileri" -> "ileri(${adım})",
+    "geri" -> "geri()",
+    "geri" -> "geri(${adım})",
     "sağ" -> "sağ(${açı})",
     "sol" -> "sol(${açı})",
     "atla" -> "atla(${x},${y})",
