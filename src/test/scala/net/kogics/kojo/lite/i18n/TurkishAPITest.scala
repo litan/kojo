@@ -69,6 +69,14 @@ class TurkishAPITest extends FunSuite with Matchers {
     sb.toString should be("1 3 5 7 9 ")
   }
 
+  test("yineleİçin[T](iterable){e => fn(e)} should process all elements of iterable"){
+    val sb = new StringBuilder(10)
+    yineleİçin(1 to 10 by 3){i =>
+      sb.append(i).append(' ')
+    }
+    sb.toString should be("1 4 7 10 ")
+  }
+
   test("İkil (Boolean in Turkish) should work") {
     val test0: İkil = yanlış
     val test1: İkil = doğru
