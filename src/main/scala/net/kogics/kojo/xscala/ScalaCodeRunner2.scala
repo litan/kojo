@@ -599,7 +599,18 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     }
 
     def interpretAsWorksheet(code: String, includedLines: Int): IR.Result = {
-      val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => line.trim() != "" && !line.trim().startsWith("//") }
+      var inMultiLineComment = false
+      def shouldIgnoreLine(line: String): Boolean = {
+        line.trim match {
+          case ""                      => true
+          case l if l.startsWith("//") => true
+          case l if l.startsWith("/*") => inMultiLineComment = true; true
+          case l if l.startsWith("*/") => inMultiLineComment = false; true
+          case l if l.startsWith("*")  && inMultiLineComment => true
+          case _                       => false
+        }
+      }
+      val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => !shouldIgnoreLine(line) }
       try {
         outputHandler.includedLines = includedLines
         interpretWorksheetLines(lines)
