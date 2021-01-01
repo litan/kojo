@@ -160,7 +160,7 @@ trait AppMenu {
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
         def actionPerformed(ev: ActionEvent): Unit = {
-          loadAndRunResourceNEL("/samples/" + file)
+          loadAndRunResourceNEL("/samples/", file)
         }
       })
       item
