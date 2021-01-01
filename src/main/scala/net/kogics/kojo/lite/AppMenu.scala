@@ -291,7 +291,7 @@ trait AppMenu {
     mathActivityMenu.add(menuItemFor("S_AdditionGame", "addition-game.kojo"))
     mathActivityMenu.add(menuItemFor("S_SubtractionGame", "subtraction-game.kojo"))
     mathActivityMenu.add(menuItemFor("S_MultiplicationGame", "multiplication-game.kojo"))
-    mathActivityMenu.add(menuItemFor("S_AngleExperiment", "angle-experiment.kojo"))
+    // mathActivityMenu.add(menuItemFor("S_AngleExperiment", "angle-experiment.kojo"))
     mathActivityMenu.add(menuItemFor("S_CountingGame", "counting.kojo", "/mathgames/"))
     mathActivityMenu.add(menuItemFor("S_MakeFractions", "make-fractions.kojo", "/mathgames/"))
     mathActivityMenu.add(menuItemFor("S_IdentifyFractions", "identify-fractions.kojo", "/mathgames/"))
