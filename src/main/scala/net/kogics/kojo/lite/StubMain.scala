@@ -103,7 +103,6 @@ trait StubMain {
     def cmsGC =
       "-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"
 
-
     def reflectiveAccess = {
       //      "--add-opens java.desktop/sun.awt=ALL-UNNAMED " +
       //        "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED " +
@@ -188,13 +187,21 @@ trait StubMain {
       ourCp.append(File.pathSeparatorChar)
     }
 
-    // add all jars in user's kojo lib dir to classpath
-    Utils.libJars.foreach { x =>
-      ourCp.append(Utils.libDir)
-      ourCp.append(File.separatorChar)
-      ourCp.append(x)
-      ourCp.append(File.pathSeparatorChar)
+    def addJars(dir: String): Unit = {
+      Utils.filesInDir(dir, "jar").foreach { x =>
+        ourCp.append(dir)
+        ourCp.append(File.separatorChar)
+        ourCp.append(x)
+        ourCp.append(File.pathSeparatorChar)
+      }
     }
+
+    // add all jars in user's kojo libk dir to classpath
+    addJars(Utils.libDir)
+
+    // add all jars in user's kojo extension dir to classpath
+    val dirs = Utils.dirsInDir(Utils.extensionsDir)
+    dirs.foreach(addJars)
 
     ourCp.append(xs.mkString(File.pathSeparator))
     ourCp.toString

@@ -70,9 +70,9 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   // entry point for interp reset from GUI
   def resetInterpUI() = codeRunner ! ResetInterp
 
-  if (Utils.libJars.size > 0) {
-    kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
-  }
+  //  if (Utils.libJars.size > 0) {
+  //    kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
+  //  }
 
   def kprintln(s: String) = print(s)
 
@@ -602,12 +602,14 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       var inMultiLineComment = false
       def shouldIgnoreLine(line: String): Boolean = {
         line.trim match {
-          case ""                      => true
+          case "" => true
           case l if l.startsWith("//") => true
-          case l if l.startsWith("/*") => inMultiLineComment = true; true
-          case l if l.startsWith("*/") => inMultiLineComment = false; true
-          case l if l.startsWith("*")  && inMultiLineComment => true
-          case _                       => false
+          case l if l.startsWith("/*") =>
+            inMultiLineComment = true; true
+          case l if l.startsWith("*/") =>
+            inMultiLineComment = false; true
+          case l if l.startsWith("*") && inMultiLineComment => true
+          case _ => false
         }
       }
       val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => !shouldIgnoreLine(line) }
