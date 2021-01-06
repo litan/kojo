@@ -152,7 +152,7 @@ object TurkishAPI {
   }
   object kaplumbağa extends Kaplumbağa0(builtins.TSCanvas.turtle0)
   def sil(): Birim = builtins.TSCanvas.clear()
-  def silVeSakla(): Birim = { builtins.TSCanvas.clear(); kaplumbağa.görünmez() }
+  def silVeSakla(): Birim = { builtins.TSCanvas.clear(); kaplumbağa.görünmez() } // cleari
   def çizimiSil(): Birim = builtins.TSCanvas.clearStepDrawing()
   def çıktıyıSil(): Birim = builtins.clearOutput()
   lazy val mavi = builtins.blue
@@ -207,6 +207,9 @@ object TurkishAPI {
   def yineleKere[T](dizi: Iterable[T])(diziKomut: T => Birim): Birim = {
     RepeatCommands.repeatFor(dizi) { diziKomut }
   }
+  def yineleİçin[T](dizi: Iterable[T])(diziKomut: T => Birim): Birim = {
+    RepeatCommands.repeatFor(dizi) { diziKomut }
+  }
 
   def yineleİlktenSona(ilk: Sayı, son: Sayı)(diziKomut: Sayı => Birim): Birim = {
     RepeatCommands.repeatFor(ilk to son) { diziKomut }
@@ -226,6 +229,9 @@ object TurkishAPI {
   }
   def rasgele(üstSınır: Sayı) = builtins.random(üstSınır)
   def rasgeleKesir(üstSınır: Sayı) = builtins.randomDouble(üstSınır)
+  def rastgeleSeçim = builtins.randomBoolean
+  def rastgeleRenk = builtins.randomColor
+  def rastgeleŞeffafRenk = builtins.randomTransparentColor
 }
 
 object TurkishInit {
@@ -257,6 +263,7 @@ object TurkishInit {
   }
 
   val codeTemplates = Map(
+    "def" -> "def $adı (${girdiler}){\n    ${cursor}\n})",
     "ileri" -> "ileri()",
     "ileri" -> "ileri(${adım})",
     "geri" -> "geri()",
@@ -296,12 +303,14 @@ object TurkishInit {
     "çıktıyıSil" -> "çıktıyıSil()",
     "arkaplanıKur" -> "arkaplanıKur(${renk})",
     "arkaplanıKurDik" -> "arkaplanıKurDik(${renk1},${renk2})",
+    "arkaplanıKurYatay" -> "arkaplanıKurYatay(${renk1},${renk2})",
     "yinele" -> "yinele(${sayı}) {\n    ${cursor}\n}",
     "yineleDizinli" -> "yineleDizinli(${sayı}) { i =>\n    ${cursor}\n}",
     "yineleDoğruysa" -> "yineleDoğruysa(${koşul}) {\n    ${cursor}\n}",
     "yineleOlanaKadar" -> "yineleOlanaKadar(${koşul}) {\n    ${cursor}\n}",
     "yineleKere" -> "yineleKere(${dizi}) { ${e} =>\n    ${cursor}\n}",
-    "yineleİlktenSona" -> "yineleİlktenSona(${ilk},${son}) { i => \n    ${cursor}\n}",
+    "yineleİçin" -> "yineleİçin(${dizi}) { ${e} =>\n    ${cursor}\n}",
+    "yineleİlktenSona" -> "yineleİlktenSona(${ilk},${son}) { s => \n    ${cursor}\n}",
     "satıryaz" -> "satıryaz(${yazı})",
     "satıroku" -> "satıroku(${istem})",
     "yuvarla" -> "yuvarla(${sayı},${basamaklar})",
@@ -309,7 +318,10 @@ object TurkishInit {
     "rasgeleKesir" -> "rasgeleKesir(${üstSınır})",
     "giysiKur" -> "giysiKur(${dostaAdı})",
     "giysileriKur" -> "giysileriKur(${dostaAdı1},${dostaAdı2})",
-    "birsonrakiGiysi" -> "birsonrakiGiysi()"
+    "birsonrakiGiysi" -> "birsonrakiGiysi()",
+    "buAn" -> "buAn()",
+    "buSaniye" -> "buSaniye()",
+    "hızıKur" -> "hızıKur(${hız})"
   )
 
   val helpContent = Map(
@@ -347,8 +359,8 @@ object TurkishInit {
     "ışınlarıAç" -> <div><strong>ışınlarıAç</strong>() - Bu komut kaplumbağanın önünü, arkasını, sağını ve solunu bir artı çizerek daha kolay seçmemizi sağlar.</div>.toString,
     "ışınlarıKapat" -> <div><strong>ışınlarıKapat</strong>() - Bu komut <tt>ışınlarıAç()</tt> komutuyla kaplumbağanın üstüne çizilen artıyı siler.</div>.toString,
     "sil" -> <div><strong>sil</strong>() - Bu komut kaplumbağanın tuvalini temizler, kaplumbağayı başlangıç konumuna geri getirir ve kuzey doğrultusuna çevirir.</div>.toString,
-    "arkaplanıKur" -> <div> <strong>arkaplanıKur</strong>(renk) - Bu komutla tuval verilen renge boyanır. Kojonun tanıdığı sarı, mavi ve siyah gibi renkleri kullanabilirsiniz ya da <tt>Renk</tt>, <tt>ColorHSB</tt> ve <tt>ColorG</tt> komutlarını kullanarak kendi renklerinizi yaratabilirsiniz. </div>.toString,
-    "arkaplanıKurDik"   ->   <div><strong>arkaplanıKurDik</strong>(renk1, renk2) - Bu komutla tuval aşağıdan yukarı doğru birinci renkten ikinci renge derece derece değişerek boyanır. </div>.toString,
+    "arkaplanıKur" -> <div><strong>arkaplanıKur</strong>(renk) - Bu komutla tuval verilen renge boyanır. Kojonun tanıdığı sarı, mavi ve siyah gibi renkleri kullanabilirsiniz ya da <tt>Renk</tt>, <tt>ColorHSB</tt> ve <tt>ColorG</tt> komutlarını kullanarak kendi renklerinizi yaratabilirsiniz. </div>.toString,
+    "arkaplanıKurDik" -> <div><strong>arkaplanıKurDik</strong>(renk1, renk2) - Bu komutla tuval aşağıdan yukarı doğru birinci renkten ikinci renge derece derece değişerek boyanır. </div>.toString,
     "arkaplanıKurYatay" -> <div><strong>arkaplanıKurYatay</strong>(renk1, renk2) - Bu komutla tuval soldan sağa doğru birinci renkten ikinci renge derece derece değişerek boyanır. </div>.toString,
     "konum" -> <div><strong>konum</strong> - Bu komut kaplumbağacığın bulunduğu konumu nokta (Point) olarak bildirir. <tt>konum.x</tt> ve <tt>konum.y</tt> ile de x ve y koordinatları okunabilir. </div>.toString,
     "yinele" -> <div><strong>yinele</strong>(sayı){{ }} - Bu komut küme içine alınan komutları verilen sayı kadar tekrar tekrar çağırır. <br/></div>.toString,
@@ -356,6 +368,7 @@ object TurkishInit {
     "yineleDoğruysa" -> <div><strong>yineleDoğruysa</strong>(koşul) {{ }} - Bu komut küme içine alılan komutları verilen koşul doğru oldukça tekrar çağırır. <br/></div>.toString,
     "yineleOlanaKadar" -> <div><strong>yineleOlanaKadar</strong>(koşul) {{ }} - Bu komut küme içine alılan komutları verilen koşul sağlanana kadar tekrar çağırır. <br/></div>.toString,
     "yineleKere" -> <div><strong>yineleKere</strong>(dizi){{ }} - Bu komut küme içine alılan komutları verilen dizideki her eleman için birer kere çağırır. <br/></div>.toString,
+    "yineleİçin" -> <div><strong>yineleİçin</strong>(dizi){{ }} - Bu komut küme içine alılan komutları verilen dizideki her eleman için birer kere çağırır. yineleKere ile aynı işlevi görür.<br/></div>.toString,
     "yineleİlktenSona" -> <div><strong>yineleİlktenSona</strong>(ilk, son){{ }} - Bu komut küme içine alınan komutları ilk sayıdan son sayıya kadar tekrar çağırır.</div>.toString,
     "satıryaz" -> <div><strong>satıryaz</strong>(obj) - Bu komut verilen nesneyi harf dizisi olarak çıktı penceresine yazar ve yeni satıra geçer. </div>.toString,
     "satıroku" -> <div><strong>satıroku</strong>(istemDizisi) - Bu komut verilen istem dizisini çıktı penceresine yazar ve arkasından sizin yazdığınız bir satırı okur. </div>.toString,
@@ -369,7 +382,40 @@ object TurkishInit {
     "silVeSakla" -> <div><strong>silVeSakla</strong>() - Bu komut tuvaldeki çizimleri siler ve kaplumbağayı görünmez kılar. </div>.toString,
     "çizimiSil" -> <div><strong>çizimiSil</strong>() - Bu komut tuvaldeki çizimleri siler. </div>.toString,
     "buAn" -> <div><strong>buAn</strong>() - Bu komut evrensel zamana (UTC) göre 1 Ocak 1970 tam geceyarısından bu ana kadar geçen zamanı kesirsiz milisaniye olarak verir.</div>.toString,
-    "buSaniye" -> <div><strong>buSaniye</strong>() - Bu komut evrensel zamana (UTC) göre 1 Ocak 1970 tam geceyarısından bu ana kadar geçen zamanı kesirli saniye olarak verir.</div>.toString
+    "buSaniye" -> <div><strong>buSaniye</strong>() - Bu komut evrensel zamana (UTC) göre 1 Ocak 1970 tam geceyarısından bu ana kadar geçen zamanı kesirli saniye olarak verir.</div>.toString,
+    "hızıKur" -> <div><strong>hızıKur</strong>(hız) - Kaplumbağacığın hızını belirler. yavaş, orta, hızlı ve çokHızlı değerlerinden birini dene.</div>.toString,
+    "def" -> <div><strong>def</strong> - Kıvrık parantez içindeki bir dizi komuta ya da deyişe bir ad takar. Bu yöntemle yeni bir işlev ya da komut tanımlamış olursun. <br/>
+      <br/>
+      <em>Örneğin:</em> <br/>
+      <br/>
+      <pre>
+      // Kare adında yeni bir komut
+      // Tek bir girdisi var
+      def kare(kenar: Sayı) {{
+          yinele(4) {{
+              ileri(kenar)
+              sağ()
+          }}
+      }}
+      sil()
+      // iki kere çagıralım yeni komutumuzu:
+      kare(100)
+      kare(200)
+
+
+      // Topla adında yeni bir işlev tanımlayalım
+      // İki girdisi, bir çıktısı var
+      def topla(a: Sayı, b: Sayı) =
+          a + b
+      çıktıyıSil()
+      // işlevi çağırıp çıktısını yazdıralım
+      satıryaz(topla(3, 5))
+      // bir toplama daha yapalım
+      val toplam = topla(20, 7)
+      satıryaz(toplam)
+      </pre>
+</div>.toString
+
   )
 }
 
