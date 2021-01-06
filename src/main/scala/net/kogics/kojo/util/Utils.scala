@@ -527,6 +527,20 @@ object Utils {
     }
   }
 
+  def numFilesInDir(dir: String, ext: String): Int = {
+    val osDir = new File(dir)
+    if (osDir.exists && osDir.isDirectory) {
+      osDir.list(new FilenameFilter {
+        override def accept(dir: File, name: String) = {
+          name.endsWith("." + ext)
+        }
+      }).length
+    }
+    else {
+      0
+    }
+  }
+
   def dirsInDir(dir: String): List[String] = {
     val osDir = new File(dir)
     if (osDir.exists && osDir.isDirectory) {
