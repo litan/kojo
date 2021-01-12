@@ -527,14 +527,43 @@ object Utils {
     }
   }
 
+  def numFilesInDir(dir: String, ext: String): Int = {
+    val osDir = new File(dir)
+    if (osDir.exists && osDir.isDirectory) {
+      osDir.list(new FilenameFilter {
+        override def accept(dir: File, name: String) = {
+          name.endsWith("." + ext)
+        }
+      }).length
+    }
+    else {
+      0
+    }
+  }
+
+  def dirsInDir(dir: String): List[String] = {
+    val osDir = new File(dir)
+    if (osDir.exists && osDir.isDirectory) {
+      osDir.list(new FilenameFilter {
+        override def accept(dir: File, name: String) = {
+          dir.isDirectory
+        }
+      }).sorted.map { subDir => dir + File.separatorChar + subDir }.toList
+    }
+    else {
+      Nil
+    }
+  }
+
   lazy val userDir = System.getProperty("user.home")
   lazy val libDir = userDir + File.separatorChar + ".kojo/lite/libk"
   lazy val initScriptDir = userDir + File.separatorChar + ".kojo/lite/initk"
 
-  lazy val libJars: List[String] = filesInDir(libDir, "jar")
   lazy val initScripts: List[String] = filesInDir(initScriptDir, "kojo")
   lazy val installLibJars: List[String] = Nil
   lazy val installInitScripts: List[String] = Nil
+
+  lazy val extensionsDir = userDir + File.separatorChar + ".kojo/extension"
 
   /**Locates where the log directory should be, creates it if necessary, and returns its File object.*/
   def locateLogDir(): File = {

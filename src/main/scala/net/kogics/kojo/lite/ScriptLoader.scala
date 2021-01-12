@@ -68,9 +68,9 @@ trait ScriptLoader { self: Main.type =>
   }
 
   // No Editor Load version
-  def loadAndRunResourceNEL(res: String) = {
+  def loadAndRunResourceNEL(root: String, file: String) = {
     try {
-      val code = Utils.loadResource(res)
+      val code = Utils.loadLocalizedResource(root, file)
       execSupport.compileRunCode(code)
     }
     catch {

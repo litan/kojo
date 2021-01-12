@@ -70,11 +70,22 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   // entry point for interp reset from GUI
   def resetInterpUI() = codeRunner ! ResetInterp
 
-  if (Utils.libJars.size > 0) {
-    kprintln(Utils.libJars.mkString("\n---\nJars (within libk) available for use:\n * ", "\n * ", "\n---\n"))
+  def kprintln(s: String) = print(s)
+
+  val numLibkJars = Utils.numFilesInDir(Utils.libDir, "jar")
+  if (numLibkJars > 0) {
+    println("\nScanning libk...")
+    println(s"Additional jars available (within libk) - $numLibkJars")
   }
 
-  def kprintln(s: String) = print(s)
+  val extenstionDirs = Utils.dirsInDir(Utils.extensionsDir)
+  if (extenstionDirs.length > 0) {
+    println("\nScanning extensions...")
+    extenstionDirs.foreach { dir =>
+      val numJars = Utils.numFilesInDir(dir, "jar")
+      println(s"Additional jars available (within $dir) - $numJars")
+    }
+  }
 
   def runCode(code: String): Unit = {
     // Runs on swing thread
@@ -604,10 +615,12 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
         line.trim match {
           case ""                      => true
           case l if l.startsWith("//") => true
-          case l if l.startsWith("/*") => inMultiLineComment = true; true
-          case l if l.startsWith("*/") => inMultiLineComment = false; true
-          case l if l.startsWith("*")  && inMultiLineComment => true
-          case _                       => false
+          case l if l.startsWith("/*") =>
+            inMultiLineComment = true; true
+          case l if l.startsWith("*/") =>
+            inMultiLineComment = false; true
+          case l if l.startsWith("*") && inMultiLineComment => true
+          case _ => false
         }
       }
       val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => !shouldIgnoreLine(line) }
