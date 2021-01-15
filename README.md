@@ -2,7 +2,8 @@
 
 * The [Kojo home-page][1] provides user-level information about Kojo.
 * The [Kojo issue-tracker][3] let's you file bug reports.
-* The [Kojo Localization](localization.md) file tells you how to translate Kojo to your language.
+* The [Kojo Localization file](localization.md) tells you how to translate Kojo to your language.
+* The [Kojo AI repo](https://github.com/litan/kojo-ai-2) adds exciting AI capabilities (Neural Style Transfer and Object Detection via Deep Learning, Graphs, etc.) to Kojo.
 
 **To start hacking:**
 
