@@ -277,7 +277,7 @@ satıryaz("ortak paydaların en büyüğü: " + y)
     "for".h2,
     """Komut dizilerini kolayca yinelemek için kullanabileceğimiz bir yöntem daha var ki belki de en faydalısı. "for (aralık) dizi/deyiş" sayesinde verilen aralıktaki her bir değer için dizi/deyiş yinelenir. 'for' elbet yine ingilizce bir sözcük. Anlamı 'için' demek ("for you" senin için demek). Aralık da nedir mi? Hemen bir örnek görelim:""".p,
     """for(i <- 1 to 4) yaz("merhaba!")""".c,
-    "'to' sözcüğü de bizim yapım/çekim ekimiz gibi, birden dörde kadar derken dörde sözcüğündeki '-e' anlamında. İngilizceyle Türkçe ne kadar çok farklı sanki, değil mi? Bir de bana sorun. 22 yaşında ilk defa yaşamak için Amerika'ya gittiğimde o kadar zorluk çektim ki! Güya iyi biliyordum hem de İngilizceyi! İşimize dönelim: Aralık burada birden dörde kadar olan sayılar elbet. 'i' değişkeni 1 değeriyle başlıyor ve her tekrarda bir artıyor. Son sayı burada 4. Ama sonuncu sayıya gelmeden hemen önce durmak istersek 'to' yerine 'until' sözcüğünü kullanıyoruz, yani kadar anlamına gelen İngilizce sözcük:".p,
+    "'to' sözcüğü de bizim yapım/çekim ekimiz gibi, birden dörde kadar derken dörde sözcüğündeki '-e' anlamında. İngilizceyle Türkçe ne kadar farklı sanki, değil mi? Bir de bana sorun. 22 yaşında ilk defa yaşamak için Amerika'ya gittiğimde o kadar zorluk çektim ki! Güya iyi biliyordum hem de İngilizceyi! İşimize dönelim: Aralık burada birden dörde kadar olan sayılar elbet. 'i' değişkeni 1 değeriyle başlıyor ve her tekrarda bir artıyor. Son sayı burada 4. Ama sonuncu sayıya gelmeden hemen önce durmak istersek 'to' yerine 'until' sözcüğünü kullanıyoruz, yani kadar anlamına gelen İngilizce sözcük:".p,
     """for (i <- 1 until 12) {
   val kare = i*i
   satıryaz(i, kare)
@@ -289,13 +289,13 @@ satıryaz("ortak paydaların en büyüğü: " + y)
     "Şimdi de matematik, bilhassa kartezyen geometrisi sevenlere bir süprizimiz var. Kaplumbağacığı kullanarak bir eğri çizelim. Neyin eğrisi? İki boyutlu bir poligon. Genel olarak a*x^2 + b*x + c diye yazabiliriz. Yine bu çok faydalı olan 'for' yapısıyla:".p,
     """sil
 def eğri(x: Kesir) = 0.001 * x * x + 0.5 * x + 10   // 'def' define yani tanımla demek. Bunu daha sonra daha iyi anlatacağız. 
-gridOn();axesOn() // kare çizgileri ve x ve y eksenlerini çizelim
+gridiGöster(); eksenleriGöster() // kare çizgileri ve x ve y eksenlerini çizelim
 val aralık = 200
 atla(-aralık,eğri(-aralık))
 for(x <- -aralık+10 to aralık; if (x % 10 == 0)) lineTo(x, eğri(x))
 """.c,
     "Eksenleri silelim. Ve bir sonraki bölüme devam edelim!".p,
-    "axesOff(); gridOff()".c
+    "eksenleriGizle(); gridiGizle()".c
   )
 )
 
@@ -1031,6 +1031,8 @@ val (a,b) = (Deneme(5), Deneme(3))""".c,
     def +(öbürü: Önerge) = bu veya öbürü
     def x(öbürü: Önerge) = bu yada öbürü
     def ==(öbürü: Önerge) = doğruMu == öbürü.doğruMu
+    def ==>(öbürü: Önerge) = bu.tersi veya öbürü
+    def <=>(öbürü: Önerge) = (bu ==> öbürü) ve (öbürü ==> bu)
 
     override def toString = if (doğruMu) "doğru" else "yanlış"
     def to01 = if (doğruMu) "1" else "0"
@@ -1041,6 +1043,8 @@ def ve(x: Önerge, y: Önerge) = x ve y
 def veya(x: Önerge, y: Önerge) = x veya y
 def yada(x: Önerge, y: Önerge) = x yada y
 def eşittir(x: Önerge, y: Önerge) = x eşittir y
+def ise(x: Önerge, y: Önerge) = x ==> y
+def gvy(x: Önerge, y: Önerge) = x <=> y // gerek ve yeter
 
 def deneme() = {
     def çizgi = satıryaz("-" * 34)
@@ -1063,7 +1067,7 @@ def deneme() = {
         çizgi
     }
     çizgi
-    for ((bağlam, adı) <- Dizin((ve _, "*"), (veya _, "+"), (yada _, "x"))) {
+    for ((bağlam, adı) <- Dizin((ve _, "*"), (veya _, "+"), (yada _, "x"), (ise _, "==>"), (gvy _, "<=>"))) {
         for (a <- seçenek; b <- seçenek) {
             val c = bağlam(a, b)
             satıryaz(f"$ara ${a.to01}%s $adı%s ${b.to01}%s == ${c.to01}")
@@ -1285,19 +1289,20 @@ canlandırmaHızınıKur(10)
 dön(120)
 ileri(100)""".c, "Kaplumbağacığın hızını belirlemek için bir süre giriyoruz. 100 adımı girdiğimiz kadar milisaniyede atıveriyor. Epey hızlı canım! Başlangıçta 1000milisaniye, yani bir saniye alıyor 100 adım atmak. "),
       row("canlandırmaHızı".c, "100 adımı şu anda kaç milisaniyede attığını bildirir"),
-      row("""newTurtle(50, 50)
-val yk1 = newTurtle(100, 100)
-yk1.back(180)""".c, "Verilen (x, y) noktasında yeni bir kaplumbağa canlandırır. Ne yazık ki henüz türkçe bilmiyor :-(. Geri git yerine 'back' demek gerekiyor."),
-      row("turtle0".c, "Başlangıçtaki kaplumbağamızın adı"),
-      row("turtle0.back(10)".c, "Onu İngilizce komutlarla da çağırabiliriz böyle"),
+      row("""yeniKaplumbağa(50, 50)
+val yk1 = yeniKaplumbağa(100, 100)
+yk1.geri(180)
+""".c, "Verilen (x, y) noktasında yeni bir kaplumbağa canlandırır."),
+      row("kaplumbağa0".c, "Başlangıçtaki kaplumbağamızın adı"),
+      row("kaplumbağa0.geri(100)".c, "Onu böyle metodlarıyla da çağırabiliriz"),
       row("sil()".c, "Tuvali temizler ve başlangıç noktasına döndürür"),
       row("""sil()
 üçgen()
 zoom(0.5, 10, 10)""".c, "(oran, x, y) Tuvali verilen oran kadar büyültür ya da küçültür ve verilen noktayı tam tuvalin merkezine getirir"),
-      row("gridOn()".c, "Tuvalin gridini çizer"),
-      row("gridOff()".c, "Gridi gizler"),
-      row("axesOn()".c, "X ve Y eksenlerini gösterir"),
-      row("axesOff()".c, "Eksenleri saklar")
+      row("gridiGöster()".c, "Tuvalin gridini çizer"),
+      row("gridiGizle()".c, "Gridi gizler"),
+      row("eksenleriGöster()".c, "X ve Y eksenlerini gösterir"),
+      row("eksenleriGizle()".c, "Eksenleri saklar")
     )
   )
 )
@@ -1317,7 +1322,7 @@ pages += Page(
 // Bizim kaplumbağa'nın komutlarıyla çelişen komutlar bu üçü:
 import Staging.{ circle, clear, animate }
 clear()
-gridOn(); axesOn
+gridiGöster(); eksenleriGöster()
 val top = circle(-200, -100, 10) // topu bir daire olarak çizelim
 
 var y = 0; var x = 0 // topun konumunu bu değişkenlerle belirleyeceğiz
@@ -1446,7 +1451,7 @@ animate {
 // Onun için hangisini kullanmak istiyoruz açık açık belirtmemiz gerek:
 import Staging.{ animate, circle, clear, setFillColor, wipe }
 
-çıktıyıSil; clear(); gridOn(); axesOn(); setFillColor(mavi)
+çıktıyıSil; clear(); gridiGöster(); eksenleriGöster(); setFillColor(mavi)
 
 // bu yazılımcıkta hızıKur gibi kaplumba komutları bir işe yaramıyor,
 // çünkü çizimleri yapan kaplumba değil Staging birimini

@@ -228,10 +228,63 @@ object TurkishAPI {
     math.round(sayı.doubleValue * faktor).toLong / faktor
   }
   def rasgele(üstSınır: Sayı) = builtins.random(üstSınır)
+  val rastgele = rasgele _
   def rasgeleKesir(üstSınır: Sayı) = builtins.randomDouble(üstSınır)
+  val rastgeleKesir = rasgeleKesir _
   def rastgeleSeçim = builtins.randomBoolean
   def rastgeleRenk = builtins.randomColor
   def rastgeleŞeffafRenk = builtins.randomTransparentColor
+
+  val kaplumbağa0 = kaplumbağa
+  def yeniKaplumbağa(x: Kesir, y: Kesir) = new Kaplumbağa(x, y)
+
+  lazy val richBuiltins = builtins.asInstanceOf[Builtins]
+
+  def tümEkran = richBuiltins.toggleFullScreenCanvas
+  object tuvalAlanı {
+    def ta = richBuiltins.canvasBounds
+    def en = ta.width
+    def boy = ta.height
+    def x = ta.x
+    def y = ta.y
+    // todo: more..
+  }
+
+  case class Resim(r: richBuiltins.Picture) {
+    val konumuKur = kondur _
+    def kondur(x: Kesir, y: Kesir) = r.setPosition(x, y)
+    def kalemKalınlığınıKur(kalınlık: Sayı) = r.setPenThickness(kalınlık)
+    def kalemRenginiKur = r.setPenColor _
+    def alan = r.area _
+    // todo: more..
+  }
+  object Resim {
+    def çiz(r: Resim) = richBuiltins.draw(r.r)
+    def köşegen(en: Kesir, boy: Kesir) = Resim(richBuiltins.Picture.line(en, boy))
+    def yay(yarıçap: Kesir, açı: Kesir) = Resim(richBuiltins.Picture.arc(yarıçap, açı))
+    def daire(yarıçap: Kesir) = Resim(richBuiltins.Picture.circle(yarıçap))
+    def elips(xYarıçapı: Kesir, yYarıçapı: Kesir) = Resim(richBuiltins.Picture.ellipse(xYarıçapı, yYarıçapı))
+    def elipsDikdörtgenİçinde(en: Kesir, boy: Kesir) = Resim(richBuiltins.Picture.ellipseInRect(en, boy))
+    def yatay(boy: Kesir) = Resim(richBuiltins.Picture.hline(boy))
+    def dikey(boy: Kesir) = Resim(richBuiltins.Picture.vline(boy))
+    def dikdörtgen(en: Kesir, boy: Kesir) = Resim(richBuiltins.Picture.rect(en, boy))
+    def yazı(içerik: Her, yazıBoyu: Sayı) = Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
+    def imge(dosyaAdı: Yazı) = Resim(richBuiltins.Picture.image(dosyaAdı))
+    // Resim.düğme("Merhaba")(println(kg.x))
+    def düğme(ad: Yazı)(işlev: => Birim) = Resim(richBuiltins.Picture.button(ad)(işlev))
+    // Resim.arayüz(Label("Merhaba"))
+    // Resim.arayüz(Button("Merhaba")(println("Selam!")))
+    def arayüz(parça: javax.swing.JComponent) = Resim(richBuiltins.Picture.widget(parça))
+    // todo: more..
+  }
+  def çiz(r: Resim) = Resim.çiz(r)
+
+  def gridiGöster() = richBuiltins.tCanvas.gridOn()
+  def gridiGizle() = richBuiltins.tCanvas.gridOff()
+  def eksenleriGöster() = richBuiltins.tCanvas.axesOn()
+  def eksenleriGizle() = richBuiltins.tCanvas.axesOff()
+
+  // more to come (:-)
 }
 
 object TurkishInit {
