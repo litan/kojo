@@ -93,8 +93,10 @@ object TurkishAPI {
     def ileri() = englishTurtle.forward(25)
     def geri(adım: Kesir) = englishTurtle.back(adım)
     def geri() = englishTurtle.back(25)
+    def sağ(açı: Kesir, yarıçap: Kesir) = englishTurtle.right(açı, yarıçap)
     def sağ(açı: Kesir) = englishTurtle.right(açı)
     def sağ() = englishTurtle.right(90)
+    def sol(açı: Kesir, yarıçap: Kesir) = englishTurtle.left(açı, yarıçap)
     def sol(açı: Kesir) = englishTurtle.left(açı)
     def sol() = englishTurtle.left(90)
     def atla(x: Kesir, y: Kesir) = englishTurtle.jumpTo(x, y)
@@ -173,6 +175,7 @@ object TurkishAPI {
   lazy val camgöbeği = builtins.cyan
 
   // TODO: other Color* constructors -- and Help Content
+  lazy val renkler = builtins.cm
   def Renk(r: Sayı, g: Sayı, b: Sayı, o: Sayı = 255): Renk = new Color(r, g, b, o)
   def arkaplanıKur(r: Renk) = builtins.setBackground(r)
   def arkaplanıKurDik  (r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
@@ -240,7 +243,7 @@ object TurkishAPI {
 
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
-  def tümEkran = richBuiltins.toggleFullScreenCanvas
+  def tümEkran() = richBuiltins.toggleFullScreenCanvas()
   object tuvalAlanı {
     def ta = richBuiltins.canvasBounds
     def en = ta.width
@@ -255,10 +258,11 @@ object TurkishAPI {
     def kondur(x: Kesir, y: Kesir) = r.setPosition(x, y)
     def kalemKalınlığınıKur(kalınlık: Sayı) = r.setPenThickness(kalınlık)
     def kalemRenginiKur = r.setPenColor _
-    def alan = r.area _
+    def alan() = r.area
     // todo: more..
   }
   object Resim {
+    def apply(işlev: => Birim) = richBuiltins.Picture(işlev)
     def çiz(r: Resim) = richBuiltins.draw(r.r)
     def köşegen(en: Kesir, boy: Kesir) = Resim(richBuiltins.Picture.line(en, boy))
     def yay(yarıçap: Kesir, açı: Kesir) = Resim(richBuiltins.Picture.arc(yarıçap, açı))
@@ -321,8 +325,12 @@ object TurkishInit {
     "ileri" -> "ileri(${adım})",
     "geri" -> "geri()",
     "geri" -> "geri(${adım})",
+    "sağ" -> "sağ()",
     "sağ" -> "sağ(${açı})",
+    "sağ" -> "sağ(${açı},${yarıçap})",
+    "sol" -> "sol()",
     "sol" -> "sol(${açı})",
+    "sol" -> "sol(${açı},${yarıçap})",
     "atla" -> "atla(${x},${y})",
     "ilerle" -> "ilerle(${x},${y})",
     "zıpla" -> "zıpla(${adım})",
