@@ -117,9 +117,9 @@ val pTemplates = LinkedHashMap(
     "Resim                  " -> """Resim {
     ${c}ileri(50)
 }""",
-    "resimSırası(resimler)       " -> "picRow(${c}p, p)",
-    "picCol(resimler)       " -> "picCol(${c}p, p)",
-    "picStack(resimler)     " -> "picStack(${c}p, p)",
+    "resimDikeyDizi(resimler) " -> "resimDikeyDizi(${c}p, p)",
+    "resimYatayDizi(resimler) " -> "resimYatayDizi(${c}p, p)",
+    "resimDizisi(resimler)    " -> "resimDizisi(${c}p, p)",
     "çiz(resim)             " -> "çiz(${c}resim)",
     "" -> "",
     "Resim.köşegen(e, b)    " -> "Resim.köşegen(${c}50, 20)",
@@ -132,19 +132,19 @@ val pTemplates = LinkedHashMap(
 )
 
 val ptTemplates = LinkedHashMap(
-    "rot(a)               " -> "rot(${c}45)",
-    "scale(f)             " -> "scale(${c}2)",
-    "trans(x,y)           " -> "trans(${c}10, 10)",
-    "penColor(c)          " -> "penColor(${c}mavi)",
-    "fillColor(c)         " -> "fillColor(${c}mavi)",
-    "penWidth(w)          " -> "penWidth(${c}4)",
-    "hue(f)               " -> "hue(${c}0.1)",
-    "sat(f)               " -> "sat(${c}0.1)",
-    "brit(f)              " -> "brit(${c}0.1)",
-    "opac(f)              " -> "opac(${c}0.1)",
-    "flipX                " -> "flipX",
-    "flipY                " -> "flipY",
-    "axes                 " -> "axes"
+    "döndür(açı)          " -> "döndür(${c}45)",
+    "büyüt(oran)          " -> "büyüt(${c}2.5)",
+    "götür(x,y)           " -> "götür(${c}10, 10)",
+    "kalemRengi(renk)     " -> "kalemRengi(${c}mavi)",
+    "boyaRengi(renk)      " -> "boyaRengi(${c}kırmızı)",
+    "kalemBoyu(boy)       " -> "kalemBoyu(${c}20)",
+    "ton(oran)            " -> "ton(${c}0.1)",
+    "parlaklık(oran)      " -> "parlaklık(${c}0.1)",
+    "aydınlık(oran)       " -> "aydınlık(${c}0.1)",
+    "saydamlık(f)         " -> "saydamlık(${c}0.1)",
+    "yansıtX              " -> "yansıtX",
+    "yansıtY              " -> "yansıtY",
+    "eksenler             " -> "eksenler"
 )
 
 val cTemplates = LinkedHashMap(

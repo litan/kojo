@@ -22,6 +22,7 @@ package net.kogics.kojo.lite.i18n
 
 import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.picture
 import net.kogics.kojo.xscala.RepeatCommands
 
 object TurkishAPI {
@@ -120,7 +121,10 @@ object TurkishAPI {
     def canlandırmaHızınıKur(n: Uzun) = englishTurtle.setAnimationDelay(n)
     def canlandırmaHızı: Uzun = englishTurtle.animationDelay
     def yazı(t: Her) = englishTurtle.write(t)
+    // ~/src/kojo/git/kojo/src/main/scala/net/kogics/kojo/turtle/Turtle.scala
+    // ../../turtle/Turtle.scala
     def yazıBoyunuKur(boyutKur: Sayı) = englishTurtle.setPenFontSize(boyutKur)
+    def yazıYüzünüKur(f: java.awt.Font) = englishTurtle.setPenFont(f)
     def yay(yarıçap: Kesir, açı: Kesir) = englishTurtle.arc(yarıçap, math.round(açı).toInt)
     def dön(açı: Kesir, yarıçap: Kesir) = englishTurtle.turn(açı, yarıçap)
     def dön(açı: Kesir) = englishTurtle.turn(açı)
@@ -253,35 +257,91 @@ object TurkishAPI {
     // todo: more..
   }
 
-  case class Resim(r: richBuiltins.Picture) {
+  // ../../picture/transforms.scala
+  abstract class ComposableTransformer extends Function1[Resim, Resim] { outer =>
+    def apply(r: Resim): Resim
+    def -> (r: Resim) = apply(r)
+    def *(digeri: ComposableTransformer) = new ComposableTransformer {
+      def apply(r: Resim): Resim = outer.apply(digeri.apply(r))
+    }
+  }
+
+  case class Rotc(angle: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Rot(angle)(r.p)) }
+  case class Rotpc(angle: Double, x: Double, y: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Rotp(angle, x, y)(r.p)) }
+  case class Scalec(factor: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Scale(factor)(r.p)) }
+  case class ScaleXYc(x: Double, y: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.ScaleXY(x, y)(r.p)) }
+  case class Opacc(f: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Opac(f)(r.p)) }
+  case class Huec(f: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Hue(f)(r.p)) }
+  case class Satc(f: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Sat(f)(r.p)) }
+  case class Britc(f: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Brit(f)(r.p)) }
+  case class Transc(x: Double, y: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Trans(x, y)(r.p)) }
+  case class Offsetc(x: Double, y: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Offset(x, y)(r.p)) }
+  case object FlipYc extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.FlipY(r.p)) }
+  case object FlipXc extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.FlipX(r.p)) }
+  case object AxesOnc extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.AxesOn(r.p)) }
+  case class Fillc(color: Paint) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Fill(color)(r.p)) }
+  case class Strokec(color: Paint) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Stroke(color)(r.p)) }
+  case class StrokeWidthc(w: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.StrokeWidth(w)(r.p)) }
+  case class PreDrawTransformc(fn: richBuiltins.Picture => Unit) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.PreDrawTransform(fn)(r.p)) }
+  case class PostDrawTransformc(fn: richBuiltins.Picture => Unit) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.PostDrawTransform(fn)(r.p)) }
+
+  def döndür(açı: Double) = Rotc(açı)
+  def döndürMerkez(açı: Double, x: Double, y: Double) = Rotpc(açı, x, y)
+  def büyüt(oran: Double) = Scalec(oran)
+  def büyütXY(xOranı: Double, yOranı: Double) = ScaleXYc(xOranı, yOranı)
+  def saydamlık(oran: Double) = Opacc(oran)
+  def ton(t: Double) = Huec(t)
+  def parlaklık(p: Double) = Satc(p)
+  def aydınlık(a: Double) = Britc(a)
+  def götür(x: Double, y: Double) = Transc(x, y)
+  def kaydır(x: Double, y: Double) = Offsetc(x, y)
+  def yansıtY = FlipYc
+  def yansıtX = FlipXc
+  def eksenler = AxesOnc
+  def boyaRengi(r: Paint) = Fillc(r)
+  def kalemRengi(r: Paint) = Strokec(r)
+  def kalemBoyu(b: Double) = StrokeWidthc(b)
+  def çizimÖncesiİşlev(iv: richBuiltins.Picture => Unit) = PreDrawTransformc(iv)
+  def çizimSonraıİşlev(iv: richBuiltins.Picture => Unit) = PostDrawTransformc(iv)
+
+  class Resim(val p: richBuiltins.Picture) {
+    def kopya: Resim = new Resim(p.copy)
     val konumuKur = kondur _
-    def kondur(x: Kesir, y: Kesir) = r.setPosition(x, y)
-    def kalemKalınlığınıKur(kalınlık: Sayı) = r.setPenThickness(kalınlık)
-    def kalemRenginiKur = r.setPenColor _
-    def alan() = r.area
+    def kondur(x: Kesir, y: Kesir) = p.setPosition(x, y)
+    def kalemKalınlığınıKur(kalınlık: Sayı) = p.setPenThickness(kalınlık)
+    def kalemRenginiKur = p.setPenColor _
+    def alan() = p.area
     // todo: more..
   }
   object Resim {
-    def apply(işlev: => Birim) = richBuiltins.Picture(işlev)
-    def çiz(r: Resim) = richBuiltins.draw(r.r)
-    def köşegen(en: Kesir, boy: Kesir) = Resim(richBuiltins.Picture.line(en, boy))
-    def yay(yarıçap: Kesir, açı: Kesir) = Resim(richBuiltins.Picture.arc(yarıçap, açı))
-    def daire(yarıçap: Kesir) = Resim(richBuiltins.Picture.circle(yarıçap))
-    def elips(xYarıçapı: Kesir, yYarıçapı: Kesir) = Resim(richBuiltins.Picture.ellipse(xYarıçapı, yYarıçapı))
-    def elipsDikdörtgenİçinde(en: Kesir, boy: Kesir) = Resim(richBuiltins.Picture.ellipseInRect(en, boy))
-    def yatay(boy: Kesir) = Resim(richBuiltins.Picture.hline(boy))
-    def dikey(boy: Kesir) = Resim(richBuiltins.Picture.vline(boy))
-    def dikdörtgen(en: Kesir, boy: Kesir) = Resim(richBuiltins.Picture.rect(en, boy))
-    def yazı(içerik: Her, yazıBoyu: Sayı) = Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
-    def imge(dosyaAdı: Yazı) = Resim(richBuiltins.Picture.image(dosyaAdı))
+    def apply(işlev: => Birim): Resim = new Resim(richBuiltins.Picture(işlev))
+    def çiz(r: Resim) = richBuiltins.draw(r.p)
+    def köşegen(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.line(en, boy))
+    def yay(yarıçap: Kesir, açı: Kesir) = new Resim(richBuiltins.Picture.arc(yarıçap, açı))
+    def daire(yarıçap: Kesir) = new Resim(richBuiltins.Picture.circle(yarıçap))
+    def elips(xYarıçapı: Kesir, yYarıçapı: Kesir) = new Resim(richBuiltins.Picture.ellipse(xYarıçapı, yYarıçapı))
+    def elipsDikdörtgenİçinde(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.ellipseInRect(en, boy))
+    def yatay(boy: Kesir) = new Resim(richBuiltins.Picture.hline(boy))
+    def dikey(boy: Kesir) = new Resim(richBuiltins.Picture.vline(boy))
+    def dikdörtgen(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.rect(en, boy))
+    def yazı(içerik: Her, yazıBoyu: Sayı) = new Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
+    def imge(dosyaAdı: Yazı) = new Resim(richBuiltins.Picture.image(dosyaAdı))
     // Resim.düğme("Merhaba")(println(kg.x))
-    def düğme(ad: Yazı)(işlev: => Birim) = Resim(richBuiltins.Picture.button(ad)(işlev))
+    def düğme(ad: Yazı)(işlev: => Birim) = new Resim(richBuiltins.Picture.button(ad)(işlev))
     // Resim.arayüz(Label("Merhaba"))
     // Resim.arayüz(Button("Merhaba")(println("Selam!")))
-    def arayüz(parça: javax.swing.JComponent) = Resim(richBuiltins.Picture.widget(parça))
+    def arayüz(parça: javax.swing.JComponent) = new Resim(richBuiltins.Picture.widget(parça))
     // todo: more..
   }
   def çiz(r: Resim) = Resim.çiz(r)
+  def çizMerkezde(r: Resim) = richBuiltins.drawCentered(r.p)
+
+  def resimDizisi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.toList.map(_.p)))
+  def resimDikeyDizi(rd: Resim*) = new Resim(richBuiltins.picCol(rd.toList.map(_.p)))
+  def resimYatayDizi(rd: Resim*) = new Resim(richBuiltins.picRow(rd.toList.map(_.p)))
+  def resimDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picStackCentered(rd.toList.map(_.p)))
+  def resimDikeyDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picColCentered(rd.toList.map(_.p)))
+  def resimYatayDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picRowCentered(rd.toList.map(_.p)))
 
   def gridiGöster() = richBuiltins.tCanvas.gridOn()
   def gridiGizle() = richBuiltins.tCanvas.gridOff()
