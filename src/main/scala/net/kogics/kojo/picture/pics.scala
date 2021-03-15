@@ -872,23 +872,26 @@ class BatchPics(pics: List[Picture]) extends BasePicList(pics) {
     }
   }
 
-  var currPic = 0
+  var currPicIndex = 0
   var lastDraw = System.currentTimeMillis
+
+  def currentPicture = pics(currPicIndex)
+
   override def showNext(gap: Long) = Utils.runInSwingThread {
     val currTime = System.currentTimeMillis
     if (currTime - lastDraw > gap) {
-      pics(currPic).invisible()
-      currPic += 1
-      if (currPic == pics.size) {
-        currPic = 0
+      pics(currPicIndex).invisible()
+      currPicIndex += 1
+      if (currPicIndex == pics.size) {
+        currPicIndex = 0
       }
-      pics(currPic).visible()
+      pics(currPicIndex).visible()
       lastDraw = currTime
     }
   }
 
   override def picGeom: Geometry = Utils.runInSwingThreadAndWait {
-    pgTransform.transform(pics(currPic).picGeom)
+    pgTransform.transform(pics(currPicIndex).picGeom)
   }
 
   def copy = BatchPics(picsCopy).withGap(padding)
