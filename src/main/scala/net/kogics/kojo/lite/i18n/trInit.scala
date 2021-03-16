@@ -109,6 +109,7 @@ object TurkishAPI {
     }
     def zıpla(): Birim = zıpla(25)
     def ev() = englishTurtle.home()
+    def noktayaDön(p: Point) = englishTurtle.towards(p)
     def noktayaDön(x: Kesir, y: Kesir) = englishTurtle.towards(x, y)
     def noktayaGit(x: Kesir, y: Kesir) = englishTurtle.lineTo(x, y)
     def noktayaGit(n: Nokta) = englishTurtle.lineTo(n)
@@ -148,10 +149,23 @@ object TurkishAPI {
     def birsonrakiGiysi() = englishTurtle.nextCostume()
     def hızıKur(hız: Hız) = englishTurtle.setSpeed(hız)
   }
+
   class Kaplumbağa(override val englishTurtle: Turtle) extends TurkishTurtle {
     def this(startX: Kesir, startY: Kesir, costumeFileName: Yazı) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Kesir, startY: Kesir) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
+    def uzaklık(öbürü: Kaplumbağa) = englishTurtle.distanceTo(öbürü.englishTurtle)
+    def çevir(öbürü: Kaplumbağa) = englishTurtle.towards(öbürü.englishTurtle)
+    // get f: Turtle => Unit from g: Kaplumbağa => Birim
+    val bu = this // Function1 has its own this
+    def davran(işlev: Kaplumbağa => Birim) = {
+      val f = new Function1[Turtle, Unit] { def apply(t: Turtle) = işlev(bu) }
+      englishTurtle.act(f)
+    }
+    def tepkiVer(işlev: Kaplumbağa => Birim) = {
+      val f = new Function1[Turtle, Unit] { def apply(t: Turtle) = işlev(bu) }
+      englishTurtle.react(f)
+    }
   }
   class Kaplumbağa0(t0: => Turtle) extends TurkishTurtle { //by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
@@ -347,6 +361,10 @@ object TurkishAPI {
   def gridiGizle() = richBuiltins.tCanvas.gridOff()
   def eksenleriGöster() = richBuiltins.tCanvas.axesOn()
   def eksenleriGizle() = richBuiltins.tCanvas.axesOff()
+
+  // todo: help doc
+  def artalandaOynat(kod: => Unit) = richBuiltins.runInBackground(kod)
+  def fareKonumu = richBuiltins.mousePosition
 
   // more to come (:-)
 }
