@@ -114,37 +114,37 @@ val aTemplates = LinkedHashMap(
 )
 
 val pTemplates = LinkedHashMap(
-    "Picture              " -> """Picture {
-    ${c}forward(50)
+    "Resim                  " -> """Resim {
+    ${c}ileri(50)
 }""",
-    "picRow(pics)             " -> "picRow(${c}p, p)",
-    "picCol(pics)             " -> "picCol(${c}p, p)",
-    "picStack(pics)           " -> "picStack(${c}p, p)",
-    "draw(pics)               " -> "draw(${c}pic)",
+    "resimDikeyDizi(resimler) " -> "resimDikeyDizi(${c}p, p)",
+    "resimYatayDizi(resimler) " -> "resimYatayDizi(${c}p, p)",
+    "resimDizisi(resimler)    " -> "resimDizisi(${c}p, p)",
+    "çiz(resim)             " -> "çiz(${c}resim)",
     "" -> "",
-    "Picture.line(w, h)       " -> "Picture.line(${c}50, 0)",
-    "Picture.rectangle(w, h)  " -> "Picture.rectangle(${c}100, 50)",
-    "Picture.circle(r)        " -> "Picture.circle(${c}50)",
-    "Picture.ellipse(rx, ry)  " -> "Picture.ellipse(${c}50, 25)",
-    "Picture.text(s, n)       " -> """Picture.text(${c}"Hello", 18)""",
-    "Picture.image(f)         " -> "Picture.image(${c}Costume.womanWaving)",
-    "Picture.widget(c)        " -> """Picture.widget(${c}Label("Hi there"))"""
+    "Resim.köşegen(e, b)    " -> "Resim.köşegen(${c}50, 20)",
+    "Resim.dikdörtgen(e, b) " -> "Resim.dikdörtgen(${c}100, 50)",
+    "Resim.daire(yç)        " -> "Resim.daire(${c}50)",
+    "Resim.elips(yçx, yçy)  " -> "Resim.elips(${c}50, 25)",
+    "Resim.yazı(y, boyu)    " -> """Resim.yazı(${c}"Merhaba!", 18)""",
+    "Resim.imge(f)          " -> "Resim.imge(${c}Costume.womanWaving)",
+    "Resim.arayüz(jc)       " -> """Resim.arayüz(${c}Label("Selam!"))"""
 )
 
 val ptTemplates = LinkedHashMap(
-    "rot(a)               " -> "rot(${c}45)",
-    "scale(f)             " -> "scale(${c}2)",
-    "trans(x,y)           " -> "trans(${c}10, 10)",
-    "penColor(c)          " -> "penColor(${c}mavi)",
-    "fillColor(c)         " -> "fillColor(${c}mavi)",
-    "penWidth(w)          " -> "penWidth(${c}4)",
-    "hue(f)               " -> "hue(${c}0.1)",
-    "sat(f)               " -> "sat(${c}0.1)",
-    "brit(f)              " -> "brit(${c}0.1)",
-    "opac(f)              " -> "opac(${c}0.1)",
-    "flipX                " -> "flipX",
-    "flipY                " -> "flipY",
-    "axes                 " -> "axes"
+    "döndür(açı)          " -> "döndür(${c}45)",
+    "büyüt(oran)          " -> "büyüt(${c}2.5)",
+    "götür(x,y)           " -> "götür(${c}10, 10)",
+    "kalemRengi(renk)     " -> "kalemRengi(${c}mavi)",
+    "boyaRengi(renk)      " -> "boyaRengi(${c}kırmızı)",
+    "kalemBoyu(boy)       " -> "kalemBoyu(${c}20)",
+    "ton(oran)            " -> "ton(${c}0.1)",
+    "parlaklık(oran)      " -> "parlaklık(${c}0.1)",
+    "aydınlık(oran)       " -> "aydınlık(${c}0.1)",
+    "saydamlık(f)         " -> "saydamlık(${c}0.1)",
+    "yansıtX              " -> "yansıtX",
+    "yansıtY              " -> "yansıtY",
+    "eksenler             " -> "eksenler"
 )
 
 val cTemplates = LinkedHashMap(
