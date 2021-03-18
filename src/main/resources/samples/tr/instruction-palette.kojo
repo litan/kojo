@@ -55,7 +55,7 @@ val tTemplates = LinkedHashMap(
     "kalemRenginiKur(renk)" -> "kalemRenginiKur(${c}rastgeleRenk)",
     "boyamaRenginiKur(r)  " -> "boyamaRenginiKur(${c}mavi)",
     "kalemKalınlığınıKur(k)" -> "kalemKalınlığınıKur(${c}4)",
-    "arkaplanıKur(renk)   " -> "arkaplanıKur(${c}siyah)",
+    "artalanıKur(renk)    " -> "artalanıKur(${c}siyah)",
     "konumVeYönüBelleğeYaz()" -> "konumVeYönüBelleğeYaz()",
     "konumVeYönüGeriYükle()" -> "konumVeYönüGeriYükle()",
     "yinele(s) {...}      " -> """yinele(${c}4) {
@@ -117,9 +117,9 @@ val pTemplates = LinkedHashMap(
     "Resim                  " -> """Resim {
     ${c}ileri(50)
 }""",
-    "resimDikeyDizi(resimler) " -> "resimDikeyDizi(${c}p, p)",
-    "resimYatayDizi(resimler) " -> "resimYatayDizi(${c}p, p)",
-    "resimDizisi(resimler)    " -> "resimDizisi(${c}p, p)",
+    "resimDikeyDizi(resimler) " -> "resimDikeyDizi(${c}r, r)",
+    "resimYatayDizi(resimler) " -> "resimYatayDizi(${c}r, r)",
+    "resimDizisi(resimler)    " -> "resimDizisi(${c}r, r)",
     "çiz(resim)             " -> "çiz(${c}resim)",
     "" -> "",
     "Resim.köşegen(e, b)    " -> "Resim.köşegen(${c}50, 20)",
