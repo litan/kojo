@@ -472,7 +472,7 @@ trait AppMenu {
                <li>Massimo Maria Ghisalberti</li>
                <li>Luka Volaric</li>
                <li>Marcus Klang</li>
-               <li>Bulent Basaran</li>
+               <li>Bülent Başaran</li>
                <li>Guillermo Ovejero</li>
                <li>Alberto R.R. Manzanares</li>
               </ul>
