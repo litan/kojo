@@ -19,11 +19,10 @@ import scala.math._ // karekök ve trigonometri işlemleri yapmak için
 val kenarUzunluğu: Kesir = 40 // taşımızın kenar uzunluğu
 
 val dönüşSayısı = 8 // kaç dönüş olsun? Merkezdeki taşı saymıyoruz.
-val yavaşlatma = 2 // 0 bir anda çizer. 1000 epey yavaşlatır ve her bir taşın nasıl çizildiğini görebilirsin
+val yavaşlatma = 4 // 0 bir anda çizer. 1000 çok yavaşlatır ve her bir taşın nasıl çizildiğini görebilirsin
 
 sil()
-yaklaşXY(0.4, 0.4, 0, 0) // 8 dönüşün sığması için uzaklaşalım biraz
-// todo  yaklaş(0.3)
+yaklaş(0.4) // 8 dönüşün sığması için uzaklaşalım biraz
 
 // Başlangıç renkleri ve merkezdeki taş türü. Bunları her dönüşte değiştiriyoruz
 var renk1 = Renk(235, 0, 20)
@@ -53,10 +52,12 @@ def taş1 {
     kalemiİndir()
     sol(30)
     yinele(6) {
-        yinele(3) {
+        yinele(3) { // altıgenin her kenarına bir eşkenar üçgen çizelim
             ileri(kenarUzunluğu)
             sağ(120)
         }
+        // üçgenin taban olmayan iki kenarının orta noktalarını bağlayalım
+        // bu sayede taşın ortasında bir eşkenar üçgen daha oluşacak
         sağ(60)
         yinele(3) {
             ileri(kenarUzunluğu / 2)
@@ -68,31 +69,35 @@ def taş1 {
     sağ(30)
     kalemiKaldır
 
+    // bir beşgen çizelim!
     kalemRenginiKur(renk2)
     kalemiİndir
     sol(30)
     yinele(6) {
-        yinele(5) {
+        yinele(5) { // altıgenin bu kenarı beşgenin tabanı olsun
             ileri(kenarUzunluğu)
             sağ(72)
         }
-        ileri(kenarUzunluğu)
+        ileri(kenarUzunluğu) // altıgenin bir sonraki kenarına geçelim
         sağ(60)
     }
     kalemiKaldır
-    sağ(30)
+    sağ(30) // kuzeye bakalım
 }
 
 def taş2 {
+    // Altıgenin içine bir daire çizelim
+    // Merkezi taşın merkezinde olacak
     sağ()
     ileri(kenarUzunluğu / 2)
     kalemRenginiKur(renk2)
     kalemiİndir
-    daire(kenarUzunluğu * sqrt(3.0) / 2)
+    daire(kenarUzunluğu * sqrt(3.0) / 2) // yarıçap!
     kalemiKaldır
     geri(kenarUzunluğu / 2)
-    sol()
+    sol() // ilk konum ve doğrultuya döndük
 
+    // taşın içine kesişen kareler çizelim
     kalemRenginiKur(renk1)
     kalemiİndir
     yinele(6) {
@@ -105,6 +110,7 @@ def taş2 {
     }
     kalemiKaldır
 
+    // bir de küçük bir çember
     sağ(30)
     ileri(kenarUzunluğu / 2)
     sağ(90)
@@ -117,54 +123,62 @@ def taş2 {
     sol(30)
 }
 
-def birTaşÇiz(taşTürü: Int) = taşTürü match {
+// her dönüşte yeni bir taş/desen seçimi yapıyoruz
+def birTaş(taşTürü: Int) = taşTürü match {
     case 1 => taş1
     case 2 => taş2
     case 3 => taş3
 }
 
-def birKolÇiz(taşSayısı: Int, doğrultu: Double, taşTürü: Integer) {
-    // burdaDur(s"birKolÇiz taşSayısı: $taşSayısı")
+// verilen taş sayısı kadar taşı bir doğrultu üzerinde çizeceğiz
+def birKenar(taşSayısı: Int, doğrultu: Double, taşTürü: Integer) {
+    // burdaDur(s"birKenar taşSayısı: $taşSayısı")
     yinele(taşSayısı) {
         sol(doğrultu)
-        birTaşÇiz(taşTürü)
+        birTaş(taşTürü)
         sağ(doğrultu)
         sağ(doğrultu % 120 - 30)
         ileri(kenarUzunluğu)
         sol(2 * (doğrultu % 120 - 30))
         ileri(kenarUzunluğu)
         sağ(doğrultu % 120 - 30)
-
     }
     sağ(60)
 }
+
+// altı kenar çizerek bir dönüşü tamamlayacağız
 def birDönüş(kısaKenar: Int) {
-    //burdaDur(s"birDönüş kısaKenar: $kısaKenar")
-    taşTürü = taşTürü match {
+    // burdaDur(s"birDönüş kısaKenar: $kısaKenar")
+    taşTürü = taşTürü match { // her dönüşte bir sonraki taş desenini kullanalım
         case 1 => 2
         case 2 => 3
         case 3 => 1
     }
-    birKolÇiz(kısaKenar, 0, taşTürü)
-    birKolÇiz(kısaKenar + 1, 60, taşTürü)
-    birKolÇiz(kısaKenar + 1, 120, taşTürü)
-    birKolÇiz(kısaKenar + 1, 180, taşTürü)
-    birKolÇiz(kısaKenar + 1, 240, taşTürü)
-    birKolÇiz(kısaKenar + 2, 300, taşTürü)
+    // ilk dönüşte ilk kenar taş çizmez! Bir kenardaki taş sayısı her dönüşte artıyor:
+    birKenar(kısaKenar, 0, taşTürü)       // 0  1  2 ...
+    birKenar(kısaKenar + 1, 60, taşTürü)  // 1  2  3 ...
+    birKenar(kısaKenar + 1, 120, taşTürü) // 1  2  3 ...
+    birKenar(kısaKenar + 1, 180, taşTürü) // 1  2  3 ...
+    birKenar(kısaKenar + 1, 240, taşTürü) // 1  2  3 ...
+    birKenar(kısaKenar + 2, 300, taşTürü) // 2  3  4 ...
+    //                              Toplam:  6 12 18 ...
 }
+
+// Bütün desenler ve tanımlar hazır. Artık çizebiliriz
 canlandırmaHızınıKur(yavaşlatma)
 kalemiKaldır() // sadece taşları çizerken kalemi indireceğiz
-birTaşÇiz(taşTürü)
-sol(30)
-ileri(kenarUzunluğu)
-sol(60)
-ileri(kenarUzunluğu)
-sağ()
+
+birTaş(taşTürü) // merkez taş
+// bir sonraki dönüşün sol alt köşesindeki başlangıç konumuna ve doğrultusuna gidelim
+sol(30); ileri(kenarUzunluğu)
+sol(60); ileri(kenarUzunluğu); sağ()
 for (i <- 0 to dönüşSayısı - 1) {
-    if (dönüşSayısı != 0) { // Sıfıra bölmeyelim
-        renk1 = Renk(235 - 128 / dönüşSayısı * (i + 1), 128 / dönüşSayısı * (i + 1), 20)
-        renk2 = Renk(20, 128 / dönüşSayısı * (i + 1), 255 - 128 / dönüşSayısı * (i + 1))
-        renk3 = Renk(128 / dönüşSayısı * (i + 1), 20, 255 - 128 / dönüşSayısı * (i + 1))
+    if (dönüşSayısı != 0) { // ilk taş için renkleri değiştirmeye gerek yok
+        val r1 = 128 / dönüşSayısı * (i + 1)
+        val r2 = 235 - r1
+        renk1 = Renk(r2, r1, 20)
+        renk2 = Renk(20, r1, r2)
+        renk3 = Renk(r1, 20, r2)
     }
     birDönüş(i)
 }
