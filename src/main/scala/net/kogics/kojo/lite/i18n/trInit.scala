@@ -578,6 +578,7 @@ object TurkishAPI {
   def tuvalinTavanı = new Resim(richBuiltins.tCanvas.stageTop)
   def tuvalinTabanı = new Resim(richBuiltins.tCanvas.stageBot)
   def tuvalBölgesi = new Resim(richBuiltins.tCanvas.stageArea)
+  def yaklaş(oran: Kesir) = richBuiltins.tCanvas.zoom(oran)
   def yaklaşXY(xOran: Kesir, yOran: Kesir, xMerkez: Kesir, yMerkez: Kesir) =
     richBuiltins.tCanvas.zoomXY(xOran, yOran, xMerkez, yMerkez)
   def yaklaşmayıSil() = richBuiltins.tCanvas.resetPanAndZoom()
