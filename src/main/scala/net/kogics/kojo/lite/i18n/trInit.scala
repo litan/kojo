@@ -247,7 +247,6 @@ object TurkishAPI {
 
   //simple IO
   def satıroku(istem: Yazı = "") = builtins.readln(istem)
-
   def satıryaz(data: Her) = println(data) //Transferred here from sv.tw.kojo.
   def satıryaz() = println()
   def yaz(data: Her) = print(data)
@@ -272,10 +271,26 @@ object TurkishAPI {
 
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
+  def buradaDur = burdaDur _
+  def burdaDur(mesaj: Any) = richBuiltins.breakpoint(mesaj)
+
+  def sayıOku(istem: Yazı = "") = richBuiltins.readInt(istem)
+  def kesirOku(istem: Yazı = "") = richBuiltins.readDouble(istem)
+
   def müzikÇal(mp3dosyası: Yazı) = richBuiltins.playMp3(mp3dosyası)
   def sesÇal(mp3dosyası: Yazı) = richBuiltins.playMp3Sound(mp3dosyası)
   def müzikÇalDöngülü(mp3dosyası: Yazı) = richBuiltins.playMp3Loop(mp3dosyası)
 
+  def kojoVarsayılanBakışaçısınıKur() = richBuiltins.switchToDefaultPerspective()
+  def kojoVarsayılanİkincıBakışaçısınıKur() = richBuiltins.switchToDefault2Perspective()
+  def kojoYazılımcıkBakışaçısınıKur() = richBuiltins.switchToScriptEditingPerspective()
+  def kojoÇalışmaSayfalıBakışaçısınıKur() = richBuiltins.switchToWorksheetPerspective()
+  def kojoÖyküBakışaçısınıKur() = richBuiltins.switchToStoryViewingPerspective()
+  def kojoGeçmişBakışaçısınıKur() = richBuiltins.switchToHistoryBrowsingPerspective()
+  def kojoÇıktılıÖyküBakışaçısınıKur() = richBuiltins.switchToOutputStoryViewingPerspective()
+
+  def tümEkranÇıktı() = richBuiltins.toggleFullScreenOutput()
+  def tümEkranTuval() = tümEkran()
   def tümEkran() = richBuiltins.toggleFullScreenCanvas()
   object tuvalAlanı {
     def ta = richBuiltins.canvasBounds
@@ -340,11 +355,32 @@ object TurkishAPI {
   case class Spinc(n: Int) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Spin(n)(r.p)) }
   case class Reflectc(n: Int) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Reflect(n)(r.p)) }
   // ../../picture/picimage.scala
+  case class Fadec(n: Int) extends ComposableImageEffect {
+    def apply(r: Resim) = new Resim(picture.Fade(n)(epic(r)))
+  }
+  case class Blurc(n: Int) extends ComposableImageEffect {
+    def apply(r: Resim) = new Resim(picture.Blur(n)(epic(r)))
+  }
+  case class PointLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
+    def apply(r: Resim) = new Resim(picture.PointLightEffect(x, y, direction, elevation, distance)(epic(r)))
+  }
+  case class SpotLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
+    def apply(r: Resim) = new Resim(picture.SpotLightEffect(x, y, direction, elevation, distance)(epic(r)))
+  }
+  case class Lightsc(lights: com.jhlabs.image.LightFilter.Light*) extends ComposableImageEffect {
+    def apply(r: Resim) = new Resim(picture.Lights(lights: _*)(epic(r)))
+  }
   case class Noisec(amount: Int, density: Double) extends ComposableImageEffect {
     def apply(r: Resim) = new Resim(picture.Noise(amount, density)(epic(r)))
   }
   case class Weavec(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) extends ComposableImageEffect {
     def apply(r: Resim) = new Resim(picture.Weave(xWidth, xGap, yWidth, yGap)(epic(r)))
+  }
+  case class SomeEffectc(name: Symbol, props: Tuple2[Symbol, Any]*) extends ComposableImageEffect {
+    def apply(r: Resim) = new Resim(picture.SomeEffect(name, props: _*)(epic(r)))
+  }
+  case class ApplyFilterc(filter: java.awt.image.BufferedImageOp) extends ComposableImageEffect {
+    def apply(r: Resim) = new Resim(picture.ApplyFilter(filter)(epic(r)))
   }
   // ../../picture/package.scala
   def döndür(açı: Kesir) = Rotc(açı)
@@ -368,6 +404,13 @@ object TurkishAPI {
   def çizimSonrasıİşlev(iv: Resim => Birim) = PostDrawTransformc(iv)
   def çevir(sayı: Sayı) = Spinc(sayı)
   def yansıt(sayı: Sayı) = Reflectc(sayı)
+  def soluk(n: Sayı) = Fadec(n)
+  def bulanık(n: Sayı) = Blurc(n)
+  def noktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = PointLightc(x, y, yön, yükseklik, uzaklık)
+  def sahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = SpotLightc(x, y, yön, yükseklik, uzaklık)
+  def ışıklar(ışıklar: com.jhlabs.image.LightFilter.Light*) = Lightsc(ışıklar: _*)
+  def birEfekt(isim: Symbol, özellikler: Tuple2[Symbol, Any]*) = SomeEffectc(isim, özellikler: _*)
+  def filtre(filtre: java.awt.image.BufferedImageOp) = ApplyFilterc(filtre)
   def gürültü(miktar: Sayı, yoğunluk: Kesir) = Noisec(miktar, yoğunluk)
   def örgü(xBoyu: Kesir, xAra: Kesir, yBoyu: Kesir, yAra: Kesir) = Weavec(xBoyu, xAra, yBoyu, yAra)
   // ../../core/Picture.scala
@@ -446,13 +489,17 @@ object TurkishAPI {
     def tepkileriDurdur() = p.stopReactions()
     def dönüştür(fn: Seq[richBuiltins.PolyLine] => Seq[richBuiltins.PolyLine]) = p.morph(fn)
     def yinele(fn: richBuiltins.PolyLine => Unit) = p.foreachPolyLine(fn)
+    // ../../picture/pics.scala
+    def boşluk(uzunluk: Kesir): Resim = p match {
+      case rd: picture.BasePicList => new Resim(rd.withGap(uzunluk))
+      case _ => this
+    }
     def imge = p.toImage
     def girdiyiAktar(r: Resim) = p.forwardInputTo(r.p)
     def öneAl() = p.moveToFront()
     def ardaAl() = p.moveToBack()
     def arkayaAl() = ardaAl()
-    def sonraGöster() = p.showNext()
-    def sonraGöster(ara: Uzun) = p.showNext(ara)
+    def sonrakiniGöster(ara: Uzun = 100) = p.showNext(ara)
     def güncelle(yeniVeri: Her) = p.update(yeniVeri)
     def çizimiKontrolEt(mesaj: Yazı) = p.checkDraw(mesaj)
     def yana(başka: Resim) = p.beside(başka.p)
@@ -484,7 +531,11 @@ object TurkishAPI {
     def yatay(boy: Kesir) = new Resim(richBuiltins.Picture.hline(boy))
     def dikey(boy: Kesir) = new Resim(richBuiltins.Picture.vline(boy))
     def dikdörtgen(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.rect(boy, en)) // they are swapped!
-    def yazı(içerik: Her, yazıBoyu: Sayı) = new Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
+    // ../../Picture/package.scala
+    def satır(r: => Resim, kaçTane: Sayı) = new Resim(picture.row(r.p, kaçTane))
+    def sütun(r: => Resim, kaçTane: Sayı) = new Resim(picture.col(r.p, kaçTane))
+    def yazı(içerik: Her, yazıBoyu: Sayı=15) = new Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
+    def yazıRenkli(içerik: Her, yazıBoyu: Sayı, renk: Renk) = new Resim(richBuiltins.Picture.textu(içerik, yazıBoyu, renk))
     def imge(dosyaAdı: Yazı) = new Resim(richBuiltins.Picture.image(dosyaAdı))
     // Resim.düğme("Merhaba")(println(kg.x))
     def düğme(ad: Yazı)(işlev: => Birim) = new Resim(richBuiltins.Picture.button(ad)(işlev))
@@ -504,12 +555,20 @@ object TurkishAPI {
   def çizSahne(boya: Paint) = richBuiltins.tCanvas.drawStage(boya)
   def çizMerkezdeYazı(mesaj: Yazı, renk: Renk, yazıBoyu: Sayı) = richBuiltins.drawCenteredMessage(mesaj, renk, yazıBoyu)
 
-  def resimDizisi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.toList.map(_.p)))
-  def resimDikeyDizi(rd: Resim*) = new Resim(richBuiltins.picCol(rd.toList.map(_.p)))
-  def resimYatayDizi(rd: Resim*) = new Resim(richBuiltins.picRow(rd.toList.map(_.p)))
-  def resimDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picStackCentered(rd.toList.map(_.p)))
-  def resimDikeyDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picColCentered(rd.toList.map(_.p)))
-  def resimYatayDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picRowCentered(rd.toList.map(_.p)))
+  def resimDizisi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.map(_.p)))
+  def resimDikeyDizi(rd: Resim*) = new Resim(richBuiltins.picCol(rd.map(_.p)))
+  def resimYatayDizi(rd: Resim*) = new Resim(richBuiltins.picRow(rd.map(_.p)))
+  def resimDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picStackCentered(rd.map(_.p)))
+  def resimDikeyDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
+  def resimYatayDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
+  def resimKümesi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.map(_.p)))
+  def resimDizisi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStack(rd.map(_.p)))
+  def resimDikeyDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picCol(rd.map(_.p)))
+  def resimYatayDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRow(rd.map(_.p)))
+  def resimDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStackCentered(rd.map(_.p)))
+  def resimDikeyDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
+  def resimYatayDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
+  def resimKümesi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStack(rd.map(_.p)))
 
   // ../DrawingCanvasAPI.scala
   def tuval = tuvalSınırları  // stageBorder
@@ -538,18 +597,46 @@ object TurkishAPI {
   def cetveliGöster():richBuiltins.Picture = cetveliGöster(-tuvalAlanı.en/2, tuvalAlanı.boy/2)
   def cetveliGöster(x: Kesir, y: Kesir):richBuiltins.Picture = richBuiltins.tCanvas.showScale(x, y)
 
+  def çizimiKaydet(dosyaAdı: Yazı) = richBuiltins.tCanvas.exportImage(dosyaAdı)
+  def çizimiKaydet(dosyaAdı: Yazı, en: Sayı, boy: Sayı) = richBuiltins.tCanvas.exportImage(dosyaAdı, en, boy)
+  def çizimiKaydetBoy(dosyaAdı: Yazı, boy: Sayı) = richBuiltins.tCanvas.exportImageH(dosyaAdı, boy)
+  def çizimiKaydetEn(dosyaAdı: Yazı, en: Sayı) = richBuiltins.tCanvas.exportImageW(dosyaAdı, en)
+  def çizimiPulBoyundaKaydet(dosyaAdı: Yazı, boy: Sayı) = richBuiltins.tCanvas.exportThumbnail(dosyaAdı, boy)
+
   // todo: help doc
   def artalandaOynat(kod: => Unit) = richBuiltins.runInBackground(kod)
   def fareKonumu = richBuiltins.mousePosition
   def yorumla(komutDizisi: Yazı) = richBuiltins.interpret(komutDizisi)
+  def yineleSayaçla(miliSaniye: Uzun)(işlev: => Birim) = richBuiltins.tCanvas.timer(miliSaniye)(işlev)
   def canlandır(işlev: => Birim) = richBuiltins.tCanvas.animate(işlev)
   def durdur() = richBuiltins.stopAnimation()
   def tuvaliEtkinleştir() = richBuiltins.activateCanvas()
+  def yazılımcıkDüzenleyicisiniEtkinleştir() = richBuiltins.activateEditor()
   def sahneKenarındanYansıtma(r: Resim, yöney: richBuiltins.Vector2D): richBuiltins.Vector2D =
     richBuiltins.bouncePicOffStage(r.p, yöney)
   def engeldenYansıtma(r: Resim, yöney: richBuiltins.Vector2D, engel: Resim): richBuiltins.Vector2D =
     richBuiltins.bouncePicOffPic(r.p, yöney, engel.p)
   def tuşaBasılıMı(tuş: Sayı) = richBuiltins.isKeyPressed(tuş)
+
+  def çıktıArtalanınıKur(renk: Renk) = richBuiltins.setOutputBackground(renk)
+  def çıktıYazıRenginiKur(renk: Renk) = richBuiltins.setOutputTextColor(renk)
+  def çıktıYazıYüzüBoyunuKur(boy: Sayı) = richBuiltins.setOutputTextFontSize(boy)
+  def tuvalBoyutOranınınKur(oran: Kesir) = richBuiltins.setDrawingCanvasAspectRatio(oran)
+  def tuvalBoyutlarınıKur(en: Sayı, boy: Sayı) = richBuiltins.setDrawingCanvasSize(en, boy)
+
+  /* ../../widget/swingwrappers.scala
+   Some are used in addition*.scala sample and others:
+   RowPanel
+   ColPanel
+   TextField
+   TextArea
+   Label
+   Button
+   ToggleButton
+   DropDown
+   Slider
+   */
+
   // more to come (:-)
 }
 

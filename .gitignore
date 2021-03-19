@@ -17,3 +17,4 @@ target/
 dist/
 Kojo.zip
 log
+**/.DS_Store
