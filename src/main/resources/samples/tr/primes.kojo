@@ -26,15 +26,15 @@ elek((2 to 50).toList)
 def elek2(sayılar: MiskinDizin[Sayı]): MiskinDizin[Sayı] = sayılar match {
     case sayı #:: gerisi => sayı #:: elek2(gerisi.filter { e => e % sayı != 0 })
 }
-elek2(MiskinDizin.from(2)).take(15).toList
+elek2(MiskinDizin.sayalım(2)).take(15).toList
 
 // (1c) En baştan MiskinDizin kullanarak da sade birşekilde çözebiliriz
 def elek3(sayılar: MiskinDizin[Sayı]): MiskinDizin[Sayı] = {
     sayılar.head #:: elek3(sayılar.tail.filter { e => e % sayılar.head != 0 })
 }
-elek3(MiskinDizin.from(2)).take(15).toList
+elek3(MiskinDizin.sayalım(2)).take(15).toList
 
 // (2) MiskinDizin yöntemini kullanarak daha verimli bir yöntem de şudur:
-val asallar: MiskinDizin[Sayı] = 2 #:: MiskinDizin.from(3, 2).filter { asalMı }
+val asallar: MiskinDizin[Sayı] = 2 #:: MiskinDizin.sayalım(3, 2).filter { asalMı }
 def asalMı(n: Sayı) = asallar.takeWhile { j => j * j <= n }.forall { p => n % p != 0 }
 asallar.take(15).toList

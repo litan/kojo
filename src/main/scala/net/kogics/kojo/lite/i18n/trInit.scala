@@ -79,7 +79,7 @@ object TurkishAPI {
   val Boş = scala.collection.immutable.Nil
   type MiskinDizin[C] = LazyList[C]
   object MiskinDizin {
-    def from(e: Sayı, adım: Sayı = 1) = LazyList.from(e, adım)
+    def sayalım(başlangıç: Sayı, kaçarKaçar: Sayı = 1) = LazyList.from(başlangıç, kaçarKaçar)
   }
 
   // Used in Conway's game of life code in the tutorial
