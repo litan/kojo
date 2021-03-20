@@ -133,6 +133,9 @@ object TurkishAPI {
     def dön(açı: Kesir) = englishTurtle.turn(açı)
     def daire(yarıçap: Kesir) = englishTurtle.circle(yarıçap)
     def konumuKur(x: Kesir, y: Kesir) = englishTurtle.setPosition(x, y)
+    // ../../xscala/help.scala
+    // ../../core/TurtleMover.scala
+    def konumuDeğiştir(x: Kesir, y: Kesir) = englishTurtle.changePosition(x, y)
     def konum: Nokta = englishTurtle.position
     def kalemiİndir() = englishTurtle.penDown()
     def kalemiKaldır() = englishTurtle.penUp()
@@ -549,6 +552,14 @@ object TurkishAPI {
     def sınırlarıGöster(r: Resim) = richBuiltins.Picture.showBounds(r.p)
     def sınırlarıGöster(resimler: Resim*) = richBuiltins.Picture.showBounds(resimler.map(_.p): _*)
     // todo: more..
+    def tuval = tuvalSınırları  // stageBorder
+    def tuvalinSınırları = tuvalSınırları
+    def tuvalSınırları = new Resim(richBuiltins.tCanvas.stage)
+    def tuvalinSolu = new Resim(richBuiltins.tCanvas.stageLeft)
+    def tuvalinSağı = new Resim(richBuiltins.tCanvas.stageRight)
+    def tuvalinTavanı = new Resim(richBuiltins.tCanvas.stageTop)
+    def tuvalinTabanı = new Resim(richBuiltins.tCanvas.stageBot)
+    def tuvalBölgesi = new Resim(richBuiltins.tCanvas.stageArea)
   }
   def çiz(r: Resim) = Resim.çiz(r)
   def çizMerkezde(r: Resim) = richBuiltins.drawCentered(r.p)
@@ -571,13 +582,6 @@ object TurkishAPI {
   def resimKümesi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStack(rd.map(_.p)))
 
   // ../DrawingCanvasAPI.scala
-  def tuval = tuvalSınırları  // stageBorder
-  def tuvalSınırları = new Resim(richBuiltins.tCanvas.stage)
-  def tuvalinSolu = new Resim(richBuiltins.tCanvas.stageLeft)
-  def tuvalinSağı = new Resim(richBuiltins.tCanvas.stageRight)
-  def tuvalinTavanı = new Resim(richBuiltins.tCanvas.stageTop)
-  def tuvalinTabanı = new Resim(richBuiltins.tCanvas.stageBot)
-  def tuvalBölgesi = new Resim(richBuiltins.tCanvas.stageArea)
   def yaklaş(oran: Kesir) = richBuiltins.tCanvas.zoom(oran)
   def yaklaşXY(xOran: Kesir, yOran: Kesir, xMerkez: Kesir, yMerkez: Kesir) =
     richBuiltins.tCanvas.zoomXY(xOran, yOran, xMerkez, yMerkez)

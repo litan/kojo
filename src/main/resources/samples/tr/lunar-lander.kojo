@@ -3,7 +3,7 @@
 // 2) işlevler, nesneler, sınıflar, sınıf metodları ve değişkenleri
 // 3) oyunun nesnelerini konuşlandırmak ve hareket ettirmek için temel matematik işlemler
 
-// Oynamak için klavyede yukarı oka basarak gaz yani itiş ver...
+// Oynamak için klavyede yukarı oka basarak iniş modülüne gaz ver
 
 silVeSakla()
 
@@ -41,6 +41,7 @@ class İnişModülü {
     }
 
     def adım() {
+        // yukarı tuşuna basılı mı?
         if (tuşaBasılıMı(tuşlar.VK_UP)) {
             itişVar()
         } else {
@@ -52,7 +53,7 @@ class İnişModülü {
         beden.götür(hız)
         ateşKonumunuKur()
 
-        if (beden.çarptıMı(Resim.tuvalSınırları)) {
+        if (beden.çarptıMı(Resim.tuvalinTavanı)) {
             hız = sahneKenarındanYansıtma(beden, hız)
         }
     }
