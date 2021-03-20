@@ -6,8 +6,8 @@ kalemKalınlığınıKur(2)
 
 // RGBA: red/green/blue/alpha alpha: saydamlık oranı
 val boya = renkler.radialMultipleGradient(0, 0, 150,
-    Seq(0, 0.7, 1),
-    Seq(
+    Dizi(0, 0.7, 1),
+    Dizi(
         renkler.rgba(255, 0, 0, 245),
         renkler.rgba(215, 0, 0, 245),
         renkler.rgba(185, 0, 0, 245)

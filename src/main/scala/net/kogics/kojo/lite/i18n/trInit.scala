@@ -68,11 +68,19 @@ object TurkishAPI {
   type Harf = Char
   type Yazı = String
 
+  type Dizi[B] = Seq[B]
+  object Dizi {
+    def apply[B](elems: B*): Seq[B] = Seq.from(elems)
+  }
   type Dizin[A] = List[A]
   object Dizin {
     def apply[A](elems: A*): List[A] = List.from(elems)
   }
   val Boş = scala.collection.immutable.Nil
+  type MiskinDizin[C] = LazyList[C]
+  object MiskinDizin {
+    def from(e: Sayı, adım: Sayı = 1) = LazyList.from(e, adım)
+  }
 
   // Used in Conway's game of life code in the tutorial
   type Sayılar = Vector[Sayı]
