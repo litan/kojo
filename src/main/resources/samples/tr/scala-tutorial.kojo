@@ -975,9 +975,9 @@ pages += Page(
       row("round(3.48)".c,"G1 kesirine en yakın sayıyı Uzun türünde çıktı olarak verir."),
       row("round(2.6F)".c,"G1 KısaKesir'ine en yakın sayıyı Sayı türünde çıktı olarak verir.")
     ),
-    "Rasgele (Random) sayılar".h3,
+    "Rastgele (Random) sayılar".h3,
     table(
-      row("random".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rasgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
+      row("random".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rastgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
     )
   )
 )
@@ -1610,9 +1610,9 @@ val noktalar = (0 until AS).foldLeft(Vector[Nokta]())((v, i) => { v :+ Nokta(0, 
     })
 serpiştir(noktalar) // noktaları yerleştir ve çizgileri çiz
 
-// noktaları rasgele yerleştir
+// noktaları rastgele yerleştir
 def serpiştir(hepsi: Vector[Nokta]) {
-    hepsi.foreach(nkt => nkt.yeniKonum(KS * YÇ * 6 * (random - 0.5), KS * YÇ * 6 * (random - 0.5)))
+    hepsi.foreach(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rastgele - 0.5), KS * YÇ * 6 * (rastgele - 0.5)))
     çizelim(çizgiler)
 }
 

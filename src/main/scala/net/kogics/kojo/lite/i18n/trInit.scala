@@ -211,6 +211,7 @@ object TurkishAPI {
   lazy val camgöbeği = builtins.cyan
 
   // TODO: other Color* constructors -- and Help Content
+  // ../CoreBuiltins.scala
   lazy val renkler = builtins.cm  // ColorMaker
   lazy val tuşlar = builtins.Kc // Key Codes
 
@@ -269,16 +270,32 @@ object TurkishAPI {
     val faktor = math.pow(10, basamaklar).toDouble
     math.round(sayı.doubleValue * faktor).toLong / faktor
   }
-  def rasgele(üstSınır: Sayı) = builtins.random(üstSınır)
-  val rastgele = rasgele _
-  def rasgeleKesir(üstSınır: Sayı) = builtins.randomDouble(üstSınır)
-  val rastgeleKesir = rasgeleKesir _
+  // ../CoreBuiltins.scala
+  def rastgele() = math.random()
+  def rastgele(üstSınır: Sayı) = builtins.random(üstSınır)
+  def rastgele(altSınır: Sayı, üstSınır: Sayı) = builtins.random(altSınır, üstSınır)
+  def rastgeleSayı = builtins.randomInt
+  def rastgeleUzun = builtins.randomLong
+  def rastgeleKesir(üstSınır: Kesir) = builtins.randomDouble(üstSınır)
+  def rastgeleKesir(altSınır: Kesir, üstSınır: Kesir) = builtins.randomDouble(altSınır, üstSınır)
+  def rastgeleÇanEğrisinden = rastgeleDoğalKesir
+  def rastgeleNormalKesir = rastgeleDoğalKesir
+  def rastgeleDoğalKesir = builtins.randomNormalDouble
+  def rastgeleTohumunuKur(tohum: Uzun = rastgeleUzun) = builtins.initRandomGenerator(tohum)
+  val rastgeleİkil = rastgeleSeçim
   def rastgeleSeçim = builtins.randomBoolean
   def rastgeleRenk = builtins.randomColor
   def rastgeleŞeffafRenk = builtins.randomTransparentColor
+  def rastgeleDiziden[T](dizi: Dizi[T]) = builtins.randomFrom(dizi)
+  def rastgeleDiziden[T](dizi: Dizi[T], ağırlıklar: Dizi[Kesir]) = builtins.randomFrom(dizi, ağırlıklar)
   def durakla(saniye: Kesir) = builtins.pause(saniye)
 
   def üçgenDöşeme(noktalar: Dizi[Nokta]): Dizi[Üçgen] = builtins.triangulate(noktalar)
+
+  def evDizini = builtins.homeDir
+  def buDizin = builtins.currentDir
+  def kurulumDizini = builtins.installDir
+  def yazıyüzleri = builtins.availableFontNames
 
   val kaplumbağa0 = kaplumbağa
   def yeniKaplumbağa(x: Kesir, y: Kesir) = new Kaplumbağa(x, y)
@@ -745,8 +762,8 @@ object TurkishInit {
     "satıryaz" -> "satıryaz(${yazı})",
     "satıroku" -> "satıroku(${istem})",
     "yuvarla" -> "yuvarla(${sayı},${basamaklar})",
-    "rasgele" -> "rasgele(${üstSınır})",
-    "rasgeleKesir" -> "rasgeleKesir(${üstSınır})",
+    "rastgele" -> "rastgele(${üstSınır})",
+    "rastgeleKesir" -> "rastgeleKesir(${üstSınır})",
     "giysiKur" -> "giysiKur(${dostaAdı})",
     "giysileriKur" -> "giysileriKur(${dostaAdı1},${dostaAdı2})",
     "birsonrakiGiysi" -> "birsonrakiGiysi()",
@@ -804,8 +821,8 @@ object TurkishInit {
     "satıryaz" -> <div><strong>satıryaz</strong>(obj) - Bu komut verilen nesneyi harf dizisi olarak çıktı penceresine yazar ve yeni satıra geçer. </div>.toString,
     "satıroku" -> <div><strong>satıroku</strong>(istemDizisi) - Bu komut verilen istem dizisini çıktı penceresine yazar ve arkasından sizin yazdığınız bir satırı okur. </div>.toString,
     "yuvarla" -> <div><strong>yuvarla</strong>(sayı, basamak) - Bu komut verilen sayıyı noktadan sonra verilen basamak sayısına kadar yuvarlar. </div>.toString,
-    "rasgele" -> <div><strong>rasgele</strong>(üstsınır) - Bu komut verilen üst sınırdan küçük rastgele bir doğal sayı verir. Sıfırdan küçük sayılar vermez. </div>.toString,
-    "rasgeleKesir" -> <div><strong>rasgeleÇift</strong>() - Bu komut verilen üst sınırdan küçük rastgele bir kesirli sayı (çift çözünürlüklü) verir. Sıfırdan küçük sayılar vermez. </div>.toString,
+    "rastgele" -> <div><strong>rastgele</strong>(üstsınır) - Bu komut verilen üst sınırdan küçük rastgele bir doğal sayı verir. Sıfırdan küçük sayılar vermez. </div>.toString,
+    "rastgeleKesir" -> <div><strong>rastgeleÇift</strong>() - Bu komut verilen üst sınırdan küçük rastgele bir kesirli sayı (çift çözünürlüklü) verir. Sıfırdan küçük sayılar vermez. </div>.toString,
     "giysiKur" -> <div><strong>giysiKur</strong>(giysiDosyası) - Kaplumbağanın görünüşünü verilen dosyadaki resimle değiştirir. </div>.toString,
     "giysileriKur" -> <div><strong>giysilerKur</strong>(giysiDosyası1, giysiDosyası2, ...) - Kaplumbağa için bir dizi giysi belirler ve giysiDosyası1 resmini giydirir. <tt>birSonrakiGiysi()</tt> komutuyla dizideki bir sonraki giysiyi giydirebiliriz. </div>.toString,
     "birsonrakiGiysi" -> <div><strong>birSonrakiGiysi</strong>() - Kaplumbağaya <tt>giysilerKur()</tt> komutuyla girilen giysi dizisindeki bir sonraki resmi giydirir. </div>.toString,
