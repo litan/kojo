@@ -445,6 +445,8 @@ object TurkishAPI {
   def filtre(filtre: java.awt.image.BufferedImageOp) = ApplyFilterc(filtre)
   def gürültü(miktar: Sayı, yoğunluk: Kesir) = Noisec(miktar, yoğunluk)
   def örgü(xBoyu: Kesir, xAra: Kesir, yBoyu: Kesir, yAra: Kesir) = Weavec(xBoyu, xAra, yBoyu, yAra)
+  def NoktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = picture.PointLight(x, y, yön, yükseklik, uzaklık)
+  def SahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = picture.SpotLight(x, y, yön, yükseklik, uzaklık)
   // ../../core/Picture.scala
   class Resim(val p: richBuiltins.Picture) {
     def tuval = p.canvas

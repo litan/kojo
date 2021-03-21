@@ -19,10 +19,3 @@ val resim2 = gürültü(40, 1) -> resim
 val resim3 = sahneIşığı(0.9, 0.5, 180, 30, 400) -> resim2
 // tam ortaya çizelim
 çizMerkezde(resim3)
-
-/* Henüz Türkçeleştiremediğimiz beceriler varsa, onları da kullanmak mümkün:
- val picture = resim2.p
- val l1 = SpotLight(0.9, 0.5, 180, 30, 400)
- val picture2 = lights(l1) -> picture
- çizMerkezde(new Resim(picture2))
- */
