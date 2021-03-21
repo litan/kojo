@@ -30,6 +30,6 @@ def üçgenleriÇiz() {
 }
 
 val mesaj1 = kalemRengi(siyah) -> Resim.yazı("Başlamak için tıkla", 40)
-val mesaj2 = kalemRengi(siyah) -> Resim.yazı("Devam etmek için tıklamaya devam et", 30)
+val mesaj2 = kalemRengi(siyah) -> Resim.yazı("Tıklayarak devam et", 30)
 val mesaj = resimDikeyDüzenliDizi(mesaj2, Resim.dikeyBoşluk(20), mesaj1)
 çizMerkezde(mesaj)
