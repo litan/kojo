@@ -282,7 +282,7 @@ object TurkishAPI {
   def rastgeleNormalKesir = rastgeleDoğalKesir
   def rastgeleDoğalKesir = builtins.randomNormalDouble
   def rastgeleTohumunuKur(tohum: Uzun = rastgeleUzun) = builtins.initRandomGenerator(tohum)
-  val rastgeleİkil = rastgeleSeçim
+  def rastgeleİkil = rastgeleSeçim
   def rastgeleSeçim = builtins.randomBoolean
   def rastgeleRenk = builtins.randomColor
   def rastgeleŞeffafRenk = builtins.randomTransparentColor
