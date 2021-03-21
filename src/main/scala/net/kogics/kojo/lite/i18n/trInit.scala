@@ -24,6 +24,7 @@ import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
 import net.kogics.kojo.picture
 import net.kogics.kojo.xscala.RepeatCommands
+import io.github.jdiemke.triangulation.Triangle2D
 
 object TurkishAPI {
   // some type aliases in Turkish -- Ctrl-t to return type info will also be in turkish
@@ -44,6 +45,7 @@ object TurkishAPI {
     def apply(x: Kesir, y: Kesir) = new Point(x, y)
     def unapply(p: Nokta) = Some((p.x, p.y))
   }
+  type Üçgen = Triangle2D
 
   // Ref: https://docs.scala-lang.org/overviews/scala-book/built-in-types.html
   type İkil = Boolean
@@ -68,7 +70,7 @@ object TurkishAPI {
   type Harf = Char
   type Yazı = String
 
-  type Dizi[B] = Seq[B]
+  type Dizi[B] = collection.Seq[B]
   object Dizi {
     def apply[B](elems: B*): Seq[B] = Seq.from(elems)
   }
@@ -275,6 +277,8 @@ object TurkishAPI {
   def rastgeleRenk = builtins.randomColor
   def rastgeleŞeffafRenk = builtins.randomTransparentColor
   def durakla(saniye: Kesir) = builtins.pause(saniye)
+
+  def üçgenDöşeme(noktalar: Dizi[Nokta]): Dizi[Üçgen] = builtins.triangulate(noktalar)
 
   val kaplumbağa0 = kaplumbağa
   def yeniKaplumbağa(x: Kesir, y: Kesir) = new Kaplumbağa(x, y)
@@ -573,6 +577,7 @@ object TurkishAPI {
   def çizMerkezde(r: Resim) = richBuiltins.drawCentered(r.p)
   def çizSahne(boya: Paint) = richBuiltins.tCanvas.drawStage(boya)
   def çizMerkezdeYazı(mesaj: Yazı, renk: Renk, yazıBoyu: Sayı) = richBuiltins.drawCenteredMessage(mesaj, renk, yazıBoyu)
+  def resimleriSil() = richBuiltins.tCanvas.erasePictures()
 
   def resimDizisi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.map(_.p)))
   def resimDikeyDizi(rd: Resim*) = new Resim(richBuiltins.picCol(rd.map(_.p)))
@@ -594,6 +599,7 @@ object TurkishAPI {
   def yaklaşXY(xOran: Kesir, yOran: Kesir, xMerkez: Kesir, yMerkez: Kesir) =
     richBuiltins.tCanvas.zoomXY(xOran, yOran, xMerkez, yMerkez)
   def yaklaşmayıSil() = richBuiltins.tCanvas.resetPanAndZoom()
+  def yaklaşmayaİzinVerme() = richBuiltins.tCanvas.disablePanAndZoom()
   def tuşaBasınca(iş: Sayı => Birim) = richBuiltins.tCanvas.onKeyPress(iş)
   def tuşuBırakınca(iş: Sayı => Birim) = richBuiltins.tCanvas.onKeyRelease(iş)
   def fareyeTıklıyınca(iş: (Kesir, Kesir) => Birim) = richBuiltins.tCanvas.onMouseClick(iş)
@@ -623,6 +629,8 @@ object TurkishAPI {
   def yineleSayaçla(miliSaniye: Uzun)(işlev: => Birim) = richBuiltins.tCanvas.timer(miliSaniye)(işlev)
   def canlandır(işlev: => Birim) = richBuiltins.tCanvas.animate(işlev)
   def durdur() = richBuiltins.stopAnimation()
+  def canlandırmaBaşlayınca(işlev: => Birim) = richBuiltins.tCanvas.onAnimationStart(işlev)
+  def canlandırmaBitince(işlev: => Birim) = richBuiltins.tCanvas.onAnimationStop(işlev)
   def tuvaliEtkinleştir() = richBuiltins.activateCanvas()
   def yazılımcıkDüzenleyicisiniEtkinleştir() = richBuiltins.activateEditor()
   def sahneKenarındanYansıtma(r: Resim, yöney: richBuiltins.Vector2D): richBuiltins.Vector2D =
