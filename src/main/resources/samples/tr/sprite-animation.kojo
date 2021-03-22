@@ -15,8 +15,8 @@ kaplumbağa0.giysiKur(Background.trainTrack)
 val k1 = yeniKaplumbağa(-50, -180, Costume.womanWaving)
 k1.davran { bu =>
     yineleDoğruysa(bu.konum.y < 40) {
-        bu.konumuDeğiştir(0.6, 1)
-        bu.giysiyiBüyült(0.995)
+        bu.konumuDeğiştir(0.6, 0.9)
+        bu.giysiyiBüyült(0.992)
         durakla(0.03)
     }
 }
@@ -32,4 +32,4 @@ k2.davran { bu =>
     }
     durdur() // varsa çalan müziği ve bütün canlandırmaları durduralım
 }
-müzikÇalDöngülü(Sound.medieval1)
+müzikMp3üÇalDöngülü(Sound.medieval1)

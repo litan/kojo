@@ -303,15 +303,27 @@ object TurkishAPI {
 
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
+  type ResimDosyası = richBuiltins.Image
+
   def buradaDur = burdaDur _
   def burdaDur(mesaj: Any) = richBuiltins.breakpoint(mesaj)
 
   def sayıOku(istem: Yazı = "") = richBuiltins.readInt(istem)
   def kesirOku(istem: Yazı = "") = richBuiltins.readDouble(istem)
 
-  def müzikÇal(mp3dosyası: Yazı) = richBuiltins.playMp3(mp3dosyası)
-  def sesÇal(mp3dosyası: Yazı) = richBuiltins.playMp3Sound(mp3dosyası)
-  def müzikÇalDöngülü(mp3dosyası: Yazı) = richBuiltins.playMp3Loop(mp3dosyası)
+  def resimİndir(httpAdresi: Yazı) = richBuiltins.preloadImage(httpAdresi)
+  def müzikİndir(httpAdresi: Yazı) = richBuiltins.preloadMp3(httpAdresi)
+
+  def müzikMp3üÇal(mp3dosyası: Yazı) = richBuiltins.playMp3(mp3dosyası)
+  def sesMp3üÇal(mp3dosyası: Yazı) = richBuiltins.playMp3Sound(mp3dosyası)
+  def müzikMp3üÇalDöngülü(mp3dosyası: Yazı) = richBuiltins.playMp3Loop(mp3dosyası)
+
+  def müzikMp3üÇalıyorMu = richBuiltins.isMp3Playing
+  def müzikÇalıyorMu = richBuiltins.isMusicPlaying
+  def müzikMp3üKapat() = richBuiltins.stopMp3()
+  def müzikMp3DöngüsünüKapat() = richBuiltins.stopMp3Loop()
+  def müziğiKapat() = richBuiltins.stopMusic()
+  def yeniMp3Çalar = richBuiltins.newMp3Player
 
   def kojoVarsayılanBakışaçısınıKur() = richBuiltins.switchToDefaultPerspective()
   def kojoVarsayılanİkincıBakışaçısınıKur() = richBuiltins.switchToDefault2Perspective()
@@ -571,6 +583,11 @@ object TurkishAPI {
     def yazı(içerik: Her, yazıBoyu: Sayı=15) = new Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
     def yazıRenkli(içerik: Her, yazıBoyu: Sayı, renk: Renk) = new Resim(richBuiltins.Picture.textu(içerik, yazıBoyu, renk))
     def imge(dosyaAdı: Yazı) = new Resim(richBuiltins.Picture.image(dosyaAdı))
+    def imge(dosyaAdı: Yazı, zarf: Resim) = new Resim(richBuiltins.Picture.image(dosyaAdı, zarf.p))
+    def imge(url: java.net.URL) = new Resim(richBuiltins.Picture.image(url))
+    def imge(url: java.net.URL, zarf: Resim) = new Resim(richBuiltins.Picture.image(url, zarf.p))
+    def imge(imge: ResimDosyası) = new Resim(richBuiltins.Picture.image(imge))
+    def imge(imge: ResimDosyası, zarf: Resim) = new Resim(richBuiltins.Picture.image(imge, zarf.p))
     // Resim.düğme("Merhaba")(println(kg.x))
     def düğme(ad: Yazı)(işlev: => Birim) = new Resim(richBuiltins.Picture.button(ad)(işlev))
     // Resim.arayüz(Label("Merhaba"))
@@ -596,7 +613,26 @@ object TurkishAPI {
   def çizMerkezde(r: Resim) = richBuiltins.drawCentered(r.p)
   def çizSahne(boya: Paint) = richBuiltins.tCanvas.drawStage(boya)
   def çizMerkezdeYazı(mesaj: Yazı, renk: Renk, yazıBoyu: Sayı) = richBuiltins.drawCenteredMessage(mesaj, renk, yazıBoyu)
+  def çizVeSakla(resimler: Resim*) = richBuiltins.drawAndHide(resimler.map(_.p): _*)
+  def merkezeTaşı(resim: Resim) = richBuiltins.center(resim.p)
   def resimleriSil() = richBuiltins.tCanvas.erasePictures()
+  def ekranTazelemeHızınıKur(saniyedeKaçKere: Sayı) = richBuiltins.setRefreshRate(saniyedeKaçKere)
+  def ekranTazelemeHızınıGöster(renk: Renk, yazıBoyu: Sayı = 15): Birim = { // richBuiltins.showFps(renk, yazıBoyu)
+    val cb = richBuiltins.canvasBounds
+    @volatile var frameCnt = 0
+    val fpsLabel = richBuiltins.Picture.textu("eth: ", yazıBoyu, renk)
+    fpsLabel.setPosition(cb.x + 10, cb.y + cb.height - 10)
+    richBuiltins.draw(fpsLabel)
+    fpsLabel.forwardInputTo(richBuiltins.TSCanvas.stageArea)
+
+    richBuiltins.TSCanvas.timer(1000) {
+      fpsLabel.update(s"eth: $frameCnt")
+      frameCnt = 0
+    }
+    fpsLabel.react { self =>
+      frameCnt += 1
+    }
+  }
 
   def resimDizisi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.map(_.p)))
   def resimDikeyDizi(rd: Resim*) = new Resim(richBuiltins.picCol(rd.map(_.p)))
@@ -604,14 +640,14 @@ object TurkishAPI {
   def resimDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picStackCentered(rd.map(_.p)))
   def resimDikeyDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
   def resimYatayDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
-  def resimKümesi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.map(_.p)))
+  def resimKümesi(rd: Resim*) = new Resim(richBuiltins.picBatch(rd.map(_.p)))
   def resimDizisi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStack(rd.map(_.p)))
   def resimDikeyDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picCol(rd.map(_.p)))
   def resimYatayDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRow(rd.map(_.p)))
   def resimDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStackCentered(rd.map(_.p)))
   def resimDikeyDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
   def resimYatayDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
-  def resimKümesi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStack(rd.map(_.p)))
+  def resimKümesi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picBatch(rd.map(_.p)))
 
   // ../DrawingCanvasAPI.scala
   def yaklaş(oran: Kesir) = richBuiltins.tCanvas.zoom(oran)
@@ -663,6 +699,22 @@ object TurkishAPI {
   def çıktıYazıYüzüBoyunuKur(boy: Sayı) = richBuiltins.setOutputTextFontSize(boy)
   def tuvalBoyutOranınınKur(oran: Kesir) = richBuiltins.setDrawingCanvasAspectRatio(oran)
   def tuvalBoyutlarınıKur(en: Sayı, boy: Sayı) = richBuiltins.setDrawingCanvasSize(en, boy)
+
+  def resmiSüz(r: Resim, süzgeç: java.awt.image.BufferedImageOp): Resim = new Resim(richBuiltins.filterPicture(r.p, süzgeç))
+  def resimDosyasınıSüz(rd: java.awt.image.BufferedImage, süzgeç: java.awt.image.BufferedImageOp) = richBuiltins.filterImage(rd, süzgeç)
+
+  def süreTut(komut: => Birim): Birim = {
+    val t0 = buSaniye
+    komut
+    val delta = buSaniye - t0
+    println("Komudun çalışması $delta%.3f saniye sürdü.")
+  }
+
+  def oyunSüresiniGöster(süreSaniyeOlarak: Sayı, mesaj: Yazı, renk: Renk = siyah, yazıBoyu: Sayı = 15) =
+    richBuiltins.showGameTime(süreSaniyeOlarak, mesaj, renk, yazıBoyu)
+
+  def sırayaSok(kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.schedule(kaçSaniyeSonra)(komut)
+  def sırayaSok(n: Sayı, kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.scheduleN(n, kaçSaniyeSonra)(komut)
 
   /* ../../widget/swingwrappers.scala
    Some are used in addition*.scala sample and others:
