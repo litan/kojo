@@ -21,10 +21,10 @@ class İnişModülü {
     val ateş = boyaRengi(turuncu) -> Resim.dikdörtgen(ateşEni, ateşBoyu)
     ateşKonumunuKur()
 
-    val yerçekimi = Vector2D(0, -0.1) // konum, hız ve ivme'nin x ve y boyutları (z yani üçüncü boyuta gerek yok bu oyunda)
-    var hız = Vector2D(0, 0)
-    val sıfırİtiş = Vector2D(0, 0)
-    val yukarıİtiş = Vector2D(0, 1)
+    val yerçekimi = Yöney2B(0, -0.1) // konum, hız ve ivme'nin x ve y boyutları (z yani üçüncü boyuta gerek yok bu oyunda)
+    var hız = Yöney2B(0, 0)
+    val sıfırİtiş = Yöney2B(0, 0)
+    val yukarıİtiş = Yöney2B(0, 1)
     var itiş = sıfırİtiş
 
     def ateşKonumunuKur() {

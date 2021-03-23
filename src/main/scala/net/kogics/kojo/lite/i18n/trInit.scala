@@ -49,6 +49,7 @@ object TurkishAPI {
 
   // Ref: https://docs.scala-lang.org/overviews/scala-book/built-in-types.html
   type İkil = Boolean
+  type Seçim = Boolean
   val (doğru, yanlış) = (true, false)
   // Bit? Parçacık olsun mu adı?
 
@@ -90,10 +91,20 @@ object TurkishAPI {
     def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
   }
 
+  // örnek: if (tanımlıMı(resim.çarpışma(Resim.tuvalınSınırları))) {...} else {...}
+  def tanımlıMı[T](o: Option[T]): İkil = o match {
+    case Some(x) => doğru
+    case None => yanlış
+  }
+
   // 
   val (yavaş, orta, hızlı, çokHızlı) = (Slow, Medium, Fast, SuperFast)
 
   var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
+
+  import net.kogics.kojo.core
+  type UzunlukBirimi = core.UnitLen
+  val (noktaSayısı, santim, inç) = (core.Pixel, core.Cm, core.Inch)
 
   trait TurkishTurtle {
     def englishTurtle: Turtle
@@ -193,6 +204,7 @@ object TurkishAPI {
   def silVeSakla(): Birim = { builtins.TSCanvas.clear(); kaplumbağa.görünmez() } // cleari
   def çizimiSil(): Birim = builtins.TSCanvas.clearStepDrawing()
   def çıktıyıSil(): Birim = builtins.clearOutput()
+  def silVeÇizimBiriminiKur(ub: UzunlukBirimi) = builtins.TSCanvas.clearWithUL(ub)
   lazy val mavi = builtins.blue
   lazy val kırmızı = builtins.red
   lazy val sarı = builtins.yellow
@@ -270,6 +282,32 @@ object TurkishAPI {
     val faktor = math.pow(10, basamaklar).toDouble
     math.round(sayı.doubleValue * faktor).toLong / faktor
   }
+  def piSayısı(): Kesir = math.Pi
+  def eSayısı(): Kesir = math.E
+  def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
+  def karesi(x: Kesir): Kesir = math.pow(x, 2)
+  def karekökü(x: Kesir): Kesir = math.sqrt(x)
+  val gücü = kuvveti _
+  def kuvveti(x: Kesir, k: Kesir): Kesir = math.pow(x, k)
+  def onlukTabandaLogu(x: Kesir): Kesir = math.log10(x)
+  def doğalLogu(x: Kesir): Kesir = math.log(x)
+  def logaritması(x: Kesir): Kesir = math.log(x)
+  def sinüs(x: Kesir): Kesir = math.sin(x)
+  def kosinüs(x: Kesir): Kesir = math.cos(x)
+  def tanjant(x: Kesir): Kesir = math.tan(x)
+  def sinüsünAçısı(x: Kesir): Kesir = math.asin(x)
+  def kosinüsünAçısı(x: Kesir): Kesir = math.acos(x)
+  def tanjantınAçısı(x: Kesir): Kesir = math.atan(x)
+  // todo: don't we have a type class for Num?
+  def enİrisi(x: Sayı, y: Sayı): Sayı = math.max(x, y)
+  def enUfağı(x: Sayı, y: Sayı): Sayı = math.min(x, y)
+  def enİrisi(x: Uzun, y: Uzun): Uzun = math.max(x, y)
+  def enUfağı(x: Uzun, y: Uzun): Uzun = math.min(x, y)
+  def enİrisi(x: Kesir, y: Kesir ): Kesir = math.max(x, y)
+  def enUfağı(x: Kesir, y: Kesir ): Kesir = math.min(x, y)
+  def enİrisi(x: UfakKesir, y: UfakKesir ): UfakKesir = math.max(x, y)
+  def enUfağı(x: UfakKesir, y: UfakKesir ): UfakKesir = math.min(x, y)
+  // todo more...
   // ../CoreBuiltins.scala
   def rastgele() = math.random()
   def rastgele(üstSınır: Sayı) = builtins.random(üstSınır)
@@ -304,6 +342,25 @@ object TurkishAPI {
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
   type ResimDosyası = richBuiltins.Image
+  // ../../util/Vector2D.scala
+  case class Yöney2B(x: Kesir, y: Kesir) {
+    def this(v: richBuiltins.Vector2D) = this(v.x, v.y)
+    val v = richBuiltins.Vector2D(x, y)
+    def döndür(açı: Kesir) = Yöney2B(v.rotate(açı))
+    def büyüt(oran: Kesir) = Yöney2B(v.scale(oran))
+    def uzaklık(y2: Yöney2B): Kesir = v.distance(y2.v)
+    def doğrultu = v.heading
+    def açı(y2: Yöney2B): Kesir = v.angle(y2.v)
+    def açı2(y2: Yöney2B): Kesir = v.angleTo(y2.v)
+    def +(y2: Yöney2B): Yöney2B = Yöney2B(v + y2.v)
+    def -(y2: Yöney2B): Yöney2B = Yöney2B(v - y2.v)
+    def *(oran: Kesir): Yöney2B = Yöney2B(v * oran)
+    def /(oran: Kesir): Yöney2B = Yöney2B(v / oran)
+    // todo: more..
+  }
+  object Yöney2B {
+    def apply(v: richBuiltins.Vector2D) = new Yöney2B(v.x, v.y)
+  }
 
   def buradaDur = burdaDur _
   def burdaDur(mesaj: Any) = richBuiltins.breakpoint(mesaj)
@@ -338,6 +395,8 @@ object TurkishAPI {
   def tümEkran() = richBuiltins.toggleFullScreenCanvas()
   object tuvalAlanı {
     def ta = richBuiltins.canvasBounds
+    def eni = en
+    def boyu = boy
     def en = ta.width
     def boy = ta.height
     def x = ta.x
@@ -472,9 +531,10 @@ object TurkishAPI {
     def büyüt(oran: Kesir) = p.scale(oran)
     def büyüt(x: Kesir, y: Kesir) = p.scale(x, y)
     def götür(x: Kesir, y: Kesir) = p.translate(x, y)
-    def götür(v: richBuiltins.Vector2D) = p.translate(v.x, v.y)
+    def götür(yy: Yöney2B) = p.translate(yy.v.x, yy.v.y)
+    def hızınıDönüştür(yy: Yöney2B) = p.transv(yy.v)
     def kaydır(x: Kesir, y: Kesir) = p.offset(x, y)
-    def kaydır(v: richBuiltins.Vector2D) = p.offset(v.x, v.y)
+    def kaydır(yy: Yöney2B) = p.offset(yy.v.x, yy.v.y)
     def yansıtX() = p.flipX()
     def yansıtY() = p.flipY()
     def saydamlık(oran: Kesir) = p.opacityMod(oran)
@@ -497,7 +557,7 @@ object TurkishAPI {
     def çarpıştı(başkaResim: Resim): İkil = p.intersects(başkaResim.p)
     def çarpışmalar(başkaları: Set[Resim]): Set[Resim] = 
       başkaları.filter {this çarpıştı _}
-    def çarpışma(başkaları: Set[Resim]): Option[Resim] =
+    def çarpışma(başkaları: Seq[Resim]): Option[Resim] =
       başkaları.find {this çarpıştı _}
     def kesişim(başkaResim: Resim): com.vividsolutions.jts.geom.Geometry =
       p.intersection(başkaResim.p)
@@ -610,6 +670,7 @@ object TurkishAPI {
     def tuvalBölgesi = new Resim(richBuiltins.tCanvas.stageArea)
   }
   def çiz(r: Resim) = Resim.çiz(r)
+  def çiz(rler: Resim*) = richBuiltins.draw(rler.map(_.p): _*)
   def çizMerkezde(r: Resim) = richBuiltins.drawCentered(r.p)
   def çizSahne(boya: Paint) = richBuiltins.tCanvas.drawStage(boya)
   def çizMerkezdeYazı(mesaj: Yazı, renk: Renk, yazıBoyu: Sayı) = richBuiltins.drawCenteredMessage(mesaj, renk, yazıBoyu)
@@ -688,10 +749,10 @@ object TurkishAPI {
   def canlandırmaBitince(işlev: => Birim) = richBuiltins.tCanvas.onAnimationStop(işlev)
   def tuvaliEtkinleştir() = richBuiltins.activateCanvas()
   def yazılımcıkDüzenleyicisiniEtkinleştir() = richBuiltins.activateEditor()
-  def sahneKenarındanYansıtma(r: Resim, yöney: richBuiltins.Vector2D): richBuiltins.Vector2D =
-    richBuiltins.bouncePicOffStage(r.p, yöney)
-  def engeldenYansıtma(r: Resim, yöney: richBuiltins.Vector2D, engel: Resim): richBuiltins.Vector2D =
-    richBuiltins.bouncePicOffPic(r.p, yöney, engel.p)
+  def sahneKenarındanYansıtma(r: Resim, yöney: Yöney2B): Yöney2B =
+    Yöney2B(richBuiltins.bouncePicOffStage(r.p, yöney.v))
+  def engeldenYansıtma(r: Resim, yöney: Yöney2B, engel: Resim): Yöney2B =
+    Yöney2B(richBuiltins.bouncePicOffPic(r.p, yöney.v, engel.p))
   def tuşaBasılıMı(tuş: Sayı) = richBuiltins.isKeyPressed(tuş)
 
   def çıktıArtalanınıKur(renk: Renk) = richBuiltins.setOutputBackground(renk)
@@ -710,8 +771,8 @@ object TurkishAPI {
     println("Komudun çalışması $delta%.3f saniye sürdü.")
   }
 
-  def oyunSüresiniGöster(süreSaniyeOlarak: Sayı, mesaj: Yazı, renk: Renk = siyah, yazıBoyu: Sayı = 15) =
-    richBuiltins.showGameTime(süreSaniyeOlarak, mesaj, renk, yazıBoyu)
+  def oyunSüresiniGöster(süreSaniyeOlarak: Sayı, mesaj: Yazı, renk: Renk = siyah, yazıBoyu: Sayı = 15, kx: Kesir = 10, ky: Kesir = 50) =
+    richBuiltins.showGameTime(süreSaniyeOlarak, mesaj, renk, yazıBoyu, kx, ky)
 
   def sırayaSok(kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.schedule(kaçSaniyeSonra)(komut)
   def sırayaSok(n: Sayı, kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.scheduleN(n, kaçSaniyeSonra)(komut)
