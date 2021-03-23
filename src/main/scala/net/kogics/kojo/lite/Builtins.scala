@@ -733,10 +733,10 @@ Here's a partial list of the available commands:
     draw(pic)
   }
 
-  def showGameTime(limitSecs: Int, endMsg: String, color: Color = black, fontSize: Int = 15): Unit = {
+  def showGameTime(limitSecs: Int, endMsg: String, color: Color = black, fontSize: Int = 15, dx: Double = 10, dy: Double = 50): Unit = {
     val cb = canvasBounds
     @volatile var gameTime = 0
-    val timeLabel = trans(cb.x + 10, cb.y + 50) -> PicShape.textu(gameTime, fontSize, color)
+    val timeLabel = trans(cb.x + dx, cb.y + dy) -> PicShape.textu(gameTime, fontSize, color)
     draw(timeLabel)
     timeLabel.forwardInputTo(TSCanvas.stageArea)
 
