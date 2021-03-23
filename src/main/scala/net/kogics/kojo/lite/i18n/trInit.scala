@@ -383,7 +383,7 @@ object TurkishAPI {
   def yeniMp3Çalar = richBuiltins.newMp3Player
 
   def kojoVarsayılanBakışaçısınıKur() = richBuiltins.switchToDefaultPerspective()
-  def kojoVarsayılanİkincıBakışaçısınıKur() = richBuiltins.switchToDefault2Perspective()
+  def kojoVarsayılanİkinciBakışaçısınıKur() = richBuiltins.switchToDefault2Perspective()
   def kojoYazılımcıkBakışaçısınıKur() = richBuiltins.switchToScriptEditingPerspective()
   def kojoÇalışmaSayfalıBakışaçısınıKur() = richBuiltins.switchToWorksheetPerspective()
   def kojoÖyküBakışaçısınıKur() = richBuiltins.switchToStoryViewingPerspective()
@@ -671,6 +671,7 @@ object TurkishAPI {
   }
   def çiz(r: Resim) = Resim.çiz(r)
   def çiz(rler: Resim*) = richBuiltins.draw(rler.map(_.p): _*)
+  def çiz(rler: collection.Seq[Resim]) = richBuiltins.draw(rler.map(_.p))
   def çizMerkezde(r: Resim) = richBuiltins.drawCentered(r.p)
   def çizSahne(boya: Paint) = richBuiltins.tCanvas.drawStage(boya)
   def çizMerkezdeYazı(mesaj: Yazı, renk: Renk, yazıBoyu: Sayı) = richBuiltins.drawCenteredMessage(mesaj, renk, yazıBoyu)
