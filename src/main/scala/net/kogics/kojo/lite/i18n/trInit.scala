@@ -536,6 +536,12 @@ object TurkishAPI {
   def NoktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = picture.PointLight(x, y, yön, yükseklik, uzaklık)
   def SahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = picture.SpotLight(x, y, yön, yükseklik, uzaklık)
   // ../../core/Picture.scala
+
+  // ../../core/vertexShapeSupport.scala
+  type GeoYol = java.awt.geom.GeneralPath
+  type GeoNokta = core.VertexShape
+  type Grafik2B = scala.swing.Graphics2D
+
   class Resim(val p: richBuiltins.Picture) {
     def tuval = p.canvas
     def pnode = p.pnode // ??
@@ -646,6 +652,7 @@ object TurkishAPI {
   object Resim {
     def apply(işlev: => Birim): Resim = new Resim(richBuiltins.Picture(işlev))
     def çiz(r: Resim) = richBuiltins.draw(r.p)
+    val doğru = köşegen _
     def köşegen(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.line(en, boy))
     def yay(yarıçap: Kesir, açı: Kesir) = new Resim(richBuiltins.Picture.arc(yarıçap, açı))
     def daire(yarıçap: Kesir) = new Resim(richBuiltins.Picture.circle(yarıçap))
@@ -672,6 +679,13 @@ object TurkishAPI {
     def arayüz(parça: javax.swing.JComponent) = new Resim(richBuiltins.Picture.widget(parça))
     def yatayBoşluk(en:  Kesir) = new Resim(richBuiltins.Picture.hgap(en))
     def dikeyBoşluk(boy: Kesir) = new Resim(richBuiltins.Picture.vgap(boy))
+    def yoldan(işlev: GeoYol => Birim) = new Resim(richBuiltins.Picture.fromPath(işlev))
+    def noktadan(işlev: GeoNokta => Birim) = new Resim(richBuiltins.Picture.fromVertexShape(işlev))
+    def kaplumbağadan(işlev: Kaplumbağa => Birim) = { // todo: does this work?
+      val f = new Function1[Turtle, Unit] { def apply(t: Turtle): Unit = işlev(new Kaplumbağa(t)) }
+      new Resim(richBuiltins.Picture.fromTurtle(f))
+    }
+    def tuvalden(en: Kesir, boy: Kesir)(işlev: Grafik2B => Birim) = new Resim(richBuiltins.Picture.fromCanvas(en, boy)(işlev))
     def eksenleriGöster(r: Resim) = richBuiltins.Picture.showAxes(r.p)
     def eksenleriGöster(resimler: Resim*) = richBuiltins.Picture.showAxes(resimler.map(_.p): _*)
     def sınırlarıGöster(r: Resim) = richBuiltins.Picture.showBounds(r.p)
