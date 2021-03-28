@@ -68,10 +68,10 @@ val sayıDurumu = Map(
 
 canlandır {
     top.götür(topunBuankiHızı)
-    if (tanımlıMı(top.çarpışma(raketler))) {
+    if (varMı(top.çarpışma(raketler))) {
         topunBuankiHızı = Yöney2B(-topunBuankiHızı.x, topunBuankiHızı.y)
     }
-    else if (tanımlıMı(top.çarpışma(üstVeAltKenar))) {
+    else if (varMı(top.çarpışma(üstVeAltKenar))) {
         topunBuankiHızı = Yöney2B(topunBuankiHızı.x, -topunBuankiHızı.y)
     }
     else if (top.çarptıMı(solÇizgi)) {

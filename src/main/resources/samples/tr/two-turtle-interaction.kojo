@@ -1,3 +1,4 @@
+// Bu program çalışınca fareyi tuvale götür.
 silVeSakla()
 val k1 = yeniKaplumbağa(-500, 0)
 val k2 = yeniKaplumbağa(500, 0)

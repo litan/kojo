@@ -24,9 +24,11 @@ asalÇarpanlarınHerbiri(40)
 
 // Kaç tane asal sayı var?
 val deneyler = for (ilkKaçAsal <- 1 to 6) yield asallar.take(ilkKaçAsal).toList
-deneyler.foreach{ d =>
-    val y = d.map(n => f"$n%2s") // her sayı iki basamaklı yazılsın (" 5" ve "11" gibi) ki hiza bozulmasın 
+deneyler.foreach { d =>
+    val y = d.map(n => f"$n%2s") // her sayı iki basamaklı yazılsın (" 5" ve "11" gibi) ki hiza bozulmasın
     val çab = d.reduce(_ * _) + 1
-    val mesaj = if (asalMı(çab)) "            Yeni bir asal sayı bulduk" else s"${asalÇarpanlarınHerbiri(çab).mkString("= ", " x ", "  Yeni iki asal bulduk")}"
+    val mesaj =
+        if (asalMı(çab)) "            Daha büyük bir asal sayı bulduk"
+        else s"${asalÇarpanlarınHerbiri(çab).mkString("= ", " x ", "  Daha büyük iki asal sayı bulduk")}"
     satıryaz(f"${y.mkString("", " x ", "  + 1 = ")}%40s $çab%-5s $mesaj%-40s")
 }

@@ -1,7 +1,7 @@
 def ağaç(boy: Kesir) {
     // toInt metodu kesirli sayıyı tam sayıya çeviriyor
     // yani boy 1.75 olursa boy.toInt 1 oluyor
-    def renk = Renk(boy.toInt % 255, math.abs(255 - boy * 3).toInt % 255, 125)
+    def renk = Renk(boy.toInt % 255, mutlakDeğer(255 - boy * 3).toInt % 255, 125)
     if (boy > 4) {
         kalemKalınlığınıKur(boy / 7)
         kalemRenginiKur(renk)

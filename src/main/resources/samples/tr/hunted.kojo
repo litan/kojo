@@ -143,7 +143,7 @@ val bitişMesajı = büyüt(3) * götür(-20, 0) -> Resim { yazı("Çarpıştın
 çizVeSakla(bitişMesajı)
 
 kaçan.canlan { bu =>
-    if (tanımlıMı(bu.çarpışma(kovalayanlar))) {
+    if (varMı(bu.çarpışma(kovalayanlar))) {
         durdur()
         bu.boyamaRenginiKur(kahverengi)
         bitişMesajı.konumuKur(-3, 0) // 2 santim!

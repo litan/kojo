@@ -152,7 +152,7 @@ def süreyiYönet() {
     var geçenSüre = 0
     val sayaç = götür(ta.x + 10, ta.y + 50) -> Resim.yazıRenkli(geçenSüre, 40, mavi)
     çiz(sayaç)
-    sayaç.girdiyiAktar(tuvalBölgesi)
+    sayaç.girdiyiAktar(Resim.tuvalBölgesi)
 
     yineleSayaçla(1000) {
         geçenSüre += 1

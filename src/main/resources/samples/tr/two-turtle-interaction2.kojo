@@ -1,3 +1,5 @@
+// Bu program çalışınca fareyi tuvale götür.
+
 // Değişik bir yöntem görelim.
 // Kaplumbağaları eş zamanlı hareket ettirmek için
 // kaplumbağa.davran yerine kaplumbağa.tepkiVer metodunu kullanalım
