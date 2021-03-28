@@ -24,12 +24,12 @@ silVeSakla()
 canlandırmaHızınıKur(10)
 artalanıKurDik(Renk(255, 255, 150), beyaz)
 
-val otVeYansıması = resimDikeyDizi(
+val otVeYansıması = Resim.diziDikey(
     yansıtX -> (soluk(230) * bulanık(2) -> eğreltiOtuResim),
     götür(-20, 0) * kalemRengi(Renk(234, 234, 234)) * kalemBoyu(1) -> Resim.yatay(40),
     götür(0, 3) -> eğreltiOtuResim
 ).boşluk(10)
 
 çizMerkezde(
-  resimYatayDizi(yansıtY * büyüt(0.6) -> otVeYansıması, otVeYansıması).boşluk(100)
+  Resim.diziYatay(yansıtY * büyüt(0.6) -> otVeYansıması, otVeYansıması).boşluk(100)
 )

@@ -384,6 +384,7 @@ object TurkishAPI {
     richBuiltins.tCanvas.zoomXY(xOran, yOran, xMerkez, yMerkez)
   def yaklaşmayıSil() = richBuiltins.tCanvas.resetPanAndZoom()
   def yaklaşmayaİzinVerme() = richBuiltins.tCanvas.disablePanAndZoom()
+  def tuşaBasılıMı(tuş: Sayı) = richBuiltins.isKeyPressed(tuş)
   def tuşaBasınca(iş: Sayı => Birim) = richBuiltins.tCanvas.onKeyPress(iş)
   def tuşuBırakınca(iş: Sayı => Birim) = richBuiltins.tCanvas.onKeyRelease(iş)
   def fareyeTıklıyınca(iş: (Kesir, Kesir) => Birim) = richBuiltins.tCanvas.onMouseClick(iş)
@@ -440,80 +441,27 @@ object TurkishAPI {
   type ResimDosyası = tr.ResimDosyası
   type Yöney2B = tr.Yöney2B
   val Yöney2B = tr.Yöney2B
-
   type Resim = tr.Resim
-  object Resim {
-    import tr.{Resim => R}
-    def apply(işlev: => Birim): Resim = R.apply(işlev)
-    val doğru = R.doğru
-    val (çiz, köşegen, yay, daire, elips, elipsDikdörtgenİçinde, yatay, dikey, dikdörtgen, satır, sütun, yazı, yazıRenkli, düğme, arayüz, yatayBoşluk, dikeyBoşluk, yoldan, noktadan, kaplumbağadan, tuvalden) = (R.çiz _, R.köşegen _, R.yay _, R.daire _, R.elips _, R.elipsDikdörtgenİçinde _, R.yatay _, R.dikey _, R.dikdörtgen _, R.satır _, R.sütun _, R.yazı _, R.yazıRenkli _, R.düğme _, R.arayüz _, R.yatayBoşluk _, R.dikeyBoşluk _, R.yoldan _, R.noktadan _, R.kaplumbağadan _, R.tuvalden _)
-
-    def tuval = tuvalSınırları  // stageBorder
-    def tuvalinSınırları = tuvalSınırları
-    def tuvalSınırları = new Resim(richBuiltins.tCanvas.stage)
-    def tuvalinSolu = new Resim(richBuiltins.tCanvas.stageLeft)
-    def tuvalinSağı = new Resim(richBuiltins.tCanvas.stageRight)
-    def tuvalinTavanı = new Resim(richBuiltins.tCanvas.stageTop)
-    def tuvalinTabanı = new Resim(richBuiltins.tCanvas.stageBot)
-    def tuvalBölgesi = new Resim(richBuiltins.tCanvas.stageArea)
-
-    def imge(dosyaAdı: Yazı) = R.imge(dosyaAdı)
-    def imge(dosyaAdı: Yazı, zarf: Resim) = R.imge(dosyaAdı, zarf)
-    def imge(url: java.net.URL) = R.imge(url)
-    def imge(url: java.net.URL, zarf: Resim) = R.imge(url, zarf)
-    def imge(imge: ResimDosyası) = R.imge(imge)
-    def imge(imge: ResimDosyası, zarf: Resim) = R.imge(imge, zarf)
-
-    def eksenleriGöster(r: Resim) = richBuiltins.Picture.showAxes(r.p)
-    def eksenleriGöster(resimler: Resim*) = richBuiltins.Picture.showAxes(resimler.map(_.p): _*)
-    def sınırlarıGöster(r: Resim) = richBuiltins.Picture.showBounds(r.p)
-    def sınırlarıGöster(resimler: Resim*) = richBuiltins.Picture.showBounds(resimler.map(_.p): _*)
-  }
+  val Resim = tr.Resim
   import tr.{res => r}
-  // val döndür = r.döndür _
-  val (döndür, döndürMerkezli) = (r.döndür _, r.döndürMerkezli _)
+  val (döndür, döndürMerkezli, filtre, gürültü, örgü) = (r.döndür _, r.döndürMerkezli _, r.filtre _, r.gürültü _, r.örgü _)
+  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, götür, kaydır, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.götür _, r.kaydır _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
   def büyüt(oran: Kesir) = r.büyüt(oran)
   def büyüt(xOranı: Kesir, yOranı: Kesir) = r.büyüt(xOranı, yOranı)
   def ışıklar(ışıklar: com.jhlabs.image.LightFilter.Light*) = r.ışıklar(ışıklar: _*)
   def birEfekt(isim: Symbol, özellikler: Tuple2[Symbol, Any]*) = r.birEfekt(isim, özellikler: _*)
-  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, götür, kaydır, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.götür _, r.kaydır _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
-  val (filtre, gürültü, örgü) = (r.filtre _, r.gürültü _, r.örgü _)
   def NoktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = r.NoktaIşık(x, y, yön, yükseklik, uzaklık)
   def SahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = r.SahneIşığı(x, y, yön, yükseklik, uzaklık)
   def çiz(r2: Resim) = r.çiz(r2)
   def çiz(rler: Resim*) = r.çiz(rler: _*)
   def çiz(rler: collection.Seq[Resim]) = r.çiz(rler)
   def çizVeSakla(resimler: Resim*) = richBuiltins.drawAndHide(resimler.map(_.p): _*)
-  val (çizMerkezde, çizSahne, çizMerkezdeYazı, merkezeTaşı, resimleriSil) = (r.çizMerkezde _, r.çizSahne _, r.çizMerkezdeYazı _, r.merkezeTaşı _, r.resimleriSil _)
-
-  def resimDizisi(rd: Resim*) = r.resimDizisi(rd)
-  def resimDikeyDizi(rd: Resim*) = r.resimDikeyDizi(rd)
-  def resimYatayDizi(rd: Resim*) = r.resimYatayDizi(rd)
-  def resimDüzenliDizi(rd: Resim*) = r.resimDüzenliDizi(rd)
-  def resimDikeyDüzenliDizi(rd: Resim*) = r.resimDikeyDüzenliDizi(rd)
-  def resimYatayDüzenliDizi(rd: Resim*) = r.resimYatayDüzenliDizi(rd)
-  def resimKümesi(rd: Resim*) = r.resimKümesi(rd)
-  def resimDizisi(rd: collection.Seq[Resim]) = r.resimDizisi(rd)
-  def resimDikeyDizi(rd: collection.Seq[Resim]) = r.resimDikeyDizi(rd)
-  def resimYatayDizi(rd: collection.Seq[Resim]) = r.resimYatayDizi(rd)
-  def resimDüzenliDizi(rd: collection.Seq[Resim]) =r.resimDüzenliDizi(rd)
-  def resimDikeyDüzenliDizi(rd: collection.Seq[Resim]) = r.resimDikeyDüzenliDizi(rd)
-  def resimYatayDüzenliDizi(rd: collection.Seq[Resim]) = r.resimYatayDüzenliDizi(rd)
-  def resimKümesi(rd: collection.Seq[Resim]) = r.resimKümesi(rd)
-
-  val (sahneKenarındanYansıtma, engeldenYansıtma, tuşaBasılıMı, resmiSüz, resimDosyasınıSüz) = (r.sahneKenarındanYansıtma _, r.engeldenYansıtma _, r.tuşaBasılıMı _, r.resmiSüz _, r.resimDosyasınıSüz _)
+  val (çizMerkezde, çizSahne, çizMerkezdeYazı, merkezeTaşı) = (r.çizMerkezde _, r.çizSahne _, r.çizMerkezdeYazı _, r.merkezeTaşı _)
+  val (sahneKenarındanYansıtma, engeldenYansıtma) = (r.sahneKenarındanYansıtma _, r.engeldenYansıtma _)
 
   /* ../../widget/swingwrappers.scala
    Some are used in addition*.scala sample and others:
-   RowPanel
-   ColPanel
-   TextField
-   TextArea
-   Label
-   Button
-   ToggleButton
-   DropDown
-   Slider
+   RowPanel  ColPanel   TextField   TextArea   Label   Button   ToggleButton   DropDown   Slider
    */
 
   // more to come (:-)

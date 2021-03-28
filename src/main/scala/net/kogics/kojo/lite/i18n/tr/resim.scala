@@ -69,30 +69,11 @@ object res {
   def çizSahne(boya: Paint) = richBuiltins.tCanvas.drawStage(boya)
   def çizMerkezdeYazı(mesaj: Yazı, renk: Renk, yazıBoyu: Sayı) = richBuiltins.drawCenteredMessage(mesaj, renk, yazıBoyu)
   def merkezeTaşı(resim: Resim) = richBuiltins.center(resim.p)
-  def resimleriSil() = richBuiltins.tCanvas.erasePictures()
-
-  def resimDizisi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.map(_.p)))
-  def resimDikeyDizi(rd: Resim*) = new Resim(richBuiltins.picCol(rd.map(_.p)))
-  def resimYatayDizi(rd: Resim*) = new Resim(richBuiltins.picRow(rd.map(_.p)))
-  def resimDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picStackCentered(rd.map(_.p)))
-  def resimDikeyDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
-  def resimYatayDüzenliDizi(rd: Resim*) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
-  def resimKümesi(rd: Resim*) = new Resim(richBuiltins.picBatch(rd.map(_.p)))
-  def resimDizisi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStack(rd.map(_.p)))
-  def resimDikeyDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picCol(rd.map(_.p)))
-  def resimYatayDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRow(rd.map(_.p)))
-  def resimDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStackCentered(rd.map(_.p)))
-  def resimDikeyDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
-  def resimYatayDüzenliDizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
-  def resimKümesi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picBatch(rd.map(_.p)))
 
   def sahneKenarındanYansıtma(r: Resim, yöney: Yöney2B): Yöney2B =
     Yöney2B(richBuiltins.bouncePicOffStage(r.p, yöney.v))
   def engeldenYansıtma(r: Resim, yöney: Yöney2B, engel: Resim): Yöney2B =
     Yöney2B(richBuiltins.bouncePicOffPic(r.p, yöney.v, engel.p))
-  def tuşaBasılıMı(tuş: Sayı) = richBuiltins.isKeyPressed(tuş)
-  def resmiSüz(r: Resim, süzgeç: java.awt.image.BufferedImageOp): Resim = new Resim(richBuiltins.filterPicture(r.p, süzgeç))
-  def resimDosyasınıSüz(rd: java.awt.image.BufferedImage, süzgeç: java.awt.image.BufferedImageOp) = richBuiltins.filterImage(rd, süzgeç)
 
   //
   // interface above
@@ -295,7 +276,7 @@ class Resim(val p: richBuiltins.Picture) {
 object Resim {
   def apply(işlev: => Birim): Resim = new Resim(richBuiltins.Picture(işlev))
   def çiz(r: Resim) = richBuiltins.draw(r.p)
-  val doğru = köşegen _
+  val doğru(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.line(en, boy))
   def köşegen(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.line(en, boy))
   def yay(yarıçap: Kesir, açı: Kesir) = new Resim(richBuiltins.Picture.arc(yarıçap, açı))
   def daire(yarıçap: Kesir) = new Resim(richBuiltins.Picture.circle(yarıçap))
@@ -333,5 +314,45 @@ object Resim {
   def eksenleriGöster(resimler: Resim*) = richBuiltins.Picture.showAxes(resimler.map(_.p): _*)
   def sınırlarıGöster(r: Resim) = richBuiltins.Picture.showBounds(r.p)
   def sınırlarıGöster(resimler: Resim*) = richBuiltins.Picture.showBounds(resimler.map(_.p): _*)
+
+  def tuval = tuvalSınırları  // stageBorder
+  def tuvalinSınırları = tuvalSınırları
+  def tuvalSınırları = new Resim(richBuiltins.tCanvas.stage)
+  def tuvalinSolu = new Resim(richBuiltins.tCanvas.stageLeft)
+  def tuvalinSağı = new Resim(richBuiltins.tCanvas.stageRight)
+  def tuvalinTavanı = new Resim(richBuiltins.tCanvas.stageTop)
+  def tuvalinTabanı = new Resim(richBuiltins.tCanvas.stageBot)
+  def tuvalBölgesi = new Resim(richBuiltins.tCanvas.stageArea)
+
+  /* old                  new
+   =====                  ===
+   resimleriSil           Resim.sil
+   resimDizisi            Resim.dizi
+   resimDikeyDizi         Resim.diziDikey
+   resimYatayDizi         Resim.diziYatay
+   resimDüzenliDizi       Resim.diziDüzenli
+   resimDikeyDüzenliDizi  Resim.diziDikeyDüzenli
+   resimYatayDüzenliDizi  Resim.diziYatayDüzenli
+   resimKümesi            Resim.küme
+   resmiSüz               Resim.süz
+   resimDosyasınıSüz      Resim.süz   */
+  def sil() = richBuiltins.tCanvas.erasePictures()
+  def dizi(rd: Resim*) = new Resim(richBuiltins.picStack(rd.map(_.p)))
+  def diziDikey(rd: Resim*) = new Resim(richBuiltins.picCol(rd.map(_.p)))
+  def diziYatay(rd: Resim*) = new Resim(richBuiltins.picRow(rd.map(_.p)))
+  def diziDüzenli(rd: Resim*) = new Resim(richBuiltins.picStackCentered(rd.map(_.p)))
+  def diziDikeyDüzenli(rd: Resim*) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
+  def diziYatayDüzenli(rd: Resim*) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
+  def küme(rd: Resim*) = new Resim(richBuiltins.picBatch(rd.map(_.p)))
+  def dizi(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStack(rd.map(_.p)))
+  def diziDikey(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picCol(rd.map(_.p)))
+  def diziYatay(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRow(rd.map(_.p)))
+  def diziDüzenli(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picStackCentered(rd.map(_.p)))
+  def diziDikeyDüzenli(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
+  def diziYatayDüzenli(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
+  def küme(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picBatch(rd.map(_.p)))
+  def süz(r: Resim, süzgeç: java.awt.image.BufferedImageOp): Resim = new Resim(richBuiltins.filterPicture(r.p, süzgeç))
+  def süz(rd: java.awt.image.BufferedImage, süzgeç: java.awt.image.BufferedImageOp) = richBuiltins.filterImage(rd, süzgeç)
+
   // todo: more
 }

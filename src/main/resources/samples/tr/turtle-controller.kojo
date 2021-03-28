@@ -44,22 +44,22 @@ def silKomudu(n: Int) =
 
 def düğme(komutAdı: String) = Resim.düğme(komutlar(komutAdı)) { eylem(komutlar(komutAdı)) }
 
-val düğmePanosu = götür(-en / 2, -boy / 2) * büyüt(1.4) -> resimDikeyDizi(
-    resimYatayDizi(
+val düğmePanosu = götür(-en / 2, -boy / 2) * büyüt(1.4) -> Resim.diziDikey(
+    Resim.diziYatay(
         düğme("sol3"),
         düğme("ileri3"),
         düğme("sağ3"),
         düğme("zıpla3"),
         Resim.düğme(s" sil($ileriAdım3) ") { eylem(silKomudu(ileriAdım3)) }
     ),
-    resimYatayDizi(
+    Resim.diziYatay(
         düğme("sol2"),
         düğme("ileri2"),
         düğme("sağ2"),
         düğme("zıpla2"),
         Resim.düğme(s"sil($ileriAdım2)") { eylem(silKomudu(ileriAdım2)) }
     ),
-    resimYatayDizi(
+    Resim.diziYatay(
         düğme("sol1"),
         düğme("ileri1"),
         düğme("sağ1"),

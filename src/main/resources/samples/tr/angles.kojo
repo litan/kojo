@@ -17,13 +17,13 @@ val eskiAçıRengi = açıkGri
 val yayRengi = gri
 
 // Yarıçapı çizerek başlayalım
-def yarıçapıÇiz(açı: Sayı) = kalemRengi(renk) * döndür(açı) -> resimDizisi(
+def yarıçapıÇiz(açı: Sayı) = kalemRengi(renk) * döndür(açı) -> Resim.dizi(
     boyaRengi(renk) -> Resim.daire(3),
     Resim.yatay(yçBoyu),
     götür(yçBoyu, 0) * boyaRengi(renk) -> Resim.daire(3)
 )
 
-def eğriYçÇiz(başı: Kesir, açı: Kesir) = kalemRengi(renk) * döndür(başı) -> resimDizisi(
+def eğriYçÇiz(başı: Kesir, açı: Kesir) = kalemRengi(renk) * döndür(başı) -> Resim.dizi(
     götür(yçBoyu, 0) * boyaRengi(renk) -> Resim.daire(3),
     Resim.yay(yçBoyu, açı),
     döndür(açı) * götür(yçBoyu, 0) * boyaRengi(renk) -> Resim.daire(3)
@@ -31,7 +31,7 @@ def eğriYçÇiz(başı: Kesir, açı: Kesir) = kalemRengi(renk) * döndür(baş
 
 def yayÇiz(açı: Sayı) = kalemRengi(yayRengi) -> Resim.yay(yçBoyu, açı)
 
-def açıÇiz(başı: Kesir, açı: Kesir) = döndür(başı) -> resimDizisi(
+def açıÇiz(başı: Kesir, açı: Kesir) = döndür(başı) -> Resim.dizi(
     Resim.yatay(yçBoyu),
     döndür(açı) -> Resim.yatay(yçBoyu),
     Resim.yay(yçBoyu / 4, açı)

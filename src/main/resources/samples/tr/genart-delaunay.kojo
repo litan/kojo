@@ -13,7 +13,7 @@ fareyeTıklıyınca { (x, y) =>
 }
 
 def üçgenleriÇiz() {
-    resimleriSil()
+    Resim.sil()
     val üçgenler = üçgenDöşeme(noktalar) 
     üçgenler.foreach { üçgen =>
         çiz(Resim {
@@ -31,5 +31,5 @@ def üçgenleriÇiz() {
 
 val mesaj1 = kalemRengi(siyah) -> Resim.yazı("Başlamak için tıkla", 40)
 val mesaj2 = kalemRengi(siyah) -> Resim.yazı("Tıklayarak devam et", 30)
-val mesaj = resimDikeyDüzenliDizi(mesaj2, Resim.dikeyBoşluk(20), mesaj1)
+val mesaj = Resim.diziDikeyDüzenli(mesaj2, Resim.dikeyBoşluk(20), mesaj1)
 çizMerkezde(mesaj)

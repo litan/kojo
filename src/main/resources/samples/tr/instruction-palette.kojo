@@ -117,9 +117,9 @@ val pTemplates = LinkedHashMap(
     "Resim                  " -> """Resim {
     ${c}ileri(50)
 }""",
-    "resimDikeyDizi(resimler) " -> "resimDikeyDizi(${c}r, r)",
-    "resimYatayDizi(resimler) " -> "resimYatayDizi(${c}r, r)",
-    "resimDizisi(resimler)    " -> "resimDizisi(${c}r, r)",
+    "Resim.dizi(resimler)   " -> "Resim.dizi(${c}r, r)",
+    "Resim.diziDikey(resimler) " -> "Resim.diziDikey(${c}r, r)",
+    "Resim.diziYatay(resimler) " -> "Resim.diziYatay(${c}r, r)",
     "çiz(resim)             " -> "çiz(${c}resim)",
     "" -> "",
     "Resim.köşegen(e, b)    " -> "Resim.köşegen(${c}50, 20)",
@@ -128,7 +128,8 @@ val pTemplates = LinkedHashMap(
     "Resim.elips(yçx, yçy)  " -> "Resim.elips(${c}50, 25)",
     "Resim.yazı(y, boyu)    " -> """Resim.yazı(${c}"Merhaba!", 18)""",
     "Resim.imge(f)          " -> "Resim.imge(${c}Costume.womanWaving)",
-    "Resim.arayüz(jc)       " -> """Resim.arayüz(${c}Label("Selam!"))"""
+    "Resim.arayüz(jc1)      " -> """Resim.arayüz(${c}Label("Selam!"))""",
+    "Resim.arayüz(jc2)      " -> """Resim.arayüz(${c}Button("Selam!")(println("Nasılsın?")))"""
 )
 
 val ptTemplates = LinkedHashMap(

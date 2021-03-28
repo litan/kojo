@@ -20,9 +20,9 @@ def çizim(n: Sayı): Resim = {
     if (n <= 1)
         gövde
     else
-        resimDizisi(
+        Resim.dizi(
             gövde,
-            götür(0, büyüklük - 5) * aydınlık(0.05) -> resimDizisi(
+            götür(0, büyüklük - 5) * aydınlık(0.05) -> Resim.dizi(
                 döndür(25.0) * büyüt(0.72) -> çizim(n - 1),
                 döndür(-50.0) * büyüt(0.55) -> çizim(n - 1))
         )

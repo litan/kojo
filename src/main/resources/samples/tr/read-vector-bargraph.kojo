@@ -19,6 +19,6 @@ def çubuk(n: Sayı) = Resim.dikdörtgen(30, n * 10)
 val çubuklar = yöney.map { n => çubuk(n) }
 eksenleriGöster()
 gridiGöster()
-val çubukGrafiği = resimYatayDizi(çubuklar).boşluk(5)
+val çubukGrafiği = Resim.diziYatay(çubuklar).boşluk(5)
 çiz(çubukGrafiği)
 yazılımcıkDüzenleyicisiniEtkinleştir()

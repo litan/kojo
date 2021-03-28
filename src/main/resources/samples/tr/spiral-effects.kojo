@@ -14,7 +14,7 @@ val ta = tuvalAlanı
 def artalan = götür(ta.x, ta.y) * boyaRengi(Renk(153, 0, 255)) -> Resim.dikdörtgen(ta.en, ta.boy)
 
 // artalanın üstüne sarmalı koyalım:
-val resim = resimDizisi(
+val resim = Resim.dizi(
     örgü(30, 5, 30, 5) -> artalan,
     gürültü(80, 1) -> sarmallıResim
 )

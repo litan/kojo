@@ -10,7 +10,7 @@ val d = karekökü(2 * uzunluk * uzunluk)
 val d2 = d / 2
 val d4 = d / 4
 
-// origamide yedi şekil var
+// tangramda yedi şekil var
 // önce iki büyük dik üçgen
 def parça1 = Resim {
     ileri(uzunluk)
@@ -57,8 +57,8 @@ def parça7 = Resim {
     sol(45)
     ileri(d4)
 }
-// bu da origami insan
-def origamiTen = resimDizisi(
+// bu da tangram insan
+def origamiTen = Resim.dizi(
     döndür(-120) -> parça3,
     döndür(150) * götür(0, -3.5) -> parça1,
     yansıtY * döndür(120) * götür(1.5, 0) -> parça7,

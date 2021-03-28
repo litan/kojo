@@ -1,5 +1,5 @@
-val derece = 2 // zorluk derecesi. Kart sayısı = derece * 10
-require(derece >= 1 && derece <= 3, "derece sadece 1, 2 ya da 3 olabilir")
+val derece = 1 // zorluk derecesi. Kart sayısı = derece * 10
+gerekli(derece >= 1 && derece <= 3, "derece sadece 1, 2 ya da 3 olabilir")
 
 tümEkran()
 silVeSakla()
@@ -7,7 +7,7 @@ silVeSakla()
 case class Kart(sayı: Sayı) {
     def renkVer(p: Resim) = boyaRengi(kartAA) * kalemRengi(koyuGri) -> p
     val yç = yazıÇerçevesi(sayı.toString, 60) // 35.toString -> "35"
-    val rÖnü = renkVer(resimDizisi(
+    val rÖnü = renkVer(Resim.dizi(
         Resim.dikdörtgen(80, 120),
         // yç bir Dikdörtgen .width eni .height da boyu
         götür((80 - yç.width) / 2, yç.height + (120 - yç.height) / 2)
