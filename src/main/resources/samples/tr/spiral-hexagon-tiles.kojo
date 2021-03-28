@@ -14,8 +14,6 @@
 // Bir de başlarken ve bittiğinde kuzeye bakıyor olmalı.
 // Aşağıdaki notlarda biraz daha açıklama bulacaksın.
 
-import scala.math._ // karekök ve trigonometri işlemleri yapmak için
-
 val kenarUzunluğu: Kesir = 40 // taşımızın kenar uzunluğu
 
 val dönüşSayısı = 8 // kaç dönüş olsun? Merkezdeki taşı saymıyoruz.
@@ -92,7 +90,7 @@ def taş2 {
     ileri(kenarUzunluğu / 2)
     kalemRenginiKur(renk2)
     kalemiİndir
-    daire(kenarUzunluğu * sqrt(3.0) / 2) // yarıçap!
+    daire(kenarUzunluğu * karekökü(3.0) / 2) // yarıçap!
     kalemiKaldır
     geri(kenarUzunluğu / 2)
     sol() // ilk konum ve doğrultuya döndük

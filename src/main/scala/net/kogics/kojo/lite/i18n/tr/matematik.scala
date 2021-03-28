@@ -18,16 +18,18 @@ package net.kogics.kojo.lite.i18n.tr
 
 // translating math library
 object matematik {
-  def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
   def karesi(x: Kesir): Kesir = math.pow(x, 2)
   def karekökü(x: Kesir): Kesir = math.sqrt(x)
   def kuvveti(x: Kesir, k: Kesir): Kesir = math.pow(x, k)
+  def eüssü(x: Kesir): Kesir = math.exp(x)
   def onlukTabandaLogu(x: Kesir): Kesir = math.log10(x)
   def doğalLogu(x: Kesir): Kesir = math.log(x)
   def logaritması(x: Kesir): Kesir = math.log(x)
-  def sinüs(x: Kesir): Kesir = math.sin(x)
-  def kosinüs(x: Kesir): Kesir = math.cos(x)
-  def tanjant(x: Kesir): Kesir = math.tan(x)
+  def radyana(açı: Kesir): Kesir = math.toRadians(açı)
+  def dereceye(açı: Kesir): Kesir = math.toDegrees(açı)
+  def sinüs(açı: Kesir): Kesir = math.sin(açı)
+  def kosinüs(açı: Kesir): Kesir = math.cos(açı)
+  def tanjant(açı: Kesir): Kesir = math.tan(açı)
   def sinüsünAçısı(x: Kesir): Kesir = math.asin(x)
   def kosinüsünAçısı(x: Kesir): Kesir = math.acos(x)
   def tanjantınAçısı(x: Kesir): Kesir = math.atan(x)
@@ -35,6 +37,9 @@ object matematik {
     val faktor = math.pow(10, basamaklar).toDouble
     math.round(sayı.doubleValue * faktor).toLong / faktor
   }
+  def taban(x: Kesir): Kesir = math.floor(x)
+  def tavan(x: Kesir): Kesir = math.ceil(x)
+  def yakını(x: Kesir): Kesir = math.rint(x)
   /* todo: how to import/export overloaded defs?
    def enİrisi(x: Sayı, y: Sayı): Sayı = math.max(x, y)
    def enUfağı(x: Sayı, y: Sayı): Sayı = math.min(x, y)

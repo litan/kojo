@@ -415,7 +415,7 @@ def enbop(x: Uzun, y: Uzun): Uzun = if (y == 0) x else enbop(y, x % y)
     """def ağaç(boy: Kesir) {
     // toInt metodu kesirli sayıyı tam sayıya çeviriyor
     // yani boy 1.75 olursa boy.toInt 1 oluyor
-    def renk = Renk(boy.toInt % 255, math.abs(255 - boy * 3).toInt % 255, 125)
+    def renk = Renk(boy.toInt % 255, mutlakDeğer(255 - boy * 3).toInt % 255, 125)
     if (boy > 4) {
         kalemKalınlığınıKur(boy / 7)
         kalemRenginiKur(renk)
@@ -934,50 +934,49 @@ pages += Page(
   name = "MF",
   body = tPage("Matematiksel İşlevler",
     "Matematik"h3,
-    "Matematik fonksiyonları bazen işimize çok yararlar. Birkaç tanesini görelim. Önce matematik birimindeki komutları çağırmak gerekiyor:".p,
-    "import math._".c,
+    "Matematik fonksiyonları bazen işimize çok yararlar. Birkaç tanesini görelim.".p,
     "Değişmez (sabit) Değerler".h3,
     "Matematik sınıfında iki çok meşhur sabit var:".p,
     table(
-      row("E".c,"e, meşhur matematikçi Euler'den gelir adı 2.718282... değerindedir, doğal logaritmanın da tabanıdır."),
-      row("Pi".c,"pi sayısı, 3.14159265 .... yani yarıçapı 1 olan dairenin çevre uzunluğunun yarısıdır.")
+      row("eSayısı".c,"e, meşhur matematikçi Euler'den gelir adı 2.718282... değerindedir, doğal logaritmanın da tabanıdır."),
+      row("piSayısı".c,"pi sayısı, 3.14159265 .... yani yarıçapı 1 olan dairenin çevre uzunluğunun yarısıdır.")
     ),
     "Trigonometri fonksiyonları".h3,
     "Trigonometrik işlevler girdi olarak radyan birimi kullanırlar. Radyan kavramını anlatan çok güzel bir örneğimiz var Kojo'da. Örnekler menüsünde en altta Matematik Öğrenme Birimleri menüsü var. Onun en altında 'Açı Nedir?' var. Ona tıklayıver. Günlük hayatta biz 90 derece, 180 derece gibi bize daha doğal gelen derece birimini kullanırız açıları ifade etmek için. Radyandan dereceye çevirmek için 'toDegrees' metodunu, tersini yapmak için de 'toRadians' metodunu kullanabiliriz. Bilmemiz gereken tek şey şu: 2*PI radyan 360 dereceye eşittir. Aşağıda sıraladığımız metodlardan başka yay metodları da var. İngilizce arc diye geçer.".p,
     "Kısa not: aşağıdaki tanımlarda G1, G2, ... ile fonksiyona girilen değerleri ifade ediyoruz kısaca. Yani işlevAdı(G1, G2, G3, ...). ".p,
     table(
-      row("sin(Pi/6)".c,"G1 girdisinin yani burada Pi/6 değerinin sinüsü."),
-      row("cos(Pi/6)".c,"G1 girdisinin kosinüsü."),
-      row("tan(Pi/6)".c,"G1 girdisinin tanjantı."),
-      row("toRadians(45)".c,"G1 (derece olsun) girdisini radyana çevirir."),
-      row("toDegrees(Pi/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir.")
+      row("sinüs(piSayısı/6)".c,"G1 girdisinin yani burada Pi/6 değerinin sinüsü."),
+      row("kosinüs(piSayısı/6)".c,"G1 girdisinin kosinüsü."),
+      row("tanjant(piSayısı/6)".c,"G1 girdisinin tanjantı."),
+      row("radyana(45)".c,"G1 (derece olsun) girdisini radyana çevirir."),
+      row("dereceye(piSayısı/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir.")
     ),
     "Üst bulma metodları".h3,
-    "Logaritma ve üst bulmak için iki temel işlev var. İkisi de E tabanını kullanır (Math.E)".p,
+    "Logaritma ve üst bulmak için iki temel işlev var. İkisi de e tabanını kullanır (e sayısı)".p,
     table(
-      row("exp(Pi)".c,"e (2.71...) sayısının G1 üssünü hesaplar."),
-      row("pow(6,3)".c,"G1 girdisinin G2 üssünü bulur."),
-      row("log(10)".c,"G1'in E tabanina göre logaritmasını verir.")
+      row("eüssü(piSayısı)".c,"e (2.71...) sayısının G1 üssünü hesaplar."),
+      row("gücü(6, 3)".c,"G1 girdisinin G2 üssünü bulur."),
+      row("logaritması(10)".c,"G1'in E tabanina göre logaritmasını verir.")
     ),
     "Başka bazı fonksiyonlar".h3,
     table(
-      row("sqrt(225)".c,"G1'in karekökü."),
-      row("abs(-7)".c,"abs absolute sözcüğünün kısaltması. Mutlak değeri verir. Girdinin türü neyse, çıktı da aynı tür sayı olur, Sayı, Uzun, KısaKesir, Kesir."),
-      row("max(8,3)".c,"maximum sözcüğünden. G1 ve G2 arasında büyük olanı bulur."),
-      row("min(8,3)".c,"minimum sözcüğünden. G1 ve G2 arasında küçük olanı bulur.")
+      row("karekökü(225)".c,"G1'in karekökü."),
+      row("mutlakDeğer(-7)".c,"Mutlak değeri verir. Girdinin türü neyse, çıktı da aynı tür sayı olur, Sayı, Uzun, KısaKesir, Kesir."),
+      row("enİrisi(8,3)".c,"G1 ve G2 arasında büyük olanı bulur."),
+      row("enUfağı(8,3)".c,"G1 ve G2 arasında küçük olanı bulur.")
     ),
     "Sayı türüyle ilgili metodlar".h3,
     "Bu işlevler kesirli sayıları tam yani kesirsiz sayıya çevirir. Ama dikkat, çıktı türü hala Kesir olabilir.".p,
     table(
-      row("floor(3.12)".c,"Yer anlamına gelir. G1 girdisinden küçük ya da ona eşit olan en büyük tam sayıyı hesabeder."),
-      row("ceil(3.12)".c,"Tavan anlamına gelir. G1 girdisinden büyük ya da ona eşit olan en küçük tam sayıyı verir."),
-      row("rint(3.51)".c,"RoundInteger'dan. G1 değerine en yakın tam sayıyı Kesir türünde bir çıktı olarak verir."),
-      row("round(3.48)".c,"G1 kesirine en yakın sayıyı Uzun türünde çıktı olarak verir."),
-      row("round(2.6F)".c,"G1 KısaKesir'ine en yakın sayıyı Sayı türünde çıktı olarak verir.")
+      row("taban(3.12)".c,"G1 girdisinden küçük ya da ona eşit olan en büyük tam sayıyı hesabeder."),
+      row("tavan(3.12)".c,"G1 girdisinden büyük ya da ona eşit olan en küçük tam sayıyı verir."),
+      row("yakını(3.51)".c,"G1 değerine en yakın tam sayıyı Kesir türünde bir çıktı olarak verir."),
+      row("yakın(3.48)".c,"G1 kesirine en yakın sayıyı Uzun türünde çıktı olarak verir."),
+      row("yakın(2.6F)".c,"G1 KısaKesir'ine en yakın sayıyı Sayı türünde çıktı olarak verir.")
     ),
     "Rastgele (Random) sayılar".h3,
     table(
-      row("random".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rastgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
+      row("rastgele".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rastgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
     )
   )
 )
@@ -1401,7 +1400,7 @@ activateCanvas()""".c,
 import Staging.{ circle, clear, animate, wipe, setPenColor }
 clear
 val Sc = 100 // saatin boyu. Büyültmek ister misin?
-val Pi2 = 2.0 * math.Pi // 2*Pi radyan tam 360 derece dönüş demek
+val Pi2 = 2.0 * piSayısı // 2*Pi radyan tam 360 derece dönüş demek
 // saati çizelim
 def saat = {
     circle(0, 0, Sc)  // daire
@@ -1575,7 +1574,6 @@ def dörtlü = Dizin((0, 0), (1, 0), (-1, 0), (0, 2)) // dokuzcanlı'nın altkü
     
     """import Staging._ // şu komutlar gelsin bakalım: line, circle, square
 import Staging.{ circle, clear } // bu komut adları çatışıyor
-import math.pow, math.random
 
 // KS arttıkça oyun zorlaşır. Bir kenarda kaç tane nokta olsun?
 val KS = 4; val AS = KS * KS
@@ -1621,7 +1619,7 @@ def çizelim(hepsi: Vector[Çizgi]) {
     hepsi.foreach(çzg => {
         val (x1, y1) = (çzg.n1.x, çzg.n1.y)
         val (x2, y2) = (çzg.n2.x, çzg.n2.y)
-        val boy = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2))
+        val boy = karekökü(karesi(x2 - x1) + karesi(y2 - y1))
         val (xr, yr) = (YÇ / boy * (x2 - x1), YÇ / boy * (y2 - y1))
         çzg.çizgi.erase
         çzg.çizgi = line(x1 + xr, y1 + yr, x2 - xr, y2 - yr)

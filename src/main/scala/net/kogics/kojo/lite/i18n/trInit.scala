@@ -268,8 +268,16 @@ object TurkishAPI {
   def piSayısı: Kesir = math.Pi
   def eSayısı: Kesir = math.E
   val gücü = m.kuvveti _
-  val (yuvarla, mutlakDeğer, karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.yuvarla _, m.mutlakDeğer _, m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
+  val (yuvarla, karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.yuvarla _, m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
+  val (eüssü, radyana, dereceye, taban, tavan, yakını) = (m.eüssü _, m.radyana _, m.dereceye _, m.taban _, m.tavan _, m.yakını _)
+
   // todo: don't we have a type class for Num?
+  def mutlakDeğer(x: Sayı): Sayı = math.abs(x)
+  def mutlakDeğer(x: Uzun): Uzun = math.abs(x)
+  def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
+  def mutlakDeğer(x: UfakKesir): UfakKesir = math.abs(x)
+  def yakın(x: Kesir): Uzun = math.round(x)
+  def yakın(x: UfakKesir): Sayı = math.round(x)
   def enİrisi(x: Sayı, y: Sayı): Sayı = math.max(x, y)
   def enUfağı(x: Sayı, y: Sayı): Sayı = math.min(x, y)
   def enİrisi(x: Uzun, y: Uzun): Uzun = math.max(x, y)
@@ -280,7 +288,7 @@ object TurkishAPI {
   def enUfağı(x: UfakKesir, y: UfakKesir ): UfakKesir = math.min(x, y)
 
   // ../CoreBuiltins.scala
-  def rastgele() = math.random()
+  def rastgele = math.random()
   def rastgele(üstSınır: Sayı) = builtins.random(üstSınır)
   def rastgele(altSınır: Sayı, üstSınır: Sayı) = builtins.random(altSınır, üstSınır)
   def rastgeleSayı = builtins.randomInt

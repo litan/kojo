@@ -7,7 +7,7 @@
   Daha çok bilgi ve detay istersen, şuraya bak: https://academo.org/demos/estimating-pi-monte-carlo/
 */
 def π(toplamNoktaSayısı: Sayı): Kesir = {
-    def merkezdenUzaklık(x: Kesir, y: Kesir) = math.sqrt(math.pow(x, 2) + math.pow(y, 2))
+    def merkezdenUzaklık(x: Kesir, y: Kesir) = karekökü(karesi(x) + karesi(y))
     var daireninİçineDüşenNoktaSayısı = 0
     yinele(toplamNoktaSayısı) {
         val (noktaX, noktaY) = (rastgeleKesir(1), rastgeleKesir(1))

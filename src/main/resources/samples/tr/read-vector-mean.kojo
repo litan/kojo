@@ -15,4 +15,4 @@ for (i <- 1 to n) {
 çıktıYazıRenginiKur(yeşil)
 satıryaz(s"Girdiğin yöney: ${yöney.mkString("[", ",", "]")}")
 satıryaz(f"    Ortalaması: ${yöney.sum.toDouble / yöney.size}%.2f")
-satıryaz(f"      Uzunluğu: ${math.sqrt(yöney.map(x => x*x).sum)}%.2f")  // pisagor bu kadar basit! (8-)
+satıryaz(f"      Uzunluğu: ${karekökü(yöney.map(x => x*x).sum)}%.2f")  // pisagor bu kadar basit! (8-)
