@@ -292,7 +292,7 @@ def eğri(x: Kesir) = 0.001 * x * x + 0.5 * x + 10   // 'def' define yani tanım
 gridiGöster(); eksenleriGöster() // kare çizgileri ve x ve y eksenlerini çizelim
 val aralık = 200
 atla(-aralık,eğri(-aralık))
-for(x <- -aralık+10 to aralık; if (x % 10 == 0)) lineTo(x, eğri(x))
+for(x <- -aralık+10 to aralık; if (x % 10 == 0)) noktayaGit(x, eğri(x))
 """.c,
     "Eksenleri silelim. Ve bir sonraki bölüme devam edelim!".p,
     "eksenleriGizle(); gridiGizle()".c
