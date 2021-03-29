@@ -168,6 +168,32 @@ class TurkishAPITest extends FunSuite with Matchers {
     while (rastgeleKarıştır(deste) == Dizi(1, 2, 3, 4, 5)) count += 1
     count < 20 should be(true)
   }
+
+  test("Translation of Range should work") {
+    val a = new Aralık(1, 10, 3)
+    a.ilk shouldBe 1
+    a.son shouldBe 10
+    a.adım shouldBe 3
+    a.dizin() shouldBe List(1, 4, 7)
+    a.yazı() shouldBe "Aralık(1, 4, 7)"
+    a.map(_ * 2) shouldBe Vector(2, 8, 14)
+    a.flatMap(s => List(s, s*s)) shouldBe Vector(1, 1, 4, 16, 7, 49)
+
+    val a2 = new Aralık(1, 200, 7)
+    a2.dizin().size shouldBe 29
+    a2.başı shouldBe 1
+    a2.sonu shouldBe 197
+    a2.uzunluğu shouldBe 29
+
+    val a3 = Aralık.kapalı(1, 10, 3)
+    a3.dizin() shouldBe List(1, 4, 7, 10)
+    (for (i <- a3 if i % 2 != 0) yield i) shouldBe Vector(1, 7)
+
+    val a4 = Aralık.kapalı(5, 1, -1)
+    a4.dizin() shouldBe List(5, 4, 3, 2, 1)
+    val a5 = Aralık(5, 1, -1)
+    a5.dizin() shouldBe List(5, 4, 3, 2)
+  }
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala
   // ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/lite/TestEnv.scala

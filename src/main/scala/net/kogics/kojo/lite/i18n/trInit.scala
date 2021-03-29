@@ -82,6 +82,9 @@ object TurkishAPI {
   type GeoNokta=tr.GeoNokta
   type Grafik2B=tr.Grafik2B
 
+  type Aralık = tr.Aralık
+  val Aralık = tr.Aralık
+
   val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) = (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
 
   val Nokta = tr.Nokta
