@@ -470,10 +470,8 @@ object TurkishAPI {
   val (çizMerkezde, çizSahne, çizMerkezdeYazı, merkezeTaşı) = (r.çizMerkezde _, r.çizSahne _, r.çizMerkezdeYazı _, r.merkezeTaşı _)
   val (sahneKenarındanYansıtma, engeldenYansıtma) = (r.sahneKenarındanYansıtma _, r.engeldenYansıtma _)
 
-  /* ../../widget/swingwrappers.scala
-   Some are used in addition*.scala sample and others:
-   RowPanel  ColPanel   TextField   TextArea   Label   Button   ToggleButton   DropDown   Slider
-   */
+  import tr.arayuz
+  val ay = arayuz
 
   // more to come (:-)
 }

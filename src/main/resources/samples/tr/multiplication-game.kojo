@@ -33,31 +33,32 @@ var yanıt = 0
 var yanıtUzunluğu = 0
 var bittiMi = yanlış
 
-// java'nın arayüz kütüphanesi çok zengin -- ne yazık ki Türkçe'si yok bildiğim kadarıyla
-import javax.swing.SwingConstants
-import javax.swing.BorderFactory
-val yazıYüzü = Font("Sans Serif", 60)
-val yanıtKutusu = new TextField(0) {
+// java'nın arayüz kütüphanesi çok zengin
+// birkaç tanesini Türkçe'ye çevirdik. ay modülüne koyduk.
+val yazıYüzü = yazıyüzü("Sans Serif", 60)
+val yanıtKutusu = new ay.Yazıgirdisi(0) {
+    // bu komutlar Yazıgirdisi türünün metodları.
+    // Henüz Türkçe'leri yok
     setFont(yazıYüzü)
     setColumns(3)
-    setHorizontalAlignment(SwingConstants.CENTER)
+    setHorizontalAlignment(ay.değişmez.merkez)
     setBackground(aaRengi)
-    setBorder(BorderFactory.createLineBorder(siyah))
+    setBorder(ay.çerçeveci.çizgiKenar(siyah))
 }
 
-def işlemPanosu = new ColPanel(
-    new RowPanel(
-        new Label(sayıYazısı(sayı1)) {
+def işlemPanosu = new ay.Sütun(
+    new ay.Sıra(
+        new ay.Tanıt(sayıYazısı(sayı1)) {
             setFont(yazıYüzü)
-            setHorizontalAlignment(SwingConstants.CENTER)
+            setHorizontalAlignment(ay.değişmez.merkez)
         },
-        new Label(işlem) {
+        new ay.Tanıt(işlem) {
             setFont(yazıYüzü)
-            setHorizontalAlignment(SwingConstants.CENTER)
+            setHorizontalAlignment(ay.değişmez.merkez)
         },
-        new Label(sayıYazısı(sayı2)) {
+        new ay.Tanıt(sayıYazısı(sayı2)) {
             setFont(yazıYüzü)
-            setHorizontalAlignment(SwingConstants.CENTER)
+            setHorizontalAlignment(ay.değişmez.merkez)
         }
     ) {
         setBackground(aaRengi)
@@ -65,14 +66,14 @@ def işlemPanosu = new ColPanel(
     yanıtKutusu
 ) {
     setBackground(aaRengi)
-    setBorder(BorderFactory.createEmptyBorder)
+    setBorder(ay.çerçeveci.boşKenar)
 }
 
 def yeniAraYüz() {
     araYüz.sil()
     araYüz = götür(-150, 0) -> Resim.arayüz(işlemPanosu)
     çiz(araYüz)
-    yanıtKutusu.takeFocus()
+    yanıtKutusu.takeFocus() // basılan tuşlar yanıtKutusuna gelsin
 }
 
 var doğrular = 0
@@ -88,14 +89,43 @@ def yeterinceSüreKaldıMı = {
     else yanlış
 }
 
-import java.awt.event.{ KeyAdapter, KeyEvent }
-yanıtKutusu.addKeyListener(new KeyAdapter {
+// yanıtKutusunun üstünde tuşlara basıldıkça birşeyler yapmamız gerek
+yanıtKutusu.addKeyListener(new ay.olay.TuşUyarlayıcısı {
+
+    // her tuşa basıldığında bu çalışır
+    override def keyPressed(e: ay.olay.TuşaBasmaOlayı) {
+        if (e.getKeyCode == Kc.VK_ESCAPE) {  // Escape tuşuna basılınca
+            e.consume()
+            durdur()
+            tümEkran() // zaten tüm ekran olduğu için bu komutla tüm ekrandan çıkar.. aç/kapa düğmesi gibi yani
+        }
+    }
+    // her karakter okunduğunda da bu çalışır
+    override def keyTyped(e: ay.olay.TuşaBasmaOlayı) {
+        if (!e.getKeyChar.isDigit) {  // sayı olmayan girdileri boş verelim
+            e.consume()
+        }
+    }
+    // her tuştan kalkışta bakalım yanıt hazır ve doğru mu
+    override def keyReleased(e: ay.olay.TuşaBasmaOlayı) {
+        if (yanıtVerdiMi(e)) {
+            val x = yanıtKutusu.value
+            yanıtaBak(x)
+        }
+        else {
+            yanıtKutusu.setForeground(siyah)
+        }
+    }
+    
+    def yanıtVerdiMi(e: ay.olay.TuşaBasmaOlayı) = {
+        yanıtKutusu.getText.length >= yanıtUzunluğu
+    }
     def yanıtaBak(x: Sayı) {
         if (x == yanıt) {
             yanıtKutusu.setForeground(Renk(0, 220, 0))
             doğrular += 1
             if (!bittiMi && yeterinceSüreKaldıMı) {
-                schedule(0.3) {
+                sırayaSok(0.3) {
                     yeniSoru()
                     yeniAraYüz()
                     yanıtKutusu.setForeground(siyah)
@@ -111,33 +141,6 @@ yanıtKutusu.addKeyListener(new KeyAdapter {
         }
     }
 
-    def yanıtVerdiMi(e: KeyEvent) = {
-        yanıtKutusu.getText.length >= yanıtUzunluğu
-    }
-
-    override def keyPressed(e: KeyEvent) {
-        if (e.getKeyCode == Kc.VK_ESCAPE) {
-            e.consume()
-            durdur()
-            tümEkran() // zaten tüm ekran olduğu için bu komutla tüm ekrandan çıkar.. aç/kapa düğmesi gibi yani
-        }
-    }
-
-    override def keyTyped(e: KeyEvent) {
-        if (!e.getKeyChar.isDigit) {
-            e.consume()
-        }
-    }
-
-    override def keyReleased(e: KeyEvent) {
-        if (yanıtVerdiMi(e)) {
-            val x = yanıtKutusu.value
-            yanıtaBak(x)
-        }
-        else {
-            yanıtKutusu.setForeground(siyah)
-        }
-    }
 })
 
 def çizMesaj(m: Yazı, r: Renk) {
