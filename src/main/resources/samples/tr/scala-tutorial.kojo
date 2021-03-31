@@ -1447,7 +1447,7 @@ canlandır { // bu döngü her saniyede yaklaşık 40 kere yinelenir
     "Bu yaşam ya da hayat oyunu sıfır oyuncuyla oynanıyor! Çok sıkıcı mı dedin? Yok, çok ilginç aslında. Aslında sen çok önemlisin. Çünkü bu oyunun başlaması için en başta canlı hücrelere gerek var. Bunları sen belirleyebilirsin. Ama önce hazır bazı desenlerle başlamak daha kolay olur. 'başlangıç' adlı komudu bul. Onun ikinci girdisi 'desen'. Deseni seçmek için yapman gereken tek şey 'seç' adındaki değeri değiştirmek. Birinciyle başlıyoruz. Ama sıfırdan ona kadar hepsini deneyebilirsin. Sonra hatta kendin de yeni desenler ekleyebilirsin.".p,
 
     "Bu simulasyonun hızını 'oran' değerini değiştirerek ayarlayabilirsin.".p,
-    """çıktıyıSil; silVeSakla(); gridiGöster(); eksenleriGöster(); kalemRenginiKur(mavi)
+    """çıktıyıSil; silVeSakla(); kalemRenginiKur(mavi)
 // bu oyunun dünyası yani tahtası büyük bir kare. Kenarı KU uzunluğunda olsun
 // Nasıl satranç tahtası 8x8, bu tahta da 128x128 kare.
 val KU = 128
