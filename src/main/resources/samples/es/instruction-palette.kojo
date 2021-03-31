@@ -79,7 +79,7 @@ val cfTemplates = LinkedHashMap(
 else {
     establecerColorPluma(verde)
 }""",
-    "if-else   [expr]     " -> """if (${c}verdad) 5 else 9""",
+    "if-else   [expr]     " -> """if (${c}true) 5 else 9""",
     "for       [comando]  " -> """for (i <- ${c}1 to 4) {
     imprimirln(i)
 }""",
@@ -212,15 +212,15 @@ import java.awt.event._
 @volatile var helpFrame: JWindow = _
 @volatile var helpPane: JEditorPane = _
 @volatile var footerPanel: JPanel = _
-@volatile var helpOn = falso
+@volatile var helpOn = false
 
 def insertCodeInline(cat: String, idx: Int) {
     stInsertCodeInline(templates(cat)(instructions(cat)(idx)))
-    helpFrame.setVisible(falso)
+    helpFrame.setVisible(false)
 }
 def insertCodeBlock(cat: String, idx: Int) {
     stInsertCodeBlock(templates(cat)(instructions(cat)(idx)))
-    helpFrame.setVisible(falso)
+    helpFrame.setVisible(false)
 }
 
 stAddLinkHandler(Turtle, story) { idx: Int => insertCodeBlock(Turtle, idx) }
@@ -252,7 +252,7 @@ def showHelp(key: String) {
         helpPane.setCaretPosition(0)
         val cloc = stCanvasLocation
         helpFrame.setLocation(cloc.x + 5, cloc.y + 5)
-        helpFrame.setVisible(verdad)
+        helpFrame.setVisible(true)
         // try to make sure that the help pane gains focus
         helpPane.requestFocus()
         helpPane.requestFocusInWindow()
@@ -269,7 +269,7 @@ stAddLinkEnterHandler(Conditions, story) { idx: Int => showCatHelp(Conditions, i
 stAddLinkEnterHandler(Summary, story) { cat: String => showCatSummary(cat) }
 
 stOnStoryStop(story) {
-    helpFrame.setVisible(falso)
+    helpFrame.setVisible(false)
     helpFrame.dispose()
     switchToDefaultPerspective()
 }
@@ -281,7 +281,7 @@ runInGuiThread {
     helpPane = new JEditorPane
     helpPane.setBackground(Color(255, 255, 51))
     helpPane.setContentType("text/html")
-    helpPane.setEditable(falso)
+    helpPane.setEditable(false)
     val helpScroller = new JScrollPane(helpPane)
     helpScroller.setBorder(BorderFactory.createLineBorder(gray, 1))
     helpFrame.getContentPane.add(helpScroller)
@@ -298,20 +298,20 @@ runInGuiThread {
     val helpLabel = new JLabel("Ayuda"); helpLabel.setForeground(Color(0xfafafa))
     footerPanel.add(helpLabel)
     val onButton = new JRadioButton("On"); onButton.setForeground(Color(0xfafafa))
-    onButton.setSelected(falso)
+    onButton.setSelected(false)
     val offButton = new JRadioButton("Off"); offButton.setForeground(Color(0xfafafa))
-    offButton.setSelected(verdad)
+    offButton.setSelected(true)
     val onOff = new ButtonGroup; onOff.add(onButton); onOff.add(offButton)
     footerPanel.add(onButton)
     footerPanel.add(offButton)
     onButton.addActionListener(new ActionListener {
         override def actionPerformed(e: ActionEvent) {
-            helpOn = verdad
+            helpOn = true
         }
     })
     offButton.addActionListener(new ActionListener {
         override def actionPerformed(e: ActionEvent) {
-            helpOn = falso
+            helpOn = false
         }
     })
 }
