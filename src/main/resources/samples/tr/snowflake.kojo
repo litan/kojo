@@ -31,7 +31,7 @@ def kochTanesi(kenarUzunluğu: Sayı, kaçKere: Sayı) {
 type Konum = (Kesir, Kesir)
 
 def ayarla(yer: Konum, duraklamaSüresi: Sayı = 50) = {
-  çizimiSil
+  sil
   kalemKalınlığınıKur(1)
   kalemRenginiKur(darkGray)
   boyamaRenginiKur(gray)

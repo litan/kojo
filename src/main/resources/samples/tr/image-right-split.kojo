@@ -1,23 +1,19 @@
 // Kojo'nun bildiği resimlerden biri el sallayan kadın (womanWaving)
 // Onu birkaç kez kullanarak bileşik bir resim oluşturalım
 
-// Picture resim demek. Image da imaj. Benzer şeyler yani!
-// def resim = Picture.image("dosya-adı")
-def resim = Picture.image(Costume.womanWaving)
+def imge = Resim.imge(Costume.womanWaving)
 /* şunlardan herhangi birini de deneyebilirsin:
     Costume.bat1 Costume.bat2 Costume.car Costume.pencil */
 
-// scale: ölçek demek. Resmin büyüklüğünü değiştiriyor bu dönüşüm komutu
-// H horizontal yatay, V de vertical dikey demek
-def yanına(r1: Picture, r2: Picture) = scale(0.5, 1) -> HPics(r1, r2)
-def üstüne(r1: Picture, r2: Picture) = scale(1, 0.5) -> VPics(r2, r1)
+def yanına(r1: Resim, r2: Resim) = büyüt(0.5, 1) -> Resim.diziYatay(r1, r2)
+def üstüne(r1: Resim, r2: Resim) = büyüt(1, 0.5) -> Resim.diziDikey(r2, r1)
 
-def desen(n: Int): Picture = {
-    if (n <= 1)
-        resim
+def resim(s: Sayı): Resim = {
+    if (s <= 1)
+        imge
     else
-        yanına(resim, üstüne(desen(n - 1), desen(n - 1)))
+        yanına(imge, üstüne(resim(s - 1), resim(s - 1)))
 }
 
 silVeSakla()
-draw(desen(6))  // draw İngilizce bir sözcük. Çiz demek. desen işleviyle resmi çizen komut bu.
+çiz(resim(7))

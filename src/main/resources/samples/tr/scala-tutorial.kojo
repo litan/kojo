@@ -292,7 +292,7 @@ def eğri(x: Kesir) = 0.001 * x * x + 0.5 * x + 10   // 'def' define yani tanım
 gridiGöster(); eksenleriGöster() // kare çizgileri ve x ve y eksenlerini çizelim
 val aralık = 200
 atla(-aralık,eğri(-aralık))
-for(x <- -aralık+10 to aralık; if (x % 10 == 0)) lineTo(x, eğri(x))
+for(x <- -aralık+10 to aralık; if (x % 10 == 0)) noktayaGit(x, eğri(x))
 """.c,
     "Eksenleri silelim. Ve bir sonraki bölüme devam edelim!".p,
     "eksenleriGizle(); gridiGizle()".c
@@ -415,7 +415,7 @@ def enbop(x: Uzun, y: Uzun): Uzun = if (y == 0) x else enbop(y, x % y)
     """def ağaç(boy: Kesir) {
     // toInt metodu kesirli sayıyı tam sayıya çeviriyor
     // yani boy 1.75 olursa boy.toInt 1 oluyor
-    def renk = Renk(boy.toInt % 255, math.abs(255 - boy * 3).toInt % 255, 125)
+    def renk = Renk(boy.toInt % 255, mutlakDeğer(255 - boy * 3).toInt % 255, 125)
     if (boy > 4) {
         kalemKalınlığınıKur(boy / 7)
         kalemRenginiKur(renk)
@@ -723,11 +723,16 @@ pages += Page(
 }
 """.c,
     """Bak bu sayede, eğer işlev girdisi vermezsek, ele adlı işlev tekMi koşulunu kullanacak. Yani varsayılan koşul tekMi ile ifade ettiğimiz tek sayı olmak olacak. Yeni bir örnek iyi olacak:""".p,
-    """val ilkOnSayı = (1 to 10).toList""".c,
-    """İngilizce 'toList' dilimizde dizine çevir anlamına gelir. Ama dizine çevrilebilen '(1 to 10)' nedir diye merak ediyor olabilirsin. 1'den 10'a kadar sayılar anlamına geliyor. Daha önce görmediğimiz ama çok faydalı olan bu türün İngilizce adı 'Range'. Genel hali şu: '(a to b by c)' yani a sayısından b sayısına kadar c adımlarıyla sayıyoruz. Örneğin:""".p,
-    "(3 to 22 by 3)".c,
-    "(30 to -33 by -5)".c,
-    "Sonuna .toList ekle bakalım ne olacak. Aralıkları araya sıkıştırdık, umarım kafa karıştırmadık. Hemen konumuza dönelım. Nerede kalmıştık? Bir sayı dizisı içinden herhangi bir koşula göre bazı sayıları seçmek istiyorduk. Ama tek sayıları seçmek varsayılan koşulumuz olsun dedik. Deneyelim hemen:".p,
+    """val ilkOnSayı = Aralık(1, 11).dizin""".c,
+    "Daha önce görmediğimiz ama çok faydalı olan bu Aralık türünün İngilizce adı 'Range'. İngilizce daha kısa bir yolu daha var. Şöyle:".p,
+    """val ilkOnSayı = (1 until 11).toList""".c,    
+    """İngilizce 'toList' dilimizde dizine çevir anlamına gelir. (1 until 11) yerine (1 to 10) da yazabilirdik. Bunların daha genel hali de var: '(a until b by c)' ve '(a to b by c)' yani a sayısından b sayısına kadar c adımlarıyla sayıyoruz ama 'until' olursa b sayısından hemen önce duruyoruz. Örneğin:""".p,
+    "(3 until 22 by 3)".c,
+    "Türkçesi:".p, "Aralık(3, 22, 3)".c,
+    "Geri geri de gidebiliriz:".p, "(30 to -35 by -5)".c,
+    """Aralık(30, -36, -5)
+Aralık.kapalı(30, -35, -5)""".c,
+    "Aralığın sonuna dizin metodunu ekle bakalım ne olacak. İngilizcesi toList. Aralıkları araya sıkıştırdık, umarım kafa karıştırmadık. Hemen konumuza dönelım. Nerede kalmıştık? Bir sayı dizisı içinden herhangi bir koşula göre bazı sayıları seçmek istiyorduk. Ama tek sayıları seçmek varsayılan koşulumuz olsun dedik. Deneyelim hemen:".p,
     """ele(ilkOnSayı)""".c,
     """Aynı 'tek' adını verdiğimiz işlev gibi çalıştı, değil mi? Ama, ele adlı işlevimiz hala daha genel. İstersek ikinci arguman olarak başka bir koşul girer, başka tür bir eleme yaparız. Hemen geliyor bir örnek!""".p,
     "Çift sayıları bulmak için de benzer bir yöntem kullanabiliriz elbet. Yani çiftMi diye yeni bir işlev tanımlar ve sonra kullanırız. Ama adsız (anonymous) bir işlev kullanarak çok daha kısaca ifade edebiliriz dileğimizi. Ne demek adsız? Yani 'def' özel sözcüğünü kullanmadan ve işlevin adını vermeden bir işlev tanımlayacağız. Bu işlev basitçe girdiyi alacak ve onu değerlendirecek. Bu özel yöntemde '=>' imini kullanıyoruz. Solunda girdiler, sağında da işlevin eylemleri gelecek.".p,
@@ -934,50 +939,49 @@ pages += Page(
   name = "MF",
   body = tPage("Matematiksel İşlevler",
     "Matematik"h3,
-    "Matematik fonksiyonları bazen işimize çok yararlar. Birkaç tanesini görelim. Önce matematik birimindeki komutları çağırmak gerekiyor:".p,
-    "import math._".c,
+    "Matematik fonksiyonları bazen işimize çok yararlar. Birkaç tanesini görelim.".p,
     "Değişmez (sabit) Değerler".h3,
     "Matematik sınıfında iki çok meşhur sabit var:".p,
     table(
-      row("E".c,"e, meşhur matematikçi Euler'den gelir adı 2.718282... değerindedir, doğal logaritmanın da tabanıdır."),
-      row("Pi".c,"pi sayısı, 3.14159265 .... yani yarıçapı 1 olan dairenin çevre uzunluğunun yarısıdır.")
+      row("eSayısı".c,"e, meşhur matematikçi Euler'den gelir adı 2.718282... değerindedir, doğal logaritmanın da tabanıdır."),
+      row("piSayısı".c,"pi sayısı, 3.14159265 .... yani yarıçapı 1 olan dairenin çevre uzunluğunun yarısıdır.")
     ),
     "Trigonometri fonksiyonları".h3,
     "Trigonometrik işlevler girdi olarak radyan birimi kullanırlar. Radyan kavramını anlatan çok güzel bir örneğimiz var Kojo'da. Örnekler menüsünde en altta Matematik Öğrenme Birimleri menüsü var. Onun en altında 'Açı Nedir?' var. Ona tıklayıver. Günlük hayatta biz 90 derece, 180 derece gibi bize daha doğal gelen derece birimini kullanırız açıları ifade etmek için. Radyandan dereceye çevirmek için 'toDegrees' metodunu, tersini yapmak için de 'toRadians' metodunu kullanabiliriz. Bilmemiz gereken tek şey şu: 2*PI radyan 360 dereceye eşittir. Aşağıda sıraladığımız metodlardan başka yay metodları da var. İngilizce arc diye geçer.".p,
     "Kısa not: aşağıdaki tanımlarda G1, G2, ... ile fonksiyona girilen değerleri ifade ediyoruz kısaca. Yani işlevAdı(G1, G2, G3, ...). ".p,
     table(
-      row("sin(Pi/6)".c,"G1 girdisinin yani burada Pi/6 değerinin sinüsü."),
-      row("cos(Pi/6)".c,"G1 girdisinin kosinüsü."),
-      row("tan(Pi/6)".c,"G1 girdisinin tanjantı."),
-      row("toRadians(45)".c,"G1 (derece olsun) girdisini radyana çevirir."),
-      row("toDegrees(Pi/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir.")
+      row("sinüs(piSayısı/6)".c,"G1 girdisinin yani burada Pi/6 değerinin sinüsü."),
+      row("kosinüs(piSayısı/6)".c,"G1 girdisinin kosinüsü."),
+      row("tanjant(piSayısı/6)".c,"G1 girdisinin tanjantı."),
+      row("radyana(45)".c,"G1 (derece olsun) girdisini radyana çevirir."),
+      row("dereceye(piSayısı/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir.")
     ),
     "Üst bulma metodları".h3,
-    "Logaritma ve üst bulmak için iki temel işlev var. İkisi de E tabanını kullanır (Math.E)".p,
+    "Logaritma ve üst bulmak için iki temel işlev var. İkisi de e tabanını kullanır (e sayısı)".p,
     table(
-      row("exp(Pi)".c,"e (2.71...) sayısının G1 üssünü hesaplar."),
-      row("pow(6,3)".c,"G1 girdisinin G2 üssünü bulur."),
-      row("log(10)".c,"G1'in E tabanina göre logaritmasını verir.")
+      row("eüssü(piSayısı)".c,"e (2.71...) sayısının G1 üssünü hesaplar."),
+      row("gücü(6, 3)".c,"G1 girdisinin G2 üssünü bulur."),
+      row("logaritması(10)".c,"G1'in E tabanina göre logaritmasını verir.")
     ),
     "Başka bazı fonksiyonlar".h3,
     table(
-      row("sqrt(225)".c,"G1'in karekökü."),
-      row("abs(-7)".c,"abs absolute sözcüğünün kısaltması. Mutlak değeri verir. Girdinin türü neyse, çıktı da aynı tür sayı olur, Sayı, Uzun, KısaKesir, Kesir."),
-      row("max(8,3)".c,"maximum sözcüğünden. G1 ve G2 arasında büyük olanı bulur."),
-      row("min(8,3)".c,"minimum sözcüğünden. G1 ve G2 arasında küçük olanı bulur.")
+      row("karekökü(225)".c,"G1'in karekökü."),
+      row("mutlakDeğer(-7)".c,"Mutlak değeri verir. Girdinin türü neyse, çıktı da aynı tür sayı olur, Sayı, Uzun, KısaKesir, Kesir."),
+      row("enİrisi(8,3)".c,"G1 ve G2 arasında büyük olanı bulur."),
+      row("enUfağı(8,3)".c,"G1 ve G2 arasında küçük olanı bulur.")
     ),
     "Sayı türüyle ilgili metodlar".h3,
     "Bu işlevler kesirli sayıları tam yani kesirsiz sayıya çevirir. Ama dikkat, çıktı türü hala Kesir olabilir.".p,
     table(
-      row("floor(3.12)".c,"Yer anlamına gelir. G1 girdisinden küçük ya da ona eşit olan en büyük tam sayıyı hesabeder."),
-      row("ceil(3.12)".c,"Tavan anlamına gelir. G1 girdisinden büyük ya da ona eşit olan en küçük tam sayıyı verir."),
-      row("rint(3.51)".c,"RoundInteger'dan. G1 değerine en yakın tam sayıyı Kesir türünde bir çıktı olarak verir."),
-      row("round(3.48)".c,"G1 kesirine en yakın sayıyı Uzun türünde çıktı olarak verir."),
-      row("round(2.6F)".c,"G1 KısaKesir'ine en yakın sayıyı Sayı türünde çıktı olarak verir.")
+      row("taban(3.12)".c,"G1 girdisinden küçük ya da ona eşit olan en büyük tam sayıyı hesabeder."),
+      row("tavan(3.12)".c,"G1 girdisinden büyük ya da ona eşit olan en küçük tam sayıyı verir."),
+      row("yakını(3.51)".c,"G1 değerine en yakın tam sayıyı Kesir türünde bir çıktı olarak verir."),
+      row("yakın(3.48)".c,"G1 kesirine en yakın sayıyı Uzun türünde çıktı olarak verir."),
+      row("yakın(2.6F)".c,"G1 KısaKesir'ine en yakın sayıyı Sayı türünde çıktı olarak verir.")
     ),
-    "Rasgele (Random) sayılar".h3,
+    "Rastgele (Random) sayılar".h3,
     table(
-      row("random".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rasgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
+      row("rastgele".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rastgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
     )
   )
 )
@@ -1310,129 +1314,126 @@ zoom(0.5, 10, 10)""".c, "(oran, x, y) Tuvali verilen oran kadar büyültür ya d
 pages += Page(
   name = "GAG",
   body = tPage("Çizim ve Oyun",
-    "Staging adlı birimi Kojo'ya kazandıran Peter Lewerin adlı bilgisayar aşığı. Staging birimi sayesinde bilgisayar oyunları yazman ve güzel bilgisayar çizimleri yapman çok daha kolay. Staging biriminin becerilerinin tarihçesi Processing adlı bir Java projesine kadar uzanır. Processing birimini de Kojo'ya Peter eklemişti. Bu Staging birimi o kadar becerikli ki sırf onun üzerine büyük bir kılavuz bile yazılabilir. Burada bir kaç örnekle neler yapılabilir görelim ve tadında bırakalım istersen.".p,
-    "Eğer ilgilenip daha çok örnek görme istersen, şu bağlantıya bakabilirsin:".p,
-    // TODO: THIS LINK IS BROKEN "Commands or Methods".link("lewerin.se/peter/kojo/staging.html"),
-    "Örnekler ve açıklamalar burada".link("code.google.com/p/kojo/wiki/StagingModule"),
+    "Kojo'nun Scala üzerine yaptığı katkılardan biri kaplumbağacıklarla çizimler yapmak ve bilgisayar oyunları yazmak. Ama Kojo'nun bir de Resim adlı bir birimi var ki, onunla daha da kolaylıkla bilgisayar grafikleri çizip onları canlandırabilir ve istersen oyunlar programlayabilirsin. Kojo'ya bu becerileri kazandıranlardan birisi de Peter Lewerin adlı bilgisayar aşığı. Lalit ve Peter sayesinde bilgisayar oyunları yazman ve güzel bilgisayar çizimleri yapman çok daha kolay. Resim biriminin becerilerinin tarihçesi Processing adlı bir Java projesine kadar uzanır. Processing birimini de Kojo'ya Peter eklemişti. Bu Resim birimi o kadar becerikli ki sırf onun üzerine büyük bir kılavuz bile yazılabilir. Burada bir kaç örnekle neler yapılabilir görelim ve tadında bırakalım istersen. Kojo'nun Örnekler ve Sergi menülerinde başka pek çok örnek bulacaksın. Burdakileri deneyip anladıktan sonra onlara da bakmanda fayda var.".p,
+    "Eğer ilgilenip daha çok örnek görmek istersen, Kojo'nun web sayfasına da bak. Henüz sadece İngilizce. Resim yerine Picture diyecek. Ama ordaki örnekler de sana bir fikir verecektir.".p,
     "Bu birim birçok komut, işlem ve bir de çizim döngüsü sunuyor bize. Bunları kullanarak epey gelişmiş şekiller, resimler ve grafikler çizebiliriz. Çizim dönğüsünü kullanarak grafikleri canlandırabilir ve istersek oyuna çevirebiliriz.".p,
     "İlk örnekle başlayalım. Ortamı hazırlar ve ekranı temizleriz ilk önce. Sonra bir top çizer ve canlandırma döngüsünün içinde topun nasıl hareket edeceğini tanımlarız. Birim, bu döngüyü her yirmi ile 32 milisaniye içinde çalıştırıyor. Bilgisayarın hızına göre saniyede en az 30 en çok 50 kere tekrar tekrar resim çizebilecek yani. Bu da bizim gözümüzün değişiklikleri görme hızından fazla olduğu için bize canlı ve harektli gibi görünecek. Bu temel kavramları ve komutları kullanarak pekçok ilginç canlı, hareketli grafik çizilebilir.".p,
-    """import Staging._
-// Farklı birimlerin bazı benzer komutları oluyor ve aynı adları kullanabiliyorlar.
-// Onun için hangisini kullanmak istediğimizi açık açık belirtmemiz gerek.
-// Bizim kaplumbağa'nın komutlarıyla çelişen komutlar bu üçü:
-import Staging.{ circle, clear, animate }
-clear()
-gridiGöster(); eksenleriGöster()
-val top = circle(-200, -100, 10) // topu bir daire olarak çizelim
-
-var y = 0; var x = 0 // topun konumunu bu değişkenlerle belirleyeceğiz
-var dx = 5 // topun hızı x ve y'deki değişimle belirlenecek
-var dy = 10 // Yani aşağıdaki döngünün her yinelenmesinde y x'ten daha çok artacak
-// Bunları değiştirip tekrar çalıştır. Hemen anlarsın ne oluyor.
-
-// İşte döngümüz. Saniyede en az 30 en çok 50 kere yinelenir bunun içindeki komutlar.
-animate {
-    top.setPosition(x, y)
+    """silVeSakla(); gridiGöster(); eksenleriGöster()
+val yç = 10 // topumuzun yarıçapı
+val top = Resim.daire(yç) // resmi
+çiz(top) // bu da tuvale çiziveriyor topu
+// topun içinde kalmasını istediğimiz sahayı da tanımlayıp çizelim
+val en = 400; val boy = 200 // çizmesek de çalışır ama görmek faydalı:
+çiz(kalemRengi(siyah) * götür(-en / 2, -boy / 2) -> Resim.dikdörtgen(en, boy))
+// topun şu ufak ve iri sayılar arasında kalmasını istiyoruz
+val (ufakX, iriX) = (-en/2 + yç, en/2 - yç)
+val (ufakY, iriY) = (-boy/2 + yç, boy/2 - yç)
+var x = 0; var y = 0 // topun konumunu bu değişkenlerle belirleyeceğiz
+var dx = 2; var dy = 4 // topun hızını da x ve y'deki değişikliklerle belirleyeceğiz
+// Bu dx ve dy'i birazcık değiştirip tekrar çalıştır. Hemen anlarsın ne oluyor.
+// Bize bir de döngü gerek. Bu komut çok becerikli:
+canlandır { // İçindeki komutlar saniyede yaklaşık 40 kere yinelenir.
+    top.kondur(x, y) // bu metod resimlerin yani burda bizim topun yerini değiştirir
     // topun konumunu yani x ve y'yi günceliyoruz:
     // Zıplama alanının dışına çıkmasın diye sınıra gelince
-    // konum değişimini tersine çeviriyoruz:
-    dx = if (x < -200 || x > 200) -dx else dx
+    // hızının doğrultusunu tersine çeviriyoruz:
+    dx = if (x <= ufakX || x >= iriX) -dx else dx
+    dy = if (y <= ufakY || y >= iriY) -dy else dy
     x += dx
-    dy = if (y < -50 || y > 100) -dy else dy
     y += dy
-}
-""".c,
-    "İkinci örneğimiz küçük ve basit bir oyun. Duydun mu en eski bilgisayar oyunlarından olan pinpon (İngilizce adıyla Pong) oyunu. Tek kişilik bir oyun. Yapmamız gereken topa raketle vurup geri yollamak. Raketi fareyle yönetiyoruz. Top kaçarsa bir puan kaybediyorsun. İyi eğlenceler!".p,
-    """import Staging._
-import Staging.{ circle, clear, animate, setFillColor, wipe, mouseX, mouseY }
-clear()
-var x = 0; var y = 0 // topun konumu
-var dy = 10; var dx = 3 // topun hızı
-var rx = 0.0; var ry = 0.0 // raketin konumu
+}""".c,
+    "İkinci örneğimiz küçük ve basit bir oyun. Duymuş olabilirsin: en eski bilgisayar oyunlarından duvara karşı pinpon (İngilizce adıyla Pong) oyunu. Tek kişilik bir oyun. Yapmamız gereken topa raketle vurup geri yollamak. Raketi fareyle yönetiyoruz. Top kaçarsa bir puan kaybediyorsun. İyi eğlenceler!".p,
+    """silVeSakla()
 val rb = 80 // raketin boyu
 var ıska = 0 // top kaç kere kaçtı, sayalım
-// Üç duvar çizelim
-line(-200, -100, -200, 100)
-line(-200, -100, 200, -100)
-line(-200, 100, 200, 100)
-setFillColor(mavi) // topun rengi
-val top = circle(-200, -100, 5)
-animate {
-    wipe() // herşeyi sil
-    rx = mouseX; ry = mouseY // fare nerede raket de orada olsun
-    line(rx, ry, rx, ry + rb) // raketi çiz
-    // top rakete çarptı mı?
-    dx = if ((dx > 0) && (rx - x < 15) && (x - rx < 15) &&
+// Üç duvar çizelim, bir top, bir raket, bir de skor
+çiz(götür(-200, -100) -> Resim.doğru(0, 200))
+çiz(götür(-200, -100) -> Resim.doğru(400, 0))
+çiz(götür(-200,  100) -> Resim.doğru(400, 0))
+val top = kalemRengi(mavi) -> Resim.daire(5)
+val raket = kalemRengi(mavi) -> Resim.doğru(0, rb)
+def sayaç(yazı: Yazı) = kalemRengi(siyah) * götür(-50, 150) -> Resim.yazı(yazı)
+var skor = sayaç("Hiç ıskalamadın")
+çiz(top, raket, skor)
+var x = 0; var y = 0 // topun konumu
+var dy = 8; var dx = -8 // topun hızı
+var rx = 0.0; var ry = 0.0 // raketin konumu
+canlandır {
+    raket.kondur(fareKonumu)  // raketi fareyle kontrol ediyoruz
+    top.kondur(x, y) // topun yerini değiştirelim
+    // top rakete çarpıyor mu?
+    rx = fareKonumu.x; ry = fareKonumu.y
+    dx = if ((dx > 0) && (mutlakDeğer(rx - x) < 10) &&
         (y > ry) && (y < ry + rb)) -dx else dx
-    top.setPosition(x, y)
     // topun konumunu güncelleyelim, duvarlara bakalım
     dx = if (x + dx < -200) -dx else dx
     if (x + dx > 200) { x = -200; ıska += 1 } // ıskaladı
-    x += dx
     dy = if ((y + dy < -100) || (y + dy > 100)) -dy else dy
-    y += dy
-    // kaç kaç?
-    if (ıska > 0)
-        text(ıska.toString + " kere ıskaladın", -50, 150)
+    x += dx; y += dy // topun gideceği noktayı hesaplayalım
+    if (ıska > 0) {  // skor tutalım
+        skor.sil
+        skor = sayaç(ıska.toString + " kere ıskaladın")
+        çiz(skor)
+    }
 }""".c,
-    "Temel kavramlar ve komutlarla artık tanıştın. Bir kaç tane daha top eklemeye ne dersin? Topların hızını rastgele değiştirerek oyunu daha eğlenceli kılabilirsin istersen. Raketin boyunu kısaltabilir ya da uzatabilirsin. Bir de programımızın bir hatası var! İngilizce'de bug yani böcek denir. Ama nerden çıktı deme. Programı yazanın hatası de. Sen de yapacaksın bol bol hata. Hiç dert etme. Her hata aslında daha usta olmak için bir fırsat. Fırsatları hiç kaçırma! Hatayı farkettin mi? Bazen top raketin içinden geçiyor sanki elektron tünelleme yapıyormuş gibi (kuvantum mekaniği değil ki bu)! Bakalım yazılımcığın içinde nerede? Sen bulup düzeltebilecek misin?".p,
+    "Temel kavramlar ve komutlarla artık tanıştın. Bir kaç tane daha top eklemeye ne dersin? Topların hızını rastgele değiştirerek oyunu daha eğlenceli kılabilirsin istersen. Raketin boyunu kısaltabilir ya da uzatabilirsin. Bir de programımızın bir (belki kimbilir daha çok) hatası var! İngilizce'de bug yani böcek denir. Ama nerden çıktı deme. Programı yazanın hatası de. Sen de yapacaksın bol bol hata. Hiç dert etme. Her hata aslında daha usta olmak için bir fırsat. Fırsatları hiç kaçırma! Hatayı farkettin mi? Bazen top raketin içinden geçiyor sanki elektron tünelleme yapıyormuş gibi (kuvantum mekaniği değil ki bu)! Bazen de ıskalaması gerekirken geri yolluyor.. Bakalım yazılımcığın içinde nerede? Sen bulup düzeltebilecek misin?".p,
     "Klavye ve tuşlarla komut girişi".h3,
     "Pekçok oyun klaveyeden komut bekler. Minecraft oynadın mı hiç? Hem fare hem de klavye komutları oyunu iyice eğlenceli kılar. Bak bu küçük oyun sağ/sol/yukarı ve aşağı ok olan tuşlarla kaplumbağacığa yön veriyor.".p,
 
     "Her zamanki gibi aşağıdaki yazılımcığa tıkla ki çalışsın. Sonra da tuvale tıkla ki klavyeye bastığın zaman farketsin kaplumbağa ve söz dinlesin, senin komutlarını yerine getirsin.".p,
-    """sil(); görünür(); setAnimationDelay(100)
-onKeyPress { k =>
+    """sil()
+görünür()
+canlandırmaHızınıKur(100)
+var zıpladı = yanlış
+tuşaBasınca { k =>
     k match {
-        case Kc.VK_LEFT  => setHeading(180)  // sola git
-        case Kc.VK_RIGHT => setHeading(0)    // sağa git
-        case Kc.VK_UP    => setHeading(90)   // yukarı
-        case Kc.VK_DOWN  => setHeading(270)  // aşağı
+        case Kc.VK_LEFT  => açıyaDön(180)  // sola git
+        case Kc.VK_RIGHT => açıyaDön(0)    // sağa git
+        case Kc.VK_UP    => açıyaDön(90)   // yukarı
+        case Kc.VK_DOWN  => açıyaDön(270)  // aşağı
+        case Kc.VK_Z     => zıpla(20); zıpladı = doğru    
         case _           => // diğer tuşlar sadece ilerletsin
     }
-    ileri(20)
+    if (zıpladı) {
+        zıpladı = yanlış
+    } else {
+     ileri(20)
+    }
 }
-activateCanvas()""".c,
+tuvaliEtkinleştir()""".c,
     "Hayal gücünü kullan, yazılımcığı değiştir (örneğin 45 derece döndürmek için komut ekleyebilirsin), tekrar çalıştır. Yazılımcık düzenleme ekranında Kc. yazdıktan sonra control tuşunu basık tutup büyük boşluk tuşuna bas ki başka hangi tuşları kullanabileceğini gör.".p,
 
     "Saat".h3,
     "Bir saat yapalım mı?".p,
     "Java'nın Date yani tarih adlı kütüphane birimini kullanacağız.".p,
-    """import Staging._
-import Staging.{ circle, clear, animate, wipe, setPenColor }
-clear
-val Sc = 100 // saatin boyu. Büyültmek ister misin?
-val Pi2 = 2.0 * math.Pi // 2*Pi radyan tam 360 derece dönüş demek
+    """silVeSakla
+val yç = 100 // saatin yarıçapı. Büyültmek ister misin?
+val pi2 = 2.0 * piSayısı // 2*Pi radyan tam 360 derece dönüş demek
 // saati çizelim
 def saat = {
-    circle(0, 0, Sc)  // daire
-    for (i <- 0 to 59) {
-        val ra = Pi2 * i / 60
-        val x = Sc * sin(ra); val y = Sc * cos(ra)
-        val tks = if (i % 5 == 0) 0.9 else 0.95
-        line(tks * x, tks * y, x, y)  // dakika ve saat çentikleri
+    Resim.sil() // eski saati silelim
+    çiz(kalemRengi(kırmızı) -> Resim.daire(yç))
+    for (i <- 0 to 59) { // // dakika ve saat çentikleri
+        val ra = pi2 * i / 60
+        val (x, y) = (yç * sinüs(ra), yç * kosinüs(ra))
+        val çentikBoyu = if (i % 5 == 0) 0.9 else 0.95
+        val (llx, lly, urx, ury) = (çentikBoyu * x, çentikBoyu * y, x, y)
+        val (en, boy) = (urx - llx, ury - lly)
+        çiz(kalemRengi(kırmızı) * götür(llx, lly) -> Resim.doğru(en, boy))
     }
 }
-// saniyede 30 ile 50 kere tekrar eder bu döngü
-animate {
+canlandır { // bu döngü her saniyede yaklaşık 40 kere yinelenir
     var d = new java.util.Date
-    wipe
-    setPenColor(kırmızı)
-    saat
-    setPenColor(mavi)
-
-    val s = Pi2 * d.getSeconds / 60 // saniye kolu
-    line(0, 0, 0.9 * Sc * sin(s), 0.9 * Sc * cos(s))
-    setPenColor(yeşil)
-    val m = Pi2 * d.getMinutes / 60 // dakika kolu
-    line(0, 0, 0.8 * Sc * sin(m), 0.8 * Sc * cos(m))
-    setPenColor(turuncu)
-    val h = Pi2 * d.getHours / 12 + m / 12 // saat kolu
-    line(0, 0, 0.6 * Sc * sin(h), 0.6 * Sc * cos(h))
-    setPenColor(siyah)
-    text(d.toString, -Sc, -Sc - 20)
+    saat; çiz(kalemRengi(siyah) * götür(-yç-5, -yç-20) -> Resim.yazı(d.toString))
+    val s = pi2 * d.getSeconds / 60 // saniyeKolu
+    çiz(kalemRengi(mavi) -> Resim.doğru(0.9 * yç * sinüs(s), 0.9 * yç * kosinüs(s)))
+    val m = pi2 * d.getMinutes / 60 // dakika kolu
+    çiz(kalemRengi(yeşil) -> Resim.doğru(0.8 * yç * sinüs(m), 0.8 * yç * kosinüs(m)))
+    val h = pi2 * d.getHours / 12 + m / 12 // saat kolu
+    çiz(kalemRengi(turuncu) -> Resim.doğru(0.6 * yç * sinüs(h), 0.6 * yç * kosinüs(h)))
 }
 """.c,
-
+    "Saatin kaç tane çizimden oluştuğunu hesabedebilir misin? Yanıt pekçok ülkedeki emeklilik yaşı! Neyseki bu 65 çizimi yapmak hem de saniyede 40 kere tekrar tekrar bizim bilgisayarımızı hiç yormuyor! Peki belki de yok, yok 63 tane çizgi, bir çember ve bir kaç da yazı diyerek itiraz edeceksin. Çok haklısın. Ve tebrikler!".p,
     "Conway'in Yaşam Oyunu".h3,
     """İngilizce adıyla "The Game of Life" o kadar meşhur ki, bilgisayarcılar arasında basitçe Life yani Yaşam adıyla tanınır! Aslında o bir hücresel otomaton yani basit hücrelerden oluşan ve onların yerel etkileşimleri sayesinde kendi kendine devinen en basit program türlerinden biri. İngiltere doğumlu Amerika'da Princeton üniversitesinde matematik araştırmaları yapan John Horton Conway tarafından 1970 yılında icat edilmiş. Belki de keşfedilmiş demek lazım. Kimbilir. Sen nedersin?""".p,
     "Wikipedia ansiklopedisinden bakabilirsin".link("tr.wikipedia.org/wiki/Conway%27in_Hayat_Oyunu"),
@@ -1446,16 +1447,7 @@ animate {
     "Bu yaşam ya da hayat oyunu sıfır oyuncuyla oynanıyor! Çok sıkıcı mı dedin? Yok, çok ilginç aslında. Aslında sen çok önemlisin. Çünkü bu oyunun başlaması için en başta canlı hücrelere gerek var. Bunları sen belirleyebilirsin. Ama önce hazır bazı desenlerle başlamak daha kolay olur. 'başlangıç' adlı komudu bul. Onun ikinci girdisi 'desen'. Deseni seçmek için yapman gereken tek şey 'seç' adındaki değeri değiştirmek. Birinciyle başlıyoruz. Ama sıfırdan ona kadar hepsini deneyebilirsin. Sonra hatta kendin de yeni desenler ekleyebilirsin.".p,
 
     "Bu simulasyonun hızını 'oran' değerini değiştirerek ayarlayabilirsin.".p,
-    """import Staging._ // Staging birimindeki komutları kullanmak için çağıralım.
-// Farklı birimlerin bazı benzer komutları oluyor ve aynı adı kullanıyorlar.
-// Onun için hangisini kullanmak istiyoruz açık açık belirtmemiz gerek:
-import Staging.{ animate, circle, clear, setFillColor, wipe }
-
-çıktıyıSil; clear(); gridiGöster(); eksenleriGöster(); setFillColor(mavi)
-
-// bu yazılımcıkta hızıKur gibi kaplumba komutları bir işe yaramıyor,
-// çünkü çizimleri yapan kaplumba değil Staging birimini
-
+    """çıktıyıSil; silVeSakla(); kalemRenginiKur(mavi)
 // bu oyunun dünyası yani tahtası büyük bir kare. Kenarı KU uzunluğunda olsun
 // Nasıl satranç tahtası 8x8, bu tahta da 128x128 kare.
 val KU = 128
@@ -1464,20 +1456,20 @@ val KU = 128
 // ilk önce, bütün kareler cansız olmalı
 var dünya = (0 until KU * KU).foldLeft(Sayılar())((x, y) => x :+ 0)
 satıryaz(s"Dünyamızda $KU'in karesi yani ${dünya.size} tane hane var.")
-yaz(s"Ekranımız ${(canvasBounds.width / 10).toInt} kare eninde ")
-satıryaz(s"ve ${(canvasBounds.height / 10).toInt} kare boyunda.")
+yaz(s"Ekranımız ${(tuvalAlanı.eni / 10).toInt} kare eninde ")
+satıryaz(s"ve ${(tuvalAlanı.boyu / 10).toInt} kare boyunda.")
 
 val oran = 5 // canlandırmayı yavaşlatmak için bunu arttır.
 // En hızlısı 1. 40'a eşitlersen saniyede bir nesil ilerliyor yaklaşık olarak.
-// Nasıl mı? Canlandırma komutu (adı animate) bir saniyede 30 kere çalıştırılıyor. 
+// Nasıl mı? Aşağıdaki canlandır adlı döngü komutu saniyede yaklaşık 40 kere yineleniyor.
 
 val gösterVeDur = yanlış // bunu doğru yaparsan deseni gösterip dururuz
-val sonundaDur = doğru   // her desenin bir durağı var. Ondan sonra fazla bir şey değişmiyor.
+val sonundaDur = doğru // her desenin bir durağı var. Ondan sonra fazla bir şey değişmiyor.
 // Ama, yine de çalışmaya devam etsin isterse, bunu yanlışa çevir.
 
 // deseni seçelim:
 val seç = 1
-// block1 ve block2 bir kaç füze yolluyor ve sonra 1000. nesil civarı gibi duruyor.
+// blok1 ve blok2 bir kaç füze yolluyor ve sonra 1000. nesil civarı gibi duruyor.
 val (desen, adı, durak) = seç match {
     case 0 => (üçlüler, "üçlüler", 20)
     case 1 => (kayGit, "kayGit", 500) /* makineli tüfek gibi */
@@ -1497,21 +1489,21 @@ dünya = başlangıç(dünya, desen)
 yaz(s"$seç. desende ${desen.size} tane canlı kare var. Adı $adı.\nNesilleri sayalım: ")
 
 var zaman = 0
-val z0 = epochTime // şimdiki zamanı (geçmişte bir ana göre) anımsayalım
-animate {
+val z0 = buSaniye // şimdiki zamanı (geçmişte bir ana göre) anımsayalım
+canlandır {
     val nesil = zaman / oran + 1
     if (zaman % oran == 0) {
-        wipe() // sil
-        çiz(dünya)
+        Resim.sil()
+        çizim(dünya)
         dünya = (0 until KU * KU).foldLeft(Sayılar())((x, y) => x :+ yeniNesil(dünya, y))
         yaz(s"$nesil ")
-        if (gösterVeDur) stopAnimation
+        if (gösterVeDur) durdur
     }
     zaman += 1
     if (sonundaDur && nesil == durak) {
-        val z1 = epochTime - z0
+        val z1 = buSaniye - z0
         satıryaz(s"\n${round(z1, 2)} saniye geçti. Durduk.")
-        stopAnimation()
+        durdur()
     }
 }
 
@@ -1532,10 +1524,11 @@ def yeniNesil(v: Sayılar, ix: Sayı) = {
 }
 // canlı kareleri çizelim. Can mavi çember içi kırmızı daire. Yarıçapı 5
 val yarıçap = 5
-def çiz(v: Sayılar) = for (i <- 0 until KU * KU)
-    if (v(i) == 1) circle(
+def çizim(v: Sayılar) = for (i <- 0 until KU * KU)
+    if (v(i) == 1) çiz(götür(
         (i / KU) * 2 * yarıçap - KU * yarıçap,
-        (i % KU) * 2 * yarıçap - KU * yarıçap, yarıçap)
+        (i % KU) * 2 * yarıçap - KU * yarıçap
+    ) * kalemRengi(mavi) * boyaRengi(kırmızı) -> Resim.daire(yarıçap))
 
 // Meşhur olmuş desenlerden birkaçı
 def esaslı = Dizin((0, 1), (1, 0), (1, 1), (1, 2), (2, 2)) // orijinal adı: fpent
@@ -1568,37 +1561,38 @@ def dörtlü = Dizin((0, 0), (1, 0), (-1, 0), (0, 2)) // dokuzcanlı'nın altkü
 """.c,
     
     "Düğüm açma oyunu".h3,
-    "Bu oyun bize iki şey gösterecek: 1) Scala'nın bize sunduğu veri yapılarından Vector ne işlere yarıyor. 2) Fareye tıklayıp bırakmadan sürüklerse neler yapabiliyoruz. Tabii daha da güzeli eğlenceli bir oyun yazabiliyoruz bu sayede.".p,
+    "Bu oyun bize iki şey gösterecek: 1) Scala'nın bize sunduğu veri yapılarından Vector ne işlere yarıyor. 2) Fareye tıklayıp bırakmadan sürüklersek neler yapabiliyoruz. Tabii daha da güzeli eğlenceli bir oyun yazabiliyoruz bu sayede.".p,
     "Bu oyunu internetteki eski bir oyundan esinlenerek yazdık. Oyunun adı Planarity yani düzlemsellik. Mavi toplardan herhangi birinin üzerine tıklayıp bırakmadan tuvalde başka bir yere taşı. Göreceksin ki bağlı olduğu iki çizgi sanki lastik gibi hareket ediyor ve topu bırakmıyor. Bu bulmacanın amacı topları güzelce yerleştirerek çizgilerin birbirini kesmesine engel olmak. Yani bu düğümü çözmek. Çok zor sayılmaz. Biraz dene kolaylaşacak. Kırmızı kareye tıklarsan yeni bir düğüm oluşur.".p,
     "Yazılımcığa bakarsa ES adında bir değişken göreceksin. Onu değiştirerek oyunun zorluğunu ayarlayabilirsin. Ne kadar büyütürsen o kadar zorlaşır!".p,
     "Bize ilham veren oyunun adı Planarity. Daha çok bilgi için buna tıkla".link("en.wikipedia.org/wiki/Planarity"),
     
-    """import Staging._ // şu komutlar gelsin bakalım: line, circle, square
-import Staging.{ circle, clear } // bu komut adları çatışıyor
-import math.pow, math.random
-
-// KS arttıkça oyun zorlaşır. Bir kenarda kaç tane nokta olsun?
+    """// KS arttıkça oyun zorlaşır. Bir kenarda kaç tane nokta olsun?
 val KS = 4; val AS = KS * KS
 val YÇ = 20 // bu da noktaların yarıçapı
-// her çizgi iki noktayı bağlar
-case class Çizgi(n1: Nokta, n2: Nokta) {
-    var çizgi = line(n1.x, n1.y, n2.x, n2.y) // bir doğru çizer
+case class Çizgi(n1: Nokta, n2: Nokta) {  // her çizgi iki noktayı bağlar
+    var çizgi = doğru(n1.x, n1.y, n2.x, n2.y) // bir doğru çizer
+}
+def doğru(llx: Kesir, lly: Kesir, urx: Kesir, ury: Kesir) = {
+    val (en, boy) = (urx - llx, ury - lly)
+    val r = götür(llx, lly) -> Resim.doğru(en, boy)
+    çiz(r)
+    r
 }
 // bütün çizgiler. boş küme olarak başlarız
 var çizgiler = Vector[Çizgi]()
 // Noktayı tuvalde kaydıracağız. Yeri değişince ona bağlı çizgileri tekrar çizmemiz gerek
 case class Nokta(var x: Kesir, var y: Kesir) {
-    val n = circle(x, y, YÇ) // verilen x ve y coordinatı merkezimiz. yarıçap belli.
-    n.setFillColor(mavi) // rengi mavi olsun
+    val n = götür(x, y) * boyaRengi(mavi) -> Resim.daire(YÇ)
+    çiz(n)
     def yeniKonum(yeniX: Kesir, yeniY: Kesir) {
         x = yeniX; y = yeniY
-        n.setPosition(yeniX, yeniY)
+        n.kondur(yeniX, yeniY)
     }
     // fareye tıklayıp çekince bu çalışacak
-    n.onMouseDrag { (mx, my) => { n.setPosition(mx, my); x = mx; y = my; çizelim(çizgiler) } }
+    n.fareyiSürükleyince { (mx, my) => { n.kondur(mx, my); x = mx; y = my; çizelim(çizgiler) } }
 }
 // Bütün noktaları (0,0) yani orijine üştüste koyalım. Merak etme birazdan dağıtacağız
-clear()
+silVeSakla()
 val noktalar = (0 until AS).foldLeft(Vector[Nokta]())((v, i) => { v :+ Nokta(0, 0) })
 
 // çizgileri tanımlar ve noktalara bağlarız. Bir balık ağı gibi. KS * KS düğümlü
@@ -1610,9 +1604,9 @@ val noktalar = (0 until AS).foldLeft(Vector[Nokta]())((v, i) => { v :+ Nokta(0, 
     })
 serpiştir(noktalar) // noktaları yerleştir ve çizgileri çiz
 
-// noktaları rasgele yerleştir
+// noktaları rastgele yerleştir
 def serpiştir(hepsi: Vector[Nokta]) {
-    hepsi.foreach(nkt => nkt.yeniKonum(KS * YÇ * 6 * (random - 0.5), KS * YÇ * 6 * (random - 0.5)))
+    hepsi.foreach(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rastgele - 0.5), KS * YÇ * 6 * (rastgele - 0.5)))
     çizelim(çizgiler)
 }
 
@@ -1621,17 +1615,21 @@ def çizelim(hepsi: Vector[Çizgi]) {
     hepsi.foreach(çzg => {
         val (x1, y1) = (çzg.n1.x, çzg.n1.y)
         val (x2, y2) = (çzg.n2.x, çzg.n2.y)
-        val boy = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2))
+        val boy = karekökü(karesi(x2 - x1) + karesi(y2 - y1))
         val (xr, yr) = (YÇ / boy * (x2 - x1), YÇ / boy * (y2 - y1))
-        çzg.çizgi.erase
-        çzg.çizgi = line(x1 + xr, y1 + yr, x2 - xr, y2 - yr)
+        çzg.çizgi.sil
+        çzg.çizgi = doğru(x1 + xr, y1 + yr, x2 - xr, y2 - yr)
     })
 }
 
 // kırmızı kareye basınca yeni bir düğümle baştan başlarız
-val b = square(-KS * 35, -KS * 35, 20)
-b.setFillColor(red)
-b.onMouseClick { (x, y) => serpiştir(noktalar) }
+def kare(x: Kesir, y: Kesir, en: Kesir) = {
+    val k = götür(x, y) * boyaRengi(kırmızı) -> Resim.dikdörtgen(en, en)
+    çiz(k)
+    k
+}
+val b = kare(-KS * 35, -KS * 35, 20)
+b.fareyeTıklayınca{ (x, y) => serpiştir(noktalar) }
 """.c
   )
 )

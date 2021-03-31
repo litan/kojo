@@ -9,7 +9,7 @@ def başlık = kalemRengi(mor) -> Resim {
     kaplumbağa.yazı("Çılgın yarasalar!")
 }
 
-val resim = resimDizisi(
+val resim = Resim.dizi(
     götür(-150, -150) -> kadın, 
     götür(-50, 91) * döndür(-10) * saydamlık(-0.3) -> araba,
     götür(94 , 44) * saydamlık(-0.2) -> kalem,

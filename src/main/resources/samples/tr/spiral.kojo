@@ -8,7 +8,7 @@ def sarmal(adım: Sayı, açı: Sayı) {
 sil()
 kalemRenginiKur(siyah)
 boyamaRenginiKur(yeşil)
-arkaplanıKurYatay(kırmızı, sarı)
+artalanıKurYatay(kırmızı, sarı)
 kalemKalınlığınıKur(1)
 hızıKur(çokHızlı)
 sarmal(0, 91)

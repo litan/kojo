@@ -1,4 +1,4 @@
-def resim = Picture {
+def resim = Resim {
     kalemRenginiKur(renksiz)
     boyamaRenginiKur(Renk(0, 102, 255))
     yinele(4) {
@@ -14,7 +14,7 @@ def resim = Picture {
 }
 
 silVeSakla()
-val l1 = SpotLight(0.2, 0.8, 300, 30, 130)
-val l2 = SpotLight(0.5, 0.4, 0, 70, 80)
-val resim2 = lights(l1, l2) -> resim
-drawCentered(resim2)
+val sı1 = SahneIşığı(0.2, 0.8, 300, 30, 130)
+val sı2 = SahneIşığı(0.5, 0.4, 0, 70, 80)
+val resim2 = ışıklar(sı1, sı2) -> resim
+çizMerkezde(resim2)
