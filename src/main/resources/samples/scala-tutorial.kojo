@@ -1098,11 +1098,10 @@ pages += Page(
                  "The package contains commands and functions that allow you to draw sophisticated shapes and images, and a frame loop that allows you to animate the graphics.".p,
                  "In the first example you can see that a Staging environment is initialized, and the screen cleared. A ball is created, and then the ball bouncing movement is defined in the animation loop. Staging causes this loop to be executed every 20 to 32 milli-seconds giving a frame rate of around 30 to 50 frames per second depending on your computer performance. Using these principles you can create sophisticated animated graphics.".p,
   
-                 """import Staging._
-import Staging.{circle, clear, animate} // explicitly import names that clash
-clear()
+                 """cleari()
 gridOn()
-val ball = circle(-200, -100, 5)
+val ball = Picture.circle(5)
+draw(ball)
 
 var y = 0 ; var x = 0 // ball position
 var dy = 10; var dx = 3 // ball speed
@@ -1114,32 +1113,30 @@ animate {
     x += dx
     dy =  if(y < 0 || y > 100) -dy else dy
     y += dy  
-}
-""".c,
+}""".c,
                  "The next example is a simple game - a single player version of what must be one of the oldest games ever played on computers called 'Pong'. The idea is to hit the ball back with a paddle which you can move with the mouse. Each of your misses will be recorded. Have fun!".p,
-                 """import Staging._
-import Staging.{circle, clear, animate, setFillColor, wipe, mouseX, mouseY} // explicitly import names that clash
-clear()
+                 """cleari()
 var x = 0 ; var y = 0  // ball position
-var dy = 10 ; var dx = 3 // ball speed
+var dy = -10 ; var dx = -8 // ball speed
 var padx = 0.0 ; var pady = 0.0 // paddle position
 val padl = 80 // paddle length
 var miss = 0
 // Court
-line(-200,-100,-200,100)
-line(-200,-100,200,-100)
-line(-200,100,200,100)
-// the ball
-setFillColor(blue)
-val ball=circle(-200, -100, 5) 
+draw(trans(-200, -100) -> Picture.line(0, 200))
+draw(trans(-200, -100) -> Picture.line(400, 0))
+draw(trans(-200,  100) -> Picture.line(400, 0))
+val ball=fillColor(blue) -> Picture.circle(5) 
+val paddle = penColor(blue) -> Picture.line(0, padl)
+def counter(score: String) = penColor(black) * trans(-50, 150) -> Picture.text(score)
+var score = counter("")
+draw(ball, paddle, score)
 // animation is about 30 frames per second or 32 milliseconds per frame
 animate {
-    wipe()
-    padx=mouseX; pady=mouseY
-    line(padx, pady, padx, pady+padl) // the paddle
-    // detect a hit
-    dx =if((dx>0)&&(padx-x<15)&&(x-padx<15)&&(y>pady)&&(y<pady+padl)) -dx else dx
+    paddle.setPosition(mousePosition)
     ball.setPosition(x,y)
+    // detect a hit
+    padx=mouseX; pady=mouseY
+    dx =if((dx>0)&&(padx-x<15)&&(x-padx<15)&&(y>pady)&&(y<pady+padl)) -dx else dx
     // update ball position and check for walls
     dx =  if(x+dx < -200) -dx else dx
     if(x+dx>200){x= -200;miss+=1}  // a miss
@@ -1147,9 +1144,12 @@ animate {
     dy =  if((y+dy < -100 )|| (y + dy > 100)) -dy else dy
     y += dy
     // Keep Score
-    text(miss.toString + " missed",0,0)
-}
-""".c,
+    if (miss > 0) {
+        score.erase()
+        score = counter(miss.toString + " missed")
+        draw(score)
+    }
+}""".c,
                  "Now that you have the basics, try adding more balls, randomising their speed or changing the paddle size. Also see if you can fix the bug - sometimes the ball appears to pass through the paddle.".p,
                  "Keyboard Input".h3,
                  "It is very useful in games to use the keyboard to get player commands. Here is a simple example that allows you to draw using the left/right/up/down arrows to steer the Turtle.".p,
@@ -1172,38 +1172,32 @@ activateCanvas()
                  "Clock".h3,
                  "Here is a short example that illustrates how to use the staging graphics to display a clock.".p, 
                  "The Date library functions are used to find current time and date.".p,
-   """import Staging._
-import Staging.{circle, clear, animate, wipe, setPenColor} // explicitly import names that clash
-clear
-val Sc=100
-val Pi2=2.0*math.Pi // 2*Pi radians in a circle
-def clkFace={
-  circle(0,0,Sc)
-  for(i<-0 to 59){
-    val ra=Pi2*i/60
-    val x=Sc*sin(ra);val y=Sc*cos(ra)
-    val tks=if(i%5==0) 0.9 else 0.95
-    line(tks*x,tks*y,x,y)
+   """import math.{Pi, sin, cos}
+cleari
+val Sc = 100
+val Pi2 = 2.0 * Pi // 2*Pi radians in a circle
+def clkFace = {
+    erasePictures()
+    draw(penColor(red) -> Picture.circle(Sc))
+    for (i <- 0 to 59) {
+        val ra = Pi2 * i / 60
+        val x = Sc * sin(ra); val y = Sc * cos(ra)
+        val tks = if (i % 5 == 0) 0.9 else 0.95
+        val (xl, yl) = (tks * x, tks * y); val (w, h) = (x - xl, y - yl)
+        draw(penColor(red) * trans(xl, yl) -> Picture.line(w, h))
     }
 }
 // the animate function runs around 30-50 times a second
-animate{
-  var d=new java.util.Date
-  wipe
-  setPenColor(red)
-  clkFace
-  setPenColor(blue)
-
-  val s=Pi2*d.getSeconds/60
-  line(0,0,0.9*Sc*sin(s),0.9*Sc*cos(s))
-
-  val m=Pi2*d.getMinutes/60
-  line(0,0,0.8*Sc*sin(m),0.8*Sc*cos(m))
-  
-  val h=Pi2*d.getHours/12+m/12
-  line(0,0,0.6*Sc*sin(h),0.6*Sc*cos(h))
-  
-  text(d.toString, -Sc, -Sc-20)
+animate {
+    var d = new java.util.Date
+    clkFace
+    val s = Pi2 * d.getSeconds / 60
+    draw( penColor(blue) -> Picture.line(0.9 * Sc * sin(s), 0.9 * Sc * cos(s)) )
+    val m = Pi2 * d.getMinutes / 60
+    draw( penColor(blue) -> Picture.line(0.8 * Sc * sin(m), 0.8 * Sc * cos(m)) )
+    val h = Pi2 * d.getHours / 12 + m / 12
+    draw( penColor(blue) -> Picture.line(0.6 * Sc * sin(h), 0.6 * Sc * cos(h)) )
+    draw( trans(-Sc, -Sc-20) * penColor(black) -> Picture.text(d.toString) )
 }
 """.c,
 
@@ -1220,10 +1214,7 @@ table(row("Any live cell with fewer than two live neighbours dies, as if caused 
 "You can choose the starting pattern from a number of well known ones by changing the init line in the program. Different starting patterns are to be found at the end of the program. Try modifying the start patterns to see what happens.".p, 
 
 "The time per generation can changed by modifying the 'mod' value on t in the animate function.".p,  
-                 """import Staging._
-import Staging.{circle, clear, animate, setFillColor, wipe} // explicitly import names that clash
-clear()
-setFillColor(blue)
+                 """cleari()
 // ES is edge size of 'world' 
 val ES=128; val AS=ES*ES
 // Initialize vector to all dead cells
@@ -1235,7 +1226,7 @@ v=init(v,glider) // Choose initial pattern from those below
 var t=0
 animate {
    if(t%5 == 0){
-     wipe()
+     erasePictures()
      disp(v)
      v = (0 until AS).foldLeft(Vector[Int]())((x,y)=>x :+ ns(v,y)) 
    }  
@@ -1255,7 +1246,7 @@ def ns(v:Vector[Int],ix:Int)={
 }
 // display cells
 def disp(v:Vector[Int])= for(i<- 0 until AS)
-    if(v(i)==1)circle((i/ES)*10-ES*5,(i%ES)*10-ES*5, 5)
+    if(v(i)==1) draw( fillColor(blue) * trans((i/ES)*10-ES*5,(i%ES)*10-ES*5) -> Picture.circle(5) )
 // set up starting pattern   
 def init(v:Vector[Int],p:List[(Int,Int)]) = p.foldLeft(v)((x,y)=> x.updated( (y._1 + ES/2)* ES+y._2 + ES/2,1))
 
@@ -1272,7 +1263,7 @@ def block2=List((0,0),(0,3),(0,4),(1,1),(1,4),(2,0),(2,1),(2,4),(3,2),(4,0),
             (4,1),(4,2),(4,4))
 def tiny=List((-18,0),(-17,0),(-16,0),(-15,0),(-14,0),(-13,0),(-12,0),(-11,0),(-9,0),(-8,0),
         (-7,0),(-6,0),(-5,0),(-1,0),(0,0),(1,0),(8,0),(9,0),(10,0),
-    (11,0),(12,0),(13,0),(14,0),(16,0),(17,0),(18,0),(19,0),(20,0))    
+    (11,0),(12,0),(13,0),(14,0),(16,0),(17,0),(18,0),(19,0),(20,0)) 
 """.c,
     
 "Tangle".h3,
@@ -1281,63 +1272,69 @@ def tiny=List((-18,0),(-17,0),(-16,0),(-15,0),(-14,0),(-13,0),(-12,0),(-11,0),(-
 "You can increase the difficulty of the game by changing the value ES in the program. Larger values make it more difficult.".p,
 "The inspiration for Tangle is Planarity".link("en.wikipedia.org/wiki/Planarity"),
                  
-"""import Staging._
-import Staging.{circle, clear, animate} // explicitly import names that clash
-import math.pow,math.random
+"""import math.{ pow, random, sqrt }
 // Tangle based on Planarity
-clear()
+cleari()
 // ES sets difficulty level
-val ES=4;val AS=ES*ES
-val Ra=10
+val ES = 4; val AS = ES * ES
+val Ra = 10
 // Edge is a line between two nodes
-case class EdgeP(n1:NodeP,n2:NodeP){
-var e=line(n1.x,n1.y,n2.x,n2.y)
+case class EdgeP(n1: NodeP, n2: NodeP) {
+    var e = line(n1.x, n1.y, n2.x, n2.y)
+}
+def line(xl: Double, yl: Double, xh: Double, yh: Double) = {
+    val l = trans(xl, yl) -> Picture.line(xh - xl, yh - yl)
+    draw(l)
+    l
 }
 // edges is all the edges, initially empty
-var edges=Vector[EdgeP]()
+var edges = Vector[EdgeP]()
 // Node is a circle which is dragable. Redraws edges when dragged
-case class NodeP(var x:Double,var y:Double){
-  val n=circle(x,y,Ra)
-  n.setFillColor(blue)
-  def goTo(gx:Double,gy:Double){
-   x=gx ; y=gy
-   n.setPosition(gx,gy)   
-  }
-  n.onMouseDrag{(mx, my) => {n.setPosition(mx, my);x=mx;y=my;drawEdges(edges)}}
+case class NodeP(var x: Double, var y: Double) {
+    val n = trans(x, y) * fillColor(blue) -> Picture.circle(Ra)
+    draw(n)
+    def goTo(gx: Double, gy: Double) {
+        x = gx; y = gy
+        n.setPosition(gx, gy)
+    }
+    n.onMouseDrag { (mx, my) => { n.setPosition(mx, my); x = mx; y = my; drawEdges(edges) } }
 }
-// Create and link all nodes topologically in a square 
-val p=(0 until AS).foldLeft(Vector[NodeP]())((v,i)=>{v :+ NodeP(0,0)})
+// Create and link all nodes topologically in a square
+val p = (0 until AS).foldLeft(Vector[NodeP]())((v, i) => { v :+ NodeP(0, 0) })
 
-// Create all edges, link to adjacent nodes   
-edges=(0 until AS).foldLeft(Vector[EdgeP]())(
-    (ev,i)=>{
-        val x=i/ES; val y=i%ES 
-        val te=if(y<ES-1) {ev :+ EdgeP(p(i),p(i+1))} else ev
-        if(x<ES-1) {te :+ EdgeP(p(i),p(i+ES))} else te
+// Create all edges, link to adjacent nodes
+edges = (0 until AS).foldLeft(Vector[EdgeP]())(
+    (ev, i) => {
+        val x = i / ES; val y = i % ES
+        val te = if (y < ES - 1) { ev :+ EdgeP(p(i), p(i + 1)) } else ev
+        if (x < ES - 1) { te :+ EdgeP(p(i), p(i + ES)) } else te
     })
 // draw all edges
 putRand(p)
 // Button for new game
-val b=square(-ES*35,-ES*35, 20)
-b.setFillColor(red)
-b.onMouseClick { (x, y) =>putRand(p)}
+def square(x: Double, y: Double, len: Double) = {
+    val s = trans(x, y) * fillColor(red) -> Picture.rectangle(len, len)
+    draw(s)
+    s
+}
+val b = square(-ES * 35, -ES * 35, 20)
+b.onMouseClick { (x, y) => putRand(p) }
 // randomise node positions
-def putRand(p:Vector[NodeP]){
-   p.foreach(tn=>tn.goTo(ES*Ra*6*(random - 0.5),ES*Ra*6*(random - 0.5)))    
-   drawEdges(edges) 
-   }    
+def putRand(p: Vector[NodeP]) {
+    p.foreach(tn => tn.goTo(ES * Ra * 6 * (random - 0.5), ES * Ra * 6 * (random - 0.5)))
+    drawEdges(edges)
+}
 //draw edges between nodes and start line from circumference of circle
-def drawEdges(ev:Vector[EdgeP]){ 
-   ev.foreach(te=>{
-     val x1=te.n1.x ; val y1=te.n1.y
-     val x2=te.n2.x ; val y2=te.n2.y
-     val len=sqrt(pow(x2-x1,2) + pow(y2-y1,2))
-     val xr=Ra/len*(x2-x1) ; val yr=Ra/len*(y2-y1) 
-     te.e.erase;
-     te.e=line(x1+xr,y1+yr,x2-xr,y2-yr)
-     }) 
-   }
-""".c
+def drawEdges(ev: Vector[EdgeP]) {
+    ev.foreach(te => {
+        val x1 = te.n1.x; val y1 = te.n1.y
+        val x2 = te.n2.x; val y2 = te.n2.y
+        val len = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2))
+        val xr = Ra / len * (x2 - x1); val yr = Ra / len * (y2 - y1)
+        te.e.erase;
+        te.e = line(x1 + xr, y1 + yr, x2 - xr, y2 - yr)
+    })
+}""".c
     )
 )
     
