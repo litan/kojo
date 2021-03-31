@@ -2,7 +2,8 @@
 java -version
 set -x 
 # Build Kojo
-./sbt.sh clean test package
+rm -rf dist
+./sbt.sh clean test buildDist
 
 # Create staging area
 rm -rf installerbuild
@@ -11,7 +12,7 @@ cd installer
 scala cp-staging-jars.scala
 cd ..
 
-cp -var installer/* installerbuild/
+cp -va installer/* installerbuild/
 cd installerbuild
 rm *.*
 rm -rf Uninstaller
