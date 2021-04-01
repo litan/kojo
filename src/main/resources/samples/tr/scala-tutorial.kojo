@@ -1344,38 +1344,38 @@ canlandır { // İçindeki komutlar saniyede yaklaşık 40 kere yinelenir.
 }""".c,
     "İkinci örneğimiz küçük ve basit bir oyun. Duymuş olabilirsin: en eski bilgisayar oyunlarından duvara karşı pinpon (İngilizce adıyla Pong) oyunu. Tek kişilik bir oyun. Yapmamız gereken topa raketle vurup geri yollamak. Raketi fareyle yönetiyoruz. Top kaçarsa bir puan kaybediyorsun. İyi eğlenceler!".p,
     """silVeSakla()
+çiz(götür(-200, -100) -> Resim.doğru(0, 200)) // Üç duvar çizelim. Bu dik ön duvar
+çiz(götür(-200, -100) -> Resim.doğru(400, 0)) // Bu alt duvar
+çiz(götür(-200,  100) -> Resim.doğru(400, 0)) // Bu da üst duvar
 val rb = 80 // raketin boyu
-var ıska = 0 // top kaç kere kaçtı, sayalım
-// Üç duvar çizelim, bir top, bir raket, bir de skor
-çiz(götür(-200, -100) -> Resim.doğru(0, 200))
-çiz(götür(-200, -100) -> Resim.doğru(400, 0))
-çiz(götür(-200,  100) -> Resim.doğru(400, 0))
-val top = kalemRengi(mavi) -> Resim.daire(5)
 val raket = kalemRengi(mavi) -> Resim.doğru(0, rb)
-def sayaç(yazı: Yazı) = kalemRengi(siyah) * götür(-50, 150) -> Resim.yazı(yazı)
-var skor = sayaç("Hiç ıskalamadın")
-çiz(top, raket, skor)
-var x = 0; var y = 0 // topun konumu
-var dy = 8; var dx = -8 // topun hızı
+val top = kalemRengi(mavi) -> Resim.daire(5)
+var skor = kalemRengi(siyah) * götür(-50, 150) -> Resim.yazı("Raketi fareyle yönet")
+çiz(raket, top, skor)
+var x = 0.0; var y = 0 // topun konumu
+var dy = 8; var dx = -8.0 // topun hızı: d delta yani değişim ya da derivative yani türev demek
 var rx = 0.0; var ry = 0.0 // raketin konumu
+var ıska = 0 // top kaç kere kaçtı, saymak için
+var vuruş = 0 // kaç kere raketle vurduğumuzu da sayalım
 canlandır {
     raket.kondur(fareKonumu)  // raketi fareyle kontrol ediyoruz
     top.kondur(x, y) // topun yerini değiştirelim
     // top rakete çarpıyor mu?
     rx = fareKonumu.x; ry = fareKonumu.y
     dx = if ((dx > 0) && (mutlakDeğer(rx - x) < 10) &&
-        (y > ry) && (y < ry + rb)) -dx else dx
+        (y > ry) && (y < ry + rb)) {vuruş += 1; -1.1*dx} else dx
     // topun konumunu güncelleyelim, duvarlara bakalım
-    dx = if (x + dx < -200) -dx else dx
-    if (x + dx > 200) { x = -200; ıska += 1 } // ıskaladı
-    dy = if ((y + dy < -100) || (y + dy > 100)) -dy else dy
+    dx = if (x + dx < -200) -dx else dx  // ön duvardan sekti mi?
+    dy = if ((y + dy < -100) || (y + dy > 100)) -dy else dy // üst ve alt duvarlardan sekti mi?
+    if (x + dx > 200) { x = -200; dx = 8; ıska += 1 } // ıskaladı
     x += dx; y += dy // topun gideceği noktayı hesaplayalım
-    if (ıska > 0) {  // skor tutalım
-        skor.sil
-        skor = sayaç(ıska.toString + " kere ıskaladın")
-        çiz(skor)
+    if (ıska > 0 || vuruş > 0) {  // skoru güncelleyelim
+        val mesaj = if (vuruş == 0) "Fareyi tuvale getir!" else s"$vuruş kere vurdun"
+        skor.güncelle(s"$mesaj\n$ıska kere ıskaladın")
     }
-}""".c,
+}
+oyunSüresiniGöster(60, "Süre bitti", yeşil) // oyun 60 saniye sürsün 
+""".c,
     "Temel kavramlar ve komutlarla artık tanıştın. Bir kaç tane daha top eklemeye ne dersin? Topların hızını rastgele değiştirerek oyunu daha eğlenceli kılabilirsin istersen. Raketin boyunu kısaltabilir ya da uzatabilirsin. Bir de programımızın bir (belki kimbilir daha çok) hatası var! İngilizce'de bug yani böcek denir. Ama nerden çıktı deme. Programı yazanın hatası de. Sen de yapacaksın bol bol hata. Hiç dert etme. Her hata aslında daha usta olmak için bir fırsat. Fırsatları hiç kaçırma! Hatayı farkettin mi? Bazen top raketin içinden geçiyor sanki elektron tünelleme yapıyormuş gibi (kuvantum mekaniği değil ki bu)! Bazen de ıskalaması gerekirken geri yolluyor.. Bakalım yazılımcığın içinde nerede? Sen bulup düzeltebilecek misin?".p,
     "Klavye ve tuşlarla komut girişi".h3,
     "Pekçok oyun klaveyeden komut bekler. Minecraft oynadın mı hiç? Hem fare hem de klavye komutları oyunu iyice eğlenceli kılar. Bak bu küçük oyun sağ/sol/yukarı ve aşağı ok olan tuşlarla kaplumbağacığa yön veriyor.".p,
@@ -1387,11 +1387,11 @@ canlandırmaHızınıKur(100)
 var zıpladı = yanlış
 tuşaBasınca { k =>
     k match {
-        case Kc.VK_LEFT  => açıyaDön(180)  // sola git
-        case Kc.VK_RIGHT => açıyaDön(0)    // sağa git
-        case Kc.VK_UP    => açıyaDön(90)   // yukarı
-        case Kc.VK_DOWN  => açıyaDön(270)  // aşağı
-        case Kc.VK_Z     => zıpla(20); zıpladı = doğru    
+        case tuşlar.VK_LEFT  => açıyaDön(180)  // sola git
+        case tuşlar.VK_RIGHT => açıyaDön(0)    // sağa git
+        case tuşlar.VK_UP    => açıyaDön(90)   // yukarı
+        case tuşlar.VK_DOWN  => açıyaDön(270)  // aşağı
+        case tuşlar.VK_Z     => zıpla(20); zıpladı = doğru    
         case _           => // diğer tuşlar sadece ilerletsin
     }
     if (zıpladı) {
@@ -1401,7 +1401,7 @@ tuşaBasınca { k =>
     }
 }
 tuvaliEtkinleştir()""".c,
-    "Hayal gücünü kullan, yazılımcığı değiştir (örneğin 45 derece döndürmek için komut ekleyebilirsin), tekrar çalıştır. Yazılımcık düzenleme ekranında Kc. yazdıktan sonra control tuşunu basık tutup büyük boşluk tuşuna bas ki başka hangi tuşları kullanabileceğini gör.".p,
+    "Hayal gücünü kullan, yazılımcığı değiştir (örneğin 45 derece döndürmek için komut ekleyebilirsin), tekrar çalıştır. Yazılımcık düzenleme ekranında 'tuşlar.' yazdıktan sonra (ama tırnak işaretleri olmadan!) kontrol tuşunu basık tutup büyük boşluk tuşuna bas ki başka hangi tuşları kullanabileceğini gör.".p,
 
     "Saat".h3,
     "Bir saat yapalım mı?".p,
