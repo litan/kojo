@@ -2,6 +2,7 @@
  * Copyright (C) 2009 Anthony Bagwell
  * Copyright (C) 2009 Phil Bagwell <pbagwell@bluewin.ch>
  * Copyright (C) 2011 Lalit Pant <pant.lalit@gmail.com>
+ * Copyright (C) 2021 Bulent Basaran <bulent2k2@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -1091,17 +1092,16 @@ pages += Page(
 pages += Page(
     name = "GAG",
     body = tPage("Graphics and Games",
-                 "Peter Lewerin has contributed 'Staging' to Kojo. Staging gives you some neat graphics and the potential to make games. These Staging features originated in a Java project called Processing and were ported to Kojo by Peter. This capability is worth a whole tutorial in itself. However to give you a taste of what is possible and a starting point for experimentation, here are a couple examples.".p,
-                 "The section on Staging will be expanded in a later version of the Tutorial. You can find a more complete list of Staging features and examples at:".p,
-                 "Commands or Methods".link("lewerin.se/peter/kojo/staging.html"),
-                 "Examples and Description".link("code.google.com/p/kojo/wiki/StagingModule"),
-                 "The package contains commands and functions that allow you to draw sophisticated shapes and images, and a frame loop that allows you to animate the graphics.".p,
-                 "In the first example you can see that a Staging environment is initialized, and the screen cleared. A ball is created, and then the ball bouncing movement is defined in the animation loop. Staging causes this loop to be executed every 20 to 32 milli-seconds giving a frame rate of around 30 to 50 frames per second depending on your computer performance. Using these principles you can create sophisticated animated graphics.".p,
-  
+                 "This sections shows you how you can use 'Pictures' to draw shapes and make simple games in Kojo. Pictures provide support for rich generative art and gaming. This section is meant to just give you a brief overview. For more information, you can check out the Pictures Tutorial (https://docs.kogics.net/tutorials/pictures-intro.html).".p,
+                 "An earlier version of this page used 'Staging', which was inspired by the Java Processing project, and was contributed by Peter Lewerin to Kojo. Pictures are an evolution of Staging. The port of this page from Staging to Pictures has been contributed by Bulent Basaran.".p,
+                 "In the first example you can see that the screen is cleared, and a ball is created; then the bouncing movement of the ball is defined in the animation loop. Kojo makes this loop run approximately 50 times per second. Using these principles (of creating, drawing, animating, and colliding/bouncing objects) you can create sophisticated animated graphics.".p,
                  """cleari()
 gridOn()
 val ball = Picture.circle(5)
 draw(ball)
+
+val box = Picture.rectangle(200, 100)
+draw(box)
 
 var y = 0 ; var x = 0 // ball position
 var dy = 10; var dx = 3 // ball speed
