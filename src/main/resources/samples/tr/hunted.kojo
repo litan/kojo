@@ -3,7 +3,7 @@
 
 tümEkranTuval
 
-val oyunSüresi = 15
+val oyunSüresi = 20
 
 val uzunluk = 4
 val d = karekökü(2 * uzunluk * uzunluk)
@@ -58,7 +58,7 @@ def parça7 = Resim {
     ileri(d4)
 }
 // bu da tangram insan
-def origamiTen = Resim.dizi(
+def tangram = Resim.dizi(
     döndür(-120) -> parça3,
     döndür(150) * götür(0, -3.5) -> parça1,
     yansıtY * döndür(120) * götür(1.5, 0) -> parça7,
@@ -72,12 +72,12 @@ silVeÇizimBiriminiKur(santim)
 val ta = tuvalAlanı
 val enİriX = ta.x.abs
 val enİriY = ta.y.abs
-val kaçan = boyaRengi(sarı) * götür(enİriX / 3, 2) * büyüt(0.3) -> origamiTen
-val kovalayan = boyaRengi(siyah) * büyüt(0.3) -> origamiTen
-val kovalayan2 = boyaRengi(siyah) * götür(-enİriX / 2, 0) * büyüt(0.3) -> origamiTen
-val kovalayan3 = boyaRengi(siyah) * götür(2 * enİriX / 3, 0) * büyüt(0.3) -> origamiTen
-val kovalayan4 = boyaRengi(siyah) * götür(-enİriX / 2, enİriY / 2) * büyüt(0.3) -> origamiTen
-val kovalayan5 = boyaRengi(siyah) * götür(2 * enİriX / 3, enİriY / 2) * büyüt(0.3) -> origamiTen
+val kaçan = boyaRengi(sarı) * götür(enİriX / 3, 2) * büyüt(0.3) -> tangram
+val kovalayan = boyaRengi(siyah) * büyüt(0.3) -> tangram
+val kovalayan2 = boyaRengi(siyah) * götür(-enİriX / 2, 0) * büyüt(0.3) -> tangram
+val kovalayan3 = boyaRengi(siyah) * götür(2 * enİriX / 3, 0) * büyüt(0.3) -> tangram
+val kovalayan4 = boyaRengi(siyah) * götür(-enİriX / 2, enİriY / 2) * büyüt(0.3) -> tangram
+val kovalayan5 = boyaRengi(siyah) * götür(2 * enİriX / 3, enİriY / 2) * büyüt(0.3) -> tangram
 
 müzikMp3üÇalDöngülü("/media/music-loops/Cave.mp3")
 gizle()
@@ -138,7 +138,7 @@ kovalayan5.canlan(koşuşturma)
 
 val kovalayanlar = List(kovalayan, kovalayan2, kovalayan3, kovalayan4, kovalayan5)
 
-oyunSüresiniGöster(15, "Tebrikler!", yeşil, 30, 1, 2)
+oyunSüresiniGöster(oyunSüresi, "Tebrikler!", yeşil, 30, 1, 2)
 val bitişMesajı = büyüt(3) * götür(-20, 0) -> Resim { yazı("Çarpıştın :-(\nBir daha dene!") }
 çizVeSakla(bitişMesajı)
 
