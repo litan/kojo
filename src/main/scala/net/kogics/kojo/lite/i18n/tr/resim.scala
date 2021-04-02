@@ -75,6 +75,12 @@ object res {
   def engeldenYansıtma(r: Resim, yöney: Yöney2B, engel: Resim): Yöney2B =
     Yöney2B(richBuiltins.bouncePicOffPic(r.p, yöney.v, engel.p))
 
+  def imge(boy: Sayı, en: Sayı) = builtins.image(boy, en)
+  def imge(dosya: Yazı) = builtins.image(dosya)
+  def imge(url: java.net.URL) = builtins.image(url)
+  def imgeNoktası(imge: BellekteResim, x: Sayı, y: Sayı) = builtins.getImagePixel(imge, x, y)
+  def imgeNoktasınıKur(imge: BellekteResim, x: Sayı, y: Sayı, r: Renk) = builtins.setImagePixel(imge, x, y, r)
+
   //
   // interface above
   // internals stuff below
@@ -353,6 +359,5 @@ object Resim {
   def küme(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picBatch(rd.map(_.p)))
   def süz(r: Resim, süzgeç: java.awt.image.BufferedImageOp): Resim = new Resim(richBuiltins.filterPicture(r.p, süzgeç))
   def süz(rd: java.awt.image.BufferedImage, süzgeç: java.awt.image.BufferedImageOp) = richBuiltins.filterImage(rd, süzgeç)
-
   // todo: more
 }

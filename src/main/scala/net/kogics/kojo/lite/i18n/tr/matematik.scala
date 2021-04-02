@@ -33,16 +33,9 @@ object matematik {
   def sinüsünAçısı(x: Kesir): Kesir = math.asin(x)
   def kosinüsünAçısı(x: Kesir): Kesir = math.acos(x)
   def tanjantınAçısı(x: Kesir): Kesir = math.atan(x)
-  def yuvarla(sayı: Number, basamaklar: Sayı = 0): Kesir = {
-    val faktor = math.pow(10, basamaklar).toDouble
-    math.round(sayı.doubleValue * faktor).toLong / faktor
-  }
   def taban(x: Kesir): Kesir = math.floor(x)
   def tavan(x: Kesir): Kesir = math.ceil(x)
   def yakını(x: Kesir): Kesir = math.rint(x)
-  /* todo: how to import/export overloaded defs?
-   def enİrisi(x: Sayı, y: Sayı): Sayı = math.max(x, y)
-   def enUfağı(x: Sayı, y: Sayı): Sayı = math.min(x, y)
-   ...
-   */
+  def işareti(x: Number): Sayı = x.doubleValue.sign.toInt
+  def sayıya(x: Number): Sayı = x.doubleValue.toInt
 }

@@ -19,6 +19,7 @@ package net.kogics.kojo.lite.i18n
 
 import net.kogics.kojo.core.{Turtle, UnitLen, Pixel, Cm, Inch, VertexShape, Rectangle}
 import java.awt.{Color, Paint}
+import java.awt.image.BufferedImage
 import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast, Point}
 import io.github.jdiemke.triangulation.Triangle2D
 import net.kogics.kojo.lite.{CoreBuiltins, Builtins}
@@ -78,7 +79,7 @@ package object tr {
     }
   }
 
-  type Dizi[B] = collection.Seq[B]
+  type Dizi[B] = collection.Seq[B] // why collection?
   type Dizin[A] = List[A]
   type MiskinDizin[C] = LazyList[C]
 
@@ -97,6 +98,12 @@ package object tr {
   }
   object Dizi {
     def apply[B](elems: B*): Seq[B] = Seq.from(elems)
+    def doldur[B](n1: Sayı)(f: Sayı => B) = Seq.tabulate(n1)(f)
+    def doldur[B](n1: Sayı, n2: Sayı)(f: (Sayı, Sayı) => B) = Seq.tabulate(n1, n2)(f)
+    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı)(f: (Sayı, Sayı, Sayı) => B) = Seq.tabulate(n1, n2, n3)(f)
+    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı, n4: Sayı)(f: (Sayı, Sayı, Sayı, Sayı) => B) = Seq.tabulate(n1, n2, n3, n4)(f)
+    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı, n4: Sayı, n5: Sayı)(f: (Sayı, Sayı, Sayı, Sayı, Sayı) => B) =
+      Seq.tabulate(n1, n2, n3, n4, n5)(f)
   }
   object Dizin {
     def apply[A](elems: A*): List[A] = List.from(elems)
@@ -114,4 +121,5 @@ package object tr {
   val Boş = scala.collection.immutable.Nil
 
   type ResimDosyası = richBuiltins.Image
+  type BellekteResim = BufferedImage
 }

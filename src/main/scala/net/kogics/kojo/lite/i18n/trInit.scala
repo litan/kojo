@@ -271,10 +271,14 @@ object TurkishAPI {
   def piSayısı: Kesir = math.Pi
   def eSayısı: Kesir = math.E
   val gücü = m.kuvveti _
-  val (yuvarla, karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.yuvarla _, m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
+  val (karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
   val (eüssü, radyana, dereceye, taban, tavan, yakını) = (m.eüssü _, m.radyana _, m.dereceye _, m.taban _, m.tavan _, m.yakını _)
-
-  // todo: don't we have a type class for Num?
+  val (işareti, sayıya) = (m.işareti _, m.sayıya _)
+  def yuvarla(sayı: Number, basamaklar: Sayı = 0): Kesir = {
+    val faktor = math.pow(10, basamaklar).toDouble
+    math.round(sayı.doubleValue * faktor).toLong / faktor
+  }
+  // todo: can we use Number instead?
   def mutlakDeğer(x: Sayı): Sayı = math.abs(x)
   def mutlakDeğer(x: Uzun): Uzun = math.abs(x)
   def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
@@ -469,6 +473,11 @@ object TurkishAPI {
   def çizVeSakla(resimler: Resim*) = richBuiltins.drawAndHide(resimler.map(_.p): _*)
   val (çizMerkezde, çizSahne, çizMerkezdeYazı, merkezeTaşı) = (r.çizMerkezde _, r.çizSahne _, r.çizMerkezdeYazı _, r.merkezeTaşı _)
   val (sahneKenarındanYansıtma, engeldenYansıtma) = (r.sahneKenarındanYansıtma _, r.engeldenYansıtma _)
+
+  def imge(boy: Sayı, en: Sayı) = r.imge(boy, en)
+  def imge(dosya: Yazı) = r.imge(dosya)
+  def imge(url: java.net.URL) = r.imge(url)
+  val (imgeNoktası, imgeNoktasınıKur) = (r.imgeNoktası _, r.imgeNoktasınıKur _)
 
   import tr.arayuz
   val ay = arayuz
