@@ -32,7 +32,7 @@ case class VarsılSayı(x: Kesir, y: Kesir) {
 /* Mandelbrot kümesi varsıl sayıların bir işlevi (matematik fonksiyonu):
  *  m(n+1) = m(n)*m(n) + v
  *  m(0) = 0
- *    => 
+ *    =>
  *  m(1) = v
  *  m(2) = v*v + v
  *  m(3) = v^3 + v^2
@@ -40,7 +40,7 @@ case class VarsılSayı(x: Kesir, y: Kesir) {
  *  n sonsuza gittikçe m ufak kalırsa o zaman v sayısı M kümemizin içinde oluyor
  *  ve onu siyah yapıyoruz. Diğer renkler m'nin sonsuza gitmesine neden olan v
  *  sayılarını gösteriyor. Ne kadar çabuk m>2 olduğuna bakarak renk veriyoruz...
- */ 
+ */
 
 // eğer çizmesi çok yavaşlarsa, bunu 600'e indirin:
 val kenar = 1200 // kümemizin resmi kenar x kenar büyüklüğünde bir kare olsun
@@ -56,7 +56,7 @@ def mKümesi(d: Dörtgen): Image = {
         var z = VarsılSayı(0, 0)
         var i = 0
         while (z.uzunluğu < 2 && i < yinelemeSınırı) {
-            z *= z; z += c; i += 1  // işte bütün küme buradan çıkıyor!
+            z *= z; z += c; i += 1 // işte bütün küme buradan çıkıyor!
         }
         imgeNoktasınıKur(img, xi, yi, if (z.uzunluğu < 2) black else (renk(i)))
     }
@@ -81,14 +81,14 @@ lazy val renkler = Dizi.doldur(yinelemeSınırı + 1) { n =>
     Renk(rastgele(x), rastgele(x), 200)
 }
 def renk(i: Int) = renkler(i)
-def renk2(i: Int) = {  // bu da alternatif renklendirme
-    val band = yinelemeSınırı / 3
-    if (i <= band)
-        Renk(sayıya(i * 255.0 / band), 50, 100)
-    else if (i <= 2 * band && i > band)
-        Renk(75, sayıya((i - band) * 255.0 / band), 25)
+def renk2(i: Int) = { // bu da alternatif renklendirme
+    val kuşak = yinelemeSınırı / 3
+    if (i <= kuşak)
+        Renk(sayıya(i * 255.0 / kuşak), 50, 100)
+    else if (i <= 2 * kuşak && i > kuşak)
+        Renk(75, sayıya((i - kuşak) * 255.0 / kuşak), 25)
     else
-        Renk(10, 30, sayıya((i - 2 * band) * 255.0 / band))
+        Renk(10, 30, sayıya((i - 2 * kuşak) * 255.0 / kuşak))
 }
 
 // yaklaştıkça bir önceki bakış penceresini saklayalım ki ona geri dönebilelim
@@ -99,9 +99,9 @@ class Pencere {
     def boşMu() = bakışlar.size == 0
     def üsteKoy(d: Dörtgen) = bakışlar.push(d)
     def üsttenAl(): Dörtgen = bakışlar.pop()
-    def boşalt() = while(!boşMu()) üsttenAl()
+    def boşalt() = while (!boşMu()) üsttenAl()
 }
-val pGeri = new Pencere  // geride kalan yani daha uzaktan bakışlar
+val pGeri = new Pencere // geride kalan yani daha uzaktan bakışlar
 val pİleri = new Pencere // ilerideki yani daha yakından bakışlar
 
 // artık çizebiliriz
@@ -155,15 +155,15 @@ var yaklaşmaKaresi: Resim = Resim.dikdörtgen(0, 0)
 
 def fareyiTanımla(r: Resim) {
     r.fareyiSürükleyince { (x, y) =>
-        val delx = x - tıklananXY._1
-        val dely = y - tıklananXY._2
-        val del = enİrisi(mutlakDeğer(delx), mutlakDeğer(dely))
-        val newx = tıklananXY._1 + del * delx.signum
-        val newy = tıklananXY._2 + del * dely.signum
+        val farkX = x - tıklananXY._1
+        val farkY = y - tıklananXY._2
+        val fark = enİrisi(mutlakDeğer(farkX), mutlakDeğer(farkY))
+        val yeniX = tıklananXY._1 + fark * işareti(farkX)
+        val yeniY = tıklananXY._2 + fark * işareti(farkY)
         yaklaşmaKaresi.sil()
-        yaklaşmaKaresi = götür(enUfağı(newx, tıklananXY._1), enUfağı(newy, tıklananXY._2)) -> Resim.dikdörtgen(del, del)
+        yaklaşmaKaresi = götür(enUfağı(yeniX, tıklananXY._1), enUfağı(yeniY, tıklananXY._2)) -> Resim.dikdörtgen(fark, fark)
         çiz(yaklaşmaKaresi)
-        sürüklenenXY = (newx, newy)
+        sürüklenenXY = (yeniX, yeniY)
     }
 
     r.fareyiBırakınca { (x, y) =>
@@ -171,13 +171,13 @@ def fareyiTanımla(r: Resim) {
         val bx2 = enİrisi(sürüklenenXY._1, tıklananXY._1) - resimSolAltKöşe.x
         val by1 = enUfağı(sürüklenenXY._2, tıklananXY._2) - resimSolAltKöşe.y
         val by2 = enİrisi(sürüklenenXY._2, tıklananXY._2) - resimSolAltKöşe.y
-        val (ox1, ox2, oy1, oy2) = sonDörtgen.dörtlü
-        val delx = (ox2 - ox1) / kenar
-        val dely = (oy2 - oy1) / kenar
+        val (sx1, sx2, sy1, sy2) = sonDörtgen.dörtlü
+        val farkX = (sx2 - sx1) / kenar
+        val farkY = (sy2 - sy1) / kenar
         yaklaşmaKaresi.sil()
         resim.sil()
-        val d = Dörtgen(ox1 + delx * bx1, ox1 + delx * bx2,
-            oy1 + dely * by1, oy1 + dely * by2)
+        val d = Dörtgen(sx1 + farkX * bx1, sx1 + farkX * bx2,
+            sy1 + farkY * by1, sy1 + farkY * by2)
         pGeri.üsteKoy(sonDörtgen) // uzaklaşmak için geri dönmek isteyebiliriz
         pİleri.boşalt() // yeni bir dal, eski daldaki ileri pencerelere gerek yok artık
         sıra += 1
