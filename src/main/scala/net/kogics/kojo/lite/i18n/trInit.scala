@@ -84,6 +84,8 @@ object TurkishAPI {
 
   type Aralık = tr.Aralık
   val Aralık = tr.Aralık
+  type Yığın[T] = tr.Yığın[T]
+  val Yığın = tr.Yığın
 
   val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) = (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
 

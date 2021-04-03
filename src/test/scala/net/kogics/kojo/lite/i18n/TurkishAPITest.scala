@@ -194,6 +194,56 @@ class TurkishAPITest extends FunSuite with Matchers {
     val a5 = Aralık(5, 1, -1)
     a5.dizin() shouldBe List(5, 4, 3, 2)
   }
+
+  test("Translations of mutable.Stack should work") {
+    val y1 = Yığın.boş[Sayı]
+    y1.tane should be(0)
+    y1.koy(1)
+    y1.tane should be(1)
+    val y2 = Yığın(1,2,3)
+    y2.tane should be(3)
+    val y3 = Yığın.doldur(y2)
+    y3.tane should be(3)
+    // todo more!
+  }
+
+  test("Translations needed for mandelbrot sample should work") {
+    case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
+      def alanı() = (x2 - x1) * (y2 - y1)
+      def ortaNoktası = (x, y)
+      val (x, y) = ((x2 + x1) / 2, (y2 + y1) / 2)
+      def yazı = {
+        val a = alanı()
+        if (a > 0.0001) s"${yuvarla(a, 5)}" else f"${a}%2.3e"
+      }
+      def dörtlü = (x1, x2, y1, y2)
+      def büyüt(oran: Kesir): Dörtgen = {
+        if (oran <= 0 || oran >= 10.0) this else {
+          val o2 = 0.5 * oran
+          val en2 = o2 * (x2 - x1)
+          val boy2 = o2 * (y2 - y1)
+          Dörtgen(x - en2, x + en2, y - boy2, y + boy2)
+        }
+      }
+    }
+    class Pencere {
+      def koy(d: Dörtgen) = bakışlar.koy(d)
+      def al(): Dörtgen = bakışlar.al()
+      def boşMu() = bakışlar.tane == 0
+      def boşalt() = while (!boşMu()) al()
+      private val bakışlar = Yığın.boş[Dörtgen]
+    }
+    val p1 = new Pencere
+    p1.boşMu() should be(doğru)
+    val d1 = Dörtgen(1, 2, 3, 4)
+    val d2 = Dörtgen(0, 1, 2, 3)
+    p1.koy(d1)
+    p1.boşMu() should be(yanlış)
+    p1.koy(d2)
+    p1.al() should be (d2)
+    p1.al() should be (d1)
+    p1.boşMu() should be(doğru)
+  }
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala
   // ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/lite/TestEnv.scala
