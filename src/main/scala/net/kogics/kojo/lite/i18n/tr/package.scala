@@ -120,6 +120,7 @@ package object tr {
   val (noktaSayısı, santim, inç) = (Pixel, Cm, Inch)
   val Boş = scala.collection.immutable.Nil
 
-  type ResimDosyası = richBuiltins.Image
-  type BellekteResim = BufferedImage
+  type İmge = richBuiltins.Image // java.awt.Image
+  type Bellekteİmge = BufferedImage
+  type Bellekteİmgeİşlemi = java.awt.image.BufferedImageOp
 }

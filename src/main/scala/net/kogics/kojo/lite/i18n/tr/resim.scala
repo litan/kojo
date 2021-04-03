@@ -78,8 +78,8 @@ object res {
   def imge(boy: Sayı, en: Sayı) = builtins.image(boy, en)
   def imge(dosya: Yazı) = builtins.image(dosya)
   def imge(url: java.net.URL) = builtins.image(url)
-  def imgeNoktası(imge: BellekteResim, x: Sayı, y: Sayı) = builtins.getImagePixel(imge, x, y)
-  def imgeNoktasınıKur(imge: BellekteResim, x: Sayı, y: Sayı, r: Renk) = builtins.setImagePixel(imge, x, y, r)
+  def imgeNoktası(imge: Bellekteİmge, x: Sayı, y: Sayı) = builtins.getImagePixel(imge, x, y)
+  def imgeNoktasınıKur(imge: Bellekteİmge, x: Sayı, y: Sayı, r: Renk) = builtins.setImagePixel(imge, x, y, r)
 
   //
   // interface above
@@ -300,8 +300,8 @@ object Resim {
   def imge(dosyaAdı: Yazı, zarf: Resim) = new Resim(richBuiltins.Picture.image(dosyaAdı, zarf.p))
   def imge(url: java.net.URL) = new Resim(richBuiltins.Picture.image(url))
   def imge(url: java.net.URL, zarf: Resim) = new Resim(richBuiltins.Picture.image(url, zarf.p))
-  def imge(imge: ResimDosyası) = new Resim(richBuiltins.Picture.image(imge))
-  def imge(imge: ResimDosyası, zarf: Resim) = new Resim(richBuiltins.Picture.image(imge, zarf.p))
+  def imge(imge: İmge) = new Resim(richBuiltins.Picture.image(imge))
+  def imge(imge: İmge, zarf: Resim) = new Resim(richBuiltins.Picture.image(imge, zarf.p))
   // Resim.düğme("Merhaba")(println(kg.x))
   def düğme(ad: Yazı)(işlev: => Birim) = new Resim(richBuiltins.Picture.button(ad)(işlev))
   // Resim.arayüz(Label("Merhaba"))
@@ -357,7 +357,7 @@ object Resim {
   def diziDikeyDüzenli(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picColCentered(rd.map(_.p)))
   def diziYatayDüzenli(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picRowCentered(rd.map(_.p)))
   def küme(rd: collection.Seq[Resim]) = new Resim(richBuiltins.picBatch(rd.map(_.p)))
-  def süz(r: Resim, süzgeç: java.awt.image.BufferedImageOp): Resim = new Resim(richBuiltins.filterPicture(r.p, süzgeç))
-  def süz(rd: java.awt.image.BufferedImage, süzgeç: java.awt.image.BufferedImageOp) = richBuiltins.filterImage(rd, süzgeç)
+  def süz(r: Resim, süzgeç: Bellekteİmgeİşlemi): Resim = new Resim(richBuiltins.filterPicture(r.p, süzgeç))
+  def süz(rd: Bellekteİmge, süzgeç: Bellekteİmgeİşlemi) = richBuiltins.filterImage(rd, süzgeç)
   // todo: more
 }

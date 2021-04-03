@@ -453,11 +453,14 @@ object TurkishAPI {
   def sırayaSok(kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.schedule(kaçSaniyeSonra)(komut)
   def sırayaSok(n: Sayı, kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.scheduleN(n, kaçSaniyeSonra)(komut)
 
-  type ResimDosyası = tr.ResimDosyası
   type Yöney2B = tr.Yöney2B
-  val Yöney2B = tr.Yöney2B
   type Resim = tr.Resim
+  type İmge = tr.İmge
+  type Bellekteİmge = tr.Bellekteİmge
+  type Bellekteİmgeİşlemi = tr.Bellekteİmgeİşlemi
+  val Yöney2B = tr.Yöney2B
   val Resim = tr.Resim
+
   import tr.{res => r}
   val (döndür, döndürMerkezli, filtre, gürültü, örgü) = (r.döndür _, r.döndürMerkezli _, r.filtre _, r.gürültü _, r.örgü _)
   val (büyütXY, saydamlık, ton, parlaklık, aydınlık, götür, kaydır, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.götür _, r.kaydır _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
