@@ -207,6 +207,23 @@ class TurkishAPITest extends FunSuite with Matchers {
     // todo more!
   }
 
+  test("Translations of mutable.Map should work") {
+    val e1 = Eşlem.boş[Yazı, Sayı]
+    e1 eşli ("anahtar") should be(yanlış)
+    e1 eşle ("anahtar" -> 99)
+    e1 eşli ("anahtar") should be(doğru)
+    e1("anahtar") should be(99)
+    e1 eşle ("b" -> 88)
+    e1 eşli ("b") should be(doğru)
+    e1("b") should be(88)
+    val l = e1.m.toSeq
+    l.size should be(2)
+    l.head match {
+      case ("b", 88) => l.tail.head should be("anahtar", 99)
+      case _ => l.tail.head should be("b", 88)
+    }
+  }
+
   test("Translations needed for mandelbrot sample should work") {
     case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
       def alanı() = (x2 - x1) * (y2 - y1)
@@ -244,6 +261,8 @@ class TurkishAPITest extends FunSuite with Matchers {
     p1.al() should be (d1)
     p1.boşMu() should be(doğru)
   }
+
+
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala
   // ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/lite/TestEnv.scala
