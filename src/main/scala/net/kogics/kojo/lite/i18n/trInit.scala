@@ -397,6 +397,7 @@ object TurkishAPI {
 
   // ../DrawingCanvasAPI.scala
   def yaklaş(oran: Kesir) = richBuiltins.tCanvas.zoom(oran)
+  def yaklaş(oran: Kesir, xMerkez: Kesir, yMerkez: Kesir) = richBuiltins.tCanvas.zoom(oran, xMerkez, yMerkez)
   def yaklaşXY(xOran: Kesir, yOran: Kesir, xMerkez: Kesir, yMerkez: Kesir) =
     richBuiltins.tCanvas.zoomXY(xOran, yOran, xMerkez, yMerkez)
   def yaklaşmayıSil() = richBuiltins.tCanvas.resetPanAndZoom()
