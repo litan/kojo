@@ -102,21 +102,24 @@ def mKümesi(d: Dörtgen): İmge = {
         f"Uzunluk: ${VarsılSayı(d.x, d.y).uzunluğu}%2.8f"
     )
     sonDörtgen = d
-    val img = imge(kenar, kenar)
-    for { xi <- 0 until kenar; yi <- 0 until kenar } {
-        val x = d.x1 + xi * (d.x2 - d.x1) / kenar
-        val y = d.y1 + yi * (d.y2 - d.y1) / kenar
-        val v = VarsılSayı(2 + x, y)
-        var z = VarsılSayı(0, 0)
-        var i = 0
-        while (z.uzunluğu < 2 && i < yinelemeSınırı) {
-            z *= z; z += v; i += 1 // işte bütün küme buradan çıkıyor!
+    if (bellek.eşli(d)) bellek(d) else {
+        val img = imge(kenar, kenar)
+        for { xi <- 0 until kenar; yi <- 0 until kenar } {
+            val x = d.x1 + xi * (d.x2 - d.x1) / kenar
+            val y = d.y1 + yi * (d.y2 - d.y1) / kenar
+            val v = VarsılSayı(2 + x, y)
+            var z = VarsılSayı(0, 0)
+            var i = 0
+            while (z.uzunluğu < 2 && i < yinelemeSınırı) {
+                z *= z; z += v; i += 1 // işte bütün küme buradan çıkıyor!
+            }
+            // küme içindeki noktalar hep siyah. diğerleri renkli olacak
+            import renklendirme.renk
+            imgeNoktasınıKur(img, xi, yi, if (z.uzunluğu < 2) siyah else (renk(i, x, y)))
         }
-        // küme içindeki noktalar hep siyah. diğerleri renkli olacak
-        import renklendirme.renk
-        imgeNoktasınıKur(img, xi, yi, if (z.uzunluğu < 2) siyah else (renk(i, x, y)))
+        bellek eşle (d -> img)
+        img
     }
-    img
 }
 
 object renklendirme {
@@ -164,6 +167,7 @@ var sonDörtgen = Dörtgen(0, 0, 0, 0) // son çizdiğimiz kümenin boyutların�
 // çıkarıyoruz. Peki, neden ekledik? Renklendirme metodunun bir sıkıntısı
 // vardı. Onu rahatlatmak için. Pencereyi ve mKümesini aslına döndürürsen görürsün.
 val başlangıç = Dörtgen(-4, -1, -1.5, 1.5)
+var bellek = Eşlem.boş[Dörtgen, İmge]
 var resim = resimGötür -> Resim.imge(mKümesi(başlangıç))
 çiz(resim)
 fareyiTanımla(resim)
