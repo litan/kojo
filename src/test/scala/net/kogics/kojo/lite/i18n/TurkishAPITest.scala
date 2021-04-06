@@ -224,6 +224,44 @@ class TurkishAPITest extends FunSuite with Matchers {
     }
   }
 
+  test("Translation of Array should work") {
+    val s0 = Dizim.boş[Harf](10)
+    s0.boyut should be(1)
+    val s1 = Dizim.boş[Sayı](3, 3)
+    s1.boyut should be(2)
+    s1(0) should be(Array(0, 0, 0))
+    s1(0)(0) should be(0)
+    s1(0)(1) = 1
+    s1(0) should be(Array(0, 1, 0))
+    val s2 = Dizim.doldur[Sayı](2, 2)(5)
+    s2.boyut should be(2)
+    s2(0) should be(Array(5, 5))
+    s2(0)(0) should be(5)
+  }
+
+  test("Translation of mutable.ArrayBuffer should work") {
+    import net.kogics.kojo.core.Point
+    val noktalar = EsnekDizim(Point(-100, -50), Point(100, -50), Point(-100, 50))
+    noktalar.sayı should be(3)
+    noktalar.ekle(Point(100, 100))
+    noktalar.sayı should be(4)
+    def deneme(nler: Seq[Point]) = nler.toList.tail
+    deneme(noktalar.dizi).size should be(3)
+  }
+
+  test("Translations of Vector should work") {
+    val y1 = Yöney(3, 4)
+    y1(0) should be(3)
+    y1.size should be(2)
+    val y1b = y1 :+ 5
+    y1b(2) should be(5)
+    val y2 = Yöney.boş[Yazı]
+    y2.size should be(0)
+    val y2b = y2 :+ "Merhaba"
+    (y2b :+ "Dünya!").size should be(2)
+    y2b(0)(2) should be('r')
+  }
+
   test("Translations needed for mandelbrot sample should work") {
     case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
       def alanı() = (x2 - x1) * (y2 - y1)
@@ -261,7 +299,6 @@ class TurkishAPITest extends FunSuite with Matchers {
     p1.al() should be (d1)
     p1.boşMu() should be(doğru)
   }
-
 
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala

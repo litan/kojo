@@ -71,9 +71,20 @@ object TurkishAPI {
   }
   def yokMu[T](o: Belki[T]): İkil = !varMı(o)
 
+  type Yöney[T] = Vector[T]
+  object Yöney {
+    def apply[T](elemanlar: T*) = Vector.from(elemanlar)
+    def boş[T] = Vector.empty[T]
+  }
+
   type Dizi[T]=tr.Dizi[T]
   type Dizin[T]=tr.Dizin[T]
   type MiskinDizin[T]=tr.MiskinDizin[T]
+
+  type Dizim[T]=tr.Dizim[T]
+  val EsnekDizim = tr.EsnekDizim
+  type EsnekDizim[T]=tr.Dizim[T]
+  val Dizim = tr.Dizim
 
   type Sayılar=tr.Sayılar
   type UzunlukBirimi=tr.UzunlukBirimi
@@ -370,10 +381,10 @@ object TurkishAPI {
     def ta = richBuiltins.canvasBounds
     def eni = en
     def boyu = boy
-    def en = ta.width
-    def boy = ta.height
-    def x = ta.x
-    def y = ta.y
+    def en: Kesir = ta.width
+    def boy:Kesir = ta.height
+    def x: Kesir = ta.x
+    def y: Kesir = ta.y
     // todo: more..
   }
   def yatayMerkezKonumu(uzunluk: Kesir): Kesir = tuvalAlanı.x + (tuvalAlanı.en - uzunluk) / 2
@@ -489,6 +500,13 @@ object TurkishAPI {
 
   import tr.arayuz
   val ay = arayuz
+
+  def zamanTut(başlık: Yazı = "Zaman ölçümü:")(işlev: => Birim)(bitiş: Yazı = "sürdü."): Birim = { // timeit in Builtins.scala
+    val t0 = buSaniye
+    işlev
+    val delta = buSaniye - t0
+    println(f"$başlık $delta%.3f saniye $bitiş")
+  }
 
   // more to come (:-)
 }

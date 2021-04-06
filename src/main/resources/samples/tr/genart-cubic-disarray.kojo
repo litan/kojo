@@ -26,7 +26,7 @@ def dikdörtgen(yerX: Kesir, yerY: Kesir, en: Kesir, boy: Kesir) = {
     Dikdörtgen(en, boy, dönüşAçısı, yerX + kaydırma, yerY)
 }
 
-var dörtgenler = Vector.empty[Dikdörtgen]
+var dörtgenler = Yöney.boş[Dikdörtgen]
 yineleİçin(0 to n) { yerY =>
     val y = ta.y + yerY * dikeyAdım
     yineleİçin(0 to n) { yerX =>

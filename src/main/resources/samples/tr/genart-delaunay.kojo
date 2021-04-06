@@ -4,23 +4,24 @@
 silVeSakla()
 artalanıKur(beyaz)
 yaklaşmayaİzinVerme()
-val noktalar = ArrayBuffer(Nokta(-100, -50), Nokta(100, -50), Nokta(-100, 50))
+// üç noktayla başlayalım
+val noktalar = EsnekDizim(Nokta(-100, -50), Nokta(100, -50), Nokta(-100, 50))
 fareyeTıklıyınca { (x, y) =>
-    noktalar.append(Nokta(x, y))
-    if (noktalar.size > 3) {
+    noktalar.ekle(Nokta(x, y)) // istediğin noktaları ekleyelım
+    if (noktalar.sayı > 3) {
         üçgenleriÇiz()
     }
 }
 
 def üçgenleriÇiz() {
     Resim.sil()
-    val üçgenler = üçgenDöşeme(noktalar) 
+    val üçgenler = üçgenDöşeme(noktalar.dizi)  // todo?
     üçgenler.foreach { üçgen =>
         çiz(Resim {
             // her üçgenin üç noktası var: a, b, c
             val (a, b, c) = (üçgen.a, üçgen.b, üçgen.c)
-            val doğrusalDeğişim = renkler.linearGradient(a.x, a.y, siyah, b.x, b.y, mavi)
-            boyamaRenginiKur(doğrusalDeğişim)
+            val doğrusalEğim = renkler.linearGradient(a.x, a.y, siyah, b.x, b.y, mavi)
+            boyamaRenginiKur(doğrusalEğim)
             kalemRenginiKur(gri)
             konumuKur(a.x, a.y)
             noktayaGit(b.x, b.y)

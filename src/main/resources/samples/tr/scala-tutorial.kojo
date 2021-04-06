@@ -92,7 +92,7 @@ def tPage(title:String,h:SHtm *)={
     </body>    
     
 }
-val codeExamples = new Array[String](1000)
+val codeExamples = new Array[String](1000) // no need to translate this Array
 var codeID = 0 
 // Mark up DSL definitions class
 
@@ -1106,7 +1106,7 @@ pages += Page(
   name = "US",
   body = tPage("Yazıların (String) Kullanılışı",
     "Yazı Türü".h2,
-    "Ekrana yazı yazmak bilgisayar programlamada epey sık karşılaşılan bir sorun! Bu bölümde bazı tanımlar ve yazı türünün faydalı metodlarından bazılarını göreceğiz. Bu metodların benzerleri Dizin türünde ve ona benzeyen sıra sıra elemanlar içeren başka türlerde de var (Array, Vector, Seq gibi hafifçe başkalaşmış ama benzer türler). Bir sonraki bölümde Dizin metodlarını görünce benzerliği farkedeceksin.".p,
+    "Ekrana yazı yazmak bilgisayar programlamada epey sık karşılaşılan bir sorun! Bu bölümde bazı tanımlar ve yazı türünün faydalı metodlarından bazılarını göreceğiz. Bu metodların benzerleri Dizin türünde ve ona benzeyen sıra sıra elemanlar içeren başka türlerde de var, Dizim (Array), Yöney (Vector), Dizi (Seq) gibi hafifçe başkalaşmış ama benzer türler). Bir sonraki bölümde Dizin metodlarını görünce benzerliği farkedeceksin.".p,
     "Aşağıdaki tanımlarda G1, G2, ... ile fonksiyonlara girilen değerleri ifade ediyoruz kısaca. Yani G1.işlevAdı(G2, G3, ...).".p,
     "Yazılar için kaçış karakterleri".h3,
     table(
@@ -1385,8 +1385,8 @@ oyunSüresiniGöster(60, "Süre bitti", yeşil) // oyun 60 saniye sürsün
 görünür()
 canlandırmaHızınıKur(100)
 var zıpladı = yanlış
-tuşaBasınca { k =>
-    k match {
+tuşaBasınca { t =>
+    t match {
         case tuşlar.VK_LEFT  => açıyaDön(180)  // sola git
         case tuşlar.VK_RIGHT => açıyaDön(0)    // sağa git
         case tuşlar.VK_UP    => açıyaDön(90)   // yukarı
@@ -1512,7 +1512,7 @@ def başlangıç(v: Sayılar, desen: Dizin[(Sayı, Sayı)]) = desen.foldLeft(v)(
 
 // yeni nesli bulalım
 def yeniNesil(v: Sayılar, ix: Sayı) = {
-    val kural = Vector(0, 0, 0, 1, 1, 0, 0, 0, 0, 0) // oyunun kuralları
+    val kural = Yöney(0, 0, 0, 1, 1, 0, 0, 0, 0, 0) // oyunun kuralları
     val x = ix / KU; val y = ix % KU
     val t = (0 until 3).foldLeft(0)((st, i) => {
         st + (0 until 3).foldLeft(0)((s, j) => {
@@ -1561,7 +1561,7 @@ def dörtlü = Dizin((0, 0), (1, 0), (-1, 0), (0, 2)) // dokuzcanlı'nın altkü
 """.c,
     
     "Düğüm açma oyunu".h3,
-    "Bu oyun bize iki şey gösterecek: 1) Scala'nın bize sunduğu veri yapılarından Vector ne işlere yarıyor. 2) Fareye tıklayıp bırakmadan sürüklersek neler yapabiliyoruz. Tabii daha da güzeli eğlenceli bir oyun yazabiliyoruz bu sayede.".p,
+    "Bu oyun bize iki şey gösterecek: 1) Scala'nın bize sunduğu veri yapılarından Yöney ne işlere yarıyor. 2) Fareye tıklayıp bırakmadan sürüklersek neler yapabiliyoruz. Tabii daha da güzeli eğlenceli bir oyun yazabiliyoruz bu sayede.".p,
     "Bu oyunu internetteki eski bir oyundan esinlenerek yazdık. Oyunun adı Planarity yani düzlemsellik. Mavi toplardan herhangi birinin üzerine tıklayıp bırakmadan tuvalde başka bir yere taşı. Göreceksin ki bağlı olduğu iki çizgi sanki lastik gibi hareket ediyor ve topu bırakmıyor. Bu bulmacanın amacı topları güzelce yerleştirerek çizgilerin birbirini kesmesine engel olmak. Yani bu düğümü çözmek. Çok zor sayılmaz. Biraz dene kolaylaşacak. Kırmızı kareye tıklarsan yeni bir düğüm oluşur.".p,
     "Yazılımcığa bakarsan en başta KS adında bir değişmez (val) göreceksin. Onu değiştirerek oyunun zorluğunu ayarlayabilirsin. Ne kadar büyütürsen o kadar zorlaşır!".p,
     "Bize ilham veren oyunun adı Planarity. Daha çok bilgi için buna tıkla".link("en.wikipedia.org/wiki/Planarity"),
@@ -1579,7 +1579,7 @@ def doğru(llx: Kesir, lly: Kesir, urx: Kesir, ury: Kesir) = {
     r
 }
 // bütün çizgiler. boş küme olarak başlarız
-var çizgiler = Vector[Çizgi]()
+var çizgiler = Yöney[Çizgi]()
 // Noktayı tuvalde kaydıracağız. Yeri değişince ona bağlı çizgileri tekrar çizmemiz gerek
 case class Nokta(var x: Kesir, var y: Kesir) {
     val n = götür(x, y) * boyaRengi(mavi) -> Resim.daire(YÇ)
@@ -1593,10 +1593,10 @@ case class Nokta(var x: Kesir, var y: Kesir) {
 }
 // Bütün noktaları (0,0) yani orijine üştüste koyalım. Merak etme birazdan dağıtacağız
 silVeSakla()
-val noktalar = (0 until AS).foldLeft(Vector[Nokta]())((v, i) => { v :+ Nokta(0, 0) })
+val noktalar = (0 until AS).foldLeft(Yöney[Nokta]())((v, i) => { v :+ Nokta(0, 0) })
 
 // çizgileri tanımlar ve noktalara bağlarız. Bir balık ağı gibi. KS * KS düğümlü
-çizgiler = (0 until AS).foldLeft(Vector[Çizgi]())(
+çizgiler = (0 until AS).foldLeft(Yöney[Çizgi]())(
     (çv, i) => {
         val (x, y) = (i / KS, i % KS)
         val çzg = if (y < KS - 1) { çv :+ Çizgi(noktalar(i), noktalar(i + 1)) } else çv
@@ -1605,13 +1605,13 @@ val noktalar = (0 until AS).foldLeft(Vector[Nokta]())((v, i) => { v :+ Nokta(0, 
 serpiştir(noktalar) // noktaları yerleştir ve çizgileri çiz
 
 // noktaları rastgele yerleştir
-def serpiştir(hepsi: Vector[Nokta]) {
+def serpiştir(hepsi: Yöney[Nokta]) {
     hepsi.foreach(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rastgele - 0.5), KS * YÇ * 6 * (rastgele - 0.5)))
     çizelim(çizgiler)
 }
 
 // noktalar arasındaki çizgileri çizelim. Her çizgi, iki noktasının çemberine kadar gelsin
-def çizelim(hepsi: Vector[Çizgi]) {
+def çizelim(hepsi: Yöney[Çizgi]) {
     hepsi.foreach(çzg => {
         val (x1, y1) = (çzg.n1.x, çzg.n1.y)
         val (x2, y2) = (çzg.n2.x, çzg.n2.y)

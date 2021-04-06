@@ -25,7 +25,7 @@ def çizgi(x: Kesir, y: Kesir, eni: Kesir, boyu: Kesir) = {
 }
 
 // tuvalin sol alt köşesinden çizmeye başlayacağız
-var çizgiler = Vector.empty[Köşegen] // aslında çizgileri hesaplayıp bu Vector'e kaydedeceğiz
+var çizgiler = Yöney.boş[Köşegen] // aslında çizgileri hesaplayıp bu yöneye kaydedeceğiz
 val solAltKöşeninXkoordinatı = ta.x
 val solAltKöşeninYkoordinatı = ta.y
 yineleİçin(0 until n) { sütun =>

@@ -5,7 +5,7 @@ silVeSakla()
 çıktıArtalanınıKur(siyah)
 çıktıYazıRenginiKur(gri)
 satıryaz("Gelin bir yöney (vektör) kuralım. Öğelerini aşağıda girer misin?")
-var yöney = Vector[Sayı]()
+var yöney = Yöney[Sayı]()
 val n = sayıOku("Yöney kaç boyutlu olsun, yani kaç öğesi olacak?")
 çıktıYazıRenginiKur(sarı)
 for (i <- 1 to n) {
