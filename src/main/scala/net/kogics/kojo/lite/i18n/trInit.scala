@@ -82,9 +82,9 @@ object TurkishAPI {
   type MiskinDizin[T]=tr.MiskinDizin[T]
 
   type Dizim[T]=tr.Dizim[T]
-  val EsnekDizim = tr.EsnekDizim
   type EsnekDizim[T]=tr.Dizim[T]
   val Dizim = tr.Dizim
+  val EsnekDizim = tr.EsnekDizim
 
   type Sayılar=tr.Sayılar
   type UzunlukBirimi=tr.UzunlukBirimi
