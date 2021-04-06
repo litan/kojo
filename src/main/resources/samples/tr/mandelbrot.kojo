@@ -1,12 +1,17 @@
 /*
- Mandelbrot kümesinin (MK) o garip resimlerini görmüşsündür. MK modern
- matematiğin en gizemli icat ve keşiflerinin en önde gelenlerindendir
- desek fazla abartmış olmayız.  Bu yazılımcıkla tam olarak ne olduğunu
- görecek ve anlayacaksın.
+ Mandelbrot Kümesinin (MK) o garip resimlerini görmüşsündür. MK modern
+ matematiğin gizemli icat ve keşiflerinin en önde gelenlerindendir
+ desek fazla abartmış olmayız. Bu yazılımcıkla MK'nin nereden geldiğini
+ görecek ve ne olup bittiğini daha iyi anlayacağız.
 
- Fareyi tıklayıp sürükleyerek istediğin kısımlarına yaklaşabilirsin.
- Sonra da ileri ve geri oklarıyla daha önceki pencerelere dönebilirsin.
- Yukarı okuyla biraz yaklaşıp aşağı okuyla da biraz uzaklaşabilirsin
+ Fareyi tıklayıp sürükleyerek MK'nin istediğin bir köşesine yaklaş.
+ Sonra geri okuyla daha önceki pencereye döne. İleri okuyla da
+ tekrar ileri git. İlk yaklaşma birkaç saniye alır. Ama ileri/geri okları
+ hemen çalışır. Yukarı okuyla biraz yaklaş. Aşağı okuyla da biraz uzaklaş.
+ Yukarı oku yaklaşırken farenin konumununu merkez alır. Fareyi oynatarak
+ yaklaştığın noktayı seçebilirsin.
+ 
+ Sana ve arkadaşlarına keyifli keşifler diliyorum.
 
  Bu örnek şu kaynaktan esinlendi:
      http://justindomke.wordpress.com/2008/11/29/mandelbrot-in-scala/
@@ -15,8 +20,9 @@
      https://en.wikipedia.org/wiki/Mandelbrot_set
  */
 
-// eğer çizim çok yavaşsa, bu değerleri küçültebilirsin
-val kenar = 600 // kümemizin resmi k x k büyüklüğünde bir kare olacak
+/* çizim çok yavaşsa, örneğin beş on saniyeden çok sürüyorsa
+ * buradaki değişmez değerleri küçültmeyi dene */
+val kenar = 600 // kümemizin resmi k x k büyüklüğünde bir kare
 val yinelemeSınırı = 2000 // bu da resmin çözünürlüğünü artırıyor
 tümEkran()
 
@@ -57,15 +63,22 @@ case class VarsılSayı(x: Kesir, y: Kesir) {
 
 // Mandelbrot kümesini yazmadan önce bir de dikdörtgen türü oluşturalım.
 // Epey faydalı olacak:
+object Dörtgen {
+    def apply(solalt: Nokta, sağüst: Nokta): Dörtgen = new Dörtgen(solalt.x, sağüst.x, solalt.y, sağüst.y)
+}
 case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
-    def alanı() = (x2 - x1) * (y2 - y1)
-    def ortaNoktası = (x, y)
+    val en = x2 - x1
+    val boy = y2 - y1
+    val alanı = en * boy
+    val solalt = Nokta(x1, y1)
+    val sağüst = Nokta(x2, y2)
+    val ortaNoktası = (x, y)
     val (x, y) = ((x2 + x1) / 2, (y2 + y1) / 2)
-    def yazı = {
-        val a = alanı()
+    val yazı = {
+        val a = alanı
         if (a > 0.0001) s"${yuvarla(a, 5)}" else f"${a}%2.3e"
     }
-    def dörtlü = (x1, x2, y1, y2)
+    val dörtlü = (x1, x2, y1, y2)
     def büyüt(oran: Kesir): Dörtgen = {
         if (oran <= 0 || oran >= 10.0) this else {
             val o2 = 0.5 * oran
@@ -73,6 +86,11 @@ case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
             val boy2 = o2 * (y2 - y1)
             Dörtgen(x - en2, x + en2, y - boy2, y + boy2)
         }
+    }
+    def ortala(nokta: Nokta) = {
+        val xKayma = nokta.x - x
+        val yKayma = nokta.y - y
+        Dörtgen(x1 + xKayma, x2 + xKayma, y1 + yKayma, y2 + yKayma)
     }
 }
 
@@ -97,31 +115,42 @@ case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
  */
 
 def mKümesi(d: Dörtgen): İmge = {
-    satıryaz(f"$sıra%2d. Alan: ${d.yazı}%-10s " +
-        f"Merkez: (${d.x}%2.8f, ${d.y}%2.8f) " +
-        f"Uzunluk: ${VarsılSayı(d.x, d.y).uzunluğu}%2.8f"
-    )
+    bilgiVer(sıra, d)
     sonDörtgen = d
     if (bellek.eşli(d)) bellek(d) else {
         val img = imge(kenar, kenar)
-        for { xi <- 0 until kenar; yi <- 0 until kenar } {
-            val x = d.x1 + xi * (d.x2 - d.x1) / kenar
-            val y = d.y1 + yi * (d.y2 - d.y1) / kenar
-            val v = VarsılSayı(2 + x, y)
-            var z = VarsılSayı(0, 0)
-            var i = 0
-            while (z.uzunluğu < 2 && i < yinelemeSınırı) {
-                z *= z; z += v; i += 1 // işte bütün küme buradan çıkıyor!
+        val oranx = (d.x2 - d.x1) / kenar
+        val orany = (d.y2 - d.y1) / kenar
+        import renklendirme.renk
+        val iri: Kesir = (1.0 * yinelemeSınırı) * kenar * kenar
+        zamanTut(f"mKümesi (nokta sayısı x yineleme sınırı)$iri%2.2e yineleme:") {
+            for { xi <- 0 until kenar; yi <- 0 until kenar } {
+                val x = d.x1 + xi * oranx
+                val y = d.y1 + yi * orany
+                val v = VarsılSayı(2 + x, y)
+                var z = VarsılSayı(0, 0)
+                var i = 0
+                while (z.uzunluğu < 2 && i < yinelemeSınırı) {
+                    z *= z; z += v; i += 1 // işte bütün küme buradan çıkıyor!
+                }
+                // küme içindeki noktalar hep siyah. diğerleri renkli olacak
+                imgeNoktasınıKur(img, xi, yi, if (z.uzunluğu < 2) siyah else (renk(i, x, y)))
             }
-            // küme içindeki noktalar hep siyah. diğerleri renkli olacak
-            import renklendirme.renk
-            imgeNoktasınıKur(img, xi, yi, if (z.uzunluğu < 2) siyah else (renk(i, x, y)))
-        }
+        }()
         bellek eşle (d -> img)
         img
     }
 }
-
+var eskiUzunluk = 0.0
+val epsilon = 0.000001
+def bilgiVer(s: Sayı, d: Dörtgen): Birim = {
+    val u = VarsılSayı(d.x, d.y).uzunluğu
+    satıryaz(f"$s%2d. Alan: ${d.yazı}%-10s " + (
+        if (mutlakDeğer(u - eskiUzunluk) < epsilon) "" else
+            f"Merkez: (${d.x}%2.8f, ${d.y}%2.8f) Uzunluk: ${u}%2.8f"
+    ))
+    eskiUzunluk = u
+}
 object renklendirme {
     /* https://stackoverflow.com/questions/16500656/which-color-gradient-is-used-to-color-mandelbrot-in-wikipedia
        https://en.wikipedia.org/wiki/Monotone_cubic_interpolation  */
@@ -177,8 +206,8 @@ tuşaBasınca { t =>
         case tuşlar.VK_SPACE => geri()
         case tuşlar.VK_LEFT  => geri()
         case tuşlar.VK_RIGHT => ileri()
-        case tuşlar.VK_UP    => yaklaş()
-        case tuşlar.VK_DOWN  => uzaklaş()
+        case tuşlar.VK_UP    => yaklaş(0.80)
+        case tuşlar.VK_DOWN  => uzaklaş(1.25)
         case _               =>
     }
 }
@@ -219,28 +248,35 @@ def ileri() {
         fareyiTanımla(resim)
     }
 }
-def yaklaş() = {
+def yaklaş(oran: Kesir = 0.80) = {
     sıra += 1
     pGeri.koy(sonDörtgen)
-    ayarla(0.5)
+    ayarla(oran, doğru)
 }
-def uzaklaş() = {
+def uzaklaş(oran: Kesir = 1.25) = {
     pİleri.koy(sonDörtgen)
-    ayarla(2.0)
+    ayarla(oran)
 }
-def ayarla(oran: Kesir) {
-    val yeni = sonDörtgen.büyüt(oran)
+def ayarla(oran: Kesir, ortala: İkil = yanlış) {
+    val yeni =
+        if (ortala) sonDörtgen.büyüt(oran).ortala(nTuvaldenMKye(fareKonumu))
+        else sonDörtgen.büyüt(oran)
     resim.sil()
     resim = resimGötür -> Resim.imge(mKümesi(yeni))
     resim.çiz()
     fareyiTanımla(resim)
 }
 
+def nTuvaldenMKye(n: Nokta): Nokta = Nokta(
+    sonDörtgen.x1 + (sonDörtgen.en / kenar) * (n.x - resimSolAltKöşe.x),
+    sonDörtgen.y1 + (sonDörtgen.boy / kenar) * (n.y - resimSolAltKöşe.y)
+)
+def tuvaldenMKye(d: Dörtgen): Dörtgen = Dörtgen(nTuvaldenMKye(d.solalt), nTuvaldenMKye(d.sağüst))
+
 def fareyiTanımla(r: Resim) {
     var tıklananXY = (0.0, 0.0)
     var sürüklenenXY = (0.0, 0.0)
     var yaklaşmaKaresi: Resim = Resim.dikdörtgen(0, 0)
-
     r.fareyiSürükleyince { (x, y) =>
         val farkX = x - tıklananXY._1
         val farkY = y - tıklananXY._2
@@ -254,19 +290,14 @@ def fareyiTanımla(r: Resim) {
         çiz(yaklaşmaKaresi)
         sürüklenenXY = (yeniX, yeniY)
     }
-
     r.fareyiBırakınca { (x, y) =>
-        val bx1 = enUfağı(sürüklenenXY._1, tıklananXY._1) - resimSolAltKöşe.x
-        val bx2 = enİrisi(sürüklenenXY._1, tıklananXY._1) - resimSolAltKöşe.x
-        val by1 = enUfağı(sürüklenenXY._2, tıklananXY._2) - resimSolAltKöşe.y
-        val by2 = enİrisi(sürüklenenXY._2, tıklananXY._2) - resimSolAltKöşe.y
-        val (sx1, sx2, sy1, sy2) = sonDörtgen.dörtlü
-        val oranX = (sx2 - sx1) / kenar
-        val oranY = (sy2 - sy1) / kenar
+        val tx1 = enUfağı(sürüklenenXY._1, tıklananXY._1)
+        val tx2 = enİrisi(sürüklenenXY._1, tıklananXY._1)
+        val ty1 = enUfağı(sürüklenenXY._2, tıklananXY._2)
+        val ty2 = enİrisi(sürüklenenXY._2, tıklananXY._2)
         yaklaşmaKaresi.sil()
         resim.sil()
-        val d = Dörtgen(sx1 + oranX * bx1, sx1 + oranX * bx2,
-            sy1 + oranY * by1, sy1 + oranY * by2)
+        val d = tuvaldenMKye(Dörtgen(tx1, tx2, ty1, ty2))
         pGeri.koy(sonDörtgen) // uzaklaşmak için geri dönmek isteyebiliriz
         pİleri.boşalt() // yeni bir dal, eski daldaki ileri pencerelere gerek yok artık
         sıra += 1
@@ -274,7 +305,6 @@ def fareyiTanımla(r: Resim) {
         resim.çiz()
         fareyiTanımla(resim)
     }
-
     r.fareyeBasınca { (x, y) =>
         tıklananXY = (x, y)
     }
