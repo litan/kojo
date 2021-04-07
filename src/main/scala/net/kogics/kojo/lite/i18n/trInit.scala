@@ -291,7 +291,7 @@ object TurkishAPI {
   val (eüssü, radyana, dereceye, taban, tavan, yakını) = (m.eüssü _, m.radyana _, m.dereceye _, m.taban _, m.tavan _, m.yakını _)
   val (işareti, sayıya, yuvarla, logTabanlı) = (m.işareti _, m.sayıya _, m.yuvarla _, m.logTabanlı _)
   // todo: can we use Number instead? 
-  val rastgele = () => m.rastgele
+  def rastgele = m.rastgele
   def mutlakDeğer(x: Sayı): Sayı = m.mutlakDeğer(x)
   def mutlakDeğer(x: Uzun): Uzun = m.mutlakDeğer(x)
   def mutlakDeğer(x: Kesir): Kesir = m.mutlakDeğer(x)
