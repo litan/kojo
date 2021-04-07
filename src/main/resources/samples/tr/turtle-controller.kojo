@@ -24,7 +24,7 @@ def eylem(komutlar: Yazı) {
     yorumla(komutlar); satıryaz(komutlar)
 }
 
-val komutlar = Map(
+val komutlar = Eşlem(
     "ileri1" -> s"ileri($ileriAdım)",
     "ileri2" -> s"ileri($ileriAdım2)",
     "ileri3" -> s"ileri( $ileriAdım3 )",

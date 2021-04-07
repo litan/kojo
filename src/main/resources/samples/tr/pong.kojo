@@ -55,11 +55,11 @@ val top = top0
 val topunİlkHızı = Yöney2B(topunİlkYatayHızı, 3)
 var topunBuankiHızı: Yöney2B = topunİlkHızı
 
-val rakettenHıza = Map(
+val rakettenHıza = Eşlem(
     solRaket -> new RaketinHızı(raketinHızı, doğru),
     sağRaket -> new RaketinHızı(raketinHızı, doğru))
 
-val sayıDurumu = Map(
+val sayıDurumu = Eşlem(
     solRaket -> new SkorTutma(0, doğru),
     sağRaket -> new SkorTutma(0, yanlış))
 

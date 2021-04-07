@@ -93,10 +93,10 @@ val hızYöneyi3 = Yöney2B(-hız, 0)
 val hızYöneyi4 = hızYöneyi2
 val hızYöneyi5 = hızYöneyi3
 
-var hızDefteri: Map[Resim, Yöney2B] = _
+var hızDefteri: Eşlem[Resim, Yöney2B] = _
 
 canlandırmaBaşlayınca {
-    hızDefteri = Map(
+    hızDefteri = Eşlem(
         kovalayan -> hızYöneyi,
         kovalayan2 -> hızYöneyi2,
         kovalayan3 -> hızYöneyi3,
@@ -127,7 +127,7 @@ def koşuşturma(bu: Resim) {
         yeniHızYöneyi = sahneKenarındanYansıtma(bu, yeniHızYöneyi)
         bu.hızınıDönüştür(yeniHızYöneyi)
     }
-    hızDefteri += bu -> yeniHızYöneyi
+    hızDefteri.eşle(bu -> yeniHızYöneyi)
 }
 
 kovalayan.canlan(koşuşturma)
@@ -139,7 +139,7 @@ kovalayan5.canlan(koşuşturma)
 val kovalayanlar = List(kovalayan, kovalayan2, kovalayan3, kovalayan4, kovalayan5)
 
 oyunSüresiniGöster(oyunSüresi, "Tebrikler!", yeşil, 30, 1, 2)
-val bitişMesajı = büyüt(3) * götür(-20, 0) -> Resim { yazı("Çarpıştın :-(\nBir daha dene!") }
+val bitişMesajı = büyüt(3) * götür(-20, 0) -> Resim { yazı("Çarpıştınız :-(\nBir daha dene!") }
 çizVeSakla(bitişMesajı)
 
 kaçan.canlan { bu =>
