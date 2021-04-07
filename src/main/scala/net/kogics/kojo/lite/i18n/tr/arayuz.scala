@@ -35,7 +35,6 @@ object arayuz {
   type Sıra = w.RowPanel
   type Satır = Sıra
   type Sütun = w.ColPanel
-  val Sütun = w.ColPanel
   type Yazıgirdisi[T] = w.TextField[T]
   type Yazıalanı = w.TextArea
   type Tanıt = w.Label
@@ -43,6 +42,16 @@ object arayuz {
   type Açkapa = w.ToggleButton
   type Salındıraç[T] = w.DropDown[T]
   type Kaydıraç = w.Slider
+  val Sıra = w.RowPanel
+  val Satır = Sıra
+  val Sütun = w.ColPanel
+  val Yazıgirdisi = w.TextField
+  val Yazıalanı = w.TextArea
+  val Tanıt = w.Label
+  val Düğme = w.Button
+  val Açkapa = w.ToggleButton
+  val Salındıraç = w.DropDown
+  val Kaydıraç = w.Slider
 
   object değişmez {
     // https://docs.oracle.com/javase/7/docs/api/javax/swing/SwingConstants.html

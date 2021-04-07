@@ -283,34 +283,31 @@ object TurkishAPI {
   def yaz(data: Her) = print(data)
 
   import tr.{matematik => m}
+  val matematik = m // so that coders can look up math functions using code completion in Kojo
   def piSayısı: Kesir = math.Pi
   def eSayısı: Kesir = math.E
   val gücü = m.kuvveti _
   val (karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
   val (eüssü, radyana, dereceye, taban, tavan, yakını) = (m.eüssü _, m.radyana _, m.dereceye _, m.taban _, m.tavan _, m.yakını _)
-  val (işareti, sayıya) = (m.işareti _, m.sayıya _)
-  def yuvarla(sayı: Number, basamaklar: Sayı = 0): Kesir = {
-    val faktor = math.pow(10, basamaklar).toDouble
-    math.round(sayı.doubleValue * faktor).toLong / faktor
-  }
-  // todo: can we use Number instead?
-  def mutlakDeğer(x: Sayı): Sayı = math.abs(x)
-  def mutlakDeğer(x: Uzun): Uzun = math.abs(x)
-  def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
-  def mutlakDeğer(x: UfakKesir): UfakKesir = math.abs(x)
-  def yakın(x: Kesir): Uzun = math.round(x)
-  def yakın(x: UfakKesir): Sayı = math.round(x)
-  def enİrisi(x: Sayı, y: Sayı): Sayı = math.max(x, y)
-  def enUfağı(x: Sayı, y: Sayı): Sayı = math.min(x, y)
-  def enİrisi(x: Uzun, y: Uzun): Uzun = math.max(x, y)
-  def enUfağı(x: Uzun, y: Uzun): Uzun = math.min(x, y)
-  def enİrisi(x: Kesir, y: Kesir ): Kesir = math.max(x, y)
-  def enUfağı(x: Kesir, y: Kesir ): Kesir = math.min(x, y)
-  def enİrisi(x: UfakKesir, y: UfakKesir ): UfakKesir = math.max(x, y)
-  def enUfağı(x: UfakKesir, y: UfakKesir ): UfakKesir = math.min(x, y)
-
+  val (işareti, sayıya, yuvarla, logTabanlı) = (m.işareti _, m.sayıya _, m.yuvarla _, m.logTabanlı _)
+  // todo: can we use Number instead? 
+  val rastgele = () => m.rastgele
+  def mutlakDeğer(x: Sayı): Sayı = m.mutlakDeğer(x)
+  def mutlakDeğer(x: Uzun): Uzun = m.mutlakDeğer(x)
+  def mutlakDeğer(x: Kesir): Kesir = m.mutlakDeğer(x)
+  def mutlakDeğer(x: UfakKesir): UfakKesir = m.mutlakDeğer(x)
+  def yakın(x: Kesir): Uzun = m.yakın(x)
+  def yakın(x: UfakKesir): Sayı = m.yakın(x)
+  def enİrisi(x: Sayı, y: Sayı): Sayı = m.enİrisi(x, y)
+  def enUfağı(x: Sayı, y: Sayı): Sayı = m.enUfağı(x, y)
+  def enİrisi(x: Uzun, y: Uzun): Uzun = m.enİrisi(x, y)
+  def enUfağı(x: Uzun, y: Uzun): Uzun = m.enUfağı(x, y)
+  def enİrisi(x: Kesir, y: Kesir): Kesir = m.enİrisi(x, y)
+  def enUfağı(x: Kesir, y: Kesir): Kesir = m.enUfağı(x, y)
+  def enİrisi(x: UfakKesir, y: UfakKesir): UfakKesir = m.enİrisi(x, y)
+  def enUfağı(x: UfakKesir, y: UfakKesir): UfakKesir = m.enUfağı(x, y)
+  //
   // ../CoreBuiltins.scala
-  def rastgele = math.random()
   def rastgele(üstSınır: Sayı) = builtins.random(üstSınır)
   def rastgele(altSınır: Sayı, üstSınır: Sayı) = builtins.random(altSınır, üstSınır)
   def rastgeleSayı = builtins.randomInt
@@ -500,6 +497,21 @@ object TurkishAPI {
 
   import tr.arayuz
   val ay = arayuz
+  /*
+  type Parça = ay.Parça
+  type Sıra = ay.Sıra
+  type Satır = ay.Satır
+  type Sütun = ay.Sütun
+  val Sütun = ay.Sütun
+  type Yazıgirdisi[T] = ay.Yazıgirdisi[T]
+  val Yazıgirdisi = ay.Yazıgirdisi
+  type Yazıalanı = ay.Yazıalanı
+  type Tanıt = ay.Tanıt
+  type Düğme = ay.Düğme
+  type Açkapa = ay.Açkapa
+  type Salındıraç[T] = ay.Salındıraç[T] 
+  type Kaydıraç = ay.Kaydıraç
+   */
 
   def zamanTut(başlık: Yazı = "Zaman ölçümü:")(işlev: => Birim)(bitiş: Yazı = "sürdü."): Birim = { // timeit in Builtins.scala
     val t0 = buSaniye

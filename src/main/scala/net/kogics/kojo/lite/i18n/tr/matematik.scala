@@ -18,6 +18,13 @@ package net.kogics.kojo.lite.i18n.tr
 
 // translating math library
 object matematik {
+  def piSayısı: Kesir = math.Pi
+  def eSayısı: Kesir = math.E
+  val gücü = kuvveti _
+  def yuvarla(sayı: Number, basamaklar: Sayı = 0): Kesir = {
+    val faktor = math.pow(10, basamaklar).toDouble
+    math.round(sayı.doubleValue * faktor).toLong / faktor
+  }
   def karesi(x: Kesir): Kesir = math.pow(x, 2)
   def karekökü(x: Kesir): Kesir = math.sqrt(x)
   def kuvveti(x: Kesir, k: Kesir): Kesir = math.pow(x, k)
@@ -25,6 +32,7 @@ object matematik {
   def onlukTabandaLogu(x: Kesir): Kesir = math.log10(x)
   def doğalLogu(x: Kesir): Kesir = math.log(x)
   def logaritması(x: Kesir): Kesir = math.log(x)
+  def logTabanlı(x: Kesir, t: Kesir) = math.log(x) / math.log(t)
   def radyana(açı: Kesir): Kesir = math.toRadians(açı)
   def dereceye(açı: Kesir): Kesir = math.toDegrees(açı)
   def sinüs(açı: Kesir): Kesir = math.sin(açı)
@@ -38,4 +46,19 @@ object matematik {
   def yakını(x: Kesir): Kesir = math.rint(x)
   def işareti(x: Number): Sayı = x.doubleValue.sign.toInt
   def sayıya(x: Number): Sayı = x.doubleValue.toInt
+  def rastgele = math.random()
+  def mutlakDeğer(x: Sayı): Sayı = math.abs(x)
+  def mutlakDeğer(x: Uzun): Uzun = math.abs(x)
+  def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
+  def mutlakDeğer(x: UfakKesir): UfakKesir = math.abs(x)
+  def yakın(x: Kesir): Uzun = math.round(x)
+  def yakın(x: UfakKesir): Sayı = math.round(x)
+  def enİrisi(x: Sayı, y: Sayı): Sayı = math.max(x, y)
+  def enUfağı(x: Sayı, y: Sayı): Sayı = math.min(x, y)
+  def enİrisi(x: Uzun, y: Uzun): Uzun = math.max(x, y)
+  def enUfağı(x: Uzun, y: Uzun): Uzun = math.min(x, y)
+  def enİrisi(x: Kesir, y: Kesir): Kesir = math.max(x, y)
+  def enUfağı(x: Kesir, y: Kesir): Kesir = math.min(x, y)
+  def enİrisi(x: UfakKesir, y: UfakKesir): UfakKesir = math.max(x, y)
+  def enUfağı(x: UfakKesir, y: UfakKesir): UfakKesir = math.min(x, y)
 }
