@@ -20,11 +20,13 @@ import collection.mutable.{Map}
 
 // todo: add more to the interface
 object Eşlem {
-  def boş[A,D] = new Eşlem[A,D]()
+  def boş[A,D] = new Eşlem[A,D](Map.empty[A,D])
+  def apply[A,D](elems: (A,D)*) = new Eşlem[A,D](Map.from(elems))
 }
-case class Eşlem[A,D]() {
-  val m = Map.empty[A,D]
+case class Eşlem[A,D](val m: Map[A,D]) {
   def eşli(a: A) = m.contains(a)
   def eşle(ikili: (A, D)) = m += ikili
+  def sayı: Sayı = m.size
+  def dizi = m.toSeq
   def apply(a: A) = m(a)
 }

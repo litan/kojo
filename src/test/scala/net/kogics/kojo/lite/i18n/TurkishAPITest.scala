@@ -222,6 +222,13 @@ class TurkishAPITest extends FunSuite with Matchers {
       case ("b", 88) => l.tail.head should be("anahtar", 99)
       case _ => l.tail.head should be("b", 88)
     }
+    val e2 = Eşlem(
+      "mavi" -> 1,
+      "yeşil" -> 2,
+      "sarı" -> 3
+    )
+    e2.sayı should be(3)
+    e2("mavi") should be(1)
   }
 
   test("Translation of Array should work") {
