@@ -10,7 +10,21 @@
  hemen çalışır. Yukarı okuyla biraz yaklaş. Aşağı okuyla da biraz uzaklaş.
  Yukarı oku yaklaşırken farenin konumununu merkez alır. Fareyi oynatarak
  yaklaştığın noktayı seçebilirsin.
- 
+
+ Kare kare film çekmek istersen, O tuşuyla gözüne kestirdiğin bir noktaya
+ ortala. Y tuşuyla istediğin kadar yaklaş ve gerektikçe O ile tekrar ortala.
+ Eğer merkezden uzak bir nokta seçersen, O tuşu Y tuşunun beş katı zaman
+ alabilir. Benim bilgisayarımda Y yaklaşık 2 saniye, O ise en çok 10 saniye
+ alıyor. Haberin olsun. İstediğin zaman R tuşuyla geriye doğru hızla oynatarak
+ en başa gittikten sonra P tuşuyla ileri oynatabilirsin. P ile de en
+ sona gittikten sonra tekrar R tuşuyla geri oynatabilirsin. P tuşundan sonra
+ tekrar O ve Y kullanmaya devam edebilir ve istediğin zaman da kameranla
+ çekim yapabilirsin.
+
+ P ve R tuşları saniyede yaklaşık 30 çizim oynatırlar ki filmin göze güzel
+ ve yumuşak hareketli görünsün. Ama çektiğin filmi yavaşlatarak izlemende
+ fayda olacaktır.
+
  Sana ve arkadaşlarına keyifli keşifler diliyorum.
 
  Bu örnek şu kaynaktan esinlendi:
@@ -22,9 +36,9 @@
 
 /* çizim çok yavaşsa, örneğin beş on saniyeden çok sürüyorsa
  * buradaki değişmez değerleri küçültmeyi dene */
-val kenar = 600 // kümemizin resmi k x k büyüklüğünde bir kare
+val kenar = 400 // kümemizin resmi k x k büyüklüğünde bir kare
 val yinelemeSınırı = 2000 // bu da resmin çözünürlüğünü artırıyor
-tümEkran()
+//tümEkran()
 
 /*
  x*x = 25 denklemini çözüp x=5 demek kolay. Peki x*x = -1 denklemini
@@ -127,7 +141,7 @@ def mKümesi(d: Dörtgen): İmge = {
             for { xi <- 0 until kenar; yi <- 0 until kenar } {
                 val x = d.x1 + xi * oranx
                 val y = d.y1 + yi * orany
-                val v = VarsılSayı(2 + x, y)
+                val v = VarsılSayı(kayma + x, y)
                 var z = VarsılSayı(0, 0)
                 var i = 0
                 while (z.uzunluğu < 2 && i < yinelemeSınırı) {
@@ -141,6 +155,7 @@ def mKümesi(d: Dörtgen): İmge = {
         img
     }
 }
+
 var eskiUzunluk = 0.0
 val epsilon = 0.000001
 def bilgiVer(s: Sayı, d: Dörtgen): Birim = {
@@ -191,26 +206,34 @@ val resimSolAltKöşe = Nokta(-kenar / 2, -kenar / 2)
 val resimGötür = götür(resimSolAltKöşe.x, resimSolAltKöşe.y)
 var sıra = 1 // yaklaşma pencerelerinin sırasını çıktı gözüne yazmak için
 var sonDörtgen = Dörtgen(0, 0, 0, 0) // son çizdiğimiz kümenin boyutlarını anımsamak gerekli olacak
-// Başlangıç penceremizin aslı: (-2, 1, -1.5, 1.5) ama biz
-// yukarıda mKümesi'ni tanımlarken, v'ye 2 ekledik. Onun için burada
-// çıkarıyoruz. Peki, neden ekledik? Renklendirme metodunun bir sıkıntısı
+// Başlangıç penceremizi sola doğru kaydırıyoruz (kayma miktarını x koordinatlarindan çıkarıyoruz).
+// Daha önce de yukarıda mKümesi'ni tanımlarken, v'ye aynı kayma miktarını ekledik.
+// Peki, neden yaptık bu numarayı? Renklendirme metodunun bir sıkıntısı
 // vardı. Onu rahatlatmak için. Pencereyi ve mKümesini aslına döndürürsen görürsün.
-val başlangıç = Dörtgen(-4, -1, -1.5, 1.5)
+val kayma = 4
+val başlangıç = Dörtgen(-2 - kayma, 1 - kayma, -1.5, 1.5)
 var bellek = Eşlem.boş[Dörtgen, İmge]
 var resim = resimGötür -> Resim.imge(mKümesi(başlangıç))
 çiz(resim)
 fareyiTanımla(resim)
 
-tuşaBasınca { t =>
-    t match {
-        case tuşlar.VK_SPACE => geri()
-        case tuşlar.VK_LEFT  => geri()
-        case tuşlar.VK_RIGHT => ileri()
-        case tuşlar.VK_UP    => yaklaş(0.80)
-        case tuşlar.VK_DOWN  => uzaklaş(1.25)
-        case _               =>
+def tuşlarıTanımla() {
+    tuşaBasınca { t =>
+        t match {
+            case tuşlar.VK_SPACE => geri()
+            case tuşlar.VK_LEFT  => geri()
+            case tuşlar.VK_RIGHT => ileri()
+            case tuşlar.VK_UP    => yaklaş(0.90) // fareyi merkez alır
+            case tuşlar.VK_DOWN  => uzaklaş(1.25)
+            case tuşlar.VK_P     => oynat()
+            case tuşlar.VK_R     => geriOynat()
+            case tuşlar.VK_O     => ortala()
+            case tuşlar.VK_Y     => yaklaş(0.90, yanlış)
+            case _               =>
+        }
     }
 }
+tuşlarıTanımla()
 // yaklaştıkça bir önceki bakış penceresini saklayalım ki ona geri dönebilelim
 // geri gidince de daha ileridekileri saklayacağız ki ileri geri gidebilelim
 class Pencere {
@@ -222,9 +245,10 @@ class Pencere {
 }
 val pGeri = new Pencere // geride kalan yani daha uzaktan bakışlar
 val pİleri = new Pencere // ilerideki yani daha yakından bakışlar
-def geri() {
+def geri(): İkil = {
     if (pGeri.boşMu()) {
         satıryaz("En başa döndük. Daha geri gidemeyiz.")
+        doğru
     }
     else {
         sıra -= 1
@@ -233,11 +257,13 @@ def geri() {
         resim = resimGötür -> Resim.imge(mKümesi(pGeri.al()))
         resim.çiz()
         fareyiTanımla(resim)
+        yanlış
     }
 }
-def ileri() {
+def ileri(): İkil = {
     if (pİleri.boşMu()) {
         satıryaz("En sona geldik. Daha ileri gidemeyiz.")
+        doğru
     }
     else {
         sıra += 1
@@ -246,25 +272,65 @@ def ileri() {
         resim = resimGötür -> Resim.imge(mKümesi(pİleri.al()))
         resim.çiz()
         fareyiTanımla(resim)
+        yanlış
     }
 }
-def yaklaş(oran: Kesir = 0.80) = {
+def yaklaş(oran: Kesir = 0.80, ortala: İkil = doğru, hedef: Nokta = fareKonumu) = {
     sıra += 1
     pGeri.koy(sonDörtgen)
-    ayarla(oran, doğru)
+    ayarla(oran, ortala, hedef)
 }
 def uzaklaş(oran: Kesir = 1.25) = {
     pİleri.koy(sonDörtgen)
     ayarla(oran)
 }
-def ayarla(oran: Kesir, ortala: İkil = yanlış) {
+def ayarla(oran: Kesir, ortala: İkil = yanlış, hedef: Nokta = fareKonumu) {
     val yeni =
-        if (ortala) sonDörtgen.büyüt(oran).ortala(nTuvaldenMKye(fareKonumu))
+        if (ortala && fareResmeDokunuyor)
+            sonDörtgen.büyüt(oran).ortala(nTuvaldenMKye(hedef))
         else sonDörtgen.büyüt(oran)
     resim.sil()
     resim = resimGötür -> Resim.imge(mKümesi(yeni))
     resim.çiz()
     fareyiTanımla(resim)
+}
+def fareResmeDokunuyor() =
+    fareKonumu.x > -kenar / 2 && fareKonumu.x < kenar / 2 &&
+        fareKonumu.y > -kenar / 2 && fareKonumu.y < kenar / 2
+
+def ortala() {
+    val (hedefX, hedefY) = (fareKonumu.x, fareKonumu.y)
+    val (başlangıçX, başlangıçY) = (0, 0)
+    val (araX, araY) = (hedefX - başlangıçX, hedefY - başlangıçY)
+    val oynamaOranı = enİrisi(
+        mutlakDeğer(araX) / tuvalAlanı.en,
+        mutlakDeğer(araY) / tuvalAlanı.boy)
+    val adımSayısı =
+        if (oynamaOranı > 0.10) 5 // yüzde ondan fazla hareket gerekiyor
+        else if (oynamaOranı > 0.05) 3
+        else 2
+    satıryaz(s"$adımSayısı adımda ortalıyoruz")
+    val (adımX, adımY) = (araX / adımSayısı, araY / adımSayısı)
+    val n = Nokta(başlangıçX + adımX, başlangıçY + adımY)
+    yinele(adımSayısı) {
+        yaklaş(1.0, doğru, n)
+    }
+}
+def oynat() {
+    canlandır {
+        if (ileri()) {
+            durdur
+            tuşlarıTanımla()
+        }
+    }
+}
+def geriOynat() {
+    canlandır {
+        if (geri()) {
+            durdur
+            tuşlarıTanımla()
+        }
+    }
 }
 
 def nTuvaldenMKye(n: Nokta): Nokta = Nokta(
