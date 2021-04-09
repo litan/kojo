@@ -142,6 +142,15 @@ class TurkishAPITest extends FunSuite with Matchers {
     s2 shouldBe 1.4142 +- 0.0001
   }
 
+  test("Translations of math API should work -- misc") {
+    val x = 1.234
+    yuvarla(x) should be(1)
+    yuvarla(x, 1) should be(1.2)
+    val y = 1.5005
+    yuvarla(y) should be(2)
+    yuvarla(y,3) should be(1.501)
+  }
+
   test("Translation of require should work") {
     val pass = try {
       gerekli(true && doğru, "Bu doğru")
@@ -229,6 +238,9 @@ class TurkishAPITest extends FunSuite with Matchers {
     )
     e2.sayı should be(3)
     e2("mavi") should be(1)
+    var e3 = Eşlem( 1 -> 1, 2 -> 4, 4 -> 16, 16 -> 256 )
+    e3 += (10 -> 100)
+    e3(10) should be(100)
   }
 
   test("Translation of Array should work") {
@@ -267,6 +279,30 @@ class TurkishAPITest extends FunSuite with Matchers {
     val y2b = y2 :+ "Merhaba"
     (y2b :+ "Dünya!").size should be(2)
     y2b(0)(2) should be('r')
+  }
+
+  test("Translation for Set should work") {
+    var k1 = Küme.boş[Sayı]
+    k1.size should be(0)
+    k1 += 3
+    k1.size should be(1)
+    k1(3) should be(true)
+    k1(5) should be(false)
+    k1 += 5
+    k1(5) should be(true)
+    k1.foreach { e =>
+      (e<=5) should be(true)
+      (e>=3) should be(true)
+    }
+    k1 -= 3
+    k1(3) should be(false)
+    k1(5) should be(true)
+    var k2 = Küme(51, 18, 14, 10, 6)
+    k2.size should be(5)
+    for (s <- List(6, 10, 14, 18, 51)) { k2(s) should be(true) }
+    k2(2) should be(false)
+    k2 += 2
+    k2(2) should be(true)
   }
 
   test("Translations needed for mandelbrot sample should work") {

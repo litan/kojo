@@ -71,15 +71,13 @@ object TurkishAPI {
   }
   def yokMu[T](o: Belki[T]): İkil = !varMı(o)
 
-  type Yöney[T] = Vector[T]
-  object Yöney {
-    def apply[T](elemanlar: T*) = Vector.from(elemanlar)
-    def boş[T] = Vector.empty[T]
-  }
-
   type Dizi[T]=tr.Dizi[T]
   type Dizin[T]=tr.Dizin[T]
   type MiskinDizin[T]=tr.MiskinDizin[T]
+  type Küme[T] = tr.Küme[T]
+  type Yöney[T] = tr.Yöney[T]
+  val Küme = tr.Küme
+  val Yöney = tr.Yöney
 
   type Dizim[T]=tr.Dizim[T]
   type EsnekDizim[T]=tr.Dizim[T]
@@ -289,9 +287,10 @@ object TurkishAPI {
   val gücü = m.kuvveti _
   val (karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
   val (eüssü, radyana, dereceye, taban, tavan, yakını) = (m.eüssü _, m.radyana _, m.dereceye _, m.taban _, m.tavan _, m.yakını _)
-  val (işareti, sayıya, yuvarla, logTabanlı) = (m.işareti _, m.sayıya _, m.yuvarla _, m.logTabanlı _)
+  val (işareti, sayıya, logTabanlı) = (m.işareti _, m.sayıya _, m.logTabanlı _)
   // todo: can we use Number instead? 
   def rastgele = m.rastgele
+  def yuvarla(sayı: Number, basamaklar: Sayı = 0): Kesir = m.yuvarla(sayı, basamaklar)
   def mutlakDeğer(x: Sayı): Sayı = m.mutlakDeğer(x)
   def mutlakDeğer(x: Uzun): Uzun = m.mutlakDeğer(x)
   def mutlakDeğer(x: Kesir): Kesir = m.mutlakDeğer(x)
@@ -382,6 +381,8 @@ object TurkishAPI {
     def boy:Kesir = ta.height
     def x: Kesir = ta.x
     def y: Kesir = ta.y
+    def X = ta.x + ta.width
+    def Y = ta.y + ta.height
     // todo: more..
   }
   def yatayMerkezKonumu(uzunluk: Kesir): Kesir = tuvalAlanı.x + (tuvalAlanı.en - uzunluk) / 2

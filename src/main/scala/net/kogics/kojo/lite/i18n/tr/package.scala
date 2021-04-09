@@ -83,6 +83,18 @@ package object tr {
   type Dizin[A] = List[A]
   type MiskinDizin[C] = LazyList[C]
 
+  type Yöney[T] = Vector[T]
+  object Yöney {
+    def apply[T](elemanlar: T*) = Vector.from(elemanlar)
+    def unapplySeq[T](yler: Vector[T]) = Vector.unapplySeq(yler)
+    def boş[T] = Vector.empty[T]
+  }
+  type Küme[T] = Set[T]
+  object Küme {
+    def apply[T](elemanlar: T*) = Set.from(elemanlar)
+    def boş[T] = Set.empty[T]
+  }
+
   // Used in Conway's game of life code in the tutorial
   type Sayılar = Vector[Sayı]
   type UzunlukBirimi = UnitLen
@@ -98,6 +110,7 @@ package object tr {
   }
   object Dizi {
     def apply[B](elems: B*): Seq[B] = Seq.from(elems)
+    def unapplySeq[B](dizi: Seq[B]) = Seq.unapplySeq(dizi)
     def doldur[B](n1: Sayı)(f: Sayı => B) = Seq.tabulate(n1)(f)
     def doldur[B](n1: Sayı, n2: Sayı)(f: (Sayı, Sayı) => B) = Seq.tabulate(n1, n2)(f)
     def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı)(f: (Sayı, Sayı, Sayı) => B) = Seq.tabulate(n1, n2, n3)(f)
@@ -107,9 +120,11 @@ package object tr {
   }
   object Dizin {
     def apply[A](elems: A*): List[A] = List.from(elems)
+    def unapplySeq[A](list: List[A])  = List.unapplySeq(list)
   }
   object Sayılar {
     def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
+    def unapplySeq(ss: Sayılar) = Vector.unapplySeq(ss)
   }
   object MiskinDizin {
     def sayalım(başlangıç: Sayı, kaçarKaçar: Sayı = 1) = LazyList.from(başlangıç, kaçarKaçar)
