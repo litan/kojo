@@ -305,6 +305,17 @@ class TurkishAPITest extends FunSuite with Matchers {
     k2(2) should be(true)
   }
 
+  test("Translations of Character should work") {
+    for (c <- '0' to '9') Harf.sayıMı(c) should be(true)
+    Harf.sayıMı(' ') should be(false)
+    Harf.sayıMı('a') should be(false)
+    Harf.harfMi('a') should be(true)
+
+    /*
+     Harf.enUfağı should be('\u0000')
+     Harf.enİrisi should be('\uffff')
+     */
+  }
   test("Translations needed for mandelbrot sample should work") {
     case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
       def alanı() = (x2 - x1) * (y2 - y1)

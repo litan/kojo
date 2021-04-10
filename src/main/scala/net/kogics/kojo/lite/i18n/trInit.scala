@@ -57,6 +57,7 @@ object TurkishAPI {
   type İriKesir=tr.İriKesir
   type Harf=tr.Harf
   type Yazı=tr.Yazı
+  type EsnekYazı=tr.EsnekYazı
 
   type Belki[T]=tr.Belki[T]
   type Biri[T]=tr.Biri[T]
@@ -98,8 +99,15 @@ object TurkishAPI {
   type Eşlem[A,D] = tr.Eşlem[A,D]
   val Eşlem = tr.Eşlem
 
+  // use tuples, case classes or other structure types when more args seem to be needed
+  type İşlev1[D,R] = tr.İşlev1[D,R]
+  type İşlev2[D1,D2,R] = tr.İşlev2[D1,D2,R]
+  type İşlev3[D1,D2,D3,R] = tr.İşlev3[D1,D2,D3,R]
+  type Bölümselİşlev[D,R] = tr.Bölümselİşlev[D,R]
+
   val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) = (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
 
+  val Harf = tr.Harf
   val Nokta = tr.Nokta
   val Dizi = tr.Dizi
   val Dizin = tr.Dizin
