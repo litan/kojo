@@ -119,8 +119,8 @@ class Builtins(
   def readDouble(prompt: String): Double = readln(prompt).toDouble
   UserCommand("readDouble", List("promptString"), "Displays the given prompt in the output window and reads a Double-precision Real value that the user enters.")
 
-  UserCommand("random", List("upperBound"), "Returns a random Integer between 0 (inclusive) and upperBound (exclusive).")
-  UserCommand("randomDouble", List("upperBound"), "Returns a random Double-precision Real between 0 (inclusive) and upperBound (exclusive).")
+  UserCommand("random", List("lowerBound", "upperBound"), "Returns a random Integer between 0 (inclusive) and upperBound (exclusive).")
+  UserCommand("randomDouble", List("lowerBound", "upperBound"), "Returns a random Double-precision Real between 0 (inclusive) and upperBound (exclusive).")
 
   UserCommand("color", List("red", "green", "blue"), "Creates a new color based on the specified red, green, and blue levels.")
 
