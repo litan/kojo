@@ -73,10 +73,10 @@ package object tr {
   type Biri[T] = Some[T]
   val Hiçbiri = None
   object Biri {
-    def apply[T](elem: T) = Some(elem)
+    def apply[T](elem: T): Belki[T] = Some(elem)
     def unapply[T](b: Belki[T]) = b match {
       case None    => Hiçbiri
-      case Some(n) => n
+      case Some(n) => Biri(n)
     }
   }
 

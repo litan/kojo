@@ -57,7 +57,8 @@ def kayak = Resim {
     ileri(3)
 }
 
-val kayakçı = kalemRengi(siyah) * götür(10, 1) * büyüt(0.6) -> Resim.dizi(
+val başlamaNoktası = Nokta(11, 1)
+val kayakçı = kalemRengi(siyah) * götür(başlamaNoktası) * büyüt(0.4) -> Resim.dizi(
     götür(-2, -2) * döndür(-75) -> kayak,
     boyaRengi(mor) * döndür(-120) -> r3,
     boyaRengi(sarı) * döndür(150) * götür(0, -3.5) -> r1,
@@ -122,9 +123,10 @@ def ağaçlarıYap(n: Sayı): Resim = {
     yap(n, 0.9)
 }
 
-val ağaçlar = döndür(7) * götür(-10, 0) -> ağaçlarıYap(9)
+val ağaçlar = döndür(7) * götür(-10, 1) -> ağaçlarıYap(9)
 silVeÇizimBiriminiKur(santim)
 gizle()
+yaklaş(0.4, -1, -1)
 çiz(yer, ağaçlar, kayakçı)
 
 canlandır {
@@ -134,11 +136,11 @@ canlandır {
     else {
         kayakçı.götür(-0.09, -0.045)
     }
-    if (kayakçı.uzaklık(yer) > 1) {
-        kayakçı.kondur(10, 1)
+    if (kayakçı.uzaklık(yer) > 2) {
+        kayakçı.kondur(başlamaNoktası)
     }
 }
 
 kayakçı.fareyeTıklayınca { (x, y) =>
-    kayakçı.kondur(10, 1)
+    kayakçı.kondur(başlamaNoktası)
 }

@@ -81,7 +81,7 @@ object TurkishAPI {
   val Yöney = tr.Yöney
 
   type Dizim[T]=tr.Dizim[T]
-  type EsnekDizim[T]=tr.Dizim[T]
+  type EsnekDizim[T]=tr.EsnekDizim[T]
   val Dizim = tr.Dizim
   val EsnekDizim = tr.EsnekDizim
 
@@ -485,7 +485,9 @@ object TurkishAPI {
 
   import tr.{res => r}
   val (döndür, döndürMerkezli, filtre, gürültü, örgü) = (r.döndür _, r.döndürMerkezli _, r.filtre _, r.gürültü _, r.örgü _)
-  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, götür, kaydır, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.götür _, r.kaydır _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
+  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, kaydır, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.kaydır _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
+  def götür(n: Nokta) = r.götür(n)
+  def götür(x: Kesir, y: Kesir) = r.götür(x, y)
   def büyüt(oran: Kesir) = r.büyüt(oran)
   def büyüt(xOranı: Kesir, yOranı: Kesir) = r.büyüt(xOranı, yOranı)
   def ışıklar(ışıklar: com.jhlabs.image.LightFilter.Light*) = r.ışıklar(ışıklar: _*)
@@ -528,6 +530,8 @@ object TurkishAPI {
     val delta = buSaniye - t0
     println(f"$başlık $delta%.3f saniye $bitiş")
   }
+
+  def DokumaBoya(dosya: Yazı, x: Kesir, y: Kesir) = richBuiltins.TexturePaint(dosya, x, y)
 
   // more to come (:-)
 }

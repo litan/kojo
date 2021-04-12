@@ -115,6 +115,12 @@ class TurkishAPITest extends FunSuite with Matchers {
     yokMu(o1) should be(false)
     varMı(Hiçbiri) should be(false)
     yokMu(Hiçbiri) should be(true)
+    val o2 = Hiçbiri
+    val test = for (o <- List(o1, o2)) yield(o match {
+      case Biri(n) => n
+      case Hiçbiri => -1
+    })
+    test should be(List(3, -1))
   }
   
   test("Translations of math API should work -- abs == mutlakDeğer") {
@@ -259,6 +265,20 @@ class TurkishAPITest extends FunSuite with Matchers {
   }
 
   test("Translation of mutable.ArrayBuffer should work") {
+    val ed1 = EsnekDizim.boş[Sayı]
+    ed1.sayı should be(0)
+    ed1 += 42
+    ed1.sayı should be(1)
+    ed1 += 2002
+    ed1 += 2006
+    ed1 += 2011
+    ed1(0) should be(42)
+    ed1.çıkar(0)
+    ed1(0) should be(2002)
+    ed1(1) should be(2006)
+    ed1.sayı should be(3)
+    ed1.sil()
+    ed1.sayı should be(0)
     import net.kogics.kojo.core.Point
     val noktalar = EsnekDizim(Point(-100, -50), Point(100, -50), Point(-100, 50))
     noktalar.sayı should be(3)

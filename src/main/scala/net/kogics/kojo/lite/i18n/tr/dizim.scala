@@ -46,9 +46,14 @@ class Dizim[T](val a: Array[T]) {
 
 object EsnekDizim {
   def apply[T](elemanlar: T*) = new EsnekDizim[T](ArrayBuffer.from(elemanlar))
+  def boş[T] = new EsnekDizim[T](ArrayBuffer.empty[T])
 }
 class EsnekDizim[T](val a: ArrayBuffer[T]) {
+  def apply(yer: Sayı) = a(yer)
   def sayı = a.size
   def ekle(eleman: T) = {a.append(eleman); this}
+  def +=(eleman: T) = ekle(eleman)
+  def çıkar(yer: Sayı) = a.remove(yer)
+  def sil() = a.clear()
   def dizi = a.toSeq
 }

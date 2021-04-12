@@ -43,7 +43,7 @@ pages :+= Page(
             { pgHeader("Kojo ile Arduino Programlama Yapalım!") }
           Arduino anakartından haberin oldu mu? Pazarda bulması zor ya da pahalı elektronik ve akıllı cihazları evde yapmak artık çok kolay! Hatta kendin icat ederek yepyeni cihazlar yapabilmek çok güzel olurdu diyorsan, okumaya devam! İşe şu 15 dakikalık TED konuşmasını izleyerek başlayabilirsin: { satırarası(2) }
 
-          <a href="http://www.ted.com/talks/massimo_banzi_how_arduino_is_open_sourcing_imagination?language=tr"> Arduino Nasıl Açık Kaynaklı Hayal Gücü Oldu</a> { satırarası(3) }
+          <a href="http://www.ted.com/talks/massimo_banzi_how_arduino_is_open_sourcing_imagination?language=tr"> Arduino Nasıl Açık Kaynaklı Hayal Gücü Oldu</a> { satırarası(2) }
 
           Arduino'nu programlaman ve cihazına beceriler katman Kojo'yla daha da kolay. Bunun için Kojo ile Arduino kartın arasında bir köprü oluşturacağız. Bu köprünün iki parçası var:
             <ul>
