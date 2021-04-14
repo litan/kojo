@@ -159,8 +159,16 @@ object Help {
     "readln" -> <div><strong>readln</strong>(promptString) - Displays the given prompt in the output window and reads a line that the user enters.</div>.toString,
     "readInt" -> "readInt(promptString) - Displays the given prompt in the output window and reads an Integer value that the user enters.",
     "readDouble" -> "readDouble(promptString) - Displays the given prompt in the output window and reads a Double-precision Real value that the user enters.",
-    "random" -> <div><strong>random</strong>(upperBound) - Returns a random integer between 0 (inclusive) and upperBound (exclusive).</div>.toString,
-    "randomDouble" -> <div><strong>randomDouble</strong>(upperBound) - Returns a random double-precision decimal number between 0 (inclusive) and upperBound (exclusive).</div>.toString,
+    "random" ->
+      <div>
+        <strong>random</strong>(upperBound) - Returns a random integer between 0 (inclusive) and upperBound (exclusive).<br/><br/>
+        <strong>random</strong>(lowerBound, upperBound) - Returns a random integer between lowerBound (inclusive) and upperBound (exclusive).
+      </div>.toString,
+    "randomDouble" ->
+      <div>
+        <strong>randomDouble</strong>(upperBound) - Returns a random double-precision decimal number between 0 (inclusive) and upperBound (exclusive).<br/><br/>
+        <strong>randomDouble</strong>(lowerBound, upperBound) - Returns a random double-precision decimal number between lowerBound (inclusive) and upperBound (exclusive).<br/><br/>
+      </div>.toString,
     "randomBoolean" -> "randomBoolean - Returns a random boolean value. This is like a coin toss.",
     "randomFrom" -> "randomFrom(sequence) - Returns a random value from the given sequence.",
     "round" -> <div><strong>round</strong>(n, digits) - Rounds the given number n to the specified number of digits after the decimal point.</div>.toString,
