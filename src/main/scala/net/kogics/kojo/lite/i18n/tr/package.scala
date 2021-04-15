@@ -19,6 +19,7 @@ package net.kogics.kojo.lite.i18n
 
 import net.kogics.kojo.core.{Turtle, UnitLen, Pixel, Cm, Inch, VertexShape, Rectangle}
 import java.awt.{Color, Paint}
+import java.awt.image.BufferedImage
 import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast, Point}
 import io.github.jdiemke.triangulation.Triangle2D
 import net.kogics.kojo.lite.{CoreBuiltins, Builtins}
@@ -66,21 +67,34 @@ package object tr {
   // Yazı
   type Harf = Char
   type Yazı = String
+  type EsnekYazı=collection.mutable.StringBuilder
 
   type Belki[T] = Option[T]
   type Biri[T] = Some[T]
   val Hiçbiri = None
   object Biri {
-    def apply[T](elem: T) = Some(elem)
+    def apply[T](elem: T): Belki[T] = Some(elem)
     def unapply[T](b: Belki[T]) = b match {
       case None    => Hiçbiri
-      case Some(n) => n
+      case Some(n) => Biri(n)
     }
   }
 
-  type Dizi[B] = collection.Seq[B]
+  type Dizi[B] = collection.Seq[B] // why collection?
   type Dizin[A] = List[A]
   type MiskinDizin[C] = LazyList[C]
+
+  type Yöney[T] = Vector[T]
+  object Yöney {
+    def apply[T](elemanlar: T*) = Vector.from(elemanlar)
+    def unapplySeq[T](yler: Vector[T]) = Vector.unapplySeq(yler)
+    def boş[T] = Vector.empty[T]
+  }
+  type Küme[T] = Set[T]
+  object Küme {
+    def apply[T](elemanlar: T*) = Set.from(elemanlar)
+    def boş[T] = Set.empty[T]
+  }
 
   // Used in Conway's game of life code in the tutorial
   type Sayılar = Vector[Sayı]
@@ -97,12 +111,21 @@ package object tr {
   }
   object Dizi {
     def apply[B](elems: B*): Seq[B] = Seq.from(elems)
+    def unapplySeq[B](dizi: Seq[B]) = Seq.unapplySeq(dizi)
+    def doldur[B](n1: Sayı)(f: Sayı => B) = Seq.tabulate(n1)(f)
+    def doldur[B](n1: Sayı, n2: Sayı)(f: (Sayı, Sayı) => B) = Seq.tabulate(n1, n2)(f)
+    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı)(f: (Sayı, Sayı, Sayı) => B) = Seq.tabulate(n1, n2, n3)(f)
+    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı, n4: Sayı)(f: (Sayı, Sayı, Sayı, Sayı) => B) = Seq.tabulate(n1, n2, n3, n4)(f)
+    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı, n4: Sayı, n5: Sayı)(f: (Sayı, Sayı, Sayı, Sayı, Sayı) => B) =
+      Seq.tabulate(n1, n2, n3, n4, n5)(f)
   }
   object Dizin {
     def apply[A](elems: A*): List[A] = List.from(elems)
+    def unapplySeq[A](list: List[A])  = List.unapplySeq(list)
   }
   object Sayılar {
     def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
+    def unapplySeq(ss: Sayılar) = Vector.unapplySeq(ss)
   }
   object MiskinDizin {
     def sayalım(başlangıç: Sayı, kaçarKaçar: Sayı = 1) = LazyList.from(başlangıç, kaçarKaçar)
@@ -111,7 +134,33 @@ package object tr {
   val (doğru, yanlış) = (true, false)
   val (yavaş, orta, hızlı, çokHızlı) = (Slow, Medium, Fast, SuperFast)
   val (noktaSayısı, santim, inç) = (Pixel, Cm, Inch)
-  val Boş = scala.collection.immutable.Nil
+  val Boş = collection.immutable.Nil
 
-  type ResimDosyası = richBuiltins.Image
+  type İmge = richBuiltins.Image // java.awt.Image
+  type Bellekteİmge = BufferedImage
+  type Bellekteİmgeİşlemi = java.awt.image.BufferedImageOp
+
+  type İşlev1[D,R] = Function1[D,R]
+  type İşlev2[D1,D2,R] = Function2[D1,D2,R]
+  type İşlev3[D1,D2,D3,R] = Function3[D1,D2,D3,R]
+  type Bölümselİşlev[D,R] = PartialFunction[D,R]
+
+  // todo: move to harf.scala?
+  object Harf {
+    def sayıMı(h: Harf): İkil = Character.isDigit(h)
+    def harfMi(h: Harf): İkil = Character.isLetter(h)
+    // todo: more..
+
+    def yazıya() = "nesne scala.Harf" // toString returns "object scala.Char"
+    def kutuyaKoy(h: Harf) = Char.box(h)
+    def kutudanÇıkar(h: HerGönder) = Char.unbox(h)
+
+    def sayıya(h: Harf) = Char.char2int(h)
+    def uzuna(h: Harf) = Char.char2long(h)
+    def kesire(h: Harf) = Char.char2double(h)
+    def ufakkesire(h: Harf) = Char.char2float(h)
+
+    val enUfağı = Char.MaxValue
+    val enİrisi = Char.MinValue
+  }
 }

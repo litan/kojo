@@ -57,6 +57,7 @@ object TurkishAPI {
   type İriKesir=tr.İriKesir
   type Harf=tr.Harf
   type Yazı=tr.Yazı
+  type EsnekYazı=tr.EsnekYazı
 
   type Belki[T]=tr.Belki[T]
   type Biri[T]=tr.Biri[T]
@@ -74,6 +75,15 @@ object TurkishAPI {
   type Dizi[T]=tr.Dizi[T]
   type Dizin[T]=tr.Dizin[T]
   type MiskinDizin[T]=tr.MiskinDizin[T]
+  type Küme[T] = tr.Küme[T]
+  type Yöney[T] = tr.Yöney[T]
+  val Küme = tr.Küme
+  val Yöney = tr.Yöney
+
+  type Dizim[T]=tr.Dizim[T]
+  type EsnekDizim[T]=tr.EsnekDizim[T]
+  val Dizim = tr.Dizim
+  val EsnekDizim = tr.EsnekDizim
 
   type Sayılar=tr.Sayılar
   type UzunlukBirimi=tr.UzunlukBirimi
@@ -84,9 +94,20 @@ object TurkishAPI {
 
   type Aralık = tr.Aralık
   val Aralık = tr.Aralık
+  type Yığın[T] = tr.Yığın[T]
+  val Yığın = tr.Yığın
+  type Eşlem[A,D] = tr.Eşlem[A,D]
+  val Eşlem = tr.Eşlem
+
+  // use tuples, case classes or other structure types when more args seem to be needed
+  type İşlev1[D,R] = tr.İşlev1[D,R]
+  type İşlev2[D1,D2,R] = tr.İşlev2[D1,D2,R]
+  type İşlev3[D1,D2,D3,R] = tr.İşlev3[D1,D2,D3,R]
+  type Bölümselİşlev[D,R] = tr.Bölümselİşlev[D,R]
 
   val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) = (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
 
+  val Harf = tr.Harf
   val Nokta = tr.Nokta
   val Dizi = tr.Dizi
   val Dizin = tr.Dizin
@@ -268,30 +289,32 @@ object TurkishAPI {
   def yaz(data: Her) = print(data)
 
   import tr.{matematik => m}
+  val matematik = m // so that coders can look up math functions using code completion in Kojo
   def piSayısı: Kesir = math.Pi
   def eSayısı: Kesir = math.E
   val gücü = m.kuvveti _
-  val (yuvarla, karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.yuvarla _, m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
+  val (karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
   val (eüssü, radyana, dereceye, taban, tavan, yakını) = (m.eüssü _, m.radyana _, m.dereceye _, m.taban _, m.tavan _, m.yakını _)
-
-  // todo: don't we have a type class for Num?
-  def mutlakDeğer(x: Sayı): Sayı = math.abs(x)
-  def mutlakDeğer(x: Uzun): Uzun = math.abs(x)
-  def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
-  def mutlakDeğer(x: UfakKesir): UfakKesir = math.abs(x)
-  def yakın(x: Kesir): Uzun = math.round(x)
-  def yakın(x: UfakKesir): Sayı = math.round(x)
-  def enİrisi(x: Sayı, y: Sayı): Sayı = math.max(x, y)
-  def enUfağı(x: Sayı, y: Sayı): Sayı = math.min(x, y)
-  def enİrisi(x: Uzun, y: Uzun): Uzun = math.max(x, y)
-  def enUfağı(x: Uzun, y: Uzun): Uzun = math.min(x, y)
-  def enİrisi(x: Kesir, y: Kesir ): Kesir = math.max(x, y)
-  def enUfağı(x: Kesir, y: Kesir ): Kesir = math.min(x, y)
-  def enİrisi(x: UfakKesir, y: UfakKesir ): UfakKesir = math.max(x, y)
-  def enUfağı(x: UfakKesir, y: UfakKesir ): UfakKesir = math.min(x, y)
-
+  val (işareti, sayıya, logTabanlı) = (m.işareti _, m.sayıya _, m.logTabanlı _)
+  // todo: can we use Number instead? 
+  def rastgele = m.rastgele
+  def yuvarla(sayı: Number, basamaklar: Sayı = 0): Kesir = m.yuvarla(sayı, basamaklar)
+  def mutlakDeğer(x: Sayı): Sayı = m.mutlakDeğer(x)
+  def mutlakDeğer(x: Uzun): Uzun = m.mutlakDeğer(x)
+  def mutlakDeğer(x: Kesir): Kesir = m.mutlakDeğer(x)
+  def mutlakDeğer(x: UfakKesir): UfakKesir = m.mutlakDeğer(x)
+  def yakın(x: Kesir): Uzun = m.yakın(x)
+  def yakın(x: UfakKesir): Sayı = m.yakın(x)
+  def enİrisi(x: Sayı, y: Sayı): Sayı = m.enİrisi(x, y)
+  def enUfağı(x: Sayı, y: Sayı): Sayı = m.enUfağı(x, y)
+  def enİrisi(x: Uzun, y: Uzun): Uzun = m.enİrisi(x, y)
+  def enUfağı(x: Uzun, y: Uzun): Uzun = m.enUfağı(x, y)
+  def enİrisi(x: Kesir, y: Kesir): Kesir = m.enİrisi(x, y)
+  def enUfağı(x: Kesir, y: Kesir): Kesir = m.enUfağı(x, y)
+  def enİrisi(x: UfakKesir, y: UfakKesir): UfakKesir = m.enİrisi(x, y)
+  def enUfağı(x: UfakKesir, y: UfakKesir): UfakKesir = m.enUfağı(x, y)
+  //
   // ../CoreBuiltins.scala
-  def rastgele = math.random()
   def rastgele(üstSınır: Sayı) = builtins.random(üstSınır)
   def rastgele(altSınır: Sayı, üstSınır: Sayı) = builtins.random(altSınır, üstSınır)
   def rastgeleSayı = builtins.randomInt
@@ -362,10 +385,12 @@ object TurkishAPI {
     def ta = richBuiltins.canvasBounds
     def eni = en
     def boyu = boy
-    def en = ta.width
-    def boy = ta.height
-    def x = ta.x
-    def y = ta.y
+    def en: Kesir = ta.width
+    def boy:Kesir = ta.height
+    def x: Kesir = ta.x
+    def y: Kesir = ta.y
+    def X = ta.x + ta.width
+    def Y = ta.y + ta.height
     // todo: more..
   }
   def yatayMerkezKonumu(uzunluk: Kesir): Kesir = tuvalAlanı.x + (tuvalAlanı.en - uzunluk) / 2
@@ -391,6 +416,7 @@ object TurkishAPI {
 
   // ../DrawingCanvasAPI.scala
   def yaklaş(oran: Kesir) = richBuiltins.tCanvas.zoom(oran)
+  def yaklaş(oran: Kesir, xMerkez: Kesir, yMerkez: Kesir) = richBuiltins.tCanvas.zoom(oran, xMerkez, yMerkez)
   def yaklaşXY(xOran: Kesir, yOran: Kesir, xMerkez: Kesir, yMerkez: Kesir) =
     richBuiltins.tCanvas.zoomXY(xOran, yOran, xMerkez, yMerkez)
   def yaklaşmayıSil() = richBuiltins.tCanvas.resetPanAndZoom()
@@ -449,14 +475,19 @@ object TurkishAPI {
   def sırayaSok(kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.schedule(kaçSaniyeSonra)(komut)
   def sırayaSok(n: Sayı, kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.scheduleN(n, kaçSaniyeSonra)(komut)
 
-  type ResimDosyası = tr.ResimDosyası
   type Yöney2B = tr.Yöney2B
-  val Yöney2B = tr.Yöney2B
   type Resim = tr.Resim
+  type İmge = tr.İmge
+  type Bellekteİmge = tr.Bellekteİmge
+  type Bellekteİmgeİşlemi = tr.Bellekteİmgeİşlemi
+  val Yöney2B = tr.Yöney2B
   val Resim = tr.Resim
+
   import tr.{res => r}
   val (döndür, döndürMerkezli, filtre, gürültü, örgü) = (r.döndür _, r.döndürMerkezli _, r.filtre _, r.gürültü _, r.örgü _)
-  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, götür, kaydır, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.götür _, r.kaydır _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
+  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, kaydır, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.kaydır _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
+  def götür(n: Nokta) = r.götür(n)
+  def götür(x: Kesir, y: Kesir) = r.götür(x, y)
   def büyüt(oran: Kesir) = r.büyüt(oran)
   def büyüt(xOranı: Kesir, yOranı: Kesir) = r.büyüt(xOranı, yOranı)
   def ışıklar(ışıklar: com.jhlabs.image.LightFilter.Light*) = r.ışıklar(ışıklar: _*)
@@ -470,8 +501,37 @@ object TurkishAPI {
   val (çizMerkezde, çizSahne, çizMerkezdeYazı, merkezeTaşı) = (r.çizMerkezde _, r.çizSahne _, r.çizMerkezdeYazı _, r.merkezeTaşı _)
   val (sahneKenarındanYansıtma, engeldenYansıtma) = (r.sahneKenarındanYansıtma _, r.engeldenYansıtma _)
 
+  def imge(boy: Sayı, en: Sayı) = r.imge(boy, en)
+  def imge(dosya: Yazı) = r.imge(dosya)
+  def imge(url: java.net.URL) = r.imge(url)
+  val (imgeNoktası, imgeNoktasınıKur) = (r.imgeNoktası _, r.imgeNoktasınıKur _)
+
   import tr.arayuz
   val ay = arayuz
+  /*
+  type Parça = ay.Parça
+  type Sıra = ay.Sıra
+  type Satır = ay.Satır
+  type Sütun = ay.Sütun
+  val Sütun = ay.Sütun
+  type Yazıgirdisi[T] = ay.Yazıgirdisi[T]
+  val Yazıgirdisi = ay.Yazıgirdisi
+  type Yazıalanı = ay.Yazıalanı
+  type Tanıt = ay.Tanıt
+  type Düğme = ay.Düğme
+  type Açkapa = ay.Açkapa
+  type Salındıraç[T] = ay.Salındıraç[T] 
+  type Kaydıraç = ay.Kaydıraç
+   */
+
+  def zamanTut(başlık: Yazı = "Zaman ölçümü:")(işlev: => Birim)(bitiş: Yazı = "sürdü."): Birim = { // timeit in Builtins.scala
+    val t0 = buSaniye
+    işlev
+    val delta = buSaniye - t0
+    println(f"$başlık $delta%.3f saniye $bitiş")
+  }
+
+  def DokumaBoya(dosya: Yazı, x: Kesir, y: Kesir) = richBuiltins.TexturePaint(dosya, x, y)
 
   // more to come (:-)
 }

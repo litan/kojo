@@ -15,7 +15,7 @@ case class Dikdörtgen(x: Kesir, y: Kesir, en: Kesir,
                       boy: Kesir, var renk: Renk = beyaz2)
 
 // yatay böleceksek: z -> y, yoksa dikey böleceksek: z -> x
-def dikdörtgenleriBöl(dörtgenler: Vector[Dikdörtgen], z: Kesir, yatay: İkil) = {
+def dikdörtgenleriBöl(dörtgenler: Yöney[Dikdörtgen], z: Kesir, yatay: İkil) = {
     var çıktı = dörtgenler
     yineleİçin(dörtgenler.length - 1 to 0 by -1) { i =>
         val dörtgen = dörtgenler(i)
@@ -35,11 +35,11 @@ def böl(dörtgen: Dikdörtgen, z: Kesir, yatay: İkil) = {
     val gen = z - (if (yatay) y else x)
     val dörtgenA = if (yatay) Dikdörtgen(x, y, en, gen) else Dikdörtgen(x, y, gen, boy)
     val dörtgenB = if (yatay) Dikdörtgen(x, z, en, boy - gen) else Dikdörtgen(z, y, en - gen, boy)
-    Vector(dörtgenA, dörtgenB)
+    Yöney(dörtgenA, dörtgenB)
 }
 
 // bütün tuvali kaplayan bir dikdörtgenle başlıyoruz
-var dörtgenler = Vector(Dikdörtgen(ta.x, ta.y, ta.eni, ta.boyu))
+var dörtgenler = Yöney(Dikdörtgen(ta.x, ta.y, ta.eni, ta.boyu))
 val n = 7
 val adımx = ta.eni / (n + 1)
 val adımy = ta.boyu / (n + 1)

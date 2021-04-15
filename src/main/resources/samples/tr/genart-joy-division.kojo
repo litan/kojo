@@ -13,13 +13,13 @@ case class Nokta(x: Kesir, y: Kesir)
 // Bir sıra dağ nasıl tanımlanır. Her bir x koordinatı için y koordinatını 
 // yani dağın o noktadaki değerini belirleyerek.
 // EğikÇizgi sınıfıyla bu iş tamam. Her bir EğikÇizgi nesnesi bir sıradağı tanımlayacak.
-case class EğikÇizgi(noktalar: Vector[Nokta]) // Vector sıralı bir Nokta kümesi tanımlıyor
+case class EğikÇizgi(noktalar: Yöney[Nokta]) // Yöney sıralı bir Nokta kümesi tanımlıyor
 // EğikÇizgi yerine SıraDağ adını verseydik daha iyi olur muydu?
 
 // Sıra sıra sıra dağlar çizmek istiyoruz. Önce herbir sıradağını hesaplayıp kümeye koyalım
-var çizgiler = Vector.empty[EğikÇizgi] // bu da boş bir EğikÇizgi kümesi, yani sıra sıra sıra dağlar 
+var çizgiler = Yöney.boş[EğikÇizgi] // bu da boş bir EğikÇizgi kümesi, yani sıra sıra sıra dağlar 
 yineleİçin(rangeTo(ta.y, ta.y + ta.boyu - 5 * dikeyAdım, dikeyAdım)) { y =>
-    var noktalar = Vector.empty[Nokta] // boş Nokta kümesiyle başlayalım
+    var noktalar = Yöney.boş[Nokta] // boş Nokta kümesiyle başlayalım
     yineleİçin(rangeTo(ta.x, ta.x + ta.eni, yatayAdım)) { x =>
         val f = mutlakDeğer(x / ta.eni * 2) // 0 ile 1 arasına taşıdık
         val f1 = (1 - f) * (1 - f) * 150  // x küçüldükçe f1 büyüyör

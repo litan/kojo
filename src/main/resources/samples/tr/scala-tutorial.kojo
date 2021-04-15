@@ -92,7 +92,7 @@ def tPage(title:String,h:SHtm *)={
     </body>    
     
 }
-val codeExamples = new Array[String](1000)
+val codeExamples = new Array[String](1000) // no need to translate this Array
 var codeID = 0 
 // Mark up DSL definitions class
 
@@ -150,7 +150,7 @@ pages += Page(
   name = "GS",
   body = tPage("Başlayalım",
     "Başlayalım".h2,
-    "Kılavuzcuğumuzda pek çok yazılımcık örneği bulacaksın. Onları buradan kolaylıkla çalıştırabilirsin. Herhangi birinin üstüne tıkladığında o örnek, yazılımcık düzenleyicisine taşınır ve çalışır. Yani hepsini yazmana gerek yok. Hatta yazılımcığı çalıştırma düğmesine bile tıklamaya gerek kalmıyor. Ayrıca, işin bir de güzel yanı şu: istediğin değişiklileri orada yapıp tekrar çalıştırabilirsin. Bunu için düzenleyicinin hemen üzerindeki yeşil üçgene tıklaman yeter. Haydi şimdi bunu deneyelim. Aşağıdaki mesajı Bülent yerine kendi adını yazıp tekrar çalıştırıver. Bu arada benim adım Bülent. Bu satırları siz Türkçe severler için severek çevirdim.".p,
+    "Kılavuzcuğumuzda pek çok yazılımcık örneği bulacaksın. Onları buradan kolaylıkla çalıştırabilirsin. Herhangi birinin üstüne tıkladığında o örnek, yazılımcık düzenleyicisine taşınır ve çalışır. Yani hepsini yazmana gerek yok. Hatta yazılımcığı çalıştırma düğmesine bile tıklamaya gerek kalmıyor. Ayrıca, işin bir güzel yanı da şu: istediğin değişiklileri orada yapıp tekrar çalıştırabilirsin. Bunun için düzenleyicinin hemen üzerindeki yeşil üçgene tıklaman yeter. Haydi şimdi bunu deneyelim. Aşağıdaki mesajı Bülent yerine kendi adını yazıp tekrar çalıştırıver. Bu arada benim adım Bülent. Bu satırları siz Türkçe severler için severek çevirdim.".p,
     """satıryaz("merhaba dünya! kaplumbağacık ve Bülent'ten hepinize selamlar, sevgiler")""".c,
     "Yaptığın değişikliğin sonucunu Çıktı Gözünde ya da Çizim Tuvalinde hemen göreceksin.".p,
     "Bu kılavuzcuk ilk sayfada gördüğün bölümlerden oluşuyor. Bir sonraki bölüme geçmek için, ya da bir önceki bölüme dönmek için bu pencerenin altındaki sağa ve sola bakan mavi daire içindeki beyaz üçgenlere tıkla. İlgini çeken bölüme de kolaylıkla atlayabilirsin istersen. Bunun için ilk sayfaya geri dönüp ordaki mavi ve altı çizili başlıklardan herhangi birine tıklayabilirsin. İlk sayfaya dönmek için en üstte solda menü yazıyor ya, ona tıklayıver. En alttaki mavi daire içindeki kareye basarsan bu kılavuzcuktan çıkıp Kojo'nun normal düzenine dönebilirsin. Çıkınca kılavuzcukta son seçtiğin yazılımcık kapanmaz. Onun üzerinde değişikler yapıp çalıştırmaya odaklanabilirsin.".p,
@@ -178,8 +178,8 @@ sağ(120)
     "Biraz daha uzun bir işlem yapalım:".p,
     "3.5*9.4+7/5".c,
     """Scala tam ve kesirli gibi değişik bir kaç sayı tipini tanır. Hepsinin bir tür adı var. Örneğin Sayı, Uzun, İriSayı, Kesir, vb. Bunları ileride detaylı olarak inceleyeceğiz. Yukarıdaki iki örnekten 4.0 ve 3.5 kesir (İngilizcesi Double), 4 ve 6 ise birer tam sayıdır (İngilizcede Integer, kısaca Int). Eğer bir matematiksel deyiş bir kaç tür sayı içiriyorsa Scala derleyicisi mümkünse sayının türünü biraz zorlayarak değiştirebilir.""".p,
-    """Bir deyişin sonucunu bir değişken kullanarak kaydedip daha sonra yine kullanabiliriz. Değişken isimleri (ve sonra göreceğimiz başka tür isimler) harf, sayı ve * / + - : = ! < > & ^ | gibi semboller kullanarak yazılır. Örneğin, "FutbolTopu", "BilardoTopuBeyaz1", "yardımHattı", "*+" and "Res4" (Result yani sonuç)...""".p,
-    """Bunun için iki yöntem vardır: "var" ve "val" komut sözcükleri. "val" (İngilizce value sözcüğünün kısaltması) ile sabit ve hiç değişmeyecek değerleri ve sonuçları saklayabiliriz. Ya neden bir de "var" (ingilizce variable sözcüğünün kısaltması) komutu var (var var ama varı kullanma! 8-)? Aşağıda bir örnekle ikisinin farkını hemen anlayacağız. "val" ile tanımlanan değerlerin sabit olması (ingilizcede 'immutable value') aslında çok önemli bir işlevsel programlama (functional programming) kavramıdır, ama bunu daha sonra yeri gelince daha iyi anlayacağız. Şimdilik mümkün oldukça 'var' yerine 'val' komutunu kullanmaya dikkat edelim. Bu sayede programın başka bir yerindeki değişkenleri yanlışlıkla bozamayız.""".p,
+    """Bir deyişin sonucunu bir değişken (aslında çoğunlukla bir değişmez değer) kullanarak kaydedip daha sonra yine kullanabiliriz. Değişken ve değişmez değer isimleri (ve sonra göreceğimiz başka tür isimler) harf, sayı ve * / + - : = ! < > & ^ | gibi semboller kullanarak yazılır. Örneğin, "FutbolTopu", "BilardoTopuBeyaz1", "yardımHattı", "*+" and "Res4" (Result yani sonuç)...""".p,
+    """Bunun için iki yöntem vardır: "var" ve "val" komut sözcükleri. "val" (İngilizce value sözcüğünün kısaltması) ile sabit ve hiç değişmeyecek değerleri ve sonuçları saklayabiliriz. Bunlara değişmez değer, ya da kısaca değişmez diyelim. Ya neden bir de "var" (ingilizce variable sözcüğünün kısaltması) komutu var (var var ama var'ı kullanma! 8-)? Aşağıda bir örnekle ikisinin farkını hemen anlayacağız. "val" ile tanımlanan değerlerin sabit olması (ingilizcede 'immutable value') aslında çok önemli bir işlevsel programlama (functional programming) kavramıdır, ama bunu daha sonra yeri gelince daha iyi anlayacağız. Şimdilik mümkün oldukça 'var' yerine 'val' komutunu kullanmaya dikkat edelim. Bu sayede programın başka bir yerindeki değişkenleri yanlışlıkla bozamayız.""".p,
     "val noktaSayısı=34+5".c,
     """Bir ya da daha fazla sayıda işlemin sonucunu çıktı gözüne 'satıryaz(deyiş1, deyiş2, deyişn)' komutunu kullanarak yazabiliriz. Deyişler arasına virgül koymayı unutmayalım. Gerekmez ama istersek virgülden sonra boşluk bırakarak yazılımın okunuşu biraz daha kolaylaştırabiliriz. Ama çıktı da durum başka. Orada boşluk bırakmak nasıl olur yakında göreceğiz.""".p,
     """satıryaz(noktaSayısı,3+2,noktaSayısı/2, 3.9/2.3)
@@ -282,7 +282,7 @@ satıryaz("ortak paydaların en büyüğü: " + y)
   val kare = i*i
   satıryaz(i, kare)
 }""".c,
-    "Biliyor musun, bu yineleme işlemlerini birden çok boyutta yapmak bilgisayarla çok kolay. Birden fazla aralık vereceğiz ve her aralık için de bir değişken. Tek dikkat etmemiz gereken ikisi arasına bir noktalı virgül koymak. Bakın ne kolay!".p,
+    "Biliyor musun, bu yineleme işlemlerini birden çok boyutta yapmak bilgisayarla çok kolay. Birden fazla aralık vereceğiz ve her aralık için de bir değişken (aslında değişiyor gibi göründüğüne bakma, bunlar da değişmez). Tek dikkat etmemiz gereken ikisi arasına bir noktalı virgül koymak. Bakın ne kolay!".p,
     """for(i <- 1 until 5 ; j <- "abc") satıryaz(i, j)""".c,
     """Bakın şu işe! Sayı yerine harfler kullandık! "for" yapısı içinde kullandığımız kümeler illa da sayılardan oluşmak zorunda değil yani. Genel olarak biz bunlara küme tekerleme diyebiliriz (İngilizcesi: iterating through a set or collection) yani teker teker her küme elemanını ele alıyoruz. "abc" yazısı da aslında bir harf kümesi ya da kolleksiyonu. Bakın hep küme ya da kolleksiyon dedim. Bu kavramlar yakın ama ufak farklılıkları var. Daha sonra bunlara verilen anlamı daha iyi anlayacağız. Şu anda çok da önemli değil gerçekten. Neyse. Harflerle tekerlemeye bir örnek daha verelim ve devam edelim:""".p,
     """for(c<-"merhaba!") satıryaz(c)""".c,
@@ -658,9 +658,9 @@ bul2(ağaç, "c")  // 0
 pages += Page(
   name = "STI",
   body = tPage("Dingin Türleme ve Tür Çıkarımı",
-    """Scala dingin türleme (static typing) yapan bir dil. Bu ne demek? Bütün değişkenlerin ve işlevlerin türü, program çalışmadan önce, yani derleme sırasında belirleniyor. Bütün diller böyle değil. Örneğin pek çok yazılımcının favorilerinden olan Python ve Ruby, devingen türlemeli diller (dynamically typed languages). Dingin türleme sayesinde pek çok yazım ve mantık hatası programı çalıştırmadan önce yani derleme sırasında yakalanır. Örneğin, yanlışlıkla bir işleve uygun olmayan tür bir nesneyi girdi olarak sokarsak, derleyici hemen yakalar ve bizden hatayı düzeltmemizi ister. Kısaca, her değerin türünün önceden belli olması hem faydalı hem de gerekli. Ama, buna rağmen yazılımcık örneklerimizde tür tanımlarının pek az olduğunu farketmiş olabilirsin. Bu nasıl oluyor? Çünkü Scala tür çıkarımında çok becerikli. Tür çıkarımı (type inference) bir değerin türünü kullanıldığı yere bakarak belirlemek demek.""".p,
+    """Scala dingin türleme (static typing) yapan bir dil. Bu ne demek? Bütün değişkenlerin, değişmezlerin ve işlevlerin türü, program çalışmadan önce, yani derleme sırasında belirleniyor. Bütün diller böyle değil. Örneğin pek çok yazılımcının favorilerinden olan Python ve Ruby, devingen türlemeli diller (dynamically typed languages). Dingin türleme sayesinde pek çok yazım ve mantık hatası programı çalıştırmadan önce yani derleme sırasında yakalanır. Örneğin, yanlışlıkla bir işleve uygun olmayan tür bir nesneyi girdi olarak sokarsak, derleyici hemen yakalar ve bizden hatayı düzeltmemizi ister. Kısaca, her değerin türünün önceden belli olması hem faydalı hem de gerekli. Ama, buna rağmen yazılımcık örneklerimizde tür tanımlarının pek az olduğunu farketmiş olabilirsin. Bu nasıl oluyor? Çünkü Scala tür çıkarımında çok becerikli. Tür çıkarımı (type inference) bir değerin türünü kullanıldığı yere bakarak belirlemek demek.""".p,
 
-    """Örneğin, 'val x = 3' yazalım. Derleyici elbette 3'ün yalın bir değer olduğunu ve ayrıca ne tür bir sayı olduğunu biliyor. 3 (kesirsiz bir) Sayı. Onun için derleyici 'x' değişkeninin türünün de Sayı olması gerektiği çıkarımında bulunuyor ve elbette yanılmıyor. Az da olsa bir kaç durum var ki derleyici tür çıkarımını beceremiyebiliyor. İşte o zaman, kafam karıştı der ve bir hata verir. Hatanın türü "type ambiguity" gibi birşeylerdir, yani tür belirsizliği. O durumda gerekli tür bilgisini yazılımcığa ekleyiverirsin.""".p,
+    """Örneğin, 'val x = 3' yazalım. Derleyici elbette 3'ün yalın bir değer olduğunu ve ayrıca ne tür bir sayı olduğunu biliyor. 3 (kesirsiz bir) Sayı. Onun için derleyici 'x' değişmezinin türünün de Sayı olması gerektiği çıkarımında bulunuyor ve elbette yanılmıyor. Az da olsa bir kaç durum var ki derleyici tür çıkarımını beceremiyebiliyor. İşte o zaman, kafam karıştı der ve bir hata verir. Hatanın türü "type ambiguity" gibi birşeylerdir, yani tür belirsizliği. O durumda gerekli tür bilgisini yazılımcığa ekleyiverirsin.""".p,
 
     "Genelde işlevlerin girdilerinin türünü tanımlarız. Ama çıktının türünü belirtmek gerekmez. Çünkü derleyici işlevin tanımından çıktının türünün çıkarımını yapıverir. Bunun istisnası özyineleyen, yani kendi kendini çağıran işlevler. Pek çok örneğini gördük elbet. Onların çıktısının türünü hep belirttik.".p,
 
@@ -673,8 +673,8 @@ pages += Page(
   name = "FAO",
   body = tPage("İşlevler de Birer Nesnedir",
     "İşlevler de Birer Nesnedir".h2,
-    """Scala dilinde herşey bir nesnedir demiştik. İşlevler de aynen öyle! Bir işlevi başka işlevlere girdi yapabiliriz. Bir işlevin çıktısı da bir işlev olabilir. Ayrıca değişkenlerin değeri de bir işlevin kendisi olabilir. Bunların örneklerini biraz sonra göreceğiz. Bu özellikler Scala dilinin çok faydalı bir becerisidir. Karşımıza sık sık çıkan bazı zorlukları çok kısa ve güzel bir şekilde çözmemizi sağlarlar. Bunlar arasında program akışını yönlendirme teknikleri de var. Örneğin, Scala dilinde yazılmış eski adı "Actors" yeni adıyla "Akka" birimi (İngilizce'de module ya da library denen ve başka yazılımlar tarafından kullanılan bir yazılım bütününe birim denir) işlevleri nesne olarak kullanma yöntemini kullanarak eşzamanlı programlamayı destekler. Ama biz dizinlerin kullanılmasıyla başlayalım. Bakın göreceksiniz işlevlerin nesne olarak kullanılmasına güzel bir giriş olacak.""".p,
-    """Nesneleri bir dizi olarak ele almak çok doğal ve faydalı, değil mi? Ne tür örnekler geliyor senin aklına? Her sözcük, örneğin, bir dizi harften oluşur. Gün içersinde yaptığımız şeyleri bir dizi eylem olarak düşünebiliriz. Scala dili Dizin adını verdiğimiz bir tür tanımlamıştır. Bunu daha önce pek görmedik. Ama aslında çok basit bir kavram. Dizin türü bir dizi nesneyi ele almayı ve işlemeyi çok kolaylaştırır ve hemen hemen her yazılımcık ve daha büyük yazılımlarda sık sık kullanılır. Dizin içindeki nesnelerin belli bir sırası vardır. Dizin türünün sunduğu pek çok metod ve komut sayesinde Dizin tanımlamak ve işlemek kolaylaşır. Daha önce Nokta sınıfıyla gördüğümüz gibi Dizin oluşturmanın bir yolu Dizin sınıfının yapıcı metodunu (constructor) kullanmak. Bu yapıcı metoda bir ya da daha çok girdi sokarız ve yapıcı o girdilerin oluşturduğu bir Dizin yapıverir. İlk örneğimizle hemen başlayalım. Bir dizi sayı oluşturalım. Bu dizinin türü "Dizin[Sayı]" olacak. Buradaki köşeli parantezler dizinin içindeki elemanların türünü belirliyor, yani Sayı. Her eleman bir Sayı olduğu için Scala tür çıkarımı yaparak 'dzn' değişkeninin türünü Dizin[Sayı] olarak belirler. Yani bizim bunu açık açık yazmak için zahmet etmemiz gerekmez.""".p,
+    """Scala dilinde herşey bir nesnedir demiştik. İşlevler de aynen öyle! Bir işlevi başka işlevlere girdi yapabiliriz. Bir işlevin çıktısı da bir işlev olabilir. Ayrıca değişkenlerin ya da değişmezlerin değeri de bir işlevin kendisi olabilir. Bunların örneklerini biraz sonra göreceğiz. Bu özellikler Scala dilinin çok faydalı bir becerisidir. Karşımıza sık sık çıkan bazı zorlukları çok kısa ve güzel bir şekilde çözmemizi sağlarlar. Bunlar arasında program akışını yönlendirme teknikleri de var. Örneğin, Scala dilinde yazılmış eski adı "Actors" yeni adıyla "Akka" birimi (İngilizce'de module ya da library denen ve başka yazılımlar tarafından kullanılan bir yazılım bütününe birim denir) işlevleri nesne olarak kullanma yöntemini kullanarak eşzamanlı programlamayı destekler. Ama biz dizinlerin kullanılmasıyla başlayalım. Bakın göreceksiniz işlevlerin nesne olarak kullanılmasına güzel bir giriş olacak.""".p,
+    """Nesneleri bir dizi olarak ele almak çok doğal ve faydalı, değil mi? Ne tür örnekler geliyor senin aklına? Her sözcük, örneğin, bir dizi harften oluşur. Gün içersinde yaptığımız şeyleri bir dizi eylem olarak düşünebiliriz. Scala dili Dizin adını verdiğimiz bir tür tanımlamıştır. Bunu daha önce pek görmedik. Ama aslında çok basit bir kavram. Dizin türü bir dizi nesneyi ele almayı ve işlemeyi çok kolaylaştırır ve hemen hemen her yazılımcık ve daha büyük yazılımlarda sık sık kullanılır. Dizin içindeki nesnelerin belli bir sırası vardır. Dizin türünün sunduğu pek çok metod ve komut sayesinde Dizin tanımlamak ve işlemek kolaylaşır. Daha önce Nokta sınıfıyla gördüğümüz gibi Dizin oluşturmanın bir yolu Dizin sınıfının yapıcı metodunu (constructor) kullanmak. Bu yapıcı metoda bir ya da daha çok girdi sokarız ve yapıcı o girdilerin oluşturduğu bir Dizin yapıverir. İlk örneğimizle hemen başlayalım. Bir dizi sayı oluşturalım. Bu dizinin türü "Dizin[Sayı]" olacak. Buradaki köşeli parantezler dizinin içindeki elemanların türünü belirliyor, yani Sayı. Her eleman bir Sayı olduğu için Scala tür çıkarımı yaparak 'dzn' değişmezinin türünü Dizin[Sayı] olarak belirler. Yani bizim bunu açık açık yazmak için zahmet etmemiz gerekmez.""".p,
     "val dzn = Dizin(1, 7, 2, 8, 5, 6, 3, 9, 14, 12, 4, 10)".c,
     "Tamam, şimdi elimizde bir dizin var. Dizinleri kullanmanın üç temel metodu var. Onları görelim. Her dizinin bir başı olduğu için 'head' yani İngilizcede baş anlamına gelen metod bize ilk elemanı verir. 'tail' kuyruk anlamına gelir, dizinin başı hariç diğer elemanlarından oluşan kısmını verir. Ve son olarak da çift iki nokta üstüste yani '::' bir dizinin başına yeni bir eleman, yani yeni bir baş ekler. Bu baş ve kuyruk deyişi sana yılanları anımsattıysa haklısın. Dizinler yılanlara benziyor: hep başından tutmakta fayda var! Şaka bir yana Dizin türü çok gelişmiştir ve daha pek çok kullanışlı metodu vardır. 'Dizinlerin Kullanılışı' kısmında daha pek çok Dizin metodu göreceğiz.".p,
     "'head' ilk yani en soldaki elemanı verir. dzn örneğinde bu '1' olacak.".p,
@@ -741,7 +741,7 @@ Aralık.kapalı(30, -35, -5)""".c,
     "Genelleyici Programlamanın Tadına Bakalım".h3,
     "Şimdi diyelim ki yeni bir eleme koşulu tanımlamak istiyorsun, çünkü tam sayılarla yetinmek olmaz, kesirli sayıları da herhangi bir koşula göre eleyebilmek istiyorsun. Yukarıda 'def' ile tanımladığımız kısacık 'ele' işlevini kopyalar ve basitçe her gördüğün 'Sayı' sözcüğünü 'Kesir' sözcüğüyle değiştirirsin olur biter. Sonra da adını eleKesir gibi birşey koyarsın. Tabii Kesir de yetmez. Başka her hangi bir tür için eleHerneyse dersin ve bu sayede birbirine çok benzeyen, daha doğrusu neredeyse apaynı bir sürü işlevin olur: ele, eleKesir, eleYazı, vb.. Ne güzel, değil mi? Hiç de güzel değil! Çok tekrar oldu. Nerede çokluk orada çok ayıp...".p,
 
-    "Scala'yla yazarken bu kadar tekrara, bu zahmete girmeye hiç gerek yok. İşi iyi bilenlerin yaptığı gibi bir 'tür değişkeni' (type variable ya da generic type diye de bilinir) kullanarak genel bir çözüm sayesinde işler kolaylaşıverir. Tür değişkenleri diğer 'val' değişkenlerine benzer. Gerçek değer yerine değişkenin adını kullanırız her yerde. Sonra Scala derleyicisi gerekli yerleştirmeleri yapıverir".p,
+    "Scala'yla yazarken bu kadar tekrara, bu zahmete girmeye hiç gerek yok. İşi iyi bilenlerin yaptığı gibi bir 'tür değişkeni' (type variable ya da generic type diye de bilinir) kullanarak genel bir çözüm sayesinde işler kolaylaşıverir. Tür değişkenleri diğer 'val' değişmezlerine benzer. Gerçek değer yerine değişkenin adını kullanırız her yerde. Sonra Scala derleyicisi gerekli yerleştirmeleri yapıverir".p,
 
     "Aşağıda 'T' harfini kullanacağız Tür anlamında. Ama başka her hangi bir harf ya da sözcük de olur elbette. Nerede Sayı varsa onun yerine T gelecek. Bir de işlevin adının hemen arkasında [T] gelecek. Bu da yeni işlevimizin genelleyici bir işlev olduğunu belirtiyor. Peki o halde yeni halini görelim:".p,
 
@@ -843,7 +843,7 @@ pages += Page(
     """Sıralamalar da birer nesnedir desem artık şaşırmazsın değil mi? Onun için nokta koyup arkasından içinden istediğimiz değere ulaşabiliriz. Ama bir sorun var. Bu iç değerlerin bir adı yok! Sorun değil. Sıralarını biliyoruz. Birinci elemanı okumak için "._1" dememiz yeter. İkinci için "._2" varsa üçüncü için "._3" vb... Hemen deneyelim.""".p,
     """satıryaz((3, 'c')._1)
 satıryaz((3, 'c')._2)""".c,
-    "Böyle birşey yapmak gereksiz geldi mi size de? Tabii genelde elimizde val değişkenler olur. Örneğin:".p,
+    "Böyle birşey yapmak gereksiz geldi mi size de? Tabii genelde elimizde val değişmezleri olur. Örneğin:".p,
     """val sıralıDörtlü = ("En sevdiğim sayı", 5, "karesi", 25)
 """.c,
     "sıralıDörtlü._1".c,
@@ -877,7 +877,7 @@ val g2 = g1.map(_.toUpper); satıryaz("g2", g2)
 """.c,
     "Bunu anlayamadım diye üzülme sakın! Daha önce görmediğimiz bir kaç becerisi var Scala derleyicisinin burada!".p,
 
-    "1) adsız işlevimizi tanımlarken 'case' yani örüntü eşleme yapısı kullanabiliriz. Bunun için normal parantez yerine kıvrık parantez kullanmamız yeter. 'match' özel sözcüğüne gerek kalmadı. Ondan önce gelen değişkenlere de! Yani bu epey faydalı bir kısa yol oluyor ve bunu iyi bilmekte fayda var! Normal, yani kısaltılmamış halini anımsayalım hemen:".p,
+    "1) adsız işlevimizi tanımlarken 'case' yani örüntü eşleme yapısı kullanabiliriz. Bunun için normal parantez yerine kıvrık parantez kullanmamız yeter. 'match' özel sözcüğüne gerek kalmadı. Ondan önce gelen değişmezlere de! Yani bu epey faydalı bir kısa yol oluyor ve bunu iyi bilmekte fayda var! Normal, yani kısaltılmamış halini anımsayalım hemen:".p,
     "(a, b) => (a, b) match {case ... => ...; case ... => ...}".p,
     "match ve ondan önceki hiç birşeye gerek kalmıyor!".p,
 
@@ -997,7 +997,7 @@ pages += Page(
     """val _0abc = "bak bu oldu" """.c,
     """val a*b = "yok yok bu hala problem" """.c,
     """val _a$b__c_ = "bak bunlar da oldu" """.c,
-    "Gördüğümüz gibi bazı özel karakterleri değişken adlarında kullanamıyoruz. Matematik işlemlerinin imleri hiç olmuyor. Ama aşağıdaki yazılımda bir istisna daha göreceğiz.".p,
+    "Gördüğümüz gibi bazı özel karakterleri değişken ve değişmez adlarında kullanamıyoruz. Matematik işlemlerinin imleri hiç olmuyor. Ama aşağıdaki yazılımda bir istisna daha göreceğiz.".p,
     "Peki geçerli ve geçersiz bazı adları görmemiz iyi oldu da esas konumuza dönelim, yani öncelik meselesi. Bakın aşagıdaki tablo öncelik sırasını gösteriyor. Üsttekiler önce geliyor. Eğer bir işlem iminde birden fazla karakter varsa o durumda da ilk karakter önem kazanıyor. Örneğin +* diye bir işlem tanımlarsak, onun önceliği + imininkiyle aynı olur.".p,
     table(
       row("diğer bütün özel karakterler","""Örneğin @  {  }  (  ) vb..."""),
@@ -1106,7 +1106,7 @@ pages += Page(
   name = "US",
   body = tPage("Yazıların (String) Kullanılışı",
     "Yazı Türü".h2,
-    "Ekrana yazı yazmak bilgisayar programlamada epey sık karşılaşılan bir sorun! Bu bölümde bazı tanımlar ve yazı türünün faydalı metodlarından bazılarını göreceğiz. Bu metodların benzerleri Dizin türünde ve ona benzeyen sıra sıra elemanlar içeren başka türlerde de var (Array, Vector, Seq gibi hafifçe başkalaşmış ama benzer türler). Bir sonraki bölümde Dizin metodlarını görünce benzerliği farkedeceksin.".p,
+    "Ekrana yazı yazmak bilgisayar programlamada epey sık karşılaşılan bir sorun! Bu bölümde bazı tanımlar ve yazı türünün faydalı metodlarından bazılarını göreceğiz. Bu metodların benzerleri Dizin türünde ve ona benzeyen sıra sıra elemanlar içeren başka türlerde de var, Dizim (Array), Yöney (Vector), Dizi (Seq) gibi hafifçe başkalaşmış ama benzer türler). Bir sonraki bölümde Dizin metodlarını görünce benzerliği farkedeceksin.".p,
     "Aşağıdaki tanımlarda G1, G2, ... ile fonksiyonlara girilen değerleri ifade ediyoruz kısaca. Yani G1.işlevAdı(G2, G3, ...).".p,
     "Yazılar için kaçış karakterleri".h3,
     table(
@@ -1316,8 +1316,8 @@ pages += Page(
   body = tPage("Çizim ve Oyun",
     "Kojo'nun Scala üzerine yaptığı katkılardan biri kaplumbağacıklarla çizimler yapmak ve bilgisayar oyunları yazmak. Ama Kojo'nun bir de Resim adlı bir birimi var ki, onunla daha da kolaylıkla bilgisayar grafikleri çizip onları canlandırabilir ve istersen oyunlar programlayabilirsin. Kojo'ya bu becerileri kazandıranlardan birisi de Peter Lewerin adlı bilgisayar aşığı. Lalit ve Peter sayesinde bilgisayar oyunları yazman ve güzel bilgisayar çizimleri yapman çok daha kolay. Resim biriminin becerilerinin tarihçesi Processing adlı bir Java projesine kadar uzanır. Processing birimini de Kojo'ya Peter eklemişti. Bu Resim birimi o kadar becerikli ki sırf onun üzerine büyük bir kılavuz bile yazılabilir. Burada bir kaç örnekle neler yapılabilir görelim ve tadında bırakalım istersen. Kojo'nun Örnekler ve Sergi menülerinde başka pek çok örnek bulacaksın. Burdakileri deneyip anladıktan sonra onlara da bakmanda fayda var.".p,
     "Eğer ilgilenip daha çok örnek görmek istersen, Kojo'nun web sayfasına da bak. Henüz sadece İngilizce. Resim yerine Picture diyecek. Ama ordaki örnekler de sana bir fikir verecektir.".p,
-    "Bu birim birçok komut, işlem ve bir de çizim döngüsü sunuyor bize. Bunları kullanarak epey gelişmiş şekiller, resimler ve grafikler çizebiliriz. Çizim dönğüsünü kullanarak grafikleri canlandırabilir ve istersek oyuna çevirebiliriz.".p,
-    "İlk örnekle başlayalım. Ortamı hazırlar ve ekranı temizleriz ilk önce. Sonra bir top çizer ve canlandırma döngüsünün içinde topun nasıl hareket edeceğini tanımlarız. Birim, bu döngüyü her yirmi ile 32 milisaniye içinde çalıştırıyor. Bilgisayarın hızına göre saniyede en az 30 en çok 50 kere tekrar tekrar resim çizebilecek yani. Bu da bizim gözümüzün değişiklikleri görme hızından fazla olduğu için bize canlı ve harektli gibi görünecek. Bu temel kavramları ve komutları kullanarak pekçok ilginç canlı, hareketli grafik çizilebilir.".p,
+    "Resim adlı birim birçok komut, işlem ve bir de çizim döngüsü sunuyor bize. Bunları kullanarak epey gelişmiş şekiller, resimler ve grafikler çizebiliriz. Çizim döngüsünü kullanarak grafikleri canlandırabilir ve istersek fare ve tuşlarla kontrol ekleyerek oyuna çevirebiliriz.".p,
+    "İlk örnekle başlayalım. Önce ekranı temizliyoruz. Sonra bir top çiziyor ve canlandırma döngüsünün içinde topun nasıl hareket edeceğini tanımlıyoruz. Resim birimi, bu döngüyü yaklaşık yirmibeş milisaniyede bir yineleyerek çalıştırıyor. Bilgisayarın hızına göre saniyede yaklaşık olarak 40 kere tekrar tekrar resim çizebiliyor yani. Bu da bizim gözümüzün değişiklikleri görme hızından fazla olduğu için bize canlı ve harektli gibi görünüyor. Bu temel kavramları ve komutları kullanarak pekçok ilginç canlı, hareketli grafik çizebilirsin.".p,
     """silVeSakla(); gridiGöster(); eksenleriGöster()
 val yç = 10 // topumuzun yarıçapı
 val top = Resim.daire(yç) // resmi
@@ -1344,38 +1344,38 @@ canlandır { // İçindeki komutlar saniyede yaklaşık 40 kere yinelenir.
 }""".c,
     "İkinci örneğimiz küçük ve basit bir oyun. Duymuş olabilirsin: en eski bilgisayar oyunlarından duvara karşı pinpon (İngilizce adıyla Pong) oyunu. Tek kişilik bir oyun. Yapmamız gereken topa raketle vurup geri yollamak. Raketi fareyle yönetiyoruz. Top kaçarsa bir puan kaybediyorsun. İyi eğlenceler!".p,
     """silVeSakla()
+çiz(götür(-200, -100) -> Resim.doğru(0, 200)) // Üç duvar çizelim. Bu dik ön duvar
+çiz(götür(-200, -100) -> Resim.doğru(400, 0)) // Bu alt duvar
+çiz(götür(-200,  100) -> Resim.doğru(400, 0)) // Bu da üst duvar
 val rb = 80 // raketin boyu
-var ıska = 0 // top kaç kere kaçtı, sayalım
-// Üç duvar çizelim, bir top, bir raket, bir de skor
-çiz(götür(-200, -100) -> Resim.doğru(0, 200))
-çiz(götür(-200, -100) -> Resim.doğru(400, 0))
-çiz(götür(-200,  100) -> Resim.doğru(400, 0))
-val top = kalemRengi(mavi) -> Resim.daire(5)
 val raket = kalemRengi(mavi) -> Resim.doğru(0, rb)
-def sayaç(yazı: Yazı) = kalemRengi(siyah) * götür(-50, 150) -> Resim.yazı(yazı)
-var skor = sayaç("Hiç ıskalamadın")
-çiz(top, raket, skor)
-var x = 0; var y = 0 // topun konumu
-var dy = 8; var dx = -8 // topun hızı
+val top = kalemRengi(mavi) -> Resim.daire(5)
+var skor = kalemRengi(siyah) * götür(-50, 150) -> Resim.yazı("Raketi fareyle yönet")
+çiz(raket, top, skor)
+var x = 0.0; var y = 0 // topun konumu
+var dy = 8; var dx = -8.0 // topun hızı: d delta yani değişim ya da derivative yani türev demek
 var rx = 0.0; var ry = 0.0 // raketin konumu
+var ıska = 0 // top kaç kere kaçtı, saymak için
+var vuruş = 0 // kaç kere raketle vurduğumuzu da sayalım
 canlandır {
     raket.kondur(fareKonumu)  // raketi fareyle kontrol ediyoruz
     top.kondur(x, y) // topun yerini değiştirelim
     // top rakete çarpıyor mu?
     rx = fareKonumu.x; ry = fareKonumu.y
     dx = if ((dx > 0) && (mutlakDeğer(rx - x) < 10) &&
-        (y > ry) && (y < ry + rb)) -dx else dx
+        (y > ry) && (y < ry + rb)) {vuruş += 1; -1.1*dx} else dx
     // topun konumunu güncelleyelim, duvarlara bakalım
-    dx = if (x + dx < -200) -dx else dx
-    if (x + dx > 200) { x = -200; ıska += 1 } // ıskaladı
-    dy = if ((y + dy < -100) || (y + dy > 100)) -dy else dy
+    dx = if (x + dx < -200) -dx else dx  // ön duvardan sekti mi?
+    dy = if ((y + dy < -100) || (y + dy > 100)) -dy else dy // üst ve alt duvarlardan sekti mi?
+    if (x + dx > 200) { x = -200; dx = 8; ıska += 1 } // ıskaladı
     x += dx; y += dy // topun gideceği noktayı hesaplayalım
-    if (ıska > 0) {  // skor tutalım
-        skor.sil
-        skor = sayaç(ıska.toString + " kere ıskaladın")
-        çiz(skor)
+    if (ıska > 0 || vuruş > 0) {  // skoru güncelleyelim
+        val mesaj = if (vuruş == 0) "Fareyi tuvale getir!" else s"$vuruş kere vurdun"
+        skor.güncelle(s"$mesaj\n$ıska kere ıskaladın")
     }
-}""".c,
+}
+oyunSüresiniGöster(60, "Süre bitti", yeşil) // oyun 60 saniye sürsün 
+""".c,
     "Temel kavramlar ve komutlarla artık tanıştın. Bir kaç tane daha top eklemeye ne dersin? Topların hızını rastgele değiştirerek oyunu daha eğlenceli kılabilirsin istersen. Raketin boyunu kısaltabilir ya da uzatabilirsin. Bir de programımızın bir (belki kimbilir daha çok) hatası var! İngilizce'de bug yani böcek denir. Ama nerden çıktı deme. Programı yazanın hatası de. Sen de yapacaksın bol bol hata. Hiç dert etme. Her hata aslında daha usta olmak için bir fırsat. Fırsatları hiç kaçırma! Hatayı farkettin mi? Bazen top raketin içinden geçiyor sanki elektron tünelleme yapıyormuş gibi (kuvantum mekaniği değil ki bu)! Bazen de ıskalaması gerekirken geri yolluyor.. Bakalım yazılımcığın içinde nerede? Sen bulup düzeltebilecek misin?".p,
     "Klavye ve tuşlarla komut girişi".h3,
     "Pekçok oyun klaveyeden komut bekler. Minecraft oynadın mı hiç? Hem fare hem de klavye komutları oyunu iyice eğlenceli kılar. Bak bu küçük oyun sağ/sol/yukarı ve aşağı ok olan tuşlarla kaplumbağacığa yön veriyor.".p,
@@ -1385,13 +1385,13 @@ canlandır {
 görünür()
 canlandırmaHızınıKur(100)
 var zıpladı = yanlış
-tuşaBasınca { k =>
-    k match {
-        case Kc.VK_LEFT  => açıyaDön(180)  // sola git
-        case Kc.VK_RIGHT => açıyaDön(0)    // sağa git
-        case Kc.VK_UP    => açıyaDön(90)   // yukarı
-        case Kc.VK_DOWN  => açıyaDön(270)  // aşağı
-        case Kc.VK_Z     => zıpla(20); zıpladı = doğru    
+tuşaBasınca { t =>
+    t match {
+        case tuşlar.VK_LEFT  => açıyaDön(180)  // sola git
+        case tuşlar.VK_RIGHT => açıyaDön(0)    // sağa git
+        case tuşlar.VK_UP    => açıyaDön(90)   // yukarı
+        case tuşlar.VK_DOWN  => açıyaDön(270)  // aşağı
+        case tuşlar.VK_Z     => zıpla(20); zıpladı = doğru    
         case _           => // diğer tuşlar sadece ilerletsin
     }
     if (zıpladı) {
@@ -1401,7 +1401,7 @@ tuşaBasınca { k =>
     }
 }
 tuvaliEtkinleştir()""".c,
-    "Hayal gücünü kullan, yazılımcığı değiştir (örneğin 45 derece döndürmek için komut ekleyebilirsin), tekrar çalıştır. Yazılımcık düzenleme ekranında Kc. yazdıktan sonra control tuşunu basık tutup büyük boşluk tuşuna bas ki başka hangi tuşları kullanabileceğini gör.".p,
+    "Hayal gücünü kullan, yazılımcığı değiştir (örneğin 45 derece döndürmek için komut ekleyebilirsin), tekrar çalıştır. Yazılımcık düzenleme ekranında 'tuşlar.' yazdıktan sonra (ama tırnak işaretleri olmadan!) kontrol tuşunu basık tutup büyük boşluk tuşuna bas ki başka hangi tuşları kullanabileceğini gör.".p,
 
     "Saat".h3,
     "Bir saat yapalım mı?".p,
@@ -1512,7 +1512,7 @@ def başlangıç(v: Sayılar, desen: Dizin[(Sayı, Sayı)]) = desen.foldLeft(v)(
 
 // yeni nesli bulalım
 def yeniNesil(v: Sayılar, ix: Sayı) = {
-    val kural = Vector(0, 0, 0, 1, 1, 0, 0, 0, 0, 0) // oyunun kuralları
+    val kural = Yöney(0, 0, 0, 1, 1, 0, 0, 0, 0, 0) // oyunun kuralları
     val x = ix / KU; val y = ix % KU
     val t = (0 until 3).foldLeft(0)((st, i) => {
         st + (0 until 3).foldLeft(0)((s, j) => {
@@ -1561,9 +1561,9 @@ def dörtlü = Dizin((0, 0), (1, 0), (-1, 0), (0, 2)) // dokuzcanlı'nın altkü
 """.c,
     
     "Düğüm açma oyunu".h3,
-    "Bu oyun bize iki şey gösterecek: 1) Scala'nın bize sunduğu veri yapılarından Vector ne işlere yarıyor. 2) Fareye tıklayıp bırakmadan sürüklersek neler yapabiliyoruz. Tabii daha da güzeli eğlenceli bir oyun yazabiliyoruz bu sayede.".p,
+    "Bu oyun bize iki şey gösterecek: 1) Scala'nın bize sunduğu veri yapılarından Yöney ne işlere yarıyor. 2) Fareye tıklayıp bırakmadan sürüklersek neler yapabiliyoruz. Tabii daha da güzeli eğlenceli bir oyun yazabiliyoruz bu sayede.".p,
     "Bu oyunu internetteki eski bir oyundan esinlenerek yazdık. Oyunun adı Planarity yani düzlemsellik. Mavi toplardan herhangi birinin üzerine tıklayıp bırakmadan tuvalde başka bir yere taşı. Göreceksin ki bağlı olduğu iki çizgi sanki lastik gibi hareket ediyor ve topu bırakmıyor. Bu bulmacanın amacı topları güzelce yerleştirerek çizgilerin birbirini kesmesine engel olmak. Yani bu düğümü çözmek. Çok zor sayılmaz. Biraz dene kolaylaşacak. Kırmızı kareye tıklarsan yeni bir düğüm oluşur.".p,
-    "Yazılımcığa bakarsa ES adında bir değişken göreceksin. Onu değiştirerek oyunun zorluğunu ayarlayabilirsin. Ne kadar büyütürsen o kadar zorlaşır!".p,
+    "Yazılımcığa bakarsan en başta KS adında bir değişmez (val) göreceksin. Onu değiştirerek oyunun zorluğunu ayarlayabilirsin. Ne kadar büyütürsen o kadar zorlaşır!".p,
     "Bize ilham veren oyunun adı Planarity. Daha çok bilgi için buna tıkla".link("en.wikipedia.org/wiki/Planarity"),
     
     """// KS arttıkça oyun zorlaşır. Bir kenarda kaç tane nokta olsun?
@@ -1579,7 +1579,7 @@ def doğru(llx: Kesir, lly: Kesir, urx: Kesir, ury: Kesir) = {
     r
 }
 // bütün çizgiler. boş küme olarak başlarız
-var çizgiler = Vector[Çizgi]()
+var çizgiler = Yöney[Çizgi]()
 // Noktayı tuvalde kaydıracağız. Yeri değişince ona bağlı çizgileri tekrar çizmemiz gerek
 case class Nokta(var x: Kesir, var y: Kesir) {
     val n = götür(x, y) * boyaRengi(mavi) -> Resim.daire(YÇ)
@@ -1593,10 +1593,10 @@ case class Nokta(var x: Kesir, var y: Kesir) {
 }
 // Bütün noktaları (0,0) yani orijine üştüste koyalım. Merak etme birazdan dağıtacağız
 silVeSakla()
-val noktalar = (0 until AS).foldLeft(Vector[Nokta]())((v, i) => { v :+ Nokta(0, 0) })
+val noktalar = (0 until AS).foldLeft(Yöney[Nokta]())((v, i) => { v :+ Nokta(0, 0) })
 
 // çizgileri tanımlar ve noktalara bağlarız. Bir balık ağı gibi. KS * KS düğümlü
-çizgiler = (0 until AS).foldLeft(Vector[Çizgi]())(
+çizgiler = (0 until AS).foldLeft(Yöney[Çizgi]())(
     (çv, i) => {
         val (x, y) = (i / KS, i % KS)
         val çzg = if (y < KS - 1) { çv :+ Çizgi(noktalar(i), noktalar(i + 1)) } else çv
@@ -1605,13 +1605,13 @@ val noktalar = (0 until AS).foldLeft(Vector[Nokta]())((v, i) => { v :+ Nokta(0, 
 serpiştir(noktalar) // noktaları yerleştir ve çizgileri çiz
 
 // noktaları rastgele yerleştir
-def serpiştir(hepsi: Vector[Nokta]) {
+def serpiştir(hepsi: Yöney[Nokta]) {
     hepsi.foreach(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rastgele - 0.5), KS * YÇ * 6 * (rastgele - 0.5)))
     çizelim(çizgiler)
 }
 
 // noktalar arasındaki çizgileri çizelim. Her çizgi, iki noktasının çemberine kadar gelsin
-def çizelim(hepsi: Vector[Çizgi]) {
+def çizelim(hepsi: Yöney[Çizgi]) {
     hepsi.foreach(çzg => {
         val (x1, y1) = (çzg.n1.x, çzg.n1.y)
         val (x2, y2) = (çzg.n2.x, çzg.n2.y)

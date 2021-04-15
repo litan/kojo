@@ -76,8 +76,8 @@ def installMouseHandlers(p: Picture) {
         val bymin = math.min(dragxy._2, pressxy._2) - cDelta.y
         val bymax = math.max(dragxy._2, pressxy._2) - cDelta.y
 
-        val delx = (oxmax - oxmin) / 600
-        val dely = (oymax - oymin) / 600
+        val delx = (oxmax - oxmin) / size
+        val dely = (oymax - oymin) / size
         dragSq.erase()
         pic.erase()
         pic = trans(cDelta.x, cDelta.y) -> Picture.image(mandel(oxmin + delx * bxmin, oxmin + delx * bxmax, oymin + dely * bymin, oymin + dely * bymax))

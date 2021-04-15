@@ -115,6 +115,12 @@ class TurkishAPITest extends FunSuite with Matchers {
     yokMu(o1) should be(false)
     varMı(Hiçbiri) should be(false)
     yokMu(Hiçbiri) should be(true)
+    val o2 = Hiçbiri
+    val test = for (o <- List(o1, o2)) yield(o match {
+      case Biri(n) => n
+      case Hiçbiri => -1
+    })
+    test should be(List(3, -1))
   }
   
   test("Translations of math API should work -- abs == mutlakDeğer") {
@@ -140,6 +146,15 @@ class TurkishAPITest extends FunSuite with Matchers {
     pi shouldBe 3.1415 +- 0.0001
     e shouldBe 2.7182 +- 0.0001
     s2 shouldBe 1.4142 +- 0.0001
+  }
+
+  test("Translations of math API should work -- misc") {
+    val x = 1.234
+    yuvarla(x) should be(1)
+    yuvarla(x, 1) should be(1.2)
+    val y = 1.5005
+    yuvarla(y) should be(2)
+    yuvarla(y,3) should be(1.501)
   }
 
   test("Translation of require should work") {
@@ -194,6 +209,171 @@ class TurkishAPITest extends FunSuite with Matchers {
     val a5 = Aralık(5, 1, -1)
     a5.dizin() shouldBe List(5, 4, 3, 2)
   }
+
+  test("Translations of mutable.Stack should work") {
+    val y1 = Yığın.boş[Sayı]
+    y1.tane should be(0)
+    y1.koy(1)
+    y1.tane should be(1)
+    val y2 = Yığın(1,2,3)
+    y2.tane should be(3)
+    val y3 = Yığın.doldur(y2)
+    y3.tane should be(3)
+    // todo more!
+  }
+
+  test("Translations of mutable.Map should work") {
+    val e1 = Eşlem.boş[Yazı, Sayı]
+    e1 eşli ("anahtar") should be(yanlış)
+    e1 eşle ("anahtar" -> 99)
+    e1 eşli ("anahtar") should be(doğru)
+    e1("anahtar") should be(99)
+    e1 eşle ("b" -> 88)
+    e1 eşli ("b") should be(doğru)
+    e1("b") should be(88)
+    val l = e1.m.toSeq
+    l.size should be(2)
+    l.head match {
+      case ("b", 88) => l.tail.head should be("anahtar", 99)
+      case _ => l.tail.head should be("b", 88)
+    }
+    val e2 = Eşlem(
+      "mavi" -> 1,
+      "yeşil" -> 2,
+      "sarı" -> 3
+    )
+    e2.sayı should be(3)
+    e2("mavi") should be(1)
+    var e3 = Eşlem( 1 -> 1, 2 -> 4, 4 -> 16, 16 -> 256 )
+    e3 += (10 -> 100)
+    e3(10) should be(100)
+  }
+
+  test("Translation of Array should work") {
+    val s0 = Dizim.boş[Harf](10)
+    s0.boyut should be(1)
+    val s1 = Dizim.boş[Sayı](3, 3)
+    s1.boyut should be(2)
+    s1(0) should be(Array(0, 0, 0))
+    s1(0)(0) should be(0)
+    s1(0)(1) = 1
+    s1(0) should be(Array(0, 1, 0))
+    val s2 = Dizim.doldur[Sayı](2, 2)(5)
+    s2.boyut should be(2)
+    s2(0) should be(Array(5, 5))
+    s2(0)(0) should be(5)
+  }
+
+  test("Translation of mutable.ArrayBuffer should work") {
+    val ed1 = EsnekDizim.boş[Sayı]
+    ed1.sayı should be(0)
+    ed1 += 42
+    ed1.sayı should be(1)
+    ed1 += 2002
+    ed1 += 2006
+    ed1 += 2011
+    ed1(0) should be(42)
+    ed1.çıkar(0)
+    ed1(0) should be(2002)
+    ed1(1) should be(2006)
+    ed1.sayı should be(3)
+    ed1.sil()
+    ed1.sayı should be(0)
+    import net.kogics.kojo.core.Point
+    val noktalar = EsnekDizim(Point(-100, -50), Point(100, -50), Point(-100, 50))
+    noktalar.sayı should be(3)
+    noktalar.ekle(Point(100, 100))
+    noktalar.sayı should be(4)
+    def deneme(nler: Seq[Point]) = nler.toList.tail
+    deneme(noktalar.dizi).size should be(3)
+  }
+
+  test("Translations of Vector should work") {
+    val y1 = Yöney(3, 4)
+    y1(0) should be(3)
+    y1.size should be(2)
+    val y1b = y1 :+ 5
+    y1b(2) should be(5)
+    val y2 = Yöney.boş[Yazı]
+    y2.size should be(0)
+    val y2b = y2 :+ "Merhaba"
+    (y2b :+ "Dünya!").size should be(2)
+    y2b(0)(2) should be('r')
+  }
+
+  test("Translation for Set should work") {
+    var k1 = Küme.boş[Sayı]
+    k1.size should be(0)
+    k1 += 3
+    k1.size should be(1)
+    k1(3) should be(true)
+    k1(5) should be(false)
+    k1 += 5
+    k1(5) should be(true)
+    k1.foreach { e =>
+      (e<=5) should be(true)
+      (e>=3) should be(true)
+    }
+    k1 -= 3
+    k1(3) should be(false)
+    k1(5) should be(true)
+    var k2 = Küme(51, 18, 14, 10, 6)
+    k2.size should be(5)
+    for (s <- List(6, 10, 14, 18, 51)) { k2(s) should be(true) }
+    k2(2) should be(false)
+    k2 += 2
+    k2(2) should be(true)
+  }
+
+  test("Translations of Character should work") {
+    for (c <- '0' to '9') Harf.sayıMı(c) should be(true)
+    Harf.sayıMı(' ') should be(false)
+    Harf.sayıMı('a') should be(false)
+    Harf.harfMi('a') should be(true)
+
+    /*
+     Harf.enUfağı should be('\u0000')
+     Harf.enİrisi should be('\uffff')
+     */
+  }
+  test("Translations needed for mandelbrot sample should work") {
+    case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
+      def alanı() = (x2 - x1) * (y2 - y1)
+      def ortaNoktası = (x, y)
+      val (x, y) = ((x2 + x1) / 2, (y2 + y1) / 2)
+      def yazı = {
+        val a = alanı()
+        if (a > 0.0001) s"${yuvarla(a, 5)}" else f"${a}%2.3e"
+      }
+      def dörtlü = (x1, x2, y1, y2)
+      def büyüt(oran: Kesir): Dörtgen = {
+        if (oran <= 0 || oran >= 10.0) this else {
+          val o2 = 0.5 * oran
+          val en2 = o2 * (x2 - x1)
+          val boy2 = o2 * (y2 - y1)
+          Dörtgen(x - en2, x + en2, y - boy2, y + boy2)
+        }
+      }
+    }
+    class Pencere {
+      def koy(d: Dörtgen) = bakışlar.koy(d)
+      def al(): Dörtgen = bakışlar.al()
+      def boşMu() = bakışlar.tane == 0
+      def boşalt() = while (!boşMu()) al()
+      private val bakışlar = Yığın.boş[Dörtgen]
+    }
+    val p1 = new Pencere
+    p1.boşMu() should be(doğru)
+    val d1 = Dörtgen(1, 2, 3, 4)
+    val d2 = Dörtgen(0, 1, 2, 3)
+    p1.koy(d1)
+    p1.boşMu() should be(yanlış)
+    p1.koy(d2)
+    p1.al() should be (d2)
+    p1.al() should be (d1)
+    p1.boşMu() should be(doğru)
+  }
+
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala
   // ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/lite/TestEnv.scala
