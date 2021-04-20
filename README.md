@@ -41,6 +41,7 @@ For running Kojo from within an IDE, the main class is `net.kogics.kojo.lite.Des
 #### Emacs
 
 Put the following in your .emacs config file
+```  
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
@@ -50,7 +51,7 @@ Put the following in your .emacs config file
     ("scala" . scala-mode))
 (add-to-list 'auto-mode-alist '("\\.sc\\'" . scala-mode))
 (add-to-list 'auto-mode-alist '("\\.kojo\\'" . scala-mode))
-
+```
 
   [1]: http://www.kogics.net/kojo
   [2]: https://github.com/litan/kojo/issues
