@@ -40,7 +40,7 @@ For running Kojo from within an IDE, the main class is `net.kogics.kojo.lite.Des
 
 #### Emacs
 
-Put the following in your .emacs config file
+Put the following in your .emacs config file:
 ```  
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
