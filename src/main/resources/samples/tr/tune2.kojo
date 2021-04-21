@@ -1,3 +1,4 @@
+// Daha çok örnek ve bilgi için şuraya bakabilirsin: http://www.jfugue.org/examples.html
 val müzik = MusicScore(
     Melody("ACOUSTIC_Grand", "C6q D#6q F6q G6q D#6q F6h Rq D#6q F6q G6q F6q C6q D#6h Rq"),
     Melody("Pan_Flute", "X[Volume]=15000 Ri C6q D#6q F6q G6q D#6q F6h Ri Ri D#6q F6q G6q F6q C6q D#6h Ri"),

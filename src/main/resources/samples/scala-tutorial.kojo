@@ -2,7 +2,7 @@
  * Copyright (C) 2009 Anthony Bagwell
  * Copyright (C) 2009 Phil Bagwell <pbagwell@bluewin.ch>
  * Copyright (C) 2011 Lalit Pant <pant.lalit@gmail.com>
- * Copyright (C) 2021 Bulent Basaran <bulent2k2@gmail.com>
+ * Copyright (C) 2021 Bülent Başaran <ben@scala.org>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -1092,26 +1092,28 @@ pages += Page(
 pages += Page(
     name = "GAG",
     body = tPage("Graphics and Games",
-                 "This sections shows you how you can use 'Pictures' to draw shapes and make simple games in Kojo. Pictures provide support for rich generative art and gaming. This section is meant to just give you a brief overview. For more information, you can check out the Pictures Tutorial (https://docs.kogics.net/tutorials/pictures-intro.html).".p,
-                 "An earlier version of this page used 'Staging', which was inspired by the Java Processing project, and was contributed by Peter Lewerin to Kojo. Pictures are an evolution of Staging. The port of this page from Staging to Pictures has been contributed by Bulent Basaran.".p,
+                 "This sections shows you how you can use 'Pictures' to draw shapes and make simple games in Kojo. Pictures provide support for rich generative art and gaming. This section is meant to just give you a brief overview.".p,
+                 "For more information, you can check out the Pictures Tutorial online by clicking here.".link("docs.kogics.net/tutorials/pictures-intro.html"),
+                 "An earlier version of this page used 'Staging', which was inspired by the Java Processing project, and was contributed by Peter Lewerin to Kojo. Pictures are an evolution of Staging. The port of this page from Staging to Pictures has been contributed by Bülent Başaran.".p,
                  "In the first example you can see that the screen is cleared, and a ball is created; then the bouncing movement of the ball is defined in the animation loop. Kojo makes this loop run approximately 50 times per second. Using these principles (of creating, drawing, animating, and colliding/bouncing objects) you can create sophisticated animated graphics.".p,
-                 """cleari()
+      """cleari()
 gridOn()
-val ball = Picture.circle(5)
+val radius = 5
+val ball = fillColor(yellow) -> Picture.circle(radius)
 draw(ball)
-
-val box = Picture.rectangle(200, 100)
-draw(box)
+// The ball will bounce on a virtual boundary. Let's visualize it
+// Note: you can remove the next line. The animation will still run fine
+draw(trans(-100, -50) -> Picture.rectangle(200, 100))
 
 var y = 0 ; var x = 0 // ball position
-var dy = 10; var dx = 3 // ball speed
+var dy = 4; var dx = 2 // ball speed. Note that its faster in y
 // animation is around 30 - 50 frames per second depending on the computer system 
 animate {
     ball.setPosition(x,y)
     // update ball position, detect end of bounce area
-    dx =  if(x < 0 || x > 200) -dx else dx
+    dx =  if(x <= -100+radius || x >= 100-radius) -dx else dx
     x += dx
-    dy =  if(y < 0 || y > 100) -dy else dy
+    dy =  if(y <= -50+radius || y >= 50-radius) -dy else dy
     y += dy  
 }""".c,
                  "The next example is a simple game - a single player version of what must be one of the oldest games ever played on computers called 'Pong'. The idea is to hit the ball back with a paddle which you can move with the mouse. Each of your misses will be recorded. Have fun!".p,
