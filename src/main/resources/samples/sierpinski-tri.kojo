@@ -1,74 +1,39 @@
-// standing up equilateral triangle
+clear()
+val offWhite = cm.hex(0xF2F5F1)
+setBackground(offWhite)
+setSpeed(superFast)
+right(30)
+setPenColor(cm.darkBlue.fadeOut(0.4))
+setFillColor(cm.darkSeaGreen)
+
+val size = 400
+
 def triangle(n: Double) {
-    right(30)
-    repeat (3) {
+    repeat(3) {
         forward(n)
         right(120)
     }
-    left(30)
 }
 
-def innerTriangles(n: Double, levels: Int) {
-    def one2two() {
-        right(30)
-        forward(n/2)
-        left(30)
+def sier(n: Double) {
+    savePosHe()
+    if (n < 10) {
+        triangle(n)
     }
-    
-    def two2three() {
-        right(120 + 30)
-        forward(n/2)
-        left(120 + 30)
+    else {
+        setPenThickness(25 * n / size)
+        triangle(n)
+        sier(n / 2)
+        hop(n / 2)
+        sier(n / 2)
+        hop(-n / 2)
+        right(60)
+        hop(n / 2)
+        left(60)
+        sier(n / 2)
     }
-    
-    def three2one() {
-        left(90)
-        forward(n/2)
-        right(90)
-    }
-    
-    val l = if (levels > 10) 10 else levels
-    setPenThickness(l)
-    setPenColor(Color(l.toInt*20, l.toInt*25, 100))
-    
-    // left bottom (#1) inner triangle
-    triangle(n/2)
-    one2two()
-    // top (#2) inner triangle
-    triangle(n/2)
-    two2three()
-    // bottom right (#3) inner triangle
-    triangle(n/2)
-    three2one()
-
-    if (levels == 1) return
-    // do next level 
-
-    // seir within bottom left
-    innerTriangles(n/2, levels-1)
-    one2two()
-    
-    // seir within top
-    innerTriangles(n/2, levels-1)
-    two2three()
-    // seir within bottom right
-    innerTriangles(n/2, levels-1)
-    three2one()
+    restorePosHe()
 }
 
-def sierpinski(n: Double, levels: Int) {
-    saveStyle()
-    setFillColor(yellow)
-    triangle(n)
-    restoreStyle()
-    innerTriangles(n, levels)
-}
-
-clear()
-setAnimationDelay(10)
-setPenColor(blue)
-setPenThickness(1)
-penUp()
-back(100)
-penDown()
-sierpinski(300, 5)
+hop(-200)
+sier(size)
