@@ -39,7 +39,10 @@ object res {
   def aydınlık(a: Kesir) = Britc(a)
   def götür(x: Kesir, y: Kesir) = Transc(x, y)
   def götür(n: Nokta) = Transc(n.x, n.y)
+  def götür(yy: Yöney2B) = Transc(yy.v.x, yy.v.y)
   def kaydır(x: Kesir, y: Kesir) = Offsetc(x, y)
+  def kaydır(n: Nokta) = Offsetc(n.x, n.y)
+  def kaydır(yy: Yöney2B) = Offsetc(yy.v.x, yy.v.y)
   def yansıtY = FlipYc
   def yansıtX = FlipXc
   def eksenler = AxesOnc
@@ -186,6 +189,7 @@ class Resim(val p: richBuiltins.Picture) {
   def götür(yy: Yöney2B) = p.translate(yy.v.x, yy.v.y)
   def hızınıDönüştür(yy: Yöney2B) = p.transv(yy.v)
   def kaydır(x: Kesir, y: Kesir) = p.offset(x, y)
+  def kaydır(n: Nokta) = p.offset(n.x, n.y)
   def kaydır(yy: Yöney2B) = p.offset(yy.v.x, yy.v.y)
   def yansıtX() = p.flipX()
   def yansıtY() = p.flipY()
