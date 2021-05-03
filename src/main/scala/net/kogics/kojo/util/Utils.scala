@@ -186,6 +186,29 @@ object Utils {
     }
   }
 
+  def loadLocalizedInstalledFile(fileName: String): String = {
+    def stripInstalled(fileName: String) = fileName.split(".installed")(0)
+
+    def fileNameWithCode(fileName0: String, code: String) = {
+      val fileName = stripInstalled(fileName0)
+      val fileParts = fileName.split("/")
+      val file = fileParts.last.split("\\.").head
+      val localizedFile = s"${file}_$code.kojo.installed"
+      fileParts(fileParts.length - 1) = localizedFile
+      fileParts.mkString("/")
+    }
+
+    val langCode = Locale.getDefault.getLanguage
+    val localizedFileName = fileNameWithCode(fileName, langCode)
+    try {
+      loadInstalledFile(localizedFileName)
+    }
+    catch {
+      case _: Throwable =>
+        loadInstalledFile(fileName)
+    }
+  }
+
   val RmiRegistryPort = 27468
   val RmiHandlerName = "MultiInstanceHandler"
 
