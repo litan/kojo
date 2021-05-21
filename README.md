@@ -42,6 +42,10 @@ For running Kojo from within an IDE, the main class is `net.kogics.kojo.lite.Des
 
 Put the following in your .emacs config file:
 ```  
+;; cd ~/src; git clone https://github.com/jwiegley/use-package
+(eval-when-compile
+  (add-to-list 'load-path "~/src/use-package")
+  (require 'use-package))
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
