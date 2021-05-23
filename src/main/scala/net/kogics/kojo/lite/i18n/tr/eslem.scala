@@ -27,6 +27,8 @@ case class Eşlem[A,D](val m: Map[A,D]) {
   def eşli(a: A) = m.contains(a)
   def eşle(ikili: (A, D)) = m += ikili
   def +=(ikili: (A, D)) = this eşle ikili
+  def -=(birinci: A) = m -= birinci
+  def herÖgeİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
   def sayı: Sayı = m.size
   def dizi = m.toSeq
   def apply(a: A) = m(a)

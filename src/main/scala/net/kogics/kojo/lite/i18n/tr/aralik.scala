@@ -24,6 +24,7 @@ case class Aralık(ilk: Sayı, son: Sayı, adım: Sayı = 1) {
   val uzunluğu = r.size
   def dizin(): Dizin[Sayı] = r.toList
   def yazı() = toString()
+  def herÖgeİçin(komutlar: (Sayı) => Birim) = r.foreach(komutlar)
   override def toString() = {
     val yazı = if (r.size <= 10) r.mkString("(", ", ", ")")
     else {
@@ -35,6 +36,7 @@ case class Aralık(ilk: Sayı, son: Sayı, adım: Sayı = 1) {
   def map[B](f: Sayı => B) = r.map(f)
   def withFilter(pred: Sayı => İkil) = r.withFilter(pred)
   def flatMap[B](f: Sayı => IterableOnce[B]) = r.flatMap(f)
+  def foreach(f: (Sayı) => Unit) = r.foreach(f)
 }
 
 object Aralık {

@@ -108,7 +108,7 @@ animate {
 
     cars.foreach { cv =>
         val (c, vel) = cv
-        c.moveToFront()
+        //c.moveToFront()  We don't seem to need this. Sometimes, one of the cars obscures the centered message when the game ends
         if (player.collidesWith(c)) {
             cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
             pVel = bouncePicVectorOffPic(player, pVel - vel, c) / 2

@@ -116,6 +116,7 @@ object TurkishAPI {
   val Boş = tr.Boş
 
   def gerekli(gerekçe: İkil, mesaj: => Any): Birim = require(gerekçe, mesaj)
+  def yeniMp3Çalar = new tr.Mp3Çalar(richBuiltins.newMp3Player)
 
   trait TurkishTurtle {
     def englishTurtle: Turtle
@@ -363,12 +364,15 @@ object TurkishAPI {
   def sesMp3üÇal(mp3dosyası: Yazı) = richBuiltins.playMp3Sound(mp3dosyası)
   def müzikMp3üÇalDöngülü(mp3dosyası: Yazı) = richBuiltins.playMp3Loop(mp3dosyası)
 
+  def Mp3ÇalıyorMu = müzikMp3üÇalıyorMu
+  def Mp3üDurdur() = müzikMp3üKapat()
+  def Mp3DöngüsünüDurdur() = müzikMp3DöngüsünüKapat()
   def müzikMp3üÇalıyorMu = richBuiltins.isMp3Playing
   def müzikÇalıyorMu = richBuiltins.isMusicPlaying
   def müzikMp3üKapat() = richBuiltins.stopMp3()
   def müzikMp3DöngüsünüKapat() = richBuiltins.stopMp3Loop()
+  def müziğiDurdur() = müziğiKapat()
   def müziğiKapat() = richBuiltins.stopMusic()
-  def yeniMp3Çalar = richBuiltins.newMp3Player
 
   def kojoVarsayılanBakışaçısınıKur() = richBuiltins.switchToDefaultPerspective()
   def kojoVarsayılanİkinciBakışaçısınıKur() = richBuiltins.switchToDefault2Perspective()

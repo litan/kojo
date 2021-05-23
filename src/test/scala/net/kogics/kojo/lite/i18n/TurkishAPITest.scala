@@ -206,8 +206,16 @@ class TurkishAPITest extends FunSuite with Matchers {
 
     val a4 = Aralık.kapalı(5, 1, -1)
     a4.dizin() shouldBe List(5, 4, 3, 2, 1)
+    var tane = 0
+    for(i <- a4; j <- a4) { tane += 1 }
+    tane shouldBe (25)
     val a5 = Aralık(5, 1, -1)
     a5.dizin() shouldBe List(5, 4, 3, 2)
+    var toplam = 0
+    a5.foreach( x => toplam += x )
+    toplam shouldBe (2 + 3 + 4 + 5)
+    a5.herÖgeİçin( x => toplam -= x )
+    toplam shouldBe (0)
   }
 
   test("Translations of mutable.Stack should work") {
@@ -247,6 +255,15 @@ class TurkishAPITest extends FunSuite with Matchers {
     var e3 = Eşlem( 1 -> 1, 2 -> 4, 4 -> 16, 16 -> 256 )
     e3 += (10 -> 100)
     e3(10) should be(100)
+    e3.sayı should be(5)
+    e3.eşli(2) should be(doğru)
+    e3 -= 2
+    e3.eşli(2) should be(yanlış)
+    e3.sayı should be(4)
+    var toplam1 = 0; var toplam2 = 0
+    e3.herÖgeİçin { ikili => val (a, b) = ikili; toplam1 += a; toplam2 += b }
+    toplam1 should be(1 + 4 + 16 + 10)
+    toplam2 should be(1 + 16 + 256 + 100)
   }
 
   test("Translation of Array should work") {
