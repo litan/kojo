@@ -82,7 +82,7 @@ trait ScriptLoader { self: Main.type =>
   def loadAndRunInstalledFile(file: String) = {
     try {
       codePane.setText("")
-      val code = Utils.loadInstalledFile(file)
+      val code = Utils.loadLocalizedInstalledFile(file)
       codePane.setText(Utils.stripCR(code))
       codePane.setCaretPosition(0)
       execSupport.compileRunCode()

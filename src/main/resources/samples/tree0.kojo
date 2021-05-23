@@ -1,18 +1,29 @@
-def tree(distance: Double) {
-    if (distance > 4) {
-        setPenThickness(distance/7)
-        setPenColor(cm.rgb(distance.toInt, math.abs(255-distance*3).toInt, 125))
-        forward(distance)
-        right(25)
-        tree(distance*0.8-2)
-        left(45)
-        tree(distance-10)
-        right(20)
-        forward(-distance)
-    }
+cleari()
+setSpeed(fast)
+setBackground(white)
+
+def branch(n: Double) {
+    forward(n)
 }
 
-clear()
-setSpeed(fast)
+def tree(n: Double) {
+    savePosHe()
+    setPenColor(cm.rgb(n.toInt, math.abs(255 - n * 3).toInt, 125))
+    if (n <= 4) {
+        setPenThickness(0.5)
+        branch(n / 2)
+    }
+    else {
+        setPenThickness(n / 7)
+        branch(n)
+        right(25)
+        tree(0.8 * n - 2)
+        left(25)
+        left(20)
+        tree(n - 10)
+    }
+    restorePosHe()
+}
+
 hop(-200)
 tree(90)
