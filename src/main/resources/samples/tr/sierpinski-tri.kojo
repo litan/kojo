@@ -28,10 +28,9 @@ def sierpinski(boy: Kesir) {
         sierpinski(boy / 2)
         zıpla(boy / 2)
         sierpinski(boy / 2)
+        sol(60)
         zıpla(- boy / 2)
         sağ(60)
-        zıpla(boy / 2)
-        sol(60)
         sierpinski(boy / 2)
     }
     konumVeYönüGeriYükle()
