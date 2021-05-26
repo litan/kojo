@@ -95,20 +95,29 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     path.reset()
   }
 
+  private def bgRectCoords: Array[Double] = {
+    val rectCoords = Array(0, 0, width, height)
+    g2d.getTransform.inverseTransform(rectCoords, 0, rectCoords, 0, 2)
+    rectCoords
+  }
+
   def background(c: Color): Unit = {
-    tempRect.setRect(0, 0, width, height)
+    val rc = bgRectCoords
+    tempRect.setRect(rc(0), rc(1), rc(2) - rc(0), rc(3) - rc(1))
     g2d.setPaint(c)
     g2d.fill(tempRect)
   }
 
   def background(n: Int): Unit = {
-    tempRect.setRect(0, 0, width, height)
+    val rc = bgRectCoords
+    tempRect.setRect(rc(0), rc(1), rc(2) - rc(0), rc(3) - rc(1))
     g2d.setPaint(cm.rgb(n, n, n))
     g2d.fill(tempRect)
   }
 
   def background(n: Int, a: Int): Unit = {
-    tempRect.setRect(0, 0, width, height)
+    val rc = bgRectCoords
+    tempRect.setRect(rc(0), rc(1), rc(2) - rc(0), rc(3) - rc(1))
     g2d.setPaint(cm.rgba(n, n, n, a))
     g2d.fill(tempRect)
   }
