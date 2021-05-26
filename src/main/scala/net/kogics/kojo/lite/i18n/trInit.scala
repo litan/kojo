@@ -115,6 +115,13 @@ object TurkishAPI {
   val MiskinDizin = tr.MiskinDizin
   val Boş = tr.Boş
 
+  type ÇiniDünyası = tr.ÇiniDünyası
+  val ÇiniDünyası = tr.ÇiniDünyası
+  type ÇiniXY = ÇiniDünyası.ÇiniXY
+  val ÇiniXY = ÇiniDünyası.ÇiniXY
+  type BirSayfaKostüm = tr.BirSayfaKostüm
+  val BirSayfaKostüm = tr.BirSayfaKostüm
+
   def gerekli(gerekçe: İkil, mesaj: => Any): Birim = require(gerekçe, mesaj)
   def yeniMp3Çalar = new tr.Mp3Çalar(richBuiltins.newMp3Player)
 
@@ -425,6 +432,9 @@ object TurkishAPI {
     richBuiltins.tCanvas.zoomXY(xOran, yOran, xMerkez, yMerkez)
   def yaklaşmayıSil() = richBuiltins.tCanvas.resetPanAndZoom()
   def yaklaşmayaİzinVerme() = richBuiltins.tCanvas.disablePanAndZoom()
+  def tuvaliKaydır(x: Kesir, y: Kesir) = richBuiltins.tCanvas.scroll(x, y)
+  def tuvaliDöndür(açı: Kesir) = richBuiltins.tCanvas.viewRotate(açı)
+
   def tuşaBasılıMı(tuş: Sayı) = richBuiltins.isKeyPressed(tuş)
   def tuşaBasınca(iş: Sayı => Birim) = richBuiltins.tCanvas.onKeyPress(iş)
   def tuşuBırakınca(iş: Sayı => Birim) = richBuiltins.tCanvas.onKeyRelease(iş)
