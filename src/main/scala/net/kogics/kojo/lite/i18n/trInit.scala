@@ -115,7 +115,15 @@ object TurkishAPI {
   val MiskinDizin = tr.MiskinDizin
   val Boş = tr.Boş
 
+  type ÇiniDünyası = tr.ÇiniDünyası
+  val ÇiniDünyası = tr.ÇiniDünyası
+  type ÇiniXY = ÇiniDünyası.ÇiniXY
+  val ÇiniXY = ÇiniDünyası.ÇiniXY
+  type BirSayfaKostüm = tr.BirSayfaKostüm
+  val BirSayfaKostüm = tr.BirSayfaKostüm
+
   def gerekli(gerekçe: İkil, mesaj: => Any): Birim = require(gerekçe, mesaj)
+  def yeniMp3Çalar = new tr.Mp3Çalar(richBuiltins.newMp3Player)
 
   trait TurkishTurtle {
     def englishTurtle: Turtle
@@ -363,12 +371,15 @@ object TurkishAPI {
   def sesMp3üÇal(mp3dosyası: Yazı) = richBuiltins.playMp3Sound(mp3dosyası)
   def müzikMp3üÇalDöngülü(mp3dosyası: Yazı) = richBuiltins.playMp3Loop(mp3dosyası)
 
+  def Mp3ÇalıyorMu = müzikMp3üÇalıyorMu
+  def Mp3üDurdur() = müzikMp3üKapat()
+  def Mp3DöngüsünüDurdur() = müzikMp3DöngüsünüKapat()
   def müzikMp3üÇalıyorMu = richBuiltins.isMp3Playing
   def müzikÇalıyorMu = richBuiltins.isMusicPlaying
   def müzikMp3üKapat() = richBuiltins.stopMp3()
   def müzikMp3DöngüsünüKapat() = richBuiltins.stopMp3Loop()
+  def müziğiDurdur() = müziğiKapat()
   def müziğiKapat() = richBuiltins.stopMusic()
-  def yeniMp3Çalar = richBuiltins.newMp3Player
 
   def kojoVarsayılanBakışaçısınıKur() = richBuiltins.switchToDefaultPerspective()
   def kojoVarsayılanİkinciBakışaçısınıKur() = richBuiltins.switchToDefault2Perspective()
@@ -421,6 +432,9 @@ object TurkishAPI {
     richBuiltins.tCanvas.zoomXY(xOran, yOran, xMerkez, yMerkez)
   def yaklaşmayıSil() = richBuiltins.tCanvas.resetPanAndZoom()
   def yaklaşmayaİzinVerme() = richBuiltins.tCanvas.disablePanAndZoom()
+  def tuvaliKaydır(x: Kesir, y: Kesir) = richBuiltins.tCanvas.scroll(x, y)
+  def tuvaliDöndür(açı: Kesir) = richBuiltins.tCanvas.viewRotate(açı)
+
   def tuşaBasılıMı(tuş: Sayı) = richBuiltins.isKeyPressed(tuş)
   def tuşaBasınca(iş: Sayı => Birim) = richBuiltins.tCanvas.onKeyPress(iş)
   def tuşuBırakınca(iş: Sayı => Birim) = richBuiltins.tCanvas.onKeyRelease(iş)
@@ -485,9 +499,13 @@ object TurkishAPI {
 
   import tr.{res => r}
   val (döndür, döndürMerkezli, filtre, gürültü, örgü) = (r.döndür _, r.döndürMerkezli _, r.filtre _, r.gürültü _, r.örgü _)
-  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, kaydır, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.kaydır _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
+  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
   def götür(n: Nokta) = r.götür(n)
   def götür(x: Kesir, y: Kesir) = r.götür(x, y)
+  def götür(yy: Yöney2B) = r.götür(yy)
+  def kaydır(n: Nokta) = r.kaydır(n)
+  def kaydır(x: Kesir, y: Kesir) = r.kaydır(x, y)
+  def kaydır(yy: Yöney2B) = r.kaydır(yy)
   def büyüt(oran: Kesir) = r.büyüt(oran)
   def büyüt(xOranı: Kesir, yOranı: Kesir) = r.büyüt(xOranı, yOranı)
   def ışıklar(ışıklar: com.jhlabs.image.LightFilter.Light*) = r.ışıklar(ışıklar: _*)

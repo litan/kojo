@@ -163,4 +163,16 @@ package object tr {
     val enUfağı = Char.MaxValue
     val enİrisi = Char.MinValue
   }
+
+  class Mp3Çalar(p: net.kogics.kojo.music.KMp3) {
+    def çalıyorMu = p.isMp3Playing
+    def sesMp3üÇal(mp3dosyası: Yazı) = p.playMp3Sound(mp3dosyası)
+    def çal(mp3dosyası: Yazı) = p.playMp3(mp3dosyası)
+    def durdur() = p.stopMp3()
+    
+    def önyükle(mp3dosyası: Yazı) = p.preloadMp3(mp3dosyası)
+    
+    def döngülüÇal(mp3dosyası: Yazı) = p.playMp3Loop(mp3dosyası)
+    def döngüyüDurdur() = p.stopMp3Loop()
+  }
 }

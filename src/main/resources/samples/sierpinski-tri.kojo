@@ -1,4 +1,4 @@
-clear()
+cleari()
 val offWhite = cm.hex(0xF2F5F1)
 setBackground(offWhite)
 setSpeed(superFast)
@@ -26,14 +26,13 @@ def sier(n: Double) {
         sier(n / 2)
         hop(n / 2)
         sier(n / 2)
+        left(60)
         hop(-n / 2)
         right(60)
-        hop(n / 2)
-        left(60)
         sier(n / 2)
     }
     restorePosHe()
 }
 
-hop(-200)
+setPosition(-200, -150)
 sier(size)
