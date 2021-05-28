@@ -163,6 +163,7 @@ object TurkishAPI {
     def güney() = englishTurtle.setHeading(-90)
     def canlandırmaHızınıKur(n: Uzun) = englishTurtle.setAnimationDelay(n)
     def canlandırmaHızı: Uzun = englishTurtle.animationDelay
+    def yaz(t: Her) = yazı(t)
     def yazı(t: Her) = englishTurtle.write(t)
     // ~/src/kojo/git/kojo/src/main/scala/net/kogics/kojo/turtle/Turtle.scala
     // ../../turtle/Turtle.scala

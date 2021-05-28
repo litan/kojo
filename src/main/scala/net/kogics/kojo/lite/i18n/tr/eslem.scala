@@ -31,5 +31,7 @@ case class Eşlem[A,D](val m: Map[A,D]) {
   def herÖgeİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
   def sayı: Sayı = m.size
   def dizi = m.toSeq
+  def al(a: A): Belki[D] = m.get(a)
+  def alYoksa(a: A, varsayılanDeğer: => D) = m.getOrElse(a, varsayılanDeğer)
   def apply(a: A) = m(a)
 }

@@ -20,6 +20,9 @@ package net.kogics.kojo.lite.i18n.tr
 import net.kogics.kojo.tiles
 import net.kogics.kojo.core.SCanvas
 
+// used in Demo Platformer (Mağara Oyunu in Turkish):
+//   ../../../../../../../../../installer/examples/tiledgame/game_tr.kojo.installed
+//   ~/src/kojo/git/kojo/installer/examples/tiledgame/game_tr.kojo.installed
 object ÇiniDünyası {
   type ÇiniXY = tiles.TileXY
   val ÇiniXY = tiles.TileXY
