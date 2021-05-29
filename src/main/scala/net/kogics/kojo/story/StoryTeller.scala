@@ -147,7 +147,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
     val prevBut = new JButton()
     prevBut.setIcon(Utils.loadIcon("/images/back.png"))
-    prevBut.setToolTipText("Previous View")
+    prevBut.setToolTipText(Utils.loadString("S_StoryTellerPreviousView"))
     prevBut.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent): Unit = {
         prevPage()
@@ -157,7 +157,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
     val stopBut = new JButton()
     stopBut.setIcon(Utils.loadIcon("/images/stop.png"))
-    stopBut.setToolTipText("Stop Story")
+    stopBut.setToolTipText(Utils.loadString("S_StoryTellerStopStory"))
     stopBut.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent): Unit = {
         stop()
@@ -167,7 +167,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
     val nextBut = new JButton()
     nextBut.setIcon(Utils.loadIcon("/images/forward.png"))
-    nextBut.setToolTipText("Next View")
+    nextBut.setToolTipText(Utils.loadString("S_StoryTellerNextView"))
     nextBut.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent): Unit = {
         nextPage()
