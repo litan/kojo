@@ -260,10 +260,16 @@ class TurkishAPITest extends FunSuite with Matchers {
     e3 -= 2
     e3.eşli(2) should be(yanlış)
     e3.sayı should be(4)
-    var toplam1 = 0; var toplam2 = 0
+
+    var toplam1 = 0
+    var toplam2 = 0
     e3.herÖgeİçin { ikili => val (a, b) = ikili; toplam1 += a; toplam2 += b }
     toplam1 should be(1 + 4 + 16 + 10)
     toplam2 should be(1 + 16 + 256 + 100)
+
+    e3.al(10) shouldBe(Biri(100))
+    e3.al(3) shouldBe(Hiçbiri)
+    e3.alYoksa(3, -1) shouldBe(-1)
   }
 
   test("Translation of Array should work") {
