@@ -9,8 +9,10 @@ val SeçenekSayısı = 4 // komut salındıraçında (dropdown) kaç seçenek ol
 // Yüklediğimiz yazılım (runner.kojo) öykü anlatma özelliğini kurar.
 // #include /challenge/tr/runner.kojo
 
-// Alıştırmalar burada tanımlanıyor. İstediğin gibi değiştirebilirsin.
-lazy val challengeLevels = Dizi(
+// Alıştırmaları ve açıklamalarını burada tanımlıyoruz. İstediğin gibi değiştirebilirsin.
+// Bu iki miskin değişmez (lazy val) yukarıda yüklediğimiz runner.kojo dosyasında tanımlanmış
+// yöntemler içinde kullanılıyor.
+lazy val alıştırmalar = Dizi(
     """ileri(50)
 sağ(90)
 ileri(100)
@@ -147,7 +149,7 @@ ileri(88)
 """
 )
 
-lazy val levelsHelp = Eşlem(
+lazy val açıklamalar = Eşlem(
     1 -> <div>
     Neler öğreniyoruz:
         <ul>

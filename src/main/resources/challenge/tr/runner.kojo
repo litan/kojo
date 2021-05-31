@@ -291,11 +291,11 @@ def findDropDowns(w: Widget): Seq[DropDown[String]] = {
 }
 //resetInterpreter()
 
-val levelPages = challengeLevels.zipWithIndex.map {
+val levelPages = alıştırmalar.zipWithIndex.map {
     case (code, idx) =>
-        val last = if (idx == challengeLevels.size - 1) true else false
+        val last = if (idx == alıştırmalar.size - 1) true else false
         // level -> ""  // todo: m.get -> al
-        challengePage(code, levelsHelp.al(idx + 1), s"${idx + 1}", last)
+        challengePage(code, açıklamalar.al(idx + 1), s"${idx + 1}", last)
 }
 val story = Story(levelPages: _*)
 
