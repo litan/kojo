@@ -353,7 +353,7 @@ object TurkishAPI {
   def yazıyüzleri = builtins.availableFontNames
   def yazıyüzü(adı: Yazı, boyu: Sayı) = builtins.Font(adı, boyu)
   def yazıyüzü(adı: Yazı, boyu: Sayı, biçem: Sayı) = builtins.Font(adı, biçem, boyu)
-  def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıAdı: Yazı = null): Dikdörtgen = builtins.textExtent(yazı, yazıBoyu, yazıAdı)
+  def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıyüzüAdı: Yazı = null): Dikdörtgen = builtins.textExtent(yazı, yazıBoyu, yazıyüzüAdı)
 
   val kaplumbağa0 = kaplumbağa
   def yeniKaplumbağa(x: Kesir, y: Kesir) = new Kaplumbağa(x, y)
