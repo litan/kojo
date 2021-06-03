@@ -138,7 +138,9 @@ answerF.addKeyListener(new KeyAdapter {
             answerF.setForeground(red)
             wrongs += 1
             if (!done) {
-                newUi()
+                schedule(0.3) {
+                    newUi()
+                }
             }
         }
     }
