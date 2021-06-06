@@ -163,7 +163,8 @@ object TurkishAPI {
     def güney() = englishTurtle.setHeading(-90)
     def canlandırmaHızınıKur(n: Uzun) = englishTurtle.setAnimationDelay(n)
     def canlandırmaHızı: Uzun = englishTurtle.animationDelay
-    def yaz(t: Her) = yazı(t)
+    // yaz overlaps with (satır)yaz
+    def tuvaleYaz(t: Her) = yazı(t)
     def yazı(t: Her) = englishTurtle.write(t)
     // ~/src/kojo/git/kojo/src/main/scala/net/kogics/kojo/turtle/Turtle.scala
     // ../../turtle/Turtle.scala
@@ -353,7 +354,7 @@ object TurkishAPI {
   def yazıyüzleri = builtins.availableFontNames
   def yazıyüzü(adı: Yazı, boyu: Sayı) = builtins.Font(adı, boyu)
   def yazıyüzü(adı: Yazı, boyu: Sayı, biçem: Sayı) = builtins.Font(adı, biçem, boyu)
-  def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıAdı: Yazı = null): Dikdörtgen = builtins.textExtent(yazı, yazıBoyu, yazıAdı)
+  def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıyüzüAdı: Yazı = null): Dikdörtgen = builtins.textExtent(yazı, yazıBoyu, yazıyüzüAdı)
 
   val kaplumbağa0 = kaplumbağa
   def yeniKaplumbağa(x: Kesir, y: Kesir) = new Kaplumbağa(x, y)
