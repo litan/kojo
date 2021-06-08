@@ -122,13 +122,9 @@ def enİriBölen(pay: Sayı, payda: Sayı): Sayı = {
 }
 
 val düğme = ay.Düğme("Doğru mu?") {
-    if (girdi1.value == "" || girdi2.value == "") {
-        yanıt.sil()
-        yanıt2.sil()
-    }
-    else {
-        yanıt.sil()
-        yanıt2.sil()
+    yanıt.sil()
+    yanıt2.sil()
+    if (girdi1.value != "" && girdi2.value != "") {
         val ortakBölen = enİriBölen(pay, payda)
         belirt(pay <= payda, "Pay paydan büyük olmamalı")
         val sadePay = pay / ortakBölen
@@ -158,7 +154,6 @@ val düğme = ay.Düğme("Doğru mu?") {
     yanıt2 = Resim.arayüz(etiket2)
     çiz(götür(ta.x + 20, -ta.y - 40) -> yanıt)
     çiz(götür(ta.x + 20, -ta.y - 80) -> yanıt2)
-
 }
 
 val düğme2 = Button("Yeni soru") {
