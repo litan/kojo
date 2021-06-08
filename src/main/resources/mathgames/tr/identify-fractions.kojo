@@ -139,23 +139,18 @@ val düğme = ay.Düğme("Doğru mu?") {
         if (g1 == sadePay && g2 == sadePayda) {
             etiket = ay.Tanıt("Doğru.")
             renk = Renk(0, 143, 0) // koyu yeşilimsi
+            etiket2 = ay.Tanıt(" ")
+        }
+        else if (g1 / o2 == sadePay && g2 / o2 == sadePayda) {
+            etiket = ay.Tanıt("Doğru ama sade değil.")
+            renk = turuncu
+            etiket2 = ay.Tanıt(s"Bu oranı $sadePay / $sadePayda olarak yazalım")
         }
         else {
-            if (g1 / o2 == sadePay && g2 / o2 == sadePayda) {
-                etiket = ay.Tanıt("Doğru ama sade değil.")
-                renk = turuncu
-            }
-            else {
-                etiket = ay.Tanıt("Yanlış.")
-                renk = kırmızı
-            }
+            etiket = ay.Tanıt("Yanlış.")
+            renk = kırmızı
+            etiket2 = ay.Tanıt(" ")
         }
-        etiket2 =
-            if ((g1 == pay && g2 == payda && g1 == sadePay && g2 == sadePayda) ||
-                (g1 / o2 != sadePay || g2 / o2 != sadePayda))
-                ay.Tanıt(" ")
-            else
-                ay.Tanıt(s"Bu oranı $sadePay / $sadePayda olarak yazalım")
     }
     etiket.setForeground(renk)
     etiket.setFont(Font("Serif", 20))
