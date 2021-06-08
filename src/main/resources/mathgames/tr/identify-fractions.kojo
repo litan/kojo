@@ -124,7 +124,7 @@ def enİriBölen(pay: Sayı, payda: Sayı): Sayı = {
 val düğme = ay.Düğme("Doğru mu?") {
     yanıt.sil()
     yanıt2.sil()
-    if (girdi1.value != "" && girdi2.value != "") {
+    if (girdi1.value.toIntOption.isDefined && girdi2.value.toIntOption.isDefined) {
         val ortakBölen = enİriBölen(pay, payda)
         belirt(pay <= payda, "Pay paydan büyük olmamalı")
         val sadePay = pay / ortakBölen
@@ -147,8 +147,12 @@ val düğme = ay.Düğme("Doğru mu?") {
             renk = kırmızı
             etiket2 = ay.Tanıt(" ")
         }
+        etiket.setForeground(renk)
     }
-    etiket.setForeground(renk)
+    else {
+        etiket = ay.Tanıt("Pay ve payda tam sayı olmalı.")
+        etiket.setForeground(kırmızı)
+    }
     etiket.setFont(Font("Serif", 20))
     yanıt = Resim.arayüz(etiket)
     yanıt2 = Resim.arayüz(etiket2)
