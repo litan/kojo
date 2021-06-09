@@ -27,10 +27,16 @@ import java.awt.{event => e}
 
 object arayuz {
 
+  case class BölmeÇizgisi(renk: Renk = yok, saydamMı: İkil = yanlış) extends s.JSeparator {
+    if (renk != yok) {
+      setBackground(renk)
+    }
+    setOpaque(saydamMı)
+  }
+
   /* ../../../widget/swingwrappers.scala
    Also has traits: PreferredMax Focusable
    */
-
   type Parça = s.JComponent
   type Sıra = w.RowPanel
   type Satır = Sıra
@@ -42,6 +48,7 @@ object arayuz {
   type Açkapa = w.ToggleButton
   type Salındıraç[T] = w.DropDown[T]
   type Kaydıraç = w.Slider
+  // type BölmeÇizgisi = s.JSeparator
   val Sıra = w.RowPanel
   val Satır = Sıra
   val Sütun = w.ColPanel

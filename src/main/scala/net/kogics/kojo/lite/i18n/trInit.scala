@@ -38,6 +38,7 @@ object TurkishAPI {
   type HerDeğer=tr.HerDeğer
   type HerGönder=tr.HerGönder
   type Yok=tr.Yok
+  val  yok: Yok = tr.yok
   type Hiç=tr.Hiç
   type Renk=tr.Renk
   type Boya=tr.Boya
@@ -122,6 +123,7 @@ object TurkishAPI {
   type BirSayfaKostüm = tr.BirSayfaKostüm
   val BirSayfaKostüm = tr.BirSayfaKostüm
 
+  def belirt(belit: İkil, mesaj: => Any): Birim = assert(belit, mesaj)
   def gerekli(gerekçe: İkil, mesaj: => Any): Birim = require(gerekçe, mesaj)
   def yeniMp3Çalar = new tr.Mp3Çalar(richBuiltins.newMp3Player)
 
@@ -354,7 +356,7 @@ object TurkishAPI {
   def yazıyüzleri = builtins.availableFontNames
   def yazıyüzü(adı: Yazı, boyu: Sayı) = builtins.Font(adı, boyu)
   def yazıyüzü(adı: Yazı, boyu: Sayı, biçem: Sayı) = builtins.Font(adı, biçem, boyu)
-  def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıyüzüAdı: Yazı = null): Dikdörtgen = builtins.textExtent(yazı, yazıBoyu, yazıyüzüAdı)
+  def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıyüzüAdı: Yazı = yok): Dikdörtgen = builtins.textExtent(yazı, yazıBoyu, yazıyüzüAdı)
 
   val kaplumbağa0 = kaplumbağa
   def yeniKaplumbağa(x: Kesir, y: Kesir) = new Kaplumbağa(x, y)
@@ -528,21 +530,6 @@ object TurkishAPI {
 
   import tr.arayuz
   val ay = arayuz
-  /*
-  type Parça = ay.Parça
-  type Sıra = ay.Sıra
-  type Satır = ay.Satır
-  type Sütun = ay.Sütun
-  val Sütun = ay.Sütun
-  type Yazıgirdisi[T] = ay.Yazıgirdisi[T]
-  val Yazıgirdisi = ay.Yazıgirdisi
-  type Yazıalanı = ay.Yazıalanı
-  type Tanıt = ay.Tanıt
-  type Düğme = ay.Düğme
-  type Açkapa = ay.Açkapa
-  type Salındıraç[T] = ay.Salındıraç[T] 
-  type Kaydıraç = ay.Kaydıraç
-   */
 
   def zamanTut(başlık: Yazı = "Zaman ölçümü:")(işlev: => Birim)(bitiş: Yazı = "sürdü."): Birim = { // timeit in Builtins.scala
     val t0 = buSaniye

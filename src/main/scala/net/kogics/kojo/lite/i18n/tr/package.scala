@@ -35,6 +35,7 @@ package object tr {
   type HerDeğer  = AnyVal
   type HerGönder = AnyRef
   type Yok   = Null
+  val yok: Yok = null
   type Hiç   = Nothing
 
   type Renk = Color
