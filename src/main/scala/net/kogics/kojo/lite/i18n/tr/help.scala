@@ -17,79 +17,6 @@
 package net.kogics.kojo.lite.i18n.tr
 
 object help {
-  val keywords = Map(
-    "abstract" -> "soyut",
-    "case" -> "durum",
-    "catch" -> "yakala",
-    "class" -> "sınıf",
-    "def" -> "tanım",
-    "do" -> "yap",
-    "else" -> "yoksa",
-    "extends" -> "genişlet",
-    "false" -> "yanlış",
-    "final" -> "son",
-    "finally" -> "sonunda",
-    "for" -> "yerine",
-    "forSome" -> "bazı",
-    "if" -> "eğer",
-    "implicit" -> "örtük",
-    "import" -> "getir",
-    "lazy" -> "miskin",
-    "match" -> "eşle",
-    "new" -> "yeni",
-    "null" -> "yok",
-    "object" -> "nesne",
-    "override" -> "baskın",
-    "package" -> "deste",
-    "private" -> "özel",
-    "protected" -> "koru",
-    "return" -> "dön",
-    "sealed" -> "sınırlı",
-    "super" -> "üst",
-    "this" -> "bu",
-    "throw" -> "at",
-    "trait" -> "özellik",
-    "try" -> "dene",
-    "true" -> "doğru",
-    "type" -> "tür",
-    "val" -> "der",
-    "var" -> "den",
-    "while" -> "sırada",
-    "with" -> "ekle",
-    "yield" -> "ver"
-  )
-  // we skip java keywords listed in scala keywords above:
-  val javaKeywords = Map(
-    "assert" -> "belirt",
-    "boolean" -> "ikil",
-    "break" -> "çık",
-    "byte" -> "lokma",
-    "case" -> "durum",
-    "char" -> "harf",
-    "const" -> "değişmez",
-    "continue" -> "devam",
-    "default" -> "varsayılı",
-    "double" -> "kesir",
-    "enum" -> "sayılı",
-    "float" -> "ufakkesir",
-    "goto" -> "git",
-    "implements" -> "tanımlar",
-    "instanceof" -> "bireyi",
-    "int" -> "sayı",
-    "interface" -> "arayüz",
-    "long" -> "uzun",
-    "public" -> "açık",
-    "native" -> "yerli",
-    "short" -> "kısa",
-    "static" -> "durgun",
-    "strictfp" -> "kesinkesir",
-    "switch" -> "makas",
-    "synchronized" -> "anuyumlu",
-    "throws" -> "atar",
-    "transient" -> "geçici",
-    "void" -> "türsüz",
-    "volatile" -> "uçucu"
-  )
   val templates = Map(
     "englishTurtle" ->  "englishTurtle",
     "yeniKaplumbağa" -> "yeniKaplumbağa(${x},${y},${kılık})",
@@ -155,7 +82,7 @@ object help {
     "buAn" -> "buAn()",
     "buSaniye" -> "buSaniye()",
     "hızıKur" -> "hızıKur(${hız})",
-    "def2" -> "def2",
+    "def2" -> "def2()",
   )
 
   val content = Map(
@@ -295,7 +222,7 @@ x.metod
       val toplam = topla(20, 7)
       satıryaz(toplam)
       </pre>
-</div>.toString
+</div>.toString,
 
   )
 }
