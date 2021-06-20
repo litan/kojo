@@ -65,7 +65,8 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       "TraversableLike",
       "IterableLike",
       "VertexShapeSupport",
-      "Kmath"
+      "Kmath",
+      "TurkishAPI"
     )
 
     lazy val ownerName = {
@@ -82,13 +83,16 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
 
     def knownCompletion = knownOwners contains ownerName
 
+    def specialOwner =
+      ownerName.startsWith("Turtle") || ownerName.startsWith("VertexShapeSupport") || ownerName.startsWith("TurkishAPI")
+
     def knownMethodTemplate: Option[String] = {
       //      println(s"owner for ${completion.name} -- ${completion.owner}")
       if (knownCompletion) {
         var template = methodTemplate(qualifiedName)
         if (template == "") None
         else if (template != null) Some(template) else {
-          if (ownerName startsWith "Turtle") {
+          if (specialOwner) {
             template = methodTemplate(completion.name)
             if (template != null) Some(template) else None
           }
@@ -109,7 +113,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       if (knownCompletion) {
         var help = Help(qualifiedName)
         if (help != null) Some(help) else {
-          if (ownerName.startsWith("Turtle") || ownerName.startsWith("VertexShapeSupport")) {
+          if (specialOwner) {
             help = Help(completion.name)
             if (help != null) Some(help) else None
           }
