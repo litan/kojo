@@ -1350,7 +1350,7 @@ canlandır { // İçindeki komutlar saniyede yaklaşık 40 kere yinelenir.
 val rb = 80 // raketin boyu
 val raket = kalemRengi(mavi) -> Resim.doğru(0, rb)
 val top = kalemRengi(mavi) -> Resim.daire(5)
-var skor = kalemRengi(siyah) * götür(-50, 150) -> Resim.yazı("Raketi fareyle yönet")
+val skor = kalemRengi(siyah) * götür(-50, 150) -> Resim.yazı("Raketi fareyle yönet")
 çiz(raket, top, skor)
 var x = 0.0; var y = 0 // topun konumu
 var dy = 8; var dx = -8.0 // topun hızı: d delta yani değişim ya da derivative yani türev demek

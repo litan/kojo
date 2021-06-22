@@ -541,6 +541,7 @@ object TurkishAPI {
   def DokumaBoya(dosya: Yazı, x: Kesir, y: Kesir) = richBuiltins.TexturePaint(dosya, x, y)
 
   def a_kalıp() = println("Kalıbı kullan") // todo: geçici. Bakınız tr/help.scala
+  def def2() = println("def")
 
   // more to come (:-)
 }
@@ -577,7 +578,5 @@ object TurkishInit {
   import tr.help
   val codeTemplates = help.templates
   val helpContent = help.content
-  val keywords = help.keywords
-  val javaKeywords = help.javaKeywords
 }
 
