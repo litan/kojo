@@ -83,6 +83,7 @@ object help {
     "buSaniye" -> "buSaniye()",
     "hızıKur" -> "hızıKur(${hız})",
     "def2" -> "def2()",
+    "eksenler" -> "eksenler",
   )
 
   val content = Map(
@@ -192,7 +193,7 @@ x.metod
     "buAn" -> <div><strong>buAn</strong>() - Bu komut evrensel zamana (UTC) göre 1 Ocak 1970 tam geceyarısından bu ana kadar geçen zamanı kesirsiz milisaniye olarak verir.</div>.toString,
     "buSaniye" -> <div><strong>buSaniye</strong>() - Bu komut evrensel zamana (UTC) göre 1 Ocak 1970 tam geceyarısından bu ana kadar geçen zamanı kesirli saniye olarak verir.</div>.toString,
     "hızıKur" -> <div><strong>hızıKur</strong>(hız) - Kaplumbağacığın hızını belirler. yavaş, orta, hızlı ve çokHızlı değerlerinden birini dene.</div>.toString,
-    "def2" -> <div><strong>def2</strong> - Kıvrık parantez içindeki bir dizi komuta ya da deyişe bir ad takar. Bu yöntemle yeni bir işlev ya da komut tanımlamış olursun. <br/>
+    "def_türkçe" -> <div><strong>def</strong> - Kıvrık parantez içindeki bir dizi komuta ya da deyişe bir ad takar. Bu yöntemle yeni bir işlev ya da komut tanımlamış olursun. <br/>
       <br/>
       <em>Örneğin:</em> <br/>
       <br/>
@@ -210,7 +211,6 @@ x.metod
       kare(100)
       kare(200)
 
-
       // Topla adında yeni bir işlev tanımlayalım
       // İki girdisi, bir çıktısı var
       def topla(a: Sayı, b: Sayı) =
@@ -222,7 +222,40 @@ x.metod
       val toplam = topla(20, 7)
       satıryaz(toplam)
       </pre>
-</div>.toString,
+            </div>.toString,
+
+    "eksenler" ->
+      <div>
+      <strong>eksenler -> resim</strong> - Verilen resmin yerel eksenlerini çizerek yeni bir resim oluşturur.
+      <br/>
+      Bu yöntem dönüştürücü bir yöntemdir ve resim oluşturmakta size yardımcı olur.
+      <br/><em>Örnek:</em> <br/>
+      <pre>
+      def resim = Resim {{
+        yinele(2) {{
+          ileri(50); sağ()
+          ileri(100); sağ()
+        }}
+      }}
+      silVeSakla
+      çiz(
+        götür(-100, -50) * döndür(45) *
+          boyaRengi(mavi) * eksenler -> resim
+      )
+      eksenleriGöster()
+      </pre>
+      Bu örnekte bir dikdörtgen çiziyor, onu (-100, -50) noktasına taşıyor, 45 derece döndürüyor ve içini maviye boyuyoruz. Bir de bu çizimin kendi eksenlerini yani yerel eksenlerini çiziyoruz. En sondaki eksenleriGöster komutuyla da genel ya da mutlak eksenleri gösteriyoruz.
+    </div>.toString,
+
+    "eksenleriGöster" ->
+      <div>
+      <strong>eksenleriGöster</strong> - Çizim tuvalinde yatay (X) ve dikey (Y) eksenlerini çizer.
+      </div>.toString,
+
+    "eksenleriGizle" ->
+      <div>
+      <strong>eksenleriGizle</strong> - Çizim tuvalindeki yatay (X) ve dikey (Y) eksenlerini siler.
+      </div>.toString,
 
   )
 }
