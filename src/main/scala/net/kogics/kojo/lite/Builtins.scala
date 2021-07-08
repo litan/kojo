@@ -646,13 +646,39 @@ Here's a partial list of the available commands:
     def effectablePic(pic: Picture) = picture.effectablePic(pic)
     def hgap(gap: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(gap, 0.001)
     def vgap(gap: Double) = penColor(noColor) * penThickness(0.001) -> Picture.rectangle(0.001, gap)
-    def showBounds(pics: Picture*) = Utils.runInSwingThread {
+
+    def showGlobalBounds(pics: Picture*) = Utils.runInSwingThread {
       pics.foreach { pic =>
         val b = pic.tnode.getGlobalFullBounds
-        val bpic = trans(b.x, b.y) -> rectangle(b.width, b.height)
+        val bpic = penWidth(4) * penColor(black) * trans(b.x, b.y) -> rectangle(b.width, b.height)
         draw(bpic)
       }
     }
+
+    def showLocalBounds(pics: Picture*) = Utils.runInSwingThread {
+      pics.foreach { pic =>
+        val tnode = pic.tnode
+        val b = tnode.getUnionOfChildrenBounds(null)
+        b.add(tnode.getBoundsReference)
+        val bpic = penWidth(1) * penColor(black) * trans(b.x, b.y) -> rectangle(b.width, b.height)
+        draw(bpic)
+        tnode.addChild(bpic.tnode)
+        tnode.repaint()
+      }
+    }
+
+    def showBounds(pics: Picture*) = Utils.runInSwingThread {
+      pics.foreach { pic =>
+        val tnode = pic.tnode
+        assert(tnode.getParent != null, s"Picture does not have a parent - $pic")
+        val b = tnode.getFullBounds
+        val bpic = penWidth(2) * penColor(black) * trans(b.x, b.y) -> rectangle(b.width, b.height)
+        draw(bpic)
+        tnode.getParent.addChild(bpic.tnode)
+        tnode.getParent.repaint()
+      }
+    }
+
     def showAxes(pics: Picture*) = {
       pics.foreach { pic =>
         pic.axesOn()

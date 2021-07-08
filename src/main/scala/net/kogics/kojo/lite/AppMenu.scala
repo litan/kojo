@@ -261,6 +261,8 @@ trait AppMenu {
     animGameMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
     animGameMenu.add(menuItemFor("S_CarRide", "car-ride.kojo"))
     animGameMenu.add(menuItemForInstalledFile("S_Platformer", "examples/tiledgame/game.kojo"))
+    animGameMenu.add(menuItemFor("S_TicTacToe", "tic-tac-toe.kojo"))
+    animGameMenu.add(menuItemForInstalledFile("S_Othello", "examples/othello/menu.kojo"))
 
     samplesMenu.add(animGameMenu)
 
@@ -317,6 +319,8 @@ trait AppMenu {
     showcaseMenu.add(menuItemFor("S_Collidium", "collidium.kojo"))
     showcaseMenu.add(menuItemFor("S_CarRide", "car-ride.kojo"))
     showcaseMenu.add(menuItemForInstalledFile("S_Platformer", "examples/tiledgame/game.kojo"))
+    showcaseMenu.add(menuItemFor("S_TicTacToe", "tic-tac-toe.kojo"))
+    showcaseMenu.add(menuItemForInstalledFile("S_Othello", "examples/othello/menu.kojo"))
 
     menuBar.add(showcaseMenu)
 

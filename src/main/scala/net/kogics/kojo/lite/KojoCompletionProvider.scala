@@ -219,7 +219,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
 
     def bareName(c: TemplateCompletion) = {
       val name = c.getInputText
-      val bn = name.split("""\(""")(0)
+      val bn = name.split("""[\(:]""")(0)
       //      if (name == bn)
       //        name.split(""":""")(0)
       //      else
