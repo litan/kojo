@@ -350,6 +350,7 @@ object TurkishAPI {
 
   def üçgenDöşeme(noktalar: Dizi[Nokta]): Dizi[Üçgen] = builtins.triangulate(noktalar)
 
+  // todo: klasör?
   def evDizini = builtins.homeDir
   def buDizin = builtins.currentDir
   def kurulumDizini = builtins.installDir
@@ -541,7 +542,7 @@ object TurkishAPI {
   def DokumaBoya(dosya: Yazı, x: Kesir, y: Kesir) = richBuiltins.TexturePaint(dosya, x, y)
 
   def a_kalıp() = println("Kalıbı kullan") // todo: geçici. Bakınız tr/help.scala
-  def def2() = println("def")
+  def def_türkçe() = println("def")
 
   // more to come (:-)
 }

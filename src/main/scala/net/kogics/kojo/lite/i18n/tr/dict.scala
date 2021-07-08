@@ -90,71 +90,9 @@ object dict {
     "void" -> "türsüz",
     "volatile" -> "uçucu"
   )
-  val type2en = Map(
-    // type defs
-    "Nesne" -> "Object",
-    "Birim" -> "Unit",
-    "Her" -> "Any",
-    "HerDeğer" -> "AnyVal",
-    "HerGönder" -> "AnyRef",
-    "Yok" -> "Null",
-    "Hiç" -> "Nothing",
-    "Renk" -> "Color",
-    "Boya" -> "Paint",
-    "Hız" -> "Speed",
-    "Nokta" -> "Point",
-    "Dikdörtgen" -> "Rectangle",
-    "Üçgen" -> "Triangle2D",
-    "İkil" -> "Boolean",
-    "Seçim" -> "Boolean",
-    "Lokma" -> "Byte",
-    "Kısa" -> "Short",
-    "Sayı" -> "Int",
-    "Uzun" -> "Long",
-    "İriSayı" -> "BigInt",
-    "UfakKesir" -> "Float",
-    "Kesir" -> "Double",
-    "İriKesir" -> "BigDecimal",
-    "Harf" -> "Char",
-    "Yazı" -> "String",
-    "EsnekYazı" -> "collection.mutable.StringBuilder",
-    "Belki" -> "Option",
-    "Biri" -> "Some",
-    "Dizi" -> "collection.Seq",
-    "Dizin" -> "List",
-    "MiskinDizin" -> "LazyList",
-    "Yöney" -> "Vector",
-    "Küme" -> "Set",
-    "Sayılar" -> "Vector[Sayı]",
-    "UzunlukBirimi" -> "UnitLen",
-    "GeoYol" -> "java.awt.geom.GeneralPath",
-    "GeoNokta" -> "VertexShape",
-    "Grafik2B" -> "scala.swing.Graphics2D",
-    "İmge" -> "Image",
-    "Bellekteİmge" -> "BufferedImage",
-    "Bellekteİmgeİşlemi" -> "java.awt.image.BufferedImageOp",
-    "İşlev1" -> "Function1",
-    "İşlev2" -> "Function2",
-    "İşlev3" -> "Function3",
-    "Bölümselİşlev" -> "PartialFunction",
-    // class defs
-    "Mp3Çalar" -> "net.kogics.kojo.music.KMp3",
-  )
-  val val2en = Map (
-    // val defs
-    "yok" -> "null",
-    "Hiçbiri" -> "None",
-    "doğru" -> "true",
-    "yanlış" -> "false",
-    "yavaş" -> "slow",
-    "orta" -> "medium",
-    "hızlı" -> "fast",
-    "çokHızlı" -> "superFast",
-    "noktaSayısı" -> "Pixel",
-    "santim" -> "Cm",
-    "inç" -> "Inch",
-    "Boş" -> "collection.immutable.Nil",
-  )
+  val type2en = Map()
+  val def2en = Map ()
+  val val2en = Map ()
   val method2en = Map (
     "Yöney.boş" -> "Vector.empty",
     "Küme.boş" -> "Set.empty",
@@ -171,5 +109,62 @@ object dict {
     "Harf.ufakkesire" -> "Char.char2float",
     "Harf.enUfağı" -> "Char.MaxValue",
     "Harf.enİrisi" -> "Char.MinValue",
+    "Aralık.başı" -> "Range.head",
+    "Aralık.sonu" -> "Range.last",
+    "Aralık.uzunluğu" -> "Range.size",
+    "Aralık.dizin" -> "Range.toList",
+    "Aralık.yazı" -> "Range.toString",
+    "Aralık.herÖgeİçin" -> "Range.foreach",
+    "ay.BölmeÇizgisi" -> "javax.swing.JSeparator",
+    "ay.Parça" -> "javax.swing.JComponent",
+    "ay.Satır" -> "javax.swing.RowPanel",
+    "ay.Sıra" -> "javax.swing.RowPanel",
+    "ay.Sütun" -> "javax.swing.ColPanel",
+    "ay.Yazıgirdisi" -> "javax.swing.TextField",
+    "ay.Yazıalanı" -> "javax.swing.TextArea",
+    "ay.Tanıt" -> "javax.swing.Label",
+    "ay.Düğme" -> "javax.swing.Button",
+    "ay.Açkapa" -> "javax.swing.ToggleButton",
+    "ay.Salındıraç" -> "javax.swing.DropDown",
+    "ay.Kaydıraç" -> "javax.swing.Slider",
+    "ay.çerçeveci.çizgiKenar" -> "javax.swing.BorderFactory.createLineBorder",
+    "ay.çerçeveci.boşKenar" -> "javax.swing.BorderFactory.createEmptyBorder",
   )
+  val altkumeler = Map (
+    "ay" -> List("olay", "değişmez", "çerçeveci")
+  )
+  val packageName2en = Map (
+    "ay" -> List("java.awt", "javax.swing"),
+  )
+  // todo: ./cinidunyasi.scala
+  /* (sub)types:
+   "ay.olay.TuşUyarlayıcısı" -> "java.awt.event.KeyAdapter",
+   "ay.olay.TuşaBasmaOlayı" -> "java.awt.event.KeyEvent",
+   */
+  /* (sub)packages
+   "ay.değişmez" -> "javax.swing.SwingConstants",
+   "ay.çerçeveci" -> "javax.swing.BorderFactory",
+   */
+  /* values
+   "ay.değişmez.merkez" -> "javax.swing.SwingConstants.CENTER",
+   "ay.değişmez.taban" -> "javax.swing.SwingConstants.BOTTOM",
+   "ay.değişmez.tavan" -> "javax.swing.SwingConstants.TOP",
+   "ay.değişmez.sol" -> "javax.swing.SwingConstants.LEFT",
+   "ay.değişmez.sağ" -> "javax.swing.SwingConstants.RIGHT",
+   "ay.değişmez.doğu" -> "javax.swing.SwingConstants.EAST",
+   "ay.değişmez.batı" -> "javax.swing.SwingConstants.WEST",
+   "ay.değişmez.kuzey" -> "javax.swing.SwingConstants.NORTH",
+   "ay.değişmez.güney" -> "javax.swing.SwingConstants.SOUTH",
+   "ay.değişmez.kuzeydoğu" -> "javax.swing.SwingConstants.NORTH_EAST",
+   "ay.değişmez.kuzeybatı" -> "javax.swing.SwingConstants.NORTH_WEST",
+   "ay.değişmez.güneydoğu" -> "javax.swing.SwingConstants.SOUTH_EAST",
+   "ay.değişmez.güneybatı" -> "javax.swing.SwingConstants.SOUTH_WEST",
+   "ay.değişmez.yatay" -> "javax.swing.SwingConstants.HORIZONTAL",
+   "ay.değişmez.dikey" -> "javax.swing.SwingConstants.VERTICAL",
+   "ay.değişmez.önceki" -> "javax.swing.SwingConstants.PREVIOUS",
+   "ay.değişmez.sonraki" -> "javax.swing.SwingConstants.NEXT",
+   "ay.değişmez.önder" -> "javax.swing.SwingConstants.LEADING",
+   "ay.değişmez.izler" -> "javax.swing.SwingConstants.TRAILING",
+   */
+
 }

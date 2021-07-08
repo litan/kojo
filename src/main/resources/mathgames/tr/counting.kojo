@@ -163,9 +163,9 @@ def yeterinceZamanVarMı() = {
     else yanlış
 }
 
+import ay.olay.TuşaBasmaOlayı
 val s = yeniSoru(0, 0)
-import java.awt.event.{ KeyAdapter, KeyEvent }
-yanıtPenceresi.addKeyListener(new KeyAdapter {
+yanıtPenceresi.addKeyListener(new ay.olay.TuşUyarlayıcısı { // yanıt penceresine tuş dinleyicisi ekliyoruz
     var sayılarAnımsa = s  // yanlış yanıt verince arayüzü baştan kuruyoruz. Soruyu hatırlayalım ki oyuncu tekrar deneyebilsin
     def yanıtıDenetle(x: Sayı) {
         if (x == yanıt) {
@@ -191,14 +191,15 @@ yanıtPenceresi.addKeyListener(new KeyAdapter {
         }
     }
 
-    def yanıtHazırMı(e: KeyEvent) = {
+    def yanıtHazırMı(olay: TuşaBasmaOlayı) = {
+        // penceredeki yazıyı al ve uzunluğunu bul
         yanıtPenceresi.getText.length >= yanıtUzunluğu
     }
 
     // escape tuşuna basınca oyuna son verelim:
-    override def keyPressed(e: KeyEvent) {
-        if (e.getKeyCode == tuşlar.VK_ESCAPE) {
-            e.consume()
+    override def keyPressed(olay: TuşaBasmaOlayı) {
+        if (olay.getKeyCode == tuşlar.VK_ESCAPE) {
+            olay.consume()
             if (!oyunBitti) {
                 oyunSüresineBak(doğru)
             }
@@ -207,33 +208,33 @@ yanıtPenceresi.addKeyListener(new KeyAdapter {
                 tümEkranTuval(); tümEkran = yanlış // tüm ekran modunu kapatalım
             }
         } // d tuşu yazılımcığımızı test etmek için:
-        else if (e.getKeyCode == tuşlar.VK_D) {
+        else if (olay.getKeyCode == tuşlar.VK_D) {
             val sayılar = (enÇokKaçSatır, enÇokKaçSütun, enÇokKaçSütun)
             sayılarAnımsa = sayılar
             yanıtıKur(sayılar)
             yeniArayüz(sayılar)
         } // büyük boşluk tuşuna basarak soruyu değiştirebiliriz:
-        else if (e.getKeyCode == tuşlar.VK_SPACE) {
+        else if (olay.getKeyCode == tuşlar.VK_SPACE) {
             değiştirmeSayısı += 1
             val sayılar = yeniSoru(0, 0)
             sayılarAnımsa = sayılar
             yeniArayüz(sayılar)
         }
-        else if (e.getKeyCode == tuşlar.VK_ENTER) {
+        else if (olay.getKeyCode == tuşlar.VK_ENTER) {
             tümEkran = !tümEkran
             tümEkranTuval() // tüm ekran modunu aç/kapat
         }
     }
 
     // sayı dışındaki girdileri yok sayalım
-    override def keyTyped(e: KeyEvent) {
-        if (!e.getKeyChar.isDigit) {
-            e.consume()
+    override def keyTyped(olay: TuşaBasmaOlayı) {
+        if (!olay.getKeyChar.isDigit) {
+            olay.consume()
         }
     }
 
-    override def keyReleased(e: KeyEvent) {
-        if (yanıtHazırMı(e)) {
+    override def keyReleased(olay: TuşaBasmaOlayı) {
+        if (yanıtHazırMı(olay)) {
             val x = yanıtPenceresi.value
             yanıtıDenetle(x)
         }

@@ -16,7 +16,7 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
-import collection.mutable.{ArrayBuffer}
+import collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
 // todo: this has only the bare essentials for Array and ArrayBuffer. Add more to the interface..
