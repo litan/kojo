@@ -196,7 +196,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           // don't need to clean out interrupt state because Kojo needs to be shut down anyway
           // and in fact, cleaning out the interrupt state will mess with a delayed interruption
           Log.info("Interrupt timer fired")
-          kprintln("Unable to stop script.\nPlease restart the Kojo Environment unless you see a 'Script Stopped' message soon.\n")
+          println("Unable to stop script.\nDoing a forced-stop. It's best to just restart Kojo!")
+          interpreterThread.get.stop()
         })
         outputHandler.interpOutputSuppressed = true
         Log.info("Interrupting Interpreter thread...")
@@ -222,7 +223,6 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       if (Thread.interrupted) {
         // also clears thread interrupted flag
         Log.info("Thread was interrupted after compiling/running.")
-        println("Thread was interrupted after compiling/running.")
       }
 
       if (interruptTimer.isDefined) {
