@@ -38,7 +38,7 @@ trait StubMain {
 
   def main(args: Array[String]): Unit = {
     val javaVersion = System.getProperty("java.version")
-    println(javaVersion)
+    println(s"Java version: $javaVersion")
 
     if (!Utils.isJavaAtLeast(8)) {
       JOptionPane.showMessageDialog(
@@ -104,11 +104,10 @@ trait StubMain {
       "-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"
 
     def reflectiveAccess = {
-      //      "--add-opens java.desktop/sun.awt=ALL-UNNAMED " +
-      //        "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED " +
-      //        "--add-opens java.desktop/sun.swing=ALL-UNNAMED"
-
-      "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED"
+      "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED " +
+        "--add-opens java.desktop/sun.awt=ALL-UNNAMED " +
+        "--add-opens java.desktop/sun.swing=ALL-UNNAMED " +
+        "--add-opens java.desktop/sun.swing.table=ALL-UNNAMED"
     }
 
     def noScaling =
