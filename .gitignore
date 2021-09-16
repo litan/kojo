@@ -8,7 +8,9 @@ lib/deploy.jar
 lib/javaws.jar
 installerbuild/
 Kojo-z/
-project/
+project/*
+!project/build.properties
+!project/plugins.sbt
 security/
 target/
 *.*~
@@ -18,3 +20,4 @@ dist/
 Kojo.zip
 log
 **/.DS_Store
+.bsp/
