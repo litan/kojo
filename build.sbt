@@ -22,6 +22,7 @@ libraryDependencies ++= Seq(
     "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2",
     "org.piccolo2d" % "piccolo2d-core" % "1.3.1",
     "org.piccolo2d" % "piccolo2d-extras" % "1.3.1",
+    "com.formdev" % "flatlaf" % "1.6",
     "com.vividsolutions" % "jts" % "1.13" intransitive(),
     "com.h2database" % "h2" % "1.3.168",
     "org.apache.commons" % "commons-math3" % "3.6.1",

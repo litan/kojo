@@ -153,9 +153,8 @@ trait StubMain {
     }
 
     val cmdArgs = s"-client -Xms128m -Xmx$maxMem " +
-      "-Xss1m -Dapple.laf.useScreenMenuBar=true " +
-      s"-Dawt.useSystemAAFontSettings=lcd $javaVersionSpecificArgs " +
-      "-Dapple.awt.graphics.UseQuartz=true " +
+      "-Xss1m " +
+      s"$javaVersionSpecificArgs " +
       extraArgs +
       s"net.kogics.kojo.lite.Main ${kojoArgs.mkString(" ")}"
 

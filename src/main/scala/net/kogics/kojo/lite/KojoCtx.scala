@@ -76,12 +76,12 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   lazy val screenDpiFontDelta: Int = {
     // alternative approach
-    // (baseFontSize * screenDPI / 96.0 - baseFontSize).round.toInt 
+    // (baseFontSize * screenDPI / 96.0 - baseFontSize).round.toInt
     val delta1 = screenSize.width match {
       case n if n <= 1440 => 0
-      case n if n <= 1680 => 2
-      case n if n <= 1920 => 4
-      case n if n <= 2560 => 6
+      case n if n <= 1680 => 1
+      case n if n <= 1920 => 2
+      case n if n <= 2560 => 4
       case n if n <= 2880 => 6
       case n if n <= 3840 => 6
       case _              => 6
@@ -102,7 +102,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
       def changeFontSize(key: String, delta: Int): Unit = {
         val f = defaults.get(key).asInstanceOf[FontUIResource]
         // if we use f.getName below, the 'Hindi' Language menu item does not show up right
-        val f2 = new FontUIResource(Font.SANS_SERIF, f.getStyle, f.getSize + delta)
+        val f2 = new FontUIResource(f.getName, f.getStyle, f.getSize + delta)
         defaults.put(key, f2)
       }
       val fontsToChange = List("defaultFont")

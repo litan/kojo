@@ -113,12 +113,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
   }
   Utils.safeProcessSilent {
-    if (kojoCtx.screenDpiFontDelta > 0) {
-      for (i <- 1 to kojoCtx.screenDpiFontDelta + 1) { increaseFontSizeAction.actionPerformed(null) }
-    }
-    else {
-      for (i <- 1 to 2) { increaseFontSizeAction.actionPerformed(null) }
-    }
+    for (i <- 1 to 3 + kojoCtx.screenDpiFontDelta) { increaseFontSizeAction.actionPerformed(null) }
   }
 
   RSyntaxTextArea.setTemplatesEnabled(true)

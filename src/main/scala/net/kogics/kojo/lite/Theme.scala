@@ -15,14 +15,10 @@
 package net.kogics.kojo.lite
 
 import java.awt.Color
-import java.awt.Font
-
-import javax.swing.UIManager
-import javax.swing.plaf.FontUIResource
 
 import org.fife.ui.rsyntaxtextarea.{Theme => RTheme}
 
-import com.bulenkov.darcula.DarculaLaf
+import com.formdev.flatlaf.{FlatDarkLaf, FlatLightLaf}
 
 import net.kogics.kojo.core
 import net.kogics.kojo.util.Utils
@@ -65,9 +61,10 @@ class DarkTheme extends Theme {
   val canvasBg = new Color(0x424647)
   def loadEditorTheme = RTheme.load(getClass.getResourceAsStream("dark-editor-theme.xml"))
   def loadLookAndFeel(): Unit = {
-    val laf = new DarculaLaf
-    UIManager.setLookAndFeel(laf)
-    UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
+    if (Utils.isMac) {
+      System.setProperty("apple.laf.useScreenMenuBar", "true")
+    }
+    FlatDarkLaf.setup()
   }
   def loadDefaultPerspective(kojoCtx: core.KojoCtx): Unit = {
     kojoCtx.switchToDefault2Perspective()
@@ -106,16 +103,9 @@ class LightTheme extends Theme {
   def loadEditorTheme = RTheme.load(getClass.getResourceAsStream("light-editor-theme.xml"))
   def loadLookAndFeel(): Unit = {
     if (Utils.isMac) {
-      // use the system look and feel
-      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName())
-      UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource("Arial", Font.PLAIN, 12))
+      System.setProperty("apple.laf.useScreenMenuBar", "true")
     }
-    else {
-      UIManager.getInstalledLookAndFeels.find { _.getName == "Nimbus" }.foreach { nim =>
-        UIManager.setLookAndFeel(nim.getClassName)
-      }
-    }
-
+    FlatLightLaf.setup()
   }
   def loadDefaultPerspective(kojoCtx: core.KojoCtx): Unit = {
     kojoCtx.switchToDefault2Perspective()

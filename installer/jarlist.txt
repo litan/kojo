@@ -15,7 +15,7 @@
 ../dist/jdi.jar
 ../dist/image-filters.jar
 ../dist/jssc.jar
-../dist/darcula.jar
+../dist/flatlaf-1.6.jar -> flatlaf.jar
 ../dist/libtiled.jar
 ../dist/scala-reflect-2.13.6.jar -> scala-reflect.jar
 ../dist/akka-actor_2.13-2.6.16.jar -> akka-actors.jar
