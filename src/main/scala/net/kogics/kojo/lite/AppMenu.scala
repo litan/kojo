@@ -80,6 +80,7 @@ trait AppMenu {
         urlGetter.getContentPane.add(urlPanel)
         urlGetter.setBounds(300, 300, 450, 300)
         urlGetter.pack()
+        urlGetter.setLocationRelativeTo(frame)
         urlGetter.setVisible(true)
       }
     })
