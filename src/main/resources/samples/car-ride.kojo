@@ -40,6 +40,7 @@ def createMarker() {
     val m = fillColor(white) * penColor(white) *
         trans(cb.x + cb.width / 2 - mwidth / 2, cb.y + cb.height) -> Picture.rect(markerHeight, mwidth)
     draw(m)
+    m.moveToBackAboveStage()
     markers += m
 }
 
@@ -53,7 +54,6 @@ timer(800) {
 }
 
 animate {
-    player.moveToFront()
     val enabled = epochTimeMillis - disabledTime > 300
     if (enabled) {
         if (isKeyPressed(Kc.VK_LEFT)) {
@@ -108,7 +108,6 @@ animate {
 
     cars.foreach { cv =>
         val (c, vel) = cv
-        //c.moveToFront()  We don't seem to need this. Sometimes, one of the cars obscures the centered message when the game ends
         if (player.collidesWith(c)) {
             cplayer.playMp3Sound("/media/car-ride/car-crash.mp3")
             pVel = bouncePicVectorOffPic(player, pVel - vel, c) / 2

@@ -28,7 +28,7 @@ import net.kogics.kojo.util.Utils
  */
 object LangMenuFactory {
 
-  val supportedLanguages = List("en", "sv", "fr", "pl" , "nl", "eo", "hi", "de", "ru", "it", "hr", "tr", "es")
+  val supportedLanguages = List("en", "sv", "fr", "pl", "nl", "eo", /*"hi", */ "de", "ru", "it", "hr", "tr", "es")
 
   def createLangMenu()(implicit kojoCtx: core.KojoCtx) = {
     var langMenus: Seq[JCheckBoxMenuItem] = Vector()
@@ -93,14 +93,4 @@ object LangMenuFactory {
     "en" -> "us",
     "hi" -> "in"
   )
-
-  /**The set of codes of all languages, for which there is no flag icon in geogebra.*/
-  private val flagsInKojo = Set("eo")
-
-  /**Return the flag icon for the country of the given language.*/
-  private def langIcon(langCode: String): ImageIcon = {
-    val countryCode = langToCountry.get(langCode).getOrElse(langCode)
-    val flagSource = if(flagsInKojo contains countryCode) "/images/flag" else "/geogebra/gui/menubar/images"
-    Utils.loadIcon(s"$flagSource/$countryCode.png")
-  }
 }

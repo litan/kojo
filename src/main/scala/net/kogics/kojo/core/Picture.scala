@@ -112,6 +112,31 @@ trait Picture extends InputAware {
   def moveToBack() = Utils.runInSwingThread {
     tnode.moveToBack()
   }
+
+  def moveToBackAboveStage() = Utils.runInSwingThread {
+    val p = tnode.getParent
+    if (p != null) {
+      val nc = p.getChildrenCount
+      var idx = 0
+      var found = false
+      while (idx < nc && !found) {
+        if (p.getChild(idx) == canvas.stageArea.tnode) {
+          found = true
+        }
+        else {
+          idx += 1
+        }
+      }
+      if (found) {
+        p.removeChild(tnode)
+        p.addChild(idx + 1, tnode)
+      }
+      else {
+        moveToBack()
+      }
+    }
+  }
+
   def showNext(): Unit = showNext(100)
   def showNext(gap: Long): Unit
   def update(newData: Any): Unit
