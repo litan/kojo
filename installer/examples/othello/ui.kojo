@@ -122,7 +122,7 @@ class UI(
         }
     }
 
-    def newGame = if (board.moveCount() != 1) {
+    def newGame: Unit = if (board.moveCount() != 1) {
         board.reset("New game:")
         for (x <- board.range; y <- board.range)
             paint(Room(y, x), board.stone(y, x))
@@ -130,6 +130,7 @@ class UI(
         clearLastMove
         showMoves
         endedTheGame = false
+        refreshScoreBoard
         if (computerInPlay) computerToMove
     }
 
