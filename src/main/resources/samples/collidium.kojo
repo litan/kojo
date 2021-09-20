@@ -5,6 +5,7 @@
 switchToDefault2Perspective()
 cleari()
 // setRefreshRate(50)
+disablePanAndZoom()
 
 drawStage(darkGray)
 val cb = canvasBounds
