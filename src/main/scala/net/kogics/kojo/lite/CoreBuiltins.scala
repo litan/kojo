@@ -121,7 +121,9 @@ trait CoreBuiltins extends Rationals {
     if (lowerBound >= upperBound) lowerBound else
       lowerBound + randomDouble(upperBound - lowerBound)
   }
-  def randomNormalDouble = Random.nextGaussian()
+
+  def randomNormalDouble: Double = Random.nextGaussian()
+  def randomNormalDouble(mean: Double, stdDev: Double): Double = randomNormalDouble * stdDev + mean
   def randomBoolean = Random.nextBoolean
   def randomInt = Random.nextInt
   def randomLong = Random.nextLong
