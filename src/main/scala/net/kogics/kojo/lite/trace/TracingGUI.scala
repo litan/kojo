@@ -101,7 +101,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   }
 
   private def addEvent(me: MethodEvent): Unit = {
-    def meSubLines(me: MethodEvent): Seq[(Point2D.Double, Point2D.Double)] = {
+    @annotation.nowarn def meSubLines(me: MethodEvent): Seq[(Point2D.Double, Point2D.Double)] = {
       def nodeSeq = me.turtlePoints match {
         case Some(tp) => Vector(tp)
         case None     => Vector()
@@ -114,7 +114,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
       }
     }
 
-    def meSubTurns(me: MethodEvent): Seq[(Point2D.Double, Double, Double)] = {
+    @annotation.nowarn def meSubTurns(me: MethodEvent): Seq[(Point2D.Double, Double, Double)] = {
       def nodeSeq = me.turtleTurn match {
         case Some(tt) => Vector(tt)
         case None     => Vector()

@@ -180,7 +180,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
     def interruptionInProgress = interruptTimer.isDefined
 
-    def interruptInterpreter(): Unit = synchronized {
+    @annotation.nowarn def interruptInterpreter(): Unit = synchronized {
       // Runs on swing thread
       if (interruptionInProgress) {
         Log.info("Interruption of Interpreter Requested")
