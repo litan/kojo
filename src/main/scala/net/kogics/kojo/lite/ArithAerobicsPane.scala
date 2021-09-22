@@ -24,7 +24,7 @@ class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
 
   lazy val init = {
     setFocusCycleRoot(true)
-    setTabPlacement(SwingConstants.LEFT)
+    //    setTabPlacement(SwingConstants.LEFT)
     setBackground(Color.white)
     addTab(Utils.loadString("S_Addition"), adder)
     addTab(Utils.loadString("S_Subtraction"), subtractor)
@@ -43,7 +43,8 @@ class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
   }
 
   lazy val init2 = {
-    setTabPlacement(SwingConstants.LEFT)
+    //    setTabPlacement(SwingConstants.LEFT)
+    setBackground(Theme.currentTheme.defaultBg)
     val msg = Utils.loadString("S_RithicaDisabled")
     val notAvailable = new JLabel(msg)
     notAvailable.setHorizontalAlignment(SwingConstants.CENTER)
