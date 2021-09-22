@@ -45,4 +45,5 @@ val panel = ColPanel(
 
 val pic = Picture.widget(panel)
 cleari()
+disablePanAndZoom()
 draw(trans(canvasBounds.x, canvasBounds.y) -> pic)
