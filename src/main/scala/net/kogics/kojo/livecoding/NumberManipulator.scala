@@ -154,6 +154,8 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
         def actionPerformed(e: ActionEvent): Unit = {
           stepL(stepT, zoomB)
           focusSlider()
+          panel.invalidate()
+          panel.repaint()
         }
       }
       stepB.addActionListener(al)

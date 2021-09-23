@@ -161,20 +161,20 @@ object Main extends AppMenu with ScriptLoader { main =>
         }
       })
 
-      if (System.getProperty("os.name") != "Linux") {
+      frame.pack()
+      if (!Utils.isLinux) {
         val screenSize = Toolkit.getDefaultToolkit.getScreenSize
         // The following triggers the menu offset bug on Gnome 3
         frame.setBounds(50, 50, screenSize.width - 100, screenSize.height - 100)
       }
       frame.setExtendedState(Frame.MAXIMIZED_BOTH)
-      frame.pack()
-
       frame.setVisible(true)
 
       if (!kojoCtx.subKojo && args.length == 1) {
         loadAndRunUrl(args(0), true)
       }
       else {
+        frame.toFront()
         Utils.schedule(1) { scriptEditorH.activate() }
         Utils.schedule(2) { scriptEditorH.activate() }
       }
@@ -228,44 +228,7 @@ object Main extends AppMenu with ScriptLoader { main =>
   }
 
   private def updateDefaultFonts(size: Int): Unit = {
-//    val plain = new Font("SansSerif", 0, size)
-//    UIManager.put("ColorChooser.font", plain)
-//    UIManager.put("FileChooser.font", plain)
-//    UIManager.put("Panel.font", plain)
-//    UIManager.put("TextPane.font", plain)
-//    UIManager.put("OptionPane.font", plain)
-//    UIManager.put("OptionPane.messageFont", plain)
-//    UIManager.put("OptionPane.buttonFont", plain)
-//    UIManager.put("EditorPane.font", plain)
-//    UIManager.put("ScrollPane.font", plain)
-//    UIManager.put("TabbedPane.font", plain)
-//    UIManager.put("ToolBar.font", plain)
-//    UIManager.put("ProgressBar.font", plain)
-//    UIManager.put("Viewport.font", plain)
-//    UIManager.put("TitledBorder.font", plain)
-//    UIManager.put("Button.font", plain)
-//    UIManager.put("RadioButton.font", plain)
-//    UIManager.put("ToggleButton.font", plain)
-//    UIManager.put("ComboBox.font", plain)
-//    UIManager.put("CheckBox.font", plain)
-//    UIManager.put("Menu.font", plain)
-//    UIManager.put("Menu.acceleratorFont", plain)
-//    UIManager.put("PopupMenu.font", plain)
-//    UIManager.put("MenuBar.font", plain)
-//    UIManager.put("MenuItem.font", plain)
-//    UIManager.put("MenuItem.acceleratorFont", plain)
-//    UIManager.put("CheckBoxMenuItem.font", plain)
-//    UIManager.put("RadioButtonMenuItem.font", plain)
-//    UIManager.put("Label.font", plain)
-//    UIManager.put("Table.font", plain)
-//    UIManager.put("TableHeader.font", plain)
-//    UIManager.put("Tree.font", plain)
-//    UIManager.put("Tree.rowHeight", plain.getSize + 5)
-//    UIManager.put("List.font", plain)
-//    UIManager.put("TextField.font", plain)
-//    UIManager.put("PasswordField.font", plain)
-//    UIManager.put("TextArea.font", plain)
-//    UIManager.put("ToolTip.font", plain)
+    // not needed with FlatLAF
   }
 
 }
