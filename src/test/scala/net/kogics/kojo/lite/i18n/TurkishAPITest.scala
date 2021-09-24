@@ -37,7 +37,7 @@ import net.kogics.kojo.staging
   * Christoph Knabe  http://public.beuth-hochschule.de/~knabe/
   */
 @RunWith(classOf[JUnitRunner])
-class TurkishAPITest extends FunSuite with Matchers {
+@annotation.nowarn class TurkishAPITest extends FunSuite with Matchers {
   
   import TurkishAPI._
 

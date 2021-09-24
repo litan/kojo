@@ -194,7 +194,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     def showPopup(e: PInputEvent): Unit = {
       if (e.isPopupTrigger) {
         val pos = e.getCanvasPosition
-        popup.show(SpriteCanvas.this, pos.getX.toInt, pos.getY.toInt);
+        popup.show(SpriteCanvas.this, pos.getX.toInt + 10, pos.getY.toInt + 10);
       }
     }
 

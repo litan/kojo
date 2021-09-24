@@ -2,12 +2,12 @@ lazy val scalaVer = "2.13.6"
 name := "Kojo"
 version := "2.9"
 scalaVersion := scalaVer
-fork in run := true
+run / fork := true
 scalacOptions := Seq("-feature", "-deprecation")
-javaOptions in run ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
+run / javaOptions ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
 
-fork in Test := true
-javaOptions in Test ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
+Test / fork := true
+Test / javaOptions ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-s")
 
 autoScalaLibrary := false
@@ -50,8 +50,8 @@ lazy val dist = project
   .settings(
     distOutpath              := baseDirectory.value / "dist",
     buildDist   := {
-      val allLibs:                List[File]          = dependencyClasspath.in(Runtime).value.map(_.data).filter(_.isFile).toList
-      val buildArtifact:          File                = packageBin.in(Runtime).value
+      val allLibs:                List[File]          = (Runtime / dependencyClasspath).value.map(_.data).filter(_.isFile).toList
+      val buildArtifact:          File                = (Runtime / packageBin).value
       val jars:                   List[File]          = buildArtifact :: allLibs
       val `mappings src->dest`:   List[(File, File)]  = jars.map(f => (f, distOutpath.value / f.getName))
       val log                                         = streams.value.log
@@ -61,9 +61,4 @@ lazy val dist = project
     }
   )
 
-//libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M2" % "test"
-
-packageOptions in (Compile, packageBin) +=
-    Package.ManifestAttributes("Permissions" -> "all-permissions", "Application-Name" -> "Kojo")
-    
-publishMavenStyle in ThisBuild := false    
+ThisBuild / publishMavenStyle := false

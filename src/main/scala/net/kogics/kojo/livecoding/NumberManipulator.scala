@@ -30,12 +30,14 @@ import javax.swing.JPanel
 import javax.swing.JSlider
 import javax.swing.JTextField
 import javax.swing.JToggleButton
+import javax.swing.JWindow
 import javax.swing.KeyStroke
 import javax.swing.Popup
 import javax.swing.PopupFactory
 import javax.swing.SwingUtilities
 import javax.swing.text.JTextComponent
 import javax.swing.text.Utilities
+import java.awt.Window
 import java.util.regex.Matcher
 
 abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveManipulator {
@@ -152,6 +154,8 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
         def actionPerformed(e: ActionEvent): Unit = {
           stepL(stepT, zoomB)
           focusSlider()
+          panel.invalidate()
+          panel.repaint()
         }
       }
       stepB.addActionListener(al)
@@ -175,6 +179,10 @@ abstract class NumberManipulator(ctx: ManipulationContext) extends InteractiveMa
     panel.getActionMap.put("esc", closeAction)
 
     numberTweakPopup = factory.getPopup(ctx.codePane, panel, pt.x - 50, pt.y - (rect.height * 3.5).toInt)
+    val win = SwingUtilities.windowForComponent(panel)
+    if (win.isInstanceOf[JWindow] && (win.getType == Window.Type.POPUP)) {
+      win.setFocusableWindowState(true)
+    }
     numberTweakPopup.show()
     Utils.schedule(0.1) {
       focusSlider()

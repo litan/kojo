@@ -249,7 +249,7 @@ object Saltire {
   }
 }
 
-class SaltireOutline(val origin: Point,
+@annotation.nowarn class SaltireOutline(val origin: Point,
                      val endpoint: Point,
                      val crossWidth: Double) extends SimpleShape {
   val path = new PPath

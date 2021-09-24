@@ -1,18 +1,56 @@
-Mw.hideAlgebraView()
-Mw.hideAxes()
-Mw.clear()
-val t = Mw.turtle(-1, 0)
-t.showExternalAngles()
-t.forward(-2)
-t.forward(3)
-val msg = """
-In the figure below, think of the green dot as the nose of the turtle.
-Initially, it is pointed upwards.
+cleari()
+setBackground(white)
+val cb = canvasBounds
 
-Move the green dot around to experiment with the input angle for 
-the right() command - needed to make the turtle point towards the green dot.
+val baseLen = 150
+
+val msg = """
+In the figure above, think of red circle as the position of the turtle
+and the blue circle as the direction in which its nose is pointed.
+Initially, the turtle's nose is pointed upwards.
+
+Move the blue circle around to experiment with the input angle needed
+for the right(?) command - to turn the turtle's nose
+towards the blue circle (from it's initial upward direction).
 """
-val txt = Mw.text(msg, 1, 4)
-Mw.show(txt)
-Mw.show(Mw.text("right(", -2.5, -2.1))
-Mw.show(Mw.text(")", 1, -2.1))
+val info = Picture.text(msg)
+info.setPenFontSize(16)
+info.setPenColor(darkGray)
+val te = textExtent(msg, 16).height
+info.setPosition(cb.x + 10, cb.y + te + 10)
+
+def anglePicMaker(x: Double, y: Double) = Picture {
+    setPenColor(black)
+    savePosHe()
+    forward(baseLen)
+    hop(-baseLen)
+    lineTo(x, y)
+    val angle = math.round(360 - heading + 90).toInt % 360
+    restorePosHe()
+    write(f"$angle%4d°")
+    val arcRadius = 50
+    hop(arcRadius)
+    right(90)
+    right(angle, arcRadius)
+}
+
+var anglePic = anglePicMaker(0, baseLen)
+anglePic.setPosition(0, 0)
+
+val turtlePos = fillColor(cm.tomato) * penColor(black) -> Picture.circle(5)
+val lineEnd = fillColor(green) * penColor(black) -> Picture.circle(5)
+lineEnd.setPosition(0, baseLen)
+
+var hotSpot = Picture.circle(10)
+hotSpot.setFillColor(blue)
+hotSpot.setPenColor(black)
+hotSpot.setPosition(0, baseLen)
+hotSpot.onMouseDrag { (x, y) =>
+    anglePic.erase()
+    anglePic = anglePicMaker(x, y)
+    draw(anglePic)
+    hotSpot.setPosition(x, y)
+    anglePic.moveToBack()
+}
+
+draw(info, turtlePos, anglePic, hotSpot, lineEnd)
