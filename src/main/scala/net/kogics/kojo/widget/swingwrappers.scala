@@ -57,6 +57,11 @@ trait Focusable { self: JComponent =>
   }
 }
 
+object RowPanel {
+  def horizontalGlue = Box.createHorizontalGlue().asInstanceOf[JComponent]
+  def horizontalGap(width: Int) = Box.createHorizontalStrut(width).asInstanceOf[JComponent]
+}
+
 case class RowPanel(comps: JComponent*) extends JPanel {
   setBackground(Theme.currentTheme.defaultBg)
   setLayout(new FlowLayout(FlowLayout.LEFT))
@@ -67,6 +72,7 @@ object ColPanel {
   def verticalGlue = {
     Box.createVerticalGlue().asInstanceOf[JComponent]
   }
+  def verticalGap(height: Int) = Box.createVerticalStrut(height).asInstanceOf[JComponent]
 }
 
 case class ColPanel(comps: JComponent*) extends JPanel with PreferredMax {
