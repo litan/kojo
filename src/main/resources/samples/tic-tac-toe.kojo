@@ -5,6 +5,7 @@ val Human = 2 // human plays X
 val Blank = 0 // blank space on board
 
 cleari()
+disablePanAndZoom()
 val cb = canvasBounds
 setBackground(black)
 //disablePanAndZoom()
