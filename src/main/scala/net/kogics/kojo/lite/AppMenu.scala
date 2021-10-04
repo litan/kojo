@@ -115,9 +115,7 @@ trait AppMenu {
     val newKojo = new JMenuItem(Utils.loadString("S_New_Scratchpad"))
     newKojo.addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent): Unit = {
-        Utils.runAsync {
-          NewKojoInstance.main(Array("subKojo"))
-        }
+        KojoScratchpadRunner.newScratchPad()
       }
     })
     newKojo.setAccelerator(KeyStroke.getKeyStroke("control N"))
