@@ -23,6 +23,7 @@ import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
 
+import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JButton
 import javax.swing.JComponent
@@ -244,6 +245,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
       }
 
       events.add(te)
+      events.add(Box.createVerticalStrut(3))
       events.revalidate()
     }
   }

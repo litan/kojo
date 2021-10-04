@@ -1,0 +1,41 @@
+package net.kogics.kojo.lite
+
+import java.io.File
+import scala.sys.process.{Process, ProcessLogger}
+
+object KojoScratchpadRunner {
+  def newScratchPad(): Unit = {
+    val classpath = System.getProperty("java.class.path")
+    val javaHome = System.getProperty("java.home")
+    val javaExec =
+      if (new File(javaHome + "/bin/javaw.exe").exists)
+        javaHome + "/bin/javaw"
+      else
+        javaHome + "/bin/java"
+
+    val command =
+      Seq(
+        javaExec,
+        "-cp",
+        classpath,
+        "net.kogics.kojo.lite.NewKojoInstance",
+        "subKojo"
+      )
+
+    val cmds = command.mkString(" ")
+
+    val processLogger = new ProcessLogger {
+      override def out(s: => String): Unit = {
+      }
+
+      override def err(s: => String): Unit = {
+      }
+
+      override def buffer[T](f: => T): T = ???
+    }
+
+    val pb = Process(cmds)
+    pb.run(processLogger)
+  }
+
+}
