@@ -53,4 +53,14 @@ hotSpot.onMouseDrag { (x, y) =>
     anglePic.moveToBack()
 }
 
-draw(info, turtlePos, anglePic, hotSpot, lineEnd)
+val showButton = trans(cb.x + 10, cb.y + 10) -> picStackCentered(
+    fillColor(cm.lightBlue) * penColor(darkGray) -> Picture.rectangle(100, 40),
+    Picture.vgap(5),
+    penColor(black) -> Picture.text("Show Help")
+)
+showButton.onMouseClick { (x, y) =>
+    showButton.erase()
+    draw(info)
+}
+
+draw(showButton, turtlePos, anglePic, hotSpot, lineEnd)
