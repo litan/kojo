@@ -245,6 +245,7 @@ trait AppMenu {
     generativeArtMenu.add(menuItemFor("S_CubicDisarray", "genart-cubic-disarray.kojo"))
     generativeArtMenu.add(menuItemFor("S_TriMesh", "genart-tri-mesh.kojo"))
     generativeArtMenu.add(menuItemFor("S_Mondrian", "genart-mondrian.kojo"))
+    generativeArtMenu.add(menuItemFor("S_HypnoticSquares", "genart-hypnotic-squares.kojo"))
     generativeArtMenu.add(menuItemFor("S_Delaunay", "genart-delaunay.kojo"))
 
     samplesMenu.add(generativeArtMenu)
@@ -308,6 +309,7 @@ trait AppMenu {
     showcaseMenu.add(menuItemFor("S_EyeEffects", "eye-effects.kojo"))
     showcaseMenu.add(menuItemFor("S_Spiral", "spiral.kojo"))
     showcaseMenu.add(menuItemFor("S_SpiralEffects", "spiral-effects.kojo"))
+    showcaseMenu.add(menuItemFor("S_Radiance", "radiance.kojo"))
     showcaseMenu.add(menuItemFor("S_RandomDots", "random-dots.kojo"))
     showcaseMenu.add(menuItemFor("S_TanTheta", "tan-theta.kojo"))
     showcaseMenu.add(menuItemFor("S_Fern", "fern.kojo"))
