@@ -21,3 +21,7 @@ Kojo.zip
 log
 **/.DS_Store
 .bsp/
+#vs code stuff
+.bloop
+.metals
+.vscode
