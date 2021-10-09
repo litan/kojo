@@ -22,8 +22,6 @@ object KojoScratchpadRunner {
         "subKojo"
       )
 
-    val cmds = command.mkString(" ")
-
     val processLogger = new ProcessLogger {
       override def out(s: => String): Unit = {
       }
@@ -34,7 +32,7 @@ object KojoScratchpadRunner {
       override def buffer[T](f: => T): T = ???
     }
 
-    val pb = Process(cmds)
+    val pb = Process(command)
     pb.run(processLogger)
   }
 
