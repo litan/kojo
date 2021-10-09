@@ -254,6 +254,7 @@ object TurkishAPI {
   def Renk(rgbHex: Sayı): Renk = new Color(rgbHex, yanlış)
   def Renk(rgbHex: Sayı, alfaDahilMi: İkil): Renk = new Color(rgbHex, alfaDahilMi)
   def artalanıKur(r: Renk) = builtins.setBackground(r)
+  def artalanıKur(b: Boya) = builtins.setBackground(b)
   def artalanıKurDik  (r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
   def artalanıKurYatay(r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundH(r1, r2)
 
