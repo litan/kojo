@@ -66,8 +66,9 @@ public class CodeExchangeForm extends javax.swing.JDialog {
     public void centerScreen() {
         Dimension dim = getToolkit().getScreenSize();
         Rectangle abounds = getBounds();
-        setLocation((dim.width - abounds.width) / 2,
-                (dim.height - abounds.height) / 2);
+//        setLocation((dim.width - abounds.width) / 2,
+//                (dim.height - abounds.height) / 2);
+        setLocationRelativeTo(kojoCtx.frame());
         super.setVisible(true);
         requestFocus();
     }
