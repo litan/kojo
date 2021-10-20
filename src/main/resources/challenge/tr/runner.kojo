@@ -49,7 +49,7 @@ def updateCanvasMarker(t2: Kaplumbağa, x: Double, y: Double, marker: String, co
     t2.yazıBoyunuKur(35)
     t2.konumuKur(x, y)
     t2.kalemRenginiKur(color)
-    t2.yaz(marker)
+    t2.yazı(marker)
 }
 
 def initTurtles(t1: Kaplumbağa, t2: Kaplumbağa) {
@@ -66,7 +66,7 @@ def updateMistakes(t2: Kaplumbağa, x: Double, y: Double, mistakes: Int, total: 
     t2.kalemRenginiKur(darkGray)
     t2.konumuKur(x, y)
     val msg = if (total) "Total Mistakes" else "Mistakes"
-    t2.yaz("%s: %d" format (msg, mistakes))
+    t2.yazı("%s: %d" format (msg, mistakes))
 }
 """
 queueInterpret(initCode)
@@ -210,14 +210,14 @@ def challengePage(challengeCode: String, help: Option[xml.Node], nm: String, las
                 else {
                     queueInterpret("t1.görünür(); t1.canlandırmaHızınıKur(300)")
                     codeLinesWithIdx.foreach { case (codeLine, idx) => runCode(codeLine, idx, ProgramStatus.good) }
-                    queueInterpret(s"""t2.sil(); ; t2.görünmez(); t2.konumuKur(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8}); t2.kalemRenginiKur(Color(0, 160, 65)); t2.yaz("Tebrikler! Bunu öğrendin.")""")
+                    queueInterpret(s"""t2.sil(); ; t2.görünmez(); t2.konumuKur(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8}); t2.kalemRenginiKur(Color(0, 160, 65)); t2.yazı("Tebrikler! Bunu öğrendin.")""")
                     if (!last) {
-                        queueInterpret(s"""t2.konumuKur(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.yaz("Bir sonraki alıştırma için sağa bakan üçgenli ileri düğmesine bas.")""")
+                        queueInterpret(s"""t2.konumuKur(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.yazı("Bir sonraki alıştırma için sağa bakan üçgenli ileri düğmesine bas.")""")
                         queueInterpret("""stEnableNextButton()""")
                         if (YanlışlarıGöster) { queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width}, ${cb.y + mbox.height}, $mistakes)""") }
                     }
                     else {
-                        queueInterpret(s"""t2.konumuKur(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.yaz("Alıştırmayı bitirdin. Tebrikler!")""")
+                        queueInterpret(s"""t2.konumuKur(${cb.x + cb.width / 8}, ${cb.y + cb.height / 8 - 30}); t2.yazı("Alıştırmayı bitirdin. Tebrikler!")""")
                         if (YanlışlarıGöster) { queueInterpret(s"""updateMistakes(t2, ${-cb.x - mbox.width * 3 / 2}, ${cb.y + mbox.height}, $totalMistakes, true)""") }
                     }
                 }
