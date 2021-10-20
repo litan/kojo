@@ -943,4 +943,8 @@ Here's a partial list of the available commands:
     Utils.loadUrlImageC(url(file))
     LoadProgress.hideLoading()
   }
+
+  def getEditorText: String = kojoCtx.getEditorText
+  def clearOutputError(): Unit = kojoCtx.clearOutputError()
+  def insertOutputError(text: String): Unit = kojoCtx.insertOutputError(text)
 }

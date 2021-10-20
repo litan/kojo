@@ -112,4 +112,8 @@ trait KojoCtx {
   def saveCodexIdPass(id: String, pass: String): Unit
   def codexId: String
   def codexPassword: String
+
+  def getEditorText: String
+  def clearOutputError(): Unit
+  def insertOutputError(text: String): Unit
 }

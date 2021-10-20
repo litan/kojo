@@ -348,7 +348,7 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   def knownColors2 = doodle.ColorMap.knownColors.keys.toList
   def knownColor2(name: String) = doodle.ColorMap.knownColors(name)
-  
+
   def isVerboseOutput = {
     execSupport.verboseOutput == true
   }
@@ -451,4 +451,16 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
   def codexId = prefs.get("codex.id", "")
   def codexPassword = prefs.get("codex.password", "")
+
+  def getEditorText: String = Utils.runInSwingThreadAndPause {
+    topcs.seh.se.codePane.getText
+  }
+
+  def clearOutputError(): Unit = {
+    topcs.owh.outputPane.resetErrInfo()
+  }
+
+  def insertOutputError(text: String): Unit = {
+    topcs.owh.outputPane.showError(text)
+  }
 }
