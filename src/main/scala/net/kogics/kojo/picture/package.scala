@@ -153,6 +153,20 @@ package object picture {
   def fromJava2d(w: Double, h: Double, fn: Graphics2D => Unit)(implicit canvas: SCanvas) =
     new Java2DPic(w, h, fn)
 
+  def fromJava2dDynamic(w: Double, h: Double, scaleOutFactor: Double, fn: Graphics2D => Unit, stopCheck: => Boolean)(implicit canvas: SCanvas) =
+    new Java2DPic(w * scaleOutFactor, h * scaleOutFactor, fn) {
+      override def draw(): Unit = {
+        super.draw()
+        scale(1 / scaleOutFactor)
+        canvas.animate {
+          update()
+          if (stopCheck) {
+            canvas.stopAnimation()
+          }
+        }
+      }
+    }
+
   def image(file: String, envelope: Option[Picture])(implicit canvas: SCanvas) = new FileImagePic(file, envelope)
   def image(url: URL, envelope: Option[Picture])(implicit canvas: SCanvas) = new UrlImagePic(url, envelope)
 

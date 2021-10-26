@@ -614,6 +614,19 @@ Here's a partial list of the available commands:
     }
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
     def fromCanvas(width: Double, height: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(width, height, fn)
+
+    private[lite] def fromCanvasDynamic(width: Double, height: Double, scaleOutFactor: Double)
+                                       (fn: Graphics2D => Unit)(stopCheck: => Boolean) =
+      picture.fromJava2dDynamic(width, height, scaleOutFactor, fn, stopCheck)
+
+    def fromSketch(sketch: {
+      def setup(cd: CanvasDraw): Unit
+      def drawLoop(cd: CanvasDraw): Unit
+    }, scaleOutFactor: Double = 1): Picture = {
+      val sr = new SketchRunner(sketch, scaleOutFactor)
+      sr.pic
+    }
+
     def circle(radius: Double) = picture.circle(radius)
     // def circle(x: Double, y: Double, r: Double) = picture.offset(x, y) -> picture.circle(r)
     def ellipse(xRadius: Double, yRadius: Double) = picture.ellipse(xRadius, yRadius)
@@ -709,6 +722,14 @@ Here's a partial list of the available commands:
     }
     def fromVertexShape(fn: VertexShape => Unit) = {
       val pic = Picture.fromVertexShape(fn)
+      placeAndDraw(pic, 0, 0)
+    }
+
+    def fromSketch(sketch: {
+      def setup(cd: CanvasDraw): Unit
+      def drawLoop(cd: CanvasDraw): Unit
+    }, scaleOutFactor: Double = 1): Picture = {
+      val pic = Picture.fromSketch(sketch, scaleOutFactor)
       placeAndDraw(pic, 0, 0)
     }
   }
@@ -888,15 +909,18 @@ Here's a partial list of the available commands:
 
   type CanvasDraw = net.kogics.kojo.lite.CanvasDraw
   import scala.language.reflectiveCalls
-  def canvasSketch(sketch: {
-                     def setup(cd: CanvasDraw): Unit
-                     def drawLoop(cd: CanvasDraw): Unit
-                   }, scaleFactor: Double = 1): Unit = {
 
+  class SketchRunner private[lite](sketch: {
+    def setup(cd: CanvasDraw): Unit
+    def drawLoop(cd: CanvasDraw): Unit
+  }, scaleFactor: Double = 1) {
     @volatile var inited = false
     @volatile var initStarted = false // to support breakpoints in setup
     @volatile var cd: CanvasDraw = null
-    val pic = Picture.fromCanvas(cwidth * scaleFactor, cheight * scaleFactor) { g2d =>
+    def shouldStop: Boolean = {
+      if (cd == null) false else !cd.loop
+    }
+    val pic = Picture.fromCanvasDynamic(cwidth, cheight, scaleFactor) { g2d =>
       if (!inited) {
         if (!initStarted) {
           initStarted = true
@@ -908,15 +932,19 @@ Here's a partial list of the available commands:
       else {
         sketch.drawLoop(cd)
       }
+    }(shouldStop)
+
+    def draw() = {
+      pic.draw()
     }
-    draw(pic)
-    pic.scale(1 / scaleFactor)
-    TSCanvas.animate {
-      pic.update()
-      if (!cd.loop) {
-        stopAnimation()
-      }
-    }
+  }
+
+  def canvasSketch(sketch: {
+    def setup(cd: CanvasDraw): Unit
+    def drawLoop(cd: CanvasDraw): Unit
+  }, scaleOutFactor: Double = 1): Unit = {
+    val sr = new SketchRunner(sketch, scaleOutFactor)
+    sr.draw()
   }
 
   type PictureDraw = net.kogics.kojo.lite.PictureDraw
