@@ -7,24 +7,26 @@ originBottomLeft()
 setBackground(white)
 
 class Sketch {
-    var x = 0
+    var x = 0.0
     def setup(surface: CanvasDraw) {
         import surface._
-        strokeWeight(4)
-        rect(0, cheight/2, 40, 40)
-        ${cursor}
+        stroke(${cursor}gray)
+        strokeWeight(1)
     }
 
     def drawLoop(surface: CanvasDraw) {
         import surface._
-        background(255)
-        x += 2
-        rect(x, cheight/2, 40, 40)
+        val xloc = random(cwidth)
+        val yloc = random(cheight)
+        fill(cm.rgba(0, 50, mathx.constrain(yloc, 100, 150).toInt, 50))
+        val dia = mathx.constrain(xloc / 10, 5, 100)
+        ellipse(xloc, yloc, dia, dia)
     }
 }
 
 val sketch = new Sketch
-canvasSketch(sketch)
+val pic = Picture.fromSketch(sketch, 1)
+draw(pic)
 """
 
   val templates = Map(
@@ -103,7 +105,7 @@ canvasSketch(sketch)
 }
 """,
     "canvasSketch" -> canvasSketch,
-    "sketch" -> canvasSketch,
+    "sketchpic" -> canvasSketch,
     "test" -> """test("testName") {
     import Matchers._
     ${cursor}
