@@ -7,7 +7,6 @@ originBottomLeft()
 setBackground(white)
 
 class Sketch {
-    var x = 0.0
     def setup(surface: CanvasDraw) {
         import surface._
         stroke(${cursor}gray)

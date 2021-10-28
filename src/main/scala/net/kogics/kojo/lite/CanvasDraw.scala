@@ -50,28 +50,37 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     fillColor = null
   }
 
-  def fill(r: Int, g: Int, b: Int): Unit = {
-    fillColor = cm.rgb(r, g, b)
+  def fill(r: Int, g: Int, b: Int, a: Int = 255): Unit = {
+    fillColor = cm.rgba(r, g, b, a)
   }
 
   def fill(c: Color): Unit = {
     fillColor = c
   }
 
-  def fill(n: Int, a: Int): Unit = {
-    fillColor = cm.rgba(n, n, n, a)
-  }
-
-  def stroke(gray: Int, alpha: Int): Unit = {
-    strokeColor = cm.rgba(gray, gray, gray, alpha)
-  }
-
-  def stroke(r: Int, g: Int, b: Int): Unit = {
-    strokeColor = cm.rgb(r, g, b)
+  def stroke(r: Int, g: Int, b: Int, a: Int = 255): Unit = {
+    strokeColor = cm.rgba(r, g, b, a)
   }
 
   def stroke(c: Color): Unit = {
     strokeColor = c
+  }
+
+  private def bgRectCoords: Array[Double] = {
+    val rectCoords = Array(0, 0, width, height)
+    g2d.getTransform.inverseTransform(rectCoords, 0, rectCoords, 0, 2)
+    rectCoords
+  }
+
+  def background(r: Int, g: Int, b: Int, a: Int = 255): Unit = {
+    background(cm.rgba(r, g, b, a))
+  }
+
+  def background(c: Color): Unit = {
+    val rc = bgRectCoords
+    tempRect.setRect(rc(0), rc(1), rc(2) - rc(0), rc(3) - rc(1))
+    g2d.setPaint(c)
+    g2d.fill(tempRect)
   }
 
   def strokeWeight(n: Double): Unit = {
@@ -89,38 +98,6 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
       g2d.setStroke(stroke)
       g2d.draw(s)
     }
-  }
-
-  def shapeDone(path: GeneralPath): Unit = {
-    drawShape(path)
-    path.reset()
-  }
-
-  private def bgRectCoords: Array[Double] = {
-    val rectCoords = Array(0, 0, width, height)
-    g2d.getTransform.inverseTransform(rectCoords, 0, rectCoords, 0, 2)
-    rectCoords
-  }
-
-  def background(c: Color): Unit = {
-    val rc = bgRectCoords
-    tempRect.setRect(rc(0), rc(1), rc(2) - rc(0), rc(3) - rc(1))
-    g2d.setPaint(c)
-    g2d.fill(tempRect)
-  }
-
-  def background(n: Int): Unit = {
-    val rc = bgRectCoords
-    tempRect.setRect(rc(0), rc(1), rc(2) - rc(0), rc(3) - rc(1))
-    g2d.setPaint(cm.rgb(n, n, n))
-    g2d.fill(tempRect)
-  }
-
-  def background(n: Int, a: Int): Unit = {
-    val rc = bgRectCoords
-    tempRect.setRect(rc(0), rc(1), rc(2) - rc(0), rc(3) - rc(1))
-    g2d.setPaint(cm.rgba(n, n, n, a))
-    g2d.fill(tempRect)
   }
 
   def ellipse(cx: Double, cy: Double, w: Double, h: Double): Unit = {
@@ -147,6 +124,11 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
 
   def point(x: Double, y: Double): Unit = {
     line(x - 0.01 / 2, y, x + 0.01 / 2, y)
+  }
+
+  def shapeDone(path: GeneralPath): Unit = {
+    drawShape(path)
+    path.reset()
   }
 
   def translate(x: Double, y: Double): Unit = {
