@@ -1,10 +1,11 @@
 package net.kogics.kojo.lite
 
-import java.awt.geom.GeneralPath
-
 import net.kogics.kojo.core.VertexShapeSupport
 
+import java.awt.geom.GeneralPath
+
 class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b: Builtins) extends VertexShapeSupport {
+
   import b._
 
   def randomSeed(s: Long): Unit = {
