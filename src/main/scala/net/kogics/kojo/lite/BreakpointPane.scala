@@ -48,12 +48,17 @@ object BreakpointPane {
         }
       }
     }
+
     if (escapeStop) {
       if (scriptRunning) {
         showDlg()
       }
+      else {
+        throw new RuntimeException("FYI- breakpoint loop interrupted.")
+      }
     }
     else {
+      println(msg)
       showDlg()
     }
   }

@@ -109,7 +109,6 @@ class Builtins(
   def breakpoint(msg: Any): Unit = {
     val pauseMessage = "Program paused at Breakpoint"
     val resumeMsg = "Hit Enter to resume"
-    println(msg)
     BreakpointPane.show(msg, pauseMessage, resumeMsg, kojoCtx)
   }
 
