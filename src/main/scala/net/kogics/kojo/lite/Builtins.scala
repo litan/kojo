@@ -596,7 +596,7 @@ Here's a partial list of the available commands:
   object Picture {
     def text(content: Any, fontSize: Int = 15) = picture.textu(content, fontSize, red)
     def textu(content: Any, fontSize: Int = 15, color: Color = red) = picture.textu(content, fontSize, color)
-    def rect(h: Double, w: Double) = picture.rect(h, w)
+    def rect(h: Double, w: Double) = picture.rect2(w, h)
     def rectangle(width: Double, height: Double) = picture.rect2(width, height)
     // def rectangle(x: Double, y: Double, w: Double, h: Double) = picture.offset(x, y) -> picture.rect2(w, h)
     def vline(l: Double) = picture.vline(l)
@@ -956,12 +956,15 @@ Here's a partial list of the available commands:
     drawLoop(sketch.drawLoop(PictureDraw))
   }
 
-  def timeit(fn: => Unit): Unit = {
+  def timeit[T](msg: String)(fn: => T): T = {
     val t0 = epochTime
-    fn
+    val ret = fn
     val delta = epochTime - t0
-    println(f"Timed code took $delta%.3f seconds")
+    println(f"$msg took $delta%.3f seconds")
+    ret
   }
+
+  def timeit[T](fn: => T): T = timeit("Timed code")(fn)
 
   def joystick(radius: Double) = new JoyStick(radius)(this)
   LoadProgress.init(this)
