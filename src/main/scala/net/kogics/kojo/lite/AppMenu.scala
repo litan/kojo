@@ -480,6 +480,7 @@ trait AppMenu {
                <li>Bülent Başaran</li>
                <li>Guillermo Ovejero</li>
                <li>Alberto R.R. Manzanares</li>
+               <li>Anay Kamat</li>
               </ul>
               <strong>Kojo</strong> is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
               Kojo runs on the Java Platform.<br/><br/>
