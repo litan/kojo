@@ -68,7 +68,7 @@ object PicCache {
       pic
     }
   }
-  def freshPics(ps: List[Picture]): List[Picture] = {
+  def freshPics(ps: collection.Seq[Picture]): collection.Seq[Picture] = {
     ps map freshPic
   }
 }
