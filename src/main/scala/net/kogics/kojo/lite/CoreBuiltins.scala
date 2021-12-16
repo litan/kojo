@@ -227,9 +227,11 @@ trait CoreBuiltins extends Rationals {
   def id = picture.trans(0, 0)
   def scale(f: Double) = picture.scale(f)
   def scale(x: Double, y: Double) = picture.scale(x, y)
-  def draw(pictures: Picture*) = pictures.foreach { _.draw() }
-  def draw(pictures: collection.Seq[Picture]) = pictures.foreach { _.draw() }
-
+  def draw(pictures: Picture*): Unit = draw(pictures)
+  def draw(pictures: collection.Seq[Picture]): Unit = {
+    import net.kogics.kojo.picture.PicCache.freshPics
+    freshPics(pictures.toList).foreach(_.draw())
+  }
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
   def setImagePixel(image: BufferedImage, x: Int, y: Int, c: Color) = image.setRGB(x, image.getHeight - 1 - y, c.getRGB)
