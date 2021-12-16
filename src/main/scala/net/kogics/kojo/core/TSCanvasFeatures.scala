@@ -71,7 +71,9 @@ trait TSCanvasFeatures {
   def stageBot: Picture
   def stageArea: Picture
   def timer(rate: Long)(fn: => Unit): Future[PActivity]
+  def timerWithState[T](rate: Long, init: T, nextState: T => T)(code: T => Unit): Future[PActivity]
   def animate(fn: => Unit): Future[PActivity]
+  def animateWithState[T](init: T, nextState: T => T)(code: T => Unit): Future[PActivity]
   def stopAnimationActivity(a: Future[PActivity]): Unit
   def onAnimationStart(fn: => Unit): Unit
   def onAnimationStop(fn: => Unit): Unit

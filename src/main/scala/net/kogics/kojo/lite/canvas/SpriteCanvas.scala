@@ -820,7 +820,18 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   def timer(rate: Long)(fn: => Unit): Future[PActivity] = figure0.refresh(rate, rate)(fn)
-  def animate(fn: => Unit): Future[PActivity] = figure0.refresh(fn)
+  def timerWithState[T](rate: Long, init: T, nextState: T => T)(code: T => Unit): Future[PActivity] = {
+    var state = init
+    timer(rate) {
+      code(state)
+      state = nextState(state)
+    }
+  }
+
+  def animate(fn: => Unit): Future[PActivity] = timer(1000 / kojoCtx.fps)(fn)
+  def animateWithState[T](init: T, nextState: T => T)(code: T => Unit): Future[PActivity] =
+    timerWithState(1000 / kojoCtx.fps, init, nextState)(code)
+
   def animateActivity(a: PActivity) = getRoot.addActivity(a)
   def stopAnimation() = figure0.stopRefresh()
   def stopAnimationActivity(a: Future[PActivity]): Unit = {

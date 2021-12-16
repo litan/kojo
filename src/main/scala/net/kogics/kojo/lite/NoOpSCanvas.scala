@@ -63,7 +63,9 @@ class NoOpSCanvas extends SCanvas {
   def setCanvasBackground(c: Paint): Unit = {}
   def kojoCtx: KojoCtx = null
   def timer(rate: Long)(fn: => Unit): Future[PActivity] = null
+  def timerWithState[T](rate: Long, init: T, nextState: T => T)(code: T => Unit): Future[PActivity] = null
   def animate(fn: => Unit): Future[PActivity] = null
+  def animateWithState[T](init: T, nextState: T => T)(code: T => Unit): Future[PActivity] = null
   def animateActivity(a: PActivity): Unit = {}
   def stopAnimation(): Unit = {}
   def stopAnimationActivity(a: Future[PActivity]): Unit = {}
