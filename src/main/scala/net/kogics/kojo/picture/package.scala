@@ -66,6 +66,15 @@ package object picture {
     PointLightc(x, y, direction, elevation, distance)
   def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) =
     SpotLightc(x, y, direction, elevation, distance)
+  def distantLight(direction: Double, elevation: Double): LightFilter = {
+    val lightFilter = new LightFilter()
+    lightFilter.getLights.clear()
+    val light = new lightFilter.DistantLight()
+    light.setAzimuth(direction.toFloat.toRadians)
+    light.setElevation(elevation.toFloat.toRadians)
+    lightFilter.addLight(light)
+    lightFilter
+  }
   def lights(lights: Light*) = Lightsc(lights: _*)
   def noise(amount: Int, density: Double) = Noisec(amount, density)
   def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double) = Weavec(xWidth, xGap, yWidth, yGap)

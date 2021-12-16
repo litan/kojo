@@ -375,6 +375,7 @@ Here's a partial list of the available commands:
   val blur = picture.blur _
   val pointLight = picture.pointLight _
   val spotLight = picture.spotLight _
+  def distantLight(direction: Double, elevation: Double) = picture.distantLight(direction, elevation)
   def lights(lights: Light*) = picture.lights(lights: _*)
   val PointLight = picture.PointLight _
   val SpotLight = picture.SpotLight _
