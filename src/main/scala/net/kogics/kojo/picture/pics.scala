@@ -115,12 +115,15 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     transformBy(AffineTransform.getRotateInstance(angle.toRadians))
   }
 
+  private def safeScaleFactor(factor: Double) = if (factor == 0) Double.MinPositiveValue else factor
+
   def scale(factor: Double): Unit = {
-    transformBy(AffineTransform.getScaleInstance(factor, factor))
+    val safeFactor = safeScaleFactor(factor)
+    transformBy(AffineTransform.getScaleInstance(safeFactor, safeFactor))
   }
 
   def scale(x: Double, y: Double): Unit = {
-    transformBy(AffineTransform.getScaleInstance(x, y))
+    transformBy(AffineTransform.getScaleInstance(safeScaleFactor(x), safeScaleFactor(y)))
   }
 
   def translate(x: Double, y: Double): Unit = {
