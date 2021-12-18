@@ -20,11 +20,11 @@ import java.awt.geom.GeneralPath
 import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.awt.{Paint, Toolkit}
 import java.net.URL
-
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
+
 import javax.swing.JComponent
-import net.kogics.kojo.core.{VertexShape, Voice}
+import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
 import net.kogics.kojo.picture.{DslImpl, PicCache, PicDrawingDsl}
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
@@ -49,7 +49,6 @@ class Builtins(
   scalaCodeRunner: core.CodeRunner
 ) extends CoreBuiltins with RepeatCommands { builtins =>
   Builtins.instance = this
-  import language.implicitConversions
   val tCanvas = TSCanvas.tCanvas
 
   val Costume = new Tw.Costume
@@ -590,10 +589,11 @@ Here's a partial list of the available commands:
   def TexturePaint(file: String, x: Double, y: Double) =
     cm.texture(file, x, y)
 
+  def url(url: String) = new URL(url)
+
   val PShapes = Picture
   val PicShape = Picture
-
-  def url(url: String) = new URL(url)
+  implicit def p2rp(path: GeneralPath): Rich2DPath = new Rich2DPath(path)
   object Picture {
     def text(content: Any, fontSize: Int = 15) = picture.textu(content, fontSize, red)
     def textu(content: Any, fontSize: Int = 15, color: Color = red) = picture.textu(content, fontSize, color)
