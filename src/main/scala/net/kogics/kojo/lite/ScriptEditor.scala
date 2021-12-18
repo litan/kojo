@@ -211,7 +211,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       AlignParameters -> true,
       AlignSingleLineCaseStatements -> true,
       DanglingCloseParenthesis -> Preserve,
-      FormatXml -> false
+      FormatXml -> false,
+      SingleCasePatternOnNewline -> false
     )
   )
 
