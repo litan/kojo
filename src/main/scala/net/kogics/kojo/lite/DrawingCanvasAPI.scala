@@ -86,11 +86,11 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def stageArea = tCanvas.stageArea
   def stageBorder = tCanvas.stage
   def timer(milliSeconds: Long)(code: => Unit): Future[PActivity] = tCanvas.timer(milliSeconds)(code)
-  def timerWithState[T](rate: Long, init: T, nextState: T => T)(code: T => Unit): Future[PActivity] =
-    tCanvas.timerWithState(rate, init, nextState)(code)
+  def timerWithState[T](rate: Long, init: T)(code: T => T): Future[PActivity] =
+    tCanvas.timerWithState(rate, init)(code)
   def animate(code: => Unit) = tCanvas.animate(code)
-  def animateWithState[T](init: T, nextState: T => T)(code: T => Unit): Future[PActivity] =
-    tCanvas.animateWithState(init, nextState)(code)
+  def animateWithState[T](init: T)(code: T => T): Future[PActivity] =
+    tCanvas.animateWithState(init)(code)
   def stopAnimationActivity(a: Future[PActivity]) = tCanvas.stopAnimationActivity(a)
   def onAnimationStart(fn: => Unit) = tCanvas.onAnimationStart(fn)
   def onAnimationStop(fn: => Unit) = tCanvas.onAnimationStop(fn)

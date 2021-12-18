@@ -978,4 +978,13 @@ Here's a partial list of the available commands:
   def getEditorText: String = kojoCtx.getEditorText
   def clearOutputError(): Unit = kojoCtx.clearOutputError()
   def insertOutputError(text: String): Unit = kojoCtx.insertOutputError(text)
+
+  def animateWithRedraw[T](init: T, nextState: T => T, code: T => Picture): Unit = {
+    var state = init
+    tCanvas.animate {
+      tCanvas.erasePictures()
+      draw(code(state))
+      state = nextState(state)
+    }
+  }
 }
