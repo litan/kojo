@@ -979,7 +979,7 @@ Here's a partial list of the available commands:
   def clearOutputError(): Unit = kojoCtx.clearOutputError()
   def insertOutputError(text: String): Unit = kojoCtx.insertOutputError(text)
 
-  def animateWithRedraw[T](init: T, nextState: T => T, code: T => Picture): Unit = {
+  def animateWithRedraw[S](init: S, nextState: S => S, code: S => Picture): Unit = {
     var state = init
     tCanvas.animate {
       tCanvas.erasePictures()

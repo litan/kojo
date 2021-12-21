@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Anay Kamat
+ * Copyright (C) 2021 Anay Kamat <kamatanay@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
