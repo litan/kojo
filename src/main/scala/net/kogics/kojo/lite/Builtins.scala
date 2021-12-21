@@ -359,6 +359,7 @@ Here's a partial list of the available commands:
   val flipY = picture.flipY
   val flipX = picture.flipX
   val axes = picture.axesOn
+  val bounds = picture.bounds
   val fillColor = picture.fill _
   val penColor = picture.stroke _
   val penWidth = picture.strokeWidth _
