@@ -1864,12 +1864,25 @@ repeat(5) {{
     "animate" -> 
     <div>
        <strong>animate</strong> {{ code }} <br/><br/>
-       Calls the given code block repeatedly within an animation loop. The refresh rate,
-       specified with the <tt>setRefreshRate()</tt> command, specifies the number of times per 
-       second that the code is run. This value can be anywhere between 20 and 100 (times 
-       per second).
+       Calls the given code block repeatedly (at the default refresh rate of 50 times per second)
+       within an animation loop. The refresh rate can be modified with the <tt>setRefreshRate(fps)</tt> command,
+       and can be set to any value between 20 and 100 (times per second).
     </div>,
-    "schedule" -> 
+    "animateWithState" ->
+      <div>
+        <strong>animateWithState</strong> (initState) {{ s => code; ns }} <br/><br/>
+        This is a version of animate that lets you pass state between successive invocations of the animation loop code.
+        This enables you to keep track of changing state in your program without putting it in a global variable.
+      </div>,
+    "animateWithRedraw" ->
+      <div>
+        <strong>animateWithRedraw</strong> (initState, nextState, code)<br/><br/>
+        This is a version of animate that lets you cleanly separate the initial state of the animation from the
+        nextState function and the code that takes a state and returns a picture. For each iteration of the
+        animation loop, this function erases all the pictures on the canvas and then redraws the picture for
+        the current state.
+      </div>,
+    "schedule" ->
     <div>
        <strong>schedule</strong>(seconds) {{ code }} <br/><br/>
        Schedules the given code block to be called (in the animation/GUI thread) after the specified 

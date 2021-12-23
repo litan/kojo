@@ -137,6 +137,8 @@ object CodeCompletionUtils {
     "setScreenDPI" -> "setScreenDPI(${dotsPerInch})",
     "timer" -> "timer(${milliSeconds}) {\n    ${cursor}\n}",
     "animate" -> "animate {\n    ${cursor}\n}",
+    "animateWithState" -> "animateWithState(${init}) { s =>\n    ${cursor}\n}",
+    "animateWithRedraw" -> "animateWithRedraw(${init}, ${nextState}, ${code})",
     "drawLoop" -> "drawLoop {\n    ${cursor}\n}",
     "setup" -> "setup {\n    ${cursor}\n}",
     "schedule" -> "schedule(${seconds}) {\n    ${cursor}\n}",
