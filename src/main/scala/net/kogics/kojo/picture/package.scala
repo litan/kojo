@@ -65,7 +65,6 @@ package object picture {
     val tnode = pic.tnode
     tnode.getParent.addChild(bRect)
     tnode.getParent.repaint()
-    pic
   }
   def fill(color: Paint) = Fillc(color)
   def stroke(color: Paint) = Strokec(color)

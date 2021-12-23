@@ -216,6 +216,7 @@ trait AppMenu {
     val fractalsMenu = newJMenu(Utils.loadString("S_Fractals"))
     fractalsMenu.add(menuItemFor("S_Tree", "tree0.kojo"))
     fractalsMenu.add(menuItemFor("S_AnotherTree", "tree1.kojo"))
+    fractalsMenu.add(menuItemFor("S_DesertTree", "tree2.kojo"))
     fractalsMenu.add(menuItemFor("S_FibonacciTree", "fib-tree.kojo"))
     fractalsMenu.add(menuItemFor("S_Snowflake", "snowflake.kojo"))
     fractalsMenu.add(menuItemFor("S_DragonCurve", "dragon-curve.kojo"))
@@ -252,6 +253,7 @@ trait AppMenu {
 
     val animGameMenu = newJMenu(Utils.loadString("S_AnimationsGames"))
     animGameMenu.add(menuItemFor("S_LunarLander", "lunar-lander.kojo"))
+    animGameMenu.add(menuItemFor("S_PulsatingLamp", "lamp-animation.kojo"))
     animGameMenu.add(menuItemFor("S_TangramSkier", "tangram-skier.kojo"))
     animGameMenu.add(menuItemFor("S_Pong", "pong.kojo"))
     animGameMenu.add(menuItemFor("S_MemoryCards", "memory-cards.kojo"))
