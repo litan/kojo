@@ -231,6 +231,8 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       c.getSummary != null && c.getInputText != c.getSummary
     }
 
+    def hasTemplate(c: TemplateCompletion) = c.getParamCount > 0
+
     def isInterpCompletion(c: TemplateCompletion) = {
       !c.getInputText.contains("(")
     }
@@ -251,7 +253,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
           }
           else {
             // no help
-            if (isInterpCompletion(c)) {
+            if (isInterpCompletion(c) && !hasTemplate(c)) {
               proposals2.remove(c)
             }
             proposals2.add(p)
