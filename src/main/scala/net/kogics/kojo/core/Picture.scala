@@ -24,7 +24,8 @@ trait Picture extends InputAware {
   def rotate(angle: Double): Unit
   def rotateAboutPoint(angle: Double, x: Double, y: Double): Unit
   def scale(factor: Double): Unit
-  def scale(x: Double, y: Double): Unit
+  def scaleAboutPoint(factor: Double, x: Double, y: Double): Unit
+  def scale(xFactor: Double, yFactor: Double): Unit
   def translate(x: Double, y: Double): Unit
   def translate(v: Vector2D): Unit = translate(v.x, v.y): Unit
   def transv(v: Vector2D) = translate(v.x, v.y): Unit

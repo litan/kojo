@@ -122,8 +122,14 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     transformBy(AffineTransform.getScaleInstance(safeFactor, safeFactor))
   }
 
-  def scale(x: Double, y: Double): Unit = {
-    transformBy(AffineTransform.getScaleInstance(safeScaleFactor(x), safeScaleFactor(y)))
+  def scaleAboutPoint(factor: Double, x: Double, y: Double): Unit = {
+    translate(x, y)
+    scale(factor)
+    translate(-x, -y)
+  }
+
+  def scale(xFactor: Double, yFactor: Double): Unit = {
+    transformBy(AffineTransform.getScaleInstance(safeScaleFactor(xFactor), safeScaleFactor(yFactor)))
   }
 
   def translate(x: Double, y: Double): Unit = {

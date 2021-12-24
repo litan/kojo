@@ -226,7 +226,8 @@ trait CoreBuiltins extends Rationals {
   val rot = picture.rot _
   def id = picture.trans(0, 0)
   def scale(f: Double) = picture.scale(f)
-  def scale(x: Double, y: Double) = picture.scale(x, y)
+  def scale(xf: Double, yf: Double) = picture.scale(xf, yf)
+  def scalep(f: Double, x: Double, y: Double) = picture.scalep(f, x, y)
   def draw(pictures: Picture*): Unit = draw(pictures)
   def draw(pictures: collection.Seq[Picture]): Unit = {
     import net.kogics.kojo.picture.PicCache.freshPics
