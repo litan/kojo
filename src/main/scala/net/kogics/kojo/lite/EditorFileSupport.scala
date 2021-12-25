@@ -87,7 +87,7 @@ trait EditorFileSupport { self: ScriptEditor =>
   def saveAs(file: java.io.File): Unit = {
     if (file.exists) {
       val doSave = JOptionPane.showConfirmDialog(
-        null,
+        kojoCtx.frame,
         Utils.loadString("S_FileExists") format (file.getName))
       if (doSave == JOptionPane.CANCEL_OPTION || doSave == JOptionPane.CLOSED_OPTION) {
         throw new RuntimeException("Cancel File SaveAs")
