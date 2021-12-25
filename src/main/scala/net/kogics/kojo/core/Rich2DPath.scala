@@ -18,8 +18,9 @@ package net.kogics.kojo.core
 import java.awt.geom.{Arc2D, GeneralPath}
 
 class Rich2DPath(p: GeneralPath) {
-  def arc(endPointX: Double, endPointY: Double, angleOfArc: Double): Unit = {
-    val arcAngle = -angleOfArc
+  def arc(endPointX: Double, endPointY: Double, angleOfArc: Double) {
+
+    val arcAngle = -(angleOfArc % 360)
     val currentPoint = p.getCurrentPoint
     val startPoint: (Double, Double) = (currentPoint.getX, currentPoint.getY)
     val endPoint: (Double, Double) = (endPointX, endPointY)
@@ -46,11 +47,10 @@ class Rich2DPath(p: GeneralPath) {
       -unitVector._1
     )
 
-    val t: Double = if (arcAngle == 180.0) {
-      0.0
-    }
-    else {
-      lengthOfDirectionVector / Math.tan(Math.toRadians(arcAngle) / 2.0)
+    val t: Double = Math.abs(arcAngle) match {
+      case value if value == 0.0 => lengthOfDirectionVector
+      case value if Math.abs(value) == 180.0 => 0.0
+      case _ => lengthOfDirectionVector / Math.tan(Math.toRadians(arcAngle) / 2.0)
     }
 
     val centerPoint = (
@@ -63,10 +63,12 @@ class Rich2DPath(p: GeneralPath) {
       centerPoint._2 - startPoint._2,
     )
 
+
     val radius = Math.hypot(pointToFindRadius._1, pointToFindRadius._2)
 
     val arcStartX = centerPoint._1 - radius
     val arcStartY = centerPoint._2 - radius
+
 
     val width: Double = 2.0 * radius
 
@@ -74,7 +76,8 @@ class Rich2DPath(p: GeneralPath) {
     val (x1, y1) = startPoint
     val (x2, y2) = endPoint
 
-    val startAngle: Double = -180 / Math.PI * Math.atan2(y1 - y0, x1 - x0)
+    val startAngle: Double = (-180 / Math.PI * Math.atan2(y1 - y0, x1 - x0))
+
     val arc = new Arc2D.Double(arcStartX, arcStartY, width, width, startAngle, arcAngle, Arc2D.OPEN)
     p.append(arc, true)
   }
