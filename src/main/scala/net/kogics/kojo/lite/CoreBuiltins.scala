@@ -74,6 +74,7 @@ trait CoreBuiltins extends Rationals {
 
   val kmath = net.kogics.kojo.kmath.Kmath
   val mathx = kmath
+  val easing = net.kogics.kojo.kmath.KEasing
 
   val slow = core.Slow
   val medium = core.Medium

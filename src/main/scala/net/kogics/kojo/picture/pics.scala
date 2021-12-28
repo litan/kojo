@@ -37,7 +37,7 @@ import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.picture.PicCache.freshPics
-import net.kogics.kojo.util.Math
+import net.kogics.kojo.kmath.{Kmath => Math}
 import net.kogics.kojo.util.Utils
 
 import edu.umd.cs.piccolo.PNode

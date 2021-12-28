@@ -22,6 +22,7 @@ import java.awt.{Paint, Toolkit}
 import java.net.URL
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
+import net.kogics.kojo.animation.Animation
 
 import javax.swing.JComponent
 import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
@@ -735,6 +736,14 @@ Here's a partial list of the available commands:
     }
   }
   val pm = PictureMaker
+
+  val Animation = animation.Animation
+  def animSeq(as: Animation*): Animation = animSeq(as)
+  def animSeq(as: collection.Seq[Animation]): Animation = animation.animSeq(as.toSeq)
+  def animPar(as: Animation*): Animation = animPar(as)
+  def animPar(as: collection.Seq[Animation]): Animation = animation.animPar(as.toSeq)
+  def run(anim: Animation) = anim.run()
+
   type Widget = JComponent
   type TextField[A] = widget.TextField[A]
   type TextArea = widget.TextArea
