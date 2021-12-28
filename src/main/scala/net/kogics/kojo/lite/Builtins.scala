@@ -26,6 +26,7 @@ import net.kogics.kojo.animation.Animation
 
 import javax.swing.JComponent
 import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
+import net.kogics.kojo.kmath.KEasing
 import net.kogics.kojo.picture.{DslImpl, PicCache, PicDrawingDsl}
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
@@ -737,7 +738,10 @@ Here's a partial list of the available commands:
   }
   val pm = PictureMaker
 
-  val Animation = animation.Animation
+  def Animation(tickDuration: Int, initState: Seq[Double], finalState: Seq[Double], easer: KEasing,
+                picMaker: Seq[Double] => Picture): Animation =
+    animation.Animation(tickDuration, initState, finalState, easer, picMaker)
+  type Animation = animation.Animation
   def animSeq(as: Animation*): Animation = animSeq(as)
   def animSeq(as: collection.Seq[Animation]): Animation = animation.animSeq(as.toSeq)
   def animPar(as: Animation*): Animation = animPar(as)

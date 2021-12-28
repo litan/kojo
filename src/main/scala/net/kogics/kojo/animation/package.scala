@@ -7,6 +7,8 @@ package object animation {
     def run()(implicit canvas: SCanvas): Unit = run(() => {})
 
     def run(onStop: () => Unit)(implicit canvas: SCanvas): Unit
+
+    def reversed: Animation
   }
 
   object Animation {
@@ -20,12 +22,12 @@ package object animation {
   }
 
   case class SingleAnimation(
-                         tickDuration: Int,
-                         initState: Seq[Double],
-                         finalState: Seq[Double],
-                         easer: net.kogics.kojo.kmath.KEasing,
-                         picMaker: Seq[Double] => Picture
-                       ) extends Animation {
+                              tickDuration: Int,
+                              initState: Seq[Double],
+                              finalState: Seq[Double],
+                              easer: net.kogics.kojo.kmath.KEasing,
+                              picMaker: Seq[Double] => Picture
+                            ) extends Animation {
     val initStateEx = initState :+ 0.0
     val finalStateEx = finalState :+ tickDuration.toDouble
 
@@ -63,12 +65,16 @@ package object animation {
         }
       anim
     }
+
+    def reversed: Animation = this.copy(initState = this.finalState, finalState = this.initState)
   }
 
   case class SeqAnimation(a1: Animation, a2: Animation) extends Animation {
     def run(onStop: () => Unit)(implicit canvas: SCanvas): Unit = {
       a1.run(() => a2.run(() => onStop()))
     }
+
+    def reversed: Animation = SeqAnimation(a2.reversed, a1.reversed)
   }
 
   case class ParAnimation(a1: Animation, a2: Animation) extends Animation {
@@ -85,6 +91,8 @@ package object animation {
       a1.run(() => triggerStop())
       a2.run(() => triggerStop())
     }
+
+    def reversed: Animation = ParAnimation(a1.reversed, a2.reversed)
   }
 
   def animSeq(as: Seq[Animation]): Animation = as match {
