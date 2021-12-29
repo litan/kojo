@@ -1,65 +1,70 @@
 package net.kogics.kojo
 
 import net.kogics.kojo.core.{Picture, SCanvas}
+import net.kogics.kojo.kmath.KEasing
 
 package object animation {
   trait Animation {
     def run()(implicit canvas: SCanvas): Unit = run(() => {})
 
-    def run(onStop: () => Unit)(implicit canvas: SCanvas): Unit
+    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit
 
     def reversed: Animation
   }
 
   object Animation {
     def apply(
-               tickDuration: Int,
+               duration: Double,
                initState: Seq[Double],
                finalState: Seq[Double],
-               easer: net.kogics.kojo.kmath.KEasing,
-               picMaker: Seq[Double] => Picture
-             ): Animation = SingleAnimation(tickDuration, initState, finalState, easer, picMaker)
+               easer: KEasing,
+               picMaker: Seq[Double] => Picture,
+               hideOnDone: Boolean
+             ): Animation = SingleAnimation(duration, initState, finalState, easer, picMaker, hideOnDone)
   }
 
   case class SingleAnimation(
-                              tickDuration: Int,
+                              duration: Double, // in seconds
                               initState: Seq[Double],
                               finalState: Seq[Double],
-                              easer: net.kogics.kojo.kmath.KEasing,
-                              picMaker: Seq[Double] => Picture
+                              easer: KEasing,
+                              picMaker: Seq[Double] => Picture,
+                              hideOnDone: Boolean
                             ) extends Animation {
-    val initStateEx = initState :+ 0.0
-    val finalStateEx = finalState :+ tickDuration.toDouble
 
-    private def nextState(s: Seq[Double]): Seq[Double] = {
-      val size = initStateEx.size
-      val currTick = s(size - 1)
-      if (currTick == tickDuration + 1) {
+    val stateSize = initState.size
+    val durationMillis = duration * 1000
+
+    private def nextState(s: Seq[Double], elapsedTimeMillis: Double): Seq[Double] = {
+      if (elapsedTimeMillis > durationMillis) {
         s
       }
       else {
-        val ns = for (idx <- 0 to size - 2) yield {
-          easer.ease(initStateEx(idx), finalStateEx(idx), currTick, tickDuration)
+        for (idx <- 0 to stateSize - 1) yield {
+          easer.ease(initState(idx), finalState(idx), elapsedTimeMillis, durationMillis)
         }
-        ns :+ (currTick + 1)
       }
     }
 
-    def run(onStop: () => Unit)(implicit canvas: SCanvas): Unit = {
+    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
       import edu.umd.cs.piccolo.activities.PActivity
 
       import java.util.concurrent.Future
+
+      val startMillis = System.currentTimeMillis
       val initPic: Picture = picture.rect2(0, 0)
       lazy val anim: Future[PActivity] =
-        canvas.animateWithState((initPic, initStateEx)) { case (pic, s) =>
+        canvas.animateWithState((initPic, initState)) { case (pic, s) =>
           pic.erase()
           val pic2 = picMaker(s)
           pic2.draw()
-          val ns = nextState(s)
+          val ns = nextState(s, (System.currentTimeMillis - startMillis).toDouble)
           if (ns == s) {
             canvas.stopAnimationActivity(anim)
-            onStop()
-            pic2.erase()
+            onDone()
+            if (hideOnDone) {
+              pic2.erase()
+            }
           }
           (pic2, ns)
         }
@@ -70,21 +75,21 @@ package object animation {
   }
 
   case class SeqAnimation(a1: Animation, a2: Animation) extends Animation {
-    def run(onStop: () => Unit)(implicit canvas: SCanvas): Unit = {
-      a1.run(() => a2.run(() => onStop()))
+    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
+      a1.run(() => a2.run(() => onDone()))
     }
 
     def reversed: Animation = SeqAnimation(a2.reversed, a1.reversed)
   }
 
   case class ParAnimation(a1: Animation, a2: Animation) extends Animation {
-    def run(onStop: () => Unit)(implicit canvas: SCanvas): Unit = {
+    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
       var stopCount = 0
 
       def triggerStop(): Unit = {
         stopCount += 1
         if (stopCount == 2) {
-          onStop()
+          onDone()
         }
       }
 

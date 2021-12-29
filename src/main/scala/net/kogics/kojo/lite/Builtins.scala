@@ -738,9 +738,9 @@ Here's a partial list of the available commands:
   }
   val pm = PictureMaker
 
-  def Animation(tickDuration: Int, initState: Seq[Double], finalState: Seq[Double], easer: KEasing,
-                picMaker: Seq[Double] => Picture): Animation =
-    animation.Animation(tickDuration, initState, finalState, easer, picMaker)
+  def Animation(durationSeconds: Int, initState: Seq[Double], finalState: Seq[Double], easer: KEasing,
+                picMaker: Seq[Double] => Picture, hideOnDone: Boolean = true): Animation =
+    animation.Animation(durationSeconds, initState, finalState, easer, picMaker, hideOnDone)
   type Animation = animation.Animation
   def animSeq(as: Animation*): Animation = animSeq(as)
   def animSeq(as: collection.Seq[Animation]): Animation = animation.animSeq(as.toSeq)
