@@ -22,9 +22,11 @@ import java.awt.{Paint, Toolkit}
 import java.net.URL
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
+import net.kogics.kojo.animation.Animation
 
 import javax.swing.JComponent
 import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
+import net.kogics.kojo.kmath.KEasing
 import net.kogics.kojo.picture.{DslImpl, PicCache, PicDrawingDsl}
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
@@ -735,6 +737,17 @@ Here's a partial list of the available commands:
     }
   }
   val pm = PictureMaker
+
+  def Animation(durationSeconds: Int, initState: Seq[Double], finalState: Seq[Double], easer: KEasing,
+                picMaker: Seq[Double] => Picture, hideOnDone: Boolean = true): Animation =
+    animation.Animation(durationSeconds, initState, finalState, easer, picMaker, hideOnDone)
+  type Animation = animation.Animation
+  def animSeq(as: Animation*): Animation = animSeq(as)
+  def animSeq(as: collection.Seq[Animation]): Animation = animation.animSeq(as.toSeq)
+  def animPar(as: Animation*): Animation = animPar(as)
+  def animPar(as: collection.Seq[Animation]): Animation = animation.animPar(as.toSeq)
+  def run(anim: Animation) = anim.run()
+
   type Widget = JComponent
   type TextField[A] = widget.TextField[A]
   type TextArea = widget.TextArea

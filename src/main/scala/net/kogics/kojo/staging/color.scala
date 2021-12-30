@@ -16,7 +16,7 @@
 package net.kogics.kojo
 package staging
 
-import util.Math
+import kmath.{Kmath => Math}
 
 import javax.swing._
 
