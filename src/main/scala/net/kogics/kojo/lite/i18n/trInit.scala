@@ -24,6 +24,8 @@ import net.kogics.kojo.lite.{CoreBuiltins, Builtins}
 import net.kogics.kojo.xscala.RepeatCommands
 import net.kogics.kojo.core.Turtle
 import java.awt.Color
+import java.util.concurrent.Future  // todo
+import edu.umd.cs.piccolo.activities.PActivity  // todo
 
 object TurkishAPI {
   var builtins: CoreBuiltins = _ //unstable reference to module
@@ -470,6 +472,12 @@ object TurkishAPI {
   def yorumla(komutDizisi: Yazı) = richBuiltins.interpret(komutDizisi)
   def yineleSayaçla(miliSaniye: Uzun)(işlev: => Birim) = richBuiltins.tCanvas.timer(miliSaniye)(işlev)
   def canlandır(işlev: => Birim) = richBuiltins.tCanvas.animate(işlev)
+  def canlandırEvreyle[Evre](ilkEvre: Evre)(işlev: Evre => Evre): Future[PActivity] = richBuiltins.tCanvas.animateWithState(ilkEvre)(işlev)
+  def canlandırmayıDurdur(etkinlik: Future[PActivity]) = richBuiltins.tCanvas.stopAnimationActivity(etkinlik)
+  def canlandırYenidenÇizerek[Evre](ilkEvre: Evre, sonrakiEvre: Evre => Evre, işlev: Evre => Resim): Birim = {
+    val işlev2 = new Function1[Evre, richBuiltins.Picture] { def apply(e: Evre) = işlev(e).p }
+    richBuiltins.animateWithRedraw(ilkEvre, sonrakiEvre, işlev2)
+  }
   def durdur() = richBuiltins.stopAnimation()
   def canlandırmaBaşlayınca(işlev: => Birim) = richBuiltins.tCanvas.onAnimationStart(işlev)
   def canlandırmaBitince(işlev: => Birim) = richBuiltins.tCanvas.onAnimationStop(işlev)
