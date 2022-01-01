@@ -34,20 +34,30 @@ package object animation {
                picMaker: Seq[Double] => Picture,
                hideOnDone: Boolean
              ): Animation = Timeline(duration, keyFrames, easer, picMaker, hideOnDone)
+  }
 
-    private[animation] def transitions(
-                                        duration: Double,
-                                        keyFrames: KeyFrames,
-                                        easer: KEasing,
-                                        picMaker: Seq[Double] => Picture,
-                                        hideOnDone: Boolean
-                                      ) = keyFrames.frames.sliding(2).map { case (Seq(as1, as2)) =>
+  private[animation] object AnimationUtils {
+    def transitions(
+                     duration: Double,
+                     keyFrames: KeyFrames,
+                     easer: KEasing,
+                     picMaker: Seq[Double] => Picture,
+                     hideOnDone: Boolean
+                   ): Iterator[Transition] = keyFrames.frames.sliding(2).map { case (Seq(as1, as2)) =>
       val tduration = (as2._1 - as1._1) / 100 * duration
       val initState = as1._2
       val finalState = as2._2
       Transition(tduration, initState, finalState, easer, picMaker, hideOnDone)
     }
 
+    def checkKeyFrames(keyFrames: KeyFrames): Unit = {
+      val frames = keyFrames.frames
+      require(frames.head._1 == 0, "KeyFrames should start at 0%")
+      require(frames.last._1 == 100, "KeyFrames should end at 100%")
+      frames.sliding(2).foreach { case (Seq(as1, as2)) =>
+        require(as2._1 > as1._1, "Keyframe start times should be in increasing order")
+      }
+    }
   }
 
   case class Transition(
@@ -108,7 +118,9 @@ package object animation {
                        picMaker: Seq[Double] => Picture,
                        hideOnDone: Boolean
                      ) extends Animation {
-    private def transitions = Animation.transitions(duration, keyFrames, easer, picMaker, hideOnDone)
+    AnimationUtils.checkKeyFrames(keyFrames)
+
+    private def transitions = AnimationUtils.transitions(duration, keyFrames, easer, picMaker, hideOnDone)
 
     lazy val anims = animSeq(transitions.toSeq)
 
@@ -126,7 +138,9 @@ package object animation {
                                picMaker: Seq[Double] => Picture,
                                hideOnDone: Boolean
                              ) extends Animation {
-    private def transitions = Animation.transitions(duration, keyFrames, easer, picMaker, hideOnDone)
+    AnimationUtils.checkKeyFrames(keyFrames)
+
+    private def transitions = AnimationUtils.transitions(duration, keyFrames, easer, picMaker, hideOnDone)
 
     lazy val anims = animSeq(transitions.toSeq).reversed
 
