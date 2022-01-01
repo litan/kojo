@@ -739,12 +739,12 @@ Here's a partial list of the available commands:
   val pm = PictureMaker
 
   type Animation = animation.Animation
-  def Transition(durationSeconds: Int, initState: Seq[Double], finalState: Seq[Double], easer: KEasing,
+  def Transition(durationSeconds: Int, fromState: Seq[Double], toState: Seq[Double], easer: KEasing,
+                 picMaker: Seq[Double] => Picture, hideOnDone: Boolean = true): Animation =
+    animation.Animation(durationSeconds, fromState, toState, easer, picMaker, hideOnDone)
+  def Timeline(duration: Double, keyFrames: animation.KeyFrames, easer: KEasing,
                 picMaker: Seq[Double] => Picture, hideOnDone: Boolean = true): Animation =
-    animation.Animation(durationSeconds, initState, finalState, easer, picMaker, hideOnDone)
-  def Timeline(keyFrames: animation.KeyFrames, easer: KEasing,
-                picMaker: Seq[Double] => Picture, hideOnDone: Boolean = true): Animation =
-    animation.Animation(keyFrames, easer, picMaker, hideOnDone)
+    animation.Animation(duration, keyFrames, easer, picMaker, hideOnDone)
   implicit def iis2dds(is: (Int, Seq[Int])): (Double, Seq[Double]) = is match {
     case (i, si) => (i.toDouble, si.map(_.toDouble))
   }

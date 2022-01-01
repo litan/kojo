@@ -10,6 +10,8 @@ package object animation {
     def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit
 
     def reversed: Animation
+
+    def repeated(count: Int = Int.MaxValue) = RepeatedAnimation(this, count)
   }
 
   // frames contain a seq of time => state
@@ -26,22 +28,24 @@ package object animation {
              ): Animation = Transition(duration, initState, finalState, easer, picMaker, hideOnDone)
 
     def apply(
+               duration: Double,
                keyFrames: KeyFrames,
                easer: KEasing,
                picMaker: Seq[Double] => Picture,
                hideOnDone: Boolean
-             ): Animation = Timeline(keyFrames, easer, picMaker, hideOnDone)
+             ): Animation = Timeline(duration, keyFrames, easer, picMaker, hideOnDone)
 
     private[animation] def transitions(
+                                        duration: Double,
                                         keyFrames: KeyFrames,
                                         easer: KEasing,
                                         picMaker: Seq[Double] => Picture,
                                         hideOnDone: Boolean
                                       ) = keyFrames.frames.sliding(2).map { case (Seq(as1, as2)) =>
-      val duration = as2._1 - as1._1
+      val tduration = (as2._1 - as1._1) / 100 * duration
       val initState = as1._2
       val finalState = as2._2
-      Transition(duration, initState, finalState, easer, picMaker, hideOnDone)
+      Transition(tduration, initState, finalState, easer, picMaker, hideOnDone)
     }
 
   }
@@ -98,40 +102,95 @@ package object animation {
   }
 
   case class Timeline(
+                       duration: Double,
                        keyFrames: KeyFrames,
                        easer: KEasing,
                        picMaker: Seq[Double] => Picture,
                        hideOnDone: Boolean
                      ) extends Animation {
-    lazy val transitions = Animation.transitions(keyFrames, easer, picMaker, hideOnDone)
+    private def transitions = Animation.transitions(duration, keyFrames, easer, picMaker, hideOnDone)
+
+    lazy val anims = animSeq(transitions.toSeq)
 
     def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      val anims = animSeq(transitions.toSeq)
-      anims.run(() => onDone())
+      anims.run(onDone)
     }
 
-    def reversed: Animation = TimelineReversed(keyFrames, easer, picMaker, hideOnDone)
+    def reversed: Animation = TimelineReversed(duration, keyFrames, easer, picMaker, hideOnDone)
   }
 
   case class TimelineReversed(
+                               duration: Double,
                                keyFrames: KeyFrames,
                                easer: KEasing,
                                picMaker: Seq[Double] => Picture,
                                hideOnDone: Boolean
                              ) extends Animation {
-    lazy val transitions = Animation.transitions(keyFrames, easer, picMaker, hideOnDone)
+    private def transitions = Animation.transitions(duration, keyFrames, easer, picMaker, hideOnDone)
+
+    lazy val anims = animSeq(transitions.toSeq).reversed
 
     def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      val anims = animSeq(transitions.toSeq).reversed
-      anims.run(() => onDone())
+      anims.run(onDone)
     }
 
-    def reversed: Animation = Timeline(keyFrames, easer, picMaker, hideOnDone)
+    def reversed: Animation = Timeline(duration, keyFrames, easer, picMaker, hideOnDone)
   }
+
+  case class RepeatedAnimation(a: Animation, count: Int) extends Animation {
+    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
+      var doneCount = 0
+
+      def triggerDone(): Unit = {
+        doneCount += 1
+        if (doneCount == count) {
+          onDone()
+        }
+        else {
+          runAnim()
+        }
+      }
+
+      def runAnim(): Unit = {
+        a.run(triggerDone)
+      }
+
+      runAnim()
+    }
+
+    def reversed: Animation = RepeatedAnimationReversed(a, count)
+  }
+
+  case class RepeatedAnimationReversed(a: Animation, count: Int) extends Animation {
+    lazy val reversedA = a.reversed
+
+    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
+      var doneCount = 0
+
+      def triggerDone(): Unit = {
+        doneCount += 1
+        if (doneCount == count) {
+          onDone()
+        }
+        else {
+          runAnim()
+        }
+      }
+
+      def runAnim(): Unit = {
+        reversedA.run(triggerDone)
+      }
+
+      runAnim()
+    }
+
+    def reversed: Animation = RepeatedAnimation(a, count)
+  }
+
 
   case class SeqAnimation(a1: Animation, a2: Animation) extends Animation {
     def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      a1.run(() => a2.run(() => onDone()))
+      a1.run(() => a2.run(onDone))
     }
 
     def reversed: Animation = SeqAnimation(a2.reversed, a1.reversed)
@@ -139,17 +198,17 @@ package object animation {
 
   case class ParAnimation(a1: Animation, a2: Animation) extends Animation {
     def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      var stopCount = 0
+      var doneCount = 0
 
-      def triggerStop(): Unit = {
-        stopCount += 1
-        if (stopCount == 2) {
+      def triggerDone(): Unit = {
+        doneCount += 1
+        if (doneCount == 2) {
           onDone()
         }
       }
 
-      a1.run(() => triggerStop())
-      a2.run(() => triggerStop())
+      a1.run(triggerDone)
+      a2.run(triggerDone)
     }
 
     def reversed: Animation = ParAnimation(a1.reversed, a2.reversed)
