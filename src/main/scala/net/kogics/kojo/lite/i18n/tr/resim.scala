@@ -236,6 +236,7 @@ class Resim(val p: richBuiltins.Picture) {
   def dönüşüm = p.transform
   def kalemRenginiKur = p.setPenColor _
   def kalemKalınlığınıKur(kalınlık: Sayı) = p.setPenThickness(kalınlık)
+  def kalemBoyunuKur(kalınlık: Sayı) = p.setPenThickness(kalınlık)  
   def kalemiKapa() = p.setNoPen()
   //def setPenCapJoin(capJoin: (Int, Int)): Unit = setPenCapJoin(capJoin._1, capJoin._2)
   //def setPenCapJoin(cap: Int, join: Int): Unit
