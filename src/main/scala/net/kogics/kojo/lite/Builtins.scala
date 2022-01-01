@@ -738,10 +738,20 @@ Here's a partial list of the available commands:
   }
   val pm = PictureMaker
 
-  def Animation(durationSeconds: Int, initState: Seq[Double], finalState: Seq[Double], easer: KEasing,
+  type Animation = animation.Animation
+  def Transition(durationSeconds: Int, initState: Seq[Double], finalState: Seq[Double], easer: KEasing,
                 picMaker: Seq[Double] => Picture, hideOnDone: Boolean = true): Animation =
     animation.Animation(durationSeconds, initState, finalState, easer, picMaker, hideOnDone)
-  type Animation = animation.Animation
+  def Timeline(keyFrames: animation.KeyFrames, easer: KEasing,
+                picMaker: Seq[Double] => Picture, hideOnDone: Boolean = true): Animation =
+    animation.Animation(keyFrames, easer, picMaker, hideOnDone)
+  implicit def iis2dds(is: (Int, Seq[Int])): (Double, Seq[Double]) = is match {
+    case (i, si) => (i.toDouble, si.map(_.toDouble))
+  }
+  implicit def ids2dds(is: (Int, Seq[Double])): (Double, Seq[Double]) = is match {
+    case (i, sd) => (i.toDouble, sd)
+  }
+  def KeyFrames(frames: (Double, Seq[Double])*)= animation.KeyFrames(frames)
   def animSeq(as: Animation*): Animation = animSeq(as)
   def animSeq(as: collection.Seq[Animation]): Animation = animation.animSeq(as.toSeq)
   def animPar(as: Animation*): Animation = animPar(as)
@@ -918,7 +928,6 @@ Here's a partial list of the available commands:
   def rangeTo(start: Double, end: Double, step: Double) = Range.BigDecimal.inclusive(start, end, step)
   def rangeTill(start: Double, end: Double, step: Double) = Range.BigDecimal(start, end, step)
 
-  import scala.language.implicitConversions
   implicit def bd2double(bd: BigDecimal) = bd.doubleValue
 
   type CanvasDraw = net.kogics.kojo.lite.CanvasDraw

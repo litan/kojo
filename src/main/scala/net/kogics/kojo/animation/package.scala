@@ -12,6 +12,9 @@ package object animation {
     def reversed: Animation
   }
 
+  // frames contain a seq of time => state
+  case class KeyFrames(frames: Seq[(Double, Seq[Double])])
+
   object Animation {
     def apply(
                duration: Double,
@@ -20,17 +23,37 @@ package object animation {
                easer: KEasing,
                picMaker: Seq[Double] => Picture,
                hideOnDone: Boolean
-             ): Animation = SingleAnimation(duration, initState, finalState, easer, picMaker, hideOnDone)
+             ): Animation = Transition(duration, initState, finalState, easer, picMaker, hideOnDone)
+
+    def apply(
+               keyFrames: KeyFrames,
+               easer: KEasing,
+               picMaker: Seq[Double] => Picture,
+               hideOnDone: Boolean
+             ): Animation = Timeline(keyFrames, easer, picMaker, hideOnDone)
+
+    private[animation] def transitions(
+                                        keyFrames: KeyFrames,
+                                        easer: KEasing,
+                                        picMaker: Seq[Double] => Picture,
+                                        hideOnDone: Boolean
+                                      ) = keyFrames.frames.sliding(2).map { case (Seq(as1, as2)) =>
+      val duration = as2._1 - as1._1
+      val initState = as1._2
+      val finalState = as2._2
+      Transition(duration, initState, finalState, easer, picMaker, hideOnDone)
+    }
+
   }
 
-  case class SingleAnimation(
-                              duration: Double, // in seconds
-                              initState: Seq[Double],
-                              finalState: Seq[Double],
-                              easer: KEasing,
-                              picMaker: Seq[Double] => Picture,
-                              hideOnDone: Boolean
-                            ) extends Animation {
+  case class Transition(
+                         duration: Double, // in seconds
+                         initState: Seq[Double],
+                         finalState: Seq[Double],
+                         easer: KEasing,
+                         picMaker: Seq[Double] => Picture,
+                         hideOnDone: Boolean
+                       ) extends Animation {
 
     val stateSize = initState.size
     val durationMillis = duration * 1000
@@ -72,6 +95,38 @@ package object animation {
     }
 
     def reversed: Animation = this.copy(initState = this.finalState, finalState = this.initState)
+  }
+
+  case class Timeline(
+                       keyFrames: KeyFrames,
+                       easer: KEasing,
+                       picMaker: Seq[Double] => Picture,
+                       hideOnDone: Boolean
+                     ) extends Animation {
+    lazy val transitions = Animation.transitions(keyFrames, easer, picMaker, hideOnDone)
+
+    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
+      val anims = animSeq(transitions.toSeq)
+      anims.run(() => onDone())
+    }
+
+    def reversed: Animation = TimelineReversed(keyFrames, easer, picMaker, hideOnDone)
+  }
+
+  case class TimelineReversed(
+                               keyFrames: KeyFrames,
+                               easer: KEasing,
+                               picMaker: Seq[Double] => Picture,
+                               hideOnDone: Boolean
+                             ) extends Animation {
+    lazy val transitions = Animation.transitions(keyFrames, easer, picMaker, hideOnDone)
+
+    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
+      val anims = animSeq(transitions.toSeq).reversed
+      anims.run(() => onDone())
+    }
+
+    def reversed: Animation = Timeline(keyFrames, easer, picMaker, hideOnDone)
   }
 
   case class SeqAnimation(a1: Animation, a2: Animation) extends Animation {
