@@ -232,7 +232,11 @@ trait CoreBuiltins extends Rationals {
   def draw(pictures: Picture*): Unit = draw(pictures)
   def draw(pictures: collection.Seq[Picture]): Unit = {
     import net.kogics.kojo.picture.PicCache.freshPics
-    freshPics(pictures.toList).foreach(_.draw())
+    freshPics(pictures.toList).foreach { pic =>
+      pic.invisible()
+      pic.draw()
+      pic.visible()
+    }
   }
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)
