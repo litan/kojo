@@ -3,8 +3,7 @@ package core
 
 import java.awt.Paint
 import java.awt.geom.AffineTransform
-import java.awt.image.BufferedImage
-
+import java.awt.image.{BufferedImage, BufferedImageOp}
 import com.vividsolutions.jts.geom.Geometry
 
 import net.kogics.kojo.kgeom.PolyLine
@@ -13,6 +12,7 @@ import net.kogics.kojo.util.Vector2D
 
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.util.PBounds
+import net.kogics.kojo.picture.ImageOp
 
 trait Picture extends InputAware {
   def canvas: SCanvas
@@ -174,4 +174,12 @@ trait Picture extends InputAware {
     val pos0 = position
     animateToPosition(pos0.x + dx, pos0.y + dy, inMillis)(onEnd)
   }
+  def withRotation(angle: Double): Picture
+  def withTranslation(x: Double, y: Double): Picture
+  def withScale(factor: Double): Picture
+  def withFillColor(color: Paint): Picture
+  def withPenColor(color: Paint): Picture
+  def withPenThickness(t: Double): Picture
+  def withEffect(filter: BufferedImageOp): Picture
+  def withEffect(filter: ImageOp): Picture
 }

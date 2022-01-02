@@ -16,11 +16,13 @@
 package net.kogics.kojo
 package picture
 
+import com.jhlabs.image.AbstractBufferedImageOp
+
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Paint
 import java.awt.geom.AffineTransform
-import java.awt.image.BufferedImage
+import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.util.concurrent.Future
 
 import scala.collection.mutable.ArrayBuffer
@@ -386,6 +388,26 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def beside(other: Picture): Picture = HPics2(this, other)
   def above(other: Picture): Picture = VPics2(other, this)
   def on(other: Picture): Picture = GPics2(other, this)
+
+  def withRotation(angle: Double): Picture = PostDrawTransform { pic => pic.rotate(angle) }(this)
+  def withTranslation(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.translate(x, y) }(this)
+  def withScale(factor: Double): Picture = PostDrawTransform { pic => pic.scale(factor) }(this)
+  def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
+  def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
+  def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
+  def withEffect(filter: BufferedImageOp): Picture = {
+    def epic(p: Picture) = p match {
+      case ep: EffectablePicture => ep
+      case _                     => new EffectableImagePic(p)(p.canvas)
+    }
+    ApplyFilter(filter)(epic(this))
+  }
+  def withEffect(filterOp: ImageOp): Picture = {
+    val filter2 = new AbstractBufferedImageOp {
+      def filter(src: BufferedImage, dest: BufferedImage) = filterOp.filter(src)
+    }
+    withEffect(filter2)
+  }
 }
 
 trait RedrawStopper extends Picture {
