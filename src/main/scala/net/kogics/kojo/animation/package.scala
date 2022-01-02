@@ -52,6 +52,7 @@ package object animation {
 
     def checkKeyFrames(keyFrames: KeyFrames): Unit = {
       val frames = keyFrames.frames
+      require(frames.length > 1, "KeyFrames should have at least two frames")
       require(frames.head._1 == 0, "KeyFrames should start at 0%")
       require(frames.last._1 == 100, "KeyFrames should end at 100%")
       frames.sliding(2).foreach { case (Seq(as1, as2)) =>
@@ -91,19 +92,29 @@ package object animation {
       val startMillis = System.currentTimeMillis
       val initPic: Picture = picture.rect2(0, 0)
       lazy val anim: Future[PActivity] =
-        canvas.animateWithState((initPic, initState)) { case (pic, s) =>
-          pic.erase()
-          val pic2 = picMaker(s)
-          pic2.draw()
-          val ns = nextState(s, (System.currentTimeMillis - startMillis).toDouble)
-          if (ns == s) {
-            canvas.stopAnimationActivity(anim)
-            onDone()
-            if (hideOnDone) {
-              pic2.erase()
+        canvas.animateWithState((initPic, initState, false, 0)) { case (pic, s, stop, stopcnt) =>
+          if (stop) {
+            if (stopcnt == 2) {
+              canvas.stopAnimationActivity(anim)
+              if (hideOnDone) {
+                pic.erase()
+              }
+            }
+            (pic, s, stop, stopcnt + 1)
+          }
+          else {
+            pic.erase()
+            val pic2 = picMaker(s)
+            pic2.draw()
+            val ns = nextState(s, (System.currentTimeMillis - startMillis).toDouble)
+            if (ns == s) {
+              onDone()
+              (pic2, ns, true, 0)
+            }
+            else {
+              (pic2, ns, stop, stopcnt)
             }
           }
-          (pic2, ns)
         }
       anim
     }
@@ -120,12 +131,18 @@ package object animation {
                      ) extends Animation {
     AnimationUtils.checkKeyFrames(keyFrames)
 
-    private def transitions = AnimationUtils.transitions(duration, keyFrames, easer, picMaker, hideOnDone)
+    private def transitions = AnimationUtils.transitions(duration, keyFrames, easer, picMaker, true)
 
     lazy val anims = animSeq(transitions.toSeq)
 
     def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      anims.run(onDone)
+      anims.run { () =>
+        onDone()
+        if (!hideOnDone) {
+          val finalPic = picMaker(keyFrames.frames.last._2)
+          finalPic.draw()
+        }
+      }
     }
 
     def reversed: Animation = TimelineReversed(duration, keyFrames, easer, picMaker, hideOnDone)
@@ -140,12 +157,18 @@ package object animation {
                              ) extends Animation {
     AnimationUtils.checkKeyFrames(keyFrames)
 
-    private def transitions = AnimationUtils.transitions(duration, keyFrames, easer, picMaker, hideOnDone)
+    private def transitions = AnimationUtils.transitions(duration, keyFrames, easer, picMaker, true)
 
     lazy val anims = animSeq(transitions.toSeq).reversed
 
     def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      anims.run(onDone)
+      anims.run { () =>
+        onDone()
+        if (!hideOnDone) {
+          val finalPic = picMaker(keyFrames.frames.head._2)
+          finalPic.draw()
+        }
+      }
     }
 
     def reversed: Animation = Timeline(duration, keyFrames, easer, picMaker, hideOnDone)
