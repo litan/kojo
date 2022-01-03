@@ -148,16 +148,9 @@ package object picture {
     Utils.trect(h, w, t)
   }
 
-  def vline(l: Double)(implicit canvas: SCanvas) = Pic { t =>
-    import t._
-    forward(l)
-  }
+  def vline(length: Double)(implicit canvas: SCanvas) = line(0, length)
 
-  def hline(l: Double)(implicit canvas: SCanvas) = Pic { t =>
-    import t._
-    right()
-    forward(l)
-  }
+  def hline(length: Double)(implicit canvas: SCanvas) = line(length, 0)
 
   def circle(r: Double)(implicit canvas: SCanvas) = new CirclePic(r)
 
