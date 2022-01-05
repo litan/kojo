@@ -127,7 +127,8 @@ draw(pic)
                       |    Seq(0, 100, 0, 1),
                       |    Seq(300, 50, 240, 0.7),
                       |    easing.QuadInOut,
-                      |    makePic
+                      |    makePic,
+                      |    true
                       |)
                       |
                       |run(anim)
@@ -148,18 +149,24 @@ draw(pic)
                     |        scale(scaleProp(s)) ->
                     |        pic
                     |}
-                    |${cursor}
+                    |
                     |val kf = KeyFrames(
                     |    0 -> Seq(0, 100, 0, 1),
-                    |    50 -> Seq(100, 50, 60, 1),
+                    |    50 -> Seq(100, -50, 60, 1),
                     |    100 -> Seq(300, 50, 240, 0.7)
                     |)
                     |
+                    |val easings = Seq(
+                    |    easing.QuadIn,
+                    |    easing.QuadOut
+                    |)
+                    |${cursor}
                     |val anim = Timeline(
                     |    2,
                     |    kf,
-                    |    easing.Linear,
-                    |    makePic
+                    |    easings,
+                    |    makePic,
+                    |    false
                     |)
                     |
                     |run(anim)
