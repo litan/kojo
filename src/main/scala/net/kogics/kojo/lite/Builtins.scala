@@ -1003,11 +1003,17 @@ Here's a partial list of the available commands:
   def insertOutputError(text: String): Unit = kojoCtx.insertOutputError(text)
 
   def animateWithRedraw[S](init: S, nextState: S => S, code: S => Picture): Unit = {
-    var state = init
-    tCanvas.animate {
+    import edu.umd.cs.piccolo.activities.PActivity
+    import java.util.concurrent.Future
+    lazy val anim: Future[PActivity] = tCanvas.animateWithState(init) { state =>
       tCanvas.erasePictures()
       draw(code(state))
-      state = nextState(state)
+      val newState = nextState(state)
+      if (newState == state) {
+        tCanvas.stopAnimationActivity(anim)
+      }
+      newState
     }
+    anim
   }
 }
