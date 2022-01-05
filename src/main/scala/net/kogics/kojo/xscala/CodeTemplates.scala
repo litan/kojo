@@ -105,6 +105,65 @@ draw(pic)
 """,
     "canvasSketch" -> canvasSketch,
     "sketchpic" -> canvasSketch,
+    "transition" -> """cleari()
+                      |drawStage(white)
+                      |
+                      |def pic = Picture.rectangle(100, 50)
+                      |
+                      |def xProp(s: Seq[Double]) = s(0)
+                      |def yProp(s: Seq[Double]) = s(1)
+                      |def hueProp(s: Seq[Double]) = s(2)
+                      |def scaleProp(s: Seq[Double]) = s(3)
+                      |
+                      |def makePic(s: Seq[Double]) = {
+                      |    fillColor(cm.hsl(hueProp(s), 1, 0.5)) *
+                      |        trans(xProp(s), yProp(s)) *
+                      |        scale(scaleProp(s)) ->
+                      |        pic
+                      |}
+                      |${cursor}
+                      |val anim = Transition(
+                      |    2,
+                      |    Seq(0, 100, 0, 1),
+                      |    Seq(300, 50, 240, 0.7),
+                      |    easing.QuadInOut,
+                      |    makePic
+                      |)
+                      |
+                      |run(anim)
+                      |""".stripMargin,
+    "timeline" -> """cleari()
+                    |drawStage(white)
+                    |
+                    |def pic = Picture.rectangle(100, 50)
+                    |
+                    |def xProp(s: Seq[Double]) = s(0)
+                    |def yProp(s: Seq[Double]) = s(1)
+                    |def hueProp(s: Seq[Double]) = s(2)
+                    |def scaleProp(s: Seq[Double]) = s(3)
+                    |
+                    |def makePic(s: Seq[Double]) = {
+                    |    fillColor(cm.hsl(hueProp(s), 1, 0.5)) *
+                    |        trans(xProp(s), yProp(s)) *
+                    |        scale(scaleProp(s)) ->
+                    |        pic
+                    |}
+                    |${cursor}
+                    |val kf = KeyFrames(
+                    |    0 -> Seq(0, 100, 0, 1),
+                    |    50 -> Seq(100, 50, 60, 1),
+                    |    100 -> Seq(300, 50, 240, 0.7)
+                    |)
+                    |
+                    |val anim = Timeline(
+                    |    2,
+                    |    kf,
+                    |    easing.Linear,
+                    |    makePic
+                    |)
+                    |
+                    |run(anim)
+                    |""".stripMargin,
     "test" -> """test("testName") {
     import Matchers._
     ${cursor}
