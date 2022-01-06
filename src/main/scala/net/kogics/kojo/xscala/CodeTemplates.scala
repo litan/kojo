@@ -162,7 +162,7 @@ draw(pic)
                     |)
                     |${cursor}
                     |val anim = Timeline(
-                    |    2,
+                    |    4,
                     |    kf,
                     |    easings,
                     |    makePic,

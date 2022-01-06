@@ -254,6 +254,7 @@ trait AppMenu {
     val animGameMenu = newJMenu(Utils.loadString("S_AnimationsGames"))
     animGameMenu.add(menuItemFor("S_LunarLander", "lunar-lander.kojo"))
     animGameMenu.add(menuItemFor("S_PulsatingLamp", "lamp-animation.kojo"))
+    animGameMenu.add(menuItemFor("S_PulsatingLamp2", "lamp-animation2.kojo"))
     animGameMenu.add(menuItemFor("S_TangramSkier", "tangram-skier.kojo"))
     animGameMenu.add(menuItemFor("S_Pong", "pong.kojo"))
     animGameMenu.add(menuItemFor("S_MemoryCards", "memory-cards.kojo"))

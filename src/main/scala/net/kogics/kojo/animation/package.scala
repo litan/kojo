@@ -11,7 +11,9 @@ package object animation {
 
     def reversed: Animation
 
-    def repeated(count: Int = Int.MaxValue) = RepeatedAnimation(this, count)
+    def repeated(count: Int) = RepeatedAnimation(this, count)
+
+    def repeatedForever = repeated(Int.MaxValue)
   }
 
   // frames contain a seq of time => state
@@ -198,7 +200,9 @@ package object animation {
         a.run(triggerDone)
       }
 
-      runAnim()
+      if (count > 0) {
+        runAnim()
+      }
     }
 
     def reversed: Animation = RepeatedAnimationReversed(a, count)
