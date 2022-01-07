@@ -40,6 +40,7 @@ import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.util.Vector2D
 import core.Picture
+import net.kogics.kojo.picture.PicCache.freshPic
 
 package object picture {
   type Painter = core.Painter
@@ -459,5 +460,10 @@ package object picture {
     pullbackCollision()
     val cv = collisionVector
     vel.bounceOff(cv)
+  }
+
+  protected[picture] def epic(p: Picture) = p match {
+    case ep: EffectablePicture => ep
+    case _                     => new EffectableImagePic(freshPic(p))(p.canvas)
   }
 }

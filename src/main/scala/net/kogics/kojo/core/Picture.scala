@@ -182,4 +182,8 @@ trait Picture extends InputAware {
   def withPenThickness(t: Double): Picture
   def withEffect(filter: BufferedImageOp): Picture
   def withEffect(filter: ImageOp): Picture
+  def withFlippedX: Picture
+  def withFlippedY: Picture
+  def withFading(n: Int): Picture
+  def withBlurring(r: Int): Picture
 }

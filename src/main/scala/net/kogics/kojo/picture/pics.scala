@@ -395,19 +395,18 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
   def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
   def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
-  def withEffect(filter: BufferedImageOp): Picture = {
-    def epic(p: Picture) = p match {
-      case ep: EffectablePicture => ep
-      case _                     => new EffectableImagePic(p)(p.canvas)
-    }
-    ApplyFilter(filter)(epic(this))
-  }
+  def withEffect(filter: BufferedImageOp): Picture = ApplyFilter(filter)(epic(this))
+
   def withEffect(filterOp: ImageOp): Picture = {
     val filter2 = new AbstractBufferedImageOp {
       def filter(src: BufferedImage, dest: BufferedImage) = filterOp.filter(src)
     }
     withEffect(filter2)
   }
+  def withFlippedX: Picture = FlipY(this)
+  def withFlippedY: Picture  = FlipX(this)
+  def withFading(n: Int): Picture  = Fade(n)(epic(this))
+  def withBlurring(r: Int): Picture = Blur(r)(epic(this))
 }
 
 trait RedrawStopper extends Picture {
