@@ -390,8 +390,12 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def on(other: Picture): Picture = GPics2(other, this)
 
   def withRotation(angle: Double): Picture = PostDrawTransform { pic => pic.rotate(angle) }(this)
+  def withRotationAround(angle: Double, x: Double, y: Double): Picture =
+    PostDrawTransform { pic => pic.rotateAboutPoint(angle, x, y) }(this)
   def withTranslation(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.translate(x, y) }(this)
-  def withScale(factor: Double): Picture = PostDrawTransform { pic => pic.scale(factor) }(this)
+  def withScaling(factor: Double): Picture = PostDrawTransform { pic => pic.scale(factor) }(this)
+  def withScalingAround(factor: Double, x: Double, y: Double): Picture =
+    PostDrawTransform { pic => pic.scaleAboutPoint(factor, x, y) }(this)
   def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
   def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
   def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)

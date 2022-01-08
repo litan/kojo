@@ -175,8 +175,10 @@ trait Picture extends InputAware {
     animateToPosition(pos0.x + dx, pos0.y + dy, inMillis)(onEnd)
   }
   def withRotation(angle: Double): Picture
+  def withRotationAround(angle: Double, x: Double, y: Double): Picture
   def withTranslation(x: Double, y: Double): Picture
-  def withScale(factor: Double): Picture
+  def withScaling(factor: Double): Picture
+  def withScalingAround(factor: Double, x: Double, y: Double): Picture
   def withFillColor(color: Paint): Picture
   def withPenColor(color: Paint): Picture
   def withPenThickness(t: Double): Picture

@@ -46,33 +46,6 @@ trait PicDrawingDsl {
   def atRt(r: Double, theta: Double) = at(r * math.cos(theta.toRadians), r * math.sin(theta.toRadians))
 }
 
-object PicCache {
-  var hits = 0
-  var misses = 0
-  val seen = new java.util.concurrent.ConcurrentHashMap[Picture, Int]()
-  def clear(): Unit = {
-    seen.clear()
-    hits = 0
-    misses = 0
-  }
-  def freshPic(pic: Picture): Picture = {
-    if (seen.containsKey(pic)) {
-      val ret = pic.copy
-      seen.put(ret, 0)
-      hits += 1
-      ret
-    }
-    else {
-      seen.put(pic, 0)
-      misses += 1
-      pic
-    }
-  }
-  def freshPics(ps: collection.Seq[Picture]): collection.Seq[Picture] = {
-    ps map freshPic
-  }
-}
-
 case class DslImpl(pic: Picture) extends PicDrawingDsl {
   import PicCache.freshPic
   val drawnMsg = "Picture has already been drawn; drawing function '%s 'is not available."
