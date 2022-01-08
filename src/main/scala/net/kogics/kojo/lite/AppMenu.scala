@@ -513,9 +513,10 @@ trait AppMenu {
               <li>Akka (https://akka.io/) for concurrency</li>
               <li>FlatLaf (https://github.com/JFormDesigner/FlatLaf) for the Kojo 'Look and Feel'</li>
               <li>libTiled (https://www.mapeditor.org/) to load game level files created with the Tiled Map Editor</li>
-              <li>Processing (https://processing.org/) for perlin noise and curved shapes</li>
+              <li>The Processing lib (https://processing.org/) for perlin noise and curved shapes</li>
               <li>Delaunay Triangulator (https://github.com/jdiemke/delaunay-triangulator) for triangulation of points</li>
               <li>Java implementation of HSLuv (https://github.com/hsluv/hsluv-java) for a perceptually uniform color space</li>
+              <li>The Penner easing functions for animation (https://github.com/mattdesl/cisc226game/blob/master/SpaceGame/src/space/engine/easing/Easing.java)</li>
               <li>Rhino (https://developer.mozilla.org/en-US/docs/Mozilla/Projects/Rhino) for the Code Exchange interface</li>
               </ul>
               </div>
