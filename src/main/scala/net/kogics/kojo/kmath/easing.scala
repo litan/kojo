@@ -72,6 +72,36 @@ object KEasing {
       Easing.QUINTIC_IN_OUT.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
   }
 
+  val ExpoIn = new KEasing {
+    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
+      Easing.EXPO_IN.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
+  }
+
+  val ExpoOut = new KEasing {
+    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
+      Easing.EXPO_OUT.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
+  }
+
+  val ExpoInOut = new KEasing {
+    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
+      Easing.EXPO_IN_OUT.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
+  }
+
+  val BackIn = new KEasing {
+    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
+      Easing.BACK_IN.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
+  }
+
+  val BackOut = new KEasing {
+    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
+      Easing.BACK_OUT.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
+  }
+
+  val BackInOut = new KEasing {
+    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
+      Easing.BACK_IN_OUT.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
+  }
+
   val ElasticIn = new KEasing {
     override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
       Easing.ELASTIC_IN.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
@@ -130,20 +160,5 @@ object KEasing {
   val CircInOut = new KEasing {
     override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
       Easing.CIRC_IN_OUT.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
-  }
-
-  val ExpoIn = new KEasing {
-    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
-      Easing.EXPO_IN.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
-  }
-
-  val ExpoOut = new KEasing {
-    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
-      Easing.EXPO_OUT.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
-  }
-
-  val ExpoInOut = new KEasing {
-    override def ease(start: Double, end: Double, step: Double, duration: Double): Double =
-      Easing.EXPO_IN_OUT.ease(step.toFloat, start.toFloat, (end - start).toFloat, duration.toFloat)
   }
 }

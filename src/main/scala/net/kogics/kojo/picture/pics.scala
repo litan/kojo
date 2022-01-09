@@ -316,6 +316,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
   def update(newData: Any): Unit = notSupported("update", "for immutable picture")
 }
 
+// Ops that transforms cannot delegate to their underlying tpic
 trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def picLayer = canvas.pictures
   var reactions = Vector.empty[Future[PActivity]]
@@ -411,6 +412,8 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withFlippedY: Picture  = FlipX(this)
   def withFading(n: Int): Picture  = Fade(n)(epic(this))
   def withBlurring(r: Int): Picture = Blur(r)(epic(this))
+  def withAxes: Picture = PostDrawTransform { pic => pic.axesOn() }(this)
+  //  def withBounds: Picture = PostDrawTransform { pic => picBounds(pic) }(this)
 }
 
 trait RedrawStopper extends Picture {
