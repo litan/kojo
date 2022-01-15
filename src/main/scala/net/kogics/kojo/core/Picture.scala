@@ -186,11 +186,13 @@ trait Picture extends InputAware {
   def withEffect(filter: ImageOp): Picture
   def withFlippedX: Picture
   def withFlippedY: Picture
-  def withFading(n: Int): Picture
-  def withBlurring(r: Int): Picture
+  def withFading(distance: Int): Picture
+  def withBlurring(radius: Int): Picture
   def withAxes: Picture
   // The bounds transform is  tricky. If bounds are attached to the pic's parent's tnode,
   // they get out of sync with the pic if the pic is translated etc.
   // If they are attached to the pic's tnode, they change the pic's bounds!
   //  def withBounds: Picture
+  def withOpacity(opacity: Double): Picture
+  def withPosition(x: Double, y: Double): Picture
 }
