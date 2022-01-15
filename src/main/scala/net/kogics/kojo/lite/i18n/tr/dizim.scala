@@ -32,7 +32,7 @@ object Dizim {
 }
 class Dizim[T](val a: Array[T]) {
   def apply(b1: Sayı) = a(b1)
-  def boyut: Sayı = { // just an exercise -- not really needed 
+  @annotation.nowarn def boyut: Sayı = { // just an exercise -- not really needed
     var b = 1
     var p = a // scala style pointer
     var recurse = true
