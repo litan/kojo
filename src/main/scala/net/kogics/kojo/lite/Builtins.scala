@@ -406,6 +406,7 @@ Here's a partial list of the available commands:
   }
   def drawAndHide(pictures: Picture*) = pictures.foreach { p => p.draw(); p.invisible() }
   def drawCentered(pic: Picture): Unit = {
+    checkForLargeDrawing()
     pic.invisible()
     pic.draw()
     center(pic)

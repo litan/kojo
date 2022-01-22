@@ -20,11 +20,14 @@ object PicCache {
   var hits = 0
   var misses = 0
   val seen = new java.util.concurrent.ConcurrentHashMap[Picture, Int]()
+  def size = seen.size()
+
   def clear(): Unit = {
     seen.clear()
     hits = 0
     misses = 0
   }
+
   def freshPic(pic: Picture): Picture = {
     if (seen.containsKey(pic)) {
       val ret = pic.copy
@@ -38,6 +41,7 @@ object PicCache {
       pic
     }
   }
+
   def freshPics(ps: collection.Seq[Picture]): collection.Seq[Picture] = {
     ps map freshPic
   }
