@@ -62,9 +62,9 @@ def line(ps: ArrayBuffer[Point], c: Color) = Picture {
     sq()
 }
 val slingPts = ArrayBuffer.empty[Point]
-var sling = Picture.hline(1)
-var paddle = Picture.hline(1)
-var tempPaddle = paddle
+var sling: Picture = Picture.hline(1)
+var paddle: Picture = Picture.hline(1)
+var tempPaddle: Picture = paddle
 drawAndHide(paddle)
 
 ball.onMousePress { (x, y) =>

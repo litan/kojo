@@ -232,7 +232,7 @@ trait CoreBuiltins extends Rationals {
   def scalep(f: Double, x: Double, y: Double) = picture.scalep(f, x, y)
   def draw(pictures: Picture*): Unit = draw(pictures)
   protected [lite] def checkForLargeDrawing(): Unit = {
-    if (PicCache.size > 50000) {
+    if (PicCache.size > 60000) {
       println("There are too many pics in your drawing, and trying to draw them might freeze Kojo.")
       println("If you still want to go ahead with this, use the pic.draw() method.")
       println("Or use Picture.fromSketch(...).")
