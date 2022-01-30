@@ -116,13 +116,21 @@ package object animation {
       lazy val anim: Future[PActivity] =
         canvas.animateWithState((initPic, initState, false, 0)) { case (pic, s, stop, stopcnt) =>
           if (stop) {
-            if (stopcnt == 2) {
-              canvas.stopAnimationActivity(anim)
-              if (hideOnDone) {
-                pic.erase()
-              }
+            if (stopcnt == 0) {
+              pic.erase()
+              val pic2 = picMaker(finalState)
+              pic2.draw()
+              (pic2, finalState, stop, stopcnt + 1)
             }
-            (pic, s, stop, stopcnt + 1)
+            else {
+              if (stopcnt == 2) {
+                canvas.stopAnimationActivity(anim)
+                if (hideOnDone) {
+                  pic.erase()
+                }
+              }
+              (pic, s, stop, stopcnt + 1)
+            }
           }
           else {
             pic.erase()
