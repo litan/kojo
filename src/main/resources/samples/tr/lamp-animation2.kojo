@@ -5,6 +5,7 @@ silVeSakla()
 artalanıKur(renkler.darkSlateBlue) // eflatuna yakın koyu mavi
 
 val alev = Resim {
+    // linearGradient: doğrusalDeğişim
     boyamaRenginiKur(cm.linearGradient(0, 0, kırmızı, 0, 130, sarı))
     kalemRenginiKur(sarı)
     kalemKalınlığınıKur(3)
@@ -15,7 +16,7 @@ val alev = Resim {
 }
 
 val lamba = Resim {
-    setFillColor(cm.linearGradient(0, 10, kırmızı, 0, -25, kahverengi))
+    boyamaRenginiKur(cm.linearGradient(0, 10, kırmızı, 0, -25, kahverengi))
     kalemKalınlığınıKur(2)
     kalemRenginiKur(siyah)
     sol(120)
