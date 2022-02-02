@@ -740,7 +740,7 @@ Here's a partial list of the available commands:
   val pm = PictureMaker
 
   type Animation = animation.Animation
-  def Transition(durationSeconds: Int, fromState: Seq[Double], toState: Seq[Double], easer: KEasing,
+  def Transition(durationSeconds: Double, fromState: Seq[Double], toState: Seq[Double], easer: KEasing,
                  picMaker: Seq[Double] => Picture, hideOnDone: Boolean): Animation =
     animation.Animation(durationSeconds, fromState, toState, easer, picMaker, hideOnDone)
   def Timeline(duration: Double, keyFrames: animation.KeyFrames, easer: KEasing,
