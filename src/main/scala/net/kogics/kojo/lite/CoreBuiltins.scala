@@ -18,6 +18,7 @@ import net.kogics.kojo.turtle.LoTurtle
 import net.kogics.kojo.util.PerlinNoiseImproved
 import net.kogics.kojo.util.PerlinNoiseProcessing
 import net.kogics.kojo.util.Utils
+import net.kogics.kojo.picture.PicCache
 
 import io.github.jdiemke.triangulation.Triangle2D
 
@@ -74,6 +75,7 @@ trait CoreBuiltins extends Rationals {
 
   val kmath = net.kogics.kojo.kmath.Kmath
   val mathx = kmath
+  val easing = net.kogics.kojo.kmath.KEasing
 
   val slow = core.Slow
   val medium = core.Medium
@@ -229,9 +231,21 @@ trait CoreBuiltins extends Rationals {
   def scale(xf: Double, yf: Double) = picture.scale(xf, yf)
   def scalep(f: Double, x: Double, y: Double) = picture.scalep(f, x, y)
   def draw(pictures: Picture*): Unit = draw(pictures)
+  protected [lite] def checkForLargeDrawing(): Unit = {
+    if (PicCache.size > 60000) {
+      println("There are too many pics in your drawing, and trying to draw them might freeze Kojo.")
+      println("If you still want to go ahead with this, use the pic.draw() method.")
+      println("Or use Picture.fromSketch(...).")
+      assert(false, "Too many pics to draw - Kojo might freeze.")
+    }
+  }
   def draw(pictures: collection.Seq[Picture]): Unit = {
-    import net.kogics.kojo.picture.PicCache.freshPics
-    freshPics(pictures.toList).foreach(_.draw())
+    checkForLargeDrawing()
+    PicCache.freshPics(pictures.toList).foreach { pic =>
+      pic.invisible()
+      pic.draw()
+      pic.visible()
+    }
   }
   type Image = java.awt.Image
   def image(height: Int, width: Int) = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB)

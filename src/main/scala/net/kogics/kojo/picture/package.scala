@@ -40,6 +40,7 @@ import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.util.Vector2D
 import core.Picture
+import net.kogics.kojo.picture.PicCache.freshPic
 
 package object picture {
   type Painter = core.Painter
@@ -60,7 +61,8 @@ package object picture {
   val flipX = FlipXc
   val flipY = FlipYc
   val axesOn = AxesOnc
-  def bounds = PostDrawTransformc { pic =>
+
+  private[picture] def picBounds(pic: Picture): Unit = Utils.runInSwingThread {
     import edu.umd.cs.piccolo.nodes.PPath
     val b = pic.bounds
     val bRect = PPath.createRectangle(b.x.toFloat, b.y.toFloat, b.width.toFloat, b.height.toFloat)
@@ -68,6 +70,10 @@ package object picture {
     val tnode = pic.tnode
     tnode.getParent.addChild(bRect)
     tnode.getParent.repaint()
+  }
+
+  def bounds = PostDrawTransformc { pic =>
+    picBounds(pic)
   }
   def fill(color: Paint) = Fillc(color)
   def stroke(color: Paint) = Strokec(color)
@@ -148,16 +154,9 @@ package object picture {
     Utils.trect(h, w, t)
   }
 
-  def vline(l: Double)(implicit canvas: SCanvas) = Pic { t =>
-    import t._
-    forward(l)
-  }
+  def vline(length: Double)(implicit canvas: SCanvas) = line(0, length)
 
-  def hline(l: Double)(implicit canvas: SCanvas) = Pic { t =>
-    import t._
-    right()
-    forward(l)
-  }
+  def hline(length: Double)(implicit canvas: SCanvas) = line(length, 0)
 
   def circle(r: Double)(implicit canvas: SCanvas) = new CirclePic(r)
 
@@ -466,5 +465,10 @@ package object picture {
     pullbackCollision()
     val cv = collisionVector
     vel.bounceOff(cv)
+  }
+
+  protected[picture] def epic(p: Picture) = p match {
+    case ep: EffectablePicture => ep
+    case _                     => new EffectableImagePic(freshPic(p))(p.canvas)
   }
 }

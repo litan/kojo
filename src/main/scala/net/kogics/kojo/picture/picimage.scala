@@ -206,9 +206,9 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
       picLayer.removeChild(pic.tnode)
       tnode.addChild(pimage(pic.toImage))
       tnode.translate(pic.bounds.x, pic.bounds.y)
-      if (!pic.isInstanceOf[ImagePic]) {
-        tnode.translate(-1, 0)
-      }
+//      if (!pic.isInstanceOf[ImagePic]) {
+//        tnode.translate(-1, 0)
+//      }
       tnode.setVisible(true)
       tnode.repaint()
     }
@@ -342,12 +342,7 @@ case class ApplyFilter(filter: BufferedImageOp)(pic: EffectablePicture) extends 
   override def toString() = s"ApplyFilter($filter) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
-abstract class ComposableImageEffect extends ComposableTransformer {
-  def epic(p: Picture) = p match {
-    case ep: EffectablePicture => ep
-    case _                     => new EffectableImagePic(p)(p.canvas)
-  }
-}
+abstract class ComposableImageEffect extends ComposableTransformer
 
 case class Fadec(n: Int) extends ComposableImageEffect {
   def apply(p: Picture) = Fade(n)(epic(p))

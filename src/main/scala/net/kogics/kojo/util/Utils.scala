@@ -910,7 +910,7 @@ object Utils {
   def increaseSysTimerResolutionIfNeeded(): Unit = {
     if (isWin) {
       if (timerThreadCount.getAndIncrement == 0) {
-        runAsyncMonitored {
+        runAsync {
           try {
             // The irregularly long sleep makes the JVM set the OS timer resolution to 1 ms
             Thread.sleep(Int.MaxValue)

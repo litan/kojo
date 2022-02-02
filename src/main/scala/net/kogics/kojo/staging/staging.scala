@@ -18,7 +18,7 @@ package net.kogics.kojo
 package staging
 
 import util.Utils
-import util.Math
+import kmath.{Kmath => Math}
 import core.InputAware
 import core.Point
 import java.awt.BasicStroke

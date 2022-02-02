@@ -22,9 +22,11 @@ import java.awt.{Paint, Toolkit}
 import java.net.URL
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
+import net.kogics.kojo.animation.Animation
 
 import javax.swing.JComponent
 import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
+import net.kogics.kojo.kmath.KEasing
 import net.kogics.kojo.picture.{DslImpl, PicCache, PicDrawingDsl}
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
@@ -404,6 +406,7 @@ Here's a partial list of the available commands:
   }
   def drawAndHide(pictures: Picture*) = pictures.foreach { p => p.draw(); p.invisible() }
   def drawCentered(pic: Picture): Unit = {
+    checkForLargeDrawing()
     pic.invisible()
     pic.draw()
     center(pic)
@@ -601,8 +604,8 @@ Here's a partial list of the available commands:
     def rect(h: Double, w: Double) = picture.rect2(w, h)
     def rectangle(width: Double, height: Double) = picture.rect2(width, height)
     // def rectangle(x: Double, y: Double, w: Double, h: Double) = picture.offset(x, y) -> picture.rect2(w, h)
-    def vline(l: Double) = picture.vline(l)
-    def hline(l: Double) = picture.hline(l)
+    def vline(length: Double) = picture.vline(length)
+    def hline(length: Double) = picture.hline(length)
     def line(width: Double, height: Double) = picture.line(width, height)
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
     def fromPath(fn: GeneralPath => Unit) = picture.fromPath {
@@ -735,6 +738,30 @@ Here's a partial list of the available commands:
     }
   }
   val pm = PictureMaker
+
+  type Animation = animation.Animation
+  def Transition(durationSeconds: Int, fromState: Seq[Double], toState: Seq[Double], easer: KEasing,
+                 picMaker: Seq[Double] => Picture, hideOnDone: Boolean): Animation =
+    animation.Animation(durationSeconds, fromState, toState, easer, picMaker, hideOnDone)
+  def Timeline(duration: Double, keyFrames: animation.KeyFrames, easer: KEasing,
+               picMaker: Seq[Double] => Picture, hideOnDone: Boolean): Animation =
+    animation.Animation(duration, keyFrames, Seq.fill(keyFrames.frames.length - 1)(easer), picMaker, hideOnDone)
+  def Timeline(duration: Double, keyFrames: animation.KeyFrames, easers: Seq[KEasing],
+               picMaker: Seq[Double] => Picture, hideOnDone: Boolean): Animation =
+    animation.Animation(duration, keyFrames, easers, picMaker, hideOnDone)
+  implicit def iis2dds(is: (Int, Seq[Int])): (Double, Seq[Double]) = is match {
+    case (i, si) => (i.toDouble, si.map(_.toDouble))
+  }
+  implicit def ids2dds(is: (Int, Seq[Double])): (Double, Seq[Double]) = is match {
+    case (i, sd) => (i.toDouble, sd)
+  }
+  def KeyFrames(frames: (Double, Seq[Double])*)= animation.KeyFrames(frames)
+  def animSeq(as: Animation*): Animation = animSeq(as)
+  def animSeq(as: collection.Seq[Animation]): Animation = animation.animSeq(as.toSeq)
+  def animPar(as: Animation*): Animation = animPar(as)
+  def animPar(as: collection.Seq[Animation]): Animation = animation.animPar(as.toSeq)
+  def run(anim: Animation) = anim.run()
+
   type Widget = JComponent
   type TextField[A] = widget.TextField[A]
   type TextArea = widget.TextArea
@@ -905,7 +932,6 @@ Here's a partial list of the available commands:
   def rangeTo(start: Double, end: Double, step: Double) = Range.BigDecimal.inclusive(start, end, step)
   def rangeTill(start: Double, end: Double, step: Double) = Range.BigDecimal(start, end, step)
 
-  import scala.language.implicitConversions
   implicit def bd2double(bd: BigDecimal) = bd.doubleValue
 
   type CanvasDraw = net.kogics.kojo.lite.CanvasDraw
@@ -981,11 +1007,17 @@ Here's a partial list of the available commands:
   def insertOutputError(text: String): Unit = kojoCtx.insertOutputError(text)
 
   def animateWithRedraw[S](init: S, nextState: S => S, code: S => Picture): Unit = {
-    var state = init
-    tCanvas.animate {
+    import edu.umd.cs.piccolo.activities.PActivity
+    import java.util.concurrent.Future
+    lazy val anim: Future[PActivity] = tCanvas.animateWithState(init) { state =>
       tCanvas.erasePictures()
       draw(code(state))
-      state = nextState(state)
+      val newState = nextState(state)
+      if (newState == state) {
+        tCanvas.stopAnimationActivity(anim)
+      }
+      newState
     }
+    anim
   }
 }

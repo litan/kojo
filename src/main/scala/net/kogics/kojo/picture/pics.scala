@@ -16,11 +16,13 @@
 package net.kogics.kojo
 package picture
 
+import com.jhlabs.image.AbstractBufferedImageOp
+
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Paint
 import java.awt.geom.AffineTransform
-import java.awt.image.BufferedImage
+import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.util.concurrent.Future
 
 import scala.collection.mutable.ArrayBuffer
@@ -37,7 +39,7 @@ import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.picture.PicCache.freshPics
-import net.kogics.kojo.util.Math
+import net.kogics.kojo.kmath.{Kmath => Math}
 import net.kogics.kojo.util.Utils
 
 import edu.umd.cs.piccolo.PNode
@@ -314,6 +316,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
   def update(newData: Any): Unit = notSupported("update", "for immutable picture")
 }
 
+// Ops that transforms cannot delegate to their underlying tpic
 trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def picLayer = canvas.pictures
   var reactions = Vector.empty[Future[PActivity]]
@@ -386,6 +389,33 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def beside(other: Picture): Picture = HPics2(this, other)
   def above(other: Picture): Picture = VPics2(other, this)
   def on(other: Picture): Picture = GPics2(other, this)
+
+  def withRotation(angle: Double): Picture = PostDrawTransform { pic => pic.rotate(angle) }(this)
+  def withRotationAround(angle: Double, x: Double, y: Double): Picture =
+    PostDrawTransform { pic => pic.rotateAboutPoint(angle, x, y) }(this)
+  def withTranslation(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.translate(x, y) }(this)
+  def withScaling(factor: Double): Picture = PostDrawTransform { pic => pic.scale(factor) }(this)
+  def withScalingAround(factor: Double, x: Double, y: Double): Picture =
+    PostDrawTransform { pic => pic.scaleAboutPoint(factor, x, y) }(this)
+  def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
+  def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
+  def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
+  def withEffect(filter: BufferedImageOp): Picture = ApplyFilter(filter)(epic(this))
+
+  def withEffect(filterOp: ImageOp): Picture = {
+    val filter2 = new AbstractBufferedImageOp {
+      def filter(src: BufferedImage, dest: BufferedImage) = filterOp.filter(src)
+    }
+    withEffect(filter2)
+  }
+  def withFlippedX: Picture = FlipY(this)
+  def withFlippedY: Picture  = FlipX(this)
+  def withFading(distance: Int): Picture  = Fade(distance)(epic(this))
+  def withBlurring(radius: Int): Picture = Blur(radius)(epic(this))
+  def withAxes: Picture = PostDrawTransform { pic => pic.axesOn() }(this)
+  //  def withBounds: Picture = PostDrawTransform { pic => picBounds(pic) }(this)
+  def withOpacity(opacity: Double): Picture = PostDrawTransform { pic => pic.setOpacity(opacity) }(this)
+  def withPosition(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.setPosition(x, y) }(this)
 }
 
 trait RedrawStopper extends Picture {
