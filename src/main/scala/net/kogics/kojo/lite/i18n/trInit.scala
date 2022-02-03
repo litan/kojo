@@ -26,6 +26,7 @@ import net.kogics.kojo.core.Turtle
 import java.awt.Color
 import java.util.concurrent.Future  // todo
 import edu.umd.cs.piccolo.activities.PActivity  // todo
+import net.kogics.kojo.kmath.KEasing
 
 object TurkishAPI {
   var builtins: CoreBuiltins = _ //unstable reference to module
@@ -76,6 +77,7 @@ object TurkishAPI {
   def yokMu[T](o: Belki[T]): İkil = !varMı(o)
 
   type Dizi[T]=tr.Dizi[T]
+  type DeğişkenDizi[B] = tr.DeğişkenDizi[B]
   type Dizin[T]=tr.Dizin[T]
   type MiskinDizin[T]=tr.MiskinDizin[T]
   type Küme[T] = tr.Küme[T]
@@ -351,7 +353,7 @@ object TurkishAPI {
 
   def durakla(saniye: Kesir) = builtins.pause(saniye)
 
-  def üçgenDöşeme(noktalar: Dizi[Nokta]): Dizi[Üçgen] = builtins.triangulate(noktalar)
+  def üçgenDöşeme(noktalar: Dizi[Nokta]): DeğişkenDizi[Üçgen] = builtins.triangulate(noktalar)
 
   // todo: klasör?
   def evDizini = builtins.homeDir
@@ -467,6 +469,14 @@ object TurkishAPI {
   def çizimiPulBoyundaKaydet(dosyaAdı: Yazı, boy: Sayı) = richBuiltins.tCanvas.exportThumbnail(dosyaAdı, boy)
 
   // todo: help doc
+  def Geçiş(süreSaniyeOlarak: Kesir, ilkEvre: Dizi[Kesir], sonEvre: Dizi[Kesir], kolaylaştırma: KEasing,
+    resimci: Dizi[Kesir] => Resim, bitinceGizle: İkil) = {
+    val resimci2 = new Function1[Dizi[Kesir], richBuiltins.Picture] { def apply(d: Dizi[Kesir]) = resimci(d).p }
+    richBuiltins.Transition(süreSaniyeOlarak, ilkEvre, sonEvre, kolaylaştırma, resimci2, bitinceGizle)
+  }
+  def canlandırmaDizisi(canlandırmalar: richBuiltins.Animation*) = richBuiltins.animSeq(canlandırmalar)
+  def canlandırmaDizisi(canlandırmalar: collection.Seq[richBuiltins.Animation]) = richBuiltins.animSeq(canlandırmalar.toSeq)
+  def oynat(canlandırma: richBuiltins.Animation) = richBuiltins.run(canlandırma)
   def artalandaOynat(kod: => Unit) = richBuiltins.runInBackground(kod)
   def fareKonumu = richBuiltins.mousePosition
   def yorumla(komutDizisi: Yazı) = richBuiltins.interpret(komutDizisi)

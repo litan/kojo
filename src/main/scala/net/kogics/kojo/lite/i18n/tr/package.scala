@@ -81,7 +81,8 @@ package object tr {
     }
   }
 
-  type Dizi[B] = collection.Seq[B] // why collection?
+  type Dizi[B] = Seq[B]
+  type DeğişkenDizi[B] = collection.Seq[B]
   type Dizin[A] = List[A]
   type MiskinDizin[C] = LazyList[C]
 

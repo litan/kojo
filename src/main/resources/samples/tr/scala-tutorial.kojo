@@ -141,7 +141,7 @@ pages += Page(
     <a href={link("GAG")}>Çizim ve Oyun</a> <br/>
     <a href={link("LM")}>Daha Çok Öğrenelim</a> <br/>
     <br/>
-    <p>Not: Bu kılavuzcuk Anthony Bagwell'in simplyscala.com sitesinden Kojo'ya uyarlanarak yazılmıştır. O sites ne yazık ki artık çalışmıyor. Arşivini şurada bulabilirsin: <a href="http://web.archive.org/web/20130305041026/http://www.simplyscala.com">web.archive.org'dan simplyscala.com</a>.</p>
+    <p>Not: Bu kılavuzcuk Anthony Bagwell'in simplyscala.com sitesinden Kojo'ya uyarlanarak yazılmıştır. O site ne yazık ki artık çalışmıyor. Ama arşivde bulabilirsin: <a href="http://web.archive.org/web/20130305041026/http://www.simplyscala.com">web.archive.org'dan simplyscala.com</a>.</p>
     </div>
     </body>
 )
@@ -154,7 +154,7 @@ pages += Page(
     """satıryaz("merhaba dünya! kaplumbağacık ve Bülent'ten hepinize selamlar, sevgiler")""".c,
     "Yaptığın değişikliğin sonucunu Çıktı Gözünde ya da Çizim Tuvalinde hemen göreceksin.".p,
     "Bu kılavuzcuk ilk sayfada gördüğün bölümlerden oluşuyor. Bir sonraki bölüme geçmek için, ya da bir önceki bölüme dönmek için bu pencerenin altındaki sağa ve sola bakan mavi daire içindeki beyaz üçgenlere tıkla. İlgini çeken bölüme de kolaylıkla atlayabilirsin istersen. Bunun için ilk sayfaya geri dönüp ordaki mavi ve altı çizili başlıklardan herhangi birine tıklayabilirsin. İlk sayfaya dönmek için en üstte solda menü yazıyor ya, ona tıklayıver. En alttaki mavi daire içindeki kareye basarsan bu kılavuzcuktan çıkıp Kojo'nun normal düzenine dönebilirsin. Çıkınca kılavuzcukta son seçtiğin yazılımcık kapanmaz. Onun üzerinde değişikler yapıp çalıştırmaya odaklanabilirsin.".p,
-    "Daha önce çalışan bir yazılıma dönmek de kolay: yazılım düzenleyicisinin üst kısmındaki menünün ortasında sağa ve sola bakan mavi oklara tıkla. Seçtiğin yazılımı düzenlemeye kaldığın yerden devam edebilirsin. Her örneği deneyebilir, istediğine geri dönüp değişiklikler yapıp tekrar çalıştırabilirsin. Değişik fikirler dener, programlama dilini daha iyi tanıyıp yazım, gramer kurallarını daha çabuk öğrenebilirsin. Yazılımcık düzenleyicisindeki programları diske kaydedebilir ve sonra oradan geri yükleyebilirsin. Bunun için Dosya menüsüdeki komutları kullan.".p,
+    "Daha önce çalışan bir yazılıma dönmek de kolay: yazılım düzenleyicisinin üst kısmındaki menünün ortasında sağa ve sola bakan mavi oklara tıkla. Seçtiğin yazılımı düzenlemeye kaldığın yerden devam edebilirsin. Her örneği deneyebilir, istediğine geri dönüp değişiklikler yapıp tekrar çalıştırabilirsin. Değişik fikirler dener, programlama dilini daha iyi tanıyıp yazım, yazılım gramer (syntax) kurallarını daha çabuk öğrenebilirsin. Yazılımcık düzenleyicisindeki programları diske kaydedebilir ve sonra oradan geri yükleyebilirsin. Bunun için Dosya menüsüdeki komutları kullan.".p,
     "Şu anda kullandığın Kojo öğrenim ortamı, çok gelişmiş ve uzman bilgisayar mühendislerinin en sevdikleri dillerin önde gelenlerinden Scala programlama dilini öğrenmene yardımcı olmak için hem çok faydalı hem de eğlendirici özellikler ve beceriler içeriyor. Müzik çalan programlar yazabilir, ileri matematik kavramlarını resimler ve grafikler çizerek inceleyip daha iyi öğrenir, değişik tür oyunları hem oynayabilir hem de nasıl yazıldıklarını kolayca öğrenebilir, hatta fizik deneyleri bile yapabilirsin! En güzeli Kojo'nun kaplumbağaları var! Onlara yol göstererek çizimler yaptırabilirsin. Küçük hemen anlayıp seveceğin tek kaplumbağalı bir örnekle başlayalım mı? Kaplumbağa yürüsün ve bir taraftan da bir üçgen çizsin istersen, bu yazılımcığa tıklaman yeter:".p,
     """sil
 ileri(100)
@@ -178,7 +178,7 @@ sağ(120)
     "Biraz daha uzun bir işlem yapalım:".p,
     "3.5*9.4+7/5".c,
     """Scala tam ve kesirli gibi değişik bir kaç sayı tipini tanır. Hepsinin bir tür adı var. Örneğin Sayı, Uzun, İriSayı, Kesir, vb. Bunları ileride detaylı olarak inceleyeceğiz. Yukarıdaki iki örnekten 4.0 ve 3.5 kesir (İngilizcesi Double), 4 ve 6 ise birer tam sayıdır (İngilizcede Integer, kısaca Int). Eğer bir matematiksel deyiş bir kaç tür sayı içiriyorsa Scala derleyicisi mümkünse sayının türünü biraz zorlayarak değiştirebilir.""".p,
-    """Bir deyişin sonucunu bir değişken (aslında çoğunlukla bir değişmez değer) kullanarak kaydedip daha sonra yine kullanabiliriz. Değişken ve değişmez değer isimleri (ve sonra göreceğimiz başka tür isimler) harf, sayı ve * / + - : = ! < > & ^ | gibi semboller kullanarak yazılır. Örneğin, "FutbolTopu", "BilardoTopuBeyaz1", "yardımHattı", "*+" and "Res4" (Result yani sonuç)...""".p,
+    """Bir deyişin sonucunu bir değişken (aslında çoğunlukla bir değişmez değer) kullanarak kaydedip daha sonra yine kullanabiliriz. Değişken ve değişmez değer isimleri (ve sonra göreceğimiz başka tür isimler) harf, sayı ve * / + - : = ! < > & ^ | gibi semboller kullanarak yazılır. Örneğin, "FutbolTopu", "BilardoTopuBeyaz1", "yardımHattı", "*+" and "res4" (result yani sonuç)...""".p,
     """Bunun için iki yöntem vardır: "var" ve "val" komut sözcükleri. "val" (İngilizce value sözcüğünün kısaltması) ile sabit ve hiç değişmeyecek değerleri ve sonuçları saklayabiliriz. Bunlara değişmez değer, ya da kısaca değişmez diyelim. Ya neden bir de "var" (ingilizce variable sözcüğünün kısaltması) komutu var (var var ama var'ı kullanma! 8-)? Aşağıda bir örnekle ikisinin farkını hemen anlayacağız. "val" ile tanımlanan değerlerin sabit olması (ingilizcede 'immutable value') aslında çok önemli bir işlevsel programlama (functional programming) kavramıdır, ama bunu daha sonra yeri gelince daha iyi anlayacağız. Şimdilik mümkün oldukça 'var' yerine 'val' komutunu kullanmaya dikkat edelim. Bu sayede programın başka bir yerindeki değişkenleri yanlışlıkla bozamayız.""".p,
     "val noktaSayısı=34+5".c,
     """Bir ya da daha fazla sayıda işlemin sonucunu çıktı gözüne 'satıryaz(deyiş1, deyiş2, deyişn)' komutunu kullanarak yazabiliriz. Deyişler arasına virgül koymayı unutmayalım. Gerekmez ama istersek virgülden sonra boşluk bırakarak yazılımın okunuşu biraz daha kolaylaştırabiliriz. Ama çıktı da durum başka. Orada boşluk bırakmak nasıl olur yakında göreceğiz.""".p,
@@ -190,13 +190,13 @@ satıryaz(boy)""".c,
     """'error' hata demek. Scala derleyicisi (compiler), 'reassignment to val' yani sabit bir değeri değiştirmek hata olur diyor ve izin vermiyor.""".p,
     """boy+=4 // yani boyunu 4 nokta uzatalım
 satıryaz(boy)""".c,
-    """Okuyanları bilgilendirmek ve kendimize anımsatmak için satır sonlarına // yani iki taksim ya da bölüm işaretinden sonra bir açıklama yazabiliriz. Bir satıra sığmıyorsa /* ile başlayıp */ ile biten daha uzun açıklamalar ekleyebiliriz. Scala derleyicisi bunları göz ardı eder ve bu sayesede bilgisayarın kafası karışmaz 8-).""".p,
+    """Okuyanları bilgilendirmek ve kendimize anımsatmak için satır sonlarına // yani iki taksim ya da bölüm işaretinden sonra bir açıklama yazabiliriz. Bir satıra sığmıyorsa /* ile başlayıp */ ile biten daha uzun açıklamalar ekleyebiliriz. Scala derleyicisi bunları göz ardı eder ve bu sayede bilgisayarın kafası karışmaz 8-).""".p,
     """/*
   Çok satırlı bir açıklama örneği
   Fahrenayttan santigrata çevirelim
 */
 val dereceF = 98.4
-// Tek satırda açıklama: 0S = 32F. 9F artış 5C artışa denk
+// Tek satırda açıklama: 0C = 32F. 9F artış 5C artışa denk
 satıryaz(dereceF, "derece Fahrenayt", (dereceF-32)*5/9, "derece Santigrat")  // satır sonu açıklama
 """.c,
     "'satıryaz' komutuyla yazı da yazdık yukarıda gördüğün gibi. Böyle çift tırnaklar içine alınan yazıların türüne Yazı (İngilizcesi String) diyoruz. Bu tür, sadece yazı yazmak için değil, yazılarla işlemler yapmak için de kullanılabilir:".p,
@@ -1302,7 +1302,7 @@ yk1.geri(180)
       row("sil()".c, "Tuvali temizler ve başlangıç noktasına döndürür"),
       row("""sil()
 üçgen()
-zoom(0.5, 10, 10)""".c, "(oran, x, y) Tuvali verilen oran kadar büyültür ya da küçültür ve verilen noktayı tam tuvalin merkezine getirir"),
+yaklaş(0.5, 10, 10)""".c, "(oran, x, y) Tuvali verilen oran kadar büyültür ya da küçültür ve verilen noktayı tam tuvalin merkezine getirir"),
       row("gridiGöster()".c, "Tuvalin gridini çizer"),
       row("gridiGizle()".c, "Gridi gizler"),
       row("eksenleriGöster()".c, "X ve Y eksenlerini gösterir"),
