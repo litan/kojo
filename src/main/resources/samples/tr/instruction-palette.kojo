@@ -66,19 +66,20 @@ val tTemplates = LinkedHashMap(
 
 val cfTemplates = LinkedHashMap(
     "yinele     [komut]  " -> """yinele(${c}4) {
-    forward(50)
+    ileri(50)
+    sağ(90)
 }""",
     "yineleİçin [komut]  " -> """yineleİçin(${c}1 to 5) { n =>
     satıryaz(n)
 }""",
     "if         [komut]  " -> """if (${c}doğru) {
-    setPenColor(mavi)
+    boyamaRenginiKur(mavi)
 }""",
     "if-else    [komut]  " -> """if (${c}doğru) {
-    setPenColor(mavi)
+    boyamaRenginiKur(mavi)
 }
 else {
-    setPenColor(yeşil)
+    boyamaRenginiKur(yeşil)
 }""",
     "if-else    [deyiş]     " -> """if (${c}doğru) 5 else 9""",
     "for        [komut]  " -> """for (i <- ${c}1 to 4) {
@@ -106,11 +107,11 @@ satıryaz(s"f($s)=${faktöryel(s)}")"""
 
 val aTemplates = LinkedHashMap(
     "val       [deyiş]     " -> "val x = ${c}10",
-    "def       [komut]  " -> """def ${c}newcmd(n: Int) {
-    forward(50)
+    "def       [komut]  " -> """def ${c}yeniKomut(adım: Sayı) {
+    ileri(adım)
 }""",
-    "def       [işlev] " -> """def ${c}max(n1: Int, n2: Int) =
-        if (n1 > n2) n1 else n2"""
+    "def       [işlev] " -> """def ${c}irisi(sayı1: Sayı, sayı2: Sayı) =
+        if (sayı1 > sayı2) sayı1 else sayı2"""
 )
 
 val pTemplates = LinkedHashMap(
@@ -129,7 +130,7 @@ val pTemplates = LinkedHashMap(
     "Resim.yazı(y, boyu)    " -> """Resim.yazı(${c}"Merhaba!", 18)""",
     "Resim.imge(f)          " -> "Resim.imge(${c}Costume.womanWaving)",
     "Resim.arayüz(jc1)      " -> """Resim.arayüz(${c}Label("Selam!"))""",
-    "Resim.arayüz(jc2)      " -> """Resim.arayüz(${c}Button("Selam!")(println("Nasılsın?")))"""
+    "Resim.arayüz(jc2)      " -> """Resim.arayüz(${c}Button("Selam!")(satıryaz("Nasılsın?")))"""
 )
 
 val ptTemplates = LinkedHashMap(
