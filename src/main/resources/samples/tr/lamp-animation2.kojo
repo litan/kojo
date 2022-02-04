@@ -6,7 +6,7 @@ artalanıKur(renkler.darkSlateBlue) // eflatuna yakın koyu mavi
 
 val alev = Resim {
     // linearGradient: doğrusalDeğişim
-    boyamaRenginiKur(cm.linearGradient(0, 0, kırmızı, 0, 130, sarı))
+    boyamaRenginiKur(renkler.linearGradient(0, 0, kırmızı, 0, 130, sarı))
     kalemRenginiKur(sarı)
     kalemKalınlığınıKur(3)
     sol(45)
@@ -16,16 +16,14 @@ val alev = Resim {
 }
 
 val lamba = Resim {
-    boyamaRenginiKur(cm.linearGradient(0, 10, kırmızı, 0, -25, kahverengi))
+    boyamaRenginiKur(renkler.linearGradient(0, 10, kırmızı, 0, -25, kahverengi))
     kalemKalınlığınıKur(2)
     kalemRenginiKur(siyah)
     sol(120)
     sağ(60, 100)
-    sağ(180)
-    sağ(30)
+    sağ(210)
     sol(120, 115)
-    sağ(180)
-    sağ(30)
+    sağ(210)
     sağ(60, 100)
 }
 
@@ -36,7 +34,7 @@ def büyütme(dizi: Dizi[Kesir]) = dizi(0)
 def alevlendir(dizi: Dizi[Kesir]) = büyüt(büyütme(dizi)) -> alev
 
 /* todo: Çeviri yap:
-    easing          kolayca
+    easing          ahesteGeçiş
     QuadInOut       DörtlüGirdiÇıktı
     reversed        tersten
     repeatedForever sonsuzYineleme
