@@ -34,7 +34,7 @@ def büyütme(dizi: Dizi[Kesir]) = dizi(0)
 def alevlendir(dizi: Dizi[Kesir]) = büyüt(büyütme(dizi)) -> alev
 
 /* todo: Çeviri yap:
-    easing          ahesteGeçiş
+    easing          hoşGeçiş
     QuadInOut       DörtlüGirdiÇıktı
     reversed        tersten
     repeatedForever sonsuzYineleme
