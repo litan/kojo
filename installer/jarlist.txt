@@ -17,7 +17,7 @@
 ../dist/jssc.jar
 ../dist/flatlaf-1.6.jar -> flatlaf.jar
 ../dist/libtiled.jar
-../dist/scala-reflect-2.13.8.jar -> scala-reflect.jar
+../dist/scala-reflect-2.13.6.jar -> scala-reflect.jar
 ../dist/akka-actor_2.13-2.6.16.jar -> akka-actors.jar
 ../dist/scala-swing_2.13-2.1.1.jar -> scala-swing.jar
 ../dist/scala-xml_2.13-1.2.0.jar -> scala-xml.jar
@@ -28,8 +28,8 @@
 ../dist/h2-1.3.168.jar -> h2.jar
 ../dist/scalatest_2.13-3.0.8.jar -> scalatest.jar
 ../dist/scalactic_2.13-3.0.8.jar -> scalactic.jar
-../dist/scala-library-2.13.8.jar -> scala-library.jar
-../dist/scala-compiler-2.13.8.jar -> scala-compiler.jar
+../dist/scala-library-2.13.6.jar -> scala-library.jar
+../dist/scala-compiler-2.13.6.jar -> scala-compiler.jar
 ../dist/config-1.4.0.jar -> config.jar
 ../dist/scala-java8-compat_2.13-1.0.0.jar -> scala-java8-compat.jar
 ../dist/activation-1.1.jar -> activation.jar
