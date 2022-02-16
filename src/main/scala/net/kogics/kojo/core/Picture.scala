@@ -25,6 +25,7 @@ trait Picture extends InputAware {
   def rotateAboutPoint(angle: Double, x: Double, y: Double): Unit
   def scale(factor: Double): Unit
   def scaleAboutPoint(factor: Double, x: Double, y: Double): Unit
+  def scaleAboutPoint(factorX: Double, factorY: Double, x: Double, y: Double): Unit
   def scale(xFactor: Double, yFactor: Double): Unit
   def translate(x: Double, y: Double): Unit
   def translate(v: Vector2D): Unit = translate(v.x, v.y): Unit
@@ -178,7 +179,9 @@ trait Picture extends InputAware {
   def withRotationAround(angle: Double, x: Double, y: Double): Picture
   def withTranslation(x: Double, y: Double): Picture
   def withScaling(factor: Double): Picture
+  def withScaling(factorX: Double, factorY: Double): Picture
   def withScalingAround(factor: Double, x: Double, y: Double): Picture
+  def withScalingAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture
   def withFillColor(color: Paint): Picture
   def withPenColor(color: Paint): Picture
   def withPenThickness(t: Double): Picture

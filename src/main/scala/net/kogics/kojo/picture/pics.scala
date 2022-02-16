@@ -130,6 +130,12 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     translate(-x, -y)
   }
 
+  def scaleAboutPoint(factorX: Double, factorY: Double, x: Double, y: Double): Unit = {
+    translate(x, y)
+    scale(factorX, factorY)
+    translate(-x, -y)
+  }
+
   def scale(xFactor: Double, yFactor: Double): Unit = {
     transformBy(AffineTransform.getScaleInstance(safeScaleFactor(xFactor), safeScaleFactor(yFactor)))
   }
@@ -395,8 +401,12 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
     PostDrawTransform { pic => pic.rotateAboutPoint(angle, x, y) }(this)
   def withTranslation(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.translate(x, y) }(this)
   def withScaling(factor: Double): Picture = PostDrawTransform { pic => pic.scale(factor) }(this)
+  def withScaling(factorX: Double, factorY: Double): Picture =
+    PostDrawTransform { pic => pic.scale(factorX, factorY) }(this)
   def withScalingAround(factor: Double, x: Double, y: Double): Picture =
     PostDrawTransform { pic => pic.scaleAboutPoint(factor, x, y) }(this)
+  def withScalingAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture =
+    PostDrawTransform { pic => pic.scaleAboutPoint(factorX, factorY, x, y) }(this)
   def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
   def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
   def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
