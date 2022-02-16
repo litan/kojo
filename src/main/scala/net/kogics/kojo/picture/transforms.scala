@@ -34,6 +34,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def rotateAboutPoint(angle: Double, x: Double, y: Double) = tpic.rotateAboutPoint(angle, x, y)
   def scale(factor: Double) = tpic.scale(factor)
   def scaleAboutPoint(factor: Double, x: Double, y: Double) = tpic.scaleAboutPoint(factor, x, y)
+  def scaleAboutPoint(factorX: Double, factorY: Double, x: Double, y: Double) = tpic.scaleAboutPoint(factorX, factorY, x, y)
   def scale(xFactor: Double, yFactor: Double) = tpic.scale(xFactor, yFactor)
   def opacityMod(f: Double) = tpic.opacityMod(f)
   def hueMod(f: Double) = tpic.hueMod(f)
