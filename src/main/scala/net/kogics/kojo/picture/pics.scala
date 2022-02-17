@@ -140,6 +140,10 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     transformBy(AffineTransform.getScaleInstance(safeScaleFactor(xFactor), safeScaleFactor(yFactor)))
   }
 
+  def shear(shearX:Double, shearY:Double):Unit = {
+    transformBy(AffineTransform.getShearInstance(shearX, shearY))
+  }
+
   def translate(x: Double, y: Double): Unit = {
     transformBy(AffineTransform.getTranslateInstance(x, y))
   }
@@ -407,6 +411,8 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
     PostDrawTransform { pic => pic.scaleAboutPoint(factor, x, y) }(this)
   def withScalingAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture =
     PostDrawTransform { pic => pic.scaleAboutPoint(factorX, factorY, x, y) }(this)
+  def withShear(shearX:Double, shearY:Double):Picture =
+    PostDrawTransform { pic => pic.shear(shearX, shearY) }(this)
   def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
   def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
   def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)

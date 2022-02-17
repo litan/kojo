@@ -27,6 +27,7 @@ trait Picture extends InputAware {
   def scaleAboutPoint(factor: Double, x: Double, y: Double): Unit
   def scaleAboutPoint(factorX: Double, factorY: Double, x: Double, y: Double): Unit
   def scale(xFactor: Double, yFactor: Double): Unit
+  def shear(shearX:Double, shearY:Double):Unit
   def translate(x: Double, y: Double): Unit
   def translate(v: Vector2D): Unit = translate(v.x, v.y): Unit
   def transv(v: Vector2D) = translate(v.x, v.y): Unit
@@ -182,6 +183,7 @@ trait Picture extends InputAware {
   def withScaling(factorX: Double, factorY: Double): Picture
   def withScalingAround(factor: Double, x: Double, y: Double): Picture
   def withScalingAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture
+  def withShear(shearX:Double, shearY:Double):Picture
   def withFillColor(color: Paint): Picture
   def withPenColor(color: Paint): Picture
   def withPenThickness(t: Double): Picture
