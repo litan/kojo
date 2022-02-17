@@ -413,9 +413,9 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
     PreDrawTransform { pic => pic.scaleAboutPoint(factorX, factorY, x, y) }(this)
   def withShear(shearX:Double, shearY:Double):Picture =
     PreDrawTransform { pic => pic.shear(shearX, shearY) }(this)
-  def withFillColor(color: Paint): Picture = PreDrawTransform { pic => pic.setFillColor(color) }(this)
-  def withPenColor(color: Paint): Picture = PreDrawTransform { pic => pic.setPenColor(color) }(this)
-  def withPenThickness(t: Double): Picture = PreDrawTransform { pic => pic.setPenThickness(t) }(this)
+  def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
+  def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
+  def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
   def withEffect(filter: BufferedImageOp): Picture = ApplyFilter(filter)(epic(this))
 
   def withEffect(filterOp: ImageOp): Picture = {
@@ -430,8 +430,8 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withBlurring(radius: Int): Picture = Blur(radius)(epic(this))
   def withAxes: Picture = PreDrawTransform { pic => pic.axesOn() }(this)
   //  def withBounds: Picture = PreDrawTransform { pic => picBounds(pic) }(this)
-  def withOpacity(opacity: Double): Picture = PreDrawTransform { pic => pic.setOpacity(opacity) }(this)
-  def withPosition(x: Double, y: Double): Picture = PreDrawTransform { pic => pic.setPosition(x, y) }(this)
+  def withOpacity(opacity: Double): Picture = PostDrawTransform { pic => pic.setOpacity(opacity) }(this)
+  def withPosition(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.setPosition(x, y) }(this)
 }
 
 trait RedrawStopper extends Picture {
