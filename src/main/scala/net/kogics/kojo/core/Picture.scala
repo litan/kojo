@@ -176,6 +176,7 @@ trait Picture extends InputAware {
     val pos0 = position
     animateToPosition(pos0.x + dx, pos0.y + dy, inMillis)(onEnd)
   }
+
   def withRotation(angle: Double): Picture
   def withRotationAround(angle: Double, x: Double, y: Double): Picture
   def withTranslation(x: Double, y: Double): Picture
@@ -187,6 +188,20 @@ trait Picture extends InputAware {
   def withFillColor(color: Paint): Picture
   def withPenColor(color: Paint): Picture
   def withPenThickness(t: Double): Picture
+
+  // Transforms that are applied before drawing
+  def thatsRotated(angle: Double): Picture
+  def thatsRotatedAround(angle: Double, x: Double, y: Double): Picture
+  def thatsTranslated(x: Double, y: Double): Picture
+  def thatsScaled(factor: Double): Picture
+  def thatsScaled(factorX: Double, factorY: Double): Picture
+  def thatsScaledAround(factor: Double, x: Double, y: Double): Picture
+  def thatsScaledAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture
+  def thatsSheared(shearX:Double, shearY:Double):Picture
+  def thatsFilledWith(color: Paint): Picture
+  def thatsStrokeColored(color: Paint): Picture
+  def thatsStrokeSized(t: Double): Picture
+
   def withEffect(filter: BufferedImageOp): Picture
   def withEffect(filter: ImageOp): Picture
   def withFlippedX: Picture

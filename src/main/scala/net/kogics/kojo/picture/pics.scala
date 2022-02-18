@@ -416,6 +416,25 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
   def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
   def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
+
+  // Transforms that are applied before drawing
+  def thatsRotated(angle: Double): Picture = PreDrawTransform { pic => pic.rotate(angle) }(this)
+  def thatsRotatedAround(angle: Double, x: Double, y: Double): Picture =
+    PreDrawTransform { pic => pic.rotateAboutPoint(angle, x, y) }(this)
+  def thatsTranslated(x: Double, y: Double): Picture = PreDrawTransform { pic => pic.translate(x, y) }(this)
+  def thatsScaled(factor: Double): Picture = PreDrawTransform { pic => pic.scale(factor) }(this)
+  def thatsScaled(factorX: Double, factorY: Double): Picture =
+    PreDrawTransform { pic => pic.scale(factorX, factorY) }(this)
+  def thatsScaledAround(factor: Double, x: Double, y: Double): Picture =
+    PreDrawTransform { pic => pic.scaleAboutPoint(factor, x, y) }(this)
+  def thatsScaledAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture =
+    PreDrawTransform { pic => pic.scaleAboutPoint(factorX, factorY, x, y) }(this)
+  def thatsSheared(shearX:Double, shearY:Double):Picture =
+    PreDrawTransform { pic => pic.shear(shearX, shearY) }(this)
+  def thatsFilledWith(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
+  def thatsStrokeColored(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
+  def thatsStrokeSized(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
+
   def withEffect(filter: BufferedImageOp): Picture = ApplyFilter(filter)(epic(this))
 
   def withEffect(filterOp: ImageOp): Picture = {
