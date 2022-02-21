@@ -326,15 +326,15 @@ case object AxesOnc extends ComposableTransformer {
 }
 
 case class Fillc(color: Paint) extends ComposableTransformer {
-  def apply(p: Picture) = Fill(color)(p)
+  def apply(p: Picture) = p.thatsFilledWith(color)
 }
 
 case class Strokec(color: Paint) extends ComposableTransformer {
-  def apply(p: Picture) = Stroke(color)(p)
+  def apply(p: Picture) = p.thatsStrokeColored(color)
 }
 
 case class StrokeWidthc(w: Double) extends ComposableTransformer {
-  def apply(p: Picture) = StrokeWidth(w)(p)
+  def apply(p: Picture) = p.thatsStrokeSized(w)
 }
 
 case class PreDrawTransformc(fn: Picture => Unit) extends ComposableTransformer {
