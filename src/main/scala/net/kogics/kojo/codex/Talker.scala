@@ -34,7 +34,6 @@ object Talker {
 
 class Talker(email: String, password: String, listener: TalkListener) {
   
-  Conversation.server = Talker.server
   @volatile var _cancel = false
 
   def fireEvent(msg: String): Unit = {
@@ -83,26 +82,11 @@ class Talker(email: String, password: String, listener: TalkListener) {
             fireProblem("Please provide a Competition Number (above) before uploading your sketch.")
           }
         
-          val conv = new Conversation
+          val session = new CodexSession(Talker.server)
           fireEvent(Utils.loadString(classOf[Talker], "Talker.login", Talker.server))
-          try {
-            conv.go("/login")
-          }
-          catch {
-            case _: HttpNotFoundException =>
-              fireProblem(s"The Code Exchange seems to be down.\nUnable to upload at this time.")
-            case t: Throwable =>
-              fireProblem(s"There's a problem logging into the Code Exchange:\n${t.getMessage}")
-          }
 
-          checkCancel()
-
-          conv.formField("email", email)
-          conv.formField("password", password)
           try {
-            conv.formSubmit()
-            // redirects to code exchange page after login
-            conv.title("Code Exchange")
+            val resp = session.login(email, password)
             fireEvent(Utils.loadString(classOf[Talker], "Talker.login.success"))
           }
           catch {
@@ -113,28 +97,11 @@ class Talker(email: String, password: String, listener: TalkListener) {
           checkCancel()
 
           fireEvent(Utils.loadString(classOf[Talker], "Talker.upload.init"))
-          try {
-            conv.go("/codeupload")
-          }
-          catch {
-            case t: Throwable => fireProblem(t.getMessage)
-          }
 
-          checkCancel()
-
-          conv.formField("title", title)
-          conv.formField("code", code)
-          if (catData == null || catData.trim == "") {
-            conv.formField("category", category)
-          }
-          else {
-            conv.formField("category", category + "-" + catData)
-          }
-          conv.formField("image", file)
+          val cat = if (catData == null || catData.trim == "") category else category + "-" + catData
           fireEvent(Utils.loadString(classOf[Talker], "Talker.upload.start"))
           try {
-            conv.formSubmit()
-            conv.title("Code Exchange")
+            session.upload(title, cat, code, file)
             fireEvent(Utils.loadString(classOf[Talker], "Talker.upload.success"))
             fireFinish(true)
           }
@@ -142,6 +109,9 @@ class Talker(email: String, password: String, listener: TalkListener) {
             case ex: RuntimeException => fireProblem(Utils.loadString(classOf[Talker], "Talker.upload.error"))
             case t: Throwable => fireProblem(t.getMessage)
           }
+
+
+
         }
         catch {
           case t: Throwable =>
