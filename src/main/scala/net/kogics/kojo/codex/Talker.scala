@@ -98,7 +98,7 @@ class Talker(email: String, password: String, listener: TalkListener) {
 
           fireEvent(Utils.loadString(classOf[Talker], "Talker.upload.init"))
 
-          val cat = if (catData == null || catData.trim == "") category else category + "-" + catData
+          val cat = if (Talker.Competition != category) category else category + "-" + catData
           fireEvent(Utils.loadString(classOf[Talker], "Talker.upload.start"))
           try {
             session.upload(title, cat, code, file)
