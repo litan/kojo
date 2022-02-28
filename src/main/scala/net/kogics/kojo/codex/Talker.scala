@@ -106,7 +106,8 @@ class Talker(email: String, password: String, listener: TalkListener) {
             fireFinish(true)
           }
           catch {
-            case ex: RuntimeException => fireProblem(Utils.loadString(classOf[Talker], "Talker.upload.error"))
+            case _: UploadTooBigException => fireProblem("The drawing is too big to upload. Try reducing your canvas size.")
+            case _: RuntimeException => fireProblem(Utils.loadString(classOf[Talker], "Talker.upload.error"))
             case t: Throwable => fireProblem(t.getMessage)
           }
 

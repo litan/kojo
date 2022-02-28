@@ -11,6 +11,8 @@ import org.apache.hc.core5.http.io.support.ClassicRequestBuilder
 import java.io.File
 import java.net.URI
 
+class UploadTooBigException(msg: String) extends RuntimeException(msg)
+
 class CodexSession(server: String) {
   val cookieStore = new BasicCookieStore()
   val client = HttpClients.custom()
@@ -61,6 +63,11 @@ class CodexSession(server: String) {
     }
     finally {
       resp.close()
+    }
+
+    if (resp.getCode == 413) {
+      client.close()
+      throw new UploadTooBigException("Upload Failed")
     }
 
     if (resp.getCode != 200) {
