@@ -177,17 +177,18 @@ trait Picture extends InputAware {
     animateToPosition(pos0.x + dx, pos0.y + dy, inMillis)(onEnd)
   }
 
-  def withRotation(angle: Double): Picture
-  def withRotationAround(angle: Double, x: Double, y: Double): Picture
-  def withTranslation(x: Double, y: Double): Picture
-  def withScaling(factor: Double): Picture
-  def withScaling(factorX: Double, factorY: Double): Picture
-  def withScalingAround(factor: Double, x: Double, y: Double): Picture
-  def withScalingAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture
-  def withShear(shearX:Double, shearY:Double):Picture
-  def withFillColor(color: Paint): Picture
-  def withPenColor(color: Paint): Picture
-  def withPenThickness(t: Double): Picture
+  def withRotation(angle: Double): Picture =  thatsRotated(angle)
+  def withRotationAround(angle: Double, x: Double, y: Double): Picture = thatsRotatedAround(angle, x, y)
+  def withTranslation(x: Double, y: Double): Picture = thatsTranslated(x, y)
+  def withScaling(factor: Double): Picture = thatsScaled(factor)
+  def withScaling(factorX: Double, factorY: Double): Picture = thatsScaled(factorX, factorY)
+  def withScalingAround(factor: Double, x: Double, y: Double): Picture = thatsScaledAround(factor, x, y)
+  def withScalingAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture =
+    thatsScaledAround(factorX, factorY, x, y)
+  def withShear(shearX:Double, shearY:Double): Picture = thatsSheared(shearX, shearY)
+  def withFillColor(color: Paint): Picture = thatsFilledWith(color)
+  def withPenColor(color: Paint): Picture = thatsStrokeColored(color)
+  def withPenThickness(t: Double): Picture = thatsStrokeSized(t)
 
   // Transforms that are applied before drawing
   def thatsRotated(angle: Double): Picture

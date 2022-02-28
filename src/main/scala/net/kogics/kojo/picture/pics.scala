@@ -400,23 +400,6 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def above(other: Picture): Picture = VPics2(other, this)
   def on(other: Picture): Picture = GPics2(other, this)
 
-  def withRotation(angle: Double): Picture = PostDrawTransform { pic => pic.rotate(angle) }(this)
-  def withRotationAround(angle: Double, x: Double, y: Double): Picture =
-    PostDrawTransform { pic => pic.rotateAboutPoint(angle, x, y) }(this)
-  def withTranslation(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.translate(x, y) }(this)
-  def withScaling(factor: Double): Picture = PostDrawTransform { pic => pic.scale(factor) }(this)
-  def withScaling(factorX: Double, factorY: Double): Picture =
-    PostDrawTransform { pic => pic.scale(factorX, factorY) }(this)
-  def withScalingAround(factor: Double, x: Double, y: Double): Picture =
-    PostDrawTransform { pic => pic.scaleAboutPoint(factor, x, y) }(this)
-  def withScalingAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture =
-    PostDrawTransform { pic => pic.scaleAboutPoint(factorX, factorY, x, y) }(this)
-  def withShear(shearX:Double, shearY:Double):Picture =
-    PostDrawTransform { pic => pic.shear(shearX, shearY) }(this)
-  def withFillColor(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
-  def withPenColor(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
-  def withPenThickness(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
-
   // Transforms that are applied before drawing
   def thatsRotated(angle: Double): Picture = PreDrawTransform { pic => pic.rotate(angle) }(this)
   def thatsRotatedAround(angle: Double, x: Double, y: Double): Picture =
@@ -436,7 +419,6 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def thatsStrokeSized(t: Double): Picture = PostDrawTransform { pic => pic.setPenThickness(t) }(this)
 
   def withEffect(filter: BufferedImageOp): Picture = ApplyFilter(filter)(epic(this))
-
   def withEffect(filterOp: ImageOp): Picture = {
     val filter2 = new AbstractBufferedImageOp {
       def filter(src: BufferedImage, dest: BufferedImage) = filterOp.filter(src)
