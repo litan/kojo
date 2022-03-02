@@ -241,7 +241,7 @@ trait CoreBuiltins extends Rationals {
   }
   def draw(pictures: collection.Seq[Picture]): Unit = {
     checkForLargeDrawing()
-    PicCache.freshPics(pictures.toList).foreach { pic =>
+    PicCache.freshPics(pictures).foreach { pic =>
       pic.invisible()
       pic.draw()
       pic.visible()
