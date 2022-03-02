@@ -218,31 +218,31 @@ class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Pic
   override def toString() = s"EffectableImagePic (Id: ${System.identityHashCode(this)}) -> ${pic.toString}"
 
   def fade(n: Int): Unit = {
-    effects = effects :+ new FadeImageOp(n)
+    effects = new FadeImageOp(n) +: effects
   }
   def blur(n: Int): Unit = {
-    effects = effects :+ new BlurImageOp(n)
+    effects = new BlurImageOp(n) +: effects
   }
   def pointLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double): Unit = {
-    effects = effects :+ new PointLightImageOp(x, y, direction, elevation, distance)
+    effects = new PointLightImageOp(x, y, direction, elevation, distance) +: effects
   }
   def spotLight(x: Double, y: Double, direction: Double, elevation: Double, distance: Double): Unit = {
-    effects = effects :+ new SpotLightImageOp(x, y, direction, elevation, distance)
+    effects = new SpotLightImageOp(x, y, direction, elevation, distance) +: effects
   }
   def lights(lights: Light*): Unit = {
-    effects = effects :+ new LightsImageOp(lights: _*)
+    effects = new LightsImageOp(lights: _*) +: effects
   }
   def noise(amount: Int, density: Double): Unit = {
-    effects = effects :+ new NoiseImageOp(amount, density)
+    effects = new NoiseImageOp(amount, density) +: effects
   }
   def weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double): Unit = {
-    effects = effects :+ new WeaveImageOp(xWidth, xGap, yWidth, yGap)
+    effects = new WeaveImageOp(xWidth, xGap, yWidth, yGap) +: effects
   }
   def effect(name: Symbol, props: Tuple2[Symbol, Any]*): Unit = {
-    effects = effects :+ new SomeEffectImageOp(name, props: _*)
+    effects = new SomeEffectImageOp(name, props: _*) +: effects
   }
   def applyFilter(filter: BufferedImageOp): Unit = {
-    effects = effects :+ new ApplyFilterImageOp(filter)
+    effects = new ApplyFilterImageOp(filter) +: effects
   }
 }
 
