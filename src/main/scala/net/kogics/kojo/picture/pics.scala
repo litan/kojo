@@ -24,14 +24,11 @@ import java.awt.Paint
 import java.awt.geom.AffineTransform
 import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.util.concurrent.Future
-
 import scala.collection.mutable.ArrayBuffer
-
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.geom.TopologyException
 import com.vividsolutions.jts.geom.util.AffineTransformation
-
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Picture
@@ -41,10 +38,9 @@ import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.picture.PicCache.freshPics
 import net.kogics.kojo.kmath.{Kmath => Math}
 import net.kogics.kojo.util.Utils
-
 import edu.umd.cs.piccolo.PNode
 import edu.umd.cs.piccolo.activities.PActivity
-import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolo.nodes.{PPath, PText}
 
 trait GeomPolygon { self: Picture =>
   lazy val geomPoly = {
@@ -545,6 +541,13 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     pp.foreach { pl =>
       pl.setStrokePaint(color)
       pl.repaint()
+    }
+    val iter = t.tlayer.getChildrenIterator
+    while (iter.hasNext) {
+      iter.next match {
+        case text: PText => text.setTextPaint(color)
+        case _ =>
+      }
     }
   }
 
