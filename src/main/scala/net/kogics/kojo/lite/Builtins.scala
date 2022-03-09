@@ -359,7 +359,9 @@ Here's a partial list of the available commands:
   val offset = picture.offset _
   val flip = picture.flipY
   val flipY = picture.flipY
+  val flipAroundY = flipY
   val flipX = picture.flipX
+  val flipAroundX = flipX
   val axes = picture.axesOn
   val bounds = picture.bounds
   val fillColor = picture.fill _

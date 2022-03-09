@@ -125,6 +125,8 @@ object CodeCompletionUtils {
     "reflect" -> "reflect(${gap})",
     "fade" -> "fade(${distance})",
     "blur" -> "blur(${radius})",
+    "flipX" -> "flipAroundX",
+    "flipY" -> "flipAroundY",
     "pointLight" -> "pointLight(${x}, ${y}, ${direction}, ${elevation}, ${distance})",
     "spotLight" -> "spotLight(${x}, ${y}, ${direction}, ${elevation}, ${distance})",
     "PointLight" -> "PointLight(${x}, ${y}, ${direction}, ${elevation}, ${distance})",

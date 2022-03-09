@@ -1797,6 +1797,7 @@ repeat(5) {{
     "flipY" -> 
     <div>
       <strong>flipY</strong> -> picture <br/>
+      <strong>flipAroundY</strong> -> picture <br/>
       Flips the given picture around the local Y axis. <br/>
       <br/>
       <em>Example:</em> <br/>
@@ -1819,6 +1820,7 @@ repeat(5) {{
     "flipX" -> 
     <div>
       <strong>flipX</strong> -> picture <br/>
+      <strong>flipAroundX</strong> -> picture <br/>
       Flips the given picture around the local X axis. <br/>
       <br/>
       <em>Example:</em> <br/>
