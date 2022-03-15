@@ -65,7 +65,7 @@ def startingPoint(square:String){
 // prints the board starting at (0,0)
 def board(){ 
 var size = 25
-var filled = 0
+var filled = 1
 def square(side:Int, shouldFill:Int) {
   if(shouldFill%2==0){
       setFillColor(black)
