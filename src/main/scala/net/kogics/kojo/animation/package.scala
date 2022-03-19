@@ -121,7 +121,7 @@ package object animation {
 
     private def nextState(s: Seq[Double], elapsedTimeMillis: Double): Seq[Double] = {
       if (elapsedTimeMillis > durationMillis) {
-        s
+        finalState
       }
       else {
         for (idx <- 0 to stateSize - 1) yield {
@@ -138,7 +138,7 @@ package object animation {
       val startMillis = System.currentTimeMillis
       val initPic: Picture = picture.rect2(0, 0)
       lazy val anim: Future[PActivity] =
-        canvas.animateWithState((initPic, initState)) { case (pic, s) =>
+        canvas.animateWithState((initPic, initState, false)) { case (pic, s, stop) =>
           if (s == initState) {
             onStart()
           }
@@ -146,18 +146,20 @@ package object animation {
           val pic2 = picMaker(s)
           pic2.draw()
           currPic = pic2
-          val ns = nextState(s, (System.currentTimeMillis - startMillis).toDouble)
-          if (ns == s) {
-            currPic.erase()
-            val pic2 = picMaker(finalState)
-            pic2.draw()
-            currPic = pic2
+
+          if (stop) {
             canvas.stopAnimationActivity(anim)
             onDone()
-            (pic2, ns)
+            (pic, s, stop)
           }
           else {
-            (pic2, ns)
+            val ns = nextState(s, (System.currentTimeMillis - startMillis).toDouble)
+            if (ns == finalState) {
+              (pic2, ns, true)
+            }
+            else {
+              (pic2, ns, false)
+            }
           }
         }
       anim
