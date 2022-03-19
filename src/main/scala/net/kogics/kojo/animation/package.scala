@@ -18,16 +18,29 @@ import net.kogics.kojo.core.{Picture, SCanvas}
 import net.kogics.kojo.kmath.KEasing
 
 package object animation {
-  trait Animation {
-    def run()(implicit canvas: SCanvas): Unit = run(() => {})
+  val noOp = () => {}
 
-    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit
+  trait Animation {
+    def run()(implicit canvas: SCanvas): Unit = {
+      val r = runner
+      r.run(() => if (hideOnDone) r.hidePic())(noOp)
+    }
 
     def reversed: Animation
 
     def repeated(count: Int) = RepeatedAnimation(this, count)
 
     def repeatedForever = repeated(Int.MaxValue)
+
+    def runner: AnimationRunner
+
+    def hideOnDone: Boolean
+  }
+
+  trait AnimationRunner {
+    def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit
+
+    def hidePic(): Unit
   }
 
   // frames contain a seq of time => state
@@ -92,8 +105,19 @@ package object animation {
                          hideOnDone: Boolean
                        ) extends Animation {
 
+    def runner = new TransitionRunner(this)
+
+    def reversed: Animation = this.copy(initState = finalState, finalState = initState)
+  }
+
+  class TransitionRunner(transition: Transition) extends AnimationRunner {
+
+    import transition._
+
     val stateSize = initState.size
     val durationMillis = duration * 1000
+
+    var currPic: Picture = _
 
     private def nextState(s: Seq[Double], elapsedTimeMillis: Double): Seq[Double] = {
       if (elapsedTimeMillis > durationMillis) {
@@ -106,7 +130,7 @@ package object animation {
       }
     }
 
-    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
+    def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit = {
       import edu.umd.cs.piccolo.activities.PActivity
 
       import java.util.concurrent.Future
@@ -114,42 +138,32 @@ package object animation {
       val startMillis = System.currentTimeMillis
       val initPic: Picture = picture.rect2(0, 0)
       lazy val anim: Future[PActivity] =
-        canvas.animateWithState((initPic, initState, false, 0)) { case (pic, s, stop, stopcnt) =>
-          if (stop) {
-            if (stopcnt == 0) {
-              pic.erase()
-              val pic2 = picMaker(finalState)
-              pic2.draw()
-              (pic2, finalState, stop, stopcnt + 1)
-            }
-            else {
-              if (stopcnt == 2) {
-                canvas.stopAnimationActivity(anim)
-                if (hideOnDone) {
-                  pic.erase()
-                }
-              }
-              (pic, s, stop, stopcnt + 1)
-            }
+        canvas.animateWithState((initPic, initState)) { case (pic, s) =>
+          if (s == initState) {
+            onStart()
+          }
+          pic.erase()
+          val pic2 = picMaker(s)
+          pic2.draw()
+          currPic = pic2
+          val ns = nextState(s, (System.currentTimeMillis - startMillis).toDouble)
+          if (ns == s) {
+            canvas.stopAnimationActivity(anim)
+            onDone()
+            (pic2, ns)
           }
           else {
-            pic.erase()
-            val pic2 = picMaker(s)
-            pic2.draw()
-            val ns = nextState(s, (System.currentTimeMillis - startMillis).toDouble)
-            if (ns == s) {
-              onDone()
-              (pic2, ns, true, 0)
-            }
-            else {
-              (pic2, ns, stop, stopcnt)
-            }
+            (pic2, ns)
           }
         }
       anim
     }
 
-    def reversed: Animation = this.copy(initState = this.finalState, finalState = this.initState)
+    def hidePic(): Unit = {
+      if (hideOnDone) {
+        currPic.erase()
+      }
+    }
   }
 
   case class Timeline(
@@ -157,56 +171,58 @@ package object animation {
                        keyFrames: KeyFrames,
                        easers: Seq[KEasing],
                        picMaker: Seq[Double] => Picture,
-                       hideOnDone: Boolean
+                       hideOnDone: Boolean,
+                       isReversed: Boolean = false
                      ) extends Animation {
     AnimationUtils.checkKeyFrames(keyFrames)
 
-    private def transitions = AnimationUtils.transitions(duration, keyFrames, easers, picMaker, true)
+    def runner = new TimelineRunner(this)
 
-    lazy val anims = animSeq(transitions.toSeq)
-
-    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      anims.run { () =>
-        onDone()
-        if (!hideOnDone) {
-          val finalPic = picMaker(keyFrames.frames.last._2)
-          finalPic.draw()
-        }
-      }
-    }
-
-    def reversed: Animation = TimelineReversed(duration, keyFrames, easers, picMaker, hideOnDone)
+    def reversed: Animation = this.copy(isReversed = !isReversed)
   }
 
-  case class TimelineReversed(
-                               duration: Double,
-                               keyFrames: KeyFrames,
-                               easers: Seq[KEasing],
-                               picMaker: Seq[Double] => Picture,
-                               hideOnDone: Boolean
-                             ) extends Animation {
-    AnimationUtils.checkKeyFrames(keyFrames)
+  class TimelineRunner(timeline: Timeline) extends AnimationRunner {
+
+    import timeline._
 
     private def transitions = AnimationUtils.transitions(duration, keyFrames, easers, picMaker, true)
 
-    lazy val anims = animSeq(transitions.toSeq).reversed
-
-    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      anims.run { () =>
-        onDone()
-        if (!hideOnDone) {
-          val finalPic = picMaker(keyFrames.frames.head._2)
-          finalPic.draw()
-        }
-      }
+    def anims = {
+      val anims0 = animSeq(transitions.toSeq)
+      if (isReversed) anims0.reversed else anims0
     }
 
-    def reversed: Animation = Timeline(duration, keyFrames, easers, picMaker, hideOnDone)
+    lazy val animsRunner = anims.runner
+
+    def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit = {
+      animsRunner.run(onDone)(onStart)
+    }
+
+    def hidePic(): Unit = {
+      if (hideOnDone) {
+        animsRunner.hidePic()
+      }
+    }
   }
 
-  case class RepeatedAnimation(a: Animation, count: Int) extends Animation {
-    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
+  case class RepeatedAnimation(a: Animation, count: Int, isReversed: Boolean = false) extends Animation {
+    def runner = new RepeatedAnimationRunner(this)
+
+    def hideOnDone = a.hideOnDone
+
+    def reversed: Animation = this.copy(isReversed = !isReversed)
+  }
+
+  class RepeatedAnimationRunner(repeatedAnimation: RepeatedAnimation) extends AnimationRunner {
+
+    import repeatedAnimation._
+
+    var prevRunner: AnimationRunner = _
+    var currRunner: AnimationRunner = _
+
+    def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit = {
       var doneCount = 0
+      var startCount = 0
 
       def triggerDone(): Unit = {
         doneCount += 1
@@ -218,8 +234,20 @@ package object animation {
         }
       }
 
+      def triggerStart(): Unit = {
+        if (startCount == 0) {
+          onStart()
+        }
+        startCount += 1
+        if (prevRunner != null) {
+          prevRunner.hidePic()
+        }
+      }
+
       def runAnim(): Unit = {
-        a.run(triggerDone)
+        prevRunner = currRunner
+        currRunner = a.runner
+        currRunner.run(triggerDone)(triggerStart)
       }
 
       if (count > 0) {
@@ -227,47 +255,56 @@ package object animation {
       }
     }
 
-    def reversed: Animation = RepeatedAnimationReversed(a, count)
-  }
-
-  case class RepeatedAnimationReversed(a: Animation, count: Int) extends Animation {
-    lazy val reversedA = a.reversed
-
-    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      var doneCount = 0
-
-      def triggerDone(): Unit = {
-        doneCount += 1
-        if (doneCount == count) {
-          onDone()
-        }
-        else {
-          runAnim()
-        }
+    def hidePic(): Unit = {
+      if (hideOnDone) {
+        currRunner.hidePic()
       }
-
-      def runAnim(): Unit = {
-        reversedA.run(triggerDone)
-      }
-
-      runAnim()
     }
-
-    def reversed: Animation = RepeatedAnimation(a, count)
   }
-
 
   case class SeqAnimation(a1: Animation, a2: Animation) extends Animation {
-    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
-      a1.run(() => a2.run(onDone))
-    }
+    def runner = new SeqAnimationRunner(this)
+
+    def hideOnDone = a2.hideOnDone
 
     def reversed: Animation = SeqAnimation(a2.reversed, a1.reversed)
   }
 
+  class SeqAnimationRunner(seqAnimation: SeqAnimation) extends AnimationRunner {
+
+    import seqAnimation._
+
+    lazy val a1runner = a1.runner
+    lazy val a2runner = a2.runner
+
+    def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit = {
+      a1runner.run(() => a2runner.run(onDone)(() => a1runner.hidePic()))(onStart)
+    }
+
+    def hidePic(): Unit = {
+      a2runner.hidePic()
+    }
+  }
+
   case class ParAnimation(a1: Animation, a2: Animation) extends Animation {
-    def run(onDone: () => Unit)(implicit canvas: SCanvas): Unit = {
+
+    def runner = new ParAnimationRunner(this)
+
+    def hideOnDone = a1.hideOnDone || a2.hideOnDone
+
+    def reversed: Animation = ParAnimation(a1.reversed, a2.reversed)
+  }
+
+  class ParAnimationRunner(parAnimation: ParAnimation) extends AnimationRunner {
+
+    import parAnimation._
+
+    lazy val a1runner = a1.runner
+    lazy val a2runner = a2.runner
+
+    def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit = {
       var doneCount = 0
+      var startCount = 0
 
       def triggerDone(): Unit = {
         doneCount += 1
@@ -276,11 +313,21 @@ package object animation {
         }
       }
 
-      a1.run(triggerDone)
-      a2.run(triggerDone)
+      def triggerStart(): Unit = {
+        if (startCount == 0) {
+          onStart()
+        }
+        startCount += 1
+      }
+
+      a1runner.run(triggerDone)(triggerStart)
+      a2runner.run(triggerDone)(triggerStart)
     }
 
-    def reversed: Animation = ParAnimation(a1.reversed, a2.reversed)
+    def hidePic(): Unit = {
+      a1runner.hidePic()
+      a2runner.hidePic()
+    }
   }
 
   def animSeq(as: Seq[Animation]): Animation = as match {
