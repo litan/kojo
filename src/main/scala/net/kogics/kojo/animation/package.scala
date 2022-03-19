@@ -148,6 +148,10 @@ package object animation {
           currPic = pic2
           val ns = nextState(s, (System.currentTimeMillis - startMillis).toDouble)
           if (ns == s) {
+            currPic.erase()
+            val pic2 = picMaker(finalState)
+            pic2.draw()
+            currPic = pic2
             canvas.stopAnimationActivity(anim)
             onDone()
             (pic2, ns)
