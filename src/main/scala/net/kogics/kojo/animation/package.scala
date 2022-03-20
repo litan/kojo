@@ -23,7 +23,7 @@ package object animation {
   trait Animation {
     def run()(implicit canvas: SCanvas): Unit = {
       val r = runner
-      r.run(() => if (hideOnDone) r.hidePic())(noOp)
+      r.run(() => if (hideOnDone) r.hideLastFrame())(noOp)
     }
 
     def reversed: Animation
@@ -40,7 +40,7 @@ package object animation {
   trait AnimationRunner {
     def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit
 
-    def hidePic(): Unit
+    def hideLastFrame(): Unit
   }
 
   // frames contain a seq of time => state
@@ -165,7 +165,7 @@ package object animation {
       anim
     }
 
-    def hidePic(): Unit = {
+    def hideLastFrame(): Unit = {
       if (hideOnDone) {
         currPic.erase()
       }
@@ -204,9 +204,9 @@ package object animation {
       animsRunner.run(onDone)(onStart)
     }
 
-    def hidePic(): Unit = {
+    def hideLastFrame(): Unit = {
       if (hideOnDone) {
-        animsRunner.hidePic()
+        animsRunner.hideLastFrame()
       }
     }
   }
@@ -246,7 +246,7 @@ package object animation {
         }
         startCount += 1
         if (prevRunner != null) {
-          prevRunner.hidePic()
+          prevRunner.hideLastFrame()
         }
       }
 
@@ -261,9 +261,9 @@ package object animation {
       }
     }
 
-    def hidePic(): Unit = {
+    def hideLastFrame(): Unit = {
       if (hideOnDone) {
-        currRunner.hidePic()
+        currRunner.hideLastFrame()
       }
     }
   }
@@ -284,11 +284,11 @@ package object animation {
     lazy val a2runner = a2.runner
 
     def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit = {
-      a1runner.run(() => a2runner.run(onDone)(() => a1runner.hidePic()))(onStart)
+      a1runner.run(() => a2runner.run(onDone)(() => a1runner.hideLastFrame()))(onStart)
     }
 
-    def hidePic(): Unit = {
-      a2runner.hidePic()
+    def hideLastFrame(): Unit = {
+      a2runner.hideLastFrame()
     }
   }
 
@@ -330,9 +330,9 @@ package object animation {
       a2runner.run(triggerDone)(triggerStart)
     }
 
-    def hidePic(): Unit = {
-      a1runner.hidePic()
-      a2runner.hidePic()
+    def hideLastFrame(): Unit = {
+      a1runner.hideLastFrame()
+      a2runner.hideLastFrame()
     }
   }
 
