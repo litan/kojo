@@ -6,12 +6,14 @@ def sarmal(boy: Sayı, açı: Sayı) {
     }
 }
 
-val sarmallıResim = kalemRengi(siyah) * boyaRengi(Renk(255, 0, 204)) -> Resim {
-    sarmal(0, 91)
-}
+val sarmallıResim = kalemRengi(siyah) * boyaRengi(Renk(255, 0, 204)) ->
+    Resim {
+        sarmal(0, 91)
+    }
 
 val ta = tuvalAlanı
-def artalan = götür(ta.x, ta.y) * boyaRengi(Renk(153, 0, 255)) -> Resim.dikdörtgen(ta.en, ta.boy)
+def artalan = götür(ta.x, ta.y) * boyaRengi(Renk(153, 0, 255)) ->
+    Resim.dikdörtgen(ta.en, ta.boy)
 
 // artalanın üstüne sarmalı koyalım:
 val resim = Resim.dizi(
