@@ -2,6 +2,7 @@ package net.kogics.kojo
 package core
 
 import java.awt.Paint
+import java.awt.Shape
 import java.awt.geom.AffineTransform
 import java.awt.image.{BufferedImage, BufferedImageOp}
 import com.vividsolutions.jts.geom.Geometry
@@ -218,4 +219,5 @@ trait Picture extends InputAware {
   def withOpacity(opacity: Double): Picture
   def withPosition(x: Double, y: Double): Picture
   def withZIndex(idx: Int): Picture
+  def withClipping(clipShape: Shape): Picture
 }

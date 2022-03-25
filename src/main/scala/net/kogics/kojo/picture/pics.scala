@@ -21,6 +21,7 @@ import com.jhlabs.image.AbstractBufferedImageOp
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Paint
+import java.awt.Shape
 import java.awt.geom.AffineTransform
 import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.util.concurrent.Future
@@ -454,6 +455,7 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withOpacity(opacity: Double): Picture = PostDrawTransform { pic => pic.setOpacity(opacity) }(this)
   def withPosition(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.setPosition(x, y) }(this)
   def withZIndex(zIndex: Int): Picture = PostDrawTransform { pic => pic.setZIndex(zIndex) }(this)
+  def withClipping(clipShape: Shape): Picture = new ClipPic(this, clipShape)(canvas)
 }
 
 trait RedrawStopper extends Picture {

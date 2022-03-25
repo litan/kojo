@@ -402,6 +402,7 @@ Here's a partial list of the available commands:
 
   def shear(shearX: Double, shearY: Double) = preDrawTransform { pic => pic.shear(shearX, shearY) }
   def zIndex(idx: Int) = postDrawTransform { pic => pic.setZIndex(idx) }
+  def clip(clipShape: java.awt.Shape) = picture.Clippedc(clipShape)
 
   def rotated(pic: Picture, angle: Double) = pic.thatsRotated(angle)
   def translated(pic: Picture, x: Double, y: Double) = pic.thatsTranslated(x, y)
