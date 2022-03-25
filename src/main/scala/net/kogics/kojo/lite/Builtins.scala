@@ -17,12 +17,12 @@ package net.kogics.kojo
 package lite
 
 import java.awt.geom.GeneralPath
+import java.awt.geom.{Ellipse2D, Rectangle2D}
 import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.awt.{Paint, Toolkit}
 import java.net.URL
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
-import net.kogics.kojo.animation.Animation
 
 import javax.swing.JComponent
 import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
@@ -713,6 +713,13 @@ Here's a partial list of the available commands:
       }
     }
   }
+
+  object ClipShape {
+    def ellipse(x: Double, y: Double, width: Double, height: Double) = new Ellipse2D.Double(x, y, width, height)
+    def rectangle(x: Double, y: Double, width: Double, height: Double) = new Rectangle2D.Double(x, y, width, height)
+    def emptyPath = new GeneralPath()
+  }
+
   object PictureMaker {
     private def placeAndDraw(pic: Picture, x: Double, y: Double) = {
       pic.setPosition(x, y)
