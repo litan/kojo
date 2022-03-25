@@ -401,6 +401,7 @@ Here's a partial list of the available commands:
   def postDrawTransform(fn: Picture => Unit) = picture.PostDrawTransformc(fn)
 
   def shear(shearX: Double, shearY: Double) = preDrawTransform { pic => pic.shear(shearX, shearY) }
+  def zIndex(idx: Int) = postDrawTransform { pic => pic.setZIndex(idx) }
 
   def rotated(pic: Picture, angle: Double) = pic.thatsRotated(angle)
   def translated(pic: Picture, x: Double, y: Double) = pic.thatsTranslated(x, y)

@@ -61,6 +61,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
   protected var axes: PNode = _
   protected var _picGeom: Geometry = _
   protected var _pgTransform: AffineTransformation = _
+  protected var _zIndex = -1
 
   def pgTransform = {
     if (_pgTransform == null) {
@@ -161,6 +162,29 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
   def setPosition(x: Double, y: Double) = Utils.runInSwingThread {
     tnode.setOffset(x, y)
     _pgTransform = null
+  }
+
+  def setZIndex(zIndex: Int): Unit = Utils.runInSwingThread {
+    _zIndex = zIndex
+    val parent = tnode.getParent
+    parent.removeChild(tnode)
+    val nc = parent.getChildrenCount
+    var idx = 0
+    var found = false
+    while (idx < nc && !found) {
+      val pic = parent.getChild(idx).getAttribute("pic")
+      val siblingZi = if (pic == null) -1 else pic.asInstanceOf[CorePicOps]._zIndex
+      if (siblingZi > zIndex) {
+        found = true
+        parent.addChild(idx, tnode)
+      }
+      else {
+        idx += 1
+      }
+    }
+    if (!found) {
+      parent.addChild(idx, tnode)
+    }
   }
 
   def heading = Utils.runInSwingThreadAndPause {
@@ -429,6 +453,7 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   //  def withBounds: Picture = PostDrawTransform { pic => picBounds(pic) }(this)
   def withOpacity(opacity: Double): Picture = PostDrawTransform { pic => pic.setOpacity(opacity) }(this)
   def withPosition(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.setPosition(x, y) }(this)
+  def withZIndex(zIndex: Int): Picture = PostDrawTransform { pic => pic.setZIndex(zIndex) }(this)
 }
 
 trait RedrawStopper extends Picture {
@@ -452,6 +477,7 @@ trait TNodeCacher {
   def tnode = {
     if (_tnode == null) {
       _tnode = makeTnode
+      _tnode.addAttribute("pic", this)
     }
     _tnode
   }

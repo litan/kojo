@@ -65,6 +65,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def setFillColor(color: Paint) = tpic.setFillColor(color)
   def opacity = tpic.opacity
   def setOpacity(o: Double) = tpic.setOpacity(o)
+  def setZIndex(zIndex: Int): Unit = tpic.setZIndex(zIndex)
   def morph(fn: Seq[PolyLine] => Seq[PolyLine]) = tpic.morph(fn)
   def foreachPolyLine(fn: PolyLine => Unit) = tpic.foreachPolyLine(fn)
   def distanceTo(other: Picture) = tpic.distanceTo(other)

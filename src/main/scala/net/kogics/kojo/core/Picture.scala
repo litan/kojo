@@ -87,6 +87,7 @@ trait Picture extends InputAware {
   def setFillColor(color: Paint): Unit
   def opacity: Double
   def setOpacity(o: Double): Unit
+  def setZIndex(zIndex: Int): Unit
   @deprecated("Use picture.react instead", "2.1")
   def act(fn: Picture => Unit) = react(fn)
   def react(fn: Picture => Unit): Unit
@@ -216,4 +217,5 @@ trait Picture extends InputAware {
   //  def withBounds: Picture
   def withOpacity(opacity: Double): Picture
   def withPosition(x: Double, y: Double): Picture
+  def withZIndex(idx: Int): Picture
 }
