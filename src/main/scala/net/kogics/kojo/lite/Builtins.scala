@@ -17,17 +17,16 @@ package net.kogics.kojo
 package lite
 
 import java.awt.geom.GeneralPath
+import java.awt.geom.{Ellipse2D, Rectangle2D}
 import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.awt.{Paint, Toolkit}
 import java.net.URL
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
-import net.kogics.kojo.animation.Animation
 
 import javax.swing.JComponent
 import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
 import net.kogics.kojo.kmath.KEasing
-import net.kogics.kojo.picture.{DslImpl, PicCache, PicDrawingDsl}
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
 import net.kogics.kojo.xscala.{CodeCompletionUtils, Help, RepeatCommands}
@@ -401,6 +400,8 @@ Here's a partial list of the available commands:
   def postDrawTransform(fn: Picture => Unit) = picture.PostDrawTransformc(fn)
 
   def shear(shearX: Double, shearY: Double) = preDrawTransform { pic => pic.shear(shearX, shearY) }
+  def zIndex(idx: Int) = postDrawTransform { pic => pic.setZIndex(idx) }
+  def clip(clipShape: java.awt.Shape) = picture.Clippedc(clipShape)
 
   def rotated(pic: Picture, angle: Double) = pic.thatsRotated(angle)
   def translated(pic: Picture, x: Double, y: Double) = pic.thatsTranslated(x, y)
@@ -711,6 +712,13 @@ Here's a partial list of the available commands:
       }
     }
   }
+
+  object ClipShape {
+    def ellipse(x: Double, y: Double, width: Double, height: Double) = new Ellipse2D.Double(x, y, width, height)
+    def rectangle(x: Double, y: Double, width: Double, height: Double) = new Rectangle2D.Double(x, y, width, height)
+    def emptyPath = new GeneralPath()
+  }
+
   object PictureMaker {
     private def placeAndDraw(pic: Picture, x: Double, y: Double) = {
       pic.setPosition(x, y)
@@ -831,50 +839,6 @@ Here's a partial list of the available commands:
       if (gameTime == limitSecs) {
         drawCenteredMessage(endMsg, color, fontSize * 2)
         stopAnimation()
-      }
-    }
-  }
-
-  type Shape = PicDrawingDsl
-  object Shape {
-    def clear() = TSCanvas.cleari()
-    def rectangle(w: Double, h: Double): Shape = DslImpl(picture.rect(h, w))
-    def square(l: Double): Shape = rectangle(l, l)
-    def circle(r: Double): Shape = DslImpl(picture.circle(r)).translated(r, r)
-    def gap(w: Double, h: Double) = rectangle(w, h) outlined (noColor)
-    def vline(l: Double): Shape = DslImpl(picture.vline(l))
-    def hline(l: Double): Shape = DslImpl(picture.hline(l))
-    def text(string: Any, fontSize: Int = 15): Shape =
-      DslImpl(picture.textu(string, fontSize, black)).translated(0, textExtent(string.toString, fontSize).height)
-    def image(file: String) = DslImpl(picture.image(file, None))
-    def turtleMade(fn: => Unit): Shape = DslImpl(Picture(fn))
-    def stack(shapes: Shape*): Shape = DslImpl(picture.GPics2(shapes.map(s => PicCache.freshPic(s.pic)).toList))
-    def row(shapes: Shape*): Shape = DslImpl(picture.HPics2(shapes.map(s => PicCache.freshPic(s.pic)).toList))
-    def col(shapes: Shape*): Shape = DslImpl(picture.VPics2(shapes.map(s => PicCache.freshPic(s.pic)).toList))
-    def stack2(shapes: Shape*): Shape = DslImpl(picture.GPics(shapes.map(s => PicCache.freshPic(s.pic)).toList))
-    def row2(shapes: Shape*): Shape = DslImpl(picture.HPics(shapes.map(s => PicCache.freshPic(s.pic)).toList))
-    def col2(shapes: Shape*): Shape = DslImpl(picture.VPics(shapes.map(s => PicCache.freshPic(s.pic)).toList))
-    def draw2(shapes: Shape*) = shapes.foreach { _.draw() }
-    def draw(shapes: Shape*): Unit = {
-      def center(shape: Shape) = {
-        val cb = canvasBounds; val sb = shape.pic.bounds
-        val xDelta = cb.getMinX - sb.getMinX + (cb.width - sb.width) / 2
-        val yDelta = cb.getMinY - sb.getMinY + (cb.height - sb.height) / 2
-        shape.pic.offset(xDelta, yDelta)
-      }
-      if (shapes.size > 1) {
-        val shapeStack = stack(shapes: _*)
-        shapeStack.pic.invisible()
-        shapeStack.draw()
-        center(shapeStack)
-        shapeStack.pic.visible()
-      }
-      else {
-        val shape = shapes(0)
-        shape.pic.invisible()
-        shape.draw()
-        center(shape)
-        shape.pic.visible()
       }
     }
   }

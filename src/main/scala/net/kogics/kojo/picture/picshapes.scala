@@ -22,6 +22,7 @@ import java.awt.Font
 import java.awt.GraphicsEnvironment
 import java.awt.Image
 import java.awt.RenderingHints
+import java.awt.Shape
 import java.awt.Transparency
 import java.awt.geom.Arc2D
 import java.awt.geom.GeneralPath
@@ -53,6 +54,7 @@ import edu.umd.cs.piccolo.nodes.PImage
 import edu.umd.cs.piccolo.nodes.PPath
 import edu.umd.cs.piccolo.nodes.PText
 import edu.umd.cs.piccolo.util.PPaintContext
+import edu.umd.cs.piccolox.nodes.PClip
 import edu.umd.cs.piccolox.pswing.PSwing
 
 trait PicShapeOps { self: Picture with CorePicOps =>
@@ -560,3 +562,30 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
   def copy: net.kogics.kojo.core.Picture = new TextPic(text, size, color)
   override def toString() = s"TextPic (Id: ${System.identityHashCode(this)})"
 }
+
+class ClipPic(pic: Picture, clipShape: Shape)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
+  with TNodeCacher with RedrawStopper with PicShapeOps {
+  def initGeom(): com.vividsolutions.jts.geom.Geometry = {
+    throw new RuntimeException("Clip pic does not yet support geometry")
+  }
+
+  def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
+    val node = new PClip()
+    node.append(clipShape, false)
+    _setPenColor(node, Color.black)
+    _setPenThickness(node, 0)
+    node.setPaint(null)
+    node.addChild(pic.tnode)
+    node.setVisible(false)
+    picLayer.addChild(node)
+    node
+  }
+
+  override def realDraw(): Unit = {
+    pic.draw()
+    super.realDraw()
+  }
+
+  def copy: net.kogics.kojo.core.Picture = new ClipPic(pic.copy, clipShape)
+}
+
