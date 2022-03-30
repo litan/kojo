@@ -58,7 +58,7 @@ def startingPoint(square:String){
   setHeading(90)
   penDown()
   if(x==40){
-    write("Choose at starting point in row 1")
+    write("Choose a correct starting point")
   }
   setAnimationDelay(1000)
 }
