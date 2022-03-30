@@ -153,7 +153,7 @@ package object animation {
             (pic, s, stop)
           }
           else {
-            val elapsedTimeMillis = System.currentTimeMillis - startMillis
+            val elapsedTimeMillis = (System.currentTimeMillis - startMillis).toDouble
             val ns = nextState(s, elapsedTimeMillis)
             if (ns == finalState && elapsedTimeMillis > durationMillis) {
               (pic2, ns, true)
