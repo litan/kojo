@@ -56,10 +56,16 @@ def startingPoint(square:String){
   setAnimationDelay(0)
   moveTo(x,y)
   setHeading(90)
-  penDown()
-  if(x==40){
+  
+  if(x==40 || y==15){
+    x=40
+    y=15
+    moveTo(x,y)
+    penDown()
+    setHeading(90)
     write("Choose a correct starting point")
   }
+  penDown()
   setAnimationDelay(1000)
 }
 // prints the board starting at (0,0)
