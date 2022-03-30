@@ -3,6 +3,9 @@ package net.kogics.kojo.kmath
 import net.kogics.kojo.util.Easing
 
 trait KEasing {
+  // start, end - defined range for easing
+  // duration - duration for easing
+  // step - current step in the duration. Can be less than 0 and more than duration - for extrapolation
   def ease(start: Double, end: Double, step: Double, duration: Double): Double
 }
 

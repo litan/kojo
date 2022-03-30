@@ -15,8 +15,6 @@
 
 package net.kogics.kojo.codex
 
-import com.meterware.httpunit.HttpNotFoundException
-import net.kogics.swill.Conversation
 import net.kogics.kojo.util.Utils
 
 trait TalkListener {

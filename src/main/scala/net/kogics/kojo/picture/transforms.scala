@@ -17,6 +17,7 @@ package net.kogics.kojo
 package picture
 
 import java.awt.Paint
+import java.awt.Shape
 import java.awt.geom.AffineTransform
 
 import net.kogics.kojo.core.Picture
@@ -65,6 +66,7 @@ trait Transformer extends Picture with CorePicOps2 {
   def setFillColor(color: Paint) = tpic.setFillColor(color)
   def opacity = tpic.opacity
   def setOpacity(o: Double) = tpic.setOpacity(o)
+  def setZIndex(zIndex: Int): Unit = tpic.setZIndex(zIndex)
   def morph(fn: Seq[PolyLine] => Seq[PolyLine]) = tpic.morph(fn)
   def foreachPolyLine(fn: PolyLine => Unit) = tpic.foreachPolyLine(fn)
   def distanceTo(other: Picture) = tpic.distanceTo(other)
@@ -251,7 +253,7 @@ case class PreDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transform
     tpic.draw()
   }
   override def copy = PreDrawTransform(fn)(pic.copy)
-  override def toString() = s"PreDrawTransform($fn) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
+  override def toString() = s"PreDrawTransform (Id: ${System.identityHashCode(this)} -> ${tpic.toString})"
 }
 
 case class PostDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transform(pic) {
@@ -260,7 +262,7 @@ case class PostDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transfor
     fn(tpic)
   }
   override def copy = PostDrawTransform(fn)(pic.copy)
-  override def toString() = s"PostDrawTransform($fn) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
+  override def toString() = s"PostDrawTransform (Id: ${System.identityHashCode(this)} -> ${tpic.toString})"
 }
 
 abstract class ComposableTransformer extends Function1[Picture, Picture] { outer =>
@@ -335,6 +337,10 @@ case class Strokec(color: Paint) extends ComposableTransformer {
 
 case class StrokeWidthc(w: Double) extends ComposableTransformer {
   def apply(p: Picture) = p.thatsStrokeSized(w)
+}
+
+case class Clippedc(s: Shape) extends ComposableTransformer {
+  def apply(p: Picture) = p.withClipping(s)
 }
 
 case class PreDrawTransformc(fn: Picture => Unit) extends ComposableTransformer {
