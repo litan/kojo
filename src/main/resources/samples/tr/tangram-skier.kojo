@@ -1,21 +1,24 @@
-// a kayakçı based on tangram pieces
+// Tangram adlı Çin bulmacasını duydun mu? Sadece yedi parçayla neler
+// yapılır neler?! Biz de bir kayakçı yapalım ve kaydıralım.
 
 val boy = 4
-val d = karekökü(2 * boy * boy)
-val d2 = d / 2
-val d4 = d / 4
+val d = karekökü(2 * boy * boy) // ~= 5.657
+val d2 = d / 2 // ~= 2.828
+val d4 = d / 4 // ~= 1.414 (tam olarak ikinin karekökü)
 
-def r1 = Resim {
+// Tangram'daki yedi geometrik parçayı birer resim olarak tanımlayalım:
+//   r1, r2, r3, r4 ve r5 birer üçgen
+//   r6 kare
+//   r7 paralel kenar
+def r1 = Resim { // büyük üçgenler
     ileri(boy)
     sağ(135)
     ileri(d2)
     sağ()
     ileri(d2)
 }
-
 def r2 = r1
-
-def r3 = Resim {
+def r3 = Resim { // küçük üçgenler
     sağ()
     ileri(boy / 2)
     sol(135)
@@ -23,10 +26,8 @@ def r3 = Resim {
     sol()
     ileri(d4)
 }
-
 def r4 = r3
-
-def r5 = Resim {
+def r5 = Resim { // ortanca üçgen
     sağ()
     ileri(boy / 2)
     sol()
@@ -34,23 +35,16 @@ def r5 = Resim {
     sol(135)
     ileri(d2)
 }
-
-def r6 = Resim {
+def r6 = Resim { // kare
     yinele(4) {
         ileri(d4)
         sağ()
     }
 }
-
-def r7 = Resim {
-    sağ()
-    ileri(boy / 2)
-    sol(45)
-    ileri(d4)
-    sol(135)
-    ileri(boy / 2)
-    sol(45)
-    ileri(d4)
+def r7 = Resim { // paralel kenar
+    def ikiKenar = { ileri(boy / 2); sol(45); ileri(d4) }
+    sağ(); ikiKenar
+    sol(135); ikiKenar
 }
 
 def kayak = Resim {
@@ -130,11 +124,13 @@ yaklaş(0.4, -1, -1)
 çiz(yer, ağaçlar, kayakçı)
 
 canlandır {
+    val hız = 0.20 // biraz daha hızlandırmak ister misin?
+    val (hızYatay, hızDikey) = (-hız, -hız / 2)
     if (kayakçı.çarptıMı(yer)) {
-        kayakçı.götür(-0.09, 0)
+        kayakçı.götür(hızYatay, 0)
     }
     else {
-        kayakçı.götür(-0.09, -0.045)
+        kayakçı.götür(hızYatay, hızDikey)
     }
     if (kayakçı.uzaklık(yer) > 2) {
         kayakçı.kondur(başlamaNoktası)
@@ -143,4 +139,10 @@ canlandır {
 
 kayakçı.fareyeTıklayınca { (x, y) =>
     kayakçı.kondur(başlamaNoktası)
+}
+
+if (yanlış) { // bunu doğruya çevirerek sadece üç boy üçgeni çizdirebilirsin
+    silVeÇizimBiriminiKur(santim)
+    gizle()
+    çiz(Resim.diziYatay(r1, r3, r5))
 }
