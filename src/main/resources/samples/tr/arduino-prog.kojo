@@ -19,7 +19,7 @@ def pgHeader(hdr: String) =
 val scripts = Yöney(
     net.kogics.kojo.util.Utils.loadResource("/ka-bridge/ka_bridge/ka_bridge.ino"),
     net.kogics.kojo.util.Utils.loadResource("/ka-bridge/ka-bridge.kojo"),
-    net.kogics.kojo.util.Utils.loadResource("/ka-bridge/sample.kojo")
+    net.kogics.kojo.util.Utils.loadResource("/ka-bridge/tr/sample.kojo")
 )
 
 def runLink(n: Int) = "http://runhandler/script/" + n
