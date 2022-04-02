@@ -3,12 +3,10 @@
 ../dist/rstaui.jar
 ../dist/autocomplete.jar
 ../dist/scalariform.jar
-../dist/jtidy-4aug2000r7-dev.jar
 ../dist/docking-frames-common.jar
 ../dist/jl1.0.1.jar
 ../dist/jlatexmath.jar
 ../dist/jfugue-4.1.jar -> jfugue.jar
-../dist/httpunit.jar
 ../dist/docking-frames-core.jar
 ../dist/rithica.jar
 ../dist/table-layout.jar
@@ -37,7 +35,6 @@
 ../dist/jaxb-api-2.2.jar -> jaxb-api.jar
 ../dist/jaxb-impl-2.2.jar -> jaxb-impl.jar
 ../dist/stax-api-1.0-2.jar -> stax-api.jar
-../dist/js.jar
 ../dist/commons-codec-1.15.jar -> commons-codec.jar
 ../dist/httpclient5-5.1.3.jar -> httpclient5.jar
 ../dist/httpcore5-5.1.3.jar -> httpcore5.jar
