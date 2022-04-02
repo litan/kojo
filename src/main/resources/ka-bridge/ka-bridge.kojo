@@ -47,6 +47,14 @@ def writeInt(i: Int) {
     writeArray(intArray)
 }
 
+def writeSignedInt(i0: Int) {
+    require(i0 < Short.MaxValue && i0 > Short.MinValue, s"writeSignedInt(n) - an Arduino signed int has to be in the range: ${Short.MinValue} - ${Short.MaxValue}")
+    val i = i0.toShort
+    intArray(0) = (i & 0x00FF).toByte
+    intArray(1) = ((i >> 8) & 0x00FF).toByte
+    writeArray(intArray)
+}
+
 def writeString(s: String) {
     val stringArray = s.getBytes("US-ASCII")
     writeArray(stringArray)
@@ -115,11 +123,11 @@ class SerialPortReader extends SerialPortEventListener {
         state match {
             case 1 =>
                 packetSize = currData.get
-                bytesAvailable = currData.limit - currData.position
+                bytesAvailable = currData.limit() - currData.position()
                 state = 2
                 handleData()
             case 2 =>
-                bytesAvailable = currData.limit - currData.position
+                bytesAvailable = currData.limit() - currData.position()
                 handleData()
         }
     }
@@ -188,11 +196,11 @@ runInBackground {
         serialPort = new SerialPort(portName)
         println(s"Opening port: $portName (and resetting Arduino board)...")
         serialPort.openPort()
-        serialPort.setParams(SerialPort.BAUDRATE_115200,
+        serialPort.setParams(
+            SerialPort.BAUDRATE_115200,
             SerialPort.DATABITS_8,
             SerialPort.STOPBITS_1,
-            SerialPort.PARITY_NONE
-        )
+            SerialPort.PARITY_NONE)
         serialPort.setEventsMask(SerialPort.MASK_RXCHAR);
         serialPort.addEventListener(new SerialPortReader())
     }
@@ -216,6 +224,7 @@ runInBackground {
         }
         catch {
             case e: Exception =>
+                println(s"Ping hurdle: $e")
                 false
         }
     }
@@ -233,7 +242,9 @@ runInBackground {
             good
         }
         catch {
-            case _: Throwable => false
+            case t: Throwable =>
+                println(s"Connect hurdle: $t")
+                false
         }
     }
 
@@ -419,7 +430,7 @@ object UltraSonic {
         //                        sz,ns,cmd,arg1, arg2
         writeArray(command)
     }
-    
+
     def pingMicroSecs(): Long = {
         val command = Array[Byte](2, 4, 2)
         //                        sz,ns,cmd
@@ -428,8 +439,6 @@ object UltraSonic {
         awaitResult(longPromise.future)
     }
 }
-
-
 
 val INPUT, LOW = 0.toByte
 val OUTPUT, HIGH = 1.toByte
