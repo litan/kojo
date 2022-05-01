@@ -64,12 +64,13 @@ package object picture {
 
   private[picture] def picBounds(pic: Picture): Unit = Utils.runInSwingThread {
     import edu.umd.cs.piccolo.nodes.PPath
-    val b = pic.bounds
+    val tnode = pic.tnode
+    val b = tnode.getUnionOfChildrenBounds(null)
+    b.add(tnode.getBoundsReference)
     val bRect = PPath.createRectangle(b.x.toFloat, b.y.toFloat, b.width.toFloat, b.height.toFloat)
     bRect.setPaint(null)
-    val tnode = pic.tnode
-    tnode.getParent.addChild(bRect)
-    tnode.getParent.repaint()
+    tnode.addChild(bRect)
+    tnode.repaint()
   }
 
   def bounds = PostDrawTransformc { pic =>

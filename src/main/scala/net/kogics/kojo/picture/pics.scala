@@ -451,7 +451,7 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withFading(distance: Int): Picture  = Fade(distance)(epic(this))
   def withBlurring(radius: Int): Picture = Blur(radius)(epic(this))
   def withAxes: Picture = PostDrawTransform { pic => pic.axesOn() }(this)
-  //  def withBounds: Picture = PostDrawTransform { pic => picBounds(pic) }(this)
+  def withBounds: Picture = PostDrawTransform { pic => picBounds(pic) }(this)
   def withOpacity(opacity: Double): Picture = PostDrawTransform { pic => pic.setOpacity(opacity) }(this)
   def withPosition(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.setPosition(x, y) }(this)
   def withZIndex(zIndex: Int): Picture = PostDrawTransform { pic => pic.setZIndex(zIndex) }(this)
@@ -763,12 +763,20 @@ object HPics {
 
 class HPics(pics: List[Picture]) extends BasePicList(pics) {
   def realDraw(): Unit = {
-    var ox = 0.0
+    var prevPic: Option[Picture] = None
     pics.foreach { pic =>
-      pic.translate(ox, 0)
+      pic.invisible()
       pic.draw()
-      val nbounds = pic.bounds
-      ox = nbounds.getMinX + nbounds.getWidth + padding
+      prevPic match {
+        case Some(ppic) =>
+          val pbounds = ppic.bounds
+          val bounds = pic.bounds
+          val tx = pbounds.getMaxX - bounds.getMinX
+          pic.offset(tx, 0)
+        case None =>
+      }
+      pic.visible()
+      prevPic = Some(pic)
     }
   }
 
@@ -797,12 +805,10 @@ class HPics2(pics: List[Picture]) extends BasePicList(pics) {
       prevPic match {
         case Some(ppic) =>
           val pbounds = ppic.bounds
-          val tx = pbounds.getMinX + pbounds.getWidth + padding
-          pic.translate(tx, 0)
           val bounds = pic.bounds
+          val tx = pbounds.getMaxX - bounds.getMinX
           val ty = pbounds.getMinY - bounds.getMinY + (pbounds.height - bounds.height) / 2
-          val tx2 = pbounds.getMaxX - bounds.getMinX
-          pic.offset(tx2, ty)
+          pic.offset(tx, ty)
         case None =>
       }
       pic.visible()
@@ -828,12 +834,20 @@ object VPics {
 
 class VPics(pics: List[Picture]) extends BasePicList(pics) {
   def realDraw(): Unit = {
-    var oy = 0.0
+    var prevPic: Option[Picture] = None
     pics.foreach { pic =>
-      pic.translate(0, oy)
+      pic.invisible()
       pic.draw()
-      val nbounds = pic.bounds
-      oy = nbounds.getMinY + nbounds.getHeight + padding
+      prevPic match {
+        case Some(ppic) =>
+          val pbounds = ppic.bounds
+          val bounds = pic.bounds
+          val ty = pbounds.getMaxY - bounds.getMinY
+          pic.offset(0, ty)
+        case None =>
+      }
+      pic.visible()
+      prevPic = Some(pic)
     }
   }
 
@@ -862,12 +876,10 @@ class VPics2(pics: List[Picture]) extends BasePicList(pics) {
       prevPic match {
         case Some(ppic) =>
           val pbounds = ppic.bounds
-          val ty = pbounds.getMinY + pbounds.getHeight + padding
-          pic.translate(0, ty)
           val bounds = pic.bounds
           val tx = pbounds.getMinX - bounds.getMinX + (pbounds.width - bounds.width) / 2
-          val ty2 = pbounds.getMaxY - bounds.getMinY
-          pic.offset(tx, ty2)
+          val ty = pbounds.getMaxY - bounds.getMinY
+          pic.offset(tx, ty)
         case None =>
       }
       pic.visible()

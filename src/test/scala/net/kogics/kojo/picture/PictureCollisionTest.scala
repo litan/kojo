@@ -36,6 +36,7 @@ class PictureCollisionTest extends FunSuite with Matchers with xscala.RepeatComm
 
   def testBox0(n: Double) = Pic { t =>
     import t._
+    setPenThickness(0)
     repeat(4) {
       forward(n)
       right()
