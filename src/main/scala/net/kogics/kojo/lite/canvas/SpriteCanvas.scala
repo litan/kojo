@@ -664,7 +664,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       pictures.removeAllChildren()
       zoom(1, 0, 0)
       enablePanAndZoom()
-      Builtins.instance.resetPictureDraw()
+      Builtins.instance.onClear()
     }
     PicCache.clear()
     Utils.clearGuiBatchQ()

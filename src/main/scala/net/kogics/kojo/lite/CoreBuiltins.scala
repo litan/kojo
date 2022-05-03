@@ -158,7 +158,7 @@ trait CoreBuiltins extends Rationals {
   def randomColor = Color(random(256), random(256), random(256))
   def randomTransparentColor = Color(random(256), random(256), random(256), 100 + random(156))
   def initRandomGenerator(): Unit = {
-    initRandomGenerator(randomLong)
+    initRandomGenerator(System.currentTimeMillis())
   }
 
   def initRandomGenerator(seed: Long): Unit = {

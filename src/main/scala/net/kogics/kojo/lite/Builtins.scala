@@ -853,7 +853,7 @@ Here's a partial list of the available commands:
   @volatile var cwidth = 0
   @volatile var cheight = 0
 
-  def resetPictureDraw(): Unit = {
+  private[lite] def onClear(): Unit = {
     PictureDraw.reset()
     val cb = canvasBounds
     cwidth = cb.width.toInt
