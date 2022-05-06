@@ -1236,12 +1236,14 @@ The code that you provide to react runs about thirty times per second, in the UI
     "Picture.text" ->
     <div>
       <strong>Picture.text</strong>(content, size) - Creates a picture out of the given text with the given font-size.<br/>
+      <strong>Picture.text</strong>(content, font) - Creates a picture out of the given text with the given font.<br/>
       <br/>
       <em>Example:</em> <br/>
       <br/>
       <pre>
         cleari()
-        draw(Picture.text("Hi There", 18))
+        //draw(Picture.text("Hi There", 30))
+        draw(Picture.text("Hi There", Font("Serif", 30)))
       </pre>
     </div>,
     "Picture.image" ->

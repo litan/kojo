@@ -14,25 +14,19 @@
  */
 package net.kogics.kojo
 
-import java.awt.Color
-import java.awt.Image
-import java.awt.Paint
+import java.awt.{Color, Font, Image, Paint}
 import java.awt.event.KeyEvent
 import java.awt.geom.GeneralPath
 import java.awt.image.BufferedImageOp
 import java.net.URL
 import java.util.Random
-
 import javax.swing.JComponent
-
 import scala.swing.Graphics2D
-
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.geom.PrecisionModel
-
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Pixel
@@ -149,7 +143,12 @@ package object picture {
     write(s)
   }
 
-  def textu(s0: Any, fontSize: Int, color: Color)(implicit canvas: SCanvas) = new TextPic(s0.toString, fontSize, color)
+  def text(s0: Any, fontSize: Int, color: Color)(implicit canvas: SCanvas): TextPic = new TextPic(s0.toString, fontSize, color)
+  def text(s0: Any, font: Font, color: Color)(implicit canvas: SCanvas): TextPic = {
+    val ret = text(s0, 15, color)
+    ret.setPenFont(font)
+    ret
+  }
 
   def rect(h: Double, w: Double)(implicit canvas: SCanvas) = Pic { t =>
     Utils.trect(h, w, t)
