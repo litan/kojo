@@ -201,6 +201,8 @@ class Builtins(
   def stRunCode(code: String) = interpret(code)
   UserCommand("stRunCode", List("code"), "Runs the supplied code (without copying it to the script editor).")
 
+  def stCompileRunCode(code: String) = compileRunCode(code)
+
   def stClickRunButton() = kojoCtx.clickRun()
   UserCommand("stClickRunButton", Nil, "Simulates a click of the run button")
 
@@ -280,6 +282,10 @@ Here's a partial list of the available commands:
 
   def interpret(code: String): Unit = {
     scalaCodeRunner.runCode(code)
+  }
+
+  def compileRunCode(code: String): Unit = {
+    scalaCodeRunner.compileRunCode(code)
   }
 
   def eval(expr: String) = scalaCodeRunner.evalExpression(expr)
