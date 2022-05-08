@@ -72,7 +72,7 @@ object Utils {
   lazy val Log = Logger.getLogger("Utils")
   lazy val imageCache = new HashMap[String, BufferedImage]
   lazy val iconCache = new HashMap[String, ImageIcon]
-  val GuiTimeout = 10000
+  val GuiTimeout = 15000
 
   def absolutePath(fname0: String): String = {
     def expandHomeDir(fname: String): String =
