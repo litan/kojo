@@ -896,7 +896,7 @@ val g2 = g1.map(_.toUpper); satıryaz("g2", g2)
     "Elbette ki isteyen daha eski dillerde yapıldığı gibi yazabilir, Basic, Fortran, C, C++, Java örneğin. Yani:".p,
 
 """def harfSıklığı(girdi: Dizin[Harf]): Dizin[(Harf, Sayı)] = {
-    var sunum = Dizin[(Char, Sayı)]()
+    var sunum = Dizin[(Harf, Sayı)]()
     if (girdi.isEmpty) sunum
     else {
         var önceki = girdi.head

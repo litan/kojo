@@ -189,28 +189,28 @@ import net.kogics.kojo.staging
     a.ilk shouldBe 1
     a.son shouldBe 10
     a.adım shouldBe 3
-    a.dizin() shouldBe List(1, 4, 7)
+    a.dizin shouldBe List(1, 4, 7)
     a.yazı() shouldBe "Aralık(1, 4, 7)"
     a.map(_ * 2) shouldBe Vector(2, 8, 14)
     a.flatMap(s => List(s, s*s)) shouldBe Vector(1, 1, 4, 16, 7, 49)
 
     val a2 = new Aralık(1, 200, 7)
-    a2.dizin().size shouldBe 29
+    a2.dizin.size shouldBe 29
     a2.başı shouldBe 1
     a2.sonu shouldBe 197
     a2.uzunluğu shouldBe 29
 
     val a3 = Aralık.kapalı(1, 10, 3)
-    a3.dizin() shouldBe List(1, 4, 7, 10)
+    a3.dizin shouldBe List(1, 4, 7, 10)
     (for (i <- a3 if i % 2 != 0) yield i) shouldBe Vector(1, 7)
 
     val a4 = Aralık.kapalı(5, 1, -1)
-    a4.dizin() shouldBe List(5, 4, 3, 2, 1)
+    a4.dizin shouldBe List(5, 4, 3, 2, 1)
     var tane = 0
     for(i <- a4; j <- a4) { tane += 1 }
     tane shouldBe (25)
     val a5 = Aralık(5, 1, -1)
-    a5.dizin() shouldBe List(5, 4, 3, 2)
+    a5.dizin shouldBe List(5, 4, 3, 2)
     var toplam = 0
     a5.foreach( x => toplam += x )
     toplam shouldBe (2 + 3 + 4 + 5)
@@ -397,6 +397,37 @@ import net.kogics.kojo.staging
     p1.boşMu() should be(doğru)
   }
 
+  test("Translations of String methods to work") {
+    val y1 = "Hadi canım sen de"
+    val a1 = y1.böl(" ")
+    a1 should be(Array("Hadi", "canım", "sen", "de"))
+    val a2 = y1.böl(" ", 2)
+    a2 should be(Array("Hadi", "canım sen de"))
+    val a3 = y1.böl("a")
+    a3 should be(Array("H", "di c", "nım sen de"))
+    val a4 = y1.böl(new Dizim(Array('a',' ')))
+    a4 should be(Array("H", "di", "c", "nım", "sen", "de"))
+    val a5 = y1.böl(' ')
+    a5 should be(Array("Hadi", "canım", "sen", "de"))
+    // false should be(true)
+  }
+
+  test("Translations of List[T] methods to work") {
+    val d1 = Dizin(1, 3, 2)
+    d1.başı should be(1)
+    d1.kuyruğu should be(Dizin(3, 2))
+    d1.boyu should be(3)
+    d1.boşMu should be(yanlış)
+    d1.dolu should be(doğru)
+    d1.ele(_ % 2 == 0) should be(Dizin(2))
+    d1.eleDeğilse(_ % 2 == 0) should be(Dizin(1, 3))
+    d1.işle(_ * 10) should be(Dizin(10, 30, 20))
+    d1.düzİşle(x => Dizin(x, x*x)) should be(Dizin(1, 1, 3, 9, 2, 4))
+    d1.sıralı should be(Dizin(1, 2, 3))
+    d1.sırala(1.0 / _) should be(Dizin(3, 2, 1))
+    d1.sırayaSok((x, y) => -x < -y) should be(Dizin(3, 2, 1))
+    d1.indirge((x, y) => x * 10 + y) should be(132)
+  }
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala
   // ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/lite/TestEnv.scala

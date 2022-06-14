@@ -28,7 +28,7 @@ import java.util.concurrent.Future  // todo
 import edu.umd.cs.piccolo.activities.PActivity  // todo
 import net.kogics.kojo.kmath.KEasing
 
-object TurkishAPI {
+object TurkishAPI extends tr.ListMethodsInTurkish with tr.StringMethodsInTurkish {
   var builtins: CoreBuiltins = _ //unstable reference to module
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
