@@ -19,6 +19,6 @@
 
 // make Turkish names visible
 val TurkishAPI = net.kogics.kojo.lite.i18n.TurkishAPI
-import TurkishAPI._
+import TurkishAPI.{builtins => _, _ }
 // hide turtle.clear
 import kaplumbağa.{sil => _, _}
