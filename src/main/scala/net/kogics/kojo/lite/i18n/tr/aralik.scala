@@ -22,7 +22,7 @@ case class Aralık(ilk: Sayı, son: Sayı, adım: Sayı = 1) {
   val başı = r.head
   val sonu = r.last
   val uzunluğu = r.size
-  def dizin(): Dizin[Sayı] = r.toList
+  def dizin: Dizin[Sayı] = r.toList
   def yazı() = toString()
   def herÖgeİçin(komutlar: (Sayı) => Birim) = r.foreach(komutlar)
   override def toString() = {
