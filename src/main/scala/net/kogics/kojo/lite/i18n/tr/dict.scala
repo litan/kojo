@@ -26,8 +26,8 @@ object dict {
     "else" -> "yoksa",
     "while" -> "doğruysaYinele", // koşul doğruysaYinele
     "for" -> "için",  // dizi içinYinele
-    "to" -> "???", // 1 to 4 -> Aralık.kapalı(1, 4)
-    "until" -> "???", // 1 until 4 -> Aralık(1, 4)
+    "to" -> "|-| anlamı: ilkSayıdanSonSayıyaKadar", // 1 to 4 -> Aralık.kapalı(1, 4)
+    "until" -> "|- anlamı: ilkSayıdanSonSayıyaKadarAmaSonSayıHariç", // 1 until 4 -> Aralık(1, 4)
     "by" -> "adım", // 1 to 100 by 8
     "def" -> "tanım",
     "class" -> "çeşit",  // type -> tür
@@ -38,7 +38,7 @@ object dict {
     "extends" -> "yayar", // case class Leaf extends Tree -> olgu çeşit Yaprak yayar Ağaç
     "head" -> "başı", // List(1,2).head -> Dizin(1, 2).başı
     "tail" -> "kuyruğu",
-    "toList" -> "dizin", // (1 until 11).toList
+    "toList" -> "dizine", // (1 until 11).toList
     "length" -> "boyu",
     "isEmpty" -> "boşMu",
     "filter" -> "ele",
@@ -54,18 +54,45 @@ object dict {
     "foldLeft" -> "soldanKatla",
     "foldRight" -> "sağdanKatla",
     "distinct" -> "yinelemesiz",
-    "toUpper" -> "büyükHarf",
-    "toLower" -> "küçükHarf",
+    "distinctBy" -> "yinelemesizİşlevle",
+    "toUpper" -> "büyükHarfe",
+    "toLower" -> "küçükHarfe",
+    "toUpperCase" -> "büyükHarfe",
+    "toLowerCase" -> "küçükHarfe",
     "mkString" -> "yazıYap", // 1 to 100 by 9 mkString => Aralık(1, 100, 9).yazıYap
     // String.
     "split" -> "böl", // "Merhaba sevgili kardeş".böl
     "trim" -> "kısalt", // "eggs, milk, butter, Coco Puffs".split(",").map(_.trim)
+    "replace" -> "değiştir",
+    "replaceAll" -> "değiştirHepsini",
+    "replaceFirst" -> "değiştirİlkini",
     "reverse" -> "tersi",
     "toString" -> "yazıya", // 2.toString (new Object).toString
-    "compareTo" -> "",
-    "" -> "",
-    "" -> "",
-    "" -> "",
+    "foreach" -> "herbiriİçin",
+    "compareTo" -> "kıyasla",
+    "compareToIgnoreCase" -> "kıyaslaKüçükHarfBüyükHarfAyrımıYapmadan",
+    "equals" -> "eşitMi",
+    "equalsIgnoreCase" -> "eşitMiKüçükHarfBüyükHarfAyrımıYapmadan",
+    "startsWith" -> "başındaMı",
+    "endsWith" -> "sonundaMı",
+    "contains" -> "içeriyorMu",
+    "containsSlice" -> "içeriyorMuDilim",
+    "element" -> "öge",
+    "indexOf" -> "sırası", // ya da konumu
+    "lastIndexOf" -> "sırasıSondan",
+    "charAt" -> "harf",
+    "substring" -> "parçası",
+    "count" -> "say",
+    "exists" -> "varMı",
+    "take" -> "al",
+    "takeRight" -> "alSağdan",
+    "takeWhile" -> "alDoğruKaldıkça",
+    "drop" -> "düşür",
+    "dropRight" -> "düşürSağdan",
+    "dropWhile" -> "düşürDoğruKaldıkça",
+    "init" -> "önü",
+    "last" -> "sonu",
+    "forall" -> "hepsiİçinDoğruMu", // hepsiDoğruMu
     "" -> "",
     "" -> "",
     "" -> "",

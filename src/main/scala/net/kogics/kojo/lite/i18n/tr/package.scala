@@ -66,7 +66,7 @@ package object tr {
   type Kesir = Double
   type İriKesir = BigDecimal
   // Yazı
-  type Harf = Char
+  // todo type Harf = Char
   type Yazı = String
   type EsnekYazı=collection.mutable.StringBuilder
 
@@ -146,25 +146,6 @@ package object tr {
   type İşlev2[D1,D2,R] = Function2[D1,D2,R]
   type İşlev3[D1,D2,D3,R] = Function3[D1,D2,D3,R]
   type Bölümselİşlev[D,R] = PartialFunction[D,R]
-
-  // todo: move to harf.scala?
-  object Harf {
-    def sayıMı(h: Harf): İkil = Character.isDigit(h)
-    def harfMi(h: Harf): İkil = Character.isLetter(h)
-    // todo: more..
-
-    def yazıya() = "nesne scala.Harf" // toString returns "object scala.Char"
-    def kutuyaKoy(h: Harf) = Char.box(h)
-    def kutudanÇıkar(h: HerGönder) = Char.unbox(h)
-
-    def sayıya(h: Harf) = Char.char2int(h)
-    def uzuna(h: Harf) = Char.char2long(h)
-    def kesire(h: Harf) = Char.char2double(h)
-    def ufakkesire(h: Harf) = Char.char2float(h)
-
-    val enUfağı = Char.MaxValue
-    val enİrisi = Char.MinValue
-  }
 
   class Mp3Çalar(p: net.kogics.kojo.music.KMp3) {
     def çalıyorMu = p.isMp3Playing

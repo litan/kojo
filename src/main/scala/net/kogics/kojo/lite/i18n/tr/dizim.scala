@@ -31,6 +31,8 @@ object Dizim {
   def doldur[T:ClassTag](b1: Sayı, b2: Sayı, b3: Sayı)(e: => T) = new Dizim(Array.fill[T](b1, b2, b3)(e))
 }
 class Dizim[T](val a: Array[T]) {
+  def yazıya = toString
+  override def toString = String.valueOf(a)
   def apply(b1: Sayı) = a(b1)
   @annotation.nowarn def boyut: Sayı = { // just an exercise -- not really needed
     var b = 1

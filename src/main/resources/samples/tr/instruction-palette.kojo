@@ -69,7 +69,7 @@ val cfTemplates = LinkedHashMap(
     ileri(50)
     sağ(90)
 }""",
-    "yineleİçin [komut]  " -> """yineleİçin(${c}1 to 5) { n =>
+    "yineleİçin [komut]  " -> """yineleİçin(${c}1 |-| 5) { n =>
     satıryaz(n)
 }""",
     "if         [komut]  " -> """if (${c}doğru) {
@@ -82,10 +82,10 @@ else {
     boyamaRenginiKur(yeşil)
 }""",
     "if-else    [deyiş]     " -> """if (${c}doğru) 5 else 9""",
-    "for        [komut]  " -> """for (i <- ${c}1 to 4) {
+    "for        [komut]  " -> """for (i <- ${c}1 |-| 4) {
     satıryaz(i)
 }""",
-    "for        [deyiş]     " -> """for (${c}i <- 1 to 4) yield (2 * i)""",
+    "for        [deyiş]     " -> """for (${c}i <- 1 |-| 4) yield (2 * i)""",
     "özyinele   [komut]  " -> """def ${c}desen(adım: Sayı) {
     if (adım <= 10) {
         ileri(adım)

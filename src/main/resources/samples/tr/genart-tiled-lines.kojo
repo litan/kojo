@@ -28,9 +28,9 @@ def çizgi(x: Kesir, y: Kesir, eni: Kesir, boyu: Kesir) = {
 var çizgiler = Yöney.boş[Köşegen] // aslında çizgileri hesaplayıp bu yöneye kaydedeceğiz
 val solAltKöşeninXkoordinatı = ta.x
 val solAltKöşeninYkoordinatı = ta.y
-yineleİçin(0 until n) { sütun =>
+yineleİçin(0 |- n) { sütun =>
     val x = solAltKöşeninXkoordinatı + sütun * yatayAdım
-    yineleİçin(0 until n) { satır =>
+    yineleİçin(0 |- n) { satır =>
         val y = solAltKöşeninYkoordinatı + satır * dikeyAdım
         çizgiler = çizgiler :+ çizgi(x, y, yatayAdım, dikeyAdım)
     }

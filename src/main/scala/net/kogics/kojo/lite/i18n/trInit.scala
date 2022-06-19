@@ -28,7 +28,8 @@ import java.util.concurrent.Future  // todo
 import edu.umd.cs.piccolo.activities.PActivity  // todo
 import net.kogics.kojo.kmath.KEasing
 
-object TurkishAPI extends tr.ListMethodsInTurkish with tr.StringMethodsInTurkish {
+// Count: 12 *Methods*
+object TurkishAPI extends tr.SeqMethodsInTurkish with tr.ListMethodsInTurkish with tr.StringMethodsInTurkish with tr.CharMethodsInTurkish with tr.IntMethodsInTurkish with tr.RangeMethodsInTurkish with tr.SetMethodsInTurkish with tr.AnyMethodsInTurkish with tr.DoubleMethodsInTurkish with tr.LazyListMethodsInTurkish with tr.VectorMethodsInTurkish with tr.CalendarInTurkish {
   var builtins: CoreBuiltins = _ //unstable reference to module
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
@@ -59,7 +60,7 @@ object TurkishAPI extends tr.ListMethodsInTurkish with tr.StringMethodsInTurkish
   type UfakKesir=tr.UfakKesir
   type Kesir=tr.Kesir
   type İriKesir=tr.İriKesir
-  type Harf=tr.Harf
+  // todo type Harf=tr.Harf
   type Yazı=tr.Yazı
   type EsnekYazı=tr.EsnekYazı
 
@@ -112,7 +113,8 @@ object TurkishAPI extends tr.ListMethodsInTurkish with tr.StringMethodsInTurkish
 
   val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) = (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
 
-  val Harf = tr.Harf
+  // todo
+  // val Harf = tr.Harf
   val Nokta = tr.Nokta
   val Dizi = tr.Dizi
   val Dizin = tr.Dizin

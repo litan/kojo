@@ -189,33 +189,38 @@ import net.kogics.kojo.staging
     a.ilk shouldBe 1
     a.son shouldBe 10
     a.adım shouldBe 3
-    a.dizin shouldBe List(1, 4, 7)
+    a.dizine shouldBe List(1, 4, 7)
     a.yazı() shouldBe "Aralık(1, 4, 7)"
     a.map(_ * 2) shouldBe Vector(2, 8, 14)
     a.flatMap(s => List(s, s*s)) shouldBe Vector(1, 1, 4, 16, 7, 49)
 
     val a2 = new Aralık(1, 200, 7)
-    a2.dizin.size shouldBe 29
+    a2.dizine.size shouldBe 29
     a2.başı shouldBe 1
     a2.sonu shouldBe 197
     a2.uzunluğu shouldBe 29
 
     val a3 = Aralık.kapalı(1, 10, 3)
-    a3.dizin shouldBe List(1, 4, 7, 10)
+    a3.dizine shouldBe List(1, 4, 7, 10)
     (for (i <- a3 if i % 2 != 0) yield i) shouldBe Vector(1, 7)
 
     val a4 = Aralık.kapalı(5, 1, -1)
-    a4.dizin shouldBe List(5, 4, 3, 2, 1)
+    a4.dizine shouldBe List(5, 4, 3, 2, 1)
     var tane = 0
     for(i <- a4; j <- a4) { tane += 1 }
     tane shouldBe (25)
     val a5 = Aralık(5, 1, -1)
-    a5.dizin shouldBe List(5, 4, 3, 2)
+    a5.dizine shouldBe List(5, 4, 3, 2)
     var toplam = 0
     a5.foreach( x => toplam += x )
     toplam shouldBe (2 + 3 + 4 + 5)
     a5.herÖgeİçin( x => toplam -= x )
     toplam shouldBe (0)
+    val a6 = Aralık.kapalı(1, 10, 3)
+    val op = (x: Int, y: Int) => x - y
+    a6.indirge(op) should be(-20)
+    a6.soldanKatla(100)(op) should be(78)
+    a6.sağdanKatla(100)(op) should be(94)
   }
 
   test("Translations of mutable.Stack should work") {
@@ -311,17 +316,18 @@ import net.kogics.kojo.staging
     deneme(noktalar.dizi).size should be(3)
   }
 
-  test("Translations of Vector should work") {
+  test("Translations of Vector and its methods should work") {
     val y1 = Yöney(3, 4)
     y1(0) should be(3)
-    y1.size should be(2)
+    y1.boyu should be(2)
     val y1b = y1 :+ 5
     y1b(2) should be(5)
     val y2 = Yöney.boş[Yazı]
-    y2.size should be(0)
+    y2.boyu should be(0)
     val y2b = y2 :+ "Merhaba"
     (y2b :+ "Dünya!").size should be(2)
     y2b(0)(2) should be('r')
+    y1.değiştir(0, 5) should be(Dizi(5, 4))
   }
 
   test("Translation for Set should work") {
@@ -400,25 +406,51 @@ import net.kogics.kojo.staging
   test("Translations of String methods to work") {
     val y1 = "Hadi canım sen de"
     val a1 = y1.böl(" ")
-    a1 should be(Array("Hadi", "canım", "sen", "de"))
+    a1 should be(Dizin("Hadi", "canım", "sen", "de"))
     val a2 = y1.böl(" ", 2)
-    a2 should be(Array("Hadi", "canım sen de"))
+    a2 should be(Dizin("Hadi", "canım sen de"))
     val a3 = y1.böl("a")
-    a3 should be(Array("H", "di c", "nım sen de"))
+    a3 should be(Dizin("H", "di c", "nım sen de"))
     val a4 = y1.böl(new Dizim(Array('a',' ')))
-    a4 should be(Array("H", "di", "c", "nım", "sen", "de"))
+    a4 should be(Dizin("H", "di", "c", "nım", "sen", "de"))
     val a5 = y1.böl(' ')
-    a5 should be(Array("Hadi", "canım", "sen", "de"))
+    a5 should be(Dizin("Hadi", "canım", "sen", "de"))
     // false should be(true)
+    val y2 = "Merhaba Dünya!"
+    y2.boyu should be(14)
+    y2.başı should be('M')
+    y2.kuyruğu should be("erhaba Dünya!")
+    y2.doluMu should be(doğru)
+    y2.boşMu should be(yanlış)
+    y2.ele(_ == 'a') should be("aaa")
+    y2.eleDeğilse(_ == 'a') should be("Merhb Düny!")
+    y2.işle(x => x.büyükHarfe) should be("MERHABA DÜNYA!")
+    y2.düzİşle(x => x.yazıya * 3) should be("MMMeeerrrhhhaaabbbaaa   DDDüüünnnyyyaaa!!!")
+    val y3 = y2.büyükHarfe
+    y3 should be("MERHABA DÜNYA!")
+    y3.küçükHarfe should be("merhaba dünya!")
+    val y0 = "abc"
+    y0.dizine should be(List('a', 'b', 'c'))
+    val ys = Dizin("aa", "bb", "cc")
+    ys.işle(_.dizine) should be(List(List('a', 'a'), List('b', 'b'), List('c', 'c')))
+    ys.düzİşle(_.dizine) should be(List('a', 'a', 'b', 'b', 'c', 'c'))
+
+    Yazı.olarak(3) should be("3")
+    Yazı.olarak(3.14) should be("3.14")
+    Yazı.olarak(yanlış) should be("yanlış")
+    val a = Array('a', 'b', 'c', 'd', 'e')
+    Yazı.olarak(a) should be("abcde")
+    Yazı.olarak(a, 1, 3) should be("bcd")
   }
 
   test("Translations of List[T] methods to work") {
+    // todo: duplicates below
     val d1 = Dizin(1, 3, 2)
     d1.başı should be(1)
     d1.kuyruğu should be(Dizin(3, 2))
     d1.boyu should be(3)
     d1.boşMu should be(yanlış)
-    d1.dolu should be(doğru)
+    d1.doluMu should be(doğru)
     d1.ele(_ % 2 == 0) should be(Dizin(2))
     d1.eleDeğilse(_ % 2 == 0) should be(Dizin(1, 3))
     d1.işle(_ * 10) should be(Dizin(10, 30, 20))
@@ -427,7 +459,119 @@ import net.kogics.kojo.staging
     d1.sırala(1.0 / _) should be(Dizin(3, 2, 1))
     d1.sırayaSok((x, y) => -x < -y) should be(Dizin(3, 2, 1))
     d1.indirge((x, y) => x * 10 + y) should be(132)
+    d1.soldanKatla(10)(_ + _) should be(16)
+    d1.sağdanKatla(2)(_ * _) should be(12)
+    val d2 = Dizin(2, 3, 4)
+    d2.topla should be(9)
+    d2.çarp should be(24)
+    Dizin(2, 2, 1, 1).yinelemesiz should be(Dizin(2, 1))
+    Dizin(2, 4, 6, 1, 3, 5).yinelemesizİşlevle(_ % 2 == 0) should be(Dizin(2, 1))
+    Dizin(1, 2, 3).yazıYap should be("123")
+    Dizin(1, 2, 3).yazıYap(" ") should be("1 2 3")
+    Dizin(1, 2, 3).yazıYap("{", " ", "}") should be("{1 2 3}")
   }
+
+  test("Translations of Seq[T] methods to work") {
+    // todo: duplicates above
+    val d1 = Dizi(1, 3, 2)
+    d1.başı should be(1)
+    d1.kuyruğu should be(Dizi(3, 2))
+    d1.boyu should be(3)
+    d1.boşMu should be(yanlış)
+    d1.doluMu should be(doğru)
+    d1.ele(_ % 2 == 0) should be(Dizi(2))
+    d1.eleDeğilse(_ % 2 == 0) should be(Dizi(1, 3))
+    d1.işle(_ * 10) should be(Dizi(10, 30, 20))
+    d1.düzİşle(x => Dizi(x, x*x)) should be(Dizi(1, 1, 3, 9, 2, 4))
+    d1.sıralı should be(Dizi(1, 2, 3))
+    d1.sırala(1.0 / _) should be(Dizi(3, 2, 1))
+    d1.sırayaSok((x, y) => -x < -y) should be(Dizi(3, 2, 1))
+    d1.indirge((x, y) => x * 10 + y) should be(132)
+    d1.soldanKatla(10)(_ + _) should be(16)
+    d1.sağdanKatla(2)(_ * _) should be(12)
+    val d2 = Dizi(2, 3, 4)
+    d2.topla should be(9)
+    d2.çarp should be(24)
+    Dizi(2, 2, 1, 1).yinelemesiz should be(Dizi(2, 1))
+    Dizi(2, 4, 6, 1, 3, 5).yinelemesizİşlevle(_ % 2 == 0) should be(Dizi(2, 1))
+    Dizi(1, 2, 3).yazıYap should be("123")
+    Dizi(1, 2, 3).yazıYap(" ") should be("1 2 3")
+    Dizi(1, 2, 3).yazıYap("{", " ", "}") should be("{1 2 3}")
+    Dizi(2, 4).değiştir(0, 5) should be(Dizi(5, 4))
+  }
+
+  test("Translations of Char methods to work") {
+    val h1: Harf = 'a'
+    val h2: Harf = h1.büyükHarfe
+    h2 should be('A')
+    h2.küçükHarfe should be(h1)
+    h1.sayıya should be(97)
+    h1.kesire should be(97.0)
+    h1.yazıya should be("a")
+    h1.sayıMı should be(yanlış)
+    '3'.sayıMı should be(doğru)
+    h1.boşlukMu should be(yanlış)
+    ' '.boşlukMu should be(doğru)
+    '\t'.boşlukMu should be(doğru)
+    h1.küçükHarfMi should be(doğru)
+    h2.küçükHarfMi should be(yanlış)
+    h1.büyükHarfMi should be(yanlış)
+    h2.büyükHarfMi should be(doğru)
+  }
+
+  test("Translations of to, until and by to work") {
+    val d1 = for (i <- 1 |- 4) yield i
+    d1 should be(Dizi(1, 2, 3))
+    val d2 = for (i <- 1 |-| 4) yield i
+    d2 should be(Dizi(1, 2, 3, 4))
+    val d3 = for (i <- 1 |- 10 adım 3) yield i
+    d3 should be(Dizi(1, 4, 7))
+    val d4 = for (i <- 1 |-| 10 adım 3) yield i
+    d4 should be(Dizi(1, 4, 7, 10))
+    val op = (x: Int, y: Int) => x - y
+    d4.indirge(op) should be(-20)
+    d4.soldanKatla(100)(op) should be(78)
+    d4.sağdanKatla(100)(op) should be(94)
+  }
+
+  test("Translations of Range methods to work") {
+    val r = 1 until 30
+    r.içindeMi(30) should be(false)
+    r.boyu should be(29)
+    val r2 = r by 10
+    r2.dizine should be(Dizin(1, 11, 21))
+    r2.diziye should be(Dizi(1, 11, 21))
+  }
+
+  test("Translations of Any and Object methods to work") {
+    val o = new Object
+    o.yazıya.boyu > 0 should be(true)
+    val d = Dizi(1, 2)
+    d.yazıya should be("ArraySeq(1, 2)")
+    val d2 = Dizin(1, 2)
+    d2.yazıya should be("List(1, 2)")
+    val x = 5
+    x.yazıya should be("5")
+    val y = 5.0
+    y.yazıya should be("5.0")
+    val h = 'a'
+    h.yazıya should be("a")
+  }
+
+  test("Translations of Int and Double methods to work") {
+    1.5.sayıya should be(1)
+  }
+
+  test("Translation of java.util.Calendar to work") {
+    yinele (4) {
+      val b = BuAn()
+      val (saniye, dakika, saat) = (b.saniye, b.dakika, b.saat)
+      saniye >= 0 && saniye <= 59 should be(true)
+      dakika >= 0 && dakika <= 59 should be(true)
+      saat >= 0 && saat <= 24 should be(true)
+    }
+  }
+
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala
   // ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/lite/TestEnv.scala

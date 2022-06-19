@@ -138,7 +138,7 @@ def mKümesi(d: Dörtgen): İmge = {
         import renklendirme.renk
         val iri: Kesir = (1.0 * yinelemeSınırı) * kenar * kenar
         zamanTut(f"mKümesi (nokta sayısı x yineleme sınırı)$iri%2.2e yineleme:") {
-            for { xi <- 0 until kenar; yi <- 0 until kenar } {
+            for { xi <- 0 |- kenar; yi <- 0 |- kenar } {
                 val x = d.x1 + xi * oranx
                 val y = d.y1 + yi * orany
                 val v = VarsılSayı(kayma + x, y)
