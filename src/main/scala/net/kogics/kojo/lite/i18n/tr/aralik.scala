@@ -22,7 +22,8 @@ case class Aralık(ilk: Sayı, son: Sayı, adım: Sayı = 1) {
   val başı = r.head
   val sonu = r.last
   val uzunluğu = r.size
-  def dizin(): Dizin[Sayı] = r.toList
+  def dizine: Dizin[Sayı] = r.toList
+  def diziye: Dizi[Sayı] = r.toSeq
   def yazı() = toString()
   def herÖgeİçin(komutlar: (Sayı) => Birim) = r.foreach(komutlar)
   override def toString() = {
@@ -37,6 +38,10 @@ case class Aralık(ilk: Sayı, son: Sayı, adım: Sayı = 1) {
   def withFilter(pred: Sayı => İkil) = r.withFilter(pred)
   def flatMap[B](f: Sayı => IterableOnce[B]) = r.flatMap(f)
   def foreach(f: (Sayı) => Unit) = r.foreach(f)
+
+  def indirge(iş: (Sayı, Sayı) => Sayı): Sayı = diziye.reduce(iş)
+  def soldanKatla[B](z: B)(iş: (B, Sayı) => B): B = diziye.foldLeft(z)(iş)
+  def sağdanKatla[B](z: B)(iş: (Sayı, B) => B): B = diziye.foldRight(z)(iş)
 }
 
 object Aralık {
@@ -45,4 +50,20 @@ object Aralık {
     ilk,
     if (adım > 0) son+1 else son-1,
     adım)
+}
+
+// also see: trait IntMethodsInTurkish in sayi.scala
+trait RangeMethodsInTurkish {
+  implicit class RangeYöntemleri(r: Range) {
+    def adım(c: Sayı): Range = r by c
+    def diziye = r.toSeq
+    def dizine = r.toList
+    def boyu = r.length
+    def içindeMi(s: Sayı) = r.contains(s)
+    // todo: duplicate above
+    def indirge(iş: (Sayı, Sayı) => Sayı): Sayı = diziye.reduce(iş)
+    def soldanKatla[B](z: B)(iş: (B, Sayı) => B): B = diziye.foldLeft(z)(iş)
+    def sağdanKatla[B](z: B)(iş: (Sayı, B) => B): B = diziye.foldRight(z)(iş)
+
+  }
 }

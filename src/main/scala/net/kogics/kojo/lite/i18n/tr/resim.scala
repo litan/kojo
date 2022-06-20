@@ -323,6 +323,7 @@ object Resim {
     new Resim(richBuiltins.Picture.fromTurtle(f))
   }
   def tuvalden(en: Kesir, boy: Kesir)(işlev: Grafik2B => Birim) = new Resim(richBuiltins.Picture.fromCanvas(en, boy)(işlev))
+  def karalamadan() = ??? // ../../Builtins.scala  ~/src/kojo/git/kojo/src/main/scala/net/kogics/kojo/lite/Builtins.scala
   def eksenleriGöster(r: Resim) = richBuiltins.Picture.showAxes(r.p)
   def eksenleriGöster(resimler: Resim*) = richBuiltins.Picture.showAxes(resimler.map(_.p): _*)
   def sınırlarıGöster(r: Resim) = richBuiltins.Picture.showBounds(r.p)

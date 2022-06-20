@@ -276,14 +276,22 @@ satıryaz("ortak paydaların en büyüğü: " + y)
 """.c,
     "for".h2,
     """Komut dizilerini kolayca yinelemek için kullanabileceğimiz bir yöntem daha var ki belki de en faydalısı. "for (aralık) dizi/deyiş" sayesinde verilen aralıktaki her bir değer için dizi/deyiş yinelenir. 'for' elbet yine ingilizce bir sözcük. Anlamı 'için' demek ("for you" senin için demek). Aralık da nedir mi? Hemen bir örnek görelim:""".p,
-    """for(i <- 1 to 4) yaz("merhaba!")""".c,
-    "'to' sözcüğü de bizim yapım/çekim ekimiz gibi, birden dörde kadar derken dörde sözcüğündeki '-e' anlamında. İngilizceyle Türkçe ne kadar farklı sanki, değil mi? Bir de bana sorun. 22 yaşında ilk defa yaşamak için Amerika'ya gittiğimde o kadar zorluk çektim ki! Güya iyi biliyordum hem de İngilizceyi! İşimize dönelim: Aralık burada birden dörde kadar olan sayılar elbet. 'i' değişkeni 1 değeriyle başlıyor ve her tekrarda bir artıyor. Son sayı burada 4. Ama sonuncu sayıya gelmeden hemen önce durmak istersek 'to' yerine 'until' sözcüğünü kullanıyoruz, yani kadar anlamına gelen İngilizce sözcük:".p,
+    """for ( i <- 1 |-| 4 ) yaz("merhaba!")""".c,
+    """Bunun ingilizcesi de şöyle:""".p,
+    """for ( i <- 1 to 4 ) yaz("merhaba!")""".c,
+    "'to' sözcüğü de bizim yapım/çekim ekimiz gibi, birden dörde kadar derken dörde sözcüğündeki '-e' anlamında. İngilizceyle Türkçe ne kadar farklı sanki, değil mi? Bir de bana sorun. 22 yaşında ilk defa yaşamak için Amerika'ya gittiğimde o kadar zorluk çektim ki! Güya iyi biliyordum hem de İngilizceyi! İşimize dönelim: Aralık burada birden dörde kadar olan sayılar elbet. 'i' değişkeni 1 değeriyle başlıyor ve her tekrarda bir artıyor. Son sayı burada 4. Ama sonuncu sayıya gelmeden hemen önce durmak istersek '|-' yerine '|-|' imgesini kullanıyoruz:".p,
+    """for ( i <- 1 |- 12 )  {
+  val kare = i*i
+  satıryaz(i, kare)
+}""".c,
+    """Bunun ingilizcesi de şöyle:""".p,
     """for (i <- 1 until 12) {
   val kare = i*i
   satıryaz(i, kare)
 }""".c,
+    """İngilizce'de 'until 12', 12'ye kadar anlamina geliyor.""".p,
     "Biliyor musun, bu yineleme işlemlerini birden çok boyutta yapmak bilgisayarla çok kolay. Birden fazla aralık vereceğiz ve her aralık için de bir değişken (aslında değişiyor gibi göründüğüne bakma, bunlar da değişmez). Tek dikkat etmemiz gereken ikisi arasına bir noktalı virgül koymak. Bakın ne kolay!".p,
-    """for(i <- 1 until 5 ; j <- "abc") satıryaz(i, j)""".c,
+    """for(i <- 1 |- 5 ; j <- "abc") satıryaz(i, j)""".c,
     """Bakın şu işe! Sayı yerine harfler kullandık! "for" yapısı içinde kullandığımız kümeler illa da sayılardan oluşmak zorunda değil yani. Genel olarak biz bunlara küme tekerleme diyebiliriz (İngilizcesi: iterating through a set or collection) yani teker teker her küme elemanını ele alıyoruz. "abc" yazısı da aslında bir harf kümesi ya da kolleksiyonu. Bakın hep küme ya da kolleksiyon dedim. Bu kavramlar yakın ama ufak farklılıkları var. Daha sonra bunlara verilen anlamı daha iyi anlayacağız. Şu anda çok da önemli değil gerçekten. Neyse. Harflerle tekerlemeye bir örnek daha verelim ve devam edelim:""".p,
     """for(c<-"merhaba!") satıryaz(c)""".c,
     "Şimdi de matematik, bilhassa kartezyen geometrisi sevenlere bir süprizimiz var. Kaplumbağacığı kullanarak bir eğri çizelim. Neyin eğrisi? İki boyutlu bir poligon. Genel olarak a*x^2 + b*x + c diye yazabiliriz. Yine bu çok faydalı olan 'for' yapısıyla:".p,
@@ -292,7 +300,7 @@ def eğri(x: Kesir) = 0.001 * x * x + 0.5 * x + 10   // 'def' define yani tanım
 gridiGöster(); eksenleriGöster() // kare çizgileri ve x ve y eksenlerini çizelim
 val aralık = 200
 atla(-aralık,eğri(-aralık))
-for(x <- -aralık+10 to aralık; if (x % 10 == 0)) noktayaGit(x, eğri(x))
+for(x <- -aralık+10 |-| aralık; if (x % 10 == 0)) noktayaGit(x, eğri(x))
 """.c,
     "Eksenleri silelim. Ve bir sonraki bölüme devam edelim!".p,
     "eksenleriGizle(); gridiGizle()".c
@@ -413,9 +421,9 @@ def enbop(x: Uzun, y: Uzun): Uzun = if (y == 0) x else enbop(y, x % y)
     "enbop(96, 128)".c,
     "Şimdi de daha renkli bir özyineleme görelim. Bu işlev kendini iki kere çagırarak kaplumbağacığa bir ağacın dallarını çizdiriyor. Bu tür ağaçlara ikil ağaç (binary tree) deriz. Sen de beğendin mi? Özyineleme nasıl duruyor? Yukarıdaki 'enbop' işlevinde y'nin değeri sıfır olunca. Aşagıda ise uzaklık dört ya da daha küçük olduğunda.".p,
     """def ağaç(boy: Kesir) {
-    // toInt metodu kesirli sayıyı tam sayıya çeviriyor
-    // yani boy 1.75 olursa boy.toInt 1 oluyor
-    def renk = Renk(boy.toInt % 255, mutlakDeğer(255 - boy * 3).toInt % 255, 125)
+    // sayıya metodu kesirli sayıyı tam sayıya çeviriyor
+    // yani boy 1.75 olursa boy.sayıya 1 oluyor
+    def renk = Renk(boy.sayıya % 255, mutlakDeğer(255 - boy * 3).sayıya % 255, 125)
     if (boy > 4) {
         kalemKalınlığınıKur(boy / 7)
         kalemRenginiKur(renk)
@@ -487,22 +495,23 @@ satıryaz(n3.x, n3.y)
     override def toString = "Nokta("+x+", "+y+")"
 }
 """.c,
-"""'override' üstüne yazmak ya da tekrar tanımlamak anlamlarına geliyor. Neyin üzerine yazıyor ve tekrar tanımlıyoruz? toString adlı işlevi. Peki aslı nereden geliyor ki tekrar tanımlayalım? Hani dedik ya herşey bir nesne. Gerçekten de adı Nesne olan bir tür var ve aslında bütün türlerin temelini oluşturuyor. Bu temel sınıf ne demek daha sonraya bırakalım. Ama bilmemiz gereken şey onun toString diye bir metodu olduğu ve bu metodun her nesneyle çalıştığı. String İngilizce'de yazi demek. Bu metod her nesneyi okunabilecek bir yazı olarak ifade ediyor:""".p,
+"""'override' üstüne yazmak ya da yeniden tanımlamak anlamlarına geliyor. Neyin üzerine yazıyor ve tekrar tanımlıyoruz? 'toString' adlı işlevi. Peki aslı nereden geliyor ki tekrar tanımlayalım? Hani dedik ya herşey bir nesne. Gerçekten de adı Nesne olan bir tür var ve aslında bütün türlerin temelini oluşturuyor. Bu temel sınıf ne demek daha sonraya bırakalım. Ama bilmemiz gereken şey onun toString diye bir metodu olduğu ve bu metodun her nesneyle çalıştığı. Bu metod her nesneyi okunabilecek bir yazı olarak ifade ediyor:""".p,
     """val n0 = new Nesne()
-satıryaz(n0.toString())
-
+// Türkçe'ye 'yazıya' diye çevirdik:
+satıryaz(n0.yazıya)
+// her tür kendisi için toString metodunu yeniden tanımlıyor:
 val n1 = 9
-satıryaz(n1.toString())
+satıryaz(n1.yazıya)
 
 val n2 = Dizin(9, 99)
-satıryaz(n2.toString())
+satıryaz(n2.yazıya)
 // bu 'case class' nedir birazdan göreceğiz!
 case class AkıllıSayı(val sayı: Sayı) {
-    override def toString() = "Ben bir sayıyım. Değerim de " + sayı + "'dur."
+    override def toString = "Ben bir sayıyım. Değerim de " + sayı + "'dur."
 }
 
 val n3 = AkıllıSayı(99)
-satıryaz(n3.toString())
+satıryaz(n3.yazıya)
 """.c,
     """Biz şimdi noktalarımıza dönelim. Nokta sınıfı hazır. Noktalar tanımlayalım:""".p,
     """val n1 = new Nokta(3,4)
@@ -512,7 +521,7 @@ val n4 = n1+n2-n3
 satıryaz(n4)
 """.c,
     "Bu çok daha okunaklı, değil mi? Kocaman bir vektör cebiri yaratmak işten bile değil Scala ve Kojo'yla!".p,
-    "Daha önce de söylediğimiz gibi, Scala'da her sınıfın varsayılan bir 'toString' metodu var ve nesnelerin yazıyla ifade edilmelerini sağlıyor ki, örneğin satıryaz komutuna girdi olabilsin. Varsayılan metod o nesneye özgü bir numara ve tür adı içerir. Biz onu tekrar tanımlamış ve daha okunur hale getirmiştik yukarıda.".p,
+    "Daha önce de söylediğimiz gibi, Scala'da her sınıfın varsayılan bir 'toString' metodu var (Türkçesi 'yazıya') ve nesnelerin yazıyla ifade edilmelerini sağlıyor ki, örneğin satıryaz komutuna girdi olabilsin. Varsayılan metod o nesneye özgü bir numara ve tür adı içerir. Biz onu tekrar tanımlamış ve daha okunur hale getirmiştik yukarıda.".p,
 
     """Yukarıda basit bir örneğini gördüğümüz 'case' anahtar sözcüğüyle sınıf tasarımı biraz daha kolaylaşıyor. Bu 'case' sözcüğü programlamada önemli bir kavrama işaret ediyor. İleride göreceğimiz 'match' anahtar sözcüğüyle beraber de kullanılıyor. İngilizce'de durum, olay ve olgu gibi anlamlara gelir. Kullandıkça daha iyi anlayacağız.""".p,
     """case class Nokta(x: Sayı, y: Sayı) {
@@ -676,29 +685,29 @@ pages += Page(
     """Scala dilinde herşey bir nesnedir demiştik. İşlevler de aynen öyle! Bir işlevi başka işlevlere girdi yapabiliriz. Bir işlevin çıktısı da bir işlev olabilir. Ayrıca değişkenlerin ya da değişmezlerin değeri de bir işlevin kendisi olabilir. Bunların örneklerini biraz sonra göreceğiz. Bu özellikler Scala dilinin çok faydalı bir becerisidir. Karşımıza sık sık çıkan bazı zorlukları çok kısa ve güzel bir şekilde çözmemizi sağlarlar. Bunlar arasında program akışını yönlendirme teknikleri de var. Örneğin, Scala dilinde yazılmış eski adı "Actors" yeni adıyla "Akka" birimi (İngilizce'de module ya da library denen ve başka yazılımlar tarafından kullanılan bir yazılım bütününe birim denir) işlevleri nesne olarak kullanma yöntemini kullanarak eşzamanlı programlamayı destekler. Ama biz dizinlerin kullanılmasıyla başlayalım. Bakın göreceksiniz işlevlerin nesne olarak kullanılmasına güzel bir giriş olacak.""".p,
     """Nesneleri bir dizi olarak ele almak çok doğal ve faydalı, değil mi? Ne tür örnekler geliyor senin aklına? Her sözcük, örneğin, bir dizi harften oluşur. Gün içersinde yaptığımız şeyleri bir dizi eylem olarak düşünebiliriz. Scala dili Dizin adını verdiğimiz bir tür tanımlamıştır. Bunu daha önce pek görmedik. Ama aslında çok basit bir kavram. Dizin türü bir dizi nesneyi ele almayı ve işlemeyi çok kolaylaştırır ve hemen hemen her yazılımcık ve daha büyük yazılımlarda sık sık kullanılır. Dizin içindeki nesnelerin belli bir sırası vardır. Dizin türünün sunduğu pek çok metod ve komut sayesinde Dizin tanımlamak ve işlemek kolaylaşır. Daha önce Nokta sınıfıyla gördüğümüz gibi Dizin oluşturmanın bir yolu Dizin sınıfının yapıcı metodunu (constructor) kullanmak. Bu yapıcı metoda bir ya da daha çok girdi sokarız ve yapıcı o girdilerin oluşturduğu bir Dizin yapıverir. İlk örneğimizle hemen başlayalım. Bir dizi sayı oluşturalım. Bu dizinin türü "Dizin[Sayı]" olacak. Buradaki köşeli parantezler dizinin içindeki elemanların türünü belirliyor, yani Sayı. Her eleman bir Sayı olduğu için Scala tür çıkarımı yaparak 'dzn' değişmezinin türünü Dizin[Sayı] olarak belirler. Yani bizim bunu açık açık yazmak için zahmet etmemiz gerekmez.""".p,
     "val dzn = Dizin(1, 7, 2, 8, 5, 6, 3, 9, 14, 12, 4, 10)".c,
-    "Tamam, şimdi elimizde bir dizin var. Dizinleri kullanmanın üç temel metodu var. Onları görelim. Her dizinin bir başı olduğu için 'head' yani İngilizcede baş anlamına gelen metod bize ilk elemanı verir. 'tail' kuyruk anlamına gelir, dizinin başı hariç diğer elemanlarından oluşan kısmını verir. Ve son olarak da çift iki nokta üstüste yani '::' bir dizinin başına yeni bir eleman, yani yeni bir baş ekler. Bu baş ve kuyruk deyişi sana yılanları anımsattıysa haklısın. Dizinler yılanlara benziyor: hep başından tutmakta fayda var! Şaka bir yana Dizin türü çok gelişmiştir ve daha pek çok kullanışlı metodu vardır. 'Dizinlerin Kullanılışı' kısmında daha pek çok Dizin metodu göreceğiz.".p,
-    "'head' ilk yani en soldaki elemanı verir. dzn örneğinde bu '1' olacak.".p,
-    "satıryaz(dzn.head)".c,
-    "'tail' başı yani ilk elemanı atlar ve dizinin gerisini verir. Bakın en baştaki 1 sayısı yok kuyrukta:".p,
-    "satıryaz(dzn.tail)".c,
+    "Tamam, şimdi elimizde bir dizin var. Dizinleri kullanmanın üç temel metodu var: 'başı, kuyruğu ve ::'. Her dizinin bir başı var. 'başı' metodu bize ilk elemanı verir. 'kuyruğu' metodu, dizinin başı hariç diğer elemanlarından oluşan kısmını verir. Ve son olarak da çift iki nokta üstüste yani '::' bir dizinin başına yeni bir eleman, yani yeni bir baş ekler. Bu baş ve kuyruk deyişi sana yılanları anımsattıysa haklısın. Dizinler yılanlara benziyor: hep başından tutmakta fayda var! Şaka bir yana Dizin türü çok gelişmiştir ve daha pek çok kullanışlı metodu vardır. 'Dizinlerin Kullanılışı' kısmında daha pek çok Dizin metodu göreceğiz.".p,
+    "'başı' ilk yani en soldaki elemanı verir. dzn örneğinde bu '1' olacak.".p,
+    "satıryaz(dzn.başı)".c,
+    "'kuyruğu' başı yani ilk elemanı atlar ve dizinin gerisini verir. Bakın en baştaki 1 sayısı yok kuyrukta:".p,
+    "satıryaz(dzn.kuyruğu)".c,
     "'::' soldaki elemanı sağdaki dizinin başına ekleyerek oluşan yeni dizini verir.".p,
     "satıryaz(23 :: dzn)".c,
     "Burada önemli bir gözlem yapalım. Bu metodlar dzn dizisini değiştirmez! Hep yeni bir Dizin üretirler. Bunun için Dizin türüne değişmez (immutable) bir veri yapısı da denir.".p,
     "Bu üç temel metodla aklına gelen her dizini tanımlayabilir ve dizinlerle yapılabilecek ne varsa yapabilirsin. Bir örnek olarak gel bizim örnek dizinimizin içindeki tek sayıları bulalım:".p,
     """def tek(girdi: Dizin[Sayı]): Dizin[Sayı] = {
     if (girdi == Boş) Boş
-    else if (girdi.head % 2 == 1) girdi.head :: tek(girdi.tail)
-    else tek(girdi.tail)
+    else if (girdi.başı % 2 == 1) girdi.başı :: tek(girdi.kuyruğu)
+    else tek(girdi.kuyruğu)
 }
 """.c,
-    "Farkettin mi? Bu işlev dizinin başına bakar ve duruma göre kuyrukla özyineler, yani kendi kendini çağırır. Bunu yaparken 'tail' yani kuyruğu veren metodu kullar ve bu sayede dizinin elemanlarını teker teker ele alır. 'Boş' özel bir değer ve içi boş olan diziyi belirtiyor. Unutmadan, içi boş olan tek dizi var aynı yegane boş küme gibi. Boş yerine şöyle de yazabilirdik: Dizin[Sayı](). Neyseki Boş tanımlanmış. Daha kısa ve anlaşılır oldu değil mi? Dizinin sonuna gelince özyineleme son bulur ve tek sayılardan oluşan yeni bir Dizin çıkar ortaya.".p,
+    "Farkettin mi? Bu işlev dizinin başına bakar ve duruma göre kuyrukla özyineler, yani kendi kendini çağırır. Bunu yaparken 'kuyruğu' metodunu kullanır ve bu sayede dizinin elemanlarını teker teker ele alır. 'Boş' özel bir değer ve içi boş olan diziyi belirtiyor. Unutmadan, içi boş olan tek dizi var aynı yegane boş küme gibi. Boş yerine şöyle de yazabilirdik: Dizin[Sayı](). Neyseki Boş tanımlanmış. Daha kısa ve anlaşılır oldu değil mi? Dizinin sonuna gelince özyineleme son bulur ve tek sayılardan oluşan yeni bir Dizin çıkar ortaya.".p,
     "Haydi deneyelim.".p,
     "tek(dzn)".c,
     "Ne kadar yalın bir çözüm, değil mi? Tek yerine çift sayıları bulmak da artık çok kolay:".p,
     """def çift(girdi: Dizin[Sayı]): Dizin[Sayı] = {
     if (girdi == Boş) Boş
-    else if (girdi.head % 2 == 0) girdi.head :: çift(girdi.tail)
-    else çift(girdi.tail)
+    else if (girdi.başı % 2 == 0) girdi.başı :: çift(girdi.kuyruğu)
+    else çift(girdi.kuyruğu)
 }""".c,
     "çift(dzn)".c,
     "Ama, dur, burada epey bir tekrarlama oldu. Görüyor musun? 'tek' ve 'çift' işlevleri neredeyse aynı. İkisi arasındaki farklılıkları bulalım: Elbette işlevlerin adı farklı. Tek ve çift. Onun dışındaki tek fark eleme için kullandığımız koşul. == iminin sağında 0 ya da 1 var. Bu farkı işlevin içinden çekip çıkarsak ortaya daha genel ve daha sade bir çözüm çıkıverecek! Onun için tek mi, çift mi sorusunu bir girdi olarak düşünelim.".p,
@@ -710,29 +719,29 @@ pages += Page(
     "Bu arada tekMi adlı işlevin çıktı türünü 'İkil' diye açık açık belirtmeye gerek yok aslında. Sadece Türkçesini görmen ve anımsaman için yazdım. Neyse, biz bu işlevi şimdi nesne olarak nasıl kullanacağız onu görelim. Bunun için yeni bir işlev tanımlayacağız. Adı elemek sözcüğünün kökü olsun. Elemanları eleyerek bize istediğimiz elemanları versin. Ama neye göre eleyecek? Tabii ki yukarıdaki tekMi işlevi gibi bir işlevi kullanarak! Nasıl kullanacak? Yeni bir girdi olarak! İşte başta da bahsettiğimiz konuya geldik. Bir işlev başka bir işleve girdi olacak şimdi.".p,
     """def ele(girdi: Dizin[Sayı], koşul: (Sayı) => İkil): Dizin[Sayı] = {
     if (girdi == Boş) Boş
-    else if (koşul(girdi.head)) girdi.head :: ele(girdi.tail, koşul)
-    else ele(girdi.tail, koşul)
+    else if (koşul(girdi.başı)) girdi.başı :: ele(girdi.kuyruğu, koşul)
+    else ele(girdi.kuyruğu, koşul)
 }
 """.c,
     "ele(dzn, tekMi)".c,
     """'ele' işlevinin ilk girdisinin adı girdi ve bu bizim sayı dizimiz. İkinci arguman ise eleme koşulumuz, yani yeni tanımladığımız işlev. Türünü nasıl yazdık farkedelim: koşulun türü bir sayıyı girdi olarak alıp bir İkil veren, yani koşul sağlanıyorsa doğru yoksa da yanlış diyen bir işlev. 'ele' adlı metodumuz her işlevi girdi olarak kabul etmez. Sadece Sayı alıp İkil veren işlev türü ile çalışır. 'ele' metodunun içinde de 'koşul' adlı değeri aynı diğer işlevler gibi kullandık. Bu ele adlı işlevi daha önceki tek ve çift işlevleriyle karşılaştırmanı öneririm. Genellemenin nasıl yapıldığını iyice özümsemende fayda var. Bu genelleme günlük hayattaki istisnası bol onun için de bizi sık sık yanıltan genellemelere benzemez. Zararı yok sayılır (ikinci bir girdi girmemiz gerekiyor, yani zahmeti biraz arttı) ama kazancı çok. Birazdan bir kaç örnek daha görünce daha iyi anlayacaksın. Bu arada, eğer çok istersek bu zararı iyice yok edebiliriz. Örneğin, bu işlevi sık sık tek sayıları bulmak için kullanacaksak, şöyle yapalım ki iyice kolaylaylaşsın kullanımı:""".p,
     """def ele(girdi: Dizin[Sayı], koşul: (Sayı) => İkil = tekMi): Dizin[Sayı] = {
     if (girdi == Boş) Boş
-    else if (koşul(girdi.head)) girdi.head :: ele(girdi.tail, koşul)
-    else ele(girdi.tail, koşul)
+    else if (koşul(girdi.başı)) girdi.başı :: ele(girdi.kuyruğu, koşul)
+    else ele(girdi.kuyruğu, koşul)
 }
 """.c,
     """Bak bu sayede, eğer işlev girdisi vermezsek, ele adlı işlev tekMi koşulunu kullanacak. Yani varsayılan koşul tekMi ile ifade ettiğimiz tek sayı olmak olacak. Yeni bir örnek iyi olacak:""".p,
-    """val ilkOnSayı = Aralık(1, 11).dizin""".c,
-    "Daha önce görmediğimiz ama çok faydalı olan bu Aralık türünün İngilizce adı 'Range'. İngilizce daha kısa bir yolu daha var. Şöyle:".p,
-    """val ilkOnSayı = (1 until 11).toList""".c,    
-    """İngilizce 'toList' dilimizde dizine çevir anlamına gelir. (1 until 11) yerine (1 to 10) da yazabilirdik. Bunların daha genel hali de var: '(a until b by c)' ve '(a to b by c)' yani a sayısından b sayısına kadar c adımlarıyla sayıyoruz ama 'until' olursa b sayısından hemen önce duruyoruz. Örneğin:""".p,
-    "(3 until 22 by 3)".c,
-    "Türkçesi:".p, "Aralık(3, 22, 3)".c,
-    "Geri geri de gidebiliriz:".p, "(30 to -35 by -5)".c,
+    """val ilkOnSayı = Aralık(1, 11).dizine""".c,
+    "Daha önce görmediğimiz ama çok faydalı olan bu Aralık türünün İngilizce adı 'Range'. Bir Aralık yazmak yerine kısa bir yolu var. Şöyle:".p,
+    """val ilkOnSayı = (1 |- 11).dizine""".c,    
+    """İngilizce olarak '1 until 11' yazılır. Ya da onun yerine '1 |-| 10', İngilizce'si: '1 to 10' da yazabilirdik. Bunların daha genel hali de var: 'a |- b adım c' ve 'a until b by c' veya 'a |-| b adım c' ve 'a to b by c'' yani a sayısından b sayısına kadar c adımlarıyla sayıyoruz ama '|-' ya da 'until' olursa b sayısından hemen önce duruyoruz. Örneğin:""".p,
+    "3 |- 22 adım 3".c,
+    "Uzun ve işlev haliyle:".p, "Aralık(3, 22, 3)".c,
+    "Geri geri de gidebiliriz:".p, "30 |-| -35 adım -5".c,
     """Aralık(30, -36, -5)
 Aralık.kapalı(30, -35, -5)""".c,
-    "Aralığın sonuna dizin metodunu ekle bakalım ne olacak. İngilizcesi toList. Aralıkları araya sıkıştırdık, umarım kafa karıştırmadık. Hemen konumuza dönelım. Nerede kalmıştık? Bir sayı dizisı içinden herhangi bir koşula göre bazı sayıları seçmek istiyorduk. Ama tek sayıları seçmek varsayılan koşulumuz olsun dedik. Deneyelim hemen:".p,
+    "Aralığın sonuna dizine metodunu ekle bakalım ne olacak. İngilizcesi toList. Aralıkları araya sıkıştırdık, umarım kafa karıştırmadık. Hemen konumuza dönelım. Nerede kalmıştık? Bir sayı dizisı içinden herhangi bir koşula göre bazı sayıları seçmek istiyorduk. Ama tek sayıları seçmek varsayılan koşulumuz olsun dedik. Deneyelim hemen:".p,
     """ele(ilkOnSayı)""".c,
     """Aynı 'tek' adını verdiğimiz işlev gibi çalıştı, değil mi? Ama, ele adlı işlevimiz hala daha genel. İstersek ikinci arguman olarak başka bir koşul girer, başka tür bir eleme yaparız. Hemen geliyor bir örnek!""".p,
     "Çift sayıları bulmak için de benzer bir yöntem kullanabiliriz elbet. Yani çiftMi diye yeni bir işlev tanımlar ve sonra kullanırız. Ama adsız (anonymous) bir işlev kullanarak çok daha kısaca ifade edebiliriz dileğimizi. Ne demek adsız? Yani 'def' özel sözcüğünü kullanmadan ve işlevin adını vermeden bir işlev tanımlayacağız. Bu işlev basitçe girdiyi alacak ve onu değerlendirecek. Bu özel yöntemde '=>' imini kullanıyoruz. Solunda girdiler, sağında da işlevin eylemleri gelecek.".p,
@@ -747,8 +756,8 @@ Aralık.kapalı(30, -35, -5)""".c,
 
     """def ele[T](girdi: Dizin[T], koşul: (T) => İkil): Dizin[T] = {
     if (girdi == Boş) Boş
-    else if (koşul(girdi.head)) girdi.head :: ele(girdi.tail, koşul)
-    else ele(girdi.tail, koşul)
+    else if (koşul(girdi.başı)) girdi.başı :: ele(girdi.kuyruğu, koşul)
+    else ele(girdi.kuyruğu, koşul)
 }
 """.c,
     "ele(dzn, (v: Sayı) => v % 2 == 0)".c,
@@ -757,55 +766,55 @@ Aralık.kapalı(30, -35, -5)""".c,
     """ele(kesirler, (v: Kesir) => v > 5)""".c,
     "Ya da bir cümle içindeki uzunca sözcükleri seçmek için de kullanabiliriz aynı genellenmiş ele adlı işlevimizi:".p,
     """val dizinler = Dizin("Bugün", "sizi", "gördüğüme", "çok", "memnun", "oldum", "Nasılsınız")""".c,
-    """ele(dizinler, (v: Yazı) => v.length > 4)""".c,
+    """ele(dizinler, (v: Yazı) => v.boyu > 4)""".c,
     "length uzunluk demek İngilizce'de. Yazı türünün metodu olarak kaç harf olduğunu gösterir. Dizinlerle ilgili bölümde de göreceğimiz gibi Dizin türünün 'filter' adlı bir metodu var. Onu kullanarak da benzer eleme işlemlerini yapabiliriz:".p,
-    "dizinler.filter((v: Yazı) => v.length < 5)".c,
+    "dizinler.ele((v: Yazı) => v.boyu < 5)".c,
     "Bu genelleyici işlevlere daha sonra yine bakacağız ve başka özelliklerini keşfedeceğiz. Ama şimdilik konumuza dönelim ve işlevleri nesne olarak kullanmaya bakalım.".p,
     "'İşlevler De Birer Nesnedir' Hakkında Başka Birkaç Şey Daha".h3,
     "Biraz önce örneklerini gördüğümüz yönteme 'kapsamalar' (comprehensions) deniyor. Yani, dizin gibi bir sürü elemandan oluşan bir kümenin bütün elemanlarına bir işlevi uygulayıvermek. Kapsamaların ne kadar becerikli olduklarını ve onlar sayesinde kısacık ama çok iş beceren yazılımlar yapabildiğimizi bir kaç örnek daha görerek pekiştireceğiz şimdi.".p,
 
-    "Yazılımcıklar yazdıkça, bazı çok basit ve çoğunlukla adı olmayan işlevleri başka işlevlere girdi yapmak isteyeceksin. O durumlarda bazı kısa yollar bilmende fayda olacak. Daha önce de üzerinde durduğumuz gibi tür çıkarımı bize fayda sağlıyor. Bakın bir önceki dizinler.filter örneğini tür çıkarımı sayesinde sadeleştirelim. Derleyici adsız işlevin girdisinin Yazı türünde olması gerektiğini biliyor (nasıl biliyor? Adı dizinler olan val değerinin türünden!). O sayede parantezleri ve tür bilgisini yazmaktan kurtuluyoruz.".p,
-    "dizinler.filter(v => v.length > 3)".c,
+    "Yazılımcıklar yazdıkça, bazı çok basit ve çoğunlukla adı olmayan işlevleri başka işlevlere girdi yapmak isteyeceksin. O durumlarda bazı kısa yollar bilmende fayda olacak. Daha önce de üzerinde durduğumuz gibi tür çıkarımı bize fayda sağlıyor. Bakın bir önceki dizinler.ele örneğini tür çıkarımı sayesinde sadeleştirelim. Derleyici adsız işlevin girdisinin Yazı türünde olması gerektiğini biliyor (nasıl biliyor? Adı dizinler olan val değerinin türünden!). O sayede parantezleri ve tür bilgisini yazmaktan kurtuluyoruz.".p,
+    "dizinler.ele(v => v.boyu > 3)".c,
     "Bu adsız işlev gibi iki ve ya bir girdili işlevler çok yaygın olduğu için, Scala dili bize bir kısa yol daha sunuyor. '(x, y) => x + y' adsız işlevini şöyle yazabiliyoruz: '_ + _'. Benzer şekilde 's=>s.Method' yerine '_.Method' da yazabiliriz. _ imi girdi yerine kullanılıyor yani. O sayede adsız işlevler içinde isimler uydurmak ve kullanmaktan kurtuluyoruz. Bu sayede, son örneğin en kısa halini görelim:".p,
-    "dizinler.filter(_.length > 3)".c,
+    "dizinler.ele(_.boyu > 3)".c,
     "Başkalarının yazdığı kodları okumak çok faydalıdır. O durumlarda burada gördüğümüz kısa yolları görünce artık şaşırmazsın. Ama bazı durumlarda uzun ve açık hallerini kullanmak gerekir. Onları da sonra göreceğiz.".p,
     
     "Bir kaç tane daha yaygın kullanımı olan örnekler görelim. Bunlar dizinleri işlemekte çok faydalı olurlar. Sen de yakında göreceksin.".p,
-    "flatMap".h4,
-    "dizinler.flatMap(_.toList)".c,
-    "Flat İngilizce'de kat kat olmayan yani düz anlamında kullanılır. Bu örnekte bizim yazı dizinimizi aldık, içindeki her bir yazıyı ilk önce toList metodunu kullanarak birer harf dizisine çevirdik ve onlarin hepsini birleştirdik. Sonucunu gördün, değil mi? flatMap yerine map metodunu kullanarak aradaki farkı daha iyi anlarsın. map İngilizce'de hem harita hem de eşlemek anlamlarına gelir. Burada ikinci anlamını kullanıyoruz:".p,
-    "dizinler.map(_.toList)".c,
-    "sort".h4,
-    "Sort da sıraya dizmek anlamına gelir. sortWith yani kendi girdiğimiz bir koşul ile sıralıyoruz. Sözcükleri a'dan z'ye sıralayalım:".p,
-    "dizinler.sortWith(_ < _)".c,
+    "düzİşle (flatMap)".h4,
+    "dizinler.düzİşle(_.dizine)".c,
+    "Flat İngilizce'de kat kat olmayan yani düz anlamında kullanılır. Bu örnekte bizim yazı dizinimizi aldık, içindeki her bir yazıyı ilk önce 'dizine' metodunu kullanarak birer harf dizisine çevirdik ve onlarin hepsini birleştirdik. Sonucunu gördün, değil mi? 'düzİşle' yerine 'işle' (map) metodunu kullanarak aradaki farkı daha iyi anlarsın. map İngilizce'de hem harita hem de eşlemek anlamlarına gelir. Ama matematikte ve bilgisayar biliminde yeni bir anlam kazanmıştır. Bir çerçeveden başka bir çerçeveye geçiş, birinci çerçeveyi işleyerek ikinci çerçeveye varış gibi anlamlara gelir. Ama anlatması zor. Nasıl çalıştığını görüp anlayıverelim:".p,
+    "dizinler.işle(_.dizine)".c,
+    "sıralamak (sort)".h4,
+    "Sort da sıraya dizmek anlamına gelir. sırayaSok (sortWith) yöntemiyle kendi girdiğimiz bir koşul ile sıralıyoruz. Sözcükleri a'dan z'ye sıralayalım:".p,
+    "dizinler.sırayaSok(_ < _)".c,
     "Bir de ters sıraya sokalım:".p,
-    "dizinler.sortWith(_ > _)".c,
+    "dizinler.sırayaSok(_ > _)".c,
     "Farkettiysen büyük harfliler başta geliyor. Onun yerine harflerin büyük küçük olduğuna bakmadan sıralamak istersek şöyle yaparız:".p,
-    "dizinler.sortWith(_.toUpperCase < _.toUpperCase)".c,
+    "dizinler.sırayaSok(_.büyükHarfe < _.büyükHarfe)".c,
     "Yani hepsini büyük harfe çeviriverdik karşılaştırmadan önce. İştediğimiz koşulu girerek istediğimiz şekilde sıralama yapıverdik. Yani sıralama metodunu baştan yazmamız gerekmedi. İşte işlevlerin nesne olmasının faydaları!".p,
-    "fold".h4,
-    "fold İngilizce'de katlamak demek. Soldan ve sağdan katlamak anlamına gelen foldLeft ve foldRight bir dizinin elemanlarını bir araya getirmekte kullanılan çok yaygın ve faydalı metodlardır. Elemanları nasıl bir araya getirmek istediğimizi iki girdi alan bir işlev girerek belirtiriz. Bu birleştirme işlemi soldan ya da sağdan başlar. Ve başlarken de yine girdiğimiz bir değer kullanır. Yani iki tane girdisi var bu fold metodlarının.".p,
+    "katlama (fold)".h4,
+    "Soldan ve sağdan katlama bir dizinin elemanlarını bir araya getirmekte kullanılan çok yaygın ve faydalı metodlardır. Elemanları nasıl bir araya getirmek istediğimizi iki girdi alan bir işlev girerek belirtiriz. Bu birleştirme işlemi soldan ya da sağdan başlar. Ve başlarken de yine girdiğimiz bir değer kullanır. Yani iki tane girdisi var bu katlama metodlarının.".p,
     "Bu iki girdiyi daha kolay okunsun diye iki parantez grubuyla gireriz. Birazdan bunu 'def' ile işlevi tanımlarken nasıl yapıldığını göreceğiz.".p,
     "Yeni bir örnekle başlayalım.".p,
     """val dzn = Dizin(1, 7, 2, 8, 5, 6, 3, 9, 14, 12, 4, 10)""".c,
-    """dzn.foldLeft(0)(_ + _)""".c,
+    """dzn.soldanKatla(0)(_ + _)""".c,
     "Soldan işleyeceğiz. İkinci girdimiz adsız bir işlev ve iki sayıyı topluyor: '_+_'. Bunun kapsama olduğunu da biliyoruz, yani dizinin içindeki bütün elemanların üstünden geçecek. İlk önce ilk girdisi olan 0 ile dizinin başındaki 1'i toplar ve 1 bulur. Sonra ona ikinci eleman olan 7'yi ekler ve böylece sonuna kadar gider.".p,
     "Tekrarlardan Kurtulalım".h4,
     "Diyelim ki bir cümlemiz var ve içinde hangi harfleri kullandığımızı bulmak istiyoruz. Örneğin,".p,
     """val dilek = Dizin("Haydi", "gelin", "bir", "oyun", "oynayalım", "hep", "beraber")""".c,
-    """dilek.flatMap(_.toList).map(_.toUpper).distinct.sortWith(_ < _)""".c,
-    "'flatMap' sözcüklerin bütün harflerini tek bir dizine sokuyor. Daha önce de gördüğümüz 'map' harfleri büyük harfe çeviriyor. distinct farklı demek, yani sadece farklı harfleri veriyor, tekrarları vermiyor. En sonunda da a'dan z'ye sıralıyoruz.".p,
+    """dilek.düzİşle(_.dizine).işle(_.büyükHarfe).yinelemesiz.sırayaSok(_ < _)""".c,
+    "'düzİşle' sözcüklerin bütün harflerini tek bir dizine sokuyor. Daha önce de gördüğümüz 'işle' harfleri büyük harfe çeviriyor. 'yinelemesiz' yöntemi sadece farklı harfleri veriyor, tekrarları vermiyor. En sonunda da a'dan z'ye sıralıyoruz.".p,
     
     "Kendi akış yöntemimizi tanımlayalım".h4,
     "İşlevlere girdi olarak adlı ya da adsız başka işlevler girebildiğimiz gibi bir dizi komut da girebiliriz. Bu sayede kendi akış yöntemlerimizi yaratabiliriz. Örneğin, bir kare çizmek için kaplumbağa komutlarını yineleyebilmek iyi olur, değil mi? Daha önce gördüğümüz 'for' yapısını kullanabiliriz:".p,
     """sil
-for (i <- 1 to 4) { ileri(100); sağ() }
+for (i <- 1 |-| 4) { ileri(100); sağ() }
 """.c,
     "Ama, aşağıdaki gibi yazabilsek çok daha iyi olmaz mı?".p,
     "yinele(4) { ileri(115); sağ() }".c,
     "Scala dili 'if/else' ve 'while' gibi yapılar sunar ama 'yinele' yapısı Kojo tarafından tanımlanmıştır. Bunu sen de Scala ile yapabilirsin. Şöyle başlayalım:".p,
     """def yinele2(ys: Sayı, dk: => Her) {
-    for (i <- 1 to ys) dk
+    for (i <- 1 |-| ys) dk
 }
 """.c,
     "ys yineleme sayısının kısaltması. dk de dizi komut anlamında.".p,
@@ -813,21 +822,21 @@ for (i <- 1 to 4) { ileri(100); sağ() }
     "yinele2(4, { ileri(130); sağ() })".c,
     "Hiç fena değil. Neredeyse istediğimiz hale geldi. Tek sorun 4 sayısından sonra gelen virgül. Scala istersek her girdiyi kendi parantezi içinde girmemizi destekler. Buna 'curried işlev' de denir. Haskell Curry adında bir matematikçi buna esin kaynağı olduğu için. Bakın şöyle değiştirelim tanımı:".p,
     """def yinele3(ys: Sayı)(dk: => Her) {
-    for (i <- 1 to ys) dk
+    for (i <- 1 |-| ys) dk
 }
 """.c,
     "Bu sayede tam istediğimiz gibi yazabiliriz:".p,
     "yinele3(4) { ileri(160); sağ() }".c,
-    "Biraz önce foldLeft örneğinde de bu tekniği kullanmıştık. Daha okunur hale geldi değil mi?".p,
+    "Biraz önce soldanKatla örneğinde de bu tekniği kullanmıştık. Daha okunur hale geldi değil mi?".p,
     "Yazılıma hobi ya da işin olarak devam edersen işlevlerin nesne gibi kullanılabilmesinin daha pek çok programlama problemini çözmede faydalı olduğunu göreceksin. Başka yolları da var elbet ama buradaki örneklerde de gördüğümüz gibi bu teknikle kodumuz epey kısa ve okunur hale geldi. Daha kapsamlı ve tasarlaması, yazması ve idare etmesi esaslı bir iş olan bazı örnekleri de şimdiden duymuş olman için kısa bir liste vereyim. Merak ettikçe, yeri geldikçe incelersin. Kusura bakma bunlar önce İngilizce olsun: (1) passing callback functions in event driven IO, (2) passing tasks to Akka Actors in concurrent processing environments, (3) in scheduling work loads. Yani, (1) olgu güdümlü girdi/çıktı idaresinde geriçağırım yapan işlevleri dağıtmak (2) eşzamanlı işlemler olan ortamlarda, yani aynı anda birden fazla işlemin paralel yani yanyana çalışması durumunda bağımsız aktörlere yeni işlevler verilmesi, (3) uzun işlerin sıralamasını düzenlerken işlevleri dağıtmak. Bilgisayar bilimi ve mühendisliği artık o kadar gerekli bir hale geldi ki, bu temeli iyi bilmek ilerde çok helal kazanç kazanmana faydalı olacaktır. Tabii eğer gönlünü bu işe verirsen.".p,
     "Bir Tür Girdiyi Yinelemek".h4,
     "Bazen işlevimize kaç tane girdi gireceğini bilemeyiz. Daha doğrusu kaç tane girilirse girilsin çalışmasını isteriz. Örneğin bu kılavuzcukta çok kullandığımız 'satıryaz' komutu öyledir. Bir, iki, üç... ne sayıda girdi girersek girelim işini yapar. Bunun yolu da çok kolay:".p,
-    """def topla(s: Sayı*) = s.reduce(_ + _)""".c,
+    """def topla(s: Sayı*) = s.indirge(_ + _)""".c,
     """topla(1, 2, 3)""".c,
     """topla(4, 5, 6, 7, 8, 9, 10)""".c,
-    "Girdinin türünden sonra gelen yıldız imi, yani '*' sayesinde 's' girdisi tek bir sayı değil bir dizi sayı oluveriyor. Onun için de 'reduce' metodunu kullandık. Bu foldLeft metoduna benzer ama daha basittir. Bakın girilen bütün sayıları toplamak bu kadar kolay. Bazı istisnalara da bakalım, ne olacak?".p,
+    "Girdinin türünden sonra gelen yıldız imi, yani '*' sayesinde 's' girdisi tek bir sayı değil bir dizi sayı oluveriyor. Onun için de 'indirge' (ingilizcesi reduce) metodunu kullandık. Bu soldanKatla metoduna benzer ama daha basittir. Bakın girilen bütün sayıları toplamak bu kadar kolay. Bazı istisnalara da bakalım, ne olacak?".p,
     """topla(99) // pek toplamaya gerek olmasa da yine de tek değerle de çalışması güzel!""".c,
-    """topla() // Bak ne oldu? Bunu tamir edebilir misin?""".c,
+    """topla() // Bak ne oldu? Bunu onarabilir misin?""".c,
     "Bu yıldızlı girdiden önce yıldızsız yani normal girdiler de tanımlayabiliriz. Ama yıldızlı yani yinelenen girdi en son gelmelidir.".p
   )
 )
@@ -856,21 +865,20 @@ satıryaz((3, 'c')._2)""".c,
     "val (i, c) = (3, 'a')".c,
     "Birazdan bir yazılımcık yazacağız ve onun içinde bu çözümleme yöntemi nasıl işe yarıyor göreceğiz. Diyelim ki bir yazının içinde hangi harften kaçtane var bulmak istiyoruz. İlk önce bir dizi sözcük oluşturalım bir tümceden:".p,
     """val yazı = "Kojo ile oyun oynayarak Scala dilini öğrenmek ve hatta işlevsel ve nesneye yönelik programlama becerisi edinmek harika değil mi """".c,
-    """val sözcükDizini = yazı.split(" ").toList""".c,
+    """val sözcükDizini = yazı.böl(" ")""".c,
     "Bu hesaplamayı yapmak için uygulamayı düşündüğümüz yöntem şu: ilk önce harfleri büyültelim sonra da sıraya sokalım.".p,
     "Ondan sonra da katlama (fold) metodunu kullanarak arka arkaya tekrar eden harfleri sayıvereceğiz. Daha önce ne görmüştük? Katlama işlevi iki girdi alıyor: bir başlangıç değeri, bir de bir dizin, yani bizim sıraya sokulmuş harf dizimiz. Katlama ilk başlangıç değerini dizinin ilk elemanıyla bir işleme sokacak. Ne işlemi mi? Biz ne istersek o! Burada teker teker ele aldığımız harfler değişmedikçe sayısını bir artıracağımız bir sayacımız olacak. Yeni gelen harf değişik olursa yeni bir sayaç tanımlayacağız. Her sayaç tabii ki birden başlayacak. Karmaşık mı geldi biraz? Çok doğal. Görüp biraz üstünde düşününce daha anlaşılır olacak. Ne de olsa ileri programlama tekniği bu!".p,
     "Kısaca söylemek gerekirse amacımız ikili sıralamalardan oluşan bir dizin oluşturmak. Her ikilinin birinci alanında bir harf ikinci alanında da kaç tane olduğunu tutan sayacı olacak. Bu dizin harflerin sıklığını sunacak bize.".p,
 """// Tek satırda epey iş var. Teker teker bak istersen
-// flat: düz, map: eşleme, toList: dizine çevir, toUpper: yüksek harfe çevir, sortWith: işlev ile sırala
-val harfler = sözcükDizini.flatMap(_.toList).map(_.toUpper).sortWith(_ < _)
+val harfler = sözcükDizini.düzİşle(_.dizine).işle(_.büyükHarfe).sırayaSok(_ < _)
 // Yani şöyle yapabilirsin:
-val g1 = sözcükDizini.flatMap(_.toList); satıryaz("g1", g1)
-val g2 = g1.map(_.toUpper); satıryaz("g2", g2)
+val g1 = sözcükDizini.düzİşle(_.dizine); satıryaz("g1", g1)
+val g2 = g1.işle(_.büyükHarfe); satıryaz("g2", g2)
 """.c,
 
-    """Şimdi de katlama yöntemimiz gelsin bakalım. Başladığımızda sunum boş olacak elbet. Nasıl tanımlarız istediğimiz boş dizini? "Dizin[(Harf, Sayı)]()" yani bir dizi (harf, sayaç) çifti. Katlama metodumuz (foldLeft) ikinci girdi olarak ne bekler anımsadın mı? Bir işlev! Nasıl bir işlev gerekiyor biraz daha iyi tahmin edebilirsin belki şimdi. Adsız işlev olacak, bir. İki tane girdisi olacak, iki. İlk girdisi bizim çift dizinimiz, ikinci girdi de harflerden biri.""".p,
+    """Şimdi de katlama yöntemimiz gelsin bakalım. Başladığımızda sunum boş olacak elbet. Nasıl tanımlarız istediğimiz boş dizini? "Dizin[(Harf, Sayı)]()" yani bir dizi (harf, sayaç) çifti. soldanKatla metodumuz ikinci girdi olarak ne bekler anımsadın mı? Bir işlev! Nasıl bir işlev gerekiyor biraz daha iyi tahmin edebilirsin belki şimdi. Adsız işlev olacak, bir. İki tane girdisi olacak, iki. İlk girdisi bizim çift dizinimiz, ikinci girdi de harflerden biri.""".p,
 
-"""val sıklık = harfler.foldLeft(Dizin[(Harf, Sayı)]()) {
+"""val sıklık = harfler.soldanKatla(Dizin[(Harf, Sayı)]()) {
     case ((önceki, sayaç) :: kuyruk, harf) if (önceki == harf) => (önceki, sayaç + 1) :: kuyruk
     case (sunum, harf)                                         => (harf, 1) :: sunum
 }
@@ -891,46 +899,49 @@ val g2 = g1.map(_.toUpper); satıryaz("g2", g2)
 
     "Sonucu okunur bir halde yazalım bakalım ne bulduk:".p,
 
-    """satıryaz(sıklık.map{p => s"${p._1}:${p._2}"}.mkString(" "))""".c,
+    """satıryaz(sıklık.işle{p => s"${p._1}:${p._2}"}.yazıYap(" "))""".c,
 
     "Elbette ki isteyen daha eski dillerde yapıldığı gibi yazabilir, Basic, Fortran, C, C++, Java örneğin. Yani:".p,
 
 """def harfSıklığı(girdi: Dizin[Harf]): Dizin[(Harf, Sayı)] = {
-    var sunum = Dizin[(Char, Sayı)]()
-    if (girdi.isEmpty) sunum
+    var sunum = Dizin[(Harf, Sayı)]()
+    if (girdi.boşMu) sunum
     else {
-        var önceki = girdi.head
-        var kuyruk = girdi.tail
+        var önceki = girdi.başı
+        var kuyruk = girdi.kuyruğu
         var sayaç = 1
-        while (!kuyruk.isEmpty) {
-            if (kuyruk.head == önceki) sayaç += 1
+        while (!kuyruk.boşMu) {
+            if (kuyruk.başı == önceki) sayaç += 1
             else {
                 sunum = (önceki, sayaç) :: sunum
                 sayaç = 1
-                önceki = kuyruk.head
+                önceki = kuyruk.başı
             }
-            kuyruk = kuyruk.tail
+            kuyruk = kuyruk.kuyruğu
         }
         (önceki, sayaç) :: sunum
     }
 }
 
+val yazı = "Kojo ile oyun oynayarak Scala dilini öğrenmek ve hatta işlevsel ve nesneye yönelik programlama becerisi edinmek harika değil mi "
+val sözcükDizini = yazı.böl(" ")
+val harfler = sözcükDizini.düzİşle(_.dizine).işle(_.büyükHarfe).sırayaSok(_ < _)
 satıryaz(harfSıklığı(harfler))""".c,
 
     "Bu da çalıştı elbette. Ama bilmem sen hangisini daha çok beğendin. Bak biraz önce işlevsel programlama esaslarını kullanarak nasıl yaptığımızı hepsi bir arada tekrar görelim ve iki farklı yöntemi yan yana karşılaştıralım:".p,
     """val harfSıklığı = "Kojo ile oyun oynayarak Scala dilini öğrenmek ve hatta işlevsel ve nesneye yönelik programlama becerisi edinmek harika değil mi".
-    split(" ").toList.flatMap(_.toList).map(_.toUpper).sortWith(_ < _).
-    foldLeft(Dizin[(Harf, Sayı)]()) {
+    böl(" ").düzİşle(_.dizine).işle(_.büyükHarfe).sırayaSok(_ < _).
+    soldanKatla(Dizin[(Harf, Sayı)]()) {
         case ((önceki, sayaç) :: kuyruk, harf) if (önceki == harf) => (önceki, sayaç + 1) :: kuyruk
         case (sunum, harf)                                         => (harf, 1) :: sunum
     }
 
 satıryaz(harfSıklığı.
-    sortBy(p => p._2).reverse.
-    map { p => s"${p._1}:${p._2}" }.
-    mkString(" "))
+    sırala(p => p._2).tersi.
+    işle { p => s"${p._1}:${p._2}" }.
+    yazıYap(" "))
 """.c,
-    "Bilmem farkettin mi ama sadece iki komut dizisi yeterli oldu. Yerilen cümlenin harflerinin sıklığını hesapladık ve sıraya sokup yazdırdık. Yukarıda adlarını saydığımız daha eski ve daha az becerikli dillerle bilgisayara istediğini yaptırmanın ne kadar zor olduğunu bilenlere bu kısacık yazılım o kadar etkileyi olur ki anlatamam!".p
+    "Bilmem farkettin mi ama sadece iki komut dizisi yeterli oldu. Yerilen cümlenin harflerinin sıklığını hesapladık ve sıraya sokup yazdırdık. Yukarıda adlarını saydığımız daha eski ve daha az becerikli dillerle bilgisayara istediğini yaptırmanın ne kadar zor olduğunu bilenlere bu kısacık yazılım o kadar etkileyici olur ki anlatamam!".p
 
   )
 )
@@ -1124,61 +1135,59 @@ sil
 var gerekYokAslında = "böyle değişkenlere\n"
 gerekYokAslında += "pek de gerek yok"
 yazı(gerekYokAslında)""".c,
-    "Sanırım hemen hemen bütün nesnelerin toString diye bir metodu var. Bu metod nesnenin neye benzediğini yazı olarak ortaya koyar ve çok faydalıdır. Mantık önermeleri için tanımladığımız sınıfı anımsadın mı? Bir önceki bölüme bakıver istersen. Orada kendi toString metodumuzu tanımlamış ve kullanmıştık.".p,
-    """val x = (2).toString + " " + (3.1F).toString
+    "Sanırım hemen hemen bütün nesnelerin yazıya diye bir metodu var. Bu metod nesnenin neye benzediğini yazı olarak ortaya koyar ve çok faydalıdır. Mantık önermeleri için tanımladığımız sınıfı anımsadın mı? Bir önceki bölüme bakıver istersen. Orada kendi yazıya metodumuzu tanımlamış ve kullanmıştık.".p,
+    """val x = (2).yazıya + " " + (3.1F).yazıya
 satıryaz(x)
 """.c, 
-    "Uzunluk veya Boy (length)".h3,
+    "Uzunluk veya Boy".h3,
     table(
-      row(""""dört".length""".c,"G1 yazısının uzunluğu yani kaç karakterden oluştuğunu bildirir.")
+      row(""""dört".boyu""".c,"G1 yazısının uzunluğu yani kaç karakterden oluştuğunu bildirir.")
     ),
     "Karşılaştırma".h3,
     table(
-      row(""""uzun".compareTo("uzuner")""".c,"G1 ile G2'yi karşılaştırır. Eğer G1 G2'den önce geliyorsa eksi bir sayı, aynıysa sıfır, sonra geliyorsa artı bir sayı verir. A ile a'yı karşılaştır istersen"),
-      row(""""uzun".compareToIgnoreCase("Uzun")""".c,"Karşılaştırma yaparken harflerin büyük ya da küçük olmasını göz ardı eder"),
-      row(""""kitap".equals("film")""".c,"İki yazı aynı ise doğru der, yoksa yanlış"),
-      row(""""kitap".equalsIgnoreCase("KITAP")""".c,"Eşitliğe bakarken harflerin büyük ya da küçük olmasını göz ardı eder"),
-      row(""""kitaplık".startsWith("kitap")""".c,"G1 yazısının başında G2 var mı?"),
-      row(""""kalınkitap".startsWith("kitap", 5)""".c,"G1 yazısının G3. harfinden itibaren G2 geliyor mu?"),
-      row(""""kitaparası".endsWith("arası")""".c,"G1'in sonunda G2 var mı?")
+      row(""""uzun".kıyasla("uzuner")""".c,"G1 ile G2'yi karşılaştırır. Eğer G1 G2'den önce geliyorsa eksi bir sayı, aynıysa sıfır, sonra geliyorsa artı bir sayı verir. A ile a'yı karşılaştır istersen"),
+      row(""""uzun".kıyaslaKüçükHarfBüyükHarfAyrımıYapmadan("Uzun")""".c,"Karşılaştırma yaparken harflerin büyük ya da küçük olmasını göz ardı eder"),
+      row(""""kitap".eşitMi("film")""".c,"İki yazı aynı ise doğru der, yoksa yanlış"),
+      row(""""kitap".eşitMiKüçükHarfBüyükHarfAyrımıYapmadan("KITAP")""".c,"Eşitliğe bakarken harflerin büyük ya da küçük olmasını göz ardı eder"),
+      row(""""kitaplık".başındaMı("kitap")""".c,"G1 yazısının başında G2 var mı?"),
+      row(""""kalınkitap".başındaMı("kitap", 5)""".c,"G1 yazısının G3. harfinden itibaren G2 geliyor mu?"),
+      row(""""kitaparası".sonundaMı("arası")""".c,"G1'in sonunda G2 var mı?")
     ),
     "Aramak ve bulmak".h3,
     """"Bir yazı içinde başka bir harfi ya da yazıyı arayıp bulmak için kullanabileceğimiz metodlar bunlar. Eğer aradığımızı bulamazsa -1 çıkar. İlk harfin konumu 0 kabul edilir. Gariptir biraz ama bilgisayarda hep sıfırdan saymaya başlarız.""".p,
     table(
-      row(""""imrendim".contains("ren")""".c,"G2, G1'in içinde geçiyor mu?"),
-      row(""""imrendim".indexOf("nd")""".c,"G2, G1'in içinde kaçıncı konumda? Birden fazla varsa, ilk konumu verir."),
-      row(""""imrendirdim".indexOf("di", 7)""".c,"G2, G1'in G3'üncü harfinden sonra hangi konumda?"),
-      row(""""imrendirdi".indexOf('r')""".c,"G2 karakterinin G1 içindeki ilk konumu?"),
-      row(""""imrendirdik".indexOf('r', 4)""".c,"G2, G1'in G3'üncü harfinden sonra hangi konumda?"),
-      row(""""imrendiler".lastIndexOf('e')""".c,"G2'nin G1 içindeki son konumu nedir?"),
-      row(""""imrenerek".lastIndexOf('e', 6)""".c,"G2'nin G1 içindeki G3. harf veya daha önceki son konumu nedir?"),
-      row(""""dipdirildi".lastIndexOf("di")""".c,"G2'n'n G1 içindeki son konumu"),
-      row(""""dipdirildi".lastIndexOf("di", 5)""".c,"G2'n'n G1 içindeki G3. harf ya da daha önceki son konumu")
+      row(""""imrendim".içeriyorMu("ren")""".c,"G2, G1'in içinde geçiyor mu?"),
+      row(""""imrendim".sırası("nd")""".c,"G2, G1'in içinde kaçıncı konumda? Birden fazla varsa, ilk konumu verir."),
+      row(""""imrendirdim".sırası("di", 7)""".c,"G2, G1'in G3'üncü harfinden sonra hangi konumda?"),
+      row(""""imrendirdi".sırası('r')""".c,"G2 karakterinin G1 içindeki ilk konumu?"),
+      row(""""imrendirdik".sırası('r', 4)""".c,"G2, G1'in G3'üncü harfinden sonra hangi konumda?"),
+      row(""""imrendiler".sırasıSondan('e')""".c,"G2'nin G1 içindeki son konumu nedir?"),
+      row(""""imrenerek".sırasıSondan('e', 6)""".c,"G2'nin G1 içindeki G3. harf veya daha önceki son konumu nedir?"),
+      row(""""dipdirildi".sırasıSondan("di")""".c,"G2'n'n G1 içindeki son konumu"),
+      row(""""dipdirildi".sırasıSondan("di", 5)""".c,"G2'n'n G1 içindeki G3. harf ya da daha önceki son konumu")
     ),
     "Yazıdan parça çıkarmak".h3,
     table(
-      row(""""aslangibi".charAt(3)""".c,"G1'in G2 konumundaki harfi"),
-      row(""""aslangibi".substring(3)""".c,"G1'in G2 konumundaki harfinden sonuna kadar olan parçası"),
-      row(""""aslangibi".substring(3, 5)""".c,"G1'in G2 konumundan G3'e kadarki parçası. G3. harf hariç.")
+      row(""""aslangibi".harf(3)""".c,"G1'in G2 konumundaki harfi"),
+      row(""""aslangibi".parçası(3)""".c,"G1'in G2 konumundaki harfinden sonuna kadar olan parçası"),
+      row(""""aslangibi".parçası(3, 5)""".c,"G1'in G2 konumundan G3'e kadarki parçası. G3. harf hariç.")
     ),
     "Yazıdan başka bir yazı türetmek".h3,
     table(
-      row(""""Merhaba Kardeş".toLowerCase""".c,"Bütün harfleri küçük olacak şekilde G1'in yeni bir kopyası"),
-      row(""""Merhaba Kardeş".toUpperCase""".c,"Bütün harfleri büyük olacak şekilde G1'in yeni bir kopyası"),
-      row(""""  Merhaba Kardeş   ".trim""".c,"G1'in başındaki ve sonundaki boşlukların silinmiş kopyası"),
-      row(""""Savar".replace('a', 'e')""".c,"G1'in içindeki bütün G2 harflerinin G3 ile değiştirilmiş kopyası"),
-      row(""""Saye saye".replace("ay", "ev")""".c,"G1'in içindeki bütün G2 yazılarının G3 ile değiştirilmiş kopyası")
+      row(""""Merhaba Kardeş".küçükHarfe""".c,"Bütün harfleri küçük olacak şekilde G1'in yeni bir kopyası"),
+      row(""""Merhaba Kardeş".büyükHarfe""".c,"Bütün harfleri büyük olacak şekilde G1'in yeni bir kopyası"),
+      row(""""  Merhaba Kardeş   ".kısalt""".c,"G1'in başındaki ve sonundaki boşlukların silinmiş kopyası"),
+      row(""""Savar".değiştir('a', 'e')""".c,"G1'in içindeki bütün G2 harflerinin G3 ile değiştirilmiş kopyası"),
+      row(""""Saye saye".değiştir("ay", "ev")""".c,"G1'in içindeki bütün G2 yazılarının G3 ile değiştirilmiş kopyası")
     ),
     "Yazıya çeviren metodlar".h3,
     table(
-      row("String.valueOf(Dizin(1,2,3))".c,"G1'i yazıya çevirir. G1 herhangi temel bir tür ya da herhangi bir sınıfın nesnesi olabilir."),
-      row("""Dizin(1,3,3,1).mkString("-ve-")""".c, "G1 dizisinin elemanlarını aralarına G2 ekleyerek yazıya çevirir"),
-      row("""Set(1, 3, 5, 3, 1).mkString("{", " ", "}")""".c, "Bir öncekinde olduğu gibi G1'in elemanlarınının aralarına G3'ü ekleyerek yazıya çevirir ama en başa G2, en sona da G4 yazılarını ekler.")
+      row("Yazı.olarak(Dizin(1,2,3))".c,"G1'i yazıya çevirir. G1 herhangi temel bir tür ya da herhangi bir sınıfın nesnesi olabilir."),
+      row("""Dizin(1,3,3,1).yazıYap("-ve-")""".c, "G1 dizisinin elemanlarını aralarına G2 ekleyerek yazıya çevirir"),
+      row("""Küme(1, 3, 5, 3, 1).yazıYap("{", " ", "}")""".c, "Bir öncekinde olduğu gibi G1'in elemanlarınının aralarına G3'ü ekleyerek yazıya çevirir ama en başa G2, en sona da G4 yazılarını ekler.")
     )
   )
 )
-
-Set(1, 3, 3, 1).mkString("{", " ", "}")
 
 pages += Page(
   name = "UL",
@@ -1193,44 +1202,44 @@ pages += Page(
       row("""Dizin("Zaman", "ok", "gibi", "uçar mı?")""".c,"""İçinde "Zaman" "ok" "gibi" ve "uçar mı?" elemanları olan yani dört elemanlı bir Dizin[Yazı] tanımladık" """),
       row("""Dizin("tik", "tok") ::: Dizin("ding", "dong")""".c,"Üç tane iki nokta üstüste işlemi dizinleri birleştirerek yeni bir dizin türetiyor. :: ile karşılaştır"),
       row("dzn(3)".c,"Dizinin 3. elemanını verir (sıfırdan başlarsak üçüncü.)"),
-      row("dzn.count(söz => söz.length == 1)".c,"Dizinin içinde tek harften oluşan kaç sözcük var?"),
-      row("""dzn.exists(söz => söz == "bu an")""".c,"""Dizinin içinde "bu an" elemanı var mı?"""),
-      row("dzn.drop(3)".c,"""Dizinin ilk üç elemanı düşmüş kopyasını verir"""),
-      row("dzn.dropRight(4)".c,"""Dizinin son dört elemanı düşmüş kopyasını verir"""),
-      row("dzn.filter(söz => 1 < söz.length && söz.length < 4)".c,"Dizinin 2 veya 3 harfli elemanlarını verir"),
-      row("dzn.flatMap(_.toList)".c,"Verilen işlevi dizinin elemanlarına uygular sonra da hepsini birleştirir"),
-      row("""dzn.forall(söz => söz.endsWith("."))""".c,"""Dizinin bütün elemanları noktayla bitiyor olsaydı doğru derdi"""),
-      row("dzn.foreach(söz => yaz(söz))".c,"Dizinin elemanlarını sırayla yazar"),
-      row("dzn.foreach(yaz)".c,"Bir öncekinin kısa hali"),
-      row("dzn.head".c,"İlk elemanı verir"),
-      row("dzn.tail".c,"İlk eleman hariç gerisini verir"),
-      row("dzn.init".c,"Son eleman hariç gerisini verir"),
-      row("dzn.isEmpty".c,"boş olsaydı doğru derdi"),
-      row("dzn.last".c,"Son elemanı verir"),
-      row("dzn.length".c,"Kaç eleman olduğunu söyler"),
-      row("""dzn.map(söz => söz + "?")""".c,"""dizinin her sözcüğünün sonuna soru işareti ekleyerek yeni bir dizi oluşturur"""),
-      row("""dzn.map { söz =>
+      row("dzn.say(söz => söz.boyu == 1)".c,"Dizinin içinde tek harften oluşan kaç sözcük var?"),
+      row("""dzn.varMı(söz => söz == "bu an")""".c,"""Dizinin içinde "bu an" elemanı var mı?"""),
+      row("dzn.düşür(3)".c,"""Dizinin ilk üç elemanı düşmüş kopyasını verir"""),
+      row("dzn.düşürSağdan(4)".c,"""Dizinin son dört elemanı düşmüş kopyasını verir"""),
+      row("dzn.ele(söz => 1 < söz.boyu && söz.boyu < 4)".c,"Dizinin 2 veya 3 harfli elemanlarını verir"),
+      row("dzn.düzİşle(_.dizine)".c,"Verilen işlevi dizinin elemanlarına uygular sonra da hepsini birleştirir"),
+      row("""dzn.hepsiİçinDoğruMu(söz => söz.endsWith("."))""".c,"""Dizinin bütün elemanları noktayla bitiyor olsaydı doğru derdi"""),
+      row("dzn.herbiriİçin(söz => yaz(söz))".c,"Dizinin elemanlarını sırayla yazar"),
+      row("dzn.herbiriİçin(yaz)".c,"Bir öncekinin kısa hali"),
+      row("dzn.başı".c,"İlk elemanı verir"),
+      row("dzn.kuyruğu".c,"İlk eleman hariç gerisini verir"),
+      row("dzn.önü".c,"Son eleman hariç gerisini verir"),
+      row("dzn.boşMu".c,"boş olsaydı doğru derdi"),
+      row("dzn.sonu".c,"Son elemanı verir"),
+      row("dzn.boyu".c,"Kaç eleman olduğunu söyler"),
+      row("""dzn.işle(söz => söz + "?")""".c,"""dizinin her sözcüğünün sonuna soru işareti ekleyerek yeni bir dizi oluşturur"""),
+      row("""dzn.işle { söz =>
     söz match {
         case "." => "?"
         case s   => s
     }
-}.foreach(println)""".c,"""Bir önceki gibi ama noktaları soru işaretiyle değiştirip yazalım."""),
-      row("""dzn.map {
+}.herbiriİçin(satıryaz)""".c,"""Bir önceki gibi ama noktaları soru işaretiyle değiştirip yazalım."""),
+      row("""dzn.işle {
     case "." => "?"
     case s   => s
-}.foreach(println)""".c, "Bir öncekinin kısa yazılışı"),
-      row("""dzn.mkString(", ")""".c,"Diziden elemanları arasına virgül koyarak bir yazı yapar"),
-      row("dzn.filterNot(söz => söz.length == 1)".c,"Dizinin bir kopyasını verir ama bir harfli elemanları atlar"),
-      row("Dizin(1,6,2,1,6,3).distinct".c,"Tekrar eden elemanları atlar. Tekrarları bulmak için == işlemini kullanır"),
-      row("dzn.reverse".c,"Elemanlarını ters sırada olan bir kopya verir"),
-      row("dzn.sortWith((söz, t) => söz.toLowerCase < t.toLowerCase)".c,"A'dan Z'ye sıraya sokulmuş bir kopya verir ama büyük küçük harf ayırımı yapmadan")
+}.herbiriİçin(satıryaz)""".c, "Bir öncekinin kısa yazılışı"),
+      row("""dzn.yazıYap(", ")""".c,"Diziden elemanları arasına virgül koyarak bir yazı yapar"),
+      row("dzn.eleDeğilse(söz => söz.boyu == 1)".c,"Dizinin bir kopyasını verir ama bir harfli elemanları atlar"),
+      row("Dizin(1,6,2,1,6,3).yinelemesiz".c,"Tekrar eden elemanları atlar. Tekrarları bulmak için == işlemini kullanır"),
+      row("dzn.tersi".c,"Elemanlarını ters sırada olan bir kopya verir"),
+      row("dzn.sırayaSok((söz, t) => söz.küçükHarfe < t.küçükHarfe)".c,"A'dan Z'ye sıraya sokulmuş bir kopya verir ama büyük küçük harf ayırımı yapmadan")
     ),
     "Katlama işlemleri de çok işe yarar! Bu sefer sayı dizisi kuralım:".p,
     "val sayılar=Dizin(1,7,2,8,5,6,3,9,14,12,4,10)".c,
     table(
-      row("sayılar.foldLeft(-81)(_ + _)".c,"Soldan sağa elemanları topluyoruz. Başlangıçta soldan -81 giriyoruz"),
-      row("sayılar.sum".c, "Sağlamasını yapalım"),
-      row("sayılar.foldRight(0x20)(_ | _)".c,"Şimdi de sağdan sola mantıksal veya işlemiyle birleştiriyoruz sayıların parçacıklarını. Başlangıçta en sağdan onaltılık tabanda 20 giriyoruz")
+      row("sayılar.soldanKatla(-81)(_ + _)".c,"Soldan sağa elemanları topluyoruz. Başlangıçta soldan -81 giriyoruz"),
+      row("sayılar.topla".c, "Sağlamasını yapalım"),
+      row("sayılar.sağdanKatla(0x20)(_ | _)".c,"Şimdi de sağdan sola mantıksal veya işlemiyle birleştiriyoruz sayıların parçacıklarını. Başlangıçta en sağdan onaltılık tabanda 20 giriyoruz")
     )
   )
 )
@@ -1405,7 +1414,7 @@ tuvaliEtkinleştir()""".c,
 
     "Saat".h3,
     "Bir saat yapalım mı?".p,
-    "Java'nın Date yani tarih adlı kütüphane birimini kullanacağız.".p,
+    "BuAn adlı birimi kullanacağız. O da içinde Java'nın Calendar yani takvim adlı kütüphane birimini kullanıyor.".p,
     """silVeSakla
 val yç = 100 // saatin yarıçapı. Büyültmek ister misin?
 val pi2 = 2.0 * piSayısı // 2*Pi radyan tam 360 derece dönüş demek
@@ -1413,7 +1422,7 @@ val pi2 = 2.0 * piSayısı // 2*Pi radyan tam 360 derece dönüş demek
 def saat = {
     Resim.sil() // eski saati silelim
     çiz(kalemRengi(kırmızı) -> Resim.daire(yç))
-    for (i <- 0 to 59) { // // dakika ve saat çentikleri
+    for (i <- 0 |-| 59) { // // dakika ve saat çentikleri
         val ra = pi2 * i / 60
         val (x, y) = (yç * sinüs(ra), yç * kosinüs(ra))
         val çentikBoyu = if (i % 5 == 0) 0.9 else 0.95
@@ -1422,14 +1431,15 @@ def saat = {
         çiz(kalemRengi(kırmızı) * götür(llx, lly) -> Resim.doğru(en, boy))
     }
 }
+
 canlandır { // bu döngü her saniyede yaklaşık 40 kere yinelenir
-    var d = new java.util.Date
-    saat; çiz(kalemRengi(siyah) * götür(-yç-5, -yç-20) -> Resim.yazı(d.toString))
-    val s = pi2 * d.getSeconds / 60 // saniyeKolu
+    val buan = BuAn()
+    saat; çiz(kalemRengi(siyah) * götür(-yç - 5, -yç - 20) -> Resim.yazı(buan.yazıya))
+    val s = pi2 * buan.saniye / 60 // saniyeKolu
     çiz(kalemRengi(mavi) -> Resim.doğru(0.9 * yç * sinüs(s), 0.9 * yç * kosinüs(s)))
-    val m = pi2 * d.getMinutes / 60 // dakika kolu
+    val m = pi2 * buan.dakika / 60 // dakika kolu
     çiz(kalemRengi(yeşil) -> Resim.doğru(0.8 * yç * sinüs(m), 0.8 * yç * kosinüs(m)))
-    val h = pi2 * d.getHours / 12 + m / 12 // saat kolu
+    val h = pi2 * buan.saat / 12 + m / 12 // saat kolu
     çiz(kalemRengi(turuncu) -> Resim.doğru(0.6 * yç * sinüs(h), 0.6 * yç * kosinüs(h)))
 }
 """.c,
@@ -1443,7 +1453,7 @@ canlandır { // bu döngü her saniyede yaklaşık 40 kere yinelenir
       row("Eğer başına üçten fazla arkadaş toplanırsa canı çıkar! Bilmem neden. Sanki çok kalabalık olmuş gibi."),
       row("Cansız bir hücrenin tam üç tane arkadaşı varsa kendisi de canlanır. Allah'ın hakkı üç denir ya!")
     ),
-    "Bu yazılımcık 'foldLeft' adlı metodu kullanarak çok önemli bir kavram olan üst derece işlevlere örnek oluyor. Ne demek üst derece işlev? Başka işlevleri girdi olarak kabul eden onları kullanarak akıl almaz derecede becerikli olan komutlar. En başlarda gördüğümüz 'for' yapısı yerine 'foldLeft' kullanarak bütün dünyayı baştan çiziveriyoruz. 'foldLeft' soldan katla gibi bir anlama geliyor (bu arada bir de sağdan katlayan foldRight var. O da esaslı bir işlev). Dünyayı temsil eden kümenin hücrelerinin hepsini işleyiveriyor.".p,
+    "Bu yazılımcık 'soldanKatla' adlı metodu kullanarak çok önemli bir kavram olan üst derece işlevlere örnek oluyor. Ne demek üst derece işlev? Başka işlevleri girdi olarak kabul eden onları kullanarak akıl almaz derecede becerikli olan komutlar. En başlarda gördüğümüz 'for' yapısı yerine 'soldanKatla' kullanarak bütün dünyayı baştan çiziveriyoruz. Bu arada bir de sağdanKatla var. O da esaslı bir işlev). Dünyayı temsil eden kümenin hücrelerinin hepsini işleyiveriyor.".p,
     "Bu yaşam ya da hayat oyunu sıfır oyuncuyla oynanıyor! Çok sıkıcı mı dedin? Yok, çok ilginç aslında. Aslında sen çok önemlisin. Çünkü bu oyunun başlaması için en başta canlı hücrelere gerek var. Bunları sen belirleyebilirsin. Ama önce hazır bazı desenlerle başlamak daha kolay olur. 'başlangıç' adlı komudu bul. Onun ikinci girdisi 'desen'. Deseni seçmek için yapman gereken tek şey 'seç' adındaki değeri değiştirmek. Birinciyle başlıyoruz. Ama sıfırdan ona kadar hepsini deneyebilirsin. Sonra hatta kendin de yeni desenler ekleyebilirsin.".p,
 
     "Bu simulasyonun hızını 'oran' değerini değiştirerek ayarlayabilirsin.".p,
@@ -1454,10 +1464,10 @@ val KU = 128
 // karenın kenarı kaplumbanın on adımına denk
 
 // ilk önce, bütün kareler cansız olmalı
-var dünya = (0 until KU * KU).foldLeft(Sayılar())((x, y) => x :+ 0)
+var dünya = (0 |- KU * KU).soldanKatla(Sayılar())((x, y) => x :+ 0)
 satıryaz(s"Dünyamızda $KU'in karesi yani ${dünya.size} tane hane var.")
-yaz(s"Ekranımız ${(tuvalAlanı.eni / 10).toInt} kare eninde ")
-satıryaz(s"ve ${(tuvalAlanı.boyu / 10).toInt} kare boyunda.")
+yaz(s"Ekranımız ${(tuvalAlanı.eni / 10).sayıya} kare eninde ")
+satıryaz(s"ve ${(tuvalAlanı.boyu / 10).sayıya} kare boyunda.")
 
 val oran = 5 // canlandırmayı yavaşlatmak için bunu arttır.
 // En hızlısı 1. 40'a eşitlersen saniyede bir nesil ilerliyor yaklaşık olarak.
@@ -1475,9 +1485,9 @@ val (desen, adı, durak) = seç match {
     case 1 => (kayGit, "kayGit", 500) /* makineli tüfek gibi */
     case 2 => (esaslı, "esaslı", 1111) /* Yaklaşık 1000 nesil canlı sonra peryodik */
     case 3 => (dokuzcanlı, "dokuzcanlı", 130) /* 131 nesil sonra can kalmıyor */
-    case 4 => (blok1, "block1", 1200) //
-    case 5 => (blok2, "block2", 1200) //
-    case 6 => (küçücük, "tiny", 700) // küçücük
+    case 4 => (blok1, "blok1", 1200) //
+    case 5 => (blok2, "blok2", 1200) //
+    case 6 => (küçücük, "küçücük", 700) //
     case 7 => (ü2a, "ü2a", 60) // üçlülere ek
     case 8 => (ü2b, "ü2b", 60) // benzeri
     case 9 => (dörtlü, "dörtlü", 30) // üçlü üretiyor
@@ -1495,27 +1505,30 @@ canlandır {
     if (zaman % oran == 0) {
         Resim.sil()
         çizim(dünya)
-        dünya = (0 until KU * KU).foldLeft(Sayılar())((x, y) => x :+ yeniNesil(dünya, y))
+        dünya = (0 |- KU * KU).soldanKatla(Sayılar())((x, y) => x :+ yeniNesil(dünya, y))
         yaz(s"$nesil ")
         if (gösterVeDur) durdur
     }
     zaman += 1
     if (sonundaDur && nesil == durak) {
         val z1 = buSaniye - z0
-        satıryaz(s"\n${round(z1, 2)} saniye geçti. Durduk.")
+        satıryaz(s"\n${yuvarla(z1, 2)} saniye geçti. Durduk.")
         durdur()
     }
 }
 
 // deseni kuralım
-def başlangıç(v: Sayılar, desen: Dizin[(Sayı, Sayı)]) = desen.foldLeft(v)((x, y) => x.updated((y._1 + KU / 2) * KU + y._2 + KU / 2, 1))
+def başlangıç(v: Sayılar, desen: Dizin[(Sayı, Sayı)]) = desen.
+    soldanKatla(v) {
+        (x, y) => x.değiştir((y._1 + KU / 2) * KU + y._2 + KU / 2, 1)
+    }
 
 // yeni nesli bulalım
 def yeniNesil(v: Sayılar, ix: Sayı) = {
     val kural = Yöney(0, 0, 0, 1, 1, 0, 0, 0, 0, 0) // oyunun kuralları
     val x = ix / KU; val y = ix % KU
-    val t = (0 until 3).foldLeft(0)((st, i) => {
-        st + (0 until 3).foldLeft(0)((s, j) => {
+    val t = (0 |- 3).soldanKatla(0)((st, i) => {
+        st + (0 |- 3).soldanKatla(0)((s, j) => {
             val xt = x + i - 1; val yt = y + j - 1
             s + (if ((xt < 0) || (xt >= KU) || (yt < 0) || (yt >= KU)) 0 else v(xt * KU + yt))
         })
@@ -1524,7 +1537,7 @@ def yeniNesil(v: Sayılar, ix: Sayı) = {
 }
 // canlı kareleri çizelim. Can mavi çember içi kırmızı daire. Yarıçapı 5
 val yarıçap = 5
-def çizim(v: Sayılar) = for (i <- 0 until KU * KU)
+def çizim(v: Sayılar) = for (i <- 0 |- KU * KU)
     if (v(i) == 1) çiz(götür(
         (i / KU) * 2 * yarıçap - KU * yarıçap,
         (i % KU) * 2 * yarıçap - KU * yarıçap
@@ -1593,10 +1606,10 @@ case class Nokta(var x: Kesir, var y: Kesir) {
 }
 // Bütün noktaları (0,0) yani orijine üştüste koyalım. Merak etme birazdan dağıtacağız
 silVeSakla()
-val noktalar = (0 until AS).foldLeft(Yöney[Nokta]())((v, i) => { v :+ Nokta(0, 0) })
+val noktalar = (0 |- AS).soldanKatla(Yöney[Nokta]())((v, i) => { v :+ Nokta(0, 0) })
 
 // çizgileri tanımlar ve noktalara bağlarız. Bir balık ağı gibi. KS * KS düğümlü
-çizgiler = (0 until AS).foldLeft(Yöney[Çizgi]())(
+çizgiler = (0 |- AS).soldanKatla(Yöney[Çizgi]())(
     (çv, i) => {
         val (x, y) = (i / KS, i % KS)
         val çzg = if (y < KS - 1) { çv :+ Çizgi(noktalar(i), noktalar(i + 1)) } else çv
@@ -1606,13 +1619,13 @@ serpiştir(noktalar) // noktaları yerleştir ve çizgileri çiz
 
 // noktaları rastgele yerleştir
 def serpiştir(hepsi: Yöney[Nokta]) {
-    hepsi.foreach(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rastgele - 0.5), KS * YÇ * 6 * (rastgele - 0.5)))
+    hepsi.herbiriİçin(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rastgele - 0.5), KS * YÇ * 6 * (rastgele - 0.5)))
     çizelim(çizgiler)
 }
 
 // noktalar arasındaki çizgileri çizelim. Her çizgi, iki noktasının çemberine kadar gelsin
 def çizelim(hepsi: Yöney[Çizgi]) {
-    hepsi.foreach(çzg => {
+    hepsi.herbiriİçin(çzg => {
         val (x1, y1) = (çzg.n1.x, çzg.n1.y)
         val (x2, y2) = (çzg.n2.x, çzg.n2.y)
         val boy = karekökü(karesi(x2 - x1) + karesi(y2 - y1))

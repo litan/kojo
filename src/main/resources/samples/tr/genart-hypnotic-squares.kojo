@@ -41,10 +41,10 @@ def kutuİçindeKareler(x: Sayı, y: Sayı) {
     kare(kenarUzunluğu, başlamaAdımı, başlamaAdımı - 1, mx, my)
 }
 
-// until: bir yere kadar, burada, bir sayıya kadar anlamında: 
+// |-: bir yere kadar, burada, bir sayıya kadar anlamında: 
 //   0,1,2,3,4,5,6 (yani 7 dahil değil)
-yineleİçin(0 until kareSayısı) { x =>
-    yineleİçin(0 until kareSayısı) { y =>
+yineleİçin(0 |- kareSayısı) { x =>
+    yineleİçin(0 |- kareSayısı) { y =>
         kutuİçindeKareler(x, y)
     }
 }

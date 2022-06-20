@@ -1,6 +1,6 @@
 /*
- * Copyright (C) 2013 
- *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
+ * Copyright (C) 2022
+ *   Bulent Basaran <ben@scala.org> https://github.com/bulent2k2
  *   Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
@@ -14,11 +14,14 @@
  * rights and limitations under the License.
  *
  */
+package net.kogics.kojo.lite.i18n.tr
 
-// Turkish Turtle wrapper init for Kojo
-
-// make Turkish names visible
-val TurkishAPI = net.kogics.kojo.lite.i18n.TurkishAPI
-import TurkishAPI.{builtins => _, _ }
-// hide turtle.clear
-import kaplumbağa.{sil => _, _}
+// obsolete. Use Buan in buan.scala instead.
+trait DateMethodsInTurkish {
+  implicit class DateYöntemleri(d: java.util.Date) {
+    // method getSeconds in class Date is deprecated
+    //def saniye = d.getSeconds
+    //def dakika = d.getMinutes
+    //def saat   = d.getHours
+  }
+}

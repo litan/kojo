@@ -17,22 +17,104 @@
 package net.kogics.kojo.lite.i18n.tr
 
 object dict {
+  // skala kılavuzunda kullanma sırasıyla (yaklaşık olarak)
+  // some translations override those in the next map
+  val myKeyWords = Map(
+    "val" -> "der", // değer
+    "var" -> "dez", // değişmez
+    "if" -> "eğer",
+    "else" -> "yoksa",
+    "while" -> "doğruysaYinele", // koşul doğruysaYinele
+    "for" -> "için",  // dizi içinYinele
+    "to" -> "|-| anlamı: ilkSayıdanSonSayıyaKadar", // 1 to 4 -> Aralık.kapalı(1, 4)
+    "until" -> "|- anlamı: ilkSayıdanSonSayıyaKadarAmaSonSayıHariç", // 1 until 4 -> Aralık(1, 4)
+    "by" -> "adım", // 1 to 100 by 8
+    "def" -> "tanım",
+    "class" -> "çeşit",  // type -> tür
+    "new" -> "yeni",
+    "override" -> "üstüne", // override def -> üstüne tanım
+    "case" -> "olgu", // case class -> olgu çeşit, match/case eşle/olgu
+    "match" -> "eşle",
+    "extends" -> "yayar", // case class Leaf extends Tree -> olgu çeşit Yaprak yayar Ağaç
+    "head" -> "başı", // List(1,2).head -> Dizin(1, 2).başı
+    "tail" -> "kuyruğu",
+    "toList" -> "dizine", // (1 until 11).toList
+    "length" -> "boyu",
+    "isEmpty" -> "boşMu",
+    "filter" -> "ele",
+    "filterNot" -> "eleDeğilse",
+    "withFilter" -> "elekle",
+    "map" -> "işle",
+    "flatMap" -> "düzİşle", // "ABC".flatMap(_.toLower.toString * 3)
+    "sorted" -> "sıralı",
+    "sortBy" -> "sırala",       // def sortBy[B](f: A => B)(implicit ord: Ordering[B]): C
+    "sortWith" -> "sırayaSok",  // def sortWith(lt: (A, A) => Boolean): C
+    "reduce" -> "indirge",
+    "fold" -> "katla",
+    "foldLeft" -> "soldanKatla",
+    "foldRight" -> "sağdanKatla",
+    "distinct" -> "yinelemesiz",
+    "distinctBy" -> "yinelemesizİşlevle",
+    "toUpper" -> "büyükHarfe",
+    "toLower" -> "küçükHarfe",
+    "toUpperCase" -> "büyükHarfe",
+    "toLowerCase" -> "küçükHarfe",
+    "mkString" -> "yazıYap", // 1 to 100 by 9 mkString => Aralık(1, 100, 9).yazıYap
+    // String.
+    "split" -> "böl", // "Merhaba sevgili kardeş".böl
+    "trim" -> "kısalt", // "eggs, milk, butter, Coco Puffs".split(",").map(_.trim)
+    "replace" -> "değiştir",
+    "replaceAll" -> "değiştirHepsini",
+    "replaceFirst" -> "değiştirİlkini",
+    "reverse" -> "tersi",
+    "toString" -> "yazıya", // 2.toString (new Object).toString
+    "foreach" -> "herbiriİçin",
+    "compareTo" -> "kıyasla",
+    "compareToIgnoreCase" -> "kıyaslaKüçükHarfBüyükHarfAyrımıYapmadan",
+    "equals" -> "eşitMi",
+    "equalsIgnoreCase" -> "eşitMiKüçükHarfBüyükHarfAyrımıYapmadan",
+    "startsWith" -> "başındaMı",
+    "endsWith" -> "sonundaMı",
+    "contains" -> "içeriyorMu",
+    "containsSlice" -> "içeriyorMuDilim",
+    "element" -> "öge",
+    "indexOf" -> "sırası", // ya da konumu
+    "lastIndexOf" -> "sırasıSondan",
+    "charAt" -> "harf",
+    "substring" -> "parçası",
+    "count" -> "say",
+    "exists" -> "varMı",
+    "take" -> "al",
+    "takeRight" -> "alSağdan",
+    "takeWhile" -> "alDoğruKaldıkça",
+    "drop" -> "düşür",
+    "dropRight" -> "düşürSağdan",
+    "dropWhile" -> "düşürDoğruKaldıkça",
+    "init" -> "önü",
+    "last" -> "sonu",
+    "forall" -> "hepsiİçinDoğruMu", // hepsiDoğruMu
+    "" -> "",
+    "" -> "",
+    "" -> "",
+    "" -> "",
+  )
+  // https://docs.scala-lang.org/scala3/reference/syntax.html
   val keywords = Map(
     "abstract" -> "soyut",
     "case" -> "durum",
     "catch" -> "yakala",
-    "class" -> "sınıf",
+    "class" -> "cins",
     "def" -> "tanım",
     "do" -> "yap",
     "else" -> "yoksa",
     "enum" -> "sayılı",
     "export" -> "götür",
-    "extends" -> "genişlet",
+    "extends" -> "genişletir",
     "false" -> "yanlış",
     "final" -> "son",
     "finally" -> "sonunda",
-    "for" -> "yerine",
-    "forSome" -> "bazı",
+    "for" -> "için",  // yerine
+    "forSome" -> "bazı", // eskitilmiş ve dilden çıkarılmış
     "given" -> "birlikte",
     "if" -> "eğer",
     "implicit" -> "örtük",
@@ -57,7 +139,7 @@ object dict {
     "try" -> "dene",
     "type" -> "tür",
     "val" -> "der",
-    "var" -> "den",
+    "var" -> "dez",
     "while" -> "sırada",
     "with" -> "ekle",
     "yield" -> "ver"
@@ -94,6 +176,27 @@ object dict {
     "void" -> "türsüz",
     "volatile" -> "uçucu"
   )
+  // https://docs.scala-lang.org/scala3/reference/soft-modifier.html
+  val softKeywords = Map(
+    "as" -> "olsun",
+    "derives" -> "türet",
+    "end" -> "bitir",
+    "extension" -> "genişleme",
+    "infix" -> "arada",
+    "inline" -> "satırarası",
+    "opaque" -> "örtük",
+    "open" -> "açık",
+    "transparent" -> "saydam",
+    "using" -> "kullanım",
+  )
+
+  val scalaTutorial = Map(
+    "kojo" -> "#tr koco",
+    "scala" -> "#tr skala",
+    "tutorial" -> "kılavuz",
+    "cheat-sheet" -> "kılavuzcuk",
+  )
+
   val type2en = Map()
   val def2en = Map ()
   val val2en = Map ()
