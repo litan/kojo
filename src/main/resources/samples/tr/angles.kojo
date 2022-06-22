@@ -53,8 +53,8 @@ def doğruÇiz(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir) = {
 }
 
 // tam sayıyı önce kesirli sayıya sonra da radyandan dereceye çevirelim:
-def sayıdanDereceye(s: Sayı) = s.toDouble.toDegrees
-def dereceye(k: Kesir) = k.toDegrees
+def sayıdanDereceye(s: Sayı) = s.kesire.dereceye
+def dereceye(k: Kesir) = k.dereceye
 
 def radyanAçıÇiz(kaçRadyan: Sayı) {
     durakla(araSüresi) // çizime ufak bir ara verelim ki çok çabuk geçmesin

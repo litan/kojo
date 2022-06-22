@@ -28,8 +28,8 @@ import java.util.concurrent.Future  // todo
 import edu.umd.cs.piccolo.activities.PActivity  // todo
 import net.kogics.kojo.kmath.KEasing
 
-// Count: 12 *Methods*
-object TurkishAPI extends tr.SeqMethodsInTurkish with tr.ListMethodsInTurkish with tr.StringMethodsInTurkish with tr.CharMethodsInTurkish with tr.IntMethodsInTurkish with tr.RangeMethodsInTurkish with tr.SetMethodsInTurkish with tr.AnyMethodsInTurkish with tr.DoubleMethodsInTurkish with tr.LazyListMethodsInTurkish with tr.VectorMethodsInTurkish with tr.CalendarInTurkish {
+// Keep in alphabetical order
+object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.NumMethodsInTurkish with tr.OptionMethodsInTurkish with tr.RangeMethodsInTurkish with tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with tr.VectorMethodsInTurkish {
   var builtins: CoreBuiltins = _ //unstable reference to module
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
@@ -44,7 +44,6 @@ object TurkishAPI extends tr.SeqMethodsInTurkish with tr.ListMethodsInTurkish wi
   type Yok=tr.Yok
   val  yok: Yok = tr.yok
   type Hiç=tr.Hiç
-  type Renk=tr.Renk
   type Boya=tr.Boya
   type Hız=tr.Hız
   type Nokta=tr.Nokta
@@ -63,19 +62,6 @@ object TurkishAPI extends tr.SeqMethodsInTurkish with tr.ListMethodsInTurkish wi
   // todo type Harf=tr.Harf
   type Yazı=tr.Yazı
   type EsnekYazı=tr.EsnekYazı
-
-  type Belki[T]=tr.Belki[T]
-  type Biri[T]=tr.Biri[T]
-  val Hiçbiri=tr.Hiçbiri
-  val Biri=tr.Biri
-  // val varMı = tr.varMı _
-  // örnek: if (varMı(resim.çarpışma(Resim.tuvalınSınırları))) {...} else {...}
-  // .isDefined yerine
-  def varMı[T](o: Belki[T]): İkil = o match {
-    case None    => yanlış
-    case Some(x) => doğru
-  }
-  def yokMu[T](o: Belki[T]): İkil = !varMı(o)
 
   type Dizi[T]=tr.Dizi[T]
   type DeğişkenDizi[B] = tr.DeğişkenDizi[B]
@@ -256,9 +242,6 @@ object TurkishAPI extends tr.SeqMethodsInTurkish with tr.ListMethodsInTurkish wi
   lazy val renkler = builtins.cm  // ColorMaker
   lazy val tuşlar = builtins.Kc // Key Codes
 
-  def Renk(kırmızı: Sayı, yeşil: Sayı, mavi: Sayı, saydam: Sayı = 255): Renk = new Color(kırmızı, yeşil, mavi, saydam)
-  def Renk(rgbHex: Sayı): Renk = new Color(rgbHex, yanlış)
-  def Renk(rgbHex: Sayı, alfaDahilMi: İkil): Renk = new Color(rgbHex, alfaDahilMi)
   def artalanıKur(r: Renk) = builtins.setBackground(r)
   def artalanıKur(b: Boya) = builtins.setBackground(b)
   def artalanıKurDik  (r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
@@ -475,6 +458,11 @@ object TurkishAPI extends tr.SeqMethodsInTurkish with tr.ListMethodsInTurkish wi
     resimci: Dizi[Kesir] => Resim, bitinceGizle: İkil) = {
     val resimci2 = new Function1[Dizi[Kesir], richBuiltins.Picture] { def apply(d: Dizi[Kesir]) = resimci(d).p }
     richBuiltins.Transition(süreSaniyeOlarak, ilkEvre, sonEvre, kolaylaştırma, resimci2, bitinceGizle)
+  }
+  implicit class trForReverse(a: richBuiltins.Animation) {
+    def tersten = a.reversed
+    def sonsuzYinelenme = a.repeatedForever
+    // todo: more to come
   }
   def canlandırmaDizisi(canlandırmalar: richBuiltins.Animation*) = richBuiltins.animSeq(canlandırmalar)
   def canlandırmaDizisi(canlandırmalar: collection.Seq[richBuiltins.Animation]) = richBuiltins.animSeq(canlandırmalar.toSeq)

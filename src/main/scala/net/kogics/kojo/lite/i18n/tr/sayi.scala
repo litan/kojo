@@ -17,19 +17,17 @@
 package net.kogics.kojo.lite.i18n.tr
 
 // also see: aralik.scala
-trait IntMethodsInTurkish {
+trait NumMethodsInTurkish {
   implicit class SayıYöntemleri(a: Sayı) {
     def |-(b: Sayı): Range = a until b
     def |-|(b: Sayı): Range = a to b
     def yazıya = a.toString
+    def kesire = a.toDouble
   }
 
-}
-
-trait DoubleMethodsInTurkish {
   implicit class KesirYöntemleri(a: Kesir) {
     def yazıya = a.toString
     def sayıya = a.toInt
+    def dereceye = a.toDegrees
   }
-
 }

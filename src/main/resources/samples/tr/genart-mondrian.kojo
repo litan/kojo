@@ -17,12 +17,12 @@ case class Dikdörtgen(x: Kesir, y: Kesir, en: Kesir,
 // yatay böleceksek: z -> y, yoksa dikey böleceksek: z -> x
 def dikdörtgenleriBöl(dörtgenler: Yöney[Dikdörtgen], z: Kesir, yatay: İkil) = {
     var çıktı = dörtgenler
-    yineleİçin(dörtgenler.length - 1 to 0 by -1) { i =>
+    yineleİçin(dörtgenler.boyu - 1 |-| 0 adım -1) { i =>
         val dörtgen = dörtgenler(i)
         val (ufak, iri) = if (yatay) (dörtgen.y, dörtgen.y + dörtgen.boy) else (dörtgen.x, dörtgen.x + dörtgen.en)
         if (z > ufak && z < iri) {
             if (rastgeleİkil) {
-                çıktı = çıktı.slice(0, i) ++ çıktı.slice(i + 1, çıktı.length)
+                çıktı = çıktı.dilim(0, i) ++ çıktı.dilim(i + 1, çıktı.boyu)
                 çıktı = çıktı ++ böl(dörtgen, z, yatay)
             }
         }
@@ -44,19 +44,19 @@ val n = 7
 val adımx = ta.eni / (n + 1)
 val adımy = ta.boyu / (n + 1)
 
-yineleİçin(1 to n) { i =>
+yineleİçin(1 |-| n) { i =>
     dörtgenler = dikdörtgenleriBöl(dörtgenler, ta.x + i * adımx, yanlış) // dikey böl
     dörtgenler = dikdörtgenleriBöl(dörtgenler, ta.y + i * adımy, doğru) // yatay böl
 }
 
 dörtgenler = rastgeleKarıştır(dörtgenler)
-renkler.zipWithIndex.map {
-    case (renk, idx) => if (idx < dörtgenler.size)
-        dörtgenler(idx).renk = renk
+renkler.ikileSırayla.işle {
+    case (renk, sıra) => if (sıra < dörtgenler.size)
+        dörtgenler(sıra).renk = renk
 }
 
 def dikdörtgendenResim(r: Dikdörtgen) = {
     kalemRengi(siyah) * boyaRengi(r.renk) * kalemBoyu(10) * götür(r.x, r.y) ->
         Resim.dikdörtgen(r.en, r.boy)
 }
-çiz(dörtgenler.map(dikdörtgendenResim))
+çiz(dörtgenler.işle(dikdörtgendenResim))

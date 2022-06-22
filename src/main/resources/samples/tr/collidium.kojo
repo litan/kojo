@@ -8,7 +8,7 @@ silVeSakla()
 val ta = tuvalAlanı
 val engelSayısı = 5
 val engellerArasıUzaklık = ta.eni / (engelSayısı + 1)
-val topunGöreceKonumuBaşta = (engellerArasıUzaklık / 4).toInt
+val topunGöreceKonumuBaşta = (engellerArasıUzaklık / 4).sayıya
 def topunGöreceKonumu = topunGöreceKonumuBaşta + rastgele(topunGöreceKonumuBaşta)
 val topunBoyu = 20
 
@@ -115,7 +115,7 @@ top.fareyiBırakınca { (x, y) =>
             case Hiçbiri =>
         }
     }
-    oyunSüresiniGöster(60, "Süre doldu. Tekrar dene", renkler.lightBlue, 20)
+    oyunSüresiniGöster(60, "Süre doldu. Tekrar dene", renkler.lightBlue, 20) // açık mavi
 }
 
 val raketNoktaları = EsnekDizim.boş[Nokta]

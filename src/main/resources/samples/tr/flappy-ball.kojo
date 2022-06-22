@@ -23,7 +23,7 @@ val top = Resim.küme(
 val ta = tuvalAlanı
 var engeller = Küme.boş[Resim]
 def engelKur() {
-    val boy = rastgele((0.5 * ta.boyu).toInt) + 50
+    val boy = rastgele((0.5 * ta.boyu).sayıya) + 50
     val (x, y) = (ta.eni, if (rastgeleİkil) ta.boyu / 2 - boy else -ta.boyu / 2)
     val engel = boyaRengi(renkler.blueViolet) * kalemRengi(renksiz) *
         götür(x, y) -> Resim.dikdörtgen(rastgele(30) + 30, boy)

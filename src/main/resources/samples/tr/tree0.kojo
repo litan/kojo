@@ -8,10 +8,12 @@ def dal(boy: Kesir) {
 
 def ağaç(boy: Kesir) {
     konumVeYönüBelleğeYaz()
-    // toInt metodu kesirli sayıyı tam sayıya çeviriyor
-    // yani boy 1.75 olursa boy.toInt 1 oluyor
-    // n % 255 işlemi ile de 255'ten küçük olmasını
-    def renk = renkler.rgb(boy.toInt % 255, mutlakDeğer(255 - boy * 3).toInt % 255, 125)
+    // dalların rengini uzunluğuyla orantılı olarak değiştirelim.
+    // Renk biriminin kym yani kırmızı/yeşil ve mavi adlı metodu kullanalım.
+    // 'sayıya' adlı metod, kesirli sayıyı tam sayıya çeviriyor.
+    // Yani boy 1.75 olursa boy.sayıya 1 oluyor
+    // n % 255 işlemi ile de 255'ten küçük olmasını sağlıyoruz
+    def renk = Renk.kym(boy.sayıya % 255, mutlakDeğer(255 - boy * 3).sayıya % 255, 125)
     kalemRenginiKur(renk)
     if (boy <= 4) {
         kalemKalınlığınıKur(0.5)

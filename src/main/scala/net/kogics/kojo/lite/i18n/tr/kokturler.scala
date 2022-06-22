@@ -17,8 +17,16 @@
 package net.kogics.kojo.lite.i18n.tr
 
 // her nesne, herneyse! java Object?
-trait AnyMethodsInTurkish {
-  // todo: duplicates in yazi.scala and dizin.scala
+trait CoreTypeMethodsInTurkish {
+  implicit class NesneYöntemleri(h: Nesne) {
+    def kıymaKodu = h.hashCode
+    def eşitMi(h2: Her) = h.equals(h2)
+    // warnings:
+    // def nesnesiMi[T] = h.isInstanceOf[T]
+    def nesnesiOlarak[T] = h.asInstanceOf[T]
+    def yazıya = h.toString
+  }
+
   implicit class HerNesneYöntemleri(h: Her) {
     def kıymaKodu = h.hashCode
     // warnings:
@@ -30,13 +38,7 @@ trait AnyMethodsInTurkish {
     def yazıya = h.toString
   }
 
-  implicit class NesneYöntemleri(h: Nesne) {
-    def kıymaKodu = h.hashCode
-    def eşitMi(h2: Her) = h.equals(h2)
-    // warnings:
-    // def nesnesiMi[T] = h.isInstanceOf[T]
-    def nesnesiOlarak[T] = h.asInstanceOf[T]
-    def yazıya = h.toString
+  implicit class HerGönderYöntemleri(h: HerGönder) {
+    def aynıMı(h2: HerGönder): İkil = h eq h2
   }
-
 }

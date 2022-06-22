@@ -5,8 +5,7 @@ silVeSakla()
 artalanıKur(renkler.darkSlateBlue) // eflatuna yakın koyu mavi
 
 val alev = Resim {
-    // linearGradient: doğrusalDeğişim
-    boyamaRenginiKur(renkler.linearGradient(0, 0, kırmızı, 0, 130, sarı))
+    boyamaRenginiKur(Renk.doğrusalDeğişim(0, 0, kırmızı, 0, 130, sarı))
     kalemRenginiKur(sarı)
     kalemKalınlığınıKur(3)
     sol(45)
@@ -16,7 +15,7 @@ val alev = Resim {
 }
 
 val lamba = Resim {
-    boyamaRenginiKur(renkler.linearGradient(0, 10, kırmızı, 0, -25, kahverengi))
+    boyamaRenginiKur(Renk.doğrusalDeğişim(0, 10, kırmızı, 0, -25, kahverengi))
     kalemKalınlığınıKur(2)
     kalemRenginiKur(siyah)
     sol(120)
@@ -35,10 +34,7 @@ def alevlendir(dizi: Dizi[Kesir]) = büyüt(büyütme(dizi)) -> alev
 
 /* todo: Çeviri yap:
     easing          hoşGeçiş
-    QuadInOut       DörtlüGirdiÇıktı
-    reversed        tersten
-    repeatedForever sonsuzYineleme
-    */ 
+    QuadInOut       Dörtlü yani eğimli GirdiÇıktı */
 val canlandırma = Geçiş(1, Dizi(1), Dizi(0.8), easing.QuadInOut, alevlendir, doğru)
-val canlandırma2 = canlandırmaDizisi(canlandırma, canlandırma.reversed)
-oynat(canlandırma2.repeatedForever)
+val canlandırma2 = canlandırmaDizisi(canlandırma, canlandırma.tersten)
+oynat(canlandırma2.sonsuzYinelenme)

@@ -33,13 +33,13 @@ package object tr {
   type Birim = Unit
   type Her   = Any
   type HerDeğer  = AnyVal
-  type HerGönder = AnyRef
+  type HerGönder = AnyRef  // Gönderge, gönderme todo...
   type Yok   = Null
   val yok: Yok = null
   type Hiç   = Nothing
 
-  type Renk = Color
   type Boya = Paint
+  type Renk = Color
 
   type Hız  = Speed
   type Nokta = Point
@@ -69,17 +69,6 @@ package object tr {
   // todo type Harf = Char
   type Yazı = String
   type EsnekYazı=collection.mutable.StringBuilder
-
-  type Belki[T] = Option[T]
-  type Biri[T] = Some[T]
-  val Hiçbiri = None
-  object Biri {
-    def apply[T](elem: T): Belki[T] = Some(elem)
-    def unapply[T](b: Belki[T]) = b match {
-      case None    => Hiçbiri
-      case Some(n) => Biri(n)
-    }
-  }
 
   type Dizi[B] = Seq[B]
   type DeğişkenDizi[B] = collection.Seq[B]

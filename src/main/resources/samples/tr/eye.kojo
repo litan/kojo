@@ -4,13 +4,14 @@ artalanıKurYatay(Renk(0, 0, 0), mavi)
 kalemRenginiKur(Renk(255, 102, 102))
 kalemKalınlığınıKur(2)
 
-// RGBA: red/green/blue/alpha alpha: saydamlık oranı
-val boya = renkler.radialMultipleGradient(0, 0, 150,
+// girdiler: merkezX, merkezY, yarıçap, dağılım, renkler, dalgalıDevam
+// KYMS: kırmızı/yeşil/mavi/saydamlık oranı
+val boya = Renk.merkezdenDışarıDoğruÇokluDeğişim(0, 0, 150,
     Dizi(0, 0.7, 1),
     Dizi(
-        renkler.rgba(255, 0, 0, 245),
-        renkler.rgba(215, 0, 0, 245),
-        renkler.rgba(185, 0, 0, 245)
+        Renk.kyms(255, 0, 0, 245),
+        Renk.kyms(215, 0, 0, 245),
+        Renk.kyms(185, 0, 0, 245)
     ),
     doğru
 )

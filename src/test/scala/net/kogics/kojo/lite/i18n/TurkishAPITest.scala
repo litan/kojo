@@ -121,6 +121,11 @@ import net.kogics.kojo.staging
       case Hiçbiri => -1
     })
     test should be(List(3, -1))
+    o1.al should be(3)
+    o2.alYoksa(1) should be(1)
+    o1.işle(_.yazıya) should be(Biri("3"))
+    o2.işle((x: Int) => x * 3) should be(Hiçbiri)
+    o1.düzİşle{ x => Option(s"x=${x}") } should be(Biri("x=3"))
   }
   
   test("Translations of math API should work -- abs == mutlakDeğer") {
@@ -543,7 +548,7 @@ import net.kogics.kojo.staging
     r2.diziye should be(Dizi(1, 11, 21))
   }
 
-  test("Translations of Any and Object methods to work") {
+  test("Translations of Any, AnyRef and Object methods to work") {
     val o = new Object
     o.yazıya.boyu > 0 should be(true)
     val d = Dizi(1, 2)
@@ -556,10 +561,26 @@ import net.kogics.kojo.staging
     y.yazıya should be("5.0")
     val h = 'a'
     h.yazıya should be("a")
+    case class Foo(x: Int)
+    val f1 = Foo(1)
+    val f2 = Foo(1)
+    val f3 = Foo(2)
+    f1 eşitMi f2 should be(true)
+    f1 eşitMi f3 should be(false)
+    f1 aynıMı f1 should be(true)
+    f1 aynıMı f2 should be(false)
+    f2 aynıMı f3 should be(false)
+    def check1(f: => Foo): İkil = f1 aynıMı f
+    def check2(f: Foo): İkil = f1 aynıMı f
+    check1(f1) should be(true)
+    check2(f1) should be(true)
   }
 
   test("Translations of Int and Double methods to work") {
     1.5.sayıya should be(1)
+    1.kesire should be(1.0)
+    0.toDegrees should be(0)
+    piSayısı.toDegrees should be(180)
   }
 
   test("Translation of java.util.Calendar to work") {
