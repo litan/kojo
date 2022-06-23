@@ -20,7 +20,7 @@ Eksi değerler de kullanabilirsin. Örneğin şu iki komut aynı işi yapar:
 val bilgi = Resim.yazı(açıklama)
 //bilgi.kalemKalınlığınıKur(16)   // todo: Turkish throws an exception. English doesn't!
 bilgi.kalemRenginiKur(koyuGri)
-val te = yazıÇerçevesi(açıklama, 16).height  // todo: Rectangle.height: Dikdörtgen.boyu
+val te = yazıÇerçevesi(açıklama, 16).boyu
 bilgi.konumuKur(ta.x + 10, ta.y + te + 10)
 
 val yukarıKaymaBoyu = 30 // çizdiğimiz yay yazıların üstünden geçmesin
@@ -31,7 +31,7 @@ def açıResmiTanımı(x: Kesir, y: Kesir) = Resim {
     ileri(kenazUzunluğu)
     zıpla(-kenazUzunluğu)
     noktayaGit(x, y)
-    val açı = yuvarla(360 - doğrultu + 90).toInt % 360 // toInt: kesirden sayıya
+    val açı = yuvarla(360 - doğrultu + 90).sayıya % 360
     konumVeYönüGeriYükle()
     yazı(f"$açı%4d°")
     val açıYarıçapı = 60

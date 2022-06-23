@@ -17,7 +17,7 @@
 package net.kogics.kojo.lite.i18n.tr
 
 trait SeqMethodsInTurkish {
-  // todo: duplicates in yazi.scala and dizin.scala
+  // todo: duplicates in yazi.scala and dizin.scala and more
   implicit class SeqYöntemleri[T](d: Dizi[T]) {
     def başı: T = d.head
     def kuyruğu: Dizi[T] = d.tail
@@ -70,6 +70,11 @@ trait SeqMethodsInTurkish {
     def dizime[S >: T](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(d.toArray(delil))
     def eşleme[K, V](implicit delil: T <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(d.toMap)
     def say(işlev: T => İkil): Sayı = d.count(işlev)
+
+    def dilim(nereden: Sayı, nereye: Sayı) = d.slice(nereden, nereye)
+    def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
+    def ikileSırayla = d.zipWithIndex
+
     // more to come
   }
 }

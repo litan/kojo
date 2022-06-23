@@ -71,6 +71,7 @@ object dict {
     "foreach" -> "herbiriİçin",
     "compareTo" -> "kıyasla",
     "compareToIgnoreCase" -> "kıyaslaKüçükHarfBüyükHarfAyrımıYapmadan",
+    "eq" -> "aynıMı",  // AnyRef
     "equals" -> "eşitMi",
     "equalsIgnoreCase" -> "eşitMiKüçükHarfBüyükHarfAyrımıYapmadan",
     "startsWith" -> "başındaMı",
@@ -93,8 +94,16 @@ object dict {
     "init" -> "önü",
     "last" -> "sonu",
     "forall" -> "hepsiİçinDoğruMu", // hepsiDoğruMu
-    "" -> "",
-    "" -> "",
+    "slice" -> "dilim",
+    "zip" -> "ikile",
+    "zipWithIndex" -> "ikileSırayla",
+    "spin" -> "çevir",
+    "rgb" -> "kym",  // kırmızı yeşil mavi
+    "rgba" -> "kyms",  // saydamlık
+    "linearGradient" -> "doğrusalDeğişim",
+    "linearMultipleGradient" -> "doğrusalÇokluDeğişim",
+    "radialGradient" -> "merkezdenDışarıDoğruDeğişim",
+    "radialMultipleGradient" -> "merkezdenDışarıDoğruÇokluDeğişim",
     "" -> "",
     "" -> "",
   )

@@ -27,9 +27,9 @@ def dikdörtgen(yerX: Kesir, yerY: Kesir, en: Kesir, boy: Kesir) = {
 }
 
 var dörtgenler = Yöney.boş[Dikdörtgen]
-yineleİçin(0 to n) { yerY =>
+yineleİçin(0 |-| n) { yerY =>
     val y = ta.y + yerY * dikeyAdım
-    yineleİçin(0 to n) { yerX =>
+    yineleİçin(0 |-| n) { yerX =>
         val x = ta.x + yerX * yatayAdım
         dörtgenler = dörtgenler :+ dikdörtgen(x, y, yatayAdım, dikeyAdım)
     }

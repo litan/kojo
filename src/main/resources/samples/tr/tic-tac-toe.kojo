@@ -55,13 +55,12 @@ def daire = Resim {
 }
 
 val çizgiler = Resim {
-    val birVeİki = Aralık.kapalı(1, 2).dizin
     kalemKalınlığınıKur(çizgininKalınlığı)
-    yineleİçin(birVeİki) { n =>
+    yineleİçin(1 |-| 2) { n =>
         konumuKur(boy * n, 0)
         noktayaGit(boy * n, 3 * boy)
     }
-    yineleİçin(birVeİki) { n =>
+    yineleİçin(1 |-| 2) { n =>
         konumuKur(0, boy * n)
         noktayaGit(3 * boy, boy * n)
     }
@@ -85,8 +84,8 @@ def değerlendir: Sayı = {
         0
     }
 }
-
-val sıfırBirİki = Aralık(0, 3).dizin // 0, 1, 2
+  
+val sıfırBirİki = 0 |-| 2
 def hamleKalmadıMı: İkil = {
     var bütünHanelerDolduMu = doğru
     yineleİçin(sıfırBirİki) { x =>
@@ -103,7 +102,7 @@ val AlfaMin = -1000
 val BetaMax = 1000
 
 // minimax: kısaca rakibin en iyi hamlesine engel olma stratejisi
-// İngilizce'de: minimize the maximum değer the opponent could get with any move
+// İngilizce'de: minimize the maximum value the opponent could get with any move
 def minimax(
     aramaDerinliği:     Sayı,
     bilgisayarınSırası: İkil,
@@ -226,7 +225,7 @@ def tahtayıÇiz() {
 
 def oyunuKazandıMı(h: Hane): İkil = {
     // yerel tanımlar da yapabiliriz
-    def sütun(x: Sayı) = tahta(x).toSeq // tahta(x) bir Array. Dizi'ye çevirelim onu
+    def sütun(x: Sayı) = tahta(x).diziye // tahta(x) bir Array. Dizi'ye çevirelim onu
     def satır(y: Sayı) = EsnekDizim(tahta(0)(y), tahta(1)(y), tahta(2)(y)).dizi
     def çapraz1 = EsnekDizim(tahta(0)(0), tahta(1)(1), tahta(2)(2)).dizi
     def çapraz2 = EsnekDizim(tahta(0)(2), tahta(1)(1), tahta(2)(0)).dizi

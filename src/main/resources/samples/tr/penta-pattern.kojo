@@ -14,6 +14,6 @@ yinele(kaçTane) {
         sağ(72)
     }
     val birSonraki = 360 / kaçTane // bir sonraki açı ve renk için
-    renk = renk.spin(birSonraki)
+    renk = renk.çevir(birSonraki)
     sağ(birSonraki)
 }

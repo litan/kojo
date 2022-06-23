@@ -5,12 +5,11 @@ tümEkran()
 silVeSakla()
 
 case class Kart(sayı: Sayı) {
-    def renkVer(p: Resim) = boyaRengi(kartAA) * kalemRengi(koyuGri) -> p
-    val yç = yazıÇerçevesi(sayı.toString, 60) // 35.toString -> "35"
+    def renkVer(r: Resim) = boyaRengi(kartAA) * kalemRengi(koyuGri) -> r
+    val yç = yazıÇerçevesi(sayı.yazıya, 60)
     val rÖnü = renkVer(Resim.dizi(
         Resim.dikdörtgen(80, 120),
-        // yç bir Dikdörtgen .width eni .height da boyu
-        götür((80 - yç.width) / 2, yç.height + (120 - yç.height) / 2)
+        götür((80 - yç.eni) / 2, yç.boyu + (120 - yç.boyu) / 2)
             -> Resim.yazı(sayı, 60))
     )
     val rArkası = renkVer(Resim.dikdörtgen(80, 120))
@@ -29,15 +28,15 @@ case class Kart(sayı: Sayı) {
             rArkası.göster()
         }
     }
-    var etkin = true
+    var etkin = doğru
     def açık() {
-        etkin = false
+        etkin = yanlış
         rÖnü.boyamaRenginiKur(kartParlakAA)
         sırayaSok(1) { rÖnü.boyamaRenginiKur(kartAA) }
     }
 
-    rArkası.fareyeTıklayınca { (x, y) => if (etkin) tıkla(this) }
-    rÖnü.fareyeTıklayınca { (x, y) => if (etkin) tıkla(this) }
+    rArkası.fareyeTıklayınca { (_, _) => if (etkin) tıkla(this) }
+    rÖnü.fareyeTıklayınca { (_, _) => if (etkin) tıkla(this) }
 }
 
 case class Hamleler(n: Sayı) {
@@ -52,21 +51,21 @@ case class Dünya(
     hamleler: Hamleler)
 
 def tıkla(kart: Kart) {
-    if (yokMu(dünya.kart1)) {
+    if (dünya.kart1.yokMu) {
         kart.çevir()
         // sadece birinci kartı değiştirmek istiyoruz
         // Onun için tam kopyasını alıp sadece birinci kartı değiştiriyoruz
-        dünya = dünya.copy(kart1 = Biri(kart))
+        dünya = dünya.copy(kart1 = Biri(kart)) // copy: dünyanın benzeri ama kart1 farklı
         hamleleriArtır()
     }
-    else if (yokMu(dünya.kart2)) {
-        // kart1 var. Onun için Biri(3).get => 3
-        // Ama Belki bir Kart yerine Hiçbiri olsaydı şunu kullanmak gerekirdi:
-        //   kart.getOrElse(x) => x
-        val kart1 = dünya.kart1.get
-        if (!(kart eq kart1)) { // dikkat! == yerine eq (equal) metodunu kullanıyoruz
+    else if (dünya.kart2.yokMu) {
+        // kart1 var. Onun için Biri(3).al => 3
+        // Ama Belki bir kart yerine Hiçbiri olsaydı şunu kullanmak gerekirdi:
+        //   kart.alYoksa(x) => x
+        val kart1 = dünya.kart1.al
+        if (!(kart aynıMı kart1)) { // dikkat! == ya da eşitMi yerine aynıMı metodunu kullanıyoruz
             kart.çevir()
-            dünya = dünya.copy(kart2 = Biri(kart))
+            dünya = dünya.copy(kart2 = Biri(kart)) // copy: benzer bir dünya ama kart2 farklı
             hamleleriArtır()
             if (kart1 == kart) {
                 kart1.açık()
@@ -74,10 +73,10 @@ def tıkla(kart: Kart) {
             }
         }
     }
-    else if (yokMu(dünya.kart3)) {
-        val kart1 = dünya.kart1.get
-        val kart2 = dünya.kart2.get
-        if (!(kart eq kart1) && !(kart eq kart2)) {
+    else if (dünya.kart3.yokMu) {
+        val kart1 = dünya.kart1.al
+        val kart2 = dünya.kart2.al
+        if (!(kart aynıMı kart1) && !(kart aynıMı kart2)) {
             if (kart1 != kart2) {
                 kart1.çevir()
                 kart2.çevir()
@@ -98,7 +97,7 @@ def hamleleriArtır() {
 }
 
 val kartSayısı = derece * 2 * 5
-def kartlarıDağıt(n: Sayı) = for (i <- 1 to n) yield Kart(i)
+def kartlarıDağıt(n: Sayı) = for (i <- 1 |-| n) yield Kart(i)
 
 var dünya = Dünya(Hiçbiri, Hiçbiri, Hiçbiri, Hamleler(0))
 
@@ -107,8 +106,8 @@ val kartParlakAA = Renk(0, 0, 255, 127)
 val yarısı = kartSayısı / 2
 val kartlar = rastgeleKarıştır(kartlarıDağıt(yarısı) ++ kartlarıDağıt(yarısı))
 
-for (i <- 0 to kartSayısı / 5 - 1) {
-    for (j <- 0 to 4) {
+for (i <- 0 |-| kartSayısı / 5 - 1) {
+    for (j <- 0 |-| 4) {
         kartlar(i * 5 + j).kartÇek(i, j)
     }
 }

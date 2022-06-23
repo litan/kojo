@@ -50,6 +50,10 @@ object Aralık {
     ilk,
     if (adım > 0) son+1 else son-1,
     adım)
+  // copied from class Builtins ../../Builtins.scala
+  def kesirden(ilk: Kesir, son: Kesir, adım: Kesir) = Range.BigDecimal(ilk, son, adım)
+  def kesirdenAçık(ilk: Kesir, son: Kesir, adım: Kesir) = Range.BigDecimal(ilk, son, adım)
+  def kesirdenKapalı(ilk: Kesir, son: Kesir, adım: Kesir) = Range.BigDecimal.inclusive(ilk, son, adım)
 }
 
 // also see: trait IntMethodsInTurkish in sayi.scala
@@ -61,9 +65,13 @@ trait RangeMethodsInTurkish {
     def boyu = r.length
     def içindeMi(s: Sayı) = r.contains(s)
     // todo: duplicate above
+
+    def eşle[B](f: Sayı => B) = r.map(f)
+    def elekle(dene: Sayı => İkil) = r.withFilter(dene)
+    def düzEşle[B](f: Sayı => IterableOnce[B]) = r.flatMap(f)
+    def herbiriİçin(f: (Sayı) => Unit) = r.foreach(f)
     def indirge(iş: (Sayı, Sayı) => Sayı): Sayı = diziye.reduce(iş)
     def soldanKatla[B](z: B)(iş: (B, Sayı) => B): B = diziye.foldLeft(z)(iş)
     def sağdanKatla[B](z: B)(iş: (Sayı, B) => B): B = diziye.foldRight(z)(iş)
-
   }
 }

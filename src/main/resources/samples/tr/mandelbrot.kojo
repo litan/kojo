@@ -77,9 +77,6 @@ case class VarsılSayı(x: Kesir, y: Kesir) {
 
 // Mandelbrot kümesini yazmadan önce bir de dikdörtgen türü oluşturalım.
 // Epey faydalı olacak:
-object Dörtgen {
-    def apply(solalt: Nokta, sağüst: Nokta): Dörtgen = new Dörtgen(solalt.x, sağüst.x, solalt.y, sağüst.y)
-}
 case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
     val en = x2 - x1
     val boy = y2 - y1
@@ -106,6 +103,14 @@ case class Dörtgen(x1: Kesir, x2: Kesir, y1: Kesir, y2: Kesir) {
         val yKayma = nokta.y - y
         Dörtgen(x1 + xKayma, x2 + xKayma, y1 + yKayma, y2 + yKayma)
     }
+}
+object Dörtgen {
+    // bazen dört kesir girmek yerine, iki nokta girerek de bir dörtgen yapmak da
+    // isteyebiliriz: Dörtgen(Nokta(x, y), Nokta(x2, y2)) şeklinde. bu apply metodu onu sağlıyor
+    def apply(solalt: Nokta, sağüst: Nokta): Dörtgen = new Dörtgen(solalt.x, sağüst.x, solalt.y, sağüst.y)
+    // hatta farkli girdilerle birden çok apply tanımı yapabiliriz gerekirse. Örneğin:
+    def apply(d: Dörtgen, oranX: Kesir, oranY: Kesir): Dörtgen = ??? // oran kesirleriyle çarpalım d'nin köşelerini. (sana bıraktım :)
+    def apply(solalt: Nokta, eni: Kesir, boyu: Kesir): Dörtgen = ??? // ya da böyle yapabiliriz. Yaratıcılığa açık bir konu...
 }
 
 /*
@@ -174,7 +179,7 @@ object renklendirme {
         renkler(sayıya(karekökü(i + 10 - yumuşak) * 256) % renkler.size)
     }
     lazy val renkler = Dizi.doldur(2048) { i => k2kym(i / 2048.0) }
-    def log2(x: Kesir) = math.log(x) / math.log(2)
+    def log2(x: Kesir) = logaritması(x) / logaritması(2)
     def k2kym(x: Kesir) = Renk(k2d(x, kd), k2d(x, yd), k2d(x, md))
     // 0 ve 1 arasını beşe bölüp beş renk seçiyoruz. Başladığımız renkle bitiriyoruz.
     // Arasını da yumuşak geçiş benzeri renklerle dolduruyoruz

@@ -6,8 +6,12 @@ silVeSakla()
 hızıKur(hızlı)
 kalemRenginiKur(siyah)
 
-// merkezden dışarıya doğru renk değiştirme!
-val ışıma = renkler.radialGradient(0, 0, camgöbeği, tuvalAlanı.boyu / 3, kırmızı, doğru)
+// merkezimiz (0, 0) olsun ve merkezdeki renk camgöbeği olsun.
+// yarıçap tuvalin boyunun üçte biri olsun ve çemberin üstündeki renk kırmızı olsun.
+// son girdi de aynı dalgalanma çemberin dışında da sürsün diye doğru. yanlış'la da dene!
+val ışıma = Renk.merkezdenDışarıDoğruDeğişim(0, 0, camgöbeği,
+    tuvalAlanı.boyu / 3, kırmızı,
+    doğru)
 artalanıKur(ışıma)
 
 yinele(18) {

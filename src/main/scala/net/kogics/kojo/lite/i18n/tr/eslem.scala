@@ -25,6 +25,7 @@ object Eşlem {
   def değişmezden[A,D](m: collection.immutable.Map[A,D]) = new Eşlem[A,D](Map.from(m.iterator))
 }
 case class Eşlem[A,D](val m: Map[A,D]) {
+  type Belki[T] = Option[T]
   def eşli(a: A) = m.contains(a)
   def eşle(ikili: (A, D)) = m += ikili
   def +=(ikili: (A, D)) = this eşle ikili

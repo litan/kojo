@@ -1,7 +1,7 @@
 silVeSakla()
 artalanıKurYatay(Renk(0, 0, 0), Renk(51, 204, 255))
 // ışığa merkezden eğim verme yöntemini kullanalım
-val boya = renkler.radialMultipleGradient(
+val boya = Renk.merkezdenDışarıDoğruÇokluDeğişim(
     0, 0, 150,
     Dizi(0, 0.7, 1),
     Dizi(Renk(255, 0, 0, 245), Renk(215, 0, 0, 245), Renk(185, 0, 0, 245)),

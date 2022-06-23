@@ -23,7 +23,7 @@ k1.davran { bu =>
 
 val k2 = yeniKaplumbağa(-250, 180)
 k2.giysileriKur(Costume.bat1, Costume.bat2)
-k2.giysiyiBüyült(0.5) // todo
+k2.giysiyiBüyült(0.5)
 k2.davran { bu =>
     yineleDoğruysa(bu.konum.x < 200) {
         bu.konumuDeğiştir(10, 0)
