@@ -20,6 +20,7 @@ object dict {
   // skala kılavuzunda kullanma sırasıyla (yaklaşık olarak)
   // some translations override those in the next map
   val myKeyWords = Map(
+    "set" -> "kur",
     "val" -> "der", // değer
     "var" -> "dez", // değişmez
     "if" -> "eğer",
@@ -104,6 +105,25 @@ object dict {
     "linearMultipleGradient" -> "doğrusalÇokluDeğişim",
     "radialGradient" -> "merkezdenDışarıDoğruDeğişim",
     "radialMultipleGradient" -> "merkezdenDışarıDoğruÇokluDeğişim",
+    "hsl" -> "ada",
+    "hue" -> "arıRenk",
+    "saturation" -> "doygunluk",
+    "lightness" -> "açıklık",
+    "alignment" -> "düzen",
+    "align" -> "düzenleme",
+    "horizontalAlignment" -> "yatayDüzen",
+    "verticalAlignment" -> "dikeyDüzen",
+    "takeFocus" -> "girdiOdağıOl",
+    "addKeyListener" -> "girdiDinleyiciEkle",
+    "foreground" -> "önalan",
+    "background" -> "artalan",
+    "isDigit" -> "sayıMı",
+    "strip" -> "çıkar/kayış",
+    "margin" -> "kenarPayı",
+    "" -> "",
+    "" -> "",
+    "" -> "",
+    "" -> "",
     "" -> "",
     "" -> "",
   )

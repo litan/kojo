@@ -44,6 +44,7 @@ case class Yığın[T]() {
   def tane = s.size
   def tepe = s.head
   def dizi = s.toSeq
+  def diziye = s.toSeq
   def koyHepsini(dizi: scala.collection.IterableOnce[T]) =
     s.pushAll(dizi)
 }

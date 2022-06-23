@@ -3,16 +3,15 @@
 def ejder(derinlik: Sayı, açı: Kesir): Birim = {
     if (derinlik == 0) {
         ileri(10)
-        return
+    } else {
+        sol(açı)
+        ejder(derinlik - 1, açı.mutlakDeğer)
+        sağ(açı)
+
+        sağ(açı)
+        ejder(derinlik - 1, -açı.mutlakDeğer)
+        sol(açı)
     }
-
-    sol(açı)
-    ejder(derinlik - 1, açı.abs)  // .abs mutlak değeri verir. -1.5.abs = 1.5
-    sağ(açı)
-
-    sağ(açı)
-    ejder(derinlik - 1, -açı.abs)
-    sol(açı)
 }
 
 sil()

@@ -70,8 +70,8 @@ def tangram = Resim.dizi(
 
 silVeÇizimBiriminiKur(santim)
 val ta = tuvalAlanı
-val enİriX = ta.x.abs
-val enİriY = ta.y.abs
+val enİriX = ta.x.mutlakDeğer
+val enİriY = ta.y.mutlakDeğer
 val kaçan = boyaRengi(sarı) * götür(enİriX / 3, 2) * büyüt(0.3) -> tangram
 val kovalayan = boyaRengi(siyah) * büyüt(0.3) -> tangram
 val kovalayan2 = boyaRengi(siyah) * götür(-enİriX / 2, 0) * büyüt(0.3) -> tangram

@@ -2,12 +2,11 @@
 
 silVeSakla()
 
-def tekDal = kalemRengi(turuncu) -> Resim.noktadan { gn => // GeoNokta == VertexShape
-    import gn._
-    beginShape() //   başla
-    vertex(0, 0) //   iki yeni nokta ...
-    vertex(0, 100) //    ... üstüste
-    endShape() //     bitir
+def tekDal = kalemRengi(turuncu) -> Resim.noktadan { gn => // GeoNokta
+    gn.başla()
+    gn.nokta(0, 0) //   iki yeni nokta ...
+    gn.nokta(0, 100) //    ... üstüste
+    gn.bitir()
 }
 
 def dallar(kalınlık: Kesir, adım: Sayı): Resim =
@@ -23,7 +22,7 @@ def dallar(kalınlık: Kesir, adım: Sayı): Resim =
         )
     }
 
-val açıkMavi = renkler.rgb(172, 212, 250)
+val açıkMavi = Renk.kym(172, 212, 250)
 
-artalanıKur(renkler.linearGradient(0, -100, kahverengi, 0, 100, açıkMavi))
+artalanıKur(Renk.doğrusalDeğişim(0, -100, kahverengi, 0, 100, açıkMavi))
 çizMerkezde(dallar(0.5, 7))

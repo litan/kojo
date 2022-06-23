@@ -16,7 +16,7 @@ val topunİvmesi = 1.001
 
 def raket = kalemRengi(koyuGri) * boyaRengi(red) -> Resim.dikdörtgen(raketinEni, raketinBoyu)
 def dikey = kalemRengi(beyaz) -> Resim.dikey(tuvalinBoyu)
-def top0 = kalemRengi(renkler.rgb(0, 230, 0)) * boyaRengi(renkler.rgb(0, 230, 0)) -> Resim.daire(topunYÇ)
+def top0 = kalemRengi(Renk.kym(0, 230, 0)) * boyaRengi(Renk.kym(0, 230, 0)) -> Resim.daire(topunYÇ)
 
 class RaketinHızı(hız0: Kesir, yukarıMıGidiyorduEnSon0: İkil) {
     var hız = hız0

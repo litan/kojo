@@ -71,9 +71,9 @@ def radyanAçıÇiz(kaçRadyan: Sayı) {
     açıYazısı = götür(-18, -yçBoyu / 4) -> Resim.yazı(s"$kaçRadyan radyan", 20)
     çiz(açıYazısı)
     if (kaçRadyan < 4) { // sinüs ve kosinüs de çok faydalı tanjant gibi
-        işaret = doğruÇiz(0, -çeyrekYÇ, çeyrekYÇ - (çeyrekYÇ - çeyrekYÇ * kosinüs(30.toRadians)), çeyrekYÇ * sinüs(30.toRadians))
+        işaret = doğruÇiz(0, -çeyrekYÇ, çeyrekYÇ - (çeyrekYÇ - çeyrekYÇ * kosinüs(30.radyana)), çeyrekYÇ * sinüs(30.radyana))
         çiz(işaret)
-        işaret2 = doğruÇiz(0, -çeyrekYÇ, yçBoyu - (yçBoyu - yçBoyu * kosinüs(30.toRadians)), yçBoyu * sinüs(30.toRadians))
+        işaret2 = doğruÇiz(0, -çeyrekYÇ, yçBoyu - (yçBoyu - yçBoyu * kosinüs(30.radyana)), yçBoyu * sinüs(30.radyana))
         çiz(işaret2)
     }
 }

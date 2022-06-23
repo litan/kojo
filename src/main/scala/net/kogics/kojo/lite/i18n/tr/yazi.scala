@@ -119,6 +119,7 @@ trait StringMethodsInTurkish {
     def başındaMı(öbürü: Yazı, başlamaNoktası: Sayı): İkil = y.startsWith(öbürü, başlamaNoktası)
     def sonundaMı(öbürü: Yazı): İkil = y.endsWith(öbürü)
 
+    def kenarPayınıÇıkar = y.stripMargin
     // more to come..
   }
 }

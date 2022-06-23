@@ -7,8 +7,8 @@
 
 silVeSakla()
 
-// uzayın rengi.. HSL: hue (ton), saturation (parlaklık), lightness (aydınlık)
-çizSahne(renkler.hsl(240, 0.20, 0.16))
+// uzayın rengi.. ADA (HSL): arı-renk/ton (hue), (doygunluk/parlaklık) saturation, (aydınlık) lightness
+çizSahne(Renk.ada(240, 0.20, 0.16))
 
 val ta = tuvalAlanı
 def xMerkezKonum(resminEni: Kesir) = { ta.x + (ta.en - resminEni) / 2 }
@@ -86,7 +86,7 @@ class Ay {
 
     def ölç(im: İnişModülü) {
         if (im.beden.çarptıMı(resim)) {
-            if (im.hız.y.abs > 3) {
+            if (im.hız.y.mutlakDeğer > 3) {
                 çizMerkezdeYazı("Çarptı ve parçalandı :-(", kırmızı, 39)
             }
             else {

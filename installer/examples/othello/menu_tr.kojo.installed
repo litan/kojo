@@ -7,7 +7,7 @@ val açıklama = <html>
  <em> KojOtello'ya hoşgeldin! </em> Bu güzel oyun hakkında bilgi edinmek için
  <br/>
  internette "wiki reversi" diye arama yapabilirsin.
-  </html>.toString
+  </html>.yazıya
 
 val ay_çeşniler = ay.Salındıraç("geleneksel", "bir çeşni")
 val ay_tahta = ay.Salındıraç(8, 4, 5, 6, 7, 8, 9, 10, 11, 12)
@@ -32,8 +32,8 @@ def menu: Birim = {
                 ay.Sıra(ay.Tanıt("Düzey:"), ay_düzey),
                 ay.Sıra(ay.Tanıt("Bilgisayar:"), ay_bilgisayar),
                 ay.Sıra(ay.Düğme("Oyna!") {
-                    val odaSayısı = ay_tahta.value
-                    val çeşni = ay_çeşniler.value match {
+                    val odaSayısı = ay_tahta.değeri
+                    val çeşni = ay_çeşniler.değeri match {
                         case "geleneksel" => 0
                         case _            => 1
                     }
@@ -44,11 +44,11 @@ def menu: Birim = {
                             sorunYok = yanlış
                         }
                     }
-                    val kimBaşlar = ay_ilk.value match {
+                    val kimBaşlar = ay_ilk.değeri match {
                         case "Siyah" => Siyah
                         case _       => Beyaz
                     }
-                    val düzey = ay_düzey.value match {
+                    val düzey = ay_düzey.değeri match {
                         case "Er"     => Er
                         case "Çırak"  => Çırak
                         case "Kalfa"  => Kalfa
@@ -57,7 +57,7 @@ def menu: Birim = {
                         case "Deha"   => Deha
                         case _        => Kalfa
                     }
-                    val bilgisayar = ay_bilgisayar.value match {
+                    val bilgisayar = ay_bilgisayar.değeri match {
                         case "Siyahları oynasın" => Siyah
                         case "Beyazları oynasın" => Beyaz
                         case "Oynamasın"         => Yok

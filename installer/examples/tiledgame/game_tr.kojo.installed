@@ -7,7 +7,7 @@ satıryaz("Oyunu kazanmak için kırmızı yuvarlağı bul ve al. Sonra da başa
 satıryaz(s"\nKendi mağaranı kurmak için, '$kurulumDizini/examples/tiledgame/level1.tmx' dosyasını www.mapeditor.org sitesindeki Tiled (çini) düzenleyicisiyle değiştirebilirsin.")
 satıryaz("Kendi mağaranı ikinci düzey olarak (level2.tmx) yazılımcığa ekleyebilir misin?")
 tuvaliKaydır(-tuvalAlanı.x, tuvalAlanı.y)
-artalanıKur(renkler.hsl(189, 0.03, 0.45))
+artalanıKur(Renk.ada(189, 0.03, 0.45))
 
 // çini dünyasının düzeyleri var. Hangi düzeydeki çinilerle çarpışma olacak belirtelim:
 val çarpışmaDüzeyi = 1
@@ -29,7 +29,7 @@ class Oyuncu(çiniX: Sayı, çiniY: Sayı, dünya: ÇiniDünyası) {
         sayfa.resimSeç(2, 2),
         sayfa.resimSeç(3, 2),
         sayfa.resimSeç(4, 2)
-    ).map(oyuncununResmi))
+    ).işle(oyuncununResmi))
 
     val solaKoşu = Resim.küme(Dizin(
         sayfa.resimSeç(0, 3),
@@ -37,23 +37,23 @@ class Oyuncu(çiniX: Sayı, çiniY: Sayı, dünya: ÇiniDünyası) {
         sayfa.resimSeç(2, 3),
         sayfa.resimSeç(3, 3),
         sayfa.resimSeç(4, 3)
-    ).map(oyuncununResmi))
+    ).işle(oyuncununResmi))
 
     val sağaZıplayış = Resim.küme(Dizin(
         sayfa.resimSeç(0, 0),
         sayfa.resimSeç(1, 0),
         sayfa.resimSeç(2, 0),
         sayfa.resimSeç(3, 0)
-    ).map(oyuncununResmi))
+    ).işle(oyuncununResmi))
 
     val solaZıplayış = Resim.küme(Dizin(
         sayfa.resimSeç(0, 1),
         sayfa.resimSeç(1, 1),
         sayfa.resimSeç(2, 1),
         sayfa.resimSeç(3, 1)
-    ).map(oyuncununResmi))
+    ).işle(oyuncununResmi))
 
-    var ancılResim = sağaDönükDuruş  // bu andaki resim
+    var ancılResim = sağaDönükDuruş // bu andaki resim
     ancılResim.konumuKur(oyuncununKonumu)
 
     var sağaMıBakıyor = doğru
@@ -77,7 +77,7 @@ class Oyuncu(çiniX: Sayı, çiniY: Sayı, dünya: ÇiniDünyası) {
         if (hedefEtkinMi) {
             if (ancılResim.çarptıMı(hedef)) {
                 hedef.sil()
-                durdur()  // oyunu iyileştirmeye davet: ikinci mağara (level2.tmx) oluştur ve burada ona geç!
+                durdur() // oyunu iyileştirmeye davet: ikinci mağara (level2.tmx) oluştur ve burada ona geç!
                 çizMerkezdeYazı("Tebrikler!", yeşil, 30)
             }
         }
@@ -180,12 +180,12 @@ class İnenÇıkanTaşlar(çiniX: Sayı, çiniY: Sayı, dünya: ÇiniDünyası) 
     val oyuncununKonumu = dünya.çinidenKojoya(ÇiniXY(çiniX, çiniY))
     val sayfa = BirSayfaKostüm("tiles.png", 24, 24)
     // inen çıkan taşları biraz küçültelim. Yoksa yan çinideki oyuncuya da çarparlar:
-    def taşınResmi(img: Image) = büyüt(0.98) * götür(0.2, 0.2) -> Resim.imge(img)
+    def taşınResmi(imge: İmge) = büyüt(0.98) * götür(0.2, 0.2) -> Resim.imge(imge)
 
     var ancılResim = Resim.küme(Dizin(
         sayfa.resimSeç(0, 6),
         sayfa.resimSeç(1, 6)
-    ).map(taşınResmi))
+    ).işle(taşınResmi))
 
     ancılResim.konumuKur(oyuncununKonumu)
 

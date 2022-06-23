@@ -19,46 +19,114 @@ package net.kogics.kojo.lite.i18n.tr
 // translating user interface widgets
 
 import net.kogics.kojo.{widget => w}
+import net.kogics.kojo.util.Read
 import javax.{swing => s}
 import javax.swing.{SwingConstants => sc}
 import javax.swing.{BorderFactory => bf}
-import java.awt.Font
+import javax.swing.border.Border
+import java.awt.{Font, Color}
 import java.awt.{event => e}
 
 object arayuz {
 
+  type Yazıyüzü = Font
+  type Çerçeve = Border
+
+  /* ../../../widget/swingwrappers.scala
+   Also has traits: PreferredMax Focusable
+   */
   case class BölmeÇizgisi(renk: Renk = yok, saydamMı: İkil = yanlış) extends s.JSeparator {
     if (renk != yok) {
       setBackground(renk)
     }
     setOpaque(saydamMı)
   }
-
-  /* ../../../widget/swingwrappers.scala
-   Also has traits: PreferredMax Focusable
-   */
   type Parça = s.JComponent
-  type Sıra = w.RowPanel
+  class Sıra(parçalar: Parça*) extends w.RowPanel(parçalar: _*) {
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
   type Satır = Sıra
-  type Sütun = w.ColPanel
-  type Yazıgirdisi[T] = w.TextField[T]
-  type Yazıalanı = w.TextArea
-  type Tanıt = w.Label
-  type Düğme = w.Button
-  type Açkapa = w.ToggleButton
-  type Salındıraç[T] = w.DropDown[T]
-  type Kaydıraç = w.Slider
-  // type BölmeÇizgisi = s.JSeparator
-  val Sıra = w.RowPanel
-  val Satır = Sıra
-  val Sütun = w.ColPanel
-  val Yazıgirdisi = w.TextField
-  val Yazıalanı = w.TextArea
-  val Tanıt = w.Label
-  val Düğme = w.Button
-  val Açkapa = w.ToggleButton
-  val Salındıraç = w.DropDown
-  val Kaydıraç = w.Slider
+  class Sütun(parçalar: Parça*) extends w.ColPanel(parçalar: _*) {
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
+  class Yazıgirdisi[T](varsayılan: T)(implicit okur: Read[T]) extends w.TextField[T](varsayılan)(okur) {
+    def değeri = value
+    def yazıYüzünüKur(yy: Yazıyüzü) = setFont(yy)
+    def sütunSayısınıKur(sayı: Sayı) = setColumns(sayı)
+    def yatayDüzeniKur(düzen: Sayı) = setHorizontalAlignment(düzen)
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def girdiOdağıOl() = takeFocus()
+    def girdiDinleyiciEkle(d: olay.TuşUyarlayıcısı) = addKeyListener(d)
+    def yazıyıAl = getText
+    def yazıyıKur(y: Yazı) = setText(y)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
+  class Yazıalanı(varsayılan: Yazı) extends w.TextArea(varsayılan) {
+    def değeri = value
+    def girdiOdağıOl() = takeFocus()
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
+
+  class Tanıt(tanıt: Yazı) extends w.Label(tanıt) {
+    def yazıYüzünüKur(yy: Yazıyüzü) = setFont(yy)
+    def yatayDüzeniKur(düzen: Sayı) = setHorizontalAlignment(düzen)
+    def dikeyDüzeniKur(düzen: Sayı) = setVerticalAlignment(düzen)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
+  class Düğme(tanıt: Yazı)(davranış: => Birim) extends w.Button(tanıt)(davranış) {
+    def yazıYüzünüKur(yy: Yazıyüzü) = setFont(yy)
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
+  class Açkapa(tanıt: Yazı)(davranış: İkil => Birim) extends w.ToggleButton(tanıt)(davranış) {
+    def yazıYüzünüKur(yy: Yazıyüzü) = setFont(yy)
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
+  class Salındıraç[T](ilkSeçenekler: T*)(implicit okur: Read[T]) extends w.DropDown[T](ilkSeçenekler: _*)(okur) {
+    def değeri = value
+    def seçilince(davran: T => Birim) = onSelection(davran)
+    def seçenekleriKur(seçenekler: T*) = setOptions(seçenekler: _*)
+    def yazıYüzünüKur(yy: Yazıyüzü) = setFont(yy)
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
+  class Kaydıraç(enUfak: Sayı, enİri: Sayı, ilkDeğer: Sayı, boşluk: Sayı) extends w.Slider(enUfak, enİri, ilkDeğer, boşluk) {
+    def değeri = value
+    def artalanıKur(renk: Renk) = setBackground(renk)
+    def önalanıKur(renk: Renk) = setForeground(renk)
+    def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def sakla = setVisible(false)
+    def göster = setVisible(true)
+  }
 
   object değişmez {
     // https://docs.oracle.com/javase/7/docs/api/javax/swing/SwingConstants.html
@@ -75,16 +143,17 @@ object arayuz {
     def boşKenar() = bf.createEmptyBorder()
   }
 
-  /* todo: how does this work? E.g.
-   *      new Tanıt("This is so and so") {
-   *          setFont(Font("Sans Serif", 60))
-   *          setHorizontalAlignment(SwingConstants.CENTER)
-   *      }
-   * Seem to be methods defined in the class Tanıt (Label)
-   */
-
   object olay {
     type TuşUyarlayıcısı = e.KeyAdapter
     type TuşaBasmaOlayı = e.KeyEvent
   }
+
+  trait SwingWidgetMethodsInTurkish {
+    implicit class TuşaBasmaOlayıYöntemleri(a: olay.TuşaBasmaOlayı) {
+      def tuşKodu = a.getKeyCode
+      def tuşHarfi = a.getKeyChar
+      def tüket() = a.consume()
+    }
+  }
+
 }

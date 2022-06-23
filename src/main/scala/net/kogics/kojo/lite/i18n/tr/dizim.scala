@@ -129,4 +129,5 @@ class EsnekDizim[T](val a: ArrayBuffer[T]) {
   def çıkar(yer: Sayı) = a.remove(yer)
   def sil() = a.clear()
   def dizi = a.toSeq
+  def diziye = a.toSeq
 }

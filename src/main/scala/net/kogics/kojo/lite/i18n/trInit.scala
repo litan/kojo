@@ -29,7 +29,7 @@ import edu.umd.cs.piccolo.activities.PActivity  // todo
 import net.kogics.kojo.kmath.KEasing
 
 // Keep in alphabetical order
-object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.NumMethodsInTurkish with tr.OptionMethodsInTurkish with tr.RangeMethodsInTurkish with tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with tr.VectorMethodsInTurkish {
+object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.NumMethodsInTurkish with tr.OptionMethodsInTurkish with tr.RangeMethodsInTurkish with tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with tr.arayuz.SwingWidgetMethodsInTurkish with tr.VectorMethodsInTurkish {
   var builtins: CoreBuiltins = _ //unstable reference to module
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 

@@ -958,14 +958,16 @@ pages += Page(
       row("piSayısı".c,"pi sayısı, 3.14159265 .... yani yarıçapı 1 olan dairenin çevre uzunluğunun yarısıdır.")
     ),
     "Trigonometri fonksiyonları".h3,
-    "Trigonometrik işlevler girdi olarak radyan birimi kullanırlar. Radyan kavramını anlatan çok güzel bir örneğimiz var Kojo'da. Örnekler menüsünde en altta Matematik Öğrenme Birimleri menüsü var. Onun en altında 'Açı Nedir?' var. Ona tıklayıver. Günlük hayatta biz 90 derece, 180 derece gibi bize daha doğal gelen derece birimini kullanırız açıları ifade etmek için. Radyandan dereceye çevirmek için 'toDegrees' metodunu, tersini yapmak için de 'toRadians' metodunu kullanabiliriz. Bilmemiz gereken tek şey şu: 2*PI radyan 360 dereceye eşittir. Aşağıda sıraladığımız metodlardan başka yay metodları da var. İngilizce arc diye geçer.".p,
+    "Trigonometrik işlevler girdi olarak radyan birimi kullanırlar. Radyan kavramını anlatan çok güzel bir örneğimiz var Kojo'da. Örnekler menüsünde en altta Matematik Öğrenme Birimleri menüsü var. Onun en altında 'Açı Nedir?' var. Ona tıklayıver. Günlük hayatta biz 90 derece, 180 derece gibi bize daha doğal gelen derece birimini kullanırız açıları ifade etmek için. Radyandan dereceye çevirmek için 'dereceye' metodunu, tersini yapmak için de 'radyana' metodunu kullanabiliriz. Bilmemiz gereken tek şey şu: 2*pi radyan 360 dereceye eşittir. Aşağıda sıraladığımız metodlardan başka yay metodları da var.".p,
     "Kısa not: aşağıdaki tanımlarda G1, G2, ... ile fonksiyona girilen değerleri ifade ediyoruz kısaca. Yani işlevAdı(G1, G2, G3, ...). ".p,
     table(
       row("sinüs(piSayısı/6)".c,"G1 girdisinin yani burada Pi/6 değerinin sinüsü."),
       row("kosinüs(piSayısı/6)".c,"G1 girdisinin kosinüsü."),
       row("tanjant(piSayısı/6)".c,"G1 girdisinin tanjantı."),
       row("radyana(45)".c,"G1 (derece olsun) girdisini radyana çevirir."),
-      row("dereceye(piSayısı/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir.")
+      row("45.radyana".c,"Kesirlerin 'radyana' yöntemini de kullanabiliriz."),
+      row("dereceye(piSayısı/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir."),
+      row("piSayısı.dereceye".c,"Bir değişik yöntem de bu aynı radyana yöntemi gibi."),
     ),
     "Üst bulma metodları".h3,
     "Logaritma ve üst bulmak için iki temel işlev var. İkisi de e tabanını kullanır (e sayısı)".p,

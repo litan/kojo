@@ -23,11 +23,22 @@ trait NumMethodsInTurkish {
     def |-|(b: Sayı): Range = a to b
     def yazıya = a.toString
     def kesire = a.toDouble
+    def mutlakDeğer = a.abs
+    def enİrisi(b: Sayı) = a max b
+    def enUfağı(b: Sayı) = a min b
   }
 
   implicit class KesirYöntemleri(a: Kesir) {
     def yazıya = a.toString
     def sayıya = a.toInt
     def dereceye = a.toDegrees
+    def radyana = a.toRadians
+    def mutlakDeğer = a.abs
+    def enİrisi(b: Kesir) = a max b
+    def enUfağı(b: Kesir) = a min b
+    def taban = a.floor
+    def tavan = a.ceil
+    def yakın = a.round
   }
+
 }
