@@ -1467,7 +1467,7 @@ val KU = 128
 
 // ilk önce, bütün kareler cansız olmalı
 var dünya = (0 |- KU * KU).soldanKatla(Sayılar())((x, y) => x :+ 0)
-satıryaz(s"Dünyamızda $KU'in karesi yani ${dünya.size} tane hane var.")
+satıryaz(s"Dünyamızda $KU'in karesi yani ${dünya.boyu} tane hane var.")
 yaz(s"Ekranımız ${(tuvalAlanı.eni / 10).sayıya} kare eninde ")
 satıryaz(s"ve ${(tuvalAlanı.boyu / 10).sayıya} kare boyunda.")
 
@@ -1498,7 +1498,7 @@ val (desen, adı, durak) = seç match {
 
 dünya = başlangıç(dünya, desen)
 
-yaz(s"$seç. desende ${desen.size} tane canlı kare var. Adı $adı.\nNesilleri sayalım: ")
+yaz(s"$seç. desende ${desen.boyu} tane canlı kare var. Adı $adı.\nNesilleri sayalım: ")
 
 var zaman = 0
 val z0 = buSaniye // şimdiki zamanı (geçmişte bir ana göre) anımsayalım

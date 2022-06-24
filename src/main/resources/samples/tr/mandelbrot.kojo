@@ -176,7 +176,7 @@ object renklendirme {
        https://en.wikipedia.org/wiki/Monotone_cubic_interpolation  */
     def renk(i: Sayı, x: Kesir, y: Kesir) = {
         val yumuşak = log2(log2(x * x + y * y) / 2)
-        renkler(sayıya(karekökü(i + 10 - yumuşak) * 256) % renkler.size)
+        renkler(sayıya(karekökü(i + 10 - yumuşak) * 256) % renkler.boyu)
     }
     lazy val renkler = Dizi.doldur(2048) { i => k2kym(i / 2048.0) }
     def log2(x: Kesir) = logaritması(x) / logaritması(2)
