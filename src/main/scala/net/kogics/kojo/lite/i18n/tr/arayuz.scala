@@ -31,6 +31,7 @@ object arayuz {
 
   type Yazıyüzü = Font
   type Çerçeve = Border
+  type Parça = s.JComponent
 
   /* ../../../widget/swingwrappers.scala
    Also has traits: PreferredMax Focusable
@@ -41,7 +42,7 @@ object arayuz {
     }
     setOpaque(saydamMı)
   }
-  type Parça = s.JComponent
+
   class Sıra(parçalar: Parça*) extends w.RowPanel(parçalar: _*) {
     def artalanıKur(renk: Renk) = setBackground(renk)
     def önalanıKur(renk: Renk) = setForeground(renk)
@@ -49,7 +50,12 @@ object arayuz {
     def sakla = setVisible(false)
     def göster = setVisible(true)
   }
+  object Sıra {
+    def apply(parçalar: Parça*) = new Sıra(parçalar: _*)
+  }
   type Satır = Sıra
+  val Satır = Sıra
+
   class Sütun(parçalar: Parça*) extends w.ColPanel(parçalar: _*) {
     def artalanıKur(renk: Renk) = setBackground(renk)
     def önalanıKur(renk: Renk) = setForeground(renk)
@@ -57,6 +63,10 @@ object arayuz {
     def sakla = setVisible(false)
     def göster = setVisible(true)
   }
+  object Sütun {
+    def apply(parçalar: Parça*) = new Sütun(parçalar: _*)
+  }
+
   class Yazıgirdisi[T](varsayılan: T)(implicit okur: Read[T]) extends w.TextField[T](varsayılan)(okur) {
     def değeri = value
     def yazıYüzünüKur(yy: Yazıyüzü) = setFont(yy)
@@ -72,6 +82,10 @@ object arayuz {
     def sakla = setVisible(false)
     def göster = setVisible(true)
   }
+  object Yazıgirdisi {
+    def apply[T](varsayılan: T)(implicit okur: Read[T]) = new Yazıgirdisi(varsayılan)(okur)
+  }
+
   class Yazıalanı(varsayılan: Yazı) extends w.TextArea(varsayılan) {
     def değeri = value
     def girdiOdağıOl() = takeFocus()
@@ -80,6 +94,9 @@ object arayuz {
     def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
     def sakla = setVisible(false)
     def göster = setVisible(true)
+  }
+  object Yazıalanı {
+    def apply(varsayılan: Yazı) = new Yazıalanı(varsayılan)
   }
 
   class Tanıt(tanıt: Yazı) extends w.Label(tanıt) {
@@ -92,6 +109,10 @@ object arayuz {
     def sakla = setVisible(false)
     def göster = setVisible(true)
   }
+  object Tanıt {
+    def apply(tanıt: Yazı) = new Tanıt(tanıt)
+  }
+
   class Düğme(tanıt: Yazı)(davranış: => Birim) extends w.Button(tanıt)(davranış) {
     def yazıYüzünüKur(yy: Yazıyüzü) = setFont(yy)
     def artalanıKur(renk: Renk) = setBackground(renk)
@@ -100,6 +121,10 @@ object arayuz {
     def sakla = setVisible(false)
     def göster = setVisible(true)
   }
+  object Düğme {
+    def apply(tanıt: Yazı)(davranış: => Birim) = new Düğme(tanıt)(davranış)
+  }
+
   class Açkapa(tanıt: Yazı)(davranış: İkil => Birim) extends w.ToggleButton(tanıt)(davranış) {
     def yazıYüzünüKur(yy: Yazıyüzü) = setFont(yy)
     def artalanıKur(renk: Renk) = setBackground(renk)
@@ -108,6 +133,10 @@ object arayuz {
     def sakla = setVisible(false)
     def göster = setVisible(true)
   }
+  object Açkapa {
+    def apply(tanıt: Yazı)(davranış: İkil => Birim) = new Açkapa(tanıt)(davranış)
+  }
+
   class Salındıraç[T](ilkSeçenekler: T*)(implicit okur: Read[T]) extends w.DropDown[T](ilkSeçenekler: _*)(okur) {
     def değeri = value
     def seçilince(davran: T => Birim) = onSelection(davran)
@@ -119,6 +148,10 @@ object arayuz {
     def sakla = setVisible(false)
     def göster = setVisible(true)
   }
+  object Salındıraç {
+    def apply[T](ilkSeçenekler: T*)(implicit okur: Read[T]) = new Salındıraç(ilkSeçenekler: _*)(okur)
+  }
+
   class Kaydıraç(enUfak: Sayı, enİri: Sayı, ilkDeğer: Sayı, boşluk: Sayı) extends w.Slider(enUfak, enİri, ilkDeğer, boşluk) {
     def değeri = value
     def artalanıKur(renk: Renk) = setBackground(renk)
@@ -126,6 +159,9 @@ object arayuz {
     def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
     def sakla = setVisible(false)
     def göster = setVisible(true)
+  }
+  object Kaydıraç {
+    def apply(enUfak: Sayı, enİri: Sayı, ilkDeğer: Sayı, boşluk: Sayı) = new Kaydıraç(enUfak, enİri, ilkDeğer, boşluk)
   }
 
   object değişmez {
