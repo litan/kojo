@@ -87,12 +87,6 @@ trait StringMethodsInTurkish {
     def sırasıSondan[S >: Harf](öge: S): Sayı = y.lastIndexOf(öge)
     def sırasıSondan[S >: Harf](öge: S, sonNokta: Sayı): Sayı = y.lastIndexOf(öge, sonNokta)
 
-    def dizine = y.toList
-    def diziye = y.toSeq
-    def kümeye = y.toSet
-    def yöneye = y.toVector
-    def dizime[S >: Harf](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(y.toArray(delil))
-    def eşleme[K, V](implicit delil: Harf <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(y.toMap)
     def say(işlev: Harf => İkil): Sayı = y.count(işlev)
 
     // yazı'ya özel
@@ -120,6 +114,17 @@ trait StringMethodsInTurkish {
     def sonundaMı(öbürü: Yazı): İkil = y.endsWith(öbürü)
 
     def kenarPayınıÇıkar = y.stripMargin
+
+    def dizime[S >: Harf](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(y.toArray(delil))
+    def ikile = y.toBoolean
+    def kesire = y.toDouble
+    def sayıya = y.toInt
+    def dizine = y.toList
+    def eşleme[K, V](implicit delil: Harf <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(y.toMap)
+    def diziye = y.toSeq
+    def kümeye = y.toSet
+    def yöneye = y.toVector
+
     // more to come..
   }
 }
