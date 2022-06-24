@@ -17,6 +17,8 @@
 package net.kogics.kojo.lite.i18n.tr
 
 trait StringMethodsInTurkish {
+  type Yazı = String
+  type EsnekYazı=collection.mutable.StringBuilder
 
   object Yazı {
     type Harf = Char
@@ -127,4 +129,15 @@ trait StringMethodsInTurkish {
 
     // more to come..
   }
+
+  implicit class EsnekYazıYöntemleri(ey: EsnekYazı) {
+    def boşMu = ey.size == 0
+    def doluMu = ey.size != 0
+    def boyu = ey.size
+    def sil() = ey.clear()
+    def ekle[T](x: T) = ey.append(x)
+    def yazıya = ey.toString
+    def sayıya = ey.toString.toInt
+  }
+
 }

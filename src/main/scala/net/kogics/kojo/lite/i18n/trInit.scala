@@ -29,7 +29,13 @@ import edu.umd.cs.piccolo.activities.PActivity  // todo
 import net.kogics.kojo.kmath.KEasing
 
 // Keep in alphabetical order
-object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.NumMethodsInTurkish with tr.OptionMethodsInTurkish with tr.RangeMethodsInTurkish with tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with tr.arayuz.SwingWidgetMethodsInTurkish with tr.VectorMethodsInTurkish {
+object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with
+    tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with
+    tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.NumMethodsInTurkish with
+    tr.OptionMethodsInTurkish with tr.PartialFunctionMethodsInTurkish with tr.RangeMethodsInTurkish with
+    tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with
+    tr.arayuz.SwingWidgetMethodsInTurkish with tr.VectorMethodsInTurkish {
+
   var builtins: CoreBuiltins = _ //unstable reference to module
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
@@ -59,9 +65,6 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   type UfakKesir=tr.UfakKesir
   type Kesir=tr.Kesir
   type İriKesir=tr.İriKesir
-  // todo type Harf=tr.Harf
-  type Yazı=tr.Yazı
-  type EsnekYazı=tr.EsnekYazı
 
   type Dizi[T]=tr.Dizi[T]
   type DeğişkenDizi[B] = tr.DeğişkenDizi[B]
@@ -95,7 +98,6 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   type İşlev1[D,R] = tr.İşlev1[D,R]
   type İşlev2[D1,D2,R] = tr.İşlev2[D1,D2,R]
   type İşlev3[D1,D2,D3,R] = tr.İşlev3[D1,D2,D3,R]
-  type Bölümselİşlev[D,R] = tr.Bölümselİşlev[D,R]
 
   val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) = (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
 
