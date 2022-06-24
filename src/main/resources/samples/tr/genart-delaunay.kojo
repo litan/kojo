@@ -16,7 +16,7 @@ fareyeTıklıyınca { (x, y) =>
 def üçgenleriÇiz() {
     Resim.sil()
     val üçgenler = üçgenDöşeme(noktalar.diziye)
-    üçgenler.foreach { üçgen =>
+    üçgenler.herbiriİçin { üçgen =>
         çiz(Resim {
             // her üçgenin üç noktası var: a, b, c
             val (a, b, c) = (üçgen.a, üçgen.b, üçgen.c)
