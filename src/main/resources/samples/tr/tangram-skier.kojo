@@ -87,7 +87,7 @@ def santimeÇevir(nokta: Kesir) = 2.54 / 96 * nokta
 def ağaç(uzaklık: Kesir) {
     if (uzaklık > santimeÇevir(4)) {
         kalemKalınlığınıKur(uzaklık / 7)
-        kalemRenginiKur(Renk(uzaklık.toInt, mutlakDeğer(255 - uzaklık * 3).toInt, 125))
+        kalemRenginiKur(Renk(uzaklık.sayıya, mutlakDeğer(255 - uzaklık * 3).sayıya, 125))
         ileri(uzaklık)
         sağ(25)
         ağaç(uzaklık * 0.8 - santimeÇevir(2))

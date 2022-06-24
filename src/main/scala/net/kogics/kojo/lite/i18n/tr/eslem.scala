@@ -34,8 +34,65 @@ case class Eşlem[A,D](val m: Map[A,D]) {
   def herÖgeİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
   def sayı: Sayı = m.size
   def dizi = m.toSeq
-  def diziye = m.toSeq
   def al(a: A): Belki[D] = m.get(a)
   def alYoksa(a: A, varsayılanDeğer: => D) = m.getOrElse(a, varsayılanDeğer)
   def apply(a: A) = m(a)
+
+  def anahtarKümesi = m.keySet
+  def anahtarlar = m.keys
+  def kaldır = m.lift
+  def değerler = m.values
+
+  def başı = m.head
+  def kuyruğu = m.tail
+  def önü = m.init
+  def sonu = m.last
+  def boyu: Sayı = m.size
+  def boşMu: İkil = m.isEmpty
+  def doluMu: İkil = m.nonEmpty
+  def ele(deneme: ((A, D)) => İkil) = m.filter(deneme)
+  def eleDeğilse(deneme: ((A, D)) => İkil) = m.filterNot(deneme)
+  def işle[A2, D2](işlev: ((A, D)) => (A2, D2)) = m.map(işlev)
+  def işle[C](işlev: ((A, D)) => C) = m.map(işlev)
+  // todo: Dizi[B] or Iterable?
+  def düzİşle[B](işlev: ((A, D)) => collection.mutable.Iterable[B]) = m.flatMap(işlev)
+  def indirge[B >: (A, D)](işlem: (B, B) => B): B = m.reduce(işlem)
+  def indirgeSoldan[B >: (A, D)](işlem: (B, (A, D)) => B): B = m.reduceLeft(işlem)
+  def indirgeSağdan[B >: (A, D)](işlem: ((A, D), B) => B): B = m.reduceRight(işlem)
+  def indirgeSoldanBelki[B >: (A, D)](işlem: (B, (A, D)) => B): Belki[B] = m.reduceLeftOption(işlem)
+  def indirgeSağdanBelki[B >: (A, D)](işlem: ((A, D), B) => B): Belki[B] = m.reduceRightOption(işlem)
+  def kalta[B >: (A, D)](z: B)(işlev: (B, B) => B): B = m.fold(z)(işlev)
+  def soldanKatla[B](z: B)(işlev: (B, (A, D)) => B): B = m.foldLeft(z)(işlev)
+  def sağdanKatla[B](z: B)(işlev: ((A, D), B) => B): B = m.foldRight(z)(işlev)
+
+  def topla[T >: (A, D)](implicit num: scala.math.Numeric[T]) = m.sum(num) 
+  def çarp[T >: (A, D)](implicit num: scala.math.Numeric[T]) = m.product(num)
+
+  def yazıYap: Yazı = m.mkString
+  def yazıYap(ara: Yazı): Yazı = m.mkString(ara)
+  def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = m.mkString(baş, ara, son)
+  def değiştir(a: A, d: D) = m.clone().addOne(a -> d)
+  def varMı(deneme: ((A, D)) => İkil): İkil = m.exists(deneme)
+
+  def hepsiDoğruMu(deneme: ((A, D)) => İkil): İkil = m.forall(deneme)
+  def hepsiİçinDoğruMu(deneme: ((A, D)) => İkil): İkil = m.forall(deneme)
+
+  def içeriyorMu(anahtar: A): İkil = m.contains(anahtar)
+
+  def alSırayla(n: Sayı) = m.take(n)
+  def alDoğruKaldıkça(deneme: ((A, D)) => İkil) = m.takeWhile(deneme)
+  def alSağdan(n: Sayı) = m.takeRight(n)
+  def düşür(n: Sayı) = m.drop(n)
+  def düşürDoğruKaldıkça(deneme: ((A, D)) => İkil) = m.dropWhile(deneme)
+  def düşürSağdan(n: Sayı) = m.dropRight(n)
+
+  def dizine = m.toList
+  def diziye = m.toSeq
+  def kümeye = m.toSet
+  def yöneye = m.toVector
+  def dizime[C >: (A, D)](implicit delil: scala.reflect.ClassTag[C]): Dizim[C] = new Dizim(m.toArray(delil))
+  def say(işlev: ((A, D)) => İkil): Sayı = m.count(işlev)
+
+  def ikile[C](öbürü: scala.collection.IterableOnce[C]) = m.zip(öbürü)
+  def ikileSırayla = m.zipWithIndex
 }

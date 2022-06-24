@@ -25,24 +25,24 @@ case class LYapısı(
     var nesil = 0
     def evir() {
         nesil += 1
-        kuram = kuram.map { h =>
+        kuram = kuram.işle { h =>
             // h harfi için tanımlanmışsa, yani h kuralı varsa:
             if (kurallar.isDefinedAt(h)) kurallar(h) else h
             // dik çizgilerin yerine nesil sayısını koy:
-        }.mkString.replaceAll("""\|""", nesil.toString)
+        }.yazıYap.değiştirHepsini("""\|""", nesil.yazıya)
     }
 
     def çiz() {
-        def sayıMı(c: Char) = Harf.sayıMı(c)
+        def sayıMı(h: Harf) = Harf.sayıMı(h)
         val üretilmişSayı = new EsnekYazı
         def düzGidebilir() {
             if (üretilmişSayı.size != 0) { // boş değilse
-                val n = üretilmişSayı.toString.toInt // esnek yazıdan sayıya çevir
+                val n = üretilmişSayı.yazıya.sayıya // esnek yazıdan sayıya çevir
                 üretilmişSayı.clear() // sil
                 ileri(uzunluk * kuvveti(büyütmeOranı, n))
             }
         }
-        kuram.foreach { c =>
+        kuram.herbiriİçin { c =>
             if (!sayıMı(c)) {
                 düzGidebilir()
             }

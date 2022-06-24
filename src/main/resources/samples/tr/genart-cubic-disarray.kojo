@@ -35,7 +35,7 @@ yineleİçin(0 |-| n) { yerY =>
     }
 }
 
-çiz(dörtgenler.map { d =>
+çiz(dörtgenler.işle { d =>
     kalemBoyu(2) * kalemRengi(beyaz) * boyaRengi(koyuGri) *
         götür(d.yerX, d.yerY) * döndür(d.açı) -> Resim.dikdörtgen(d.en, d.boy)
 })

@@ -8,11 +8,11 @@ satıryaz("Gelin bir yöney (vektör) kuralım. Öğelerini aşağıda girer mis
 var yöney = Yöney[Sayı]()
 val n = sayıOku("Yöney kaç boyutlu olsun, yani kaç öğesi olacak?")
 çıktıYazıRenginiKur(sarı)
-for (i <- 1 to n) {
+for (i <- 1 |-| n) {
     val e = sayıOku(s"$i. öğe nedir?")
     yöney = yöney :+ e
 }
 çıktıYazıRenginiKur(yeşil)
-satıryaz(s"Girdiğin yöney: ${yöney.mkString("[", ",", "]")}")
-satıryaz(f"    Ortalaması: ${yöney.sum.toDouble / yöney.size}%.2f")
-satıryaz(f"      Uzunluğu: ${karekökü(yöney.map(x => x*x).sum)}%.2f")  // pisagor bu kadar basit! (8-)
+satıryaz(s"Girdiğin yöney: ${yöney.yazıYap("[", ",", "]")}")
+satıryaz(f"    Ortalaması: ${yöney.topla.kesire / yöney.boyu}%.2f")
+satıryaz(f"      Uzunluğu: ${karekökü(yöney.işle(x => x*x).topla)}%.2f")  // pisagor bu kadar basit! (8-)
