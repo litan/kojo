@@ -31,7 +31,7 @@ import net.kogics.kojo.kmath.KEasing
 // Keep in alphabetical order
 object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with
     tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with
-    tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.NumMethodsInTurkish with
+    tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.MathMethodsInTurkish with tr.NumMethodsInTurkish with
     tr.OptionMethodsInTurkish with tr.PartialFunctionMethodsInTurkish with tr.RangeMethodsInTurkish with
     tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with
     tr.arayuz.SwingWidgetMethodsInTurkish with tr.VectorMethodsInTurkish {
@@ -65,6 +65,9 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   type UfakKesir=tr.UfakKesir
   type Kesir=tr.Kesir
   type İriKesir=tr.İriKesir
+
+  type KuralDışı = Exception
+  type ÇalışmaSırasıKuralDışı = RuntimeException
 
   type Dizi[T]=tr.Dizi[T]
   type DeğişkenDizi[B] = tr.DeğişkenDizi[B]
@@ -292,6 +295,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   def satıryaz() = println()
   def yaz(data: Her) = print(data)
 
+/* 
   import tr.{matematik => m}
   val matematik = m // so that coders can look up math functions using code completion in Kojo
   def piSayısı: Kesir = math.Pi
@@ -317,6 +321,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   def enUfağı(x: Kesir, y: Kesir): Kesir = m.enUfağı(x, y)
   def enİrisi(x: UfakKesir, y: UfakKesir): UfakKesir = m.enİrisi(x, y)
   def enUfağı(x: UfakKesir, y: UfakKesir): UfakKesir = m.enUfağı(x, y)
+ */
   //
   // ../CoreBuiltins.scala
   def rastgele(üstSınır: Sayı) = builtins.random(üstSınır)
@@ -542,6 +547,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
 
   import tr.arayuz
   val ay = arayuz
+  type Yazıyüzü = ay.Yazıyüzü
 
   def zamanTut(başlık: Yazı = "Zaman ölçümü:")(işlev: => Birim)(bitiş: Yazı = "sürdü."): Birim = { // timeit in Builtins.scala
     val t0 = buSaniye

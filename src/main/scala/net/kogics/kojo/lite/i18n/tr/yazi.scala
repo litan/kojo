@@ -119,14 +119,23 @@ trait StringMethodsInTurkish {
 
     def dizime[S >: Harf](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(y.toArray(delil))
     def ikile = y.toBoolean
+    def lokmaya = y.toByte
     def kesire = y.toDouble
+    def ufakKesire = y.toFloat
     def sayıya = y.toInt
     def dizine = y.toList
     def eşleme[K, V](implicit delil: Harf <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(y.toMap)
     def diziye = y.toSeq
     def kümeye = y.toSet
+    def kısaya = y.toShort
     def yöneye = y.toVector
 
+    def ikileBelki = y.toBooleanOption
+    def lokmayaBelki = y.toByteOption
+    def kesireBelki = y.toDoubleOption
+    def ufakKesireBelki = y.toFloatOption
+    def sayıyaBelki = y.toIntOption
+    def kısayaBelki = y.toShortOption
     // more to come..
   }
 

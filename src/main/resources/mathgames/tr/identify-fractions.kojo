@@ -8,23 +8,23 @@ val yy = yazıyüzü("Sans Serif", 40)
 val artalanRengi = Renk(255, 232, 181)
 
 val girdi1 = new ay.Yazıgirdisi("") {
-    // daha çok bilgi için, google: swing textfield api
-    setFont(yy)
-    setColumns(2)
-    setHorizontalAlignment(ay.değişmez.merkez)
-    setBackground(artalanRengi)
+    yazıYüzünüKur(yy)
+    sütunSayısınıKur(2)
+    yatayDüzeniKur(ay.değişmez.merkez)
+    artalanıKur(artalanRengi)
 }
 val girdi2 = new ay.Yazıgirdisi("") {
-    setFont(yy)
-    setColumns(2)
-    setHorizontalAlignment(ay.değişmez.merkez)
-    setBackground(artalanRengi)
+    yazıYüzünüKur(yy)
+    sütunSayısınıKur(2)
+    yatayDüzeniKur(ay.değişmez.merkez)
+    artalanıKur(artalanRengi)
 }
 
 def tıklayıncaYazıyıSil(yg: ay.Yazıgirdisi[Yazı]) {
-    yg.addFocusListener(new java.awt.event.FocusAdapter {
-        override def focusGained(e: java.awt.event.FocusEvent) {
-            yg.setText("")
+    yg.odakDinleyiciEkle(new ay.olay.OdakUyarlayıcısı {
+        // odağı kazanınca yazıyı siliverelim
+        override def focusGained(o: ay.olay.OdakOlayı) {
+            yg.yazıyıKur("")
         }
     })
 }
@@ -117,21 +117,17 @@ var yanıt2 = Resim.arayüz(etiket)
 çiz(yanıt2)
 var renk = siyah
 
-def enİriBölen(pay: Sayı, payda: Sayı): Sayı = {
-    kmath.hcf(pay, payda) // highest common factor yani en iri ortak bölen
-}
-
 val düğme = ay.Düğme("Doğru mu?") {
     yanıt.sil()
     yanıt2.sil()
     if (girdi1.value.toIntOption.isDefined && girdi2.value.toIntOption.isDefined) {
-        val ortakBölen = enİriBölen(pay, payda)
+        val ortakBölen = enİriOrtakPayda(pay, payda)
         belirt(pay <= payda, "Pay paydan büyük olmamalı")
         val sadePay = pay / ortakBölen
         val sadePayda = payda / ortakBölen
-        val g1 = girdi1.value.toInt // oyuncunun girdisi Sayı olarak
-        val g2 = girdi2.value.toInt
-        val o2 = enİriBölen(g1, g2)
+        val g1 = girdi1.değeri.sayıya // oyuncunun girdisi Sayı olarak
+        val g2 = girdi2.değeri.sayıya
+        val o2 = enİriOrtakPayda(g1, g2)
         if (g1 == sadePay && g2 == sadePayda) {
             etiket = ay.Tanıt("Doğru.")
             renk = Renk(0, 143, 0) // koyu yeşilimsi
@@ -147,23 +143,23 @@ val düğme = ay.Düğme("Doğru mu?") {
             renk = kırmızı
             etiket2 = ay.Tanıt(" ")
         }
-        etiket.setForeground(renk)
+        etiket.önalanıKur(renk)
     }
     else {
         etiket = ay.Tanıt("Pay ve payda tam sayı olmalı.")
-        etiket.setForeground(kırmızı)
+        etiket.önalanıKur(kırmızı)
     }
-    etiket.setFont(Font("Serif", 20))
+    etiket.yazıYüzünüKur(yazıyüzü("Serif", 20))
     yanıt = Resim.arayüz(etiket)
     yanıt2 = Resim.arayüz(etiket2)
     çiz(götür(ta.x + 20, -ta.y - 40) -> yanıt)
     çiz(götür(ta.x + 20, -ta.y - 80) -> yanıt2)
 }
 
-val düğme2 = Button("Yeni soru") {
+val düğme2 = ay.Düğme("Yeni soru") {
     kesirÇizimi.sil()
-    girdi1.value = ""
-    girdi2.value = ""
+    girdi1.yazıyıKur("")
+    girdi2.yazıyıKur("")
     yanıt.sil()
     yanıt2.sil()
     pay = rastgele(4) + 2
@@ -180,7 +176,7 @@ val düğme2 = Button("Yeni soru") {
 }
 
 silVeSakla()
-girdi1.takeFocus() // klavye girdisini pay olarak okuyalım
+girdi1.girdiOdağıOl() // klavye girdisini pay olarak okuyalım
 val ta = tuvalAlanı
 çiz(
     götür(ta.x, ta.y) -> Resim.arayüz(

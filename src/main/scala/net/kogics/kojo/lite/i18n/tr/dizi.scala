@@ -75,8 +75,7 @@ trait SeqMethodsInTurkish {
     def dilim(nereden: Sayı, nereye: Sayı) = d.slice(nereden, nereye)
     def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
     def ikileSırayla = d.zipWithIndex
-
-
+    // todo: more to come
   }
 
   // todo: duplicates in yazi.scala and dizin.scala and more

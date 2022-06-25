@@ -120,11 +120,11 @@ object dict {
     "isDigit" -> "sayıMı",
     "strip" -> "çıkar/kayış",
     "margin" -> "kenarPayı",
-    "" -> "",
-    "" -> "",
-    "" -> "",
-    "" -> "",
-    "" -> "",
+    "exception" -> "kuraldışı",
+    "handler" -> "işleyici",
+    "runtime" -> "çalışmaSırası",
+    "compiler" -> "derleyici",
+    "compile-time" -> "derlemeSırası",
     "" -> "",
   )
   // https://docs.scala-lang.org/scala3/reference/syntax.html

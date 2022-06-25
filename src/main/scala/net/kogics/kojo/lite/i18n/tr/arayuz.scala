@@ -77,6 +77,7 @@ object arayuz {
     def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
     def girdiOdağıOl() = takeFocus()
     def girdiDinleyiciEkle(d: olay.TuşUyarlayıcısı) = addKeyListener(d)
+    def odakDinleyiciEkle(d: olay.OdakDinleyicisi) = addFocusListener(d)
     def yazıyıAl = getText
     def yazıyıKur(y: Yazı) = setText(y)
     def sakla = setVisible(false)
@@ -118,8 +119,11 @@ object arayuz {
     def artalanıKur(renk: Renk) = setBackground(renk)
     def önalanıKur(renk: Renk) = setForeground(renk)
     def çerçeveyiKur(ç: Çerçeve) = setBorder(ç)
+    def görünürlüğüKur(seçim: İkil) = setVisible(seçim)
     def sakla = setVisible(false)
     def göster = setVisible(true)
+    def etkinliğiKur(seçim: İkil) = setEnabled(seçim)
+    def pencereİçindekiOdağıİste() = requestFocusInWindow()
   }
   object Düğme {
     def apply(tanıt: Yazı)(davranış: => Birim) = new Düğme(tanıt)(davranış)
@@ -182,6 +186,9 @@ object arayuz {
   object olay {
     type TuşUyarlayıcısı = e.KeyAdapter
     type TuşaBasmaOlayı = e.KeyEvent
+    type OdakUyarlayıcısı = e.FocusAdapter
+    type OdakOlayı = e.FocusEvent
+    type OdakDinleyicisi = e.FocusListener
   }
 
   trait SwingWidgetMethodsInTurkish {
