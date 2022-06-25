@@ -1007,7 +1007,7 @@ pages += Page(
       row("rastgeleŞeffafRenk".c,"Deneyerek daha iyi anlarsın."),
       row("rastgeleDiziden(Dizi(1, 3, 5))".c,"G1 girdisindeki diziden rastgele seçer."),
       row("rastgeleDiziden(Dizi(1.0, 10.0, 100.0), Dizi(0.9, 0.09, 0.01))".c,"G2 girdisinde verilen ağırlık oranlarını kullanarak G1'den rastgele seçer."),
-      row("rastgeleKarıştır((1 |-| 6)).dizine".c,"Girilen dizini ya da diziyi karıştırır.")
+      row("rastgeleKarıştır((1 |-| 6).dizine)".c,"Girilen dizini ya da diziyi karıştırır.")
     )
   )
 )

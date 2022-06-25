@@ -56,7 +56,7 @@ trait MathMethodsInTurkish {
   def yakını(x: Kesir): Kesir = math.rint(x)
   def işareti(x: Number): Sayı = x.doubleValue.sign.toInt
   def sayıya(x: Number): Sayı = x.doubleValue.toInt
-  def rasgele: Kesir = math.random // trInit'deki rastgele(x) ile karışmasın diye...
+  def rasgele: Kesir = math.random() // trInit'deki rastgele(x) ile karışmasın diye...
   def mutlakDeğer(x: Sayı): Sayı = math.abs(x)
   def mutlakDeğer(x: Uzun): Uzun = math.abs(x)
   def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
