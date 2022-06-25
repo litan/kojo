@@ -125,6 +125,18 @@ object dict {
     "runtime" -> "çalışmaSırası",
     "compiler" -> "derleyici",
     "compile-time" -> "derlemeSırası",
+    "context" -> "bağlam",
+    "context-menu" -> "bağlamsal-menü",
+    "Seq" -> "Dizi",
+    "collection.Seq" -> "DeğişkenDizi",
+    "Array" -> "Dizim veya Dizik",
+    "ArrayBuffer" -> "EsnekDizim",
+    "List" -> "Dizin",
+    "LazyList" -> "MiskinDizin",
+    "ListBuffer" -> "EsnekDizin", // used in StoryTeller.scala
+    "mutable" -> "değişir",
+    "immutable" -> "değişmez",
+    "" -> "",
     "" -> "",
   )
   // https://docs.scala-lang.org/scala3/reference/syntax.html

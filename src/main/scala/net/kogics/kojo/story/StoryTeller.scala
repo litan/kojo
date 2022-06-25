@@ -58,13 +58,9 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   val defaultMsg =
     <div style="text-align:center;color:#808080;font-size:15px">
       { for (idx <- 1 to 6) yield { <br/> } }
-      <p>
-        Run a story by loading/writing your story script within the <em>Script Editor</em>, 
-        and then clicking the <em>Run</em> button.
-      </p>
-      <p>
-        You can control a running story via buttons that appear at the bottom of this pane.
-      </p>
+      <p> { Utils.loadString("S_StoryTellerIntroP1") } </p>
+      <p> { Utils.loadString("S_StoryTellerIntroP2") } </p>
+      <p> { Utils.loadString("S_StoryTellerIntroP3") } </p>
     </div>
 
   //  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
