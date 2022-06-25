@@ -41,7 +41,7 @@ var bittiMi = yanlış
 
 // java'nın arayüz kütüphanesi çok zengin
 // birkaç tanesini Türkçe'ye çevirdik. ay modülüne koyduk.
-val yazıYüzü = yazıyüzü("Sans Serif", 60)
+val yazıYüzü = Yazıyüzü("Sans Serif", 60)  // kıvrıksız çizikli yazı
 val yanıtKutusu = new ay.Yazıgirdisi(0) {
     // bu komutlar Yazıgirdisi türünün metodları:
     yazıYüzünüKur(yazıYüzü)

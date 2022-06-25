@@ -4,7 +4,7 @@
 
 // Bülent Başaran (ben@scala.org) Türkçe'ye çevirirken ufak tefek değişiklikler yaptı.
 
-val yy = yazıyüzü("Sans Serif", 40)
+val yy = Yazıyüzü("Sans Serif", 40)
 val artalanRengi = Renk(255, 232, 181)
 
 val girdi1 = new ay.Yazıgirdisi("") {
