@@ -992,9 +992,22 @@ pages += Page(
       row("yakın(3.48)".c,"G1 kesirine en yakın sayıyı Uzun türünde çıktı olarak verir."),
       row("yakın(2.6F)".c,"G1 KısaKesir'ine en yakın sayıyı Sayı türünde çıktı olarak verir.")
     ),
-    "Rastgele (Random) sayılar".h3,
+    "Rastgele (Random) sayılar, rastgele başka şeyler...".h3,
     table(
-      row("rastgele".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rastgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
+      row("rasgele".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rastgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rasgele ya da rastgele."),
+      row("rastgele(2)".c,"G1 girdisinden küçük rastgele bir tam sayı verir, sıfır da dahil."),
+      row("rastgele(2, 5)".c,"G1 girdisinden başlayarak G2 girdisinden küçük rastgele tam sayı verir."),
+      row("rastgeleSayı".c,"Rastgele tam sayı, Sayı.EnUfağı ile Sayı.Enİrisi arasında."),
+      row("rastgeleUzun".c,"Rastgele tam sayı, Uzun.EnUfağı ile Uzun.Enİrisi arasında."),
+      row("rastgeleKesir(3.0)".c,"0'dan G1 girdisine kadar rastgele bir kesir."),
+      row("rastgeleKesir(2.0, 3.0)".c,"G1 ve G2 girdileri arasında rastgele bir kesir"),
+      row("rastgeleÇanEğrisinden".c,"Normal dağılım da derler. 0'a yakın sayılar daha çok rastlar, büyüdükçe ve küçüldükçe daha az gelirler. Diğer adları: rastgeleNormalKesir, rastgeleDoğalKesir."),
+      row("rastgeleİkil".c,"Rastgele doğru (true) ya da yanlış (false). Bir diğer adı da: rastgeleSeçim."),
+      row("rastgeleRenk".c,"Matematikle ilgisi yok gibi. Ama adı üstünde. Resim çizerken işe yarayabilir."),
+      row("rastgeleŞeffafRenk".c,"Deneyerek daha iyi anlarsın."),
+      row("rastgeleDiziden(Dizi(1, 3, 5))".c,"G1 girdisindeki diziden rastgele seçer."),
+      row("rastgeleDiziden(Dizi(1.0, 10.0, 100.0), Dizi(0.9, 0.09, 0.01))".c,"G2 girdisinde verilen ağırlık oranlarını kullanarak G1'den rastgele seçer."),
+      row("rastgeleKarıştır((1 |-| 6)).dizine".c,"Girilen dizini ya da diziyi karıştırır.")
     )
   )
 )
@@ -1621,7 +1634,7 @@ serpiştir(noktalar) // noktaları yerleştir ve çizgileri çiz
 
 // noktaları rastgele yerleştir
 def serpiştir(hepsi: Yöney[Nokta]) {
-    hepsi.herbiriİçin(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rastgele - 0.5), KS * YÇ * 6 * (rastgele - 0.5)))
+    hepsi.herbiriİçin(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rasgele - 0.5), KS * YÇ * 6 * (rasgele - 0.5)))
     çizelim(çizgiler)
 }
 

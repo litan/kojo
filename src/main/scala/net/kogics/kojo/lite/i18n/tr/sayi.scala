@@ -41,4 +41,34 @@ trait NumMethodsInTurkish {
     def yakın = a.round
   }
 
+  object Lokma {
+    def Enİrisi = Byte.MaxValue
+    def EnUfağı = Byte.MinValue
+  }
+
+  object Sayı {
+    def Enİrisi = Int.MaxValue
+    def EnUfağı = Int.MinValue
+  }
+
+  object Kısa {
+    def Enİrisi = Short.MaxValue
+    def EnUfağı = Short.MinValue
+  }
+
+  object Uzun {
+    def Enİrisi = Long.MaxValue
+    def EnUfağı = Long.MinValue
+  }
+
+  object Kesir {
+    def Enİrisi = Double.MaxValue
+    def EnUfağı = Double.MinValue
+  }
+
+  object UfakKesir {
+    def Enİrisi = Float.MaxValue
+    def EnUfağı = Float.MinValue
+  }
+
 }
