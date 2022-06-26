@@ -6,7 +6,7 @@
       <registry />
       <envVar name="JAVA_HOME" />
     </searchSequence>
-    <jreBundles jdkProviderId="JBR" release="11/11.0.13-b1751.21">
+    <jreBundles jdkProviderId="JBR" release="11/11.0.15-b2043.56">
       <modules>
         <module name="java.base" />
         <module name="java.compiler" />
