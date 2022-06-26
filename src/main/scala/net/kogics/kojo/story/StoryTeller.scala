@@ -58,7 +58,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   val defaultMsg =
     <div style="text-align:center;color:#808080;font-size:15px">
       { for (idx <- 1 to 6) yield { <br/> } }
-      <p> { Utils.loadString("S_StoryTellerIntroP1") } </p>
+      <p> { xml.XML.loadString(Utils.loadString("S_StoryTellerIntroP1")) } </p>
       <p> { Utils.loadString("S_StoryTellerIntroP2") } </p>
       <p> { Utils.loadString("S_StoryTellerIntroP3") } </p>
     </div>
