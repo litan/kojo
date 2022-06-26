@@ -10,7 +10,7 @@ silVeSakla()
 hızıKur(çokHızlı)
 artalanıKurDik(sarı, Renk(255, 204, 0))
 kalemKalınlığınıKur(0.01)
-boyamaRenginiKur(renkler.linearGradient(
+boyamaRenginiKur(Renk.doğrusalDeğişim(
     0, 0, Renk(0, 0, 0, 230),
     1, 1, Renk(0, 102, 255),
     doğru))

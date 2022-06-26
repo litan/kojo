@@ -16,8 +16,15 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
+import scala.language.implicitConversions
+import org.apache.commons.math3.stat.StatUtils
+import org.apache.commons.math3.util.ArithmeticUtils
+import net.kogics.kojo.core.{Point => Nokta}
+
+import scala.{Array => Dizik}
+
 // translating math library
-object matematik {
+trait MathMethodsInTurkish {
   def piSayısı: Kesir = math.Pi
   def eSayısı: Kesir = math.E
   val gücü = kuvveti _
@@ -33,6 +40,9 @@ object matematik {
   def doğalLogu(x: Kesir): Kesir = math.log(x)
   def logaritması(x: Kesir): Kesir = math.log(x)
   def logTabanlı(x: Kesir, t: Kesir) = math.log(x) / math.log(t)
+  private lazy val log2_e = math.log(2)
+  def log2tabanlı(x: Kesir) = math.log(x) / log2_e
+
   def radyana(açı: Kesir): Kesir = math.toRadians(açı)
   def dereceye(açı: Kesir): Kesir = math.toDegrees(açı)
   def sinüs(açı: Kesir): Kesir = math.sin(açı)
@@ -46,7 +56,7 @@ object matematik {
   def yakını(x: Kesir): Kesir = math.rint(x)
   def işareti(x: Number): Sayı = x.doubleValue.sign.toInt
   def sayıya(x: Number): Sayı = x.doubleValue.toInt
-  def rastgele = math.random()
+  def rasgele: Kesir = math.random() // trInit'deki rastgele(x) ile karışmasın diye...
   def mutlakDeğer(x: Sayı): Sayı = math.abs(x)
   def mutlakDeğer(x: Uzun): Uzun = math.abs(x)
   def mutlakDeğer(x: Kesir): Kesir = math.abs(x)
@@ -61,4 +71,21 @@ object matematik {
   def enUfağı(x: Kesir, y: Kesir): Kesir = math.min(x, y)
   def enİrisi(x: UfakKesir, y: UfakKesir): UfakKesir = math.max(x, y)
   def enUfağı(x: UfakKesir, y: UfakKesir): UfakKesir = math.min(x, y)
+
+  // ../../../Kmath/Kmath.scala
+  def enUfakOrtakKat(s1: Sayı, s2: Sayı) = ArithmeticUtils.lcm(s1, s2)
+  def enİriOrtakPayda(s1: Sayı, s2: Sayı) = ArithmeticUtils.gcd(s1, s2) // or hcf
+  def enUfakOrtakKat(s1: Uzun, s2: Uzun) = ArithmeticUtils.lcm(s1, s2)
+  def enİriOrtakPayda(s1: Uzun, s2: Uzun) = ArithmeticUtils.gcd(s1, s2)
+
+  def uzaklık(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir): Kesir = math.sqrt(math.pow(y2 - y1, 2) + math.pow(x2 - x1, 2))
+  def uzaklık(n1: Nokta, n2: Nokta): Kesir = uzaklık(n1.x, n1.y, n2.x, n2.y)
+  def açı(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir): Kesir = math.atan2(y2 - y1, x2 - x1).toDegrees
+  def açı(n1: Nokta, n2: Nokta): Kesir = açı(n1.x, n1.y, n2.x, n2.y)
+
+  def ortalama(sayılar: Dizik[Kesir]) = StatUtils.mean(sayılar)
+  def değişim(sayılar: Dizik[Kesir]) = StatUtils.variance(sayılar)
+  def değişim(sayılar: Dizik[Kesir], ortalama: Kesir) = StatUtils.variance(sayılar, ortalama)
+  
+  // todo: more to come
 }

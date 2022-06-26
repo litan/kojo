@@ -8,15 +8,15 @@ satıryaz("Ögelerini aşağıda girer misin?")
 val n = sayıOku("Yöney kaç boyutlu olsun, yani kaç öğesi olacak?")
 çıktıYazıRenginiKur(sarı)
 for (i <- 1 to n) {
-    val e = sayıOku(s"$i. öğe nedir? (-20 ve 20 arası olsun)")
+    val e = sayıOku(s"$i. öğe nedir? (0 ve 20 arası olsun)")
     yöney = yöney :+ e
 }
 çıktıYazıRenginiKur(yeşil)
-satıryaz(s"Girdiğin yöney: ${yöney.mkString("[", ",", "]")}")
+satıryaz(s"Girdiğin yöney: ${yöney.yazıYap("[", ",", "]")}")
 satıryaz("Tuvalde bu yöneyin elemanlarından oluşan bir çubuk grafiği çizdik (10/1 ölçeğinde)")
 
 def çubuk(n: Sayı) = Resim.dikdörtgen(30, n * 10)
-val çubuklar = yöney.map { n => çubuk(n) }
+val çubuklar = yöney.işle { n => çubuk(n) }
 eksenleriGöster()
 gridiGöster()
 val çubukGrafiği = Resim.diziYatay(çubuklar).boşluk(5)

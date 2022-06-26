@@ -958,14 +958,16 @@ pages += Page(
       row("piSayısı".c,"pi sayısı, 3.14159265 .... yani yarıçapı 1 olan dairenin çevre uzunluğunun yarısıdır.")
     ),
     "Trigonometri fonksiyonları".h3,
-    "Trigonometrik işlevler girdi olarak radyan birimi kullanırlar. Radyan kavramını anlatan çok güzel bir örneğimiz var Kojo'da. Örnekler menüsünde en altta Matematik Öğrenme Birimleri menüsü var. Onun en altında 'Açı Nedir?' var. Ona tıklayıver. Günlük hayatta biz 90 derece, 180 derece gibi bize daha doğal gelen derece birimini kullanırız açıları ifade etmek için. Radyandan dereceye çevirmek için 'toDegrees' metodunu, tersini yapmak için de 'toRadians' metodunu kullanabiliriz. Bilmemiz gereken tek şey şu: 2*PI radyan 360 dereceye eşittir. Aşağıda sıraladığımız metodlardan başka yay metodları da var. İngilizce arc diye geçer.".p,
+    "Trigonometrik işlevler girdi olarak radyan birimi kullanırlar. Radyan kavramını anlatan çok güzel bir örneğimiz var Kojo'da. Örnekler menüsünde en altta Matematik Öğrenme Birimleri menüsü var. Onun en altında 'Açı Nedir?' var. Ona tıklayıver. Günlük hayatta biz 90 derece, 180 derece gibi bize daha doğal gelen derece birimini kullanırız açıları ifade etmek için. Radyandan dereceye çevirmek için 'dereceye' metodunu, tersini yapmak için de 'radyana' metodunu kullanabiliriz. Bilmemiz gereken tek şey şu: 2*pi radyan 360 dereceye eşittir. Aşağıda sıraladığımız metodlardan başka yay metodları da var.".p,
     "Kısa not: aşağıdaki tanımlarda G1, G2, ... ile fonksiyona girilen değerleri ifade ediyoruz kısaca. Yani işlevAdı(G1, G2, G3, ...). ".p,
     table(
       row("sinüs(piSayısı/6)".c,"G1 girdisinin yani burada Pi/6 değerinin sinüsü."),
       row("kosinüs(piSayısı/6)".c,"G1 girdisinin kosinüsü."),
       row("tanjant(piSayısı/6)".c,"G1 girdisinin tanjantı."),
       row("radyana(45)".c,"G1 (derece olsun) girdisini radyana çevirir."),
-      row("dereceye(piSayısı/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir.")
+      row("45.radyana".c,"Kesirlerin 'radyana' yöntemini de kullanabiliriz."),
+      row("dereceye(piSayısı/2)".c,"G1 (radyan olsun) girdisini dereceye çevirir."),
+      row("piSayısı.dereceye".c,"Bir değişik yöntem de bu aynı radyana yöntemi gibi."),
     ),
     "Üst bulma metodları".h3,
     "Logaritma ve üst bulmak için iki temel işlev var. İkisi de e tabanını kullanır (e sayısı)".p,
@@ -990,9 +992,22 @@ pages += Page(
       row("yakın(3.48)".c,"G1 kesirine en yakın sayıyı Uzun türünde çıktı olarak verir."),
       row("yakın(2.6F)".c,"G1 KısaKesir'ine en yakın sayıyı Sayı türünde çıktı olarak verir.")
     ),
-    "Rastgele (Random) sayılar".h3,
+    "Rastgele (Random) sayılar, rastgele başka şeyler...".h3,
     table(
-      row("rastgele".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rastgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rastgele.")
+      row("rasgele".c,"0.0 ile 1.0 arasında rastgele bir sayı verir. Çıktı türü Kesir olur. Gerçekten rastgele olmasa da, çok yakındır. Pseudo-random denir tam doğru anlamıyla. Birkaç kere tıkla bak ne olacak.. İşte rasgele ya da rastgele."),
+      row("rastgele(2)".c,"G1 girdisinden küçük rastgele bir tam sayı verir, sıfır da dahil."),
+      row("rastgele(2, 5)".c,"G1 girdisinden başlayarak G2 girdisinden küçük rastgele tam sayı verir."),
+      row("rastgeleSayı".c,"Rastgele tam sayı, Sayı.EnUfağı ile Sayı.Enİrisi arasında."),
+      row("rastgeleUzun".c,"Rastgele tam sayı, Uzun.EnUfağı ile Uzun.Enİrisi arasında."),
+      row("rastgeleKesir(3.0)".c,"0'dan G1 girdisine kadar rastgele bir kesir."),
+      row("rastgeleKesir(2.0, 3.0)".c,"G1 ve G2 girdileri arasında rastgele bir kesir"),
+      row("rastgeleÇanEğrisinden".c,"Normal dağılım da derler. 0'a yakın sayılar daha çok rastlar, büyüdükçe ve küçüldükçe daha az gelirler. Diğer adları: rastgeleNormalKesir, rastgeleDoğalKesir."),
+      row("rastgeleİkil".c,"Rastgele doğru (true) ya da yanlış (false). Bir diğer adı da: rastgeleSeçim."),
+      row("rastgeleRenk".c,"Matematikle ilgisi yok gibi. Ama adı üstünde. Resim çizerken işe yarayabilir."),
+      row("rastgeleŞeffafRenk".c,"Deneyerek daha iyi anlarsın."),
+      row("rastgeleDiziden(Dizi(1, 3, 5))".c,"G1 girdisindeki diziden rastgele seçer."),
+      row("rastgeleDiziden(Dizi(1.0, 10.0, 100.0), Dizi(0.9, 0.09, 0.01))".c,"G2 girdisinde verilen ağırlık oranlarını kullanarak G1'den rastgele seçer."),
+      row("rastgeleKarıştır((1 |-| 6).dizine)".c,"Girilen dizini ya da diziyi karıştırır.")
     )
   )
 )
@@ -1465,7 +1480,7 @@ val KU = 128
 
 // ilk önce, bütün kareler cansız olmalı
 var dünya = (0 |- KU * KU).soldanKatla(Sayılar())((x, y) => x :+ 0)
-satıryaz(s"Dünyamızda $KU'in karesi yani ${dünya.size} tane hane var.")
+satıryaz(s"Dünyamızda $KU'in karesi yani ${dünya.boyu} tane hane var.")
 yaz(s"Ekranımız ${(tuvalAlanı.eni / 10).sayıya} kare eninde ")
 satıryaz(s"ve ${(tuvalAlanı.boyu / 10).sayıya} kare boyunda.")
 
@@ -1496,7 +1511,7 @@ val (desen, adı, durak) = seç match {
 
 dünya = başlangıç(dünya, desen)
 
-yaz(s"$seç. desende ${desen.size} tane canlı kare var. Adı $adı.\nNesilleri sayalım: ")
+yaz(s"$seç. desende ${desen.boyu} tane canlı kare var. Adı $adı.\nNesilleri sayalım: ")
 
 var zaman = 0
 val z0 = buSaniye // şimdiki zamanı (geçmişte bir ana göre) anımsayalım
@@ -1619,7 +1634,7 @@ serpiştir(noktalar) // noktaları yerleştir ve çizgileri çiz
 
 // noktaları rastgele yerleştir
 def serpiştir(hepsi: Yöney[Nokta]) {
-    hepsi.herbiriİçin(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rastgele - 0.5), KS * YÇ * 6 * (rastgele - 0.5)))
+    hepsi.herbiriİçin(nkt => nkt.yeniKonum(KS * YÇ * 6 * (rasgele - 0.5), KS * YÇ * 6 * (rasgele - 0.5)))
     çizelim(çizgiler)
 }
 

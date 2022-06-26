@@ -37,6 +37,29 @@ trait SetMethodsInTurkish {
     def yazıYap: Yazı = d.mkString
     def yazıYap(ara: Yazı): Yazı = d.mkString(ara)
     def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = d.mkString(baş, ara, son)
+    def herbiriİçin[S](işlev: T => S): Birim = d.foreach(işlev)
+    def varMı(deneme: T => İkil): İkil = d.exists(deneme)
+    def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
+    def hepsiİçinDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
+    def içeriyorMu(öge: T): İkil = d.contains(öge)
+    def al(n: Sayı): Küme[T] = d.take(n)
+    def alDoğruKaldıkça(deneme: T => İkil): Küme[T] = d.takeWhile(deneme)
+    def alSağdan(n: Sayı): Küme[T] = d.takeRight(n)
+    def düşür(n: Sayı): Küme[T] = d.drop(n)
+    def düşürDoğruKaldıkça(deneme: T => İkil): Küme[T] = d.dropWhile(deneme)
+    def düşürSağdan(n: Sayı): Küme[T] = d.dropRight(n)
+
+    def dizine = d.toList
+    def diziye = d.toSeq
+    def kümeye = d.toSet
+    def yöneye = d.toVector
+    def dizime[S >: T](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(d.toArray(delil))
+    def eşleme[K, V](implicit delil: T <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(d.toMap)
+    def say(işlev: T => İkil): Sayı = d.count(işlev)
+
+    def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
+    def ikileSırayla = d.zipWithIndex
+
     // more to come
   }
 }

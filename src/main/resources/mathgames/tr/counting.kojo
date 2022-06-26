@@ -33,18 +33,17 @@ def yeniArayüz(sayılar: (Sayı, Sayı, Sayı)) {
     arayüz = arayüzTanımı(sayılar)
     çiz(arayüz)
     arayüz.ardaAl() // yoksa oyun bittiğinde yazdığımız yazı altta kalıyor. Neden?
-    yanıtPenceresi.takeFocus() // klayve girdisini üstüne alsın ve ne gerekiyorsa yapsın
+    yanıtPenceresi.girdiOdağıOl() // klayve girdisini üstüne alsın ve ne gerekiyorsa yapsın
 }
 var arayüz: Resim = Resim.yatay(1) // şimdilik
  
 // Yazılımcığımızın en becerikli, en çok çalışan kısmı bu:
 val yanıtPenceresi = new ay.Yazıgirdisi(0) {
-    // daha çok bilgi için, google: swing textfield api
-    setFont(yazıyüzü("Sans Serif", 60))
-    setColumns(5)
-    setHorizontalAlignment(ay.değişmez.merkez)
-    setBackground(artalanRengi)
-    setBorder(ay.çerçeveci.çizgiKenar(siyah))
+    yazıYüzünüKur(yazıyüzü("Sans Serif", 60))
+    sütunSayısınıKur(5)
+    yatayDüzeniKur(ay.değişmez.merkez)
+    artalanıKur(artalanRengi)
+    çerçeveyiKur(ay.çerçeveci.çizgiKenar(siyah))
 }
 
 def ev() {
@@ -145,8 +144,8 @@ def yeniSoru(s1: Sayı, s2: Sayı) = {
 
 def yanıtıKur(s: (Sayı, Sayı, Sayı)) = {
     yanıt = s._1 * s._2 + s._3
-    yanıtPenceresi.setText("")
-    yanıtUzunluğu = yanıt.toString.length
+    yanıtPenceresi.yazıyıKur("")
+    yanıtUzunluğu = yanıt.yazıya.boyu
 }
 
 var doğruYanıtSayısı = 0
@@ -165,23 +164,23 @@ def yeterinceZamanVarMı() = {
 
 import ay.olay.TuşaBasmaOlayı
 val s = yeniSoru(0, 0)
-yanıtPenceresi.addKeyListener(new ay.olay.TuşUyarlayıcısı { // yanıt penceresine tuş dinleyicisi ekliyoruz
+yanıtPenceresi.girdiDinleyiciEkle(new ay.olay.TuşUyarlayıcısı {
     var sayılarAnımsa = s  // yanlış yanıt verince arayüzü baştan kuruyoruz. Soruyu hatırlayalım ki oyuncu tekrar deneyebilsin
     def yanıtıDenetle(x: Sayı) {
         if (x == yanıt) {
-            yanıtPenceresi.setForeground(yeşil)
+            yanıtPenceresi.önalanıKur(yeşil)
             doğruYanıtSayısı += 1
             if (!süreBittiMi && yeterinceZamanVarMı()) {
                 sırayaSok(0.3) {
                     val sayılar = yeniSoru(sayılarAnımsa._1, sayılarAnımsa._2)
                     sayılarAnımsa = sayılar
                     yeniArayüz(sayılar)
-                    yanıtPenceresi.setForeground(siyah)
+                    yanıtPenceresi.önalanıKur(siyah)
                 }
             }
         }
         else {
-            yanıtPenceresi.setForeground(kırmızı)
+            yanıtPenceresi.önalanıKur(kırmızı)
             yanlışYanıtSayısı += 1
             if (!süreBittiMi) {
                 sırayaSok(0.3) {  // kırmızı biraz dursun ki görelim
@@ -192,14 +191,13 @@ yanıtPenceresi.addKeyListener(new ay.olay.TuşUyarlayıcısı { // yanıt pence
     }
 
     def yanıtHazırMı(olay: TuşaBasmaOlayı) = {
-        // penceredeki yazıyı al ve uzunluğunu bul
-        yanıtPenceresi.getText.length >= yanıtUzunluğu
+        yanıtPenceresi.yazıyıAl.boyu >= yanıtUzunluğu
     }
 
     // escape tuşuna basınca oyuna son verelim:
     override def keyPressed(olay: TuşaBasmaOlayı) {
-        if (olay.getKeyCode == tuşlar.VK_ESCAPE) {
-            olay.consume()
+        if (olay.tuşKodu == tuşlar.VK_ESCAPE) {
+            olay.tüket()
             if (!oyunBitti) {
                 oyunSüresineBak(doğru)
             }
@@ -208,19 +206,19 @@ yanıtPenceresi.addKeyListener(new ay.olay.TuşUyarlayıcısı { // yanıt pence
                 tümEkranTuval(); tümEkran = yanlış // tüm ekran modunu kapatalım
             }
         } // d tuşu yazılımcığımızı test etmek için:
-        else if (olay.getKeyCode == tuşlar.VK_D) {
+        else if (olay.tuşKodu == tuşlar.VK_D) {
             val sayılar = (enÇokKaçSatır, enÇokKaçSütun, enÇokKaçSütun)
             sayılarAnımsa = sayılar
             yanıtıKur(sayılar)
             yeniArayüz(sayılar)
         } // büyük boşluk tuşuna basarak soruyu değiştirebiliriz:
-        else if (olay.getKeyCode == tuşlar.VK_SPACE) {
+        else if (olay.tuşKodu == tuşlar.VK_SPACE) {
             değiştirmeSayısı += 1
             val sayılar = yeniSoru(0, 0)
             sayılarAnımsa = sayılar
             yeniArayüz(sayılar)
         }
-        else if (olay.getKeyCode == tuşlar.VK_ENTER) {
+        else if (olay.tuşKodu == tuşlar.VK_ENTER) {
             tümEkran = !tümEkran
             tümEkranTuval() // tüm ekran modunu aç/kapat
         }
@@ -228,18 +226,18 @@ yanıtPenceresi.addKeyListener(new ay.olay.TuşUyarlayıcısı { // yanıt pence
 
     // sayı dışındaki girdileri yok sayalım
     override def keyTyped(olay: TuşaBasmaOlayı) {
-        if (!olay.getKeyChar.isDigit) {
-            olay.consume()
+        if (!olay.tuşHarfi.sayıMı) {
+            olay.tüket()
         }
     }
 
     override def keyReleased(olay: TuşaBasmaOlayı) {
         if (yanıtHazırMı(olay)) {
-            val x = yanıtPenceresi.value
+            val x = yanıtPenceresi.değeri
             yanıtıDenetle(x)
         }
         else {
-            yanıtPenceresi.setForeground(siyah)
+            yanıtPenceresi.önalanıKur(siyah)
         }
     }
 })
@@ -276,7 +274,7 @@ def oyunSüresineBak(escapeTuşunaBasıldıMı: İkil = yanlış) {
             |Skor: ${sonuç(doğruYanıtSayısı, yanlışYanıtSayısı, değiştirmeSayısı)}
             """
             arayüz.sil() // Hem temizlik hem de escape tuşu çalışsın diye.
-            mesajıYaz(mesaj.stripMargin, yeşil) // stripMargin: boşlukları temizleme metodu
+            mesajıYaz(mesaj.kenarPayınıÇıkar, yeşil) // stripMargin: boşlukları temizleme metodu
             durdur()
         }
     }
@@ -289,5 +287,5 @@ yeniArayüz(s)
 var geçenSüre = 0
 oyunSüresineBak()
 sırayaSok(1) {
-    yanıtPenceresi.takeFocus() // klayve girdisini üstüne alsın
+    yanıtPenceresi.girdiOdağıOl() // klayve girdisini üstüne alsın
 }

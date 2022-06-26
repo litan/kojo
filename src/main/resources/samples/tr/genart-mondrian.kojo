@@ -51,7 +51,7 @@ yineleİçin(1 |-| n) { i =>
 
 dörtgenler = rastgeleKarıştır(dörtgenler)
 renkler.ikileSırayla.işle {
-    case (renk, sıra) => if (sıra < dörtgenler.size)
+    case (renk, sıra) => if (sıra < dörtgenler.boyu)
         dörtgenler(sıra).renk = renk
 }
 

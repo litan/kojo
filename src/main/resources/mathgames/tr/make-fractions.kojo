@@ -4,27 +4,27 @@
 
 // Bülent Başaran (ben@scala.org) Türkçe'ye çevirirken ufak tefek değişiklikler yaptı.
 
-val yy = yazıyüzü("Sans Serif", 40)
+val yy = Yazıyüzü("Sans Serif", 40)
 val artalanRengi = Renk(255, 232, 181)
 
 val girdi1 = new ay.Yazıgirdisi("") {
-    // daha çok bilgi için, google: swing textfield api
-    setFont(yy)  // todo ..
-    setColumns(2)
-    setHorizontalAlignment(ay.değişmez.merkez)
-    setBackground(artalanRengi)
+    yazıYüzünüKur(yy)
+    sütunSayısınıKur(2)
+    yatayDüzeniKur(ay.değişmez.merkez)
+    artalanıKur(artalanRengi)
 }
 val girdi2 = new ay.Yazıgirdisi("") {
-    setFont(yy)
-    setColumns(2)
-    setHorizontalAlignment(ay.değişmez.merkez)
-    setBackground(artalanRengi)
+    yazıYüzünüKur(yy)
+    sütunSayısınıKur(2)
+    yatayDüzeniKur(ay.değişmez.merkez)
+    artalanıKur(artalanRengi)
 }
 
 def tıklayıncaYazıyıSil(yg: ay.Yazıgirdisi[Yazı]) {
-    yg.addFocusListener(new java.awt.event.FocusAdapter {  // todo ..
-        override def focusGained(e: java.awt.event.FocusEvent) { 
-            yg.setText("")
+    yg.odakDinleyiciEkle(new ay.olay.OdakUyarlayıcısı {
+        // odağı kazanınca yazıyı siliverelim
+        override def focusGained(o: ay.olay.OdakOlayı) {
+            yg.yazıyıKur("")
         }
     })
 }
@@ -36,26 +36,25 @@ val düğme = ay.Düğme("Kesiri çizelim") {
     try { // dene
         kesirÇizimi.sil()
         ondalıkVeYüzde.sil()
-        kesirÇizimi = kesiriÇiz(girdi1.value.toInt, girdi2.value.toInt)
+        kesirÇizimi = kesiriÇiz(girdi1.değeri.sayıya, girdi2.değeri.sayıya)
         çiz(kesirÇizimi)
-        düğme2.setEnabled(true)
+        düğme2.etkinliğiKur(doğru)
     }
     catch {  // "try" içinde bir yanılgı yani bir hata olunca burada yakalarız
-        // 'case' yani durum şu (RuntimeException) ise. O da Java ve Scala'da en genel ve temel yanılgı türlerinden biri (base class)
-        case e: RuntimeException => 
-            if (girdi1.value.isEmpty) {
+        case e: ÇalışmaSırasıKuralDışı => // 'case' yani durum şu ise: Java ve Scala'da en genel yanılgı, kural dışı durum türü
+            if (girdi1.değeri.boşMu) {
                 satıryaz("Pay boş!")
             }
-            else if (girdi1.value.toIntOption.isEmpty) {
+            else if (girdi1.değeri.sayıyaBelki.boşMu) {
                 satıryaz("Pay tam sayı değil.")
             }
-            else if (girdi2.value.isEmpty) {
+            else if (girdi2.değeri.boşMu) {
                 satıryaz("Payda boş!")
             }
-            else if (girdi2.value.toIntOption.isEmpty) {
+            else if (girdi2.değeri.sayıyaBelki.boşMu) {
                 satıryaz("Payda tam sayı değil.")
             }
-            else if (girdi2.value.toInt == 0) {
+            else if (girdi2.değeri.sayıya == 0) {
                 satıryaz("Payda 1 ya da daha büyük olmalı")
             }
             else {
@@ -77,13 +76,13 @@ var ondalıkVeYüzde = Resim.yatay(0) // şimdilik
 val düğme2: ay.Düğme = ay.Düğme("Kesiri ondalık ve yüzde olarak görelim") {
     try {  // dene
         ondalıkVeYüzde.sil()
-        ondalıkVeYüzde = ondalığıVeYüzdeyiYaz(girdi1.value.toDouble, girdi2.value.toDouble)
+        ondalıkVeYüzde = ondalığıVeYüzdeyiYaz(girdi1.değeri.kesire, girdi2.değeri.kesire)
         çiz(ondalıkVeYüzde)
-        düğme2.setEnabled(false)
-        düğme.requestFocusInWindow()
+        düğme2.etkinliğiKur(yanlış)
+        düğme.pencereİçindekiOdağıİste()
     }
-    catch {  // yanılgıları yakala
-        case e: RuntimeException =>  // 'case' yani durum şu ise: Java ve Scala'da en genel yanılgı türü
+    catch {  // yanılgıları yakalayıp göz ardı edelim
+        case e: ÇalışmaSırasıKuralDışı =>  // 'case' yani durum şu ise: Java ve Scala'da en genel yanılgı, kural dışı durum türü
     }
 }
 
@@ -173,7 +172,7 @@ def kesiriÇiz(pay1: Sayı, payda1: Sayı) = Resim {
 }
 
 silVeSakla()
-girdi1.takeFocus()  // klavye girdisini pay olarak okuyalım
+girdi1.girdiOdağıOl()  // klavye girdisini pay olarak okuyalım
 val ta = tuvalAlanı
 çiz(
     götür(ta.x, ta.y) -> Resim.arayüz(
@@ -189,4 +188,4 @@ val ta = tuvalAlanı
     )
 )
 
-düğme2.setEnabled(yanlış)  // başta etkisiz olsun ikinci düğme
+düğme2.etkinliğiKur(yanlış)  // başta etkisiz olsun ikinci düğme

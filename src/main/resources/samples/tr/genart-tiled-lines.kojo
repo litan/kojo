@@ -36,4 +36,4 @@ yineleİçin(0 |- n) { sütun =>
     }
 }
 // burada da hepsini çizeceğiz
-çiz(çizgiler.map(çizgidenResim))
+çiz(çizgiler.işle(çizgidenResim))

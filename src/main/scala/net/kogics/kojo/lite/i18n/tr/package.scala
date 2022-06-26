@@ -65,10 +65,6 @@ package object tr {
   type UfakKesir = Float
   type Kesir = Double
   type İriKesir = BigDecimal
-  // Yazı
-  // todo type Harf = Char
-  type Yazı = String
-  type EsnekYazı=collection.mutable.StringBuilder
 
   type Dizi[B] = Seq[B]
   type DeğişkenDizi[B] = collection.Seq[B]
@@ -134,7 +130,8 @@ package object tr {
   type İşlev1[D,R] = Function1[D,R]
   type İşlev2[D1,D2,R] = Function2[D1,D2,R]
   type İşlev3[D1,D2,D3,R] = Function3[D1,D2,D3,R]
-  type Bölümselİşlev[D,R] = PartialFunction[D,R]
+
+  type Yazı = String
 
   class Mp3Çalar(p: net.kogics.kojo.music.KMp3) {
     def çalıyorMu = p.isMp3Playing

@@ -17,6 +17,8 @@
 package net.kogics.kojo.lite.i18n.tr
 
 trait StringMethodsInTurkish {
+  type Yazı = String
+  type EsnekYazı=collection.mutable.StringBuilder
 
   object Yazı {
     type Harf = Char
@@ -87,12 +89,6 @@ trait StringMethodsInTurkish {
     def sırasıSondan[S >: Harf](öge: S): Sayı = y.lastIndexOf(öge)
     def sırasıSondan[S >: Harf](öge: S, sonNokta: Sayı): Sayı = y.lastIndexOf(öge, sonNokta)
 
-    def dizine = y.toList
-    def diziye = y.toSeq
-    def kümeye = y.toSet
-    def yöneye = y.toVector
-    def dizime[S >: Harf](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(y.toArray(delil))
-    def eşleme[K, V](implicit delil: Harf <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(y.toMap)
     def say(işlev: Harf => İkil): Sayı = y.count(işlev)
 
     // yazı'ya özel
@@ -119,6 +115,38 @@ trait StringMethodsInTurkish {
     def başındaMı(öbürü: Yazı, başlamaNoktası: Sayı): İkil = y.startsWith(öbürü, başlamaNoktası)
     def sonundaMı(öbürü: Yazı): İkil = y.endsWith(öbürü)
 
+    def kenarPayınıÇıkar = y.stripMargin
+
+    def dizime[S >: Harf](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(y.toArray(delil))
+    def ikile = y.toBoolean
+    def lokmaya = y.toByte
+    def kesire = y.toDouble
+    def ufakKesire = y.toFloat
+    def sayıya = y.toInt
+    def dizine = y.toList
+    def eşleme[K, V](implicit delil: Harf <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(y.toMap)
+    def diziye = y.toSeq
+    def kümeye = y.toSet
+    def kısaya = y.toShort
+    def yöneye = y.toVector
+
+    def ikileBelki = y.toBooleanOption
+    def lokmayaBelki = y.toByteOption
+    def kesireBelki = y.toDoubleOption
+    def ufakKesireBelki = y.toFloatOption
+    def sayıyaBelki = y.toIntOption
+    def kısayaBelki = y.toShortOption
     // more to come..
   }
+
+  implicit class EsnekYazıYöntemleri(ey: EsnekYazı) {
+    def boşMu = ey.size == 0
+    def doluMu = ey.size != 0
+    def boyu = ey.size
+    def sil() = ey.clear()
+    def ekle[T](x: T) = ey.append(x)
+    def yazıya = ey.toString
+    def sayıya = ey.toString.toInt
+  }
+
 }

@@ -36,7 +36,7 @@ yineleSayaçla(1000) {
 }
 
 canlandır {
-    engeller foreach { engel =>  // engellerin herbiri içın yapmamız gereken şeyler 
+    engeller herbiriİçin { engel =>  // engellerin herbiri içın yapmamız gereken şeyler
         if (engel.konum.x + 60 < ta.x) {  // tuvalin soluna geçenleri silelim
             engel.sil()
             engeller -= engel

@@ -25,7 +25,7 @@ val hedef = götür(-ta.x - topunGöreceKonumu, -ta.y - topunGöreceKonumu) *
     kalemRengi(kırmızı) * boyaRengi(kırmızı) -> Resim.daire(topunBoyu / 4)
 
 val duvarBoyası = DokumaBoya("/media/collidium/bwall.png", 0, 0)
-val engeller = (1 to engelSayısı).map { n =>
+val engeller = (1 |-| engelSayısı).işle { n =>
     götür(ta.x + n * engellerArasıUzaklık, ta.y + ta.boyu / 4) *
         boyaRengi(duvarBoyası) * kalemRengi(renksiz) ->
         Resim.dikdörtgen(12, ta.boyu / 2)
@@ -33,7 +33,7 @@ val engeller = (1 to engelSayısı).map { n =>
 
 çiz(top, hedef)
 çizVeSakla(topunZarfı)
-engeller.foreach { o => çiz(o) }
+engeller.herbiriİçin { o => çiz(o) }
 sesMp3üÇal("/media/collidium/hit.mp3")
 
 def doğruÇiz(ps: EsnekDizim[Nokta], r: Renk) = Resim {
@@ -145,5 +145,5 @@ Resim.tuvalBölgesi.fareyiBırakınca { (x, y) =>
     }
 }
 hedef.girdiyiAktar(Resim.tuvalBölgesi)
-engeller.foreach { o => o.girdiyiAktar(Resim.tuvalBölgesi) }
+engeller.herbiriİçin { o => o.girdiyiAktar(Resim.tuvalBölgesi) }
 // Bu oyun fikri ve ses mp3'lerini şuradan aldık: https://github.com/shadaj/collidium

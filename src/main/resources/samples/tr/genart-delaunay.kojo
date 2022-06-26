@@ -15,12 +15,12 @@ fareyeTıklıyınca { (x, y) =>
 
 def üçgenleriÇiz() {
     Resim.sil()
-    val üçgenler = üçgenDöşeme(noktalar.dizi)  // todo?
-    üçgenler.foreach { üçgen =>
+    val üçgenler = üçgenDöşeme(noktalar.diziye)
+    üçgenler.herbiriİçin { üçgen =>
         çiz(Resim {
             // her üçgenin üç noktası var: a, b, c
             val (a, b, c) = (üçgen.a, üçgen.b, üçgen.c)
-            val doğrusalEğim = renkler.linearGradient(a.x, a.y, siyah, b.x, b.y, mavi)
+            val doğrusalEğim = Renk.doğrusalDeğişim(a.x, a.y, siyah, b.x, b.y, mavi)
             boyamaRenginiKur(doğrusalEğim)
             kalemRenginiKur(gri)
             konumuKur(a.x, a.y)

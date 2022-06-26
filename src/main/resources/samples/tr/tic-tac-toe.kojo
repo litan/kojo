@@ -37,7 +37,7 @@ def artalan() {
 def çarpı = Resim {
     artalan()
     kalemKalınlığınıKur(çizgininKalınlığı)
-    kalemRenginiKur(renkler.hsl(200, 1.00, 0.50))
+    kalemRenginiKur(Renk.ada(200, 1.00, 0.50))
     konumuKur(kenarPayı, kenarPayı)
     noktayaGit(boy - kenarPayı, boy - kenarPayı)
     konumuKur(boy - kenarPayı, kenarPayı)
@@ -47,7 +47,7 @@ def çarpı = Resim {
 def daire = Resim {
     artalan()
     kalemKalınlığınıKur(çizgininKalınlığı)
-    kalemRenginiKur(renkler.hsl(120, 0.86, 0.64))
+    kalemRenginiKur(Renk.ada(120, 0.86, 0.64))
     konumuKur(boy / 2, kenarPayı)
     açıyaDön(0)
     val boy2 = boy - 2 * kenarPayı
@@ -226,11 +226,11 @@ def tahtayıÇiz() {
 def oyunuKazandıMı(h: Hane): İkil = {
     // yerel tanımlar da yapabiliriz
     def sütun(x: Sayı) = tahta(x).diziye // tahta(x) bir Array. Dizi'ye çevirelim onu
-    def satır(y: Sayı) = EsnekDizim(tahta(0)(y), tahta(1)(y), tahta(2)(y)).dizi
-    def çapraz1 = EsnekDizim(tahta(0)(0), tahta(1)(1), tahta(2)(2)).dizi
-    def çapraz2 = EsnekDizim(tahta(0)(2), tahta(1)(1), tahta(2)(0)).dizi
+    def satır(y: Sayı) = EsnekDizim(tahta(0)(y), tahta(1)(y), tahta(2)(y)).diziye
+    def çapraz1 = EsnekDizim(tahta(0)(0), tahta(1)(1), tahta(2)(2)).diziye
+    def çapraz2 = EsnekDizim(tahta(0)(2), tahta(1)(1), tahta(2)(0)).diziye
 
-    val hedef = EsnekDizim(h, h, h).dizi
+    val hedef = EsnekDizim(h, h, h).diziye
     yineleİçin(sıfırBirİki) { x =>
         if (sütun(x) == hedef)
             return doğru

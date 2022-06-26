@@ -23,11 +23,52 @@ trait NumMethodsInTurkish {
     def |-|(b: Sayı): Range = a to b
     def yazıya = a.toString
     def kesire = a.toDouble
+    def mutlakDeğer = a.abs
+    def enİrisi(b: Sayı) = a max b
+    def enUfağı(b: Sayı) = a min b
   }
 
   implicit class KesirYöntemleri(a: Kesir) {
     def yazıya = a.toString
     def sayıya = a.toInt
     def dereceye = a.toDegrees
+    def radyana = a.toRadians
+    def mutlakDeğer = a.abs
+    def enİrisi(b: Kesir) = a max b
+    def enUfağı(b: Kesir) = a min b
+    def taban = a.floor
+    def tavan = a.ceil
+    def yakın = a.round
   }
+
+  object Lokma {
+    def Enİrisi = Byte.MaxValue
+    def EnUfağı = Byte.MinValue
+  }
+
+  object Sayı {
+    def Enİrisi = Int.MaxValue
+    def EnUfağı = Int.MinValue
+  }
+
+  object Kısa {
+    def Enİrisi = Short.MaxValue
+    def EnUfağı = Short.MinValue
+  }
+
+  object Uzun {
+    def Enİrisi = Long.MaxValue
+    def EnUfağı = Long.MinValue
+  }
+
+  object Kesir {
+    def Enİrisi = Double.MaxValue
+    def EnUfağı = Double.MinValue
+  }
+
+  object UfakKesir {
+    def Enİrisi = Float.MaxValue
+    def EnUfağı = Float.MinValue
+  }
+
 }

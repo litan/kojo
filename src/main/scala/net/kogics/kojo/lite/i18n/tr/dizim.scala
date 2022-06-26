@@ -48,25 +48,27 @@ class Dizim[T](val a: Array[T]) {
 }
 
 trait ArrayMethodsInTurkish {
+  type Dizik[T] = Array[T]
+
   // todo: copied from dizi.scala
-  implicit class ArrayMethods[T](d: Array[T]) {
+  implicit class ArrayMethods[T](d: Dizik[T]) {
     def başı: T = d.head
-    def kuyruğu: Array[T] = d.tail
-    def önü: Array[T] = d.init
+    def kuyruğu: Dizik[T] = d.tail
+    def önü: Dizik[T] = d.init
     def sonu: T = d.last
     def boyu: Sayı = d.length
     def boşMu: İkil = d.isEmpty
     def doluMu: İkil = d.nonEmpty
-    def ele(deneme: T => İkil): Array[T] = d.filter(deneme)
-    def eleDeğilse(deneme: T => İkil): Array[T] = d.filterNot(deneme)
+    def ele(deneme: T => İkil): Dizik[T] = d.filter(deneme)
+    def eleDeğilse(deneme: T => İkil): Dizik[T] = d.filterNot(deneme)
     // https://www.scala-lang.org/api/2.13.x/scala/Array.html
-    // map[B](f: (T) => B)(implicit ct: ClassTag[B]): Array[B]
+    // map[B](f: (T) => B)(implicit ct: ClassTag[B]): Dizik[B]
     // Builds a new array by applying a function to all elements of this array.
-    def işle[A](işlev: T => A)(implicit ct: ClassTag[A]): Array[A] = d.map(işlev)(ct)
-    def düzİşle[A:ClassTag](işlev: T => Array[A]): Array[A] = d.flatMap(işlev)
-    def sıralı(implicit ord: Ordering[T]): Array[T] = d.sorted(ord)
-    def sırala[A](i: T => A)(implicit ord: Ordering[A]): Array[T] = d.sortBy(i)
-    def sırayaSok(önce: (T, T) => İkil): Array[T] = d.sortWith(önce)
+    def işle[A](işlev: T => A)(implicit ct: ClassTag[A]): Dizik[A] = d.map(işlev)(ct)
+    def düzİşle[A:ClassTag](işlev: T => Dizik[A]): Dizik[A] = d.flatMap(işlev)
+    def sıralı(implicit ord: Ordering[T]): Dizik[T] = d.sorted(ord)
+    def sırala[A](i: T => A)(implicit ord: Ordering[A]): Dizik[T] = d.sortBy(i)
+    def sırayaSok(önce: (T, T) => İkil): Dizik[T] = d.sortWith(önce)
     def indirge[B >: T](işlem: (B, B) => B): B = d.reduce(işlem)
     def soldanKatla[T2](z: T2)(işlev: (T2, T) => T2): T2 = d.foldLeft(z)(işlev)
     def sağdanKatla[T2](z: T2)(işlev: (T, T2) => T2): T2 = d.foldRight(z)(işlev)
@@ -74,25 +76,25 @@ trait ArrayMethodsInTurkish {
     def topla[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.sum(num)    // foldLeft(num.zero)(num.plus)
     def çarp[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.product(num) // foldLeft(num.one)(num.times)
     def yinelemesiz = d.distinct
-    def yinelemesizİşlevle[T2](işlev: T => T2): Array[T] = d.distinctBy(işlev)
+    def yinelemesizİşlevle[T2](işlev: T => T2): Dizik[T] = d.distinctBy(işlev)
     def yazıYap: Yazı = d.mkString
     def yazıYap(ara: Yazı): Yazı = d.mkString(ara)
     def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = d.mkString(baş, ara, son)
     def tersi = d.reverse
-    def değiştir[S >: T:ClassTag](yeri: Sayı, değeri: S): Array[S] = d.updated(yeri, değeri)
+    def değiştir[S >: T:ClassTag](yeri: Sayı, değeri: S): Dizik[S] = d.updated(yeri, değeri)
     def herbiriİçin[S](işlev: T => S): Birim = d.foreach(işlev)
     def varMı(deneme: T => İkil): İkil = d.exists(deneme)
     def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def hepsiİçinDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     //def içeriyorMu[S >: T](öge: S): İkil = d.contains(öge)
     def içeriyorMu(öge: T): İkil = d.contains(öge)
-    def içeriyorMuDilim(dilim: Array[T]): İkil = d.containsSlice(dilim)
-    def al(n: Sayı): Array[T] = d.take(n)
-    def alDoğruKaldıkça(deneme: T => İkil): Array[T] = d.takeWhile(deneme)
-    def alSağdan(n: Sayı): Array[T] = d.takeRight(n)
-    def düşür(n: Sayı): Array[T] = d.drop(n)
-    def düşürDoğruKaldıkça(deneme: T => İkil): Array[T] = d.dropWhile(deneme)
-    def düşürSağdan(n: Sayı): Array[T] = d.dropRight(n)
+    def içeriyorMuDilim(dilim: Dizik[T]): İkil = d.containsSlice(dilim)
+    def al(n: Sayı): Dizik[T] = d.take(n)
+    def alDoğruKaldıkça(deneme: T => İkil): Dizik[T] = d.takeWhile(deneme)
+    def alSağdan(n: Sayı): Dizik[T] = d.takeRight(n)
+    def düşür(n: Sayı): Dizik[T] = d.drop(n)
+    def düşürDoğruKaldıkça(deneme: T => İkil): Dizik[T] = d.dropWhile(deneme)
+    def düşürSağdan(n: Sayı): Dizik[T] = d.dropRight(n)
     //def sırası[S >: T](öge: S): Sayı = d.indexOf(öge)
     //def sırası[S >: T](öge: S, başlamaNoktası: Sayı): Sayı = d.indexOf(öge, başlamaNoktası)
     //def sırasıSondan[S >: T](öge: S): Sayı = d.lastIndexOf(öge)
@@ -129,4 +131,6 @@ class EsnekDizim[T](val a: ArrayBuffer[T]) {
   def çıkar(yer: Sayı) = a.remove(yer)
   def sil() = a.clear()
   def dizi = a.toSeq
+  def diziye = a.toSeq
 }
+

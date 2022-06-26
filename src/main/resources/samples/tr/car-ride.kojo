@@ -113,7 +113,7 @@ canlandır {
         etkisizlikSüresi = buAn
     }
 
-    arabalar.herÖgeİçin { arabaVeHız =>
+    arabalar.herbiriİçin { arabaVeHız =>
         val (araba, hız) = arabaVeHız
         //araba.öneAl()   // todo gerekli mi? Bitiş yazısı bazen altta kalıyor...
         if (oyuncu.çarptıMı(araba)) {
@@ -134,11 +134,8 @@ canlandır {
             arabalar -= araba
         }
     }
-    // foreach yöntemi, yukarıda kullandığımız Eşlem türünün herÖgeİçin adlı yöntemine benzer.
-    // Kümenin her bir elemanı için, yani her çizgi için verilen komut dizisini çalıştırır.
-    // Bunu henüz Türkçe'leştirmedik. Küme, İngilizce Set'e verdiğimiz yeni bir ad sadece.
-    // Halbuki Eşlem ise İngilizce Map'i içinde kullanan yeni bir tür (case class).
-    yolÇizgileri.foreach { yç => 
+
+    yolÇizgileri.herbiriİçin { yç => 
         yç.götür(0, -arabaHızı * 2)
         if (yç.konum.y + çizgiBoyu < ta.y) {
             yç.sil()

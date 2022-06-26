@@ -45,8 +45,10 @@ trait ColorMethodsInTurkish {
     def kyms(kırmızı: Sayı, yeşil: Sayı, mavi: Sayı, saydamlık: Sayı) = {
       DColor.rgba(kırmızı, yeşil, mavi, saydamlık)
     }
-    def doğrusalDeğişim(x1: Kesir, y1: Kesir, renk1: Renk, x2: Kesir, y2: Kesir, renk2: Renk) = {
-      DColor.linearGradient(x1, y1, renk1, x2, y2, renk2)
+    def ada(arıRenk: Kesir, doygunluk: Kesir, açıklık: Kesir) = DColor.hsla(arıRenk, doygunluk, açıklık, 1.0)
+    def adas(arıRenk: Kesir, doygunluk: Kesir, açıklık: Kesir, saydamlık: Kesir) = DColor.hsla(arıRenk, doygunluk, açıklık, saydamlık)
+    def doğrusalDeğişim(x1: Kesir, y1: Kesir, renk1: Renk, x2: Kesir, y2: Kesir, renk2: Renk, dalgalıDevam: İkil = yanlış) = {
+      DColor.linearGradient(x1, y1, renk1, x2, y2, renk2, dalgalıDevam)
     }
     // (x1: Double, y1: Double, x2: Double, y2: Double, distribution: collection.Seq[Double], colors: collection.Seq[AwtColor], cyclic: Boolean = false)
     def doğrusalÇokluDeğişim(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir, dağılım: Dizi[Kesir], renkler: Dizi[Renk], dalgalıDevam: İkil = yanlış) = {

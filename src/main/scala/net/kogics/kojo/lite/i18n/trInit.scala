@@ -29,7 +29,13 @@ import edu.umd.cs.piccolo.activities.PActivity  // todo
 import net.kogics.kojo.kmath.KEasing
 
 // Keep in alphabetical order
-object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.NumMethodsInTurkish with tr.OptionMethodsInTurkish with tr.RangeMethodsInTurkish with tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with tr.VectorMethodsInTurkish {
+object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with
+    tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with
+    tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.MathMethodsInTurkish with tr.NumMethodsInTurkish with
+    tr.OptionMethodsInTurkish with tr.PartialFunctionMethodsInTurkish with tr.RangeMethodsInTurkish with
+    tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with
+    tr.arayuz.SwingWidgetMethodsInTurkish with tr.VectorMethodsInTurkish {
+
   var builtins: CoreBuiltins = _ //unstable reference to module
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
@@ -59,9 +65,9 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   type UfakKesir=tr.UfakKesir
   type Kesir=tr.Kesir
   type İriKesir=tr.İriKesir
-  // todo type Harf=tr.Harf
-  type Yazı=tr.Yazı
-  type EsnekYazı=tr.EsnekYazı
+
+  type KuralDışı = Exception
+  type ÇalışmaSırasıKuralDışı = RuntimeException
 
   type Dizi[T]=tr.Dizi[T]
   type DeğişkenDizi[B] = tr.DeğişkenDizi[B]
@@ -95,7 +101,6 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   type İşlev1[D,R] = tr.İşlev1[D,R]
   type İşlev2[D1,D2,R] = tr.İşlev2[D1,D2,R]
   type İşlev3[D1,D2,D3,R] = tr.İşlev3[D1,D2,D3,R]
-  type Bölümselİşlev[D,R] = tr.Bölümselİşlev[D,R]
 
   val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) = (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
 
@@ -163,7 +168,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
     // ~/src/kojo/git/kojo/src/main/scala/net/kogics/kojo/turtle/Turtle.scala
     // ../../turtle/Turtle.scala
     def yazıBoyunuKur(boyutKur: Sayı) = englishTurtle.setPenFontSize(boyutKur)
-    def yazıYüzünüKur(f: java.awt.Font) = englishTurtle.setPenFont(f)
+    def yazıYüzünüKur(yy: Yazıyüzü) = englishTurtle.setPenFont(yy)
     def yay(yarıçap: Kesir, açı: Kesir) = englishTurtle.arc(yarıçap, math.round(açı).toInt)
     def dön(açı: Kesir, yarıçap: Kesir) = englishTurtle.turn(açı, yarıçap)
     def dön(açı: Kesir) = englishTurtle.turn(açı)
@@ -290,35 +295,10 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   def satıryaz() = println()
   def yaz(data: Her) = print(data)
 
-  import tr.{matematik => m}
-  val matematik = m // so that coders can look up math functions using code completion in Kojo
-  def piSayısı: Kesir = math.Pi
-  def eSayısı: Kesir = math.E
-  val gücü = m.kuvveti _
-  val (karesi, karekökü, kuvveti, onlukTabandaLogu, doğalLogu, logaritması, sinüs, kosinüs, tanjant, sinüsünAçısı, kosinüsünAçısı, tanjantınAçısı) = (m.karesi _, m.karekökü _, m.kuvveti _, m.onlukTabandaLogu _, m.doğalLogu _, m.logaritması _, m.sinüs _, m.kosinüs _, m.tanjant _, m.sinüsünAçısı _, m.kosinüsünAçısı _, m.tanjantınAçısı _)
-  val (eüssü, radyana, dereceye, taban, tavan, yakını) = (m.eüssü _, m.radyana _, m.dereceye _, m.taban _, m.tavan _, m.yakını _)
-  val (işareti, sayıya, logTabanlı) = (m.işareti _, m.sayıya _, m.logTabanlı _)
-  // todo: can we use Number instead? 
-  def rastgele = m.rastgele
-  def yuvarla(sayı: Number, basamaklar: Sayı = 0): Kesir = m.yuvarla(sayı, basamaklar)
-  def mutlakDeğer(x: Sayı): Sayı = m.mutlakDeğer(x)
-  def mutlakDeğer(x: Uzun): Uzun = m.mutlakDeğer(x)
-  def mutlakDeğer(x: Kesir): Kesir = m.mutlakDeğer(x)
-  def mutlakDeğer(x: UfakKesir): UfakKesir = m.mutlakDeğer(x)
-  def yakın(x: Kesir): Uzun = m.yakın(x)
-  def yakın(x: UfakKesir): Sayı = m.yakın(x)
-  def enİrisi(x: Sayı, y: Sayı): Sayı = m.enİrisi(x, y)
-  def enUfağı(x: Sayı, y: Sayı): Sayı = m.enUfağı(x, y)
-  def enİrisi(x: Uzun, y: Uzun): Uzun = m.enİrisi(x, y)
-  def enUfağı(x: Uzun, y: Uzun): Uzun = m.enUfağı(x, y)
-  def enİrisi(x: Kesir, y: Kesir): Kesir = m.enİrisi(x, y)
-  def enUfağı(x: Kesir, y: Kesir): Kesir = m.enUfağı(x, y)
-  def enİrisi(x: UfakKesir, y: UfakKesir): UfakKesir = m.enİrisi(x, y)
-  def enUfağı(x: UfakKesir, y: UfakKesir): UfakKesir = m.enUfağı(x, y)
-  //
   // ../CoreBuiltins.scala
-  def rastgele(üstSınır: Sayı) = builtins.random(üstSınır)
-  def rastgele(altSınır: Sayı, üstSınır: Sayı) = builtins.random(altSınır, üstSınır)
+  // bir de rasgele: Kesir var matematik trait'inden geliyor
+  def rastgele(üstSınır: Sayı): Sayı = builtins.random(üstSınır)
+  def rastgele(altSınır: Sayı, üstSınır: Sayı): Sayı = builtins.random(altSınır, üstSınır)
   def rastgeleSayı = builtins.randomInt
   def rastgeleUzun = builtins.randomLong
   def rastgeleKesir(üstSınır: Kesir) = builtins.randomDouble(üstSınır)
@@ -329,8 +309,8 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   def rastgeleTohumunuKur(tohum: Uzun = rastgeleUzun) = builtins.initRandomGenerator(tohum)
   def rastgeleİkil = rastgeleSeçim
   def rastgeleSeçim = builtins.randomBoolean
-  def rastgeleRenk = builtins.randomColor
-  def rastgeleŞeffafRenk = builtins.randomTransparentColor
+  def rastgeleRenk: Renk = builtins.randomColor
+  def rastgeleŞeffafRenk: Renk = builtins.randomTransparentColor
   def rastgeleDiziden[T](dizi: Dizi[T]) = builtins.randomFrom(dizi)
   def rastgeleDiziden[T](dizi: Dizi[T], ağırlıklar: Dizi[Kesir]) = builtins.randomFrom(dizi, ağırlıklar)
   // def diziKarıştır[T](xs: Dizi[T]): Dizi[T] = util.Random.shuffle(xs)
@@ -345,8 +325,8 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   def buDizin = builtins.currentDir
   def kurulumDizini = builtins.installDir
   def yazıyüzleri = builtins.availableFontNames
-  def yazıyüzü(adı: Yazı, boyu: Sayı) = builtins.Font(adı, boyu)
-  def yazıyüzü(adı: Yazı, boyu: Sayı, biçem: Sayı) = builtins.Font(adı, biçem, boyu)
+  def yazıyüzü(adı: Yazı, boyu: Sayı): Yazıyüzü = builtins.Font(adı, boyu)
+  def yazıyüzü(adı: Yazı, boyu: Sayı, biçem: Sayı): Yazıyüzü = builtins.Font(adı, biçem, boyu)
   def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıyüzüAdı: Yazı = yok): Dikdörtgen = builtins.textExtent(yazı, yazıBoyu, yazıyüzüAdı)
 
   val kaplumbağa0 = kaplumbağa
@@ -540,6 +520,11 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
 
   import tr.arayuz
   val ay = arayuz
+  type Yazıyüzü = ay.Yazıyüzü
+  object Yazıyüzü {
+    def apply(adı: Yazı, boyu: Sayı): Yazıyüzü = builtins.Font(adı, boyu)
+    def apply(adı: Yazı, boyu: Sayı, biçem: Sayı): Yazıyüzü = builtins.Font(adı, biçem, boyu)
+  }
 
   def zamanTut(başlık: Yazı = "Zaman ölçümü:")(işlev: => Birim)(bitiş: Yazı = "sürdü."): Birim = { // timeit in Builtins.scala
     val t0 = buSaniye

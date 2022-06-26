@@ -5,7 +5,9 @@ def kalem = Resim.imge(Costume.pencil)
 def yarasa1 = Resim.imge(Costume.bat1)
 def yarasa2 = Resim.imge(Costume.bat2)
 def başlık = kalemRengi(mor) -> Resim {
-    yazıYüzünüKur(yazıyüzü("Serif", 28))
+    // yazı yazarken çiziklerin ucunu biraz kıvırmaya serif deniyor İngilizce'de.
+    // Sans serif'de sanserif diye okunur, kıvrıksız demek (sans da fransızca bizim -siz/-sız çekim eki anlamında).
+    yazıYüzünüKur(Yazıyüzü("Serif", 28)) // denemek istersen: Yazıyüzü("Sans Serif", 28)
     kaplumbağa.yazı("Çılgın yarasalar!")
 }
 
