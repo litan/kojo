@@ -162,19 +162,19 @@ def dermanıAzalt() {
 }
 
 def skorVeDermanıYönet(oyunSüresi: Sayı) {
-    var geçenSüre = 0
-    val geçenSüreGösterimi = Resim.yazıRenkli(geçenSüre, 20, renkler.azure)
-    geçenSüreGösterimi.götür(ta.x + 10, ta.y + 50)
-    çiz(geçenSüreGösterimi)
+    var kalanSüre = oyunSüresi
+    val kalanSüreGösterimi = Resim.yazıRenkli(kalanSüre, 20, renkler.azure)
+    kalanSüreGösterimi.götür(ta.x + 10, ta.y + 50)
+    çiz(kalanSüreGösterimi)
     çiz(dermanÇizimi)
-    geçenSüreGösterimi.girdiyiAktar(Resim.tuvalBölgesi)
+    kalanSüreGösterimi.girdiyiAktar(Resim.tuvalBölgesi)
 
     yineleSayaçla(1000) {
-        geçenSüre += 1
-        geçenSüreGösterimi.güncelle(geçenSüre)
+        kalanSüre -= 1
+        kalanSüreGösterimi.güncelle(kalanSüre)
         dermanıArtır()
 
-        if (geçenSüre == oyunSüresi) {
+        if (kalanSüre == 0) {
             çizMerkezdeYazı("Süre doldu. Tebrikler!", yeşil, 30)
             durdur()
         }

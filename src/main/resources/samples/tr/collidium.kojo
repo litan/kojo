@@ -115,7 +115,7 @@ top.fareyiBırakınca { (x, y) =>
             case Hiçbiri =>
         }
     }
-    oyunSüresiniGöster(60, "Süre doldu. Tekrar dene", renkler.lightBlue, 20) // açık mavi
+    oyunSüresiniGeriyeSayarakGöster(60, "Süre doldu. Tekrar dene", renkler.lightBlue, 20) // açık mavi
 }
 
 val raketNoktaları = EsnekDizim.boş[Nokta]

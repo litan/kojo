@@ -138,7 +138,7 @@ kovalayan5.canlan(koşuşturma)
 
 val kovalayanlar = List(kovalayan, kovalayan2, kovalayan3, kovalayan4, kovalayan5)
 
-oyunSüresiniGöster(oyunSüresi, "Tebrikler!", yeşil, 30, 1, 2)
+oyunSüresiniGeriyeSayarakGöster(oyunSüresi, "Tebrikler!", yeşil, 30, 1, 2)
 val bitişMesajı = büyüt(3) * götür(-20, 0) -> Resim { yazı("Çarpıştınız :-(\nBir daha dene!") }
 çizVeSakla(bitişMesajı)
 
