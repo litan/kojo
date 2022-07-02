@@ -35,6 +35,7 @@ trait StringMethodsInTurkish {
 
   implicit class YazıYöntemleri(y: Yazı) {
     type Harf = Char
+    type Eşlek[A, D] = collection.immutable.Map[A, D]
     // todo: duplicated from dizi.scala with minor changes
     def başı: Harf = y.head
     def kuyruğu: Yazı = y.tail
@@ -124,7 +125,8 @@ trait StringMethodsInTurkish {
     def ufakKesire = y.toFloat
     def sayıya = y.toInt
     def dizine = y.toList
-    def eşleme[K, V](implicit delil: Harf <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(y.toMap)
+    def eşleğe[A, D](implicit delil: Harf <:< (A, D)): Eşlek[A, D] = y.toMap
+    def eşleme[A, D](implicit delil: Harf <:< (A, D)): Eşlem[A, D] = Eşlem.değişmezden(y.toMap)
     def diziye = y.toSeq
     def kümeye = y.toSet
     def kısaya = y.toShort
@@ -136,6 +138,7 @@ trait StringMethodsInTurkish {
     def ufakKesireBelki = y.toFloatOption
     def sayıyaBelki = y.toIntOption
     def kısayaBelki = y.toShortOption
+    def öbekle(iş: (Harf) => Harf): Eşlek[Harf, Yazı] = y.groupBy(iş)
     // more to come..
   }
 

@@ -288,6 +288,7 @@ trait AppMenu {
     val genProgMenu = newJMenu(Utils.loadString("S_GeneralProgramming"))
     genProgMenu.add(menuItemFor("S_InputOutput", "read-vector-mean.kojo"))
     genProgMenu.add(menuItemFor("S_InputGraphics", "read-vector-bargraph.kojo"))
+    genProgMenu.add(menuItemForInstalledFile("S_Anagrams", "examples/anagram/anagram.kojo"))
     samplesMenu.add(genProgMenu)
 
     samplesMenu.addSeparator()

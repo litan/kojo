@@ -19,6 +19,7 @@ package net.kogics.kojo.lite.i18n.tr
 trait SeqMethodsInTurkish {
   // collection.Seq[B]
   implicit class colSeqYöntemleri[T](d: DeğişkenDizi[T]) {
+    type Eşlek[A, D] = collection.immutable.Map[A, D]
     // duplicate below
     def başı: T = d.head
     def kuyruğu: DeğişkenDizi[T] = d.tail
@@ -52,7 +53,7 @@ trait SeqMethodsInTurkish {
     def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def hepsiİçinDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def içeriyorMu[S >: T](öge: S): İkil = d.contains(öge)
-    def içeriyorMuDilim[T](dilim: DeğişkenDizi[T]): İkil = d.containsSlice(dilim)
+    def içeriyorMuDilim(dilim: DeğişkenDizi[T]): İkil = d.containsSlice(dilim)
     def al(n: Sayı): DeğişkenDizi[T] = d.take(n)
     def alDoğruKaldıkça(deneme: T => İkil): DeğişkenDizi[T] = d.takeWhile(deneme)
     def alSağdan(n: Sayı): DeğişkenDizi[T] = d.takeRight(n)
@@ -69,17 +70,21 @@ trait SeqMethodsInTurkish {
     def kümeye = d.toSet
     def yöneye = d.toVector
     def dizime[S >: T](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(d.toArray(delil))
-    def eşleme[K, V](implicit delil: T <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(d.toMap)
+    def eşleğe[A, D](implicit delil: T <:< (A, D)): Eşlek[A, D] = d.toMap
+    def eşleme[A, D](implicit delil: T <:< (A, D)): Eşlem[A, D] = Eşlem.değişmezden(d.toMap)
     def say(işlev: T => İkil): Sayı = d.count(işlev)
 
     def dilim(nereden: Sayı, nereye: Sayı) = d.slice(nereden, nereye)
     def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
     def ikileSırayla = d.zipWithIndex
+    def ikileKonumla = d.zipWithIndex
+    def öbekle[A](iş: (T) => A): Eşlek[A, DeğişkenDizi[T]] = d.groupBy(iş)
     // todo: more to come
   }
 
   // todo: duplicates in yazi.scala and dizin.scala and more
   implicit class SeqYöntemleri[T](d: Dizi[T]) {
+    type Eşlek[A, D] = collection.immutable.Map[A, D]
     def başı: T = d.head
     def kuyruğu: Dizi[T] = d.tail
     def önü: Dizi[T] = d.init
@@ -129,13 +134,34 @@ trait SeqMethodsInTurkish {
     def kümeye = d.toSet
     def yöneye = d.toVector
     def dizime[S >: T](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(d.toArray(delil))
-    def eşleme[K, V](implicit delil: T <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(d.toMap)
+    def eşleğe[A, D](implicit delil: T <:< (A, D)): Eşlek[A, D] = d.toMap
+    def eşleme[A, D](implicit delil: T <:< (A, D)): Eşlem[A, D] = Eşlem.değişmezden(d.toMap)
     def say(işlev: T => İkil): Sayı = d.count(işlev)
 
     def dilim(nereden: Sayı, nereye: Sayı) = d.slice(nereden, nereye)
     def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
     def ikileSırayla = d.zipWithIndex
+    def ikileKonumla = d.zipWithIndex
+    def öbekle[A](iş: (T) => A): Eşlek[A, Dizi[T]] = d.groupBy(iş)
 
     // more to come
   }
+
+  implicit class ImmutableIterableMethods[T](d: collection.immutable.Iterable[T]) {
+    type Eşlek[A, D] = collection.immutable.Map[A, D]
+
+    def dizine = d.toList
+    def diziye = d.toSeq
+    def kümeye = d.toSet
+    def yöneye = d.toVector
+    def dizime[S >: T](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(d.toArray(delil))
+    def eşleğe[A, D](implicit delil: T <:< (A, D)): Eşlek[A, D] = d.toMap
+    def eşleme[A, D](implicit delil: T <:< (A, D)): Eşlem[A, D] = Eşlem.değişmezden(d.toMap)
+    def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
+    def ikileSırayla = d.zipWithIndex
+    def ikileKonumla = d.zipWithIndex
+    def öbekle[A](iş: (T) => A): Eşlek[A, collection.immutable.Iterable[T]] = d.groupBy(iş)
+    // more to come
+  }
+
 }

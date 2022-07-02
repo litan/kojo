@@ -18,6 +18,7 @@ package net.kogics.kojo.lite.i18n.tr
 
 trait VectorMethodsInTurkish {
   implicit class YöneyYöntemleri[A](y: Yöney[A]) {
+    type Eşlek[A, D] = collection.immutable.Map[A, D]
     // başı, kuyruğu, boyu metodları ... dizi.scala'daki SeqYöntemleri'nden geliyor
     // değiştir metodu da var orada ama Seq return ediyor ve Game of Life kodu çalışmıyor.
     def değiştir[B >: A](yeri: Sayı, değeri: B): Yöney[B] = y.updated(yeri, değeri)
@@ -40,9 +41,26 @@ trait VectorMethodsInTurkish {
     def düşür(n: Sayı): Yöney[A] = y.drop(n)
     def düşürDoğruKaldıkça(deneme: A => İkil): Yöney[A] = y.dropWhile(deneme)
     def düşürSağdan(n: Sayı): Yöney[A] = y.dropRight(n)
+    def sırası[S >: A](öge: S): Sayı = y.indexOf(öge)
+    def sırası[S >: A](öge: S, başlamaNoktası: Sayı): Sayı = y.indexOf(öge, başlamaNoktası)
+    def sırasıSondan[S >: A](öge: S): Sayı = y.lastIndexOf(öge)
+    def sırasıSondan[S >: A](öge: S, sonNokta: Sayı): Sayı = y.lastIndexOf(öge, sonNokta)
+
+    def dizine = y.toList
+    def diziye = y.toSeq
+    def kümeye = y.toSet
+    def yöneye = y.toVector
+    def dizime[S >: A](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(y.toArray(delil))
+    def eşleğe[A2, D](implicit delil: A <:< (A2, D)): Eşlek[A2, D] = y.toMap
+    def eşleme[A2, D](implicit delil: A <:< (A2, D)): Eşlem[A2, D] = Eşlem.değişmezden(y.toMap)
+    def say(işlev: A => İkil): Sayı = y.count(işlev)
 
     def dilim(nereden: Sayı, nereye: Sayı) = y.slice(nereden, nereye)
     def ikile[B](öbürü: scala.collection.IterableOnce[B]) = y.zip(öbürü)
     def ikileSırayla = y.zipWithIndex
+    def ikileKonumla = y.zipWithIndex
+    def öbekle[A2](iş: (A) => A2): Eşlek[A2, Yöney[A]] = y.groupBy(iş)
+
+    // more to come
   }
 }

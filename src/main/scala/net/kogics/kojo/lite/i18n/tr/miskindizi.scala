@@ -19,6 +19,7 @@ package net.kogics.kojo.lite.i18n.tr
 trait LazyListMethodsInTurkish {
   // todo: duplicates in dizi.scala
   implicit class LazyListYöntemleri[T](d: MiskinDizin[T]) {
+    type Eşlek[A, D] = collection.immutable.Map[A, D]
     def başı: T = d.head
     def kuyruğu: MiskinDizin[T] = d.tail
     def boyu: Sayı = d.length
@@ -65,7 +66,15 @@ trait LazyListMethodsInTurkish {
     def kümeye = d.toSet
     def yöneye = d.toVector
     def dizime[S >: T](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(d.toArray(delil))
-    def eşleme[K, V](implicit delil: T <:< (K, V)): Eşlem[K, V] = Eşlem.değişmezden(d.toMap)
+    def eşleğe[A, D](implicit delil: T <:< (A, D)): Eşlek[A, D] = d.toMap
+    def eşleme[A, D](implicit delil: T <:< (A, D)): Eşlem[A, D] = Eşlem.değişmezden(d.toMap)
+    def say(işlev: T => İkil): Sayı = d.count(işlev)
+
+    def dilim(nereden: Sayı, nereye: Sayı) = d.slice(nereden, nereye)
+    def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
+    def ikileSırayla = d.zipWithIndex
+    def ikileKonumla = d.zipWithIndex
+    def öbekle[A](iş: (T) => A): Eşlek[A, MiskinDizin[T]] = d.groupBy(iş)
 
     // more to come
   }
