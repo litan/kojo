@@ -120,7 +120,7 @@ ball.onMouseRelease { (x, y) =>
         }
 
     }
-    showGameTime(60, "Time up! You Lose", cm.lightBlue, 20)
+    showGameTimeCountdown(60, "Time up! You Lose", cm.lightBlue, 20)
 }
 
 val paddlePts = ArrayBuffer.empty[Point]
