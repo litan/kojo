@@ -366,10 +366,16 @@ class CompilerAndRunner(
 
   import core.CompletionInfo
 
-  def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
+  def completions(code0: String, offset: Int, objid: String): List[CompletionInfo] = {
     import interactive._
+
+    val selection = objid != null
+
     val augmentedCode0 =
-      "%s ;} // %s".format(code0.substring(0, offset), code0.substring(offset))
+      if (objid == null || objid == "")
+        "%s ;} // %s".format(code0.substring(0, offset), code0.substring(offset))
+      else
+        code0
 
     compilerCode(augmentedCode0) map { code =>
       classLoader.asContext {

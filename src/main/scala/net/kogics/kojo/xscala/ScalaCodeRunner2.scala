@@ -700,9 +700,13 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       (c2s, pfx.length)
     }
 
-    def memberCompletions(code: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
+    def memberCompletions(code0: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
       val pfx = prefix.getOrElse("")
-      compilerAndRunner.completions(code, caretOffset - pfx.length, objid != null) match {
+      val offset = caretOffset - pfx.length
+      val code =
+        "%s%s".format(code0.substring(0, offset), code0.substring(offset + pfx.length))
+
+      compilerAndRunner.completions(code, offset, objid) match {
         case Nil =>
           val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
           (ics.map { CompletionInfo(core.MemberKind.Var, _, "", "", 0, false, Nil, Nil, "", "") }, pfx.length)
