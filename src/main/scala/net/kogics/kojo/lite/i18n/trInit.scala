@@ -31,7 +31,8 @@ import net.kogics.kojo.kmath.KEasing
 // Keep in alphabetical order
 object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with
     tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with
-    tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.MathMethodsInTurkish with tr.NumMethodsInTurkish with
+    tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.MapMethodsInTurkish with
+    tr.MathMethodsInTurkish with tr.NumMethodsInTurkish with
     tr.OptionMethodsInTurkish with tr.PartialFunctionMethodsInTurkish with tr.RangeMethodsInTurkish with
     tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with
     tr.arayuz.SwingWidgetMethodsInTurkish with tr.VectorMethodsInTurkish {
@@ -479,6 +480,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
 
   def oyunSüresiniGöster(süreSaniyeOlarak: Sayı, mesaj: Yazı, renk: Renk = siyah, yazıBoyu: Sayı = 15, kx: Kesir = 10, ky: Kesir = 50) =
     richBuiltins.showGameTime(süreSaniyeOlarak, mesaj, renk, yazıBoyu, kx, ky)
+  def oyunSüresiniGeriyeSayarakGöster(süreSaniyeOlarak: Sayı, mesaj: Yazı, renk: Renk = siyah, yazıBoyu: Sayı = 15, kx: Kesir = 10, ky: Kesir = 50) = richBuiltins.showGameTimeCountdown(süreSaniyeOlarak, mesaj, renk, yazıBoyu, kx, ky)
 
   def sırayaSok(kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.schedule(kaçSaniyeSonra)(komut)
   def sırayaSok(n: Sayı, kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.scheduleN(n, kaçSaniyeSonra)(komut)
@@ -526,11 +528,12 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
     def apply(adı: Yazı, boyu: Sayı, biçem: Sayı): Yazıyüzü = builtins.Font(adı, biçem, boyu)
   }
 
-  def zamanTut(başlık: Yazı = "Zaman ölçümü:")(işlev: => Birim)(bitiş: Yazı = "sürdü."): Birim = { // timeit in Builtins.scala
+  def zamanTut[T](başlık: Yazı = "Zaman ölçümü:")(işlev: => T)(bitiş: Yazı = "sürdü."): T = { // timeit in Builtins.scala
     val t0 = buSaniye
-    işlev
+    val çıktı = işlev
     val delta = buSaniye - t0
     println(f"$başlık $delta%.3f saniye $bitiş")
+    çıktı
   }
 
   def DokumaBoya(dosya: Yazı, x: Kesir, y: Kesir) = richBuiltins.TexturePaint(dosya, x, y)

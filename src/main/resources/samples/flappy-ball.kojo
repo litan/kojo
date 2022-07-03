@@ -76,7 +76,7 @@ def drawMessage(m: String, c: Color) {
 }
 
 def manageGameTime() {
-    showGameTime(60, "You Win", green, 20)
+    showGameTimeCountdown(60, "You Win", green, 20)
 }
 
 manageGameTime()

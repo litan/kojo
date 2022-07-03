@@ -156,16 +156,16 @@ def çizMesaj(m: Yazı, r: Renk) {
 
 def süreyiYönet() {
     def skor(doğruSayısı: Sayı, yanlışSayısı: Sayı) = doğruSayısı - yanlışSayısı
-    var geçenSüre = 0
-    val sayaç = götür(ta.x + 10, ta.y + 50) -> Resim.yazıRenkli(geçenSüre, 40, mavi)
+    var kalanSüre = oyunSüresi
+    val sayaç = götür(ta.x + 10, ta.y + 50) -> Resim.yazıRenkli(kalanSüre, 40, mavi)
     çiz(sayaç)
     sayaç.girdiyiAktar(Resim.tuvalBölgesi)
 
     yineleSayaçla(1000) {
-        geçenSüre += 1
-        sayaç.güncelle(geçenSüre)
+        kalanSüre -= 1
+        sayaç.güncelle(kalanSüre)
 
-        if (geçenSüre == oyunSüresi) {
+        if (kalanSüre == 0) {
             bittiMi = doğru
             val mesaj = s"""      Oyun bitti!
 

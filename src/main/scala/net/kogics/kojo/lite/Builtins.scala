@@ -832,18 +832,22 @@ Here's a partial list of the available commands:
     draw(pic)
   }
 
-  def showGameTime(limitSecs: Int, endMsg: => String, color: Color = black, fontSize: Int = 15, dx: Double = 10, dy: Double = 50): Unit = {
+  def showGameTimeCountdown(limitSecs: Int, endMsg: => String, color: Color = black, fontSize: Int = 15,
+    dx: Double = 10, dy: Double = 50) = showGameTime(limitSecs, endMsg, color, fontSize, dx, dy, true)
+
+  def showGameTime(limitSecs: Int, endMsg: => String, color: Color = black, fontSize: Int = 15,
+    dx: Double = 10, dy: Double = 50, countDown: Boolean = false): Unit = {
     val cb = canvasBounds
-    @volatile var gameTime = 0
+    @volatile var gameTime = if (countDown) limitSecs else 0
+    val incr = if (countDown) -1 else 1
+    val endTime = if (countDown) 0 else limitSecs
     val timeLabel = trans(cb.x + dx, cb.y + dy) -> PicShape.textu(gameTime, fontSize, color)
     draw(timeLabel)
     timeLabel.forwardInputTo(TSCanvas.stageArea)
-
     TSCanvas.timer(1000) {
-      gameTime += 1
+      gameTime += incr
       timeLabel.update(gameTime)
-
-      if (gameTime == limitSecs) {
+      if (gameTime == endTime) {
         drawCenteredMessage(endMsg, color, fontSize * 2)
         stopAnimation()
       }

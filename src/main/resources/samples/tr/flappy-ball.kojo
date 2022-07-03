@@ -74,5 +74,5 @@ def mesajVer(m: Yazı, r: Renk) {
     çizMerkezdeYazı(m, r, 30)
 }
 
-oyunSüresiniGöster(oyunSüresi, "Tebrikler!", yeşil, 20)
+oyunSüresiniGeriyeSayarakGöster(oyunSüresi, "Tebrikler!", yeşil, 20)
 tuvaliEtkinleştir()
