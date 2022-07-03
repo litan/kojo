@@ -18,6 +18,7 @@ package net.kogics.kojo.lite.i18n.tr
 
 // translating Range
 case class Aralık(ilk: Sayı, son: Sayı, adım: Sayı = 1) {
+  type Dizi[B] = Seq[B]
   val r = Range(ilk, son, adım)
   val başı = r.head
   val sonu = r.last

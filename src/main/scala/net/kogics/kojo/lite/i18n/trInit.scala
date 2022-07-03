@@ -70,21 +70,14 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   type KuralDışı = Exception
   type ÇalışmaSırasıKuralDışı = RuntimeException
 
-  type Dizi[T]=tr.Dizi[T]
-  type DeğişkenDizi[B] = tr.DeğişkenDizi[B]
-  type Dizin[T]=tr.Dizin[T]
-  type MiskinDizin[T]=tr.MiskinDizin[T]
-  type Küme[T] = tr.Küme[T]
-  type Yöney[T] = tr.Yöney[T]
-  val Küme = tr.Küme
-  val Yöney = tr.Yöney
-
+  type Diz[T]=tr.Diz[T]
+  type Dizi[B] = tr.Dizi[B]
+  type Dizin[A] = tr.Dizin[A]
   type Dizim[T]=tr.Dizim[T]
   type EsnekDizim[T]=tr.EsnekDizim[T]
   val Dizim = tr.Dizim
   val EsnekDizim = tr.EsnekDizim
 
-  type Sayılar=tr.Sayılar
   type UzunlukBirimi=tr.UzunlukBirimi
 
   type GeoYol=tr.GeoYol
@@ -108,11 +101,6 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   // todo
   // val Harf = tr.Harf
   val Nokta = tr.Nokta
-  val Dizi = tr.Dizi
-  val Dizin = tr.Dizin
-  val Sayılar = tr.Sayılar
-  val MiskinDizin = tr.MiskinDizin
-  val Boş = tr.Boş
 
   type ÇiniDünyası = tr.ÇiniDünyası
   val ÇiniDünyası = tr.ÇiniDünyası
@@ -319,7 +307,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
 
   def durakla(saniye: Kesir) = builtins.pause(saniye)
 
-  def üçgenDöşeme(noktalar: Dizi[Nokta]): DeğişkenDizi[Üçgen] = builtins.triangulate(noktalar)
+  def üçgenDöşeme(noktalar: Dizi[Nokta]): Diz[Üçgen] = builtins.triangulate(noktalar)
 
   // todo: klasör?
   def evDizini = builtins.homeDir

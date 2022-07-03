@@ -103,6 +103,9 @@ case class Eşlem[A,D](val m: Map[A,D]) {
 
 trait MapMethodsInTurkish {
   type Eşlek[A, D] = collection.immutable.Map[A, D]
+  object Eşlek {
+    def apply[A, D](elems: (A, D)*) = collection.immutable.Map.from(elems)
+  }
   implicit class EşlekYöntemleri[A, D](m: Eşlek[A, D]) {
     // todo: copied most of the api from Eşlem above
     type C = Eşlek[A, D]

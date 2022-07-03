@@ -66,25 +66,10 @@ package object tr {
   type Kesir = Double
   type İriKesir = BigDecimal
 
+  type Diz[B] = collection.Seq[B]
   type Dizi[B] = Seq[B]
-  type DeğişkenDizi[B] = collection.Seq[B]
   type Dizin[A] = List[A]
-  type MiskinDizin[C] = LazyList[C]
 
-  type Yöney[T] = Vector[T]
-  object Yöney {
-    def apply[T](elemanlar: T*) = Vector.from(elemanlar)
-    def unapplySeq[T](yler: Vector[T]) = Vector.unapplySeq(yler)
-    def boş[T] = Vector.empty[T]
-  }
-  type Küme[T] = Set[T]
-  object Küme {
-    def apply[T](elemanlar: T*) = Set.from(elemanlar)
-    def boş[T] = Set.empty[T]
-  }
-
-  // Used in Conway's game of life code in the tutorial
-  type Sayılar = Vector[Sayı]
   type UzunlukBirimi = UnitLen
 
   // ../../../core/vertexShapeSupport.scala
@@ -96,32 +81,10 @@ package object tr {
     def apply(x: Kesir, y: Kesir) = new Point(x, y)
     def unapply(p: Nokta) = Some((p.x, p.y))
   }
-  object Dizi {
-    def apply[B](elems: B*): Seq[B] = Seq.from(elems)
-    def unapplySeq[B](dizi: Seq[B]) = Seq.unapplySeq(dizi)
-    def doldur[B](n1: Sayı)(f: Sayı => B) = Seq.tabulate(n1)(f)
-    def doldur[B](n1: Sayı, n2: Sayı)(f: (Sayı, Sayı) => B) = Seq.tabulate(n1, n2)(f)
-    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı)(f: (Sayı, Sayı, Sayı) => B) = Seq.tabulate(n1, n2, n3)(f)
-    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı, n4: Sayı)(f: (Sayı, Sayı, Sayı, Sayı) => B) = Seq.tabulate(n1, n2, n3, n4)(f)
-    def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı, n4: Sayı, n5: Sayı)(f: (Sayı, Sayı, Sayı, Sayı, Sayı) => B) =
-      Seq.tabulate(n1, n2, n3, n4, n5)(f)
-  }
-  object Dizin {
-    def apply[A](elems: A*): List[A] = List.from(elems)
-    def unapplySeq[A](list: List[A])  = List.unapplySeq(list)
-  }
-  object Sayılar {
-    def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
-    def unapplySeq(ss: Sayılar) = Vector.unapplySeq(ss)
-  }
-  object MiskinDizin {
-    def sayalım(başlangıç: Sayı, kaçarKaçar: Sayı = 1) = LazyList.from(başlangıç, kaçarKaçar)
-  }
 
   val (doğru, yanlış) = (true, false)
   val (yavaş, orta, hızlı, çokHızlı) = (Slow, Medium, Fast, SuperFast)
   val (noktaSayısı, santim, inç) = (Pixel, Cm, Inch)
-  val Boş = collection.immutable.Nil
 
   type İmge = richBuiltins.Image // java.awt.Image
   type Bellekteİmge = BufferedImage

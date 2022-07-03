@@ -18,6 +18,12 @@ package net.kogics.kojo.lite.i18n.tr
 
 // also see: aralik.scala
 trait NumMethodsInTurkish {
+  type Sayılar = Vector[Sayı]   // Used in Conway's game of life code in the tutorial
+  object Sayılar {
+    def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
+    def unapplySeq(ss: Sayılar) = Vector.unapplySeq(ss)
+  }
+
   implicit class SayıYöntemleri(a: Sayı) {
     def |-(b: Sayı): Range = a until b
     def |-|(b: Sayı): Range = a to b

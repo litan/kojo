@@ -17,6 +17,10 @@
 package net.kogics.kojo.lite.i18n.tr
 
 trait LazyListMethodsInTurkish {
+  type MiskinDizin[C] = LazyList[C]
+  object MiskinDizin {
+    def sayalım(başlangıç: Sayı, kaçarKaçar: Sayı = 1) = LazyList.from(başlangıç, kaçarKaçar)
+  }
   // todo: duplicates in dizi.scala
   implicit class LazyListYöntemleri[T](d: MiskinDizin[T]) {
     type Eşlek[A, D] = collection.immutable.Map[A, D]
