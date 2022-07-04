@@ -128,7 +128,7 @@ object dict {
     "context" -> "bağlam",
     "context-menu" -> "bağlamsal-menü",
     "Seq" -> "Dizi",
-    "collection.Seq" -> "DeğişkenDizi",
+    "collection.Seq" -> "Diz/DeğişkenDizi",
     "Array" -> "Dizim veya Dizik",
     "ArrayBuffer" -> "EsnekDizim",
     "List" -> "Dizin",

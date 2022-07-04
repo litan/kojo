@@ -449,6 +449,7 @@ import net.kogics.kojo.staging
   }
 
   test("Translations of List[T] methods to work") {
+    val d0 = 0 :: Boş; d0.başı should be(0); d0.kuyruğu should be(Boş)
     // todo: duplicates below
     val d1 = Dizin(1, 3, 2)
     d1.başı should be(1)
@@ -474,6 +475,35 @@ import net.kogics.kojo.staging
     Dizin(1, 2, 3).yazıYap should be("123")
     Dizin(1, 2, 3).yazıYap(" ") should be("1 2 3")
     Dizin(1, 2, 3).yazıYap("{", " ", "}") should be("{1 2 3}")
+  }
+
+  test("Translations of collection.Seq[T] methods to work") {
+    // todo: duplicates above
+    val d1 = Diz(1, 3, 2)
+    d1.başı should be(1)
+    d1.kuyruğu should be(Diz(3, 2))
+    d1.boyu should be(3)
+    d1.boşMu should be(yanlış)
+    d1.doluMu should be(doğru)
+    d1.ele(_ % 2 == 0) should be(Diz(2))
+    d1.eleDeğilse(_ % 2 == 0) should be(Diz(1, 3))
+    d1.işle(_ * 10) should be(Diz(10, 30, 20))
+    d1.düzİşle(x => Diz(x, x*x)) should be(Diz(1, 1, 3, 9, 2, 4))
+    d1.sıralı should be(Diz(1, 2, 3))
+    d1.sırala(1.0 / _) should be(Diz(3, 2, 1))
+    d1.sırayaSok((x, y) => -x < -y) should be(Diz(3, 2, 1))
+    d1.indirge((x, y) => x * 10 + y) should be(132)
+    d1.soldanKatla(10)(_ + _) should be(16)
+    d1.sağdanKatla(2)(_ * _) should be(12)
+    val d2 = Diz(2, 3, 4)
+    d2.topla should be(9)
+    d2.çarp should be(24)
+    Diz(2, 2, 1, 1).yinelemesiz should be(Diz(2, 1))
+    Diz(2, 4, 6, 1, 3, 5).yinelemesizİşlevle(_ % 2 == 0) should be(Diz(2, 1))
+    Diz(1, 2, 3).yazıYap should be("123")
+    Diz(1, 2, 3).yazıYap(" ") should be("1 2 3")
+    Diz(1, 2, 3).yazıYap("{", " ", "}") should be("{1 2 3}")
+    Diz(2, 4).değiştir(0, 5) should be(Diz(5, 4))
   }
 
   test("Translations of Seq[T] methods to work") {
@@ -581,6 +611,12 @@ import net.kogics.kojo.staging
     1.kesire should be(1.0)
     0.toDegrees should be(0)
     piSayısı.toDegrees should be(180)
+    val s1 = Sayılar(); s1.diziye.boyu should be(0)
+    val s2 = s1 :+ 0; s2(0) should be(0)
+    val slar = Sayılar(1, 2, 3); slar.diziye.boyu should be(3)
+    slar(0) should be(1)
+    slar(1) should be(2)
+    slar(2) should be(3)
   }
 
   test("Translation of java.util.Calendar to work") {
@@ -593,6 +629,21 @@ import net.kogics.kojo.staging
     }
   }
 
+  test("Companion objects for translations to work") {
+    val e = Eşlek("a" -> 10, "b" -> 3); e.sayı should be(2)
+    val d = Dizik(10, 3, 9); d.boyu should be(3)
+    val d1 = Dizik[Sayı](); d1.boyu should be(0)
+    var d2 = Diz(1, 2, 4); d2.boyu should be(3)
+    d2 = d2 :+ 3; d2.boyu should be(4)
+    val k = Küme(100, 10, 1); k.boyu should be(3)
+    val k2 = Küme.boş[Yazı]; k2.boyu should be(0)
+    val k3 = k2 + "Merhaba"; k3.boyu should be(1)
+    (k3 + "Dünya").boyu should be(2)
+    (k3 - "Merhaba").boyu should be(0)
+    val m = MiskinDizin.sayalım(3, 2)
+    m al 2 should be(Dizi(3, 5))
+    m al 100 alSağdan 2 should be(Dizi(199, 201))
+  }
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala
   // ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/lite/TestEnv.scala

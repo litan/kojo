@@ -20,6 +20,21 @@ import collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
 
 // todo: this has only the bare essentials for Array and ArrayBuffer. Add more to the interface..
+object EsnekDizim {
+  def apply[T](elemanlar: T*) = new EsnekDizim[T](ArrayBuffer.from(elemanlar))
+  def boş[T] = new EsnekDizim[T](ArrayBuffer.empty[T])
+}
+class EsnekDizim[T](val a: ArrayBuffer[T]) {
+  def apply(yer: Sayı) = a(yer)
+  def sayı = a.size
+  def ekle(eleman: T) = {a.append(eleman); this}
+  def +=(eleman: T) = ekle(eleman)
+  def çıkar(yer: Sayı) = a.remove(yer)
+  def sil() = a.clear()
+  def dizi = a.toSeq
+  def diziye = a.toSeq
+  // todo: more to come
+}
 
 object Dizim {
   def boş[T:ClassTag](b1: Sayı) = new Dizim(Array.ofDim[T](b1))
@@ -49,7 +64,10 @@ class Dizim[T](val a: Array[T]) {
 
 trait ArrayMethodsInTurkish {
   type Dizik[T] = Array[T]
-
+  object Dizik {
+    def apply[T](elems: T*)(implicit arg: ClassTag[T]) = Array(elems: _*)
+    def boş[T](implicit arg: ClassTag[T]) = Array.empty
+  }
   // todo: copied from dizi.scala
   implicit class ArrayMethods[T](d: Dizik[T]) {
     type Eşlek[A, D] = collection.immutable.Map[A, D]
@@ -121,21 +139,6 @@ trait ArrayMethodsInTurkish {
     def öbekle[A](iş: (T) => A): Eşlek[A, Dizik[T]] = d.groupBy(iş)
     // todo: more to come
   }
-}
 
-object EsnekDizim {
-  def apply[T](elemanlar: T*) = new EsnekDizim[T](ArrayBuffer.from(elemanlar))
-  def boş[T] = new EsnekDizim[T](ArrayBuffer.empty[T])
-}
-class EsnekDizim[T](val a: ArrayBuffer[T]) {
-  def apply(yer: Sayı) = a(yer)
-  def sayı = a.size
-  def ekle(eleman: T) = {a.append(eleman); this}
-  def +=(eleman: T) = ekle(eleman)
-  def çıkar(yer: Sayı) = a.remove(yer)
-  def sil() = a.clear()
-  def dizi = a.toSeq
-  def diziye = a.toSeq
-  // todo: more to come
 }
 

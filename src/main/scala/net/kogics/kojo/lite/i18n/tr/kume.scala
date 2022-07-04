@@ -17,6 +17,11 @@
 package net.kogics.kojo.lite.i18n.tr
 
 trait SetMethodsInTurkish {
+  type Küme[T] = Set[T]
+  object Küme {
+    def apply[T](elemanlar: T*) = Set.from(elemanlar)
+    def boş[T] = Set.empty[T]
+  }
   // todo: duplicates in yazi.scala and dizin.scala
   implicit class SetYöntemleri[T](d: Küme[T]) {
     type Eşlek[A, D] = collection.immutable.Map[A, D]
