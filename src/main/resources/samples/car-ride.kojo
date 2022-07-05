@@ -153,7 +153,7 @@ def updateEnergyCrash() {
 }
 
 def manageGameScore() {
-    var gameTime = 0
+    var gameTime = 60
     val timeLabel = Picture.textu(gameTime, 20, ColorMaker.azure)
     timeLabel.translate(cb.x + 10, cb.y + 50)
     draw(timeLabel)
@@ -161,11 +161,11 @@ def manageGameScore() {
     timeLabel.forwardInputTo(stageArea)
 
     timer(1000) {
-        gameTime += 1
+        gameTime -= 1
         timeLabel.update(gameTime)
         updateEnergyTick()
 
-        if (gameTime == 60) {
+        if (gameTime == 0) {
             drawCenteredMessage("Time up! You Win", green, 30)
             stopAnimation()
         }
