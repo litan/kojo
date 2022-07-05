@@ -11,7 +11,7 @@ val top2 = renkle(mavi) * götür(-fark, 100) -> Resim.daire(25)
 val kuvvet1 = 20 // Newton birimi yani kg * m / s^2
 val kuvvet2 = 20
 
-val kütle1 = 5 // kg
+val kütle1 = 5 // kg. Bunu daha da hafif yapmayı dene. Örneğin 2 veya 1
 val kütle2 = 10
 
 val ivme1 = kuvvet1 / kütle1 // m / s^2
@@ -26,7 +26,7 @@ canlandır {
     val s1 = -fark + 0.5 * ivme1 * t * t // top1 kaç metre gitmiş
     val s2 = -fark + 0.5 * ivme2 * t * t
 
-    top1.konumuKur(s1, top1.konum.y) // use pixels instead of meters
+    top1.konumuKur(s1, top1.konum.y) // ekrandaki bir nokta (pixel) bir metreye karşılık
     top2.konumuKur(s2, top2.konum.y)
     val frekans = 46 // canlandır döngüsü saniyede yaklaşık 46 kere çalışıyor (benim bilgisayarımda)
     if (i % frekans == 0) satıryaz(i/frekans, yuvarla(t, 2)) // bu ikisi onun için hemen hemen aynı
