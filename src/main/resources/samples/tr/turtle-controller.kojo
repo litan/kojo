@@ -24,7 +24,7 @@ def eylem(komutlar: Yazı) {
     yorumla(komutlar); satıryaz(komutlar)
 }
 
-val komutlar = Eşlem(
+val komutlar = Eşlek(
     "ileri1" -> s"ileri($ileriAdım)",
     "ileri2" -> s"ileri($ileriAdım2)",
     "ileri3" -> s"ileri( $ileriAdım3 )",
@@ -42,7 +42,7 @@ val komutlar = Eşlem(
 def silKomudu(n: Int) =
     s"biçimleriBelleğeYaz(); kalemRenginiKur($aaRengiYaz); kalemKalınlığınıKur(4); geri($n); biçimleriGeriYükle()"
 
-def düğme(komutAdı: String) = Resim.düğme(komutlar(komutAdı)) { eylem(komutlar(komutAdı)) }
+def düğme(komutAdı: Yazı) = Resim.düğme(komutlar(komutAdı)) { eylem(komutlar(komutAdı)) }
 
 val düğmePanosu = götür(-en / 2, -boy / 2) * büyüt(1.4) -> Resim.diziDikey(
     Resim.diziYatay(

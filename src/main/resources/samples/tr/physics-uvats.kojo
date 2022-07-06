@@ -7,7 +7,7 @@ gridiGöster()
 yaklaş(0.75, 500, 300)
 
 val a = 20.0 // başlangıç ivmesi
-val b = 10.0 // başlangıç hızı
+val b = 10.0 // başlangıç hızı. Bunu -100 ya da -200 yapmayı dene!
 
 val araba = yeniKaplumbağa(0, 0, Costume.car)
 
@@ -20,7 +20,7 @@ hızEğrisi.kalemRenginiKur(yeşil)
 val t0 = buSaniye // göreceli olarak bu anın zamanı
 val geçenZaman = yeniKaplumbağa(100, -50)
 
-def zamanıGöster(t: String) {
+def zamanıGöster(t: Yazı) {
     geçenZaman.sil()
     geçenZaman.gizle()
     geçenZaman.kalemRenginiKur(mavi)
@@ -40,7 +40,7 @@ canlandır {
 
 tuşaBasınca { t =>
     t match {
-      case tuşlar.VK_ESCAPE => durdur()
+      case tuşlar.VK_ESCAPE => durdur()  // sol üst tuş
       case _ =>
     }
 }
