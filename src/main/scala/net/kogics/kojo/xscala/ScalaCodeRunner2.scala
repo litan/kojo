@@ -704,7 +704,9 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       val pfx = prefix.getOrElse("")
       val offset = caretOffset - pfx.length
       val code =
-        "%s%s".format(code0.substring(0, offset), code0.substring(offset + pfx.length))
+        if (pfx.length > 0)
+          "%s%s".format(code0.substring(0, offset), code0.substring(offset + pfx.length))
+        else code0
 
       compilerAndRunner.completions(code, offset, objid) match {
         case Nil =>
