@@ -370,13 +370,15 @@ class CompilerAndRunner(
     val augmentedCode =
       "%s ;} // %s".format(code.substring(0, offset), code.substring(offset))
 
-    completions_helper(augmentedCode, offset - 1, selection) match {
-      case Nil => completions_helper(code, offset - 1, selection)
-      case _ @ ret => ret
+    val queryOffset = if (selection) offset - 1 else offset
+
+    completionQuery(augmentedCode, queryOffset, selection) match {
+      case Nil => if (selection) completionQuery(code, queryOffset, selection) else Nil
+      case _@ret => ret
     }
   }
 
-  def completions_helper(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
+  private def completionQuery(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     import interactive._
 
     compilerCode(code0) map { code =>
