@@ -366,15 +366,23 @@ class CompilerAndRunner(
 
   import core.CompletionInfo
 
-  def completions(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
-    import interactive._
-    val augmentedCode0 =
-      "%s_CURSOR_ %s".format(code0.substring(0, offset), code0.substring(offset))
+  def completions(code: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
+    val augmentedCode =
+      "%s ;} // %s".format(code.substring(0, offset), code.substring(offset))
 
-    compilerCode(augmentedCode0) map { code =>
+    completions_helper(augmentedCode, offset - 1, selection) match {
+      case Nil => completions_helper(code, offset - 1, selection)
+      case _ @ ret => ret
+    }
+  }
+
+  def completions_helper(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
+    import interactive._
+
+    compilerCode(code0) map { code =>
       classLoader.asContext {
         val source = new BatchSourceFile("scripteditor", code)
-        val pos = new OffsetPosition(source, offset + offsetDelta)
+        val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
         val r1 = new Response[Unit]
         pcompiler.askReload(List(source), r1)
