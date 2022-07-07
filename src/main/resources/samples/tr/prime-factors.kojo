@@ -1,4 +1,4 @@
-// #worksheet
+// #çalışmasayfası
 
 kojoÇalışmaSayfalıBakışaçısınıKur()
 çıktıyıSil()

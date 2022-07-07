@@ -1,4 +1,4 @@
-//#include tr/anaTanimlar
+//#yükle tr/anaTanimlar
 
 object ABa { // alfa-beta arama
     def hamleYap(durum: Durum): Belki[Oda] = {

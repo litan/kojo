@@ -675,7 +675,7 @@ class CodeExecutionSupport(
   }
 
   def isWorksheet(code: String) = {
-    code.indexOf("#worksheet") != -1
+    code.indexOf(Utils.loadString("S_WorksheetPragma")) != -1
   }
 
   def runIpmCode(code: String): Unit = {

@@ -1,4 +1,4 @@
-// #include tr/sozcuk-dizinini-yukle
+// #yükle tr/sozcuk-dizinini-yukle
 // Yazar: Bulent Basaran
 type Sözcük = Yazı
 type Tümce = Dizin[Sözcük]

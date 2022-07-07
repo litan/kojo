@@ -1,4 +1,6 @@
-// #worksheet (satırın başındaki bir komut. Bu yazılımcığı çalışma sayfası olarak çalıştırıyor)
+// #çalışmasayfası
+// Yukarıdaki ilk satırda kojo derleyicisinin özel bir komutu var.
+// Bu yazılımcığı hep çalışma sayfası olarak çalıştırıyor.
 
 kojoÇalışmaSayfalıBakışaçısınıKur()
 // Bu çalışma sayfasından çıkmak için Pencere menüsündeki

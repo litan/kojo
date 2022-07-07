@@ -1,5 +1,5 @@
-// #include /robosim/tr/robot.kojo
-// #include /robosim/tr/cevre.kojo
+// #yükle /robosim/tr/robot.kojo
+// #yükle /robosim/tr/cevre.kojo
 
 // Yüklediğimiz yazılımcıkları şuradan da okuyabilirsin:
 //   https://github.com/litan/kojo/tree/master/src/main/resources/robosim/tr

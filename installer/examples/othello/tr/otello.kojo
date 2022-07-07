@@ -1,7 +1,7 @@
-//#include tr/anaTanimlar
-//#include tr/eTahta
-//#include tr/araYuz
-//#include tr/alfabeta
+//#yükle tr/anaTanimlar
+//#yükle tr/eTahta
+//#yükle tr/araYuz
+//#yükle tr/alfabeta
 
 çıktıyıSil
 val çeşni = 0 // ya da 1
