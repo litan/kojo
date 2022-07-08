@@ -536,6 +536,11 @@ object Utils {
     (messages.getString(key) format (args: _*)) concat stringSuffix(key)
   }
 
+  // Loads the actual string in the bundle without the debug key suffix
+  def loadBundleString(key: String) = {
+    messages.getString(key)
+  }
+
   def filesInDir(dir: String, ext: String): List[String] = {
     val osDir = new File(dir)
     if (osDir.exists && osDir.isDirectory) {
@@ -759,14 +764,18 @@ object Utils {
     if (kc == 0) e.getKeyChar.toUpper.toInt else kc
   }
 
+  lazy val includePragma = loadBundleString("S_IncludePragma")
+  lazy val includeRE = ("""//\s*#""" ++ includePragma ++ """.*""").r
+  lazy val filenameRE = ("""//\s*#""" ++ includePragma).r
+  lazy val basecodeRE = ("""//(\s)*#""" ++ includePragma ++ """(.*)""").r
+
   def preProcessInclude(code: String): (String, Int, Int) = {
     val included = new mutable.HashSet[String]()
 
     def _preProcessInclude(code: String): (String, Int, Int) = {
       def countLines(s: String) = s.count(_ == '\n')
-      val pragma = Utils.loadString("S_IncludePragma")
-      val includes = ("""//\s*#""" ++ pragma ++ """.*""").r.findAllIn(code)
-      def getFileName(s: String) = ("""//\s*#""" ++ pragma).r.replaceFirstIn(s, "").trim
+      val includes = includeRE.findAllIn(code)
+      def getFileName(s: String) = filenameRE.replaceFirstIn(s, "").trim
       def addKojoExtension(fileName: String) = {
         val justFileName = new File(fileName).getName
         if (!justFileName.contains(".")) fileName + ".kojo" else fileName
@@ -805,7 +814,7 @@ object Utils {
       }
 
       val addedCode = (for (i <- includes) yield load(getFileName(i))).mkString
-      val baseCode = ("""//(\s)*#""" ++ pragma ++ """(.*)""").r.replaceAllIn(code, "//$1#" ++ pragma.capitalize ++ "$2")
+      val baseCode = basecodeRE.replaceAllIn(code, "//$1#" ++ includePragma.capitalize ++ "$2")
       (addedCode + baseCode, countLines(addedCode), addedCode.length)
     }
 

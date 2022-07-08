@@ -674,8 +674,10 @@ class CodeExecutionSupport(
     code.indexOf("stPlayStory") != -1
   }
 
+  lazy val worksheetPragma = Utils.loadBundleString("S_WorksheetPragma")
+
   def isWorksheet(code: String) = {
-    code.indexOf(Utils.loadString("S_WorksheetPragma")) != -1
+    code.indexOf(worksheetPragma) != -1
   }
 
   def runIpmCode(code: String): Unit = {
