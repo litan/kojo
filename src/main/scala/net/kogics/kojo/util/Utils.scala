@@ -764,8 +764,9 @@ object Utils {
 
     def _preProcessInclude(code: String): (String, Int, Int) = {
       def countLines(s: String) = s.count(_ == '\n')
-      val includes = """//\s*#include.*""".r.findAllIn(code)
-      def getFileName(s: String) = """//\s*#include""".r.replaceFirstIn(s, "").trim
+      val pragma = Utils.loadString("S_IncludePragma")
+      val includes = ("""//\s*#""" ++ pragma ++ """.*""").r.findAllIn(code)
+      def getFileName(s: String) = ("""//\s*#""" ++ pragma).r.replaceFirstIn(s, "").trim
       def addKojoExtension(fileName: String) = {
         val justFileName = new File(fileName).getName
         if (!justFileName.contains(".")) fileName + ".kojo" else fileName
@@ -804,7 +805,7 @@ object Utils {
       }
 
       val addedCode = (for (i <- includes) yield load(getFileName(i))).mkString
-      val baseCode = """//(\s)*#include(.*)""".r.replaceAllIn(code, "//$1#Include$2")
+      val baseCode = ("""//(\s)*#""" ++ pragma ++ """(.*)""").r.replaceAllIn(code, "//$1#" ++ pragma.capitalize ++ "$2")
       (addedCode + baseCode, countLines(addedCode), addedCode.length)
     }
 

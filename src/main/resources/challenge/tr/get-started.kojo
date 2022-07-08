@@ -6,8 +6,8 @@ val AlıştırmaKalemKalınlığı = 6 // alıştırmanın hedefini bu kalınlı
 val Çözmedenİlerleme = yanlış // doğru yanıt bulunmazsa bir sonraki alıştırmaya geçmeye izin vermez
 val SeçenekSayısı = 4 // komut salındıraçında (dropdown) kaç seçenek olduğunu belirler
 
-// Yüklediğimiz yazılım (runner.kojo) öykü anlatma özelliğini kurar.
-// #include /challenge/tr/runner.kojo
+// Yüklediğimiz yazılım, öykü anlatma özelliğini kurar ve çalıştırır:
+// #yükle /challenge/tr/oykucu.kojo
 
 // Alıştırmaları ve açıklamalarını burada tanımlıyoruz. İstediğin gibi değiştirebilirsin.
 // Bu iki miskin değişmez (lazy val) yukarıda yüklediğimiz runner.kojo dosyasında tanımlanmış

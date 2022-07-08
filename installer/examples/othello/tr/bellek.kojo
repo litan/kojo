@@ -1,5 +1,5 @@
-//#include tr/anaTanimlar
-//#include tr/eTahta
+//#yükle tr/anaTanimlar
+//#yükle tr/eTahta
 
 class Bellek(tahta: ETahta) {
     val odaSayısı = tahta.odaSayısı

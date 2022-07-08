@@ -1,4 +1,4 @@
-//#include tr/anaTanimlar
+//#yükle tr/anaTanimlar
 
 // elektronik tahta
 class ETahta(

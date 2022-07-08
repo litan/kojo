@@ -1,4 +1,4 @@
-// #include ~/kojo-includes/ka-bridge.kojo
+// #yükle ~/kojo-includes/ka-bridge.kojo
 // aşağıda kullandığımız pinMode, digitalRead/Write ve delay komutlarını yükledik ilk satırda
 
 def setup() {  // kurulum için gerekli komutları buraya koyarız. Arduinomuz bununla başlar.

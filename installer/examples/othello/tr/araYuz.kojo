@@ -1,7 +1,7 @@
-//#include tr/anaTanimlar
-//#include tr/eTahta
-//#include tr/bellek
-//#include tr/alfabeta
+//#yükle tr/anaTanimlar
+//#yükle tr/eTahta
+//#yükle tr/bellek
+//#yükle tr/alfabeta
 
 class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     tahta:      ETahta,
