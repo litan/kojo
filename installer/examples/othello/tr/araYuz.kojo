@@ -72,6 +72,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
                 case Yok => if (tahta.hamleyiDene(oda).size > 0) {
                     k.boyamaRenginiKur(renk)
                     ipucu.güncelle(s"${tahta.hamleGetirisi(oda)}")
+                    hamleninÇevireceğiTaşlarıGöster(oda)
                 }
                 else {
                     ipucu.güncelle(s"$oda")
@@ -83,7 +84,9 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
             ipucu.girdiyiAktar(k)
         }
         k.fareÇıkınca { (_, _) =>
+            hamleninÇevireceğiTaşlarıSil()
             k.boyamaRenginiKur(odaRengi)
+            k.saydamlık(1) // hamleninÇevireceğiTaşlarıGöster saydamlığı değiştiriyor
             ipucu.gizle()
             // todo: çıkmadan, ya da tekrar tıklamadan çalışmıyor!
             if (tahta.oyuncu() == bilgisayar && !tahta.hamleYoksa) öneri
@@ -156,6 +159,37 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         seçenekResimleri.foreach { r => r.sil() }
         düğmeTepkisi(d)
         d.kalemRenginiKur(renksiz)
+    }
+
+    var hamleninÇevireceğiTaşlar: Diz[Oda] = Diz()
+    def hamleninÇevireceğiTaşlarıGöster(oda: Oda) = if (seçeneklerAçık) {
+        val yasal = tahta.hamleyiDene(oda)
+        if (yasal.size > 0) {
+            val odalar = EsnekDizim(oda)
+            yasal.herbiriİçin { komşu =>
+                odalar += komşu.oda
+                tahta.gerisi(komşu).alDoğruKaldıkça { oda =>
+                    tahta.taş(oda) != Yok && tahta.taş(oda) != tahta.oyuncu()
+                } herbiriİçin { o2 => odalar += o2 }
+            }
+            hamleninÇevireceğiTaşlar = odalar.diziye
+            hamleninÇevireceğiTaşlar.işle { o =>
+                odanınKaresi(o).boyamaRenginiKur(oyuncununSolukTaşRengi)
+                odanınKaresi(o).saydamlık(0.8)
+            }
+        }
+    }
+    def hamleninÇevireceğiTaşlarıSil() = if (seçeneklerAçık) {
+        hamleninÇevireceğiTaşlar.işle { o =>
+            odanınKaresi(o).boyamaRenginiKur(taşınRengi(tahta.oyuncu.karşı))
+            odanınKaresi(o).saydamlık(1)
+        }
+        hamleninÇevireceğiTaşlar = Diz()
+    }
+    def oyuncununSolukTaşRengi = tahta.oyuncu() match {
+        case Beyaz => Renk(244, 213, 244) // açık mor
+        case Siyah => Renk(98, 8, 97) // koyu mor
+        case _     => boşOdaRengi
     }
 
     def ileri = {
