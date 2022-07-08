@@ -37,38 +37,33 @@ def menu: Birim = {
                         case "geleneksel" => 0
                         case _            => 1
                     }
-                    var sorunYok = doğru
-                    if (çeşni != 0) {
-                        if (odaSayısı < 7) {
-                            satıryaz("Çeşnili başlangıç taşları için 7x7 ya da daha iri bir tahta seç!")
-                            sorunYok = yanlış
+                    if (çeşni != 0 && odaSayısı < 7) {
+                        satıryaz("Çeşnili başlangıç taşları için 7x7 ya da daha iri bir tahta seç!")
+                    }
+                    else {
+                        val kimBaşlar = ay_ilk.değeri match {
+                            case "Siyah" => Siyah
+                            case _       => Beyaz
                         }
-                    }
-                    val kimBaşlar = ay_ilk.değeri match {
-                        case "Siyah" => Siyah
-                        case _       => Beyaz
-                    }
-                    val düzey = ay_düzey.değeri match {
-                        case "Er"     => Er
-                        case "Çırak"  => Çırak
-                        case "Kalfa"  => Kalfa
-                        case "Usta"   => Usta
-                        case "Doktor" => Doktor
-                        case "Deha"   => Deha
-                        case _        => Kalfa
-                    }
-                    val bilgisayar = ay_bilgisayar.değeri match {
-                        case "Siyahları oynasın" => Siyah
-                        case "Beyazları oynasın" => Beyaz
-                        case "Oynamasın"         => Yok
-                        case _                   => Yok
-                    }
-                    if (sorunYok) {
+                        val düzey = ay_düzey.değeri match {
+                            case "Er"     => Er
+                            case "Çırak"  => Çırak
+                            case "Kalfa"  => Kalfa
+                            case "Usta"   => Usta
+                            case "Doktor" => Doktor
+                            case "Deha"   => Deha
+                            case _        => Kalfa
+                        }
+                        val bilgisayar = ay_bilgisayar.değeri match {
+                            case "Siyahları oynasın" => Siyah
+                            case "Beyazları oynasın" => Beyaz
+                            case "Oynamasın"         => Yok
+                            case _                   => Yok
+                        }
                         val tahta = new ETahta(odaSayısı, kimBaşlar, çeşni)
-                        val bellek = new Bellek(tahta)
                         çıktıyıSil
                         ABa.ustalık(düzey)
-                        new Arayüz(tahta, bellek, bilgisayar)
+                        new Arayüz(tahta, new Bellek(tahta), bilgisayar)
                     }
                 })
             )
