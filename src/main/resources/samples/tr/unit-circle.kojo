@@ -1,8 +1,8 @@
 // Yazan: Bülent Başaran ben@scala.org Yılı: 2022
+tümEkranTuval()
 val dönüşSayısı = 3
 val yatayKosinüsDalgasınıDaÇiz = yanlış // sinüs dalgasını soldan sağa, kosinüsü yukarıdan aşağıya çizeceğiz. İstersek, bir de soldan sağa giden kosinüs eğrisi çizebiliriz.
 silVeSakla
-tümEkranTuval()
 val (yt, yy) = (4.0, 160.0) // topun ve yörüngesinin yarıçapları
 yaklaşXY(0.6, 0.6, 600, -2 * yy)
 val adımSayısı = 120
