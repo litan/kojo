@@ -304,7 +304,7 @@ object Resim {
   def sütun(r: => Resim, kaçTane: Sayı) = new Resim(picture.col(r.p, kaçTane))
   def yazı(içerik: Her, yazıBoyu: Sayı=15) = new Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
   def yazı(içerik: Her, yazıyüzü: Yazıyüzü) = new Resim(richBuiltins.Picture.text(içerik, yazıyüzü))
-  def yazı(içerik: Her, yazıyüzü: Yazıyüzü, renk: Renk) = new Resim(richBuiltins.Picture.text(içerik, yazıyüzü, renk))
+  def yazı(içerik: Her, yazıyüzü: Yazıyüzü, renk: Renk) = new Resim(richBuiltins.Picture.textu2(içerik, yazıyüzü, renk))
   def yazıRenkli(içerik: Her, yazıBoyu: Sayı, renk: Renk) = new Resim(richBuiltins.Picture.textu(içerik, yazıBoyu, renk))
   def imge(dosyaAdı: Yazı) = new Resim(richBuiltins.Picture.image(dosyaAdı))
   def imge(dosyaAdı: Yazı, zarf: Resim) = new Resim(richBuiltins.Picture.image(dosyaAdı, zarf.p))

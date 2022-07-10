@@ -302,6 +302,7 @@ trait AppMenu {
     mathActivityMenu.add(menuItemFor("S_MakeFractions", "make-fractions.kojo", "/mathgames/"))
     mathActivityMenu.add(menuItemFor("S_IdentifyFractions", "identify-fractions.kojo", "/mathgames/"))
     mathActivityMenu.add(menuItemFor("S_AnglesAnimation", "angles.kojo"))
+    mathActivityMenu.add(menuItemFor("S_UnitCircle", "unit-circle.kojo"))
     // mathActivityMenu.add(menuItemFor("S_SolvingLinearEquations", "solving-linear-equations.kojo"))
     samplesMenu.add(mathActivityMenu)
 
