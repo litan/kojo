@@ -48,7 +48,7 @@ object res {
   def eksenler = AxesOnc
   def boyaRengi(r: Boya) = Fillc(r)
   def kalemRengi(r: Boya) = Strokec(r)
-  def kalemBoyu(b: Kesir) = StrokeWidthc(b)
+  def kalemBoyu(b: Kesir) = StrokeWidthc(b)  // penThickness setPenThickness
   def çizimÖncesiİşlev(iv: Resim => Birim) = PreDrawTransformc(iv)
   def çizimSonrasıİşlev(iv: Resim => Birim) = PostDrawTransformc(iv)
   def çevir(sayı: Sayı) = Spinc(sayı)
