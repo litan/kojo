@@ -128,7 +128,7 @@ pages += Page(
     <a href={link("Literals")}>Yalın Değerler, Sayılar, Kesirler ve Yazılar</a> <br/>
     <a href={link("Functions")}>İşlevler</a> <br/>
     <a href={link("OandC")}>Nesneler ve Sınıflar</a> <br/>
-    <a href={link("PMS")}>Örüntü Eşleme ve Switch ve Case Komutları</a> <br/>
+    <a href={link("PMS")}>Desen Eşleme ve Switch ve Case Komutları</a> <br/>
     <a href={link("BTree")}>İleri Eşleme Yöntemleri - İkil Ağaç</a> <br/>
     <a href={link("STI")}>Dingin Türleme ve Tür Çıkarımı</a> <br/>
     <a href={link("FAO")}>İşlevler de Birer Nesnedir</a> <br/>
@@ -550,9 +550,9 @@ val n3 = Nokta(-2, 2)
 
 pages += Page(
   name = "PMS",
-  body =tPage("Örüntü Eşleme ve Switch ve Case Komutları",
-    "Örüntü Eşleme".h2,
-    "Program akışını değiştirmenin bazı yollarını görmüştük. Bilhassa if/else yapısıyla akış nasıl dallandırılır biliyorsun. Şimdi de switch/case yapısıyla akışı aynı anda birden fazla dala ayırmayı görelim. C ve Java gibi daha eski dillerde de vardır switch/case. Scala bu kavramı daha da geneller ve cebirsel örüntülü eşleme yapmayı sağlar! Bunu böyle anlamak mümkün değil elbet! Gelin birkaç örnekle gizemi çözüverelim. İlk önce geleneksel ve daha basit kullanışıyla başlayalım: ".p,
+  body =tPage("Desen Eşleme ve Switch ve Case Komutları",
+    "Desen Eşleme".h2,
+    "Program akışını değiştirmenin bazı yollarını görmüştük. Bilhassa if/else yapısıyla akış nasıl dallandırılır biliyorsun. Şimdi de switch/case yapısıyla akışı aynı anda birden fazla dala ayırmayı görelim. C ve Java gibi daha eski dillerde de vardır switch/case. Scala bu kavramı daha da geneller ve cebirsel desen eşleme yapmayı sağlar! Bunu böyle anlamak mümkün değil elbet. Desene ingilizcede 'pattern' deniyor. 'Design patterns' ve 'pattern matching' gibi terimler çok yaygındır bilgisayar mühendisliğinde. Türkçeye 'tasarım desenleri' ve 'desen eşleme' diye çevirebiliriz. Desen yerine örüntü sözcüğü de var, ama onu pek duyan ve kullanan yok. Neyse biz gelin birkaç örnekle gizemi çözüverelim. İlk önce geleneksel ve daha basit kullanışıyla başlayalım: ".p,
     """def sayıdanYazıya(s: Sayı){
   s match {
     case 1 => satıryaz("Bir")
@@ -562,7 +562,7 @@ pages += Page(
   }
 }""".c, 
     "sayıdanYazıya(5)".c,
-    """Burada her 'case' satırında kullandığımız '=>' iminin adı kalın ok imi olsun. Bu imden önce gelen örüntü sonra gelen komut dizisi ya da deyişle eşleşiyor. Son örneğimizde 1 sayısı "Bir" yazısıyla eşleşiyor. Son örüntü olarak kullandığımız '_' imi herşey demek. Yani 's' sayısı ne olursa olsun artık eşini buluyor. Bu yapıda kullandığımız 'match' anahtar sözcüğü hemen hemen bütün işlevler gibi bir değere sahip. Onun için son örneği daha da kısa ve öz bir şekilde yazalım:""".p,
+    """Burada her 'case' satırında kullandığımız '=>' iminin adı kalın ok imi olsun. Bu imden önce gelen desen ondan sonra gelen komut dizisi ya da deyişle eşleşiyor. Son örneğimizde 1 sayısı "Bir" yazısıyla eşleşiyor. Son desen olarak kullandığımız '_' imi herşey demek. Yani 's' sayısı ne olursa olsun artık eşini buluyor. Bu yapıda kullandığımız 'match' anahtar sözcüğü hemen hemen bütün işlevler gibi bir değere sahip. Onun için son örneği daha da kısa ve öz bir şekilde yazalım:""".p,
     """def sayıdanYazıya(s: Sayı) {
   satıryaz(s match {
     case 1 => "Bir"
@@ -585,7 +585,7 @@ pages += Page(
 }
 """.c, 
     """yazıdanSayıya("Beş")""".c,
-    """İngilizce'de açık açık okuyabildiğimiz bir yazıyı sayıya çevirmeye "encoding", tersine de "decoding" derler. Son örnekle encoding, ondan öncekiyle de decoding yapmış olduk. Haberin olsun. Örüntü eşlemeyle bir nesnenin türüne göre de farklı işlemler yapmak kolaylaşır. Hemen bir örnek görelim:""".p,
+    """İngilizce'de açık açık okuyabildiğimiz bir yazıyı sayıya çevirmeye "encoding", tersine de "decoding" derler. Son örnekle encoding, ondan öncekiyle de decoding yapmış olduk. Haberin olsun. Desen eşlemeyle bir nesnenin türüne göre de farklı işlemler yapmak kolaylaşır. Hemen bir örnek görelim:""".p,
     """def nedir(a: Her): Yazı = {
     a match {
         case x: Sayı  => "Bir Sayı"
@@ -626,8 +626,8 @@ case class Yaprak(anahtar: Yazı, değer: Sayı) extends Ağaç
     """Çatal ve Yaprak için Ağaç türünün alt türü deriz. Bunu uzatmak anlamına gelen 'extend' özel sözcüğüyle belirliyoruz. Ağaç da üst tür olarak bilinecek bundan sonra. Çatal ve Yaprak alt türlerine ataları olan Ağaç üst türünün bütün özellikleri miras kalır, hem de Ağaç daha ölmeden! :-) Bakın çok ilginç birşey daha göreceğiz hemen şimdi. Bir değerin türü Ağaç olsun diyeceğiz ama onun gerçek değeri bir Yaprak ya da Çatal olabilecek:""".p,
     """val ağaç1: Ağaç = Yaprak("c", 24)""".c,
     "Bu nasıl oluyor? Yaprak Ağaç'ın uzantısıydı ya. O sayede Ağaç deyince genel olarak ya Çatal ya da Yaprak demiş oluyoruz. Bu sayede Çatal'ın tanımındaki sol ve sağ değerlerinin türü neden Ağaç oldu anladık değil mi? Ama tersini yapamayız ona göre. Neden? Çünkü Yaprak dedik mi artık yeterince özelleşmiş oluyor ve anahtar ve değeri olarak bir sayı gerekiyor. Ne Ağaç ne de Çatal'da bir sayı yok, değil mi?".p,
-    "Şimdi en başta bahsettiğimiz arama işlevine geldi sıra. Örüntü eşleme değil mi bu kısmın adı?".p,
-    "Bakın bu işlev ağacımızı alacak ve özyineleme yöntemiyle verimli arama işlemini gerçekleştirecek. Yani bir çatala geldiğinde kendi kendini sağ ya da sol küçük ağaç ile tekrar çağıracak. Ama eğer bir yaprak görürse elbette yineleme duracak. Örüntü nerede o zaman? Küçük ağaç bir çatal mı yoksa yaprak mı onu belirleyecek örüntülerimiz. Çok lafa gerek yok. Yazılımcık yalın ve kendi kendini anlatıveriyor:".p,
+    "Şimdi en başta bahsettiğimiz arama işlevine geldi sıra. Desen eşleme değil mi bu kısmın adı?".p,
+    "Bakın bu işlev ağacımızı alacak ve özyineleme yöntemiyle verimli arama işlemini gerçekleştirecek. Yani bir çatala geldiğinde kendi kendini sağ ya da sol küçük ağaç ile tekrar çağıracak. Ama eğer bir yaprak görürse elbette yineleme duracak. Desen nerede o zaman? Küçük ağaç bir çatal mı yoksa yaprak mı onu belirleyecek desenlerimiz (ya da örüntülerimiz). Çok lafa gerek yok. Yazılımcık yalın ve kendi kendini anlatıveriyor:".p,
     """def bul(ağaç: Ağaç, anahtar: Yazı): Sayı = {
   ağaç match {
     case Yaprak(a, değer)   => if (a == anahtar) değer else 0
@@ -649,7 +649,7 @@ val ağaç = Çatal("b", Çatal("a", Yaprak("a", 30), Yaprak("b", 10)), Yaprak("
     """bul(ağaç, "a")  // 30""".c,
     """bul(ağaç, "c")  // 20""".c,
     "Bu kadarla kalmaz elbet. Ağaca yeni anahtar/değer çiftleri eklemek için de bir işlev iyi olur. Ha, bir de yaprağı koparmak gerekebilir. Bütün bu işlevleri yeni bir İkilAğaç sınıfı tanımlayıp içine koymaya ne dersin? Onu sana bırakıyorum. Biraz düşün, Kojo'da birşeyler yazıp çiziştir bakalım. Çok daha iyi öğreneceksin o sayede. Kolay gelsin!".p,
-    "Bu arada örüntüler yukarda gördüğümüz gibi değişken olmak zorunda değil. Yalın bir değer de kullanabiliriz örüntü olarak. Bir önceki bölümde de görmüştük hani sayıdan yazıya ve tersini yaparken.".p,
+    "Bu arada desenler/örüntüler yukarda gördüğümüz gibi değişken olmak zorunda değil. Yalın bir değer de kullanabiliriz örüntü olarak. Bir önceki bölümde de görmüştük hani sayıdan yazıya ve tersini yaparken.".p,
     "Bir örnek daha verelim yine de. Diyelim ki (c -> 20) çiftinin bulunmasını istemiyoruz. Nedense. Bakın nasıl kolay:".p,
     """def bul2(ağaç: Ağaç, anahtar: Yazı): Sayı = {
   ağaç match {
@@ -662,7 +662,7 @@ val ağaç = Çatal("b", Çatal("a", Yaprak("a", 30), Yaprak("b", 10)), Yaprak("
 bul2(ağaç, "c")  // 0
 """.c,
     "Burada yine '_' imini joker gibi kullanarak bütün değerlerle eşleşmesini sağladık. Ayrıca bilelim ki bu eşleştirme işlemi yukarıdan aşağıya sırayla gidiyor. İlk eşleşme ile iş bitiyor. Bariz tabii ama yine de benden söylemesi.".p,
-    "Burada örneğini gördüğümüz sınıf hierarşisi ve alt türlerin üst türü uzatması, OOP, yani nesneye yönelik programlamadaki en temel kavramlardan. Örüntü eşleme yöntemi sayesinde alt türleri birbirinden ayırıp gereğini yapabiliyoruz. Ne dahice, değil mi?!".p)
+    "Burada örneğini gördüğümüz sınıf hierarşisi ve alt türlerin üst türü uzatması, OOP, yani nesneye yönelik programlamadaki en temel kavramlardan. Desen eşleme yöntemi sayesinde alt türleri birbirinden ayırıp gereğini yapabiliyoruz. Ne dahice, değil mi?!".p)
 )
 pages += Page(
   name = "STI",
@@ -885,13 +885,13 @@ val g2 = g1.işle(_.büyükHarfe); satıryaz("g2", g2)
 """.c,
     "Bunu anlayamadım diye üzülme sakın! Daha önce görmediğimiz bir kaç becerisi var Scala derleyicisinin burada!".p,
 
-    "1) adsız işlevimizi tanımlarken 'case' yani örüntü eşleme yapısı kullanabiliriz. Bunun için normal parantez yerine kıvrık parantez kullanmamız yeter. 'match' özel sözcüğüne gerek kalmadı. Ondan önce gelen değişmezlere de! Yani bu epey faydalı bir kısa yol oluyor ve bunu iyi bilmekte fayda var! Normal, yani kısaltılmamış halini anımsayalım hemen:".p,
+    "1) adsız işlevimizi tanımlarken 'case' yani desen/örüntü eşleme yapısı kullanabiliriz. Bunun için normal parantez yerine kıvrık parantez kullanmamız yeter. 'match' özel sözcüğüne gerek kalmadı. Ondan önce gelen değişmezlere de! Yani bu epey faydalı bir kısa yol oluyor ve bunu iyi bilmekte fayda var! Normal, yani kısaltılmamış halini anımsayalım hemen:".p,
     "(a, b) => (a, b) match {case ... => ...; case ... => ...}".p,
     "match ve ondan önceki hiç birşeye gerek kalmıyor!".p,
 
-    "2) örüntülü eşleme yapmak için kullanmıştık bu 'case' yöntemini. Burada da 'case' sözcüğünden hemen sonra gelen kısımda elimizdeki iki girdiyi çözümlüyoruz. Biraz önce de dediğimiz gibi ilk girdi ufak ufak oluşturduğumuz yeni dizinimiz. '(önceki, sayaç) :: kuyruk' yeni kurduğumuz dizinin başı ve kuyruğuyla eşleşiyor ve onların üçüne de isim takıveriyor. kuyruk bariz. baş eleman da bir önceki harf ve ondan şu ana kadar kaç tane saydığımızı tutan sayaç. 'kuyruk' değerinden sonra gelen 'harf' ise katlama işlemini yaptığımız 'harfler' dizinindeki harflerden biri. Katlama işlevi her harfin üstünden teker teker geçecek elbet.".p,
+    "2) desen eşleme yani örüntülü eşleme yapmak için kullanmıştık bu 'case' yöntemini. Burada da 'case' sözcüğünden hemen sonra gelen kısımda elimizdeki iki girdiyi çözümlüyoruz. Biraz önce de dediğimiz gibi ilk girdi ufak ufak oluşturduğumuz yeni dizinimiz. '(önceki, sayaç) :: kuyruk' yeni kurduğumuz dizinin başı ve kuyruğuyla eşleşiyor ve onların üçüne de isim takıveriyor. kuyruk bariz. baş eleman da bir önceki harf ve ondan şu ana kadar kaç tane saydığımızı tutan sayaç. 'kuyruk' değerinden sonra gelen 'harf' ise katlama işlemini yaptığımız 'harfler' dizinindeki harflerden biri. Katlama işlevi her harfin üstünden teker teker geçecek elbet.".p,
 
-    "3) ve son! İlk örüntü eşleme satırında bir de koşul girdik 'if' diyerek. Bu çok önemli. Yeni bir harfe geçip geçmediğimize dikkat etmemiz gerek! Eğer en son saydığımız harften aynısı geldiyse sayaçı arttırmalıyız. Yoksa yeni bir sayaç başlatmalı.".p,
+    "3) ve son! İlk desen/örüntü eşleme satırında bir de koşul girdik 'if' diyerek. Bu çok önemli. Yeni bir harfe geçip geçmediğimize dikkat etmemiz gerek! Eğer en son saydığımız harften aynısı geldiyse sayaçı arttırmalıyız. Yoksa yeni bir sayaç başlatmalı.".p,
 
     "Şimdi, bilgisayın Scala derleyicisi sayesinde anladığı bu epey karmaşık görünen işlemi okuyalım bakalım daha iyi anlamış mıyız: esas girdimiz olan sıralanmış harfler dizisindeki her harf için teker teker şunu yapalım: eğer sıfırdan oluşturduğumuz sunum adlı yeni çift dizisinin başındaki çiftin harfi ile aynıysa, dizinin başını sayaçın bir arttığı yeni bir başla değiştirelim. Yoksa, sunum dizisine elimizdeki harf icin yeni bir baş ekleyelim ve harfin sayacını bire eşitleyelim. Çok da karmaşık değilmiş, öyle mi?".p,
 
