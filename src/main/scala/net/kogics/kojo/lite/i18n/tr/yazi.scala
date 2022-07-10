@@ -105,6 +105,7 @@ trait StringMethodsInTurkish {
     def böl(delim: Yazı, enÇokParça: Sayı = 0): Dizin[Yazı] = y.split(delim, enÇokParça).toList
     def büyükHarfe: Yazı = y.map(_.toUpper)
     def küçükHarfe: Yazı = y.map(_.toLower)
+    def ilkHarfiBüyült: Yazı = y.capitalize
     def kıyasla(öbürü: Yazı): Sayı = y.compareTo(öbürü)
     def kıyaslaKüçükHarfBüyükHarfAyrımıYapmadan(öbürü: Yazı): Sayı = y.compareToIgnoreCase(öbürü)
     def harf(sıra: Sayı): Char = y.charAt(sıra)

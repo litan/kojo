@@ -24,14 +24,15 @@ trait SetMethodsInTurkish {
   }
   // todo: duplicates in yazi.scala and dizin.scala
   implicit class SetYöntemleri[T](d: Küme[T]) {
+    type Col = Küme[T]
     type Eşlek[A, D] = collection.immutable.Map[A, D]
     def başı: T = d.head
-    def kuyruğu: Küme[T] = d.tail
+    def kuyruğu: Col = d.tail
     def boyu: Sayı = d.size
     def boşMu: İkil = d.isEmpty
     def doluMu: İkil = d.nonEmpty
-    def ele(deneme: T => İkil): Küme[T] = d.filter(deneme)
-    def eleDeğilse(deneme: T => İkil): Küme[T] = d.filterNot(deneme)
+    def ele(deneme: T => İkil): Col = d.filter(deneme)
+    def eleDeğilse(deneme: T => İkil): Col = d.filterNot(deneme)
     def işle[A](işlev: T => A): Küme[A] = d.map(işlev)
     def düzİşle[A](işlev: T => Küme[A]): Küme[A] = d.flatMap(işlev)
     def indirge[B >: T](işlem: (B, B) => B): B = d.reduce(işlem)
@@ -48,12 +49,12 @@ trait SetMethodsInTurkish {
     def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def hepsiİçinDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def içeriyorMu(öge: T): İkil = d.contains(öge)
-    def al(n: Sayı): Küme[T] = d.take(n)
-    def alDoğruKaldıkça(deneme: T => İkil): Küme[T] = d.takeWhile(deneme)
-    def alSağdan(n: Sayı): Küme[T] = d.takeRight(n)
-    def düşür(n: Sayı): Küme[T] = d.drop(n)
-    def düşürDoğruKaldıkça(deneme: T => İkil): Küme[T] = d.dropWhile(deneme)
-    def düşürSağdan(n: Sayı): Küme[T] = d.dropRight(n)
+    def al(n: Sayı): Col = d.take(n)
+    def alDoğruKaldıkça(deneme: T => İkil): Col = d.takeWhile(deneme)
+    def alSağdan(n: Sayı): Col = d.takeRight(n)
+    def düşür(n: Sayı): Col = d.drop(n)
+    def düşürDoğruKaldıkça(deneme: T => İkil): Col = d.dropWhile(deneme)
+    def düşürSağdan(n: Sayı): Col = d.dropRight(n)
 
     def dizine = d.toList
     def diziye = d.toSeq
@@ -68,8 +69,12 @@ trait SetMethodsInTurkish {
     def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
     def ikileSırayla = d.zipWithIndex
     def ikileKonumla = d.zipWithIndex
-    def öbekle[A](iş: (T) => A): Eşlek[A, Küme[T]] = d.groupBy(iş)
+    def öbekle[A](iş: (T) => A): Eşlek[A, Col] = d.groupBy(iş)
 
+    def enUfağı[B >: T](implicit sıralama: math.Ordering[B]): T = d.min(sıralama)
+    def enUfağı[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.minBy(iş)(karşılaştırma)
+    def enİrisi[B >: T](implicit sıralama: math.Ordering[B]): T = d.max(sıralama)
+    def enİrisi[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.maxBy(iş)(karşılaştırma)
     // more to come
   }
 }

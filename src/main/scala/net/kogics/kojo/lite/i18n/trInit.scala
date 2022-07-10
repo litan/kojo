@@ -32,8 +32,8 @@ import net.kogics.kojo.kmath.KEasing
 object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with
     tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with
     tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.MapMethodsInTurkish with
-    tr.MathMethodsInTurkish with tr.NumMethodsInTurkish with
-    tr.OptionMethodsInTurkish with tr.PartialFunctionMethodsInTurkish with tr.RangeMethodsInTurkish with
+    tr.MathMethodsInTurkish with tr.NumMethodsInTurkish with tr.OptionMethodsInTurkish with
+    tr.PartialFunctionMethodsInTurkish with tr.QueueMethodsInTurkish with tr.RangeMethodsInTurkish with
     tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with
     tr.arayuz.SwingWidgetMethodsInTurkish with tr.VectorMethodsInTurkish {
 

@@ -10,22 +10,22 @@ object ABa { // alfa-beta arama
     }
 
     def alfaBetaHamle(durum: Durum): Belki[Oda] =
-        if (durum.seçenekler.isEmpty) Hiçbiri
+        if (durum.seçenekler.boşMu) Hiçbiri
         else // todo: karşı oyuncunun skorunu azaltan birden çok hamle varsa rastgele seç
             Biri((for (hamle <- durum.seçenekler) yield hamle ->
                 abHamle(durum.oyna(hamle), aramaDerinliğiSınırı)
-            ).minBy(_._2)._1)
+            ).enUfağı(_._2)._1)
 
     // todo: yasal hamle olmadığı zaman arama kısa kesilmemeli!
     def abHamle(durum: Durum, derinlik: Sayı): Sayı =
-        if (durum.bitti || derinlik == 0 || durum.seçenekler.isEmpty) durum.skor
-        else azalt(durum, derinlik, Int.MinValue, Int.MaxValue) // todo
+        if (durum.bitti || derinlik == 0 || durum.seçenekler.boşMu) durum.skor
+        else azalt(durum, derinlik, Sayı.EnUfağı, Sayı.Enİrisi) // todo
 
     def azalt(durum: Durum, derinlik: Sayı, alfa: Sayı, beta: Sayı): Sayı =
-        if (durum.bitti || derinlik == 0 || durum.seçenekler.isEmpty) durum.skor
+        if (durum.bitti || derinlik == 0 || durum.seçenekler.boşMu) durum.skor
         else {
             var yeniBeta = beta
-            durum.seçenekler.foreach { hamle => // onun hamleleri
+            durum.seçenekler.herbiriİçin { hamle => // onun hamleleri
                 val yeniDurum = durum.oyna(hamle)
                 yeniBeta = enUfağı(yeniBeta, artır(yeniDurum, derinlik - 1, alfa, yeniBeta))
                 if (alfa >= yeniBeta) return alfa
@@ -33,10 +33,10 @@ object ABa { // alfa-beta arama
             yeniBeta
         }
     def artır(durum: Durum, derinlik: Sayı, alfa: Sayı, beta: Sayı): Sayı =
-        if (durum.bitti || derinlik == 0 || durum.seçenekler.isEmpty) durum.skor
+        if (durum.bitti || derinlik == 0 || durum.seçenekler.boşMu) durum.skor
         else {
             var yeniAlfa = alfa
-            durum.seçenekler.foreach { hamle =>
+            durum.seçenekler.herbiriİçin { hamle =>
                 val yeniDurum = durum.oyna(hamle)
                 yeniAlfa = enİrisi(yeniAlfa, azalt(yeniDurum, derinlik - 1, yeniAlfa, beta))
                 if (yeniAlfa >= beta) return beta
@@ -79,9 +79,9 @@ class Durum(val tahta: Tahta, val sıra: Taş) {
     def skor = tahta.durum(sıra) - tahta.durum(karşıTaş)
     def bitti = oyunBittiMi
     def oyunBittiMi = {
-        if (yasallar.size > 0) yanlış else {
+        if (yasallar.boyu > 0) yanlış else {
             val yeni = new Durum(tahta, karşıTaş)
-            yeni.yasallar.size == 0
+            yeni.yasallar.boyu == 0
         }
     }
     def seçenekler = yasallar
@@ -102,38 +102,38 @@ class Tahta(val tane: Sayı, val tahta: Sayılar) {
     def yaz(msj: Yazı = "", tab: Yazı = "") = {
         for (y <- satırAralığıSondan) {
             val satır = for (x <- satırAralığı) yield s2t(tahta(y * tane + x))
-            satıryaz(satır.mkString(s"$tab", " ", ""))
+            satıryaz(satır.yazıYap(s"$tab", " ", ""))
         }
-        if (msj.size > 0) satıryaz(msj)
+        if (msj.boyu > 0) satıryaz(msj)
         satıryaz(s"$tab Beyazlar: ${say(Beyaz)} durum: ${durum(Beyaz)}")
         satıryaz(s"$tab Siyahlar: ${say(Siyah)} durum: ${durum(Siyah)}")
     }
     def koy(oda: Oda, taş: Taş) = {
-        new Tahta(tane, tahta.updated(oda.y * tane + oda.x, t2s(taş)))
+        new Tahta(tane, tahta.değiştir(oda.y * tane + oda.x, t2s(taş)))
     }
     def koy(odalar: Dizi[Oda], taş: Taş) = {
         var yeni = tahta
-        for (o <- odalar) { yeni = yeni.updated(o.y * tane + o.x, t2s(taş)) }
+        for (o <- odalar) { yeni = yeni.değiştir(o.y * tane + o.x, t2s(taş)) }
         new Tahta(tane, yeni)
     }
     def taş(o: Oda): Taş = s2t(tahta(o.y * tane + o.x))
-    def oyunVarMı(oyuncu: Taş) = yasallar(oyuncu).size > 0
+    def oyunVarMı(oyuncu: Taş) = yasallar(oyuncu).boyu > 0
     def yasallar(oyuncu: Taş) = {
         (for (y <- satırAralığı; x <- satırAralığı if taş(Oda(y, x)) == Yok)
-            yield Oda(y, x)) filter { çevirilecekKomşuDiziler(oyuncu, _).size > 0 }
+            yield Oda(y, x)) ele { çevirilecekKomşuDiziler(oyuncu, _).boyu > 0 }
     }
     def oyna(oyuncu: Taş, oda: Oda) = {
         val odalar = EsnekDizim(oda)
         val karşı = if (oyuncu == Beyaz) Siyah else Beyaz
-        çevirilecekKomşuDiziler(oyuncu, oda).foreach { komşu =>
+        çevirilecekKomşuDiziler(oyuncu, oda).herbiriİçin { komşu =>
             odalar += komşu.oda
-            gerisi(komşu).takeWhile(taş(_) == karşı).foreach { o => odalar += o }
+            gerisi(komşu).alDoğruKaldıkça(taş(_) == karşı).herbiriİçin { o => odalar += o }
         }
         koy(odalar.dizi, oyuncu)
     }
 
     private def çevirilecekKomşuDiziler(oyuncu: Taş, oda: Oda): Dizi[Komşu] =
-        komşularıBul(oda) filter { komşu =>
+        komşularıBul(oda) ele { komşu =>
             val karşı = if (oyuncu == Beyaz) Siyah else Beyaz
             taş(komşu.oda) == karşı && sonuDaYasalMı(komşu, oyuncu)._1
         }
@@ -142,47 +142,47 @@ class Tahta(val tane: Sayı, val tahta: Sayılar) {
         Komşu(D, Oda(o.y, o.x + 1)), Komşu(B, Oda(o.y, o.x - 1)),
         Komşu(K, Oda(o.y + 1, o.x)), Komşu(G, Oda(o.y - 1, o.x)),
         Komşu(KD, Oda(o.y + 1, o.x + 1)), Komşu(KB, Oda(o.y + 1, o.x - 1)),
-        Komşu(GD, Oda(o.y - 1, o.x + 1)), Komşu(GB, Oda(o.y - 1, o.x - 1))) filter {
+        Komşu(GD, Oda(o.y - 1, o.x + 1)), Komşu(GB, Oda(o.y - 1, o.x - 1))) ele {
             k => odaMı(k.oda)
         }
 
     private def sonuDaYasalMı(k: Komşu, oyuncu: Taş): (İkil, Sayı) = {
         val diziTaşlar = gerisi(k)
-        val sıraTaşlar = diziTaşlar.dropWhile { o =>
+        val sıraTaşlar = diziTaşlar.düşürDoğruKaldıkça { o =>
             taş(o) != oyuncu && taş(o) != Yok
         }
-        if (sıraTaşlar.isEmpty) (yanlış, 0) else {
-            val oda = sıraTaşlar.head
-            (taş(oda) == oyuncu, 1 + diziTaşlar.size - sıraTaşlar.size)
+        if (sıraTaşlar.boşMu) (yanlış, 0) else {
+            val oda = sıraTaşlar.başı
+            (taş(oda) == oyuncu, 1 + diziTaşlar.boyu - sıraTaşlar.boyu)
         }
     }
     private def gerisi(k: Komşu): Dizi[Oda] = {
         val sıra = EsnekDizim.boş[Oda]
         val (x, y) = (k.oda.x, k.oda.y)
         k.yön match {
-            case D => for (i <- x + 1 to sonOda) /* */ sıra += Oda(y, i)
-            case B => for (i <- x - 1 to 0 by -1) /**/ sıra += Oda(y, i)
-            case K => for (i <- y + 1 to sonOda) /* */ sıra += Oda(i, x)
-            case G => for (i <- y - 1 to 0 by -1) /**/ sıra += Oda(i, x)
+            case D => for (i <- x + 1 |-| sonOda) /* */ sıra += Oda(y, i)
+            case B => for (i <- x - 1 |-| 0 by -1) /**/ sıra += Oda(y, i)
+            case K => for (i <- y + 1 |-| sonOda) /* */ sıra += Oda(i, x)
+            case G => for (i <- y - 1 |-| 0 by -1) /**/ sıra += Oda(i, x)
             case KD => // hem y hem x artacak
-                if (x >= y) for (i <- x + 1 to sonOda) /*         */ sıra += Oda(y + i - x, i)
-                else for (i <- y + 1 to sonOda) /*                */ sıra += Oda(i, x + i - y)
+                if (x >= y) for (i <- x + 1 |-| sonOda) /*         */ sıra += Oda(y + i - x, i)
+                else for (i <- y + 1 |-| sonOda) /*                */ sıra += Oda(i, x + i - y)
             case GB => // hem y hem x azalacak
-                if (x >= y) for (i <- y - 1 to 0 by -1) /*        */ sıra += Oda(i, x - y + i)
-                else for (i <- x - 1 to 0 by -1) /*               */ sıra += Oda(y - x + i, i)
+                if (x >= y) for (i <- y - 1 |-| 0 by -1) /*        */ sıra += Oda(i, x - y + i)
+                else for (i <- x - 1 |-| 0 by -1) /*               */ sıra += Oda(y - x + i, i)
             case KB => // y artacak x azalacak
-                if (x + y >= sonOda) for (i <- y + 1 to sonOda) /**/ sıra += Oda(i, x + y - i)
-                else for (i <- x - 1 to 0 by -1) /*               */ sıra += Oda(y + x - i, i)
+                if (x + y >= sonOda) for (i <- y + 1 |-| sonOda) /**/ sıra += Oda(i, x + y - i)
+                else for (i <- x - 1 |-| 0 by -1) /*               */ sıra += Oda(y + x - i, i)
             case GD => // y azalacak x artacak
-                if (x + y >= sonOda) for (i <- x + 1 to sonOda) /**/ sıra += Oda(y + x - i, i)
-                else for (i <- y - 1 to 0 by -1) /*               */ sıra += Oda(i, x + y - i)
+                if (x + y >= sonOda) for (i <- x + 1 |-| sonOda) /**/ sıra += Oda(y + x - i, i)
+                else for (i <- y - 1 |-| 0 by -1) /*               */ sıra += Oda(i, x + y - i)
         }
         sıra.dizi
     }
 
     val sonOda = tane - 1; val son = sonOda
-    val satırAralığı = 0 to sonOda
-    val satırAralığıSondan = sonOda to 0 by -1
+    val satırAralığı = 0 |-| sonOda
+    val satırAralığıSondan = sonOda |-| 0 by -1
 
     def tuzakKenarMı: Oda => İkil = {
         case Oda(str, stn) => str == 1 || stn == 1 || str == sonOda - 1 || stn == sonOda - 1
@@ -208,7 +208,7 @@ class Tahta(val tane: Sayı, val tahta: Sayılar) {
     def odaMı: Oda => İkil = {
         case Oda(y, x) => 0 <= y && y < tane && 0 <= x && x < tane
     }
-    def isay(t: Taş)(iş: Oda => İkil) = (for (x <- satırAralığı; y <- satırAralığı; if taş(Oda(y, x)) == t && iş(Oda(y, x))) yield 1).size
+    def isay(t: Taş)(iş: Oda => İkil) = (for (x <- satırAralığı; y <- satırAralığı; if taş(Oda(y, x)) == t && iş(Oda(y, x))) yield 1).boyu
     def say(t: Taş) = isay(t) { o => doğru }
 
     private def t2s(t: Taş) = t match {
@@ -224,9 +224,9 @@ class Tahta(val tane: Sayı, val tahta: Sayılar) {
 }
 
 def yeniTahta(tane: Sayı, çeşni: Sayı = 0): Tahta = {
-    var t = new Tahta(tane, Vector.fill(tane * tane)(0))
+    var t = new Tahta(tane, Yöney.doldur(tane * tane)(0))
 
-    def diziden(dizi: Dizi[(Sayı, Sayı)])(taş: Taş) = t = t.koy(dizi.map(p => Oda(p._1, p._2)), taş)
+    def diziden(dizi: Dizi[(Sayı, Sayı)])(taş: Taş) = t = t.koy(dizi.işle(p => Oda(p._1, p._2)), taş)
     def dörtTane: Oda => Birim = {
         case Oda(y, x) =>
             diziden(Dizi((y, x), (y + 1, x + 1)))(Beyaz)
@@ -244,8 +244,8 @@ def yeniTahta(tane: Sayı, çeşni: Sayı = 0): Tahta = {
             dörtTane(Oda(son - 2, 1))
         case _ =>
             val çiftse = tane % 2 == 0
-        if (çiftse) dörtTane(Oda(orta - 1, orta - 1))
-        else {
+            if (çiftse) dörtTane(Oda(orta - 1, orta - 1))
+            else {
                 val (a, b) = (orta - 1, orta + 1)
                 diziden(Dizi(a -> a, b -> b))(Beyaz)
                 diziden(Dizi((a, b), (b, a)))(Siyah)
@@ -291,7 +291,7 @@ class Oyun(tane: Sayı) {
 
 def dene1 = {
     val tane = 4
-    var t = new Tahta(tane, Vector.fill(tane * tane)(0))
+    var t = new Tahta(tane, Yöney.doldur(tane * tane)(0))
     satıryaz("t"); t.yaz()
     val foo = t.koy(Oda(1, 1), Beyaz)
     t = t.koy(Dizi(Oda(2, 2), Oda(3, 3)), Beyaz)

@@ -287,6 +287,7 @@ class Resim(val p: richBuiltins.Picture) {
 // ../../picture/package.scala
 // ../../Builtins.scala  object Picture
 object Resim {
+  type Yazıyüzü = java.awt.Font
   def apply(işlev: => Birim): Resim = new Resim(richBuiltins.Picture(işlev))
   def çiz(r: Resim) = richBuiltins.draw(r.p)
   def doğru(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.line(en, boy))
@@ -302,6 +303,8 @@ object Resim {
   def satır(r: => Resim, kaçTane: Sayı) = new Resim(picture.row(r.p, kaçTane))
   def sütun(r: => Resim, kaçTane: Sayı) = new Resim(picture.col(r.p, kaçTane))
   def yazı(içerik: Her, yazıBoyu: Sayı=15) = new Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
+  def yazı(içerik: Her, yazıyüzü: Yazıyüzü) = new Resim(richBuiltins.Picture.text(içerik, yazıyüzü))
+  def yazı(içerik: Her, yazıyüzü: Yazıyüzü, renk: Renk) = new Resim(richBuiltins.Picture.textu2(içerik, yazıyüzü, renk))
   def yazıRenkli(içerik: Her, yazıBoyu: Sayı, renk: Renk) = new Resim(richBuiltins.Picture.textu(içerik, yazıBoyu, renk))
   def imge(dosyaAdı: Yazı) = new Resim(richBuiltins.Picture.image(dosyaAdı))
   def imge(dosyaAdı: Yazı, zarf: Resim) = new Resim(richBuiltins.Picture.image(dosyaAdı, zarf.p))

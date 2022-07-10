@@ -25,11 +25,12 @@ object Eşlem {
   def değişmezden[A,D](m: collection.immutable.Map[A,D]) = new Eşlem[A,D](Map.from(m.iterator))
 }
 case class Eşlem[A,D](val m: Map[A,D]) {
+  type Pair = (A, D)
   // todo: duplicated most of the api in Eşlek
   type Belki[T] = Option[T]
   def eşli(a: A) = m.contains(a)
-  def eşle(ikili: (A, D)) = m += ikili
-  def +=(ikili: (A, D)) = this eşle ikili
+  def eşle(ikili: Pair) = m += ikili
+  def +=(ikili: Pair) = this eşle ikili
   def -=(birinci: A) = m -= birinci
   def herbiriİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
   def herÖgeİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
@@ -57,17 +58,17 @@ case class Eşlem[A,D](val m: Map[A,D]) {
   def işle[C](işlev: ((A, D)) => C) = m.map(işlev)
   // todo: Dizi[B] or Iterable?
   def düzİşle[B](işlev: ((A, D)) => collection.mutable.Iterable[B]) = m.flatMap(işlev)
-  def indirge[B >: (A, D)](işlem: (B, B) => B): B = m.reduce(işlem)
-  def indirgeSoldan[B >: (A, D)](işlem: (B, (A, D)) => B): B = m.reduceLeft(işlem)
-  def indirgeSağdan[B >: (A, D)](işlem: ((A, D), B) => B): B = m.reduceRight(işlem)
-  def indirgeSoldanBelki[B >: (A, D)](işlem: (B, (A, D)) => B): Belki[B] = m.reduceLeftOption(işlem)
-  def indirgeSağdanBelki[B >: (A, D)](işlem: ((A, D), B) => B): Belki[B] = m.reduceRightOption(işlem)
-  def kalta[B >: (A, D)](z: B)(işlev: (B, B) => B): B = m.fold(z)(işlev)
-  def soldanKatla[B](z: B)(işlev: (B, (A, D)) => B): B = m.foldLeft(z)(işlev)
-  def sağdanKatla[B](z: B)(işlev: ((A, D), B) => B): B = m.foldRight(z)(işlev)
+  def indirge[B >: Pair](işlem: (B, B) => B): B = m.reduce(işlem)
+  def indirgeSoldan[B >: Pair](işlem: (B, Pair) => B): B = m.reduceLeft(işlem)
+  def indirgeSağdan[B >: Pair](işlem: (Pair, B) => B): B = m.reduceRight(işlem)
+  def indirgeSoldanBelki[B >: Pair](işlem: (B, Pair) => B): Belki[B] = m.reduceLeftOption(işlem)
+  def indirgeSağdanBelki[B >: Pair](işlem: (Pair, B) => B): Belki[B] = m.reduceRightOption(işlem)
+  def kalta[B >: Pair](z: B)(işlev: (B, B) => B): B = m.fold(z)(işlev)
+  def soldanKatla[B](z: B)(işlev: (B, Pair) => B): B = m.foldLeft(z)(işlev)
+  def sağdanKatla[B](z: B)(işlev: (Pair, B) => B): B = m.foldRight(z)(işlev)
 
-  def topla[T >: (A, D)](implicit num: scala.math.Numeric[T]) = m.sum(num) 
-  def çarp[T >: (A, D)](implicit num: scala.math.Numeric[T]) = m.product(num)
+  def topla[T >: Pair](implicit num: scala.math.Numeric[T]) = m.sum(num) 
+  def çarp[T >: Pair](implicit num: scala.math.Numeric[T]) = m.product(num)
 
   def yazıYap: Yazı = m.mkString
   def yazıYap(ara: Yazı): Yazı = m.mkString(ara)
@@ -91,14 +92,19 @@ case class Eşlem[A,D](val m: Map[A,D]) {
   def diziye = m.toSeq
   def kümeye = m.toSet
   def yöneye = m.toVector
-  def dizime[C >: (A, D)](implicit delil: scala.reflect.ClassTag[C]): Dizim[C] = new Dizim(m.toArray(delil))
-  def say(işlev: ((A, D)) => İkil): Sayı = m.count(işlev)
+  def dizime[C >: Pair](implicit delil: scala.reflect.ClassTag[C]): Dizim[C] = new Dizim(m.toArray(delil))
+  def say(işlev: (Pair) => İkil): Sayı = m.count(işlev)
 
   def ikile[C](öbürü: scala.collection.IterableOnce[C]) = m.zip(öbürü)
   def ikileSırayla = m.zipWithIndex
 
   //
   def varsayılanDeğerle(d: D) = m.withDefaultValue(d: D)
+
+  def enUfağı[B >: Pair](implicit sıralama: math.Ordering[B]): Pair = m.min(sıralama)
+  def enUfağı[B >: Pair](iş: (Pair) => B)(implicit karşılaştırma: math.Ordering[B]): Pair = m.minBy(iş)(karşılaştırma)
+  def enİrisi[B >: Pair](implicit sıralama: math.Ordering[B]): Pair = m.max(sıralama)
+  def enİrisi[B](iş: (Pair) => B)(implicit karşılaştırma: math.Ordering[B]): Pair = m.maxBy(iş)(karşılaştırma)
 }
 
 trait MapMethodsInTurkish {
@@ -108,7 +114,8 @@ trait MapMethodsInTurkish {
   }
   implicit class EşlekYöntemleri[A, D](m: Eşlek[A, D]) {
     // todo: copied most of the api from Eşlem above
-    type C = Eşlek[A, D]
+    type Col = Eşlek[A, D]
+    type Pair = (A, D)
     type Belki[T] = Option[T]
     def eşli(a: A) = m.contains(a)
     def herbiriİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
@@ -133,20 +140,20 @@ trait MapMethodsInTurkish {
     def ele(deneme: ((A, D)) => İkil) = m.filter(deneme)
     def eleDeğilse(deneme: ((A, D)) => İkil) = m.filterNot(deneme)
     def işle[A2, D2](işlev: ((A, D)) => (A2, D2)) = m.map(işlev)
-    def işle[C](işlev: ((A, D)) => C) = m.map(işlev)
+    def işle[Col](işlev: ((A, D)) => Col) = m.map(işlev)
     // todo: Dizi[B] or Iterable?
     def düzİşle[B](işlev: ((A, D)) => collection.mutable.Iterable[B]) = m.flatMap(işlev)
-    def indirge[B >: (A, D)](işlem: (B, B) => B): B = m.reduce(işlem)
-    def indirgeSoldan[B >: (A, D)](işlem: (B, (A, D)) => B): B = m.reduceLeft(işlem)
-    def indirgeSağdan[B >: (A, D)](işlem: ((A, D), B) => B): B = m.reduceRight(işlem)
-    def indirgeSoldanBelki[B >: (A, D)](işlem: (B, (A, D)) => B): Belki[B] = m.reduceLeftOption(işlem)
-    def indirgeSağdanBelki[B >: (A, D)](işlem: ((A, D), B) => B): Belki[B] = m.reduceRightOption(işlem)
-    def kalta[B >: (A, D)](z: B)(işlev: (B, B) => B): B = m.fold(z)(işlev)
-    def soldanKatla[B](z: B)(işlev: (B, (A, D)) => B): B = m.foldLeft(z)(işlev)
-    def sağdanKatla[B](z: B)(işlev: ((A, D), B) => B): B = m.foldRight(z)(işlev)
+    def indirge[B >: Pair](işlem: (B, B) => B): B = m.reduce(işlem)
+    def indirgeSoldan[B >: Pair](işlem: (B, Pair) => B): B = m.reduceLeft(işlem)
+    def indirgeSağdan[B >: Pair](işlem: (Pair, B) => B): B = m.reduceRight(işlem)
+    def indirgeSoldanBelki[B >: Pair](işlem: (B, Pair) => B): Belki[B] = m.reduceLeftOption(işlem)
+    def indirgeSağdanBelki[B >: Pair](işlem: (Pair, B) => B): Belki[B] = m.reduceRightOption(işlem)
+    def kalta[B >: Pair](z: B)(işlev: (B, B) => B): B = m.fold(z)(işlev)
+    def soldanKatla[B](z: B)(işlev: (B, Pair) => B): B = m.foldLeft(z)(işlev)
+    def sağdanKatla[B](z: B)(işlev: (Pair, B) => B): B = m.foldRight(z)(işlev)
 
-    def topla[T >: (A, D)](implicit num: scala.math.Numeric[T]) = m.sum(num)
-    def çarp[T >: (A, D)](implicit num: scala.math.Numeric[T]) = m.product(num)
+    def topla[T >: Pair](implicit num: scala.math.Numeric[T]) = m.sum(num)
+    def çarp[T >: Pair](implicit num: scala.math.Numeric[T]) = m.product(num)
 
     def yazıYap: Yazı = m.mkString
     def yazıYap(ara: Yazı): Yazı = m.mkString(ara)
@@ -169,7 +176,7 @@ trait MapMethodsInTurkish {
     def diziye = m.toSeq
     def kümeye = m.toSet
     def yöneye = m.toVector
-    def dizime[C >: (A, D)](implicit delil: scala.reflect.ClassTag[C]): Dizim[C] = new Dizim(m.toArray(delil))
+    def dizime[C >: Pair](implicit delil: scala.reflect.ClassTag[C]): Dizim[C] = new Dizim(m.toArray(delil))
     def say(işlev: ((A, D)) => İkil): Sayı = m.count(işlev)
 
     def ikile[C](öbürü: scala.collection.IterableOnce[C]) = m.zip(öbürü)
@@ -181,6 +188,10 @@ trait MapMethodsInTurkish {
     def öbekle(iş: ((A, D)) => A): Eşlek[A, Eşlek[A, D]] = m.groupBy(iş)
     def değiştirilmiş[D1 >: D](a: A, d: D1): Eşlek[A, D1] = m.updated(a, d)
 
+    def enUfağı[B >: Pair](implicit sıralama: math.Ordering[B]): Pair = m.min(sıralama)
+    def enUfağı[B >: Pair](iş: (Pair) => B)(implicit karşılaştırma: math.Ordering[B]): Pair = m.minBy(iş)(karşılaştırma)
+    def enİrisi[B >: Pair](implicit sıralama: math.Ordering[B]): Pair = m.max(sıralama)
+    def enİrisi[B](iş: (Pair) => B)(implicit karşılaştırma: math.Ordering[B]): Pair = m.maxBy(iş)(karşılaştırma)
     // todo: more to come
   }
 }

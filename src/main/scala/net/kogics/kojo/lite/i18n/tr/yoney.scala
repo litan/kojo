@@ -16,12 +16,15 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
+import scala.reflect.ClassTag
+
 trait VectorMethodsInTurkish {
   type Yöney[T] = Vector[T]
   object Yöney {
     def apply[T](elemanlar: T*) = Vector.from(elemanlar)
     def unapplySeq[T](yler: Vector[T]) = Vector.unapplySeq(yler)
     def boş[T] = Vector.empty[T]
+    def doldur[T:ClassTag](b1: Sayı)(e: => T) = Vector.fill[T](b1)(e)
   }
 
   implicit class YöneyYöntemleri[A](y: Yöney[A]) {
@@ -84,6 +87,11 @@ trait VectorMethodsInTurkish {
     def ikileSırayla = y.zipWithIndex
     def ikileKonumla = y.zipWithIndex
     def öbekle[A2](iş: (A) => A2): Eşlek[A2, Yöney[A]] = y.groupBy(iş)
+
+    def enUfağı[B >: A](implicit sıralama: math.Ordering[B]): A = y.min(sıralama)
+    def enUfağı[B](iş: (A) => B)(implicit karşılaştırma: math.Ordering[B]): A = y.minBy(iş)(karşılaştırma)
+    def enİrisi[B >: A](implicit sıralama: math.Ordering[B]): A = y.max(sıralama)
+    def enİrisi[B](iş: (A) => B)(implicit karşılaştırma: math.Ordering[B]): A = y.maxBy(iş)(karşılaştırma)
     // more to come
   }
 }
