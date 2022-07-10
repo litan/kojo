@@ -1,8 +1,8 @@
 // by Bulent Basaran ben@scala.org 2022
+toggleFullScreenCanvas()
 val numTurns = 7
 val superImpose = false // sine goes left to right. cosine goes top to bottom. this super imposes another cosine curve to go left to right as well
 cleari
-toggleFullScreenCanvas()
 val (rb, rc) = (4.0, 160.0) // radius of the small ball in orbit and the radius of its circular orbit
 zoomXY(0.6, 0.6, 600, -2 * rc)
 val numPerTurn = 120
