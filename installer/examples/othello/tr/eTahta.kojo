@@ -8,15 +8,15 @@ class ETahta(
     gerekli(3 < odaSayısı, "En küçük tahtamız 4x4lük. odaSayısı değerini artırın") // başlangıç taşları sığmıyor
     gerekli(20 > odaSayısı, "En büyük tahtamız 19x19luk. odaSayısı değerini azaltın") // çok yavaşlıyor
     gerekli(kimBaşlar != Yok, "Beyaz ya da Siyah başlamalı")
-    def yaz = for (y <- satırAralığıSondan) satıryaz(tahta(y).mkString(" "))
-    def say(t: Taş) = (for (x <- satırAralığı; y <- satırAralığı; if tahta(y)(x) == t) yield 1).size
+    def yaz = for (y <- satırAralığıSondan) satıryaz(tahta(y).yazıYap(" "))
+    def say(t: Taş) = (for (x <- satırAralığı; y <- satırAralığı; if tahta(y)(x) == t) yield 1).boyu
     val hamleSayısı = new HamleSayısı
     var oyunBitti = yanlış
     var sonHamle: Belki[Oda] = _ // son hamleyi tuvalde göstermek ve geri/ileri için gerekli
     def yasallar = (for {
         x <- satırAralığı; y <- satırAralığı; if tahta(y)(x) == Yok
-    } yield Oda(y, x)) filter { hamleyiDene(_).size > 0 }
-    def hamleYoksa = yasallar.size == 0
+    } yield Oda(y, x)) ele { hamleyiDene(_).boyu > 0 }
+    def hamleYoksa = yasallar.boyu == 0
     def taş(oda: Oda): Taş = tahta(oda.str)(oda.stn)
     def taş(y: Sayı, x: Sayı): Taş = tahta(y)(x)
     def taşıKur(y: Sayı)(x: Sayı)(taş: Taş): Birim = tahta(y)(x) = taş
@@ -24,7 +24,7 @@ class ETahta(
     private val tahta = Dizim.doldur[Taş](odaSayısı, odaSayısı)(Yok)
     val oyuncu = new Oyuncu(kimBaşlar)
     def kaçkaç(kısa: İkil = yanlış) =
-        if (kısa) s"B: ${say(Beyaz)}\nS: ${say(Siyah)}"
+        if (kısa) s"Beyaz: ${say(Beyaz)}\nSiyah: ${say(Siyah)}"
         else s"Beyazlar: ${say(Beyaz)}\nSiyahlar: ${say(Siyah)}"
     def başaAl(başlık: Yazı = "") = {
         for (x <- satırAralığı; y <- satırAralığı) taşıKur(Oda(y, x))(Yok)
@@ -33,7 +33,7 @@ class ETahta(
         hamleSayısı.başaAl()
         oyunBitti = yanlış
         sonHamle = Hiçbiri
-        if (başlık.size > 0) satıryaz(başlık)
+        if (başlık.boyu > 0) satıryaz(başlık)
         yaz
     }
     def başlangıçTaşlarınıKur = {
@@ -71,8 +71,8 @@ class ETahta(
     }
 
     val sonOda = odaSayısı - 1
-    val satırAralığı = 0 to sonOda
-    val satırAralığıSondan = sonOda to 0 by -1
+    val satırAralığı = 0 |-| sonOda
+    val satırAralığıSondan = sonOda |-| 0 by -1
 
     def tuzakKenarMı: Oda => İkil = {
         case Oda(str, stn) => str == 1 || stn == 1 || str == sonOda - 1 || stn == sonOda - 1
@@ -93,11 +93,11 @@ class ETahta(
         case Oda(y, x) => 0 <= y && y < odaSayısı && 0 <= x && x < odaSayısı
     }
 
-    def hamleyiDene(oda: Oda): Dizi[Komşu] = komşularıBul(oda).filter { komşu =>
+    def hamleyiDene(oda: Oda): Dizi[Komşu] = komşularıBul(oda).ele { komşu =>
         val komşuTaş = taş(komşu.oda)
         komşuTaş != Yok && komşuTaş != oyuncu() && sonuDaYasalMı(komşu, oyuncu())._1
     }
-    def hamleGetirisi(oda: Oda): Sayı = komşularıBul(oda).map { komşu =>
+    def hamleGetirisi(oda: Oda): Sayı = komşularıBul(oda).işle { komşu =>
         val komşuTaş = taş(komşu.oda)
         val sonunaKadar = sonuDaYasalMı(komşu, oyuncu())
         if (komşuTaş != Yok && komşuTaş != oyuncu() && sonunaKadar._1) sonunaKadar._2 else 0
@@ -107,18 +107,18 @@ class ETahta(
         Komşu(D, Oda(o.str, o.stn + 1)), Komşu(B, Oda(o.str, o.stn - 1)),
         Komşu(K, Oda(o.str + 1, o.stn)), Komşu(G, Oda(o.str - 1, o.stn)),
         Komşu(KD, Oda(o.str + 1, o.stn + 1)), Komşu(KB, Oda(o.str + 1, o.stn - 1)),
-        Komşu(GD, Oda(o.str - 1, o.stn + 1)), Komşu(GB, Oda(o.str - 1, o.stn - 1))) filter {
+        Komşu(GD, Oda(o.str - 1, o.stn + 1)), Komşu(GB, Oda(o.str - 1, o.stn - 1))) ele {
             k => odaMı(k.oda)
         }
 
     def sonuDaYasalMı(k: Komşu, oyuncu: Taş): (İkil, Sayı) = {
         val diziTaşlar = gerisi(k)
-        val sıraTaşlar = diziTaşlar.dropWhile { o =>
+        val sıraTaşlar = diziTaşlar.düşürDoğruKaldıkça { o =>
             taş(o) != oyuncu && taş(o) != Yok
         }
-        if (sıraTaşlar.isEmpty) (yanlış, 0) else {
-            val oda = sıraTaşlar.head
-            (taş(oda) == oyuncu, 1 + diziTaşlar.size - sıraTaşlar.size)
+        if (sıraTaşlar.boşMu) (yanlış, 0) else {
+            val oda = sıraTaşlar.başı
+            (taş(oda) == oyuncu, 1 + diziTaşlar.boyu - sıraTaşlar.boyu)
         }
     }
     def gerisi(k: Komşu): Dizi[Oda] = {
@@ -126,24 +126,24 @@ class ETahta(
         val sıra = EsnekDizim.boş[Oda]
         val (x, y) = (k.oda.stn, k.oda.str)
         k.yön match {
-            case D => for (i <- x + 1 to son) /*    */ sıra += Oda(y, i)
-            case B => for (i <- x - 1 to 0 by -1) /**/ sıra += Oda(y, i)
-            case K => for (i <- y + 1 to son) /*    */ sıra += Oda(i, x)
-            case G => for (i <- y - 1 to 0 by -1) /**/ sıra += Oda(i, x)
+            case D => for (i <- x + 1 |-| son) /*    */ sıra += Oda(y, i)
+            case B => for (i <- x - 1 |-| 0 by -1) /**/ sıra += Oda(y, i)
+            case K => for (i <- y + 1 |-| son) /*    */ sıra += Oda(i, x)
+            case G => for (i <- y - 1 |-| 0 by -1) /**/ sıra += Oda(i, x)
             case KD => // hem str hem stn artacak
-                if (x >= y) for (i <- x + 1 to son) /*      */ sıra += Oda(y + i - x, i)
-                else for (i <- y + 1 to son) /*             */ sıra += Oda(i, x + i - y)
+                if (x >= y) for (i <- x + 1 |-| son) /*      */ sıra += Oda(y + i - x, i)
+                else for (i <- y + 1 |-| son) /*             */ sıra += Oda(i, x + i - y)
             case GB => // hem str hem stn azalacak
-                if (x >= y) for (i <- y - 1 to 0 by -1) /*  */ sıra += Oda(i, x - y + i)
-                else for (i <- x - 1 to 0 by -1) /*         */ sıra += Oda(y - x + i, i)
+                if (x >= y) for (i <- y - 1 |-| 0 by -1) /*  */ sıra += Oda(i, x - y + i)
+                else for (i <- x - 1 |-| 0 by -1) /*         */ sıra += Oda(y - x + i, i)
             case KB => // str artacak stn azalacak
-                if (x + y >= son) for (i <- y + 1 to son) /**/ sıra += Oda(i, x + y - i)
-                else for (i <- x - 1 to 0 by -1) /*         */ sıra += Oda(y + x - i, i)
+                if (x + y >= son) for (i <- y + 1 |-| son) /**/ sıra += Oda(i, x + y - i)
+                else for (i <- x - 1 |-| 0 by -1) /*         */ sıra += Oda(y + x - i, i)
             case GD => // str azalacak stn artacak
-                if (x + y >= son) for (i <- x + 1 to son) /**/ sıra += Oda(y + x - i, i)
-                else for (i <- y - 1 to 0 by -1) /*         */ sıra += Oda(i, x + y - i)
+                if (x + y >= son) for (i <- x + 1 |-| son) /**/ sıra += Oda(y + x - i, i)
+                else for (i <- y - 1 |-| 0 by -1) /*         */ sıra += Oda(i, x + y - i)
         }
-        sıra.dizi
+        sıra.diziye
     }
 
     başaAl()

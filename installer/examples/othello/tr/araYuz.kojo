@@ -22,7 +22,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
             if (kRenk == içKöşeKalemRengi) içKöşeler += r
             kareyiTanımla(r)
         }
-        içKöşeler.dizi.map(_.öneAl())
+        içKöşeler.dizi.işle(_.öneAl())
     }
     val odaSayısı = tahta.odaSayısı
     // karelerin boyu inç başına nokta sayısı. 64 => 1cm'de yaklaşık 25 nokta var (/ 64 2.54)
@@ -44,7 +44,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
             tahta.taş(oda) match {
                 case Yok =>
                     val yasal = tahta.hamleyiDene(oda)
-                    if (yasal.size > 0) {
+                    if (yasal.boyu > 0) {
                         hamleyiYap(yasal, oda)
                         if (bittiMi) bittiKaçKaç(tahta)
                         else if (tahta.hamleYoksa) {
@@ -69,7 +69,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         k.fareGirince { (x, y) =>
             ipucu.konumuKur(odanınNoktası(oda, yanlış) - Nokta(b2, -b2))
             tahta.taş(oda) match {
-                case Yok => if (tahta.hamleyiDene(oda).size > 0) {
+                case Yok => if (tahta.hamleyiDene(oda).boyu > 0) {
                     k.boyamaRenginiKur(renk)
                     ipucu.güncelle(s"${tahta.hamleGetirisi(oda)}")
                     hamleninÇevireceğiTaşlarıGöster(oda)
@@ -129,12 +129,12 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     }
 
     def seçenekleriGöster = {
-        seçenekResimleri.foreach { r => r.sil() }
+        seçenekResimleri.herbiriİçin { r => r.sil() }
         if (seçeneklerAçık) {
-            val sıralı = tahta.yasallar.map { oda => (oda, tahta.hamleGetirisi(oda)) }.sortBy { p => p._2 }.reverse
-            if (sıralı.size > 0) {
-                val enİriGetiri = sıralı.head._2
-                seçenekResimleri = sıralı map {
+            val sıralı = tahta.yasallar.işle { oda => (oda, tahta.hamleGetirisi(oda)) }.sırala{ p => p._2 }.tersi
+            if (sıralı.boyu > 0) {
+                val enİriGetiri = sıralı.başı._2
+                seçenekResimleri = sıralı işle {
                     case (oda, getirisi) =>
                         val renk = if (getirisi == enİriGetiri) sarı else turuncu
                         val göster = götür(odanınNoktası(oda, yanlış)) * kalemRengi(renk) * kalemBoyu(3) *
@@ -156,7 +156,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     }
     private def seçenekleriKapa(d: Resim) = {
         seçeneklerAçık = yanlış
-        seçenekResimleri.foreach { r => r.sil() }
+        seçenekResimleri.herbiriİçin { r => r.sil() }
         düğmeTepkisi(d)
         d.kalemRenginiKur(renksiz)
     }
@@ -164,7 +164,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     var hamleninÇevireceğiTaşlar: Diz[Oda] = Diz()
     def hamleninÇevireceğiTaşlarıGöster(oda: Oda) = if (seçeneklerAçık) {
         val yasal = tahta.hamleyiDene(oda)
-        if (yasal.size > 0) {
+        if (yasal.boyu > 0) {
             val odalar = EsnekDizim(oda)
             yasal.herbiriİçin { komşu =>
                 odalar += komşu.oda
@@ -237,11 +237,11 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
 
     def hamleyiYap(yasal: Dizi[Komşu], hane: Oda, duraklamaSüresi: Kesir = 0.0): Birim = {
         // todo: iyileştirmek için eTahta'da tanımla: def hamleYap(hane: Oda): Dizi[Oda]  çıktı olarak boyanması gereken odaları sun. İngilizce'ye tercüme ederken de öyle yaptım.
-        def bütünTaşlarıÇevir = yasal.foreach { komşu =>
+        def bütünTaşlarıÇevir = yasal.herbiriİçin { komşu =>
             val komşuTaş = tahta.taş(komşu.oda)
-            tahta.gerisi(komşu).takeWhile { oda =>
+            tahta.gerisi(komşu).alDoğruKaldıkça { oda =>
                 tahta.taş(oda) != Yok && tahta.taş(oda) != tahta.oyuncu()
-            }.foreach(taşıAltÜstYap(_))
+            }.herbiriİçin(taşıAltÜstYap(_))
             taşıAltÜstYap(komşu.oda)
         }
         def taşıAltÜstYap(oda: Oda): Birim = {
@@ -282,22 +282,22 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         var oyna = doğru
         while (oyna) yaklaşım(tahta.yasallar) match {
             case Biri(oda) =>
-                dallanma += tahta.yasallar.size
+                dallanma += tahta.yasallar.boyu
                 hamleyiYap(tahta.hamleyiDene(oda), oda, duraklamaSüresi)
             case _ =>
                 sırayıÖbürOyuncuyaGeçir
                 yaklaşım(tahta.yasallar) match {
                     case Biri(oda) =>
                         satıryaz(s"Yasal hamle yok. Sıra yine ${tahta.oyuncu().adı}ın")
-                        dallanma += tahta.yasallar.size
+                        dallanma += tahta.yasallar.boyu
                         hamleyiYap(tahta.hamleyiDene(oda), oda, duraklamaSüresi)
                     case _ =>
                         bittiKaçKaç(tahta)
                         if (dallanma.sayı > 0) {
                             val d = dallanma.dizi
-                            satıryaz(s"Oyun ${d.size} kere dallandı. Dal sayıları: ${d.mkString(",")}")
-                            satıryaz(s"Ortalama dal sayısı: ${yuvarla(d.sum / (1.0 * d.size), 1)}")
-                            satıryaz(s"En iri dal sayısı: ${d.max}")
+                            satıryaz(s"Oyun ${d.boyu} kere dallandı. Dal sayıları: ${d.yazıYap(",")}")
+                            satıryaz(s"Ortalama dal sayısı: ${yuvarla(d.topla / (1.0 * d.boyu), 1)}")
+                            satıryaz(s"En iri dal sayısı: ${d.enİrisi}")
                         }
                         oyna = yanlış
                 }
@@ -327,40 +327,40 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     }
     def tahtadanTahta: Tahta = { // elektronik tahtadan arama tahtası oluşturalım
         val tane = odaSayısı
-        var t = new Tahta(tane, Vector.fill(tane * tane)(0))
-        def diziden(dizi: Dizi[(Sayı, Sayı)])(taş: Taş) = t = t.koy(dizi.map(p => Oda(p._1, p._2)), taş)
+        var t = new Tahta(tane, Yöney.doldur(tane * tane)(0))
+        def diziden(dizi: Dizi[(Sayı, Sayı)])(taş: Taş) = t = t.koy(dizi.işle(p => Oda(p._1, p._2)), taş)
         for (t <- Dizi(Beyaz, Siyah))
-            diziden(for (y <- 0 until tane; x <- 0 until tane; if (t == tahta.taş(y, x))) yield (y, x))(t)
+            diziden(for (y <- 0 |- tane; x <- 0 |- tane; if (t == tahta.taş(y, x))) yield (y, x))(t)
         t
     }
-    def köşeYaklaşımı(yasallar: Dizi[Oda]): Belki[Oda] = rastgeleSeç(yasallar.filter(tahta.köşeMi(_))) match {
+    def köşeYaklaşımı(yasallar: Dizi[Oda]): Belki[Oda] = rastgeleSeç(yasallar.ele(tahta.köşeMi(_))) match {
         case Biri(oda) => Biri(oda) // köşe bulduk!
-        case _ => rastgeleSeç(yasallar.filter(tahta.içKöşeMi(_))) match {
+        case _ => rastgeleSeç(yasallar.ele(tahta.içKöşeMi(_))) match {
             case Biri(oda) => Biri(oda)
             case _ => { // tuzakKenarlar tuzakKöşeleri içeriyor
-                val tuzakKenarOlmayanlar = yasallar.filterNot(tahta.tuzakKenarMı(_))
+                val tuzakKenarOlmayanlar = yasallar.eleDeğilse(tahta.tuzakKenarMı(_))
                 enİriGetirililerArasındanRastgele(
-                    if (!tuzakKenarOlmayanlar.isEmpty) tuzakKenarOlmayanlar
+                    if (!tuzakKenarOlmayanlar.boşMu) tuzakKenarOlmayanlar
                     else { // tuzak kenarlardan getirisi en iri olanlardan seçiyoruz
-                        val tuzakKöşeOlmayanlar = yasallar.filterNot(tahta.tuzakKöşeMi(_))
-                        if (tuzakKöşeOlmayanlar.isEmpty) yasallar else tuzakKöşeOlmayanlar
+                        val tuzakKöşeOlmayanlar = yasallar.eleDeğilse(tahta.tuzakKöşeMi(_))
+                        if (tuzakKöşeOlmayanlar.boşMu) yasallar else tuzakKöşeOlmayanlar
                     }
                 )
             }
         }
     }
-    def rastgeleSeç[T](dizi: Dizi[T]): Belki[T] = if (dizi.isEmpty) Hiçbiri else
-        Biri(dizi.drop(rastgele(dizi.size)).head)
+    def rastgeleSeç[T](dizi: Dizi[T]): Belki[T] = if (dizi.boşMu) Hiçbiri else
+        Biri(dizi.düşür(rastgele(dizi.boyu)).başı)
     def enİriGetirililerArasındanRastgele(yasallar: Dizi[Oda]): Belki[Oda] =
         rastgeleSeç(enGetirililer(yasallar))
     def enGetirililer(yasallar: Dizi[Oda]): Dizi[Oda] = {
         def bütünEnİriler[A, B: Ordering](d: Dizin[A])(iş: A => B): Dizin[A] = {
-            d.sortBy(iş).reverse match {
+            d.sırala(iş).tersi match {
                 case Dizin()       => Dizin()
-                case baş :: kuyruk => baş :: kuyruk.takeWhile { oda => iş(oda) == iş(baş) }
+                case baş :: kuyruk => baş :: kuyruk.alDoğruKaldıkça { oda => iş(oda) == iş(baş) }
             }
         }
-        bütünEnİriler(yasallar.toList) { tahta.hamleGetirisi(_) }
+        bütünEnİriler(yasallar.dizine) { tahta.hamleGetirisi(_) }
     }
 
     private def düğme(x: Kesir, y: Kesir, boya: Renk, mesaj: Yazı) = {
@@ -381,7 +381,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     private val d0 = {
         val d = düğme(dx, dy + 2 * boy, pembe, "öneri")
         d.fareGirince { (_, _) =>
-            d.kalemRenginiKur(if (tahta.yasallar.isEmpty) kırmızı else beyaz)
+            d.kalemRenginiKur(if (tahta.yasallar.boşMu) kırmızı else beyaz)
         }
         /* todo: çalışmadı
         var running = yanlış
@@ -413,7 +413,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
             val düğmelerinTavanı = dy + 5 * boy
             enİrisi(tahtaTavanı, düğmelerinTavanı)
         }
-        val yazı = götür(dx - b3, y) -> Resim.yazıRenkli(s"", 20, sarı)
+        val yazı = götür(dx - b3, y) -> Resim.yazı(s"", yazıyüzü("JetBrains Mono", 20), sarı)
         yazı.çiz(); yazı
     }
     def skorBitiş = {
@@ -426,7 +426,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
             else "Berabere!"
         skorYazısı.güncelle(s"$msj\n${tahta.kaçkaç(doğru)}")
     }
-    def skorBaşlangıç = skorYazısı.güncelle(s"${tahta.oyuncu().adı.capitalize} başlar")
+    def skorBaşlangıç = skorYazısı.güncelle(s"${tahta.oyuncu().adı.ilkHarfiBüyült} başlar")
     def skoruGüncelle = skorYazısı.güncelle(s"${tahta.hamleSayısı()}. hamle${if (bellek.sıraGeriDöndüMü) " yine " else " "}${tahta.oyuncu().adı}ın\n${tahta.kaçkaç(doğru)}")
     def skorBilgisayarHamleArıyor = skorYazısı.güncelle(s"${tahta.hamleSayısı()}. hamle. Bilgisayar arıyor...\n${tahta.kaçkaç(doğru)}")
     skorBaşlangıç

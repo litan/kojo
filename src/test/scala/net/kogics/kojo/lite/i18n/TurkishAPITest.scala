@@ -333,6 +333,9 @@ import net.kogics.kojo.staging
     (y2b :+ "Dünya!").size should be(2)
     y2b(0)(2) should be('r')
     y1.değiştir(0, 5) should be(Dizi(5, 4))
+    val y3 = Yöney.doldur(10)(3)
+    y3.boyu should be(10)
+    for (i <- 0 |- 10) { y3(i) should be(3) }
   }
 
   test("Translation for Set should work") {
@@ -643,6 +646,30 @@ import net.kogics.kojo.staging
     val m = MiskinDizin.sayalım(3, 2)
     m al 2 should be(Dizi(3, 5))
     m al 100 alSağdan 2 should be(Dizi(199, 201))
+  }
+
+  test("Queue and PriorityQueue translations to work") {
+    val s = ÖncelikSırası(3, 5, 1, 2, 9)
+    val s2 = s.ikizle()
+    s.baştanAl should be(9)
+    s.baştanAl should be(5)
+    s.baştanAlHepsini should be(Dizi(3, 2, 1))
+    s.boyu should be(0)
+    s2.boyu should be(5)
+    s2.ekle(10); s2.başı should be(10); s2.boyu should be(6)
+    s2.ekle(20, -10, 30); s2.başı should be(30); s2.boyu should be(9)
+    s2.sil(); s2.boşMu should be(doğru)
+
+    val k = Kuyruk(1, 5, 3, 4, 7)
+    val k2 = k.ikizle()
+    k should be(k2)
+    k.baştanAl should be(1)
+    k.baştanAlHepsini(x => x > 4) should be(Dizi(5, 7))
+    k.baştanAl should be(3)
+    k.boyu should be(1)
+    k.sil(); k.boşMu should be(doğru)
+    k.ekle(11); k.başı should be(11); k.boyu should be(1)
+    k.ekleHepsini(Dizi(10, 20, 30)); k.başı should be(11); k.boyu should be(4)
   }
   /* 
   // See: ~/src/kojo/git/kojo/src/test/scala/net/kogics/kojo/turtle/TurtleTest2.scala

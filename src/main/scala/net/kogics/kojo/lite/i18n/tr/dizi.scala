@@ -16,6 +16,10 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
+// Note: The seq/map/set/list like collection types we provide translations for are in the following files:
+//   dizim dizin eslem kume miskindizin yazı yoney
+// And here are (all?) the collection types in Turkish:
+//   Diz Dizi Dizik Dizim Dizin EsnekDizim EsnekYazı Eşlem Eşlek Küme MiskinDizin Yazı Yığın Yöney
 trait SeqMethodsInTurkish {
   object Dizi {
     def apply[B](elems: B*): Seq[B] = Seq.from(elems)
@@ -35,22 +39,24 @@ trait SeqMethodsInTurkish {
     def doldur[B](n1: Sayı)(f: Sayı => B) = collection.Seq.tabulate(n1)(f)
   }
   implicit class colSeqYöntemleri[T](d: Diz[T]) {
+    type Col = Diz[T]
+    type C2[B] = Diz[B]
     type Eşlek[A, D] = collection.immutable.Map[A, D]
-    // duplicate below
+    // duplicate below in Dizi
     def başı: T = d.head
-    def kuyruğu: Diz[T] = d.tail
-    def önü: Diz[T] = d.init
+    def kuyruğu: Col = d.tail
+    def önü: Col = d.init
     def sonu: T = d.last
     def boyu: Sayı = d.length
     def boşMu: İkil = d.isEmpty
     def doluMu: İkil = d.nonEmpty
-    def ele(deneme: T => İkil): Diz[T] = d.filter(deneme)
-    def eleDeğilse(deneme: T => İkil): Diz[T] = d.filterNot(deneme)
-    def işle[A](işlev: T => A): Diz[A] = d.map(işlev)
-    def düzİşle[A](işlev: T => Diz[A]): Diz[A] = d.flatMap(işlev)
-    def sıralı(implicit ord: Ordering[T]): Diz[T] = d.sorted(ord)
-    def sırala[A](i: T => A)(implicit ord: Ordering[A]): Diz[T] = d.sortBy(i)
-    def sırayaSok(önce: (T, T) => İkil): Diz[T] = d.sortWith(önce)
+    def ele(deneme: T => İkil): Col = d.filter(deneme)
+    def eleDeğilse(deneme: T => İkil): Col = d.filterNot(deneme)
+    def işle[A](işlev: T => A): C2[A] = d.map(işlev)
+    def düzİşle[A](işlev: T => C2[A]): C2[A] = d.flatMap(işlev)
+    def sıralı(implicit ord: Ordering[T]): Col = d.sorted(ord)
+    def sırala[A](i: T => A)(implicit ord: Ordering[A]): Col = d.sortBy(i)
+    def sırayaSok(önce: (T, T) => İkil): Col = d.sortWith(önce)
     def indirge[B >: T](işlem: (B, B) => B): B = d.reduce(işlem)
     def soldanKatla[T2](z: T2)(işlev: (T2, T) => T2): T2 = d.foldLeft(z)(işlev)
     def sağdanKatla[T2](z: T2)(işlev: (T, T2) => T2): T2 = d.foldRight(z)(işlev)
@@ -58,24 +64,24 @@ trait SeqMethodsInTurkish {
     def topla[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.sum(num)    // foldLeft(num.zero)(num.plus)
     def çarp[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.product(num) // foldLeft(num.one)(num.times)
     def yinelemesiz = d.distinct
-    def yinelemesizİşlevle[T2](işlev: T => T2): Diz[T] = d.distinctBy(işlev)
+    def yinelemesizİşlevle[T2](işlev: T => T2): Col = d.distinctBy(işlev)
     def yazıYap: Yazı = d.mkString
     def yazıYap(ara: Yazı): Yazı = d.mkString(ara)
     def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = d.mkString(baş, ara, son)
     def tersi = d.reverse
-    def değiştir[S >: T](yeri: Sayı, değeri: S): Diz[S] = d.updated(yeri, değeri)
+    def değiştir[S >: T](yeri: Sayı, değeri: S): C2[S] = d.updated(yeri, değeri)
     def herbiriİçin[S](işlev: T => S): Birim = d.foreach(işlev)
     def varMı(deneme: T => İkil): İkil = d.exists(deneme)
     def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def hepsiİçinDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def içeriyorMu[S >: T](öge: S): İkil = d.contains(öge)
-    def içeriyorMuDilim(dilim: Diz[T]): İkil = d.containsSlice(dilim)
-    def al(n: Sayı): Diz[T] = d.take(n)
-    def alDoğruKaldıkça(deneme: T => İkil): Diz[T] = d.takeWhile(deneme)
-    def alSağdan(n: Sayı): Diz[T] = d.takeRight(n)
-    def düşür(n: Sayı): Diz[T] = d.drop(n)
-    def düşürDoğruKaldıkça(deneme: T => İkil): Diz[T] = d.dropWhile(deneme)
-    def düşürSağdan(n: Sayı): Diz[T] = d.dropRight(n)
+    def içeriyorMuDilim(dilim: Col): İkil = d.containsSlice(dilim)
+    def al(n: Sayı): Col = d.take(n)
+    def alDoğruKaldıkça(deneme: T => İkil): Col = d.takeWhile(deneme)
+    def alSağdan(n: Sayı): Col = d.takeRight(n)
+    def düşür(n: Sayı): Col = d.drop(n)
+    def düşürDoğruKaldıkça(deneme: T => İkil): Col = d.dropWhile(deneme)
+    def düşürSağdan(n: Sayı): Col = d.dropRight(n)
     def sırası[S >: T](öge: S): Sayı = d.indexOf(öge)
     def sırası[S >: T](öge: S, başlamaNoktası: Sayı): Sayı = d.indexOf(öge, başlamaNoktası)
     def sırasıSondan[S >: T](öge: S): Sayı = d.lastIndexOf(öge)
@@ -94,27 +100,36 @@ trait SeqMethodsInTurkish {
     def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
     def ikileSırayla = d.zipWithIndex
     def ikileKonumla = d.zipWithIndex
-    def öbekle[A](iş: (T) => A): Eşlek[A, Diz[T]] = d.groupBy(iş)
+    def öbekle[A](iş: (T) => A): Eşlek[A, Col] = d.groupBy(iş)
+
+    def enUfağı[B >: T](implicit sıralama: math.Ordering[B]): T = d.min(sıralama)
+    def enUfağı[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.minBy(iş)(karşılaştırma)
+    def enİrisi[B >: T](implicit sıralama: math.Ordering[B]): T = d.max(sıralama)
+    def enİrisi[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.maxBy(iş)(karşılaştırma)
+
     // todo: more to come
   }
 
   // todo: duplicates in yazi.scala and dizin.scala and more
   implicit class SeqYöntemleri[T](d: Dizi[T]) {
+    type Col = Dizi[T]
+    type C2[B] = Dizi[B]
     type Eşlek[A, D] = collection.immutable.Map[A, D]
+    // duplicate above in Diz
     def başı: T = d.head
-    def kuyruğu: Dizi[T] = d.tail
-    def önü: Dizi[T] = d.init
+    def kuyruğu: Col = d.tail
+    def önü: Col = d.init
     def sonu: T = d.last
     def boyu: Sayı = d.length
     def boşMu: İkil = d.isEmpty
     def doluMu: İkil = d.nonEmpty
-    def ele(deneme: T => İkil): Dizi[T] = d.filter(deneme)
-    def eleDeğilse(deneme: T => İkil): Dizi[T] = d.filterNot(deneme)
-    def işle[A](işlev: T => A): Dizi[A] = d.map(işlev)
-    def düzİşle[A](işlev: T => Dizi[A]): Dizi[A] = d.flatMap(işlev)
-    def sıralı(implicit ord: Ordering[T]): Dizi[T] = d.sorted(ord)
-    def sırala[A](i: T => A)(implicit ord: Ordering[A]): Dizi[T] = d.sortBy(i)
-    def sırayaSok(önce: (T, T) => İkil): Dizi[T] = d.sortWith(önce)
+    def ele(deneme: T => İkil): Col = d.filter(deneme)
+    def eleDeğilse(deneme: T => İkil): Col = d.filterNot(deneme)
+    def işle[A](işlev: T => A): C2[A] = d.map(işlev)
+    def düzİşle[A](işlev: T => C2[A]): C2[A] = d.flatMap(işlev)
+    def sıralı(implicit ord: Ordering[T]): Col = d.sorted(ord)
+    def sırala[A](i: T => A)(implicit ord: Ordering[A]): Col = d.sortBy(i)
+    def sırayaSok(önce: (T, T) => İkil): Col = d.sortWith(önce)
     def indirge[B >: T](işlem: (B, B) => B): B = d.reduce(işlem)
     def soldanKatla[T2](z: T2)(işlev: (T2, T) => T2): T2 = d.foldLeft(z)(işlev)
     def sağdanKatla[T2](z: T2)(işlev: (T, T2) => T2): T2 = d.foldRight(z)(işlev)
@@ -122,24 +137,24 @@ trait SeqMethodsInTurkish {
     def topla[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.sum(num)    // foldLeft(num.zero)(num.plus)
     def çarp[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.product(num) // foldLeft(num.one)(num.times)
     def yinelemesiz = d.distinct
-    def yinelemesizİşlevle[T2](işlev: T => T2): Dizi[T] = d.distinctBy(işlev)
+    def yinelemesizİşlevle[T2](işlev: T => T2): Col = d.distinctBy(işlev)
     def yazıYap: Yazı = d.mkString
     def yazıYap(ara: Yazı): Yazı = d.mkString(ara)
     def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = d.mkString(baş, ara, son)
     def tersi = d.reverse
-    def değiştir[S >: T](yeri: Sayı, değeri: S): Dizi[S] = d.updated(yeri, değeri)
+    def değiştir[S >: T](yeri: Sayı, değeri: S): C2[S] = d.updated(yeri, değeri)
     def herbiriİçin[S](işlev: T => S): Birim = d.foreach(işlev)
     def varMı(deneme: T => İkil): İkil = d.exists(deneme)
     def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def hepsiİçinDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def içeriyorMu[S >: T](öge: S): İkil = d.contains(öge)
-    def içeriyorMuDilim[T](dilim: Dizi[T]): İkil = d.containsSlice(dilim)
-    def al(n: Sayı): Dizi[T] = d.take(n)
-    def alDoğruKaldıkça(deneme: T => İkil): Dizi[T] = d.takeWhile(deneme)
-    def alSağdan(n: Sayı): Dizi[T] = d.takeRight(n)
-    def düşür(n: Sayı): Dizi[T] = d.drop(n)
-    def düşürDoğruKaldıkça(deneme: T => İkil): Dizi[T] = d.dropWhile(deneme)
-    def düşürSağdan(n: Sayı): Dizi[T] = d.dropRight(n)
+    def içeriyorMuDilim(dilim: Col): İkil = d.containsSlice(dilim)
+    def al(n: Sayı): Col = d.take(n)
+    def alDoğruKaldıkça(deneme: T => İkil): Col = d.takeWhile(deneme)
+    def alSağdan(n: Sayı): Col = d.takeRight(n)
+    def düşür(n: Sayı): Col = d.drop(n)
+    def düşürDoğruKaldıkça(deneme: T => İkil): Col = d.dropWhile(deneme)
+    def düşürSağdan(n: Sayı): Col = d.dropRight(n)
     def sırası[S >: T](öge: S): Sayı = d.indexOf(öge)
     def sırası[S >: T](öge: S, başlamaNoktası: Sayı): Sayı = d.indexOf(öge, başlamaNoktası)
     def sırasıSondan[S >: T](öge: S): Sayı = d.lastIndexOf(öge)
@@ -158,12 +173,27 @@ trait SeqMethodsInTurkish {
     def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
     def ikileSırayla = d.zipWithIndex
     def ikileKonumla = d.zipWithIndex
-    def öbekle[A](iş: (T) => A): Eşlek[A, Dizi[T]] = d.groupBy(iş)
+    def öbekle[A](iş: (T) => A): Eşlek[A, Col] = d.groupBy(iş)
+
+    def enUfağı[B >: T](implicit sıralama: math.Ordering[B]): T = d.min(sıralama)
+    def enUfağı[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.minBy(iş)(karşılaştırma)
+    def enİrisi[B >: T](implicit sıralama: math.Ordering[B]): T = d.max(sıralama)
+    def enİrisi[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.maxBy(iş)(karşılaştırma)
 
     // more to come
   }
 
+  implicit class IndexedSeqYöntemleri[T](d: IndexedSeq[T]) { // used in alfabeta in othello
+    type Col = IndexedSeq[T]
+    def ele(deneme: T => İkil): Col = d.filter(deneme)
+    def enUfağı[B >: T](implicit sıralama: math.Ordering[B]): T = d.min(sıralama)
+    def enUfağı[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.minBy(iş)(karşılaştırma)
+    def enİrisi[B >: T](implicit sıralama: math.Ordering[B]): T = d.max(sıralama)
+    def enİrisi[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.maxBy(iş)(karşılaştırma)
+  }
+
   implicit class ImmutableIterableMethods[T](d: collection.immutable.Iterable[T]) {
+    type Col = collection.immutable.Iterable[T]
     type Eşlek[A, D] = collection.immutable.Map[A, D]
 
     def dizine = d.toList
@@ -176,7 +206,7 @@ trait SeqMethodsInTurkish {
     def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
     def ikileSırayla = d.zipWithIndex
     def ikileKonumla = d.zipWithIndex
-    def öbekle[A](iş: (T) => A): Eşlek[A, collection.immutable.Iterable[T]] = d.groupBy(iş)
+    def öbekle[A](iş: (T) => A): Eşlek[A, Col] = d.groupBy(iş)
     // more to come
   }
 

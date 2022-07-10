@@ -21,8 +21,8 @@ object dict {
   // some translations override those in the next map
   val myKeyWords = Map(
     "set" -> "kur",
-    "val" -> "der", // değer
-    "var" -> "dez", // değişmez
+    "val" -> "dez", // değişmez değer
+    "var" -> "den", // değişken değer
     "if" -> "eğer",
     "else" -> "yoksa",
     "while" -> "doğruysaYinele", // koşul doğruysaYinele
@@ -31,12 +31,12 @@ object dict {
     "until" -> "|- anlamı: ilkSayıdanSonSayıyaKadarAmaSonSayıHariç", // 1 until 4 -> Aralık(1, 4)
     "by" -> "adım", // 1 to 100 by 8
     "def" -> "tanım",
-    "class" -> "çeşit",  // type -> tür
+    "class" -> "sınıf",  // çeşit ya da cins. type -> tür
     "new" -> "yeni",
     "override" -> "üstüne", // override def -> üstüne tanım
-    "case" -> "olgu", // case class -> olgu çeşit, match/case eşle/olgu
+    "case" -> "durum", // ya da olgu: case class -> durum sınıf, match/case eşle/durum
     "match" -> "eşle",
-    "extends" -> "yayar", // case class Leaf extends Tree -> olgu çeşit Yaprak yayar Ağaç
+    "extends" -> "yayar", // trait -> özellik, case class Leaf extends Tree -> durum sınıf Yaprak yayar Ağaç
     "head" -> "başı", // List(1,2).head -> Dizin(1, 2).başı
     "tail" -> "kuyruğu",
     "toList" -> "dizine", // (1 until 11).toList
@@ -144,7 +144,7 @@ object dict {
     "abstract" -> "soyut",
     "case" -> "durum",
     "catch" -> "yakala",
-    "class" -> "cins",
+    "class" -> "çeşit",
     "def" -> "tanım",
     "do" -> "yap",
     "else" -> "yoksa",
@@ -167,7 +167,7 @@ object dict {
     "object" -> "nesne",
     "override" -> "baskın",
     "package" -> "deste",
-    "private" -> "özel",
+    "private" -> "sakla",
     "protected" -> "koru",
     "return" -> "dön",
     "sealed" -> "sınırlı",
