@@ -18,10 +18,50 @@ package net.kogics.kojo.lite.i18n.tr
 
 // also see: aralik.scala
 trait NumMethodsInTurkish {
+  // We have Byte/Short/Int/Long which all default to Int and BigInt
+  // val n = 1
+  // Sayma sayıları
+  type Lokma   = Byte
+  type Kısa    = Short
+  type Sayı    = Int
+  type Uzun    = Long
+  type İriSayı = BigInt
+  // We have Float/Double which default to Double and BigDecimal
+  //   val x = 1.0
+  // Kesirli sayılar
+  type UfakKesir = Float
+  type Kesir = Double
+  type İriKesir = BigDecimal
+
+  val İriSayı = BigInt
+  val İriKesir = BigDecimal
+
   type Sayılar = Vector[Sayı]   // Used in Conway's game of life code in the tutorial
   object Sayılar {
     def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
     def unapplySeq(ss: Sayılar) = Vector.unapplySeq(ss)
+  }
+
+  implicit class BigIntMethods(a: İriSayı) {
+    type S = İriSayı
+    def yazıya = a.toString
+    def kesire = a.toDouble
+    def mutlakDeğer = a.abs
+    def enİrisi(b: S) = a max b
+    def enUfağı(b: S) = a min b
+  }
+
+  implicit class BigDecimalMethods(a: İriKesir) {
+    type S = İriKesir
+    def yazıya = a.toString
+    def kesire = a.toDouble
+    def mutlakDeğer = a.abs
+    def enİrisi(b: S) = a max b
+    def enUfağı(b: S) = a min b
+
+    def iriSayıya = a.toBigInt
+    def ölçek = a.scale
+    def ölçeğiKur(ö: Sayı) = a.setScale(ö)
   }
 
   implicit class SayıYöntemleri(a: Sayı) {

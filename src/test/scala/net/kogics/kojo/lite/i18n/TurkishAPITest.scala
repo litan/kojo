@@ -620,6 +620,20 @@ import net.kogics.kojo.staging
     slar(0) should be(1)
     slar(1) should be(2)
     slar(2) should be(3)
+    val epeyİri = "12345678909876543210"
+    val is = İriSayı(epeyİri); is.kesire > 1e19 should be(true)
+    is.yazıya should be(epeyİri)
+    val i2 = İriSayı("12345678909876543209")
+    is > i2 should be(true)
+    i2 enUfağı is should be(i2)
+    is enİrisi i2 should be(is)
+    val iky = "0.00000000000000000005"
+    val ik1 = İriKesir(iky)
+    val ik2 = İriKesir("0.00000000000000000004")
+    ik2 enUfağı ik1 should be(ik2)
+    val ik3 = İriKesir(1.0) / İriKesir(0.9)
+    ik3 should be(İriKesir("1.111111111111111111111111111111111"))
+    ik3.ölçek should be(33)
   }
 
   test("Translation of java.util.Calendar to work") {

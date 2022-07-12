@@ -58,14 +58,6 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   type Üçgen=tr.Üçgen
   type İkil=tr.İkil
   type Seçim=tr.Seçim
-  type Lokma=tr.Lokma
-  type Kısa=tr.Kısa
-  type Sayı=tr.Sayı
-  type Uzun=tr.Uzun
-  type İriSayı=tr.İriSayı
-  type UfakKesir=tr.UfakKesir
-  type Kesir=tr.Kesir
-  type İriKesir=tr.İriKesir
 
   type KuralDışı = Exception
   type ÇalışmaSırasıKuralDışı = RuntimeException
