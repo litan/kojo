@@ -1,108 +1,105 @@
-// by Bulent Basaran ben@scala.org 2022
-toggleFullScreenCanvas()
-val numTurns = 7
-val superImpose = false // sine goes left to right. cosine goes top to bottom. this super imposes another cosine curve to go left to right as well
-cleari
-val (rb, rc) = (4.0, 160.0) // radius of the small ball in orbit and the radius of its circular orbit
-zoomXY(0.6, 0.6, 600, -2 * rc)
-val numPerTurn = 120
-val angle = 360.0 / numPerTurn
-val (x1, y1) = (-rc, rc) // (0, 0) doesn't work!
-val (cBall, cCos, cSin) = (blue, red, green)
-val ball = trans(x1, y1) * fillColor(cBall) * penColor(cBall) * penThickness(4) -> Picture.circle(rb)
-draw(ball)
-// outline of the orbit of the ball
-draw(trans(-2*rc , rc) * penColor(lightGray) * penThickness(0.5) -> Picture.circle(rc))
-// waves going left to right:
-val sin = trans(0, ball.position.y) * fillColor(noColor) * penColor(noColor) -> Picture.circle(rb)
-draw(sin); sin.invisible()
-var cos: Picture = _
-if (superImpose) {
-    cos = trans(0, 2 * rc) * fillColor(noColor) * penColor(noColor) -> Picture.circle(rb)
-    draw(cos); cos.invisible()
+// Yazan: Bülent Başaran ben@scala.org Yılı: 2022
+tümEkranTuval()
+val dönüşSayısı = 7
+val yatayKosinüsDalgasınıDaÇiz = yanlış // sinüs dalgasını soldan sağa, kosinüsü yukarıdan aşağıya çizeceğiz. İstersek, bir de soldan sağa giden kosinüs eğrisi çizebiliriz.
+silVeSakla
+val (yt, yy) = (4.0, 160.0) // topun ve yörüngesinin yarıçapları
+yaklaşXY(0.6, 0.6, 600, -2 * yy)
+val adımSayısı = 120
+val açı = 360.0 / adımSayısı
+val (x0, y0) = (-yy, yy) // Topun dönmeye başladığı nokta. (0, 0) çalışmaz!
+val (rTop, rKos, rSin) = (mavi, kırmızı, yeşil)
+val top = götür(x0, y0) * boyaRengi(rTop) * kalemRengi(rTop) * kalemBoyu(4) -> Resim.daire(yt)
+çiz(top)
+// yörüngeyi biraz soluk renkle çizelim
+çiz(götür(-2 * yy, yy) * kalemRengi(açıkGri) * kalemBoyu(0.5) -> Resim.daire(yy))
+// soldan sağa giden sinüs dalgasını çizmek için de bir küçük top kullanacağız:
+val sin = götür(0, top.konum.y) * boyaRengi(renksiz) * kalemRengi(renksiz) -> Resim.daire(yt)
+çiz(sin); sin.gizle()
+var koY: Resim = _
+if (yatayKosinüsDalgasınıDaÇiz) {
+    koY = götür(0, 2 * yy) * boyaRengi(renksiz) * kalemRengi(renksiz) -> Resim.daire(yt)
+    çiz(koY); koY.gizle()
 }
-// wave going top to bottom:
-val co2 = trans(ball.position.x, -rc) * fillColor(noColor) * penColor(noColor) -> Picture.circle(rb)
-draw(co2); co2.invisible()
-val axisColor = black.fadeOut(0.5)
-draw(trans(-2 * rc, -14 * rc) * penColor(axisColor) -> Picture.line(0, 17 * rc)) // v axis
-draw(trans(-4 * rc, -rc) * penColor(axisColor) -> Picture.line(3.8 * rc, 0)) // h axis
-draw(trans(0, -0.8 * rc) * penColor(axisColor) -> Picture.line(0, 3.8 * rc)) // v axis
-draw(trans(-4 * rc, rc) * penColor(axisColor) -> Picture.line(17 * rc, 0)) // h axis
-for (i <- 0 to 14) {
-    draw(trans(120 * i, rc) * penColor(cSin) -> Picture.circle(rb)) // zeros of sin(t)
-    if (superImpose) draw(trans(60 + 120 * i, rc) * penColor(cCos) -> Picture.circle(rb)) // zeros of cos(t)
-    draw(trans(-2 * rc, -120 * i - rc - 120 / 2) * penColor(cCos) -> Picture.circle(rb)) // zeros of cos2(t)
+// yukarıdan aşağıya giden kosinüs dalgası:
+val kos = götür(top.konum.x, -yy) * boyaRengi(renksiz) * kalemRengi(renksiz) -> Resim.daire(yt)
+çiz(kos); kos.gizle()
+val rEksen = siyah.fadeOut(0.5) // todo
+çiz(götür(-2 * yy, -14 * yy) * kalemRengi(rEksen) -> Resim.doğru(0, 17 * yy)) // dikey eksen
+çiz(götür(-4 * yy, -yy) * kalemRengi(rEksen) -> Resim.doğru(3.8 * yy, 0)) // yatay eksen
+çiz(götür(0, -0.8 * yy) * kalemRengi(rEksen) -> Resim.doğru(0, 3.8 * yy)) // dikey eksen
+çiz(götür(-4 * yy, yy) * kalemRengi(rEksen) -> Resim.doğru(17 * yy, 0)) // yatay eksen
+for (i <- 0 to 14) { // eğrilerin ekseni kestiği noktalar
+    çiz(götür(120 * i, yy) * kalemRengi(rSin) -> Resim.daire(yt)) // sinüs(z)
+    if (yatayKosinüsDalgasınıDaÇiz) çiz(götür(60 + 120 * i, yy) * kalemRengi(rKos) -> Resim.daire(yt)) // yatay kosinüs(z)
+    çiz(götür(-2 * yy, -120 * i - yy - 120 / 2) * kalemRengi(rKos) -> Resim.daire(yt)) // dikey kosinüs(z)
 }
-// arrow pointing from the origin (-2 * rc, rc) to the rotating ball
-// origin == the center of the circular motion
-draw(trans(-2 * rc, rc) * penColor(axisColor) -> Picture.circle(rb))
-var arrow = trans(-2 * rc, rc) * penColor(black) -> Picture.line(rc, 0)
-draw(arrow)
-def updateArrow(p: Point) {
-    arrow.erase()
-    arrow = trans(-2 * rc, rc) * penColor(black) -> Picture.line(p.x + 2 * rc, p.y - rc)
-    draw(arrow)
+// merkezden yörüngedeki topa uzanan bir ok çizelim. Merkez: (-2 * yy, yy)
+çiz(götür(-2 * yy, yy) * kalemRengi(rEksen) -> Resim.daire(yt))
+var ok = götür(-2 * yy, yy) * kalemRengi(siyah) -> Resim.doğru(yy, 0)
+çiz(ok)
+def okuÇevir(n: Nokta) {
+    ok.sil()
+    ok = götür(-2 * yy, yy) * kalemRengi(siyah) -> Resim.doğru(n.x + 2 * yy, n.y - yy)
+    çiz(ok)
 }
-var arc = trans(-2 * rc, rc) * penColor(blue) -> Picture.arc(rc / 4, 0); draw(arc)
-def updateArc(p: Point) {
-    arc.erase()
-    val angle0 = math.asin((p.y - rc) / rc).toDegrees
-    val angle = if (p.x < -2 * rc) { // left hand side: Q2 and Q3
-        180 - angle0
+var yay = götür(-2 * yy, yy) * kalemRengi(rTop) -> Resim.yay(yy / 4, 0); çiz(yay)
+def yayıGüncelle(n: Nokta) {
+    yay.sil()
+    val ilkAçı = sinüsünAçısı((n.y - yy) / yy).dereceye
+    val açı = if (n.x < -2 * yy) { // dikey eksenin sol tarafı: 2. veya 3. çeyrek
+        180 - ilkAçı
     }
-    else if (p.y < rc) { // Q4
-        360 + angle0
+    else if (n.y < yy) { // 4. çeyrek
+        360 + ilkAçı
     }
-    else // Q1
-        angle0
-    arc = trans(-2 * rc, rc) * penColor(blue) -> Picture.arc(rc / 4, angle)
-    draw(arc)
+    else // 1. çeyrek
+        ilkAçı
+    yay = götür(-2 * yy, yy) * kalemRengi(rTop) -> Resim.yay(yy / 4, açı)
+    çiz(yay)
 }
-// balls projection on the horizontal axis == cosine of the angle:
-var xProj = trans(0, 0) -> Picture.line(1, 1); draw(xProj)
-def updateCos(p: Point) {
-    xProj.erase()
-    xProj = trans(-2 * rc, p.y) * penThickness(4) * penColor(cCos) -> Picture.line(p.x + 2 * rc, 0)
-    draw(xProj)
+// topun yatay eksen üzerine izdüşümü yani açının kosinüsü
+var izDüşümüX = götür(0, 0) -> Resim.doğru(1, 1); çiz(izDüşümüX)
+var kayanEksenX = götür(0, 0) -> Resim.doğru(1, 1); çiz(kayanEksenX); kayanEksenX.gizle()
+def kosinüsüGüncelle(n: Nokta) {
+    izDüşümüX.sil(); kayanEksenX.sil()
+    izDüşümüX = götür(-2 * yy, n.y) * kalemBoyu(4) * kalemRengi(rKos) -> Resim.doğru(n.x + 2 * yy, 0)
+    kayanEksenX = götür(-2 * yy, n.y) * kalemBoyu(0.5) * kalemRengi(açıkGri) -> Resim.doğru(17 * yy, 0)
+    çiz(izDüşümüX, kayanEksenX)
 }
-// balls projection on the vertical axis == sine of the angle:
-var yProj = trans(0, 0) -> Picture.line(1, 1); draw(yProj)
-def updateSin(p: Point) {
-    yProj.erase()
-    yProj = trans(ball.position.x, rc) * penThickness(4) * penColor(cSin) -> Picture.line(0, p.y - rc)
-    draw(yProj)
+// topun dikey eksen üzerine izdüşümü yani açının sinüsü
+var izDüşümüY = götür(0, 0) -> Resim.doğru(1, 1); çiz(izDüşümüY)
+var kayanEksenY = götür(0, 0) -> Resim.doğru(1, 1); çiz(kayanEksenY); kayanEksenY.gizle()
+def sinüsüGüncelle(n: Nokta) {
+    izDüşümüY.sil(); kayanEksenY.sil()
+    izDüşümüY = götür(top.konum.x, yy) * kalemBoyu(4) * kalemRengi(rSin) -> Resim.doğru(0, n.y - yy)
+    kayanEksenY = götür(top.konum.x, n.y - 17 * yy) * kalemBoyu(0.5) * kalemRengi(açıkGri) -> Resim.doğru(0, 17 * yy)
+    çiz(izDüşümüY, kayanEksenY)
 }
-val startTime = epochTime
-var t = 0.0
-def newBall = penThickness(4.0) * penColor(cBall) -> Picture.circle(rb)
-var lastBall = newBall
-çıktıyıSil()
-animate {
-    t += 2
-    // ball rotating around the center in uniform speed
-    if (t > numTurns * 240 + numPerTurn / 6 ) { // stop at 60 degrees
-        ball.erase()
-        stopAnimations()
-        println(s"Merkez etrafında $numTurns dönüş ${round(epochTime - startTime)} saniye sürdü.")
+def yeniTop = kalemBoyu(4.0) * kalemRengi(rTop) -> Resim.daire(yt)
+var birÖncekiTop = yeniTop
+val başlangıçAnı = buSaniye
+var z = 0
+canlandır { // top merkez çevresindeki yörüngesinde sabit bir hızla dönsün
+    z += 2 // dalga boyunu ayarlayalım
+    sin.kondur(z, top.konum.y)
+    çiz(götür(sin.konum.x, sin.konum.y) * kalemBoyu(1.0) * kalemRengi(rSin) -> Resim.daire(yt))
+    kos.kondur(top.konum.x, -1 * yy - z + 2)
+    çiz(götür(kos.konum.x, kos.konum.y) * kalemBoyu(1.0) * kalemRengi(rKos) -> Resim.daire(yt))
+    if (yatayKosinüsDalgasınıDaÇiz) {
+        koY.kondur(z, 4 * yy + top.konum.x - yy)
+        çiz(götür(koY.konum.x, koY.konum.y) * kalemBoyu(1.0) * kalemRengi(rKos) -> Resim.daire(yt))
     }
-    sin.setPosition(t, ball.position.y)
-    draw(trans(sin.position.x, sin.position.y) * penThickness(1.0) * penColor(cSin) -> Picture.circle(rb))
-    co2.setPosition(ball.position.x, -1 * rc - t + 2)
-    draw(trans(co2.position.x, co2.position.y) * penThickness(1.0) * penColor(cCos) -> Picture.circle(rb))
-    if (superImpose) {
-        cos.setPosition(t, 4 * rc + ball.position.x - rc)
-        draw(trans(cos.position.x, cos.position.y) * penThickness(1.0) * penColor(cCos) -> Picture.circle(rb))
+    top.döndürMerkezli(açı, x0, 0)
+    birÖncekiTop.sil()
+    birÖncekiTop = götür(top.konum.x, top.konum.y) -> yeniTop; çiz(birÖncekiTop)
+    okuÇevir(top.konum); yayıGüncelle(top.konum)
+    sinüsüGüncelle(top.konum); kosinüsüGüncelle(top.konum)
+    if (z > dönüşSayısı * 240 + adımSayısı / 6) { // 60 derece geçince duralım
+        top.sil()
+        durdur()
+        satıryaz(s"Merkez etrafında $dönüşSayısı dönüş ${yuvarla(buSaniye - başlangıçAnı)} saniye sürdü.")
     }
-    //updateBall()
-    ball.rotateAboutPoint(angle, x1, 0)
-    lastBall.erase()
-    lastBall = trans(ball.position.x, ball.position.y) -> newBall
-    draw(lastBall)
-    updateArrow(ball.position)
-    updateSin(ball.position)
-    updateCos(ball.position)
-    updateArc(ball.position)
 }
-çiz(götür(40, -100) -> Resim.yazı("Sinüs dalga => ...", Font("JetBrains Mono", 40), cSin))
-çiz(götür(-30, -200) * döndürMerkezli(-90, 0, 0) -> Resim.yazı("Kosinüs dalga => ...", Font("JetBrains Mono", 40), cCos))
+çiz(götür(40, -100) -> Resim.yazı("Sinüs dalga => ...", Font("JetBrains Mono", 40), rSin))
+çiz(götür(-30, -200) * döndürMerkezli(-90, 0, 0) -> Resim.yazı("Kosinüs dalga => ...", Font("JetBrains Mono", 40), rKos))

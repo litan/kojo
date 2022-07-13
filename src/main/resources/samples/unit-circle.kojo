@@ -59,19 +59,23 @@ def updateArc(p: Point) {
     arc = trans(-2 * rc, rc) * penColor(blue) -> Picture.arc(rc / 4, angle)
     draw(arc)
 }
-// balls projection on the horizontal axis == cosine of the angle:
+// ball's projection on the horizontal axis == cosine of the angle:
 var xProj = trans(0, 0) -> Picture.line(1, 1); draw(xProj)
+var xTracer = trans(0, 0) -> Picture.line(1, 1); draw(xTracer); xTracer.invisible()
 def updateCos(p: Point) {
-    xProj.erase()
+    xProj.erase(); xTracer.erase()
     xProj = trans(-2 * rc, p.y) * penThickness(4) * penColor(cCos) -> Picture.line(p.x + 2 * rc, 0)
-    draw(xProj)
+    xTracer = trans(-2 * rc, p.y) * penThickness(0.5) * penColor(lightGray) -> Picture.line(17 * rc, 0)
+    draw(xProj, xTracer)
 }
-// balls projection on the vertical axis == sine of the angle:
+// ball's projection on the vertical axis == sine of the angle:
 var yProj = trans(0, 0) -> Picture.line(1, 1); draw(yProj)
+var yTracer = trans(0, 0) -> Picture.line(1, 1); draw(yTracer); yTracer.invisible()
 def updateSin(p: Point) {
-    yProj.erase()
+    yProj.erase(); yTracer.erase()
     yProj = trans(ball.position.x, rc) * penThickness(4) * penColor(cSin) -> Picture.line(0, p.y - rc)
-    draw(yProj)
+    yTracer = trans(ball.position.x, p.y - 17 * rc) * penThickness(0.5) * penColor(lightGray) -> Picture.line(0, 17 * rc)
+    draw(yProj, yTracer)
 }
 val startTime = epochTime
 var t = 0.0

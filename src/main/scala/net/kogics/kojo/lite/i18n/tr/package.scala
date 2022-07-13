@@ -51,17 +51,12 @@ package object tr {
   type Seçim = Boolean
   // no type for Bit. But if there were, how about Parçacık?
 
-  // We have Byte/Short/Int/Long which all default to Int and BigInt
-  // val n = 1
-  // Sayma sayıları
+  // duplicated from sayi.scala as they are used in other traits
   type Lokma   = Byte
   type Kısa    = Short
   type Sayı    = Int
   type Uzun    = Long
   type İriSayı = BigInt
-  // We have Float/Double which default to Double and BigDecimal
-  //   val x = 1.0
-  // Kesirli sayılar
   type UfakKesir = Float
   type Kesir = Double
   type İriKesir = BigDecimal
@@ -78,6 +73,7 @@ package object tr {
   type Grafik2B = scala.swing.Graphics2D
 
   object Nokta {
+    type Kesir = Double
     def apply(x: Kesir, y: Kesir) = new Point(x, y)
     def unapply(p: Nokta) = Some((p.x, p.y))
   }
