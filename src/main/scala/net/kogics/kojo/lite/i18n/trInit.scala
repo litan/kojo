@@ -512,7 +512,8 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
     val t0 = buSaniye
     val çıktı = işlev
     val delta = buSaniye - t0
-    println(f"$başlık $delta%.3f saniye $bitiş")
+    val words = List(başlık, f"$delta%.3f saniye", bitiş).filter(_.nonEmpty)
+    println(words.mkString(" "))
     çıktı
   }
 
