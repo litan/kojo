@@ -43,14 +43,16 @@ def tümceEvirmece(tümce: Tümce): Dizin[Tümce] = {
     özyineleme(tümceninHarfSayıları(tümce))
 }
 
+// Döngünün içindeki diziye başka tümceler de ekleyebilirsin.
+// Ama çok uzun olmasın. Yoksa çok zaman alabilir.
 for (
     tümce <- Dizi(
-        Dizin("al", "ver"),
-        Dizin("lütfen", "gel")
-    )
+        "al ver",
+        "lütfen gel",
+        "sevdim onu")
 ) {
-    val evrik = zamanTut("") { tümceEvirmece(tümce).işle(_.işle(_.küçükHarfe)) }("sürdü.")
+    val evrik = zamanTut("Tümcenin evirmecelerinin hepsini bulmak") { tümceEvirmece(tümce.split(" ").dizine).işle(_.işle(_.küçükHarfe)) }()
     satıryaz(tümce.yazıYap(
-        "tümce: ", " ", s"\n${evrik.boyu} evirmecesi var: ${evrik.işle(_.yazıYap(" ")).yazıYap("", ", ", ".")}"
+        "Tümce: ", "", s".\n${evrik.boyu} evirmecesi var: ${evrik.işle(_.yazıYap(" ")).yazıYap("", ", ", ".\n")}"
     ))
 }
