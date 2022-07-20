@@ -38,6 +38,8 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         if (solAltKöşe) Nokta(köşeX + oda.stn * boy, köşeY + oda.str * boy)
         else Nokta(köşeX + oda.stn * boy + b2, köşeY + oda.str * boy + b2)
 
+    private def bilgisayarınSırasıMı = tahta.oyuncu() == bilgisayar && !tahta.hamleYoksa
+
     private def kareyiTanımla(k: Resim) = {
         val oda = kareninOdası(k)
         k.fareyeTıklayınca { (_, _) =>
@@ -53,7 +55,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
                             skoruGüncelle
                         }
                         else {
-                            if (tahta.oyuncu() == bilgisayar && !tahta.hamleYoksa) {
+                            if (bilgisayarınSırasıMı) {
                                 skorBilgisayarHamleArıyor
                                 /* burada yaparsak abArama sırasında herşey donuyor ve bizim
                                    aldığımız taşlar abArama hamlesini yapana kadar dönmüyor */
@@ -89,7 +91,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
             k.saydamlık(1) // hamleninÇevireceğiTaşlarıGöster saydamlığı değiştiriyor
             ipucu.gizle()
             // todo: çıkmadan, ya da tekrar tıklamadan çalışmıyor!
-            if (tahta.oyuncu() == bilgisayar && !tahta.hamleYoksa) öneri
+            if (bilgisayarınSırasıMı) öneri
         }
     }
     private val boşOdaRengi = Renk(10, 111, 23) // koyuYeşil
@@ -131,7 +133,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     def seçenekleriGöster = {
         seçenekResimleri.herbiriİçin { r => r.sil() }
         if (seçeneklerAçık) {
-            val sıralı = tahta.yasallar.işle { oda => (oda, tahta.hamleGetirisi(oda)) }.sırala{ p => p._2 }.tersi
+            val sıralı = tahta.yasallar.işle { oda => (oda, tahta.hamleGetirisi(oda)) }.sırala { p => p._2 }.tersi
             if (sıralı.boyu > 0) {
                 val enİriGetiri = sıralı.başı._2
                 seçenekResimleri = sıralı işle {
@@ -322,7 +324,15 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
 
             }
             hamleyiYap(tahta.hamleyiDene(hamle), hamle)
-            bittiMi
+            if (!bittiMi) {
+                if (tahta.hamleYoksa) {
+                    sırayıÖbürOyuncuyaGeçir
+                    satıryaz(s"Yasal hamle yok. Sıra yine ${tahta.oyuncu().adı}ın")
+                    if (bilgisayarınSırasıMı) {
+                        öneri
+                    }
+                }
+            }
         }
     }
     def tahtadanTahta: Tahta = { // elektronik tahtadan arama tahtası oluşturalım
@@ -443,6 +453,6 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         }
     }
 
-    if (tahta.oyuncu() == bilgisayar && !tahta.hamleYoksa) öneri
+    if (bilgisayarınSırasıMı) öneri
 
 }
