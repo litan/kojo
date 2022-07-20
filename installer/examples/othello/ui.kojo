@@ -70,9 +70,12 @@ class UI(
                     if (makeTheMove(room)) {
                         clearHilites
                         if (board.isGameOver) endTheGame
-                        else if (computerInPlay) refreshScoreBoard
                     }
                 case _ =>
+            }
+            if (computerInPlay) {
+                refreshScoreBoard
+                runInBackground { computerToMove }
             }
         }
         def roomColor = stone2color(board.stone(room))
@@ -131,7 +134,7 @@ class UI(
         showMoves
         endedTheGame = false
         refreshScoreBoard
-        if (computerInPlay) computerToMove
+        if (computerInPlay) { runInBackground { computerToMove } }
     }
 
     var movePics: Seq[Picture] = Seq()
@@ -276,11 +279,11 @@ class UI(
         def score: Seq[String] = for (s <- Seq(White, Black))
             yield s"${s.cname}: ${board.count(s)}"
         if (board.isGameOver) Seq("Game is over") ++ score
-        else if (board.moveCount == 1) Seq(
-            s"${board.startingPlayer.cname} to play", "", ""
-        )
-        else if (computerInPlay)
-            Seq(s"Computer computing next move...") ++ score
+        else if (board.moveCount == 1) {
+          if (computerInPlay) { Seq(s"Computer computing move...", "", "") }
+          else Seq( s"${board.startingPlayer.cname} to play", "", "" )
+        } else if (computerInPlay)
+            Seq(s"Computer computing move...") ++ score
         else
             Seq(s"Move ${board.moveCount()}. ${board.player().cname} to play" +
                 (if (board.skippedTurn) " again" else "")) ++ score
@@ -303,7 +306,9 @@ class UI(
 
     val hintPics = new HintPics(length)
 
-    //if (computerInPlay) computerToMove // todo: we get an empty screen while the computer computes the first move!
+    if (computerInPlay) {
+        runInBackground { computerToMove }
+    }
 }
 
 class HintPics(length: Int) {
