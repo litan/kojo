@@ -85,6 +85,7 @@ trait ArrayMethodsInTurkish {
     // map[B](f: (T) => B)(implicit ct: ClassTag[B]): Dizik[B]
     // Builds a new array by applying a function to all elements of this array.
     def işle[A](işlev: T => A)(implicit ct: ClassTag[A]): Dizik[A] = d.map(işlev)(ct)
+    def işleYerinde(işlev: (T) => T): Dizik[T] = d.mapInPlace(işlev)
     def düzİşle[A:ClassTag](işlev: T => Dizik[A]): Dizik[A] = d.flatMap(işlev)
     def sıralı(implicit ord: Ordering[T]): Col = d.sorted(ord)
     def sırala[A](i: T => A)(implicit ord: Ordering[A]): Col = d.sortBy(i)
@@ -102,6 +103,7 @@ trait ArrayMethodsInTurkish {
     def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = d.mkString(baş, ara, son)
     def tersi = d.reverse
     def değiştir[S >: T:ClassTag](yeri: Sayı, değeri: S): Dizik[S] = d.updated(yeri, değeri)
+    def değiştirYerinde(yeri: Sayı, değeri: T): Birim = d.update(yeri, değeri)
     def herbiriİçin[S](işlev: T => S): Birim = d.foreach(işlev)
     def varMı(deneme: T => İkil): İkil = d.exists(deneme)
     def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
