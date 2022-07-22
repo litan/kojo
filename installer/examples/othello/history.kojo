@@ -21,10 +21,6 @@ class History(board: EBoard) {
         board.moveCount.incr()
     }
 
-    def isSkippedTurn =
-        if (board.moveCount() == 1) false
-        else board.player() == players(board.moveCount() - 2)
-
     def reset() = {
         oldBoards.clear()
         players.clear()
