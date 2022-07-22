@@ -48,8 +48,10 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
                     val yasal = tahta.hamleyiDene(oda)
                     if (yasal.boyu > 0) {
                         hamleyiYap(yasal, oda)
+                        tahta.sıraGeriDöndüMü = yanlış
                         if (bittiMi) bittiKaçKaç(tahta)
                         else if (tahta.hamleYoksa) {
+                            tahta.sıraGeriDöndüMü = doğru
                             sırayıÖbürOyuncuyaGeçir
                             satıryaz(s"Yasal hamle yok. Sıra yine ${tahta.oyuncu().adı}ın")
                             skoruGüncelle
@@ -430,7 +432,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         skorYazısı.güncelle(s"$msj\n${tahta.kaçkaç(doğru)}")
     }
     def skorBaşlangıç = skorYazısı.güncelle(s"${tahta.oyuncu().adı.ilkHarfiBüyült} başlar")
-    def skoruGüncelle = skorYazısı.güncelle(s"${tahta.hamleSayısı()}. hamle${if (bellek.sıraGeriDöndüMü) " yine " else " "}${tahta.oyuncu().adı}ın\n${tahta.kaçkaç(doğru)}")
+    def skoruGüncelle = skorYazısı.güncelle(s"${tahta.hamleSayısı()}. hamle${if (tahta.sıraGeriDöndüMü) " yine " else " "}${tahta.oyuncu().adı}ın\n${tahta.kaçkaç(doğru)}")
     def skorBilgisayarHamleArıyor = skorYazısı.güncelle(s"${tahta.hamleSayısı()}. hamle. Bilgisayar arıyor...\n${tahta.kaçkaç(doğru)}")
     skorBaşlangıç
 

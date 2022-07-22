@@ -13,6 +13,8 @@ class ETahta(
     val hamleSayısı = new HamleSayısı
     var oyunBitti = yanlış
     var sonHamle: Belki[Oda] = _ // son hamleyi tuvalde göstermek ve geri/ileri için gerekli
+    var sıraGeriDöndüMü = yanlış // geri/ileri durumunda skoru doğru yazmak için
+
     def yasallar = (for {
         x <- satırAralığı; y <- satırAralığı; if tahta(y)(x) == Yok
     } yield Oda(y, x)) ele { hamleyiDene(_).boyu > 0 }
