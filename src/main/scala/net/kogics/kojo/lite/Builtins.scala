@@ -863,8 +863,8 @@ Here's a partial list of the available commands:
     val incr = if (countDown) -1 else 1
     val endTime = if (countDown) 0 else limitSecs
 
-    gameTimeLabel.foreach(_.erase)
-    gameTimeEndMsg.foreach(_.erase)
+    gameTimeLabel.foreach(_.erase())
+    gameTimeEndMsg.foreach(_.erase())
 
     gameTimeLabel = Some(trans(cb.x + dx, cb.y + dy) -> PicShape.textu(gameTime, fontSize, color))
     gameTimeLabel.foreach { label =>
