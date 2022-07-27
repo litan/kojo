@@ -893,6 +893,7 @@ Here's a partial list of the available commands:
     val cb = canvasBounds
     cwidth = cb.width.toInt
     cheight = cb.height.toInt
+    gameTimeRunning = false
   }
 
   def size(width: Int, height: Int): Unit = {
