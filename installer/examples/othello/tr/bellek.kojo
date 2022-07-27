@@ -26,6 +26,9 @@ class Bellek(tahta: ETahta) {
             tahta.taşıKur(y)(x)(eski(y)(x))
         tahta.oyuncu.kur(oyuncular(hamle))
         tahta.sonHamle = hamleler(hamle)
+        tahta.sıraGeriDöndüMü =
+            if (hamle > 1) tahta.oyuncu() == oyuncular(hamle - 1)
+            else yanlış
     }
     def yeniHamleYapıldı = {
         yeniHamleEnYeniGeriAlKomutundanDahaGüncel = doğru
@@ -51,9 +54,5 @@ class Bellek(tahta: ETahta) {
         oyuncular.sil()
         hamleler.sil()
     }
-
-    def sıraGeriDöndüMü =
-        if (tahta.hamleSayısı() == 1) yanlış
-        else tahta.oyuncu() == oyuncular(tahta.hamleSayısı() - 2)
 
 }

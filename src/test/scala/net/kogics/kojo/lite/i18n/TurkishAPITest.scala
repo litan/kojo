@@ -510,7 +510,7 @@ import net.kogics.kojo.staging
   }
 
   test("Translations of Seq[T] methods to work") {
-    // todo: duplicates above
+    // todo: duplicates above and below
     val d1 = Dizi(1, 3, 2)
     d1.başı should be(1)
     d1.kuyruğu should be(Dizi(3, 2))
@@ -536,6 +536,45 @@ import net.kogics.kojo.staging
     Dizi(1, 2, 3).yazıYap(" ") should be("1 2 3")
     Dizi(1, 2, 3).yazıYap("{", " ", "}") should be("{1 2 3}")
     Dizi(2, 4).değiştir(0, 5) should be(Dizi(5, 4))
+  }
+
+  test("Translations of Array[T] methods to work") {
+    val d = Dizik(10, 3, 9); d.boyu should be(3)
+    val golden = Dizik(5, 1, 4)
+    d.işle(_/2) should be(golden)
+    d.işleYerinde(_/2) should be(golden); d should be(golden)
+    val gold2 = Dizik(100, 1, 4)
+    d.değiştir(0, 100) should be(gold2)
+    d.değiştirYerinde(0, 100); d should be(gold2)
+    d.değiştirYerinde(2, 100); d should be(Dizik(100, 1, 100))
+    d(1) = 100; d should be(Dizik(100, 100, 100))
+    val d0 = Dizik[Sayı](); d0.boyu should be(0)
+    // copied from above
+    val d1 = Dizik(1, 3, 2)
+    d1.başı should be(1)
+    d1.kuyruğu should be(Dizik(3, 2))
+    d1.boyu should be(3)
+    d1.boşMu should be(yanlış)
+    d1.doluMu should be(doğru)
+    d1.ele(_ % 2 == 0) should be(Dizik(2))
+    d1.eleDeğilse(_ % 2 == 0) should be(Dizik(1, 3))
+    d1.işle(_ * 10) should be(Dizik(10, 30, 20))
+    d1.düzİşle(x => Dizik(x, x*x)) should be(Dizik(1, 1, 3, 9, 2, 4))
+    d1.sıralı should be(Dizik(1, 2, 3))
+    d1.sırala(1.0 / _) should be(Dizik(3, 2, 1))
+    d1.sırayaSok((x, y) => -x < -y) should be(Dizik(3, 2, 1))
+    d1.indirge((x, y) => x * 10 + y) should be(132)
+    d1.soldanKatla(10)(_ + _) should be(16)
+    d1.sağdanKatla(2)(_ * _) should be(12)
+    val d2 = Dizik(2, 3, 4)
+    d2.topla should be(9)
+    d2.çarp should be(24)
+    Dizik(2, 2, 1, 1).yinelemesiz should be(Dizik(2, 1))
+    Dizik(2, 4, 6, 1, 3, 5).yinelemesizİşlevle(_ % 2 == 0) should be(Dizik(2, 1))
+    Dizik(1, 2, 3).yazıYap should be("123")
+    Dizik(1, 2, 3).yazıYap(" ") should be("1 2 3")
+    Dizik(1, 2, 3).yazıYap("{", " ", "}") should be("{1 2 3}")
+    Dizik(2, 4).değiştir(0, 5) should be(Dizik(5, 4))
   }
 
   test("Translations of Char methods to work") {
@@ -648,10 +687,8 @@ import net.kogics.kojo.staging
 
   test("Companion objects for translations to work") {
     val e = Eşlek("a" -> 10, "b" -> 3); e.sayı should be(2)
-    val d = Dizik(10, 3, 9); d.boyu should be(3)
-    val d1 = Dizik[Sayı](); d1.boyu should be(0)
-    var d2 = Diz(1, 2, 4); d2.boyu should be(3)
-    d2 = d2 :+ 3; d2.boyu should be(4)
+    var d = Diz(1, 2, 4); d.boyu should be(3)
+    d = d :+ 3; d.boyu should be(4)
     val k = Küme(100, 10, 1); k.boyu should be(3)
     val k2 = Küme.boş[Yazı]; k2.boyu should be(0)
     val k3 = k2 + "Merhaba"; k3.boyu should be(1)
