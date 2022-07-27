@@ -841,6 +841,12 @@ Here's a partial list of the available commands:
   @volatile var gameTimeEndMsg: Option[Picture] = None
   @volatile var gameTimeRunning = false
 
+  private def clearGameTime(): Unit = {
+    gameTimeLabel = None
+    gameTimeEndMsg = None
+    gameTimeRunning = false
+  }
+
   def showGameTimeCountdown(limitSecs: Int, endMsg: => String, color: Color = black, fontSize: Int = 15,
     dx: Double = 10, dy: Double = 50) = showGameTime(limitSecs, endMsg, color, fontSize, dx, dy, true)
 
@@ -893,7 +899,7 @@ Here's a partial list of the available commands:
     val cb = canvasBounds
     cwidth = cb.width.toInt
     cheight = cb.height.toInt
-    gameTimeRunning = false
+    clearGameTime()
   }
 
   def size(width: Int, height: Int): Unit = {
