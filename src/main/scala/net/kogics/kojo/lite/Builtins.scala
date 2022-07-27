@@ -824,33 +824,56 @@ Here's a partial list of the available commands:
     }
   }
 
-  def drawCenteredMessage(message: String, color: Color = black, fontSize: Int = 15): Unit = {
+  private def makeCenteredMessage(message: String, color: Color = black, fontSize: Int = 15): Picture = {
     val cb = canvasBounds
     val te = textExtent(message, fontSize)
-    val pic = penColor(color) *
+    penColor(color) *
       trans(cb.x + (cb.width - te.width) / 2, cb.y + (cb.height - te.height) / 2 + te.height) ->
       PicShape.text(message, fontSize)
+  }
+
+  def drawCenteredMessage(message: String, color: Color = black, fontSize: Int = 15): Unit = {
+    val pic = makeCenteredMessage(message, color, fontSize)
     draw(pic)
   }
+
+  @volatile var gameTimeLabel: Option[Picture] = None
+  @volatile var gameTimeEndMsg: Option[Picture] = None
+  @volatile var gameTimeRunning = false
 
   def showGameTimeCountdown(limitSecs: Int, endMsg: => String, color: Color = black, fontSize: Int = 15,
     dx: Double = 10, dy: Double = 50) = showGameTime(limitSecs, endMsg, color, fontSize, dx, dy, true)
 
+
   def showGameTime(limitSecs: Int, endMsg: => String, color: Color = black, fontSize: Int = 15,
     dx: Double = 10, dy: Double = 50, countDown: Boolean = false): Unit = {
+    if (gameTimeRunning) {
+      return
+    }
+    gameTimeRunning = true
+
     val cb = canvasBounds
     @volatile var gameTime = if (countDown) limitSecs else 0
     val incr = if (countDown) -1 else 1
     val endTime = if (countDown) 0 else limitSecs
-    val timeLabel = trans(cb.x + dx, cb.y + dy) -> PicShape.textu(gameTime, fontSize, color)
-    draw(timeLabel)
-    timeLabel.forwardInputTo(TSCanvas.stageArea)
+
+    gameTimeLabel.foreach(_.erase)
+    gameTimeEndMsg.foreach(_.erase)
+
+    gameTimeLabel = Some(trans(cb.x + dx, cb.y + dy) -> PicShape.textu(gameTime, fontSize, color))
+    gameTimeLabel.foreach { label =>
+      draw(label)
+      label.forwardInputTo(TSCanvas.stageArea)
+    }
+
     TSCanvas.timer(1000) {
       gameTime += incr
-      timeLabel.update(gameTime)
+      gameTimeLabel.foreach(_.update(gameTime))
       if (gameTime == endTime) {
-        drawCenteredMessage(endMsg, color, fontSize * 2)
+        gameTimeEndMsg = Some(makeCenteredMessage(endMsg, color, fontSize * 2))
+        gameTimeEndMsg.foreach(draw(_))
         stopAnimation()
+        gameTimeRunning = false
       }
     }
   }
