@@ -43,25 +43,27 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     private def kareyiTanımla(k: Resim) = {
         val oda = kareninOdası(k)
         k.fareyeTıklayınca { (_, _) =>
-            tahta.taş(oda) match {
-                case Yok =>
-                    val yasal = tahta.hamleyiDene(oda)
-                    if (yasal.boyu > 0) {
-                        hamleyiYap(yasal, oda)
-                        tahta.sıraGeriDöndüMü = yanlış
-                        if (bittiMi) bittiKaçKaç(tahta)
-                        else if (tahta.hamleYoksa) {
-                            tahta.sıraGeriDöndüMü = doğru
-                            sırayıÖbürOyuncuyaGeçir
-                            satıryaz(s"Yasal hamle yok. Sıra yine ${tahta.oyuncu().adı}ın")
-                            skoruGüncelle
+            if (!bilgisayarŞimdiAramaYapıyor) {
+                tahta.taş(oda) match {
+                    case Yok =>
+                        val yasal = tahta.hamleyiDene(oda)
+                        if (yasal.boyu > 0) {
+                            hamleyiYap(yasal, oda)
+                            tahta.sıraGeriDöndüMü = yanlış
+                            if (bittiMi()) bittiKaçKaç(tahta)
+                            else if (tahta.hamleYoksa) {
+                                tahta.sıraGeriDöndüMü = doğru
+                                sırayıÖbürOyuncuyaGeçir
+                                satıryaz(s"Yasal hamle yok. Sıra yine ${tahta.oyuncu().adı}ın")
+                                skoruGüncelle
+                            }
                         }
-                    }
-                case _ =>
-            }
-            if (bilgisayarınSırasıMı) {
-                skorBilgisayarHamleArıyor
-                artalandaOynat { öneri }
+                    case _ =>
+                }
+                if (bilgisayarınSırasıMı) {
+                    skorBilgisayarHamleArıyor
+                    artalandaOynat { öneri() }
+                }
             }
         }
         def odaRengi = taşınRengi(tahta.taş(oda))
@@ -88,8 +90,6 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
             k.boyamaRenginiKur(odaRengi)
             k.saydamlık(1) // hamleninÇevireceğiTaşlarıGöster saydamlığı değiştiriyor
             ipucu.gizle()
-            // todo: çıkmadan, ya da tekrar tıklamadan çalışmıyor!
-            if (bilgisayarınSırasıMı) öneri
         }
     }
     private val boşOdaRengi = Renk(10, 111, 23) // koyuYeşil
@@ -192,15 +192,19 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         case _     => boşOdaRengi
     }
 
-    def ileri = {
-        bellek.ileriGit
-        taşlarıGüncelle
-        bittiMi
-    }
-    def geri = {
-        bellek.geriAl
-        taşlarıGüncelle
-    }
+    def ileri() =
+        if (!bilgisayarŞimdiAramaYapıyor) {
+            bellek.ileriGit
+            taşlarıGüncelle
+            bittiMi()
+        }
+
+    def geri() =
+        if (!bilgisayarŞimdiAramaYapıyor) {
+            bellek.geriAl
+            taşlarıGüncelle
+        }
+
     def taşlarıGüncelle = {
         for (y <- tahta.satırAralığı; x <- tahta.satırAralığı)
             boya(Oda(y, x), tahta.taş(y, x))
@@ -211,7 +215,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         }
         seçenekleriGöster
     }
-    def bittiMi =
+    def bittiMi() =
         if (tahta.hamleYoksa) {
             sırayıÖbürOyuncuyaGeçir
             if (tahta.hamleYoksa) {
@@ -225,17 +229,18 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         }
         else yanlış
 
-    def yeniOyun = if (tahta.hamleSayısı() != 1) {
+    def yeniOyun() = if (!bilgisayarŞimdiAramaYapıyor && tahta.hamleSayısı() != 1) {
         tahta.başaAl("Yeni oyun:")
         for (x <- tahta.satırAralığı; y <- tahta.satırAralığı)
             boya(Oda(y, x), tahta.taş(y, x))
         bellek.başaAl()
         skorBaşlangıç
         hamleResminiSil
-        if (tahta.oyuncu() == bilgisayar && !tahta.hamleYoksa) {
+        if (bilgisayarınSırasıMı) {
             skorBilgisayarHamleArıyor
-            artalandaOynat { öneri }
+            artalandaOynat { öneri() }
         }
+        seçenekleriGöster
     }
 
     def hamleyiYap(yasal: Dizi[Komşu], hane: Oda, duraklamaSüresi: Kesir = 0.0): Birim = {
@@ -309,7 +314,10 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
 
     def abArama(yasallar: Dizi[Oda]): Belki[Oda] = // yasallar yerine tahtadanTahta işlevini girdi olarak kullanıyor
         ABa.hamleYap(new Durum(tahtadanTahta, tahta.oyuncu()))
-    def öneri: Birim = {
+    var bilgisayarŞimdiAramaYapıyor = yanlış
+    def öneri(): Birim = {
+        bilgisayarŞimdiAramaYapıyor = doğru
+        skorBilgisayarHamleArıyor
         val aTahta = tahtadanTahta
         val durum = new Durum(aTahta, tahta.oyuncu())
         if (durum.bitti) bittiKaçKaç(tahta)
@@ -325,16 +333,17 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
 
             }
             hamleyiYap(tahta.hamleyiDene(hamle), hamle)
-            if (!bittiMi) {
+            if (!bittiMi()) {
                 if (tahta.hamleYoksa) {
                     sırayıÖbürOyuncuyaGeçir
                     satıryaz(s"Yasal hamle yok. Sıra yine ${tahta.oyuncu().adı}ın")
                     if (bilgisayarınSırasıMı) {
-                        öneri
+                        öneri()
                     }
                 }
             }
         }
+        bilgisayarŞimdiAramaYapıyor = yanlış
     }
     def tahtadanTahta: Tahta = { // elektronik tahtadan arama tahtası oluşturalım
         val tane = odaSayısı
@@ -394,7 +403,11 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         d.fareGirince { (_, _) =>
             d.kalemRenginiKur(if (tahta.yasallar.boşMu) kırmızı else beyaz)
         }
-        d.fareyeTıklayınca { (_, _) => skorBilgisayarHamleArıyor; artalandaOynat { öneri } }
+        d.fareyeTıklayınca { (_, _) =>
+            if (!bilgisayarŞimdiAramaYapıyor && !tahta.hamleYoksa) {
+                artalandaOynat { öneri() }
+            }
+        }
     }
     private val d1 = {
         val d = düğme(dx, dy + boy, sarı, "seçenekler")
@@ -408,10 +421,10 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         d
     }
     düğme(dx + boy, dy + 2 * boy, turuncu, "tüm ekran aç/kapa").fareyeTıklayınca { (_, _) => tümEkranTuval() }
-    düğme(dx, dy, kırmızı, "özdevin").fareyeTıklayınca { (_, _) => özdevin() }
-    düğme(dx + boy, dy, yeşil, "yeni oyun").fareyeTıklayınca { (_, _) => yeniOyun; seçenekleriGöster }
-    düğme(dx, dy + 3 * boy, açıkGri, "geri").fareyeTıklayınca { (_, _) => geri }
-    düğme(dx + boy, dy + 3 * boy, renkler.blanchedAlmond, "ileri").fareyeTıklayınca { (_, _) => ileri }
+    düğme(dx, dy, kırmızı, "özdevin").fareyeTıklayınca { (_, _) => if (!bilgisayarŞimdiAramaYapıyor) özdevin() }
+    düğme(dx + boy, dy, yeşil, "yeni oyun").fareyeTıklayınca { (_, _) => yeniOyun() }
+    düğme(dx, dy + 3 * boy, açıkGri, "geri").fareyeTıklayınca { (_, _) => geri() }
+    düğme(dx + boy, dy + 3 * boy, renkler.blanchedAlmond, "ileri").fareyeTıklayınca { (_, _) => ileri() }
     private val skorYazısı = {
         val y = {
             val tahtaTavanı = dy + (odaSayısı - 0.75) * boy
@@ -441,14 +454,17 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
 
     tuşaBasınca { t =>
         t match {
-            case tuşlar.VK_RIGHT => ileri
-            case tuşlar.VK_LEFT  => geri
-            case tuşlar.VK_UP    => öneri
-            case _               =>
+            case tuşlar.VK_RIGHT => ileri()
+            case tuşlar.VK_LEFT  => geri()
+            case tuşlar.VK_UP =>
+                if (!bilgisayarŞimdiAramaYapıyor) {
+                    artalandaOynat { öneri() }
+                }
+            case _ =>
         }
     }
 
     if (bilgisayarınSırasıMı) {
-        artalandaOynat { öneri }
+        artalandaOynat { öneri() }
     }
 }
