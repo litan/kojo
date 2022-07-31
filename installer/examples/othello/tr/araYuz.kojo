@@ -8,7 +8,10 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     bellek:     Bellek,
     bilgisayar: Taş) {
     private def tahtayıKur = {
-        silVeSakla; /* tümEkranTuval; */ artalanıKur(koyuGri)
+        silVeSakla
+        çıktıyıSil()
+        tümEkranTuval
+        artalanıKur(koyuGri)
         val içKöşeler = EsnekDizim.boş[Resim]
         val içKöşeKalemRengi = Renk(255, 215, 85, 101) // soluk sarımsı bir renk
         for (x <- tahta.satırAralığı; y <- tahta.satırAralığı) {
