@@ -62,20 +62,21 @@ class UI(
         pic.onMouseExit { (_, _) =>
             clearHilites
             hintPics.toggleV
-            if (computerInPlay) computerToMove
         }
         pic.onMouseClick { (_, _) =>
-            board.stone(room) match {
-                case Empty =>
-                    if (makeTheMove(room)) {
-                        clearHilites
-                        if (board.isGameOver) endTheGame
-                    }
-                case _ =>
-            }
-            if (computerInPlay) {
-                refreshScoreBoard
-                runInBackground { computerToMove }
+            if (notInSearch) {
+                board.stone(room) match {
+                    case Empty =>
+                        if (makeTheMove(room)) {
+                            clearHilites
+                            if (board.isGameOver) endTheGame
+                        }
+                    case _ =>
+                }
+                if (computerInPlay) {
+                    refreshScoreBoard
+                    runInBackground { computerToMove }
+                }
             }
         }
         def roomColor = stone2color(board.stone(room))
@@ -187,7 +188,12 @@ class UI(
     }
 
     def computerInPlay = board.player() == computerPlays
+    var computerInSearch = false // used to disable other UI actions
+    def notInSearch: Boolean = {
+        computerInSearch == false
+    }
     def computerToMove: Unit = {
+        computerInSearch = true
         def board2board(size: Int) = {
             var b = new Board(size, Vector.fill(size * size)(0))
             for (s <- List(White, Black)) b = b.place(s, board.stones(s))
@@ -205,6 +211,7 @@ class UI(
             // if we don't have any moves, computer to replay
             if (!board.isGameOver && computerInPlay) computerToMove
         }
+        computerInSearch = false
     }
 
     def defineKeys = {
@@ -212,19 +219,19 @@ class UI(
             k match {
                 case Kc.VK_LEFT  => mem.undo
                 case Kc.VK_RIGHT => mem.redo
-                case Kc.VK_UP    => computerToMove
+                case Kc.VK_UP    => if (notInSearch) { computerToMove }
                 case _           =>
             }
         }
     }
 
     object mem {
-        def undo = {
+        def undo = if (notInSearch) {
             history.undo
             endedTheGame = false
             repaint
         }
-        def redo = {
+        def redo = if (notInSearch) {
             history.redo
             repaint
             if (board.isGameOver) endTheGame
@@ -265,11 +272,11 @@ class UI(
                         Label(""),
                         Label(""),
                         Button("Toggle Hints On/Off") { toggleHints },
-                        Button("Suggest Move") { computerToMove },
+                        Button("Suggest Move") { if (notInSearch) { computerToMove } },
                         Button("Undo") { mem.undo },
                         Button("Redo") { mem.redo },
                         Button("Toggle Full Screen") { toggleFullScreenCanvas() },
-                        Button("New Game") { newGame })
+                        Button("New Game") { if (notInSearch) { newGame } })
                 )
         )
         scoreboard
@@ -280,9 +287,10 @@ class UI(
             yield s"${s.cname}: ${board.count(s)}"
         if (board.isGameOver) Seq("Game is over") ++ score
         else if (board.moveCount == 1) {
-          if (computerInPlay) { Seq(s"Computer computing move...", "", "") }
-          else Seq( s"${board.startingPlayer.cname} to play", "", "" )
-        } else if (computerInPlay)
+            if (computerInPlay) { Seq(s"Computer computing move...", "", "") }
+            else Seq(s"${board.startingPlayer.cname} to play", "", "")
+        }
+        else if (computerInPlay)
             Seq(s"Computer computing move...") ++ score
         else
             Seq(s"Move ${board.moveCount()}. ${board.player().cname} to play" +
