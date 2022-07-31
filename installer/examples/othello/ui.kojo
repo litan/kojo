@@ -60,7 +60,7 @@ class UI(
             hintPics.refresh(pic, room2point(room, false) - Point(l2, -l2))
         }
         pic.onMouseExit { (_, _) =>
-            clearHilites
+            clearHilites()
             hintPics.toggleV
         }
         pic.onMouseClick { (_, _) =>
@@ -68,25 +68,23 @@ class UI(
                 board.stone(room) match {
                     case Empty =>
                         if (makeTheMove(room)) {
-                            clearHilites
-                            if (board.isGameOver) endTheGame
+                            clearHilites()
+                            if (board.isGameOver) { endTheGame }
                         }
                     case _ =>
                 }
                 if (computerInPlay) {
-                    refreshScoreBoard
+                    refreshScoreBoard()
                     runInBackground { computerToMove }
                 }
             }
         }
         def roomColor = stone2color(board.stone(room))
-        def playerColor = stone2color(board.player())
         def playerColorHilite = board.player() match {
             case White => Color(244, 213, 244) // light purple
             case Black => Color(98, 8, 97) // dark purple
             case _     => stone2color(Empty)
         }
-        def oppColor = stone2color(board.player.opponent)
         def hiliteMoveOutcome = if (hintsOn) {
             stonesToBeFlipped = board.pretendMove(room)
             stonesToBeFlipped.map { r =>
@@ -94,9 +92,9 @@ class UI(
                 room2pic(r).opacityMod(0.8)
             }
         }
-        def clearHilites = if (hintsOn) {
+        def clearHilites() = if (hintsOn) {
             stonesToBeFlipped.map { r =>
-                room2pic(r).setFillColor(oppColor)
+                room2pic(r).setFillColor(stone2color(board.stone(r)))
                 room2pic(r).opacityMod(1)
             }
             pic.setFillColor(roomColor) // room of pic is in stonesToBeFlipped
@@ -116,12 +114,9 @@ class UI(
             board.lastMove = Some(room)
             val player = board.player() // move changes the player, in general
             board.move(room).foreach { paint(_, player) }
-            refreshScoreBoard
+            mem.repaint()
             board.print
-            showMoves
-            showLastMove
             if (pauseDuration > 0) pause(pauseDuration)
-            if (board.isGameOver) endTheGame
             true
         }
     }
@@ -134,7 +129,7 @@ class UI(
         clearLastMove
         showMoves
         endedTheGame = false
-        refreshScoreBoard
+        refreshScoreBoard()
         if (computerInPlay) { runInBackground { computerToMove } }
     }
 
@@ -229,15 +224,15 @@ class UI(
         def undo = if (notInSearch) {
             history.undo
             endedTheGame = false
-            repaint
+            repaint(true)
         }
         def redo = if (notInSearch) {
             history.redo
-            repaint
+            repaint(true)
             if (board.isGameOver) endTheGame
         }
-        def repaint {
-            refreshScoreBoard
+        def repaint(afterUndoOrRedo: Boolean = false) {
+            refreshScoreBoard(afterUndoOrRedo)
             for (x <- board.range; y <- board.range)
                 paint(Room(y, x), board.stone(y, x))
             showLastMove
@@ -261,7 +256,7 @@ class UI(
     }
 
     def defineButtons = {
-        val scoreboard = scoreBoard.map(Label(_))
+        val scoreboard = scoreBoard(false).map(Label(_))
         draw(
             trans(llx + length * board.size + 10, lly) ->
                 Picture.widget(
@@ -282,23 +277,22 @@ class UI(
         scoreboard
     }
 
-    def scoreBoard: Seq[String] = { // make sure to have 3 elements for three lines in the scoreBoard
-        def score: Seq[String] = for (s <- Seq(White, Black))
-            yield s"${s.cname}: ${board.count(s)}"
+    def scoreBoard(afterUndoOrRedo: Boolean): Seq[String] = { // make sure to have 3 elements for three lines in the scoreBoard
+        def score: Seq[String] = for (s <- Seq(White, Black)) yield s"${s.cname}: ${board.count(s)}"
         if (board.isGameOver) Seq("Game is over") ++ score
         else if (board.moveCount == 1) {
             if (computerInPlay) { Seq(s"Computer computing move...", "", "") }
             else Seq(s"${board.startingPlayer.cname} to play", "", "")
         }
-        else if (computerInPlay)
+        else if (computerInPlay && !afterUndoOrRedo)
             Seq(s"Computer computing move...") ++ score
         else
             Seq(s"Move ${board.moveCount()}. ${board.player().cname} to play" +
                 (if (board.skippedTurn) " again" else "")) ++ score
     }
-    def refreshScoreBoard =
+    def refreshScoreBoard(afterUndoOrRedo: Boolean = false) =
         scoreboard.zipWithIndex.foreach {
-            case (l, i) => l.setText(scoreBoard(i))
+            case (l, i) => l.setText(scoreBoard(afterUndoOrRedo)(i))
         }
 
     cleari()
@@ -310,7 +304,7 @@ class UI(
     defineKeys
     val scoreboard = defineButtons
     activateCanvas
-    refreshScoreBoard
+    refreshScoreBoard()
 
     val hintPics = new HintPics(length)
 
