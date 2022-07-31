@@ -181,7 +181,7 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
     }
     def hamleninÇevireceğiTaşlarıSil() = if (seçeneklerAçık) {
         hamleninÇevireceğiTaşlar.işle { o =>
-            odanınKaresi(o).boyamaRenginiKur(taşınRengi(tahta.oyuncu.karşı))
+            odanınKaresi(o).boyamaRenginiKur(taşınRengi(tahta.taş(o)))
             odanınKaresi(o).saydamlık(1)
         }
         hamleninÇevireceğiTaşlar = Diz()
