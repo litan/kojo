@@ -839,7 +839,7 @@ Here's a partial list of the available commands:
 
   @volatile var gameTimeLabel: Option[Picture] = None
   @volatile var gameTimeEndMsg: Option[Picture] = None
-  @volatile var gameTimeRunning = false
+  @volatile private var gameTimeRunning = false
 
   private def clearGameTime(): Unit = {
     gameTimeLabel = None
