@@ -3,7 +3,7 @@ import java.io.File
 def sözcükDizininiYükle: Dizin[Yazı] = {
     val istream = new java.io.FileInputStream(getFile)
     try {
-        val s = scala.io.Source.fromInputStream(istream)
+        val s = scala.io.Source.fromInputStream(istream)(scala.io.Codec.UTF8)
         s.getLines.toList
     }
     catch {
