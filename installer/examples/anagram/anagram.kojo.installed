@@ -46,12 +46,12 @@ def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
 clearOutput()
 for (
     sentence <- Seq(
-        List("hello", "dolly"),
-        List("how", "are", "you")
+        "hello dolly",
+        "how are you"
     )
 ) {
-    val ana = timeit { sentenceAnagrams(sentence) }
+    val ana = timeit { sentenceAnagrams(sentence.split(" ").toList) }
     println(sentence.mkString(
-        "Sentence: ", " ", s"\nhas ${ana.length} anagrams: ${ana.map(_.mkString(" ")).mkString(", ")}"
+        "Sentence: ", "", s"\nhas ${ana.length} anagrams: ${ana.map(_.mkString(" ")).mkString("", ", ", ".\n")}"
     ))
 }
