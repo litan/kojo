@@ -49,7 +49,8 @@ for (
     tümce <- Dizi(
         "al ver",
         "lütfen gel",
-        "sevdim onu")
+        "sevdim onu"
+    )
 ) {
     val evrik = zamanTut("Tümcenin evirmecelerinin hepsini bulmak") { tümceEvirmece(tümce.split(" ").dizine).işle(_.işle(_.küçükHarfe)) }()
     satıryaz(tümce.yazıYap(
