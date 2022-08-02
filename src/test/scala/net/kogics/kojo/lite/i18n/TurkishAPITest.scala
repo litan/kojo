@@ -675,7 +675,7 @@ import net.kogics.kojo.staging
     ik3.ölçek should be(33)
   }
 
-  test("Translation of java.util.Calendar to work") {
+  test("Translation of java.util.Calendar and System.nanoTime etc to work") {
     yinele (4) {
       val b = BuAn()
       val (saniye, dakika, saat) = (b.saniye, b.dakika, b.saat)
@@ -683,6 +683,12 @@ import net.kogics.kojo.staging
       dakika >= 0 && dakika <= 59 should be(true)
       saat >= 0 && saat <= 24 should be(true)
     }
+    buSaniye > 1.0E9 should be(true)
+    buSaniye2 > 83646.86 should be(true)
+    buAn > 1659458389799L should be(true)
+    buAn2 > İriSayı("1659457918531") should be(true)
+    sayıyaKadarSay(5000) < 0.01 should be(true)
+    sayıyaKadarSay(1000000) < 0.1 should be(true)
   }
 
   test("Companion objects for translations to work") {
