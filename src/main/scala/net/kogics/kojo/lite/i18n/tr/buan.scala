@@ -18,7 +18,7 @@ package net.kogics.kojo.lite.i18n.tr
 
 import java.util.{Calendar, Date, TimeZone}
 
-trait CalendarInTurkish {
+trait CalendarAndTimeUtilsInTurkish {
   type Takvim = Calendar
   type Tarih = Date
   type SaatDilimi = TimeZone
@@ -39,4 +39,33 @@ trait CalendarInTurkish {
     def yazıya = Takvim.tarih(buan).toString
     //more to come
   }
+
+  // from ../../CoreBuiltins.scala
+  def buAn: Uzun = System.currentTimeMillis()
+  def buSaniye: Kesir = System.currentTimeMillis() / 1000.0
+
+  // from ../svInit.scala
+  def buAn2: Uzun = System.nanoTime
+  def buSaniye2: İriKesir = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //seconds
+  @annotation.nowarn
+  def sayıyaKadarSay(n: İriSayı): Kesir = {
+    def buSaniye1 = BigDecimal(buSaniye)
+    var c: BigInt = 1
+    print(s"*** 1'den saymaya başlıyoruz ... ")
+    val startTid = buSaniye2 // or buSaniye1
+    while (c < n) {
+      c = c + 1  // this is one of the simplest operations :-)
+    }
+    val stoppTid = buSaniye2 // buSaniye1
+    println("" + n + " *** BİTTİ!")
+    val tid = stoppTid - startTid
+    print("Geçen süre ")
+    val timeInSec = (tid * 10).toLong / 10.0
+    if (tid < 0.1)
+      println((tid * 1000).round(new java.math.MathContext(2)) + " milisaniye.")
+    else
+      println(timeInSec + " saniye.")
+    timeInSec
+  }
+
 }

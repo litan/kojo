@@ -29,7 +29,7 @@ import edu.umd.cs.piccolo.activities.PActivity  // todo
 import net.kogics.kojo.kmath.KEasing
 
 // Keep in alphabetical order
-object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish with tr.CharMethodsInTurkish with
+object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsInTurkish with tr.CharMethodsInTurkish with
     tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with
     tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.MapMethodsInTurkish with
     tr.MathMethodsInTurkish with tr.NumMethodsInTurkish with tr.OptionMethodsInTurkish with
@@ -232,9 +232,6 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarInTurkish wit
   def artalanıKur(b: Boya) = builtins.setBackground(b)
   def artalanıKurDik  (r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
   def artalanıKurYatay(r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundH(r1, r2)
-
-  def buAn: Uzun = builtins.epochTimeMillis
-  def buSaniye: Kesir = builtins.epochTime
 
   //  object KcSwe { //Key codes for Swedish keys
   //    lazy val VK_Å = 197
