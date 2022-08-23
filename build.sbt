@@ -1,4 +1,4 @@
-lazy val scalaVer = "2.13.6"
+lazy val scalaVer = "2.13.8"
 name := "Kojo"
 version := "2.9"
 scalaVersion := scalaVer
