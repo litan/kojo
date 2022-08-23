@@ -18,25 +18,12 @@ package net.kogics.kojo.lite.i18n.tr
 
 object dict {
   // skala kılavuzunda kullanma sırasıyla (yaklaşık olarak)
-  // some translations override those in the next map
+  // excludes scala (2 and 3) and java keywords which are in the next map
   val myKeyWords = Map(
     "set" -> "kur",
-    "val" -> "dez", // değişmez değer
-    "var" -> "den", // değişken değer
-    "if" -> "eğer",
-    "else" -> "yoksa",
-    "while" -> "doğruysaYinele", // koşul doğruysaYinele
-    "for" -> "için",  // dizi içinYinele
     "to" -> "|-| anlamı: ilkSayıdanSonSayıyaKadar", // 1 to 4 -> Aralık.kapalı(1, 4)
     "until" -> "|- anlamı: ilkSayıdanSonSayıyaKadarAmaSonSayıHariç", // 1 until 4 -> Aralık(1, 4)
     "by" -> "adım", // 1 to 100 by 8
-    "def" -> "tanım",
-    "class" -> "sınıf",  // çeşit ya da cins. type -> tür
-    "new" -> "yeni",
-    "override" -> "üstüne", // override def -> üstüne tanım
-    "case" -> "durum", // ya da olgu: case class -> durum sınıf, match/case eşle/durum
-    "match" -> "eşle",
-    "extends" -> "yayar", // trait -> özellik, case class Leaf extends Tree -> durum sınıf Yaprak yayar Ağaç
     "head" -> "başı", // List(1,2).head -> Dizin(1, 2).başı
     "tail" -> "kuyruğu",
     "toList" -> "dizine", // (1 until 11).toList
@@ -139,22 +126,23 @@ object dict {
     "" -> "",
     "" -> "",
   )
+  // ~/src/scala-2/src/reflect/scala/reflect/internal/StdNames.scala
   // https://docs.scala-lang.org/scala3/reference/syntax.html
   val keywords = Map(
     "abstract" -> "soyut",
-    "case" -> "durum",
+    "case" -> "durum", // ya da olgu: case class -> durum sınıf, match/case eşle/durum
     "catch" -> "yakala",
-    "class" -> "çeşit",
+    "class" -> "sınıt", // çeşit ya da cins. type -> tür
     "def" -> "tanım",
     "do" -> "yap",
     "else" -> "yoksa",
     "enum" -> "sayılı",
     "export" -> "götür",
-    "extends" -> "genişletir",
+    "extends" -> "yayar", // trait -> özellik, case class Leaf extends Tree -> durum sınıf Yaprak yayar Ağaç
     "false" -> "yanlış",
     "final" -> "son",
     "finally" -> "sonunda",
-    "for" -> "için",  // yerine
+    "for" -> "için",  // yerine içinYinele
     "forSome" -> "bazı", // eskitilmiş ve dilden çıkarılmış
     "given" -> "birlikte",
     "if" -> "eğer",
@@ -165,12 +153,12 @@ object dict {
     "new" -> "yeni",
     "null" -> "yok",
     "object" -> "nesne",
-    "override" -> "baskın",
+    "override" -> "baskın", // override def -> baskın (üstüne) tanım
     "package" -> "deste",
     "private" -> "sakla",
     "protected" -> "koru",
     "return" -> "dön",
-    "sealed" -> "sınırlı",
+    "sealed" -> "damgalı",
     "super" -> "üst",
     "this" -> "bu",
     "then" -> "yoksa",
@@ -179,9 +167,9 @@ object dict {
     "true" -> "doğru",
     "try" -> "dene",
     "type" -> "tür",
-    "val" -> "der",
-    "var" -> "dez",
-    "while" -> "sırada",
+    "val" -> "dez", // değişmez değer
+    "var" -> "den", // değişken değer
+    "while" -> "yineleDoğruKaldıkça", // predicate: koşul
     "with" -> "ekle",
     "yield" -> "ver"
   )
