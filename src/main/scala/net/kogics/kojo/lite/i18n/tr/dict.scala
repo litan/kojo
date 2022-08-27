@@ -132,7 +132,7 @@ object dict {
     "abstract" -> "soyut",
     "case" -> "durum", // ya da olgu: case class -> durum sınıf, match/case eşle/durum
     "catch" -> "yakala",
-    "class" -> "sınıt", // çeşit ya da cins. type -> tür
+    "class" -> "sınıf", // çeşit ya da cins. type -> tür
     "def" -> "tanım",
     "do" -> "yap",
     "else" -> "yoksa",
