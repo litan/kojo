@@ -46,7 +46,7 @@ def parça5 = Resim {
     sol(135)
     ileri(d2)
 }
-// bu da yamuk
+// yamuk
 def parça7 = Resim {
     sağ()
     ileri(uzunluk / 2)
@@ -57,7 +57,7 @@ def parça7 = Resim {
     sol(45)
     ileri(d4)
 }
-// bu da tangram insan
+// tangram insan
 def tangram = Resim.dizi(
     döndür(-120) -> parça3,
     döndür(150) * götür(0, -3.5) -> parça1,
@@ -105,29 +105,29 @@ canlandırmaBaşlayınca {
     )
 }
 
-kaçan.canlan { bu =>
+kaçan.canlan { r =>
     if (tuşaBasılıMı(tuşlar.VK_RIGHT)) {
-        bu.götür(hız * hızOranı, 0)
+        r.götür(hız * hızOranı, 0)
     }
     if (tuşaBasılıMı(tuşlar.VK_LEFT)) {
-        bu.götür(-hız * hızOranı, 0)
+        r.götür(-hız * hızOranı, 0)
     }
     if (tuşaBasılıMı(tuşlar.VK_UP)) {
-        bu.götür(0, hız * hızOranı)
+        r.götür(0, hız * hızOranı)
     }
     if (tuşaBasılıMı(tuşlar.VK_DOWN)) {
-        bu.götür(0, -hız * hızOranı)
+        r.götür(0, -hız * hızOranı)
     }
 }
 
-def koşuşturma(bu: Resim) {
-    var yeniHızYöneyi = hızDefteri(bu).döndür(rastgeleKesir(10) - 5)
-    bu.hızınıDönüştür(yeniHızYöneyi)
-    if (bu.çarptıMı(Resim.tuvalinSınırları)) {
-        yeniHızYöneyi = sahneKenarındanYansıtma(bu, yeniHızYöneyi)
-        bu.hızınıDönüştür(yeniHızYöneyi)
+def koşuşturma(r: Resim) {
+    var yeniHızYöneyi = hızDefteri(r).döndür(rastgeleKesir(10) - 5)
+    r.hızınıDönüştür(yeniHızYöneyi)
+    if (r.çarptıMı(Resim.tuvalinSınırları)) {
+        yeniHızYöneyi = sahneKenarındanYansıtma(r, yeniHızYöneyi)
+        r.hızınıDönüştür(yeniHızYöneyi)
     }
-    hızDefteri.eşle(bu -> yeniHızYöneyi)
+    hızDefteri.eşEkle(r -> yeniHızYöneyi)
 }
 
 kovalayan.canlan(koşuşturma)
@@ -142,15 +142,15 @@ oyunSüresiniGeriyeSayarakGöster(oyunSüresi, "Tebrikler!", yeşil, 30, 1, 2)
 val bitişMesajı = büyüt(3) * götür(-20, 0) -> Resim { yazı("Çarpıştınız :-(\nBir daha dene!") }
 çizVeSakla(bitişMesajı)
 
-kaçan.canlan { bu =>
-    if (varMı(bu.çarpışma(kovalayanlar))) {
+kaçan.canlan { r =>
+    if (varMı(r.çarpışma(kovalayanlar))) {
         durdur()
-        bu.boyamaRenginiKur(kahverengi)
+        r.boyamaRenginiKur(kahverengi)
         bitişMesajı.konumuKur(-3, 0) // 2 santim!
         bitişMesajı.göster()
     }
 
-    // oyunda belli durumlarda değişik ses efekti yapmanın bir yolu da bu
+    // oyunda belli durumlarda değişik ses efekti yapmanın başka bir yolu da böyle
     if (kaçan.çarptıMı(Resim.tuvalinSınırları)) {
         if (!müzikMp3üÇalıyorMu) {
             müzikMp3üÇal("/media/music-loops/DrumBeats.mp3")

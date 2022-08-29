@@ -243,10 +243,10 @@ import net.kogics.kojo.staging
   test("Translations of mutable.Map should work") {
     val e1 = Eşlem.boş[Yazı, Sayı]
     e1 eşli ("anahtar") should be(yanlış)
-    e1 eşle ("anahtar" -> 99)
+    e1 eşEkle ("anahtar" -> 99)
     e1 eşli ("anahtar") should be(doğru)
     e1("anahtar") should be(99)
-    e1 eşle ("b" -> 88)
+    e1 eşEkle ("b" -> 88)
     e1 eşli ("b") should be(doğru)
     e1("b") should be(88)
     val l = e1.m.toSeq

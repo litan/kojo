@@ -108,9 +108,9 @@ def minimax(
     bilgisayarınSırası: İkil,
     alpha:              Sayı, beta: Sayı
 ): Sayı = {
-    val durum = değerlendir
-    if (durum == 10 || durum == -10) {
-        return durum
+    val kaçKaç = değerlendir
+    if (kaçKaç == 10 || kaçKaç == -10) {
+        return kaçKaç
     }
     if (hamleKalmadıMı) {
         return 0

@@ -322,14 +322,14 @@ class Arayüz( // tahtayı ve taşları çizelim ve canlandıralım
         bilgisayarŞimdiAramaYapıyor = doğru
         skorBilgisayarHamleArıyor
         val aTahta = tahtadanTahta
-        val durum = new Durum(aTahta, tahta.oyuncu())
-        if (durum.bitti) bittiKaçKaç(tahta)
+        val drm = new Durum(aTahta, tahta.oyuncu())
+        if (drm.bitti) bittiKaçKaç(tahta)
         else {
-            val hamle = ABa.hamleYap(durum) match {
+            val hamle = ABa.hamleYap(drm) match {
                 case Biri(oda) => oda
                 case _ =>
                     sırayıÖbürOyuncuyaGeçir
-                    ABa.hamleYap(new Durum(durum.tahta, durum.karşıTaş)) match {
+                    ABa.hamleYap(new Durum(drm.tahta, drm.karşıTaş)) match {
                         case Biri(oda) => oda
                         case _         => throw new Exception("Burada olmamalı")
                     }

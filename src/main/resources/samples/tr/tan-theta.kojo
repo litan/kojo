@@ -1,9 +1,12 @@
-def eğriÇizgesi(baş: Kesir, son: Kesir, adım: Kesir)(işlev: Kesir => Kesir) {
-    atla(baş, işlev(baş))
-    var bu = baş
-    while (bu <= son) {
-        noktayaGit(bu, işlev(bu))
-        bu += adım
+def eğriÇizgesi(başı: Kesir, sonu: Kesir, adım: Kesir)(işlev: Kesir => Kesir) {
+    atla(başı, işlev(başı))
+    var girdi = başı
+    while (girdi <= sonu) {
+        val çıktı = işlev(girdi)
+        noktayaGit(girdi, çıktı)
+        // tek satırda da yazabilirdik ama girdi ve çıktı ve nasıl kullandığımız belli olsun istedik:
+        //   noktayaGit(işlev(girdi))
+        girdi += adım
     }
 }
 silVeSakla()

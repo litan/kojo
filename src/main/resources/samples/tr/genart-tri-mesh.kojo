@@ -46,7 +46,7 @@ yineleİçin(0 |-| n) { sıra =>
 }
 
 val griRenkler = 
-    (1 |-| 16).eşle { n =>
+    (1 |-| 16).işle { n =>
         val n2 = n * 15
         Renk(n2, n2, n2)
     }

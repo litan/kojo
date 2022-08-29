@@ -1,43 +1,43 @@
 //#yükle tr/anaTanimlar
 
 object ABa { // alfa-beta arama
-    def hamleYap(durum: Durum): Belki[Oda] = {
+    def hamleYap(drm: Durum): Belki[Oda] = {
         var çıktı: Belki[Oda] = Hiçbiri
         zamanTut(s"Alfa-beta ${düzeydenUstalığa} arama") {
-            çıktı = alfaBetaHamle(durum)
+            çıktı = alfaBetaHamle(drm)
         }("sürdü")
         çıktı
     }
 
-    def alfaBetaHamle(durum: Durum): Belki[Oda] =
-        if (durum.seçenekler.boşMu) Hiçbiri
+    def alfaBetaHamle(drm: Durum): Belki[Oda] =
+        if (drm.seçenekler.boşMu) Hiçbiri
         else // todo: karşı oyuncunun skorunu azaltan birden çok hamle varsa rastgele seç
-            Biri((for (hamle <- durum.seçenekler) yield hamle ->
-                abHamle(durum.oyna(hamle), aramaDerinliğiSınırı)
+            Biri((for (hamle <- drm.seçenekler) yield hamle ->
+                abHamle(drm.oyna(hamle), aramaDerinliğiSınırı)
             ).enUfağı(_._2)._1)
 
     // todo: yasal hamle olmadığı zaman arama kısa kesilmemeli!
-    def abHamle(durum: Durum, derinlik: Sayı): Sayı =
-        if (durum.bitti || derinlik == 0 || durum.seçenekler.boşMu) durum.skor
-        else azalt(durum, derinlik, Sayı.EnUfağı, Sayı.Enİrisi) // todo
+    def abHamle(drm: Durum, derinlik: Sayı): Sayı =
+        if (drm.bitti || derinlik == 0 || drm.seçenekler.boşMu) drm.skor
+        else azalt(drm, derinlik, Sayı.EnUfağı, Sayı.Enİrisi) // todo
 
-    def azalt(durum: Durum, derinlik: Sayı, alfa: Sayı, beta: Sayı): Sayı =
-        if (durum.bitti || derinlik == 0 || durum.seçenekler.boşMu) durum.skor
+    def azalt(drm: Durum, derinlik: Sayı, alfa: Sayı, beta: Sayı): Sayı =
+        if (drm.bitti || derinlik == 0 || drm.seçenekler.boşMu) drm.skor
         else {
             var yeniBeta = beta
-            durum.seçenekler.herbiriİçin { hamle => // onun hamleleri
-                val yeniDurum = durum.oyna(hamle)
+            drm.seçenekler.herbiriİçin { hamle => // onun hamleleri
+                val yeniDurum = drm.oyna(hamle)
                 yeniBeta = enUfağı(yeniBeta, artır(yeniDurum, derinlik - 1, alfa, yeniBeta))
                 if (alfa >= yeniBeta) return alfa
             }
             yeniBeta
         }
-    def artır(durum: Durum, derinlik: Sayı, alfa: Sayı, beta: Sayı): Sayı =
-        if (durum.bitti || derinlik == 0 || durum.seçenekler.boşMu) durum.skor
+    def artır(drm: Durum, derinlik: Sayı, alfa: Sayı, beta: Sayı): Sayı =
+        if (drm.bitti || derinlik == 0 || drm.seçenekler.boşMu) drm.skor
         else {
             var yeniAlfa = alfa
-            durum.seçenekler.herbiriİçin { hamle =>
-                val yeniDurum = durum.oyna(hamle)
+            drm.seçenekler.herbiriİçin { hamle =>
+                val yeniDurum = drm.oyna(hamle)
                 yeniAlfa = enİrisi(yeniAlfa, azalt(yeniDurum, derinlik - 1, yeniAlfa, beta))
                 if (yeniAlfa >= beta) return beta
             }
@@ -76,12 +76,12 @@ object ABa { // alfa-beta arama
 
 class Durum(val tahta: Tahta, val sıra: Taş) {
     val karşıTaş = if (sıra == Beyaz) Siyah else Beyaz
-    def skor = tahta.durum(sıra) - tahta.durum(karşıTaş)
+    def skor = tahta.drm(sıra) - tahta.drm(karşıTaş)
     def bitti = oyunBittiMi
     def oyunBittiMi = {
         if (yasallar.boyu > 0) yanlış else {
-            val yeni = new Durum(tahta, karşıTaş)
-            yeni.yasallar.boyu == 0
+            val yeniDurum = new Durum(tahta, karşıTaş)
+            yeniDurum.yasallar.boyu == 0
         }
     }
     def seçenekler = yasallar
@@ -93,7 +93,7 @@ class Durum(val tahta: Tahta, val sıra: Taş) {
 }
 
 class Tahta(val tane: Sayı, val tahta: Sayılar) {
-    def durum(t: Taş) = {
+    def drm(t: Taş) = {
         say(t) // + 4 * isay(t)(köşeMi) + 2 * isay(t)(köşeyeİkiUzakMı)
         // + isay(t)(içKöşeMi)
         // - 2 * isay(t)(tuzakKöşeMi) - isay(t)(tuzakKenarMı)
@@ -105,16 +105,16 @@ class Tahta(val tane: Sayı, val tahta: Sayılar) {
             satıryaz(satır.yazıYap(s"$tab", " ", ""))
         }
         if (msj.boyu > 0) satıryaz(msj)
-        satıryaz(s"$tab Beyazlar: ${say(Beyaz)} durum: ${durum(Beyaz)}")
-        satıryaz(s"$tab Siyahlar: ${say(Siyah)} durum: ${durum(Siyah)}")
+        satıryaz(s"$tab Beyazlar: ${say(Beyaz)} durum: ${drm(Beyaz)}")
+        satıryaz(s"$tab Siyahlar: ${say(Siyah)} durum: ${drm(Siyah)}")
     }
     def koy(oda: Oda, taş: Taş) = {
         new Tahta(tane, tahta.değiştir(oda.y * tane + oda.x, t2s(taş)))
     }
     def koy(odalar: Dizi[Oda], taş: Taş) = {
-        var yeni = tahta
-        for (o <- odalar) { yeni = yeni.değiştir(o.y * tane + o.x, t2s(taş)) }
-        new Tahta(tane, yeni)
+        var yeniTahta = tahta
+        for (o <- odalar) { yeniTahta = yeniTahta.değiştir(o.y * tane + o.x, t2s(taş)) }
+        new Tahta(tane, yeniTahta)
     }
     def taş(o: Oda): Taş = s2t(tahta(o.y * tane + o.x))
     def oyunVarMı(oyuncu: Taş) = yasallar(oyuncu).boyu > 0
@@ -180,7 +180,7 @@ class Tahta(val tane: Sayı, val tahta: Sayılar) {
         sıra.dizi
     }
 
-    val sonOda = tane - 1; val son = sonOda
+    val sonOda = tane - 1
     val satırAralığı = 0 |-| sonOda
     val satırAralığıSondan = sonOda |-| 0 by -1
 
@@ -197,9 +197,9 @@ class Tahta(val tane: Sayı, val tahta: Sayılar) {
     }
     def köşeyeİkiUzakMı: Oda => İkil = {
         case Oda(y, x) =>
-            ((y == 0 || y == son) && (x == 2 || x == son - 2)) ||
-                ((y == 2 || y == son - 2) &&
-                    (x == 0 || x == 2 || x == son - 2 || x == son))
+            ((y == 0 || y == sonOda) && (x == 2 || x == sonOda - 2)) ||
+                ((y == 2 || y == sonOda - 2) &&
+                    (x == 0 || x == 2 || x == sonOda - 2 || x == sonOda))
     }
     def içKöşeMi: Oda => İkil = {
         case Oda(y, x) => (x == 2 && (y == 2 || y == sonOda - 2)) ||
@@ -233,15 +233,15 @@ def yeniTahta(tane: Sayı, çeşni: Sayı = 0): Tahta = {
             diziden(Dizi((y + 1, x), (y, x + 1)))(Siyah)
     }
     val orta: Sayı = tane / 2
-    val son = tane - 1
+    val sonu = tane - 1
     çeşni match {
         case 2 => // boş tahtayla oyun başlayamıyor
         case 1 =>
             gerekli((tane > 6), "Bu çeşni için 7x7 ya da daha iri bir tahta gerekli")
             dörtTane(Oda(1, 1))
-            dörtTane(Oda(son - 2, son - 2))
-            dörtTane(Oda(1, son - 2))
-            dörtTane(Oda(son - 2, 1))
+            dörtTane(Oda(sonu - 2, sonu - 2))
+            dörtTane(Oda(1, sonu - 2))
+            dörtTane(Oda(sonu - 2, 1))
         case _ =>
             val çiftse = tane % 2 == 0
             if (çiftse) dörtTane(Oda(orta - 1, orta - 1))
@@ -265,27 +265,27 @@ def yeniTahta(tane: Sayı, çeşni: Sayı = 0): Tahta = {
 var i = 0
 class Oyun(tane: Sayı) {
     val t = yeniTahta(tane)
-    val durum = new Durum(t, Siyah)
+    val drm = new Durum(t, Siyah)
 
-    def oyna: Durum = döngü(durum)
+    def oyna: Durum = döngü(drm)
 
     import scala.annotation.tailrec
     @tailrec
-    private def döngü(durum: Durum): Durum = {
-        durum.tahta.yaz("döngü")
+    private def döngü(drm: Durum): Durum = {
+        drm.tahta.yaz("döngü")
         i += 1
-        if (durum.oyunBittiMi) return durum
-        if (i > tane * tane) { satıryaz("çok uzadı!"); return durum }
-        val hamle = ABa.hamleYap(durum) match {
+        if (drm.oyunBittiMi) return drm
+        if (i > tane * tane) { satıryaz("çok uzadı!"); return drm }
+        val hamle = ABa.hamleYap(drm) match {
             case Biri(oda) => oda
-            case _ => ABa.hamleYap(new Durum(durum.tahta, durum.karşıTaş)) match {
+            case _ => ABa.hamleYap(new Durum(drm.tahta, drm.karşıTaş)) match {
                 case Biri(oda) => oda
                 case _         => throw new Exception("Burada olmamalı")
             }
         }
-        val yeni = durum.oyna(hamle)
-        satıryaz(s"$i. hamle ${durum.sıra} $hamle:")
-        döngü(yeni)
+        val yeniDurum = drm.oyna(hamle)
+        satıryaz(s"$i. hamle ${drm.sıra} $hamle:")
+        döngü(yeniDurum)
     }
 }
 

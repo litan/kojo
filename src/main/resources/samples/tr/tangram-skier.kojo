@@ -103,18 +103,18 @@ def ağaçResmi = Resim {
 }
 
 def ağaçlarıYap(n: Sayı): Resim = {
-    def yap(n: Sayı, büyütmeOranı: Kesir): Resim = {
+    def ağaçlar(n: Sayı, büyütmeOranı: Kesir): Resim = {
         if (n == 1) {
             büyüt(büyütmeOranı) -> ağaçResmi
         }
         else {
             büyüt(büyütmeOranı) -> Resim.diziYatay(
                 ağaçResmi,
-                yap(n - 1, büyütmeOranı)
+                ağaçlar(n - 1, büyütmeOranı)
             )
         }
     }
-    yap(n, 0.9)
+    ağaçlar(n, 0.9)
 }
 
 val ağaçlar = döndür(7) * götür(-10, 1) -> ağaçlarıYap(9)

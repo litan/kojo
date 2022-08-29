@@ -265,9 +265,9 @@ def oyunSüresineBak(escapeTuşunaBasıldıMı: İkil = yanlış) {
         if (geçenSüre == oyunSüresi || escapeTuşunaBasıldıMı) {
             oyunBitti = doğru
             süreBittiMi = doğru
-            val durum = if (escapeTuşunaBasıldıMı) s"Oyun $geçenSüre saniye sonra durduruldu."
+            val evre = if (escapeTuşunaBasıldıMı) s"Oyun $geçenSüre saniye sonra durduruldu."
             else "Oyun bitti!"
-            val mesaj = s"""$durum
+            val mesaj = s"""$evre
             |Doğrular: $doğruYanıtSayısı
             |Yanlışlar: $yanlışYanıtSayısı
             |Pas geçme: $değiştirmeSayısı

@@ -64,6 +64,8 @@ package object tr {
   type Diz[B] = collection.Seq[B]
   type Dizi[B] = Seq[B]
   type Dizin[A] = List[A]
+  type DiziSıralı[A] = IndexedSeq[A]
+  type Yineleyici[Col] = Iterator[Col]
 
   type UzunlukBirimi = UnitLen
 

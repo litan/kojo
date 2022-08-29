@@ -75,6 +75,11 @@ trait SetMethodsInTurkish {
     def enUfağı[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.minBy(iş)(karşılaştırma)
     def enİrisi[B >: T](implicit sıralama: math.Ordering[B]): T = d.max(sıralama)
     def enİrisi[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.maxBy(iş)(karşılaştırma)
+
+    def altKümeleri(ögeSayısı: Sayı): Yineleyici[Col] = d.subsets(ögeSayısı)
+    def boş: Col = d.empty
+    def böl(deneme: T => İkil): (Col, Col) = d.partition(deneme)
+
     // more to come
   }
 }

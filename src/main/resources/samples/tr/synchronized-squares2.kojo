@@ -20,10 +20,10 @@ val k4 = yeniKaplumbağa(250, -50)
 val k5 = yeniKaplumbağa(-200, -50)
 
 // davran metoduyla çalışan komutlar işlemci tarafından paralel çalıştırılır
-k1.davran { bu => 
-    kare(bu, 100, 100)    
+k1.davran { k =>
+    kare(k, 100, 100)
 }
-k2.davran { şu => kare(şu, 50, 200) }
-k3.davran { bu => kare(bu, 50, 200) }
+k2.davran { k => kare(k, 50, 200) }
+k3.davran { o => kare(o, 50, 200) }
 k4.davran { o => kare(o, 50, 200) }
 k5.davran { o => kare(o, 50, 200) }

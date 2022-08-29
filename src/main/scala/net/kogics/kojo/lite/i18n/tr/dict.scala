@@ -19,7 +19,7 @@ package net.kogics.kojo.lite.i18n.tr
 object dict {
   // skala kılavuzunda kullanma sırasıyla (yaklaşık olarak)
   // excludes scala (2 and 3) and java keywords which are in the next map
-  val myKeyWords = Map(
+  val otherCommonWords = Map(
     "set" -> "kur",
     "to" -> "|-| anlamı: ilkSayıdanSonSayıyaKadar", // 1 to 4 -> Aralık.kapalı(1, 4)
     "until" -> "|- anlamı: ilkSayıdanSonSayıyaKadarAmaSonSayıHariç", // 1 until 4 -> Aralık(1, 4)
@@ -128,7 +128,54 @@ object dict {
   )
   // ~/src/scala-2/src/reflect/scala/reflect/internal/StdNames.scala
   // https://docs.scala-lang.org/scala3/reference/syntax.html
-  val keywords = Map(
+  // TODO: make sure these are not used in any turkish samples or turkish translation code!
+  // They are in abc-order:
+  //   at baskın bazı birlikte bu damgalı den dene deste dez doğru durum eğer eşle geriDön getir
+  //   için koru miskin nesne sakla son sonunda soyut sınıf tanım tür ver yakala yanlış yap
+  //   yayar yeni yineleDoğruKaldıkça yok yoksa örtük özellik üst
+  val turkishKeywords = List(
+    "at",
+    "baskın",
+    "bazı",
+    "birlikte",
+    "bu",
+    "damgalı",
+    "den",
+    "dene",
+    "deste",
+    "dez",
+    "doğru",
+    "durum",
+    "eğer",
+    "eşle",
+    "geriDön",
+    "getir",
+    "için",
+    "koru",
+    "miskin",
+    "nesne",
+    "örtük",
+    "özellik",
+    "sakla",
+    "son",
+    "sonunda",
+    "soyut",
+    "sınıf",
+    "tanım",
+    "tür",
+    "üst",
+    "ver",
+    "verilen",
+    "yakala",
+    "yanlış",
+    "yap",
+    "yayar",
+    "yeni",
+    "yineleDoğruKaldıkça",
+    "yok",
+    "yoksa"
+  )
+  val keywordTranslation = Map(
     "abstract" -> "soyut",
     "case" -> "durum", // ya da olgu: case class -> durum sınıf, match/case eşle/durum
     "catch" -> "yakala",
@@ -144,7 +191,7 @@ object dict {
     "finally" -> "sonunda",
     "for" -> "için",  // yerine içinYinele
     "forSome" -> "bazı", // eskitilmiş ve dilden çıkarılmış
-    "given" -> "birlikte",
+    "given" -> "verilen",
     "if" -> "eğer",
     "implicit" -> "örtük",
     "import" -> "getir",
@@ -157,7 +204,7 @@ object dict {
     "package" -> "deste",
     "private" -> "sakla",
     "protected" -> "koru",
-    "return" -> "dön",
+    "return" -> "geriDön",
     "sealed" -> "damgalı",
     "super" -> "üst",
     "this" -> "bu",
@@ -170,7 +217,7 @@ object dict {
     "val" -> "dez", // değişmez değer
     "var" -> "den", // değişken değer
     "while" -> "yineleDoğruKaldıkça", // predicate: koşul
-    "with" -> "ekle",
+    "with" -> "birlikte",
     "yield" -> "ver"
   )
   // we skip java keywords listed in scala keywords above:
