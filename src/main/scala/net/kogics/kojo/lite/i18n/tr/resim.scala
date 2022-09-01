@@ -290,7 +290,7 @@ object Resim {
   type Yazıyüzü = java.awt.Font
   def apply(işlev: => Birim): Resim = new Resim(richBuiltins.Picture(işlev))
   def çiz(r: Resim) = richBuiltins.draw(r.p)
-  def doğru(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.line(en, boy))
+  def düz(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.line(en, boy))
   def köşegen(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.line(en, boy))
   def yay(yarıçap: Kesir, açı: Kesir) = new Resim(richBuiltins.Picture.arc(yarıçap, açı))
   def daire(yarıçap: Kesir) = new Resim(richBuiltins.Picture.circle(yarıçap))

@@ -243,10 +243,10 @@ import net.kogics.kojo.staging
   test("Translations of mutable.Map should work") {
     val e1 = Eşlem.boş[Yazı, Sayı]
     e1 eşli ("anahtar") should be(yanlış)
-    e1 eşle ("anahtar" -> 99)
+    e1 eşEkle ("anahtar" -> 99)
     e1 eşli ("anahtar") should be(doğru)
     e1("anahtar") should be(99)
-    e1 eşle ("b" -> 88)
+    e1 eşEkle ("b" -> 88)
     e1 eşli ("b") should be(doğru)
     e1("b") should be(88)
     val l = e1.m.toSeq
@@ -684,11 +684,13 @@ import net.kogics.kojo.staging
       saat >= 0 && saat <= 24 should be(true)
     }
     buSaniye > 1.0E9 should be(true)
-    buSaniye2 > 83646.86 should be(true)
-    buAn > 1659458389799L should be(true)
+    // println(s"buSaniye2=$buSaniye2")
+    // used to get > 80k, but now I get only > 44k. Let's be safe:
+    buSaniye2 > 4_000.0 should be(true) // Returns the current value of the running Java Virtual Machine's high-resolution time source, in nanoseconds.
+    buAn > 1_659_458_389_799L should be(true)
     buAn2 > İriSayı("1659457918531") should be(true)
-    sayıyaKadarSay(5000) < 0.01 should be(true)
-    sayıyaKadarSay(1000000) < 0.1 should be(true)
+    sayıyaKadarSay(5000, doğru) < 0.01 should be(true) // in my runs, we get: 0.003 (3 millisec)
+    sayıyaKadarSay(1000000, doğru) < 0.1 should be(true) // we get: 0.022 (22 msec)
   }
 
   test("Companion objects for translations to work") {

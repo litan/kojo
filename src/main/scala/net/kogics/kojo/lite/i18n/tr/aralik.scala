@@ -67,9 +67,9 @@ trait RangeMethodsInTurkish {
     def içindeMi(s: Sayı) = r.contains(s)
     // todo: duplicate above
 
-    def eşle[B](f: Sayı => B) = r.map(f)
+    def işle[B](f: Sayı => B) = r.map(f)
     def elekle(dene: Sayı => İkil) = r.withFilter(dene)
-    def düzEşle[B](f: Sayı => IterableOnce[B]) = r.flatMap(f)
+    def düzİşle[B](f: Sayı => IterableOnce[B]) = r.flatMap(f)
     def herbiriİçin(f: (Sayı) => Unit) = r.foreach(f)
     def indirge(iş: (Sayı, Sayı) => Sayı): Sayı = diziye.reduce(iş)
     def soldanKatla[B](z: B)(iş: (B, Sayı) => B): B = diziye.foldLeft(z)(iş)

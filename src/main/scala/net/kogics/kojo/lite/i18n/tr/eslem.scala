@@ -29,8 +29,8 @@ case class Eşlem[A,D](val m: Map[A,D]) {
   // todo: duplicated most of the api in Eşlek
   type Belki[T] = Option[T]
   def eşli(a: A) = m.contains(a)
-  def eşle(ikili: Pair) = m += ikili
-  def +=(ikili: Pair) = this eşle ikili
+  def eşEkle(ikili: Pair) = m += ikili
+  def +=(ikili: Pair) = this eşEkle ikili
   def -=(birinci: A) = m -= birinci
   def herbiriİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
   def herÖgeİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)

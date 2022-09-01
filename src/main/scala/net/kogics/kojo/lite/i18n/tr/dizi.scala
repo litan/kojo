@@ -22,8 +22,8 @@ package net.kogics.kojo.lite.i18n.tr
 //   Diz Dizi Dizik Dizim Dizin EsnekDizim EsnekYazı Eşlem Eşlek Küme MiskinDizin Yazı Yığın Yöney
 trait SeqMethodsInTurkish {
   object Dizi {
-    def apply[B](elems: B*): Seq[B] = Seq.from(elems)
-    def unapplySeq[B](dizi: Seq[B]) = Seq.unapplySeq(dizi)
+    def apply[B](elems: B*): Dizi[B] = Seq.from(elems)
+    def unapplySeq[B](dizi: Dizi[B]) = Seq.unapplySeq(dizi)
     def doldur[B](n1: Sayı)(f: Sayı => B) = Seq.tabulate(n1)(f)
     def doldur[B](n1: Sayı, n2: Sayı)(f: (Sayı, Sayı) => B) = Seq.tabulate(n1, n2)(f)
     def doldur[B](n1: Sayı, n2: Sayı, n3: Sayı)(f: (Sayı, Sayı, Sayı) => B) = Seq.tabulate(n1, n2, n3)(f)
@@ -183,8 +183,8 @@ trait SeqMethodsInTurkish {
     // more to come
   }
 
-  implicit class IndexedSeqYöntemleri[T](d: IndexedSeq[T]) { // used in alfabeta in othello
-    type Col = IndexedSeq[T]
+  implicit class IndexedSeqYöntemleri[T](d: DiziSıralı[T]) { // used in alfabeta in othello
+    type Col = DiziSıralı[T]
     def ele(deneme: T => İkil): Col = d.filter(deneme)
     def enUfağı[B >: T](implicit sıralama: math.Ordering[B]): T = d.min(sıralama)
     def enUfağı[B](iş: (T) => B)(implicit karşılaştırma: math.Ordering[B]): T = d.minBy(iş)(karşılaştırma)
@@ -194,7 +194,14 @@ trait SeqMethodsInTurkish {
 
   implicit class ImmutableIterableMethods[T](d: collection.immutable.Iterable[T]) {
     type Col = collection.immutable.Iterable[T]
+    type C2[B] = collection.immutable.Iterable[B]
     type Eşlek[A, D] = collection.immutable.Map[A, D]
+
+    def ele(deneme: T => İkil): Col = d.filter(deneme)
+    def eleDeğilse(deneme: T => İkil): Col = d.filterNot(deneme)
+    def işle[A](işlev: T => A): C2[A] = d.map(işlev)
+    def düzİşle[A](işlev: T => C2[A]): C2[A] = d.flatMap(işlev)
+    def herbiriİçin[S](işlev: T => S): Birim = d.foreach(işlev)
 
     def dizine = d.toList
     def diziye = d.toSeq
@@ -208,6 +215,15 @@ trait SeqMethodsInTurkish {
     def ikileKonumla = d.zipWithIndex
     def öbekle[A](iş: (T) => A): Eşlek[A, Col] = d.groupBy(iş)
     // more to come
+  }
+
+  // Needed for tangle++ (tangle-trk.kojo in kojo-denemeler) due to call to Set.subsets
+  implicit class IteratorMethods[T](d: Yineleyici[T]) { // T is a Collection
+    type Col = Yineleyici[T]
+    type C2[A] = Yineleyici[A]
+
+    def işle[B](işlev: T => B): C2[B] = d.map(işlev)
+    def herbiriİçin[B](işlev: T => B): Birim = d.foreach(işlev)
   }
 
 }

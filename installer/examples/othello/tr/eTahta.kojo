@@ -124,26 +124,26 @@ class ETahta(
         }
     }
     def gerisi(k: Komşu): Dizi[Oda] = {
-        val son = sonOda
+        val sOda = sonOda
         val sıra = EsnekDizim.boş[Oda]
         val (x, y) = (k.oda.stn, k.oda.str)
         k.yön match {
-            case D => for (i <- x + 1 |-| son) /*    */ sıra += Oda(y, i)
+            case D => for (i <- x + 1 |-| sOda) /*   */ sıra += Oda(y, i)
             case B => for (i <- x - 1 |-| 0 by -1) /**/ sıra += Oda(y, i)
-            case K => for (i <- y + 1 |-| son) /*    */ sıra += Oda(i, x)
+            case K => for (i <- y + 1 |-| sOda) /*   */ sıra += Oda(i, x)
             case G => for (i <- y - 1 |-| 0 by -1) /**/ sıra += Oda(i, x)
             case KD => // hem str hem stn artacak
-                if (x >= y) for (i <- x + 1 |-| son) /*      */ sıra += Oda(y + i - x, i)
-                else for (i <- y + 1 |-| son) /*             */ sıra += Oda(i, x + i - y)
+                if (x >= y) for (i <- x + 1 |-| sOda) /*       */ sıra += Oda(y + i - x, i)
+                else for (i <- y + 1 |-| sOda) /*              */ sıra += Oda(i, x + i - y)
             case GB => // hem str hem stn azalacak
-                if (x >= y) for (i <- y - 1 |-| 0 by -1) /*  */ sıra += Oda(i, x - y + i)
-                else for (i <- x - 1 |-| 0 by -1) /*         */ sıra += Oda(y - x + i, i)
+                if (x >= y) for (i <- y - 1 |-| 0 by -1) /*    */ sıra += Oda(i, x - y + i)
+                else for (i <- x - 1 |-| 0 by -1) /*           */ sıra += Oda(y - x + i, i)
             case KB => // str artacak stn azalacak
-                if (x + y >= son) for (i <- y + 1 |-| son) /**/ sıra += Oda(i, x + y - i)
-                else for (i <- x - 1 |-| 0 by -1) /*         */ sıra += Oda(y + x - i, i)
+                if (x + y >= sOda) for (i <- y + 1 |-| sOda) /**/ sıra += Oda(i, x + y - i)
+                else for (i <- x - 1 |-| 0 by -1) /*           */ sıra += Oda(y + x - i, i)
             case GD => // str azalacak stn artacak
-                if (x + y >= son) for (i <- x + 1 |-| son) /**/ sıra += Oda(y + x - i, i)
-                else for (i <- y - 1 |-| 0 by -1) /*         */ sıra += Oda(i, x + y - i)
+                if (x + y >= sOda) for (i <- x + 1 |-| sOda) /**/ sıra += Oda(y + x - i, i)
+                else for (i <- y - 1 |-| 0 by -1) /*           */ sıra += Oda(i, x + y - i)
         }
         sıra.diziye
     }

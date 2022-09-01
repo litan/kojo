@@ -47,7 +47,8 @@ clearOutput()
 for (
     sentence <- Seq(
         "hello dolly",
-        "how are you"
+        "how are you",
+        "listen"
     )
 ) {
     val ana = timeit { sentenceAnagrams(sentence.split(" ").toList) }

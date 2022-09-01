@@ -5,16 +5,16 @@ val k2 = yeniKaplumbağa(500, 0)
 
 // davran komuduyla çalışan komut dizisi arkadan gelen komutlarla paralel çalışır
 // bu sayede iki kaplumbağa eş zamanlı hareket ederler
-k1.davran { bu => // komut dizisi içinde bu kaplumbağaya "bu" adını verdik
-    bu.kalemRenginiKur(Renk(0, 0, 255, 120))
-    bu.kalemKalınlığınıKur(4)
+k1.davran { kap => // komut dizisi içinde bu kaplumbağaya "kap" adını verdik
+    kap.kalemRenginiKur(Renk(0, 0, 255, 120))
+    kap.kalemKalınlığınıKur(4)
     yineleDoğruysa(doğru) {
-      bu.noktayaDön(fareKonumu)
-      bu.ileri(2)
+      kap.noktayaDön(fareKonumu)
+      kap.ileri(2)
     } 
 }
 
-k2.davran { o => // istediğimiz adı verebiliriz. Ama "bu" daha mantıklı
+k2.davran { o => // istediğimiz adı verebiliriz. "kap" demek zorunda değiliz :-)
     o.kalemRenginiKur(Renk(0, 255, 0, 120))
     yineleDoğruysa(doğru) {
       o.çevir(k1)

@@ -13,10 +13,10 @@ class Bellek(tahta: ETahta) {
             oyuncular.çıkar(oyuncular.sayı - 1)
             hamleler.çıkar(hamleler.sayı - 1)
         }
-        val yeni = Dizim.boş[Taş](odaSayısı, odaSayısı)
+        val yeniTahta = Dizim.boş[Taş](odaSayısı, odaSayısı)
         for (x <- tahta.satırAralığı; y <- tahta.satırAralığı)
-            yeni(y)(x) = tahta.taş(y, x)
-        eskiTahtalar += yeni
+            yeniTahta(y)(x) = tahta.taş(y, x)
+        eskiTahtalar += yeniTahta
         oyuncular += tahta.oyuncu()
         hamleler += hane
     }

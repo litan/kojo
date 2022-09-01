@@ -40,7 +40,7 @@ case class Kart(sayı: Sayı) {
 }
 
 case class Hamleler(n: Sayı) {
-    val durum = kalemRengi(siyah) -> Resim.yazı(s"Hamle Sayısı: $n", 20)
+    val gösterge = kalemRengi(siyah) -> Resim.yazı(s"Hamle Sayısı: $n", 20)
     def artır() = Hamleler(n + 1)
 }
 
@@ -88,12 +88,12 @@ def tıkla(kart: Kart) {
 }
 
 def hamleleriArtır() {
-    def durum = dünya.hamleler.durum
-    val konum = durum.konum
-    durum.sil()
+    def gösterge = dünya.hamleler.gösterge
+    val konum = gösterge.konum
+    gösterge.sil()
     dünya = dünya.copy(hamleler = dünya.hamleler.artır())
-    durum.kondur(konum)
-    durum.çiz()
+    gösterge.kondur(konum)
+    gösterge.çiz()
 }
 
 val kartSayısı = derece * 2 * 5
@@ -112,5 +112,5 @@ for (i <- 0 |-| kartSayısı / 5 - 1) {
     }
 }
 
-çiz(götür(-tuvalAlanı.eni / 2 + 50, 0) -> dünya.hamleler.durum)
+çiz(götür(-tuvalAlanı.eni / 2 + 50, 0) -> dünya.hamleler.gösterge)
 tuvaliEtkinleştir()

@@ -1368,11 +1368,11 @@ canlandır { // İçindeki komutlar saniyede yaklaşık 40 kere yinelenir.
 }""".c,
     "İkinci örneğimiz küçük ve basit bir oyun. Duymuş olabilirsin: en eski bilgisayar oyunlarından duvara karşı pinpon (İngilizce adıyla Pong) oyunu. Tek kişilik bir oyun. Yapmamız gereken topa raketle vurup geri yollamak. Raketi fareyle yönetiyoruz. Top kaçarsa bir puan kaybediyorsun. İyi eğlenceler!".p,
     """silVeSakla()
-çiz(götür(-200, -100) -> Resim.doğru(0, 200)) // Üç duvar çizelim. Bu dik ön duvar
-çiz(götür(-200, -100) -> Resim.doğru(400, 0)) // Bu alt duvar
-çiz(götür(-200,  100) -> Resim.doğru(400, 0)) // Bu da üst duvar
+çiz(götür(-200, -100) -> Resim.düz(0, 200)) // Üç duvar çizelim. Bu dik ön duvar
+çiz(götür(-200, -100) -> Resim.düz(400, 0)) // Bu alt duvar
+çiz(götür(-200,  100) -> Resim.düz(400, 0)) // Bu da üst duvar
 val rb = 80 // raketin boyu
-val raket = kalemRengi(mavi) -> Resim.doğru(0, rb)
+val raket = kalemRengi(mavi) -> Resim.düz(0, rb)
 val top = kalemRengi(mavi) -> Resim.daire(5)
 val skor = kalemRengi(siyah) * götür(-50, 150) -> Resim.yazı("Raketi fareyle yönet")
 çiz(raket, top, skor)
@@ -1443,7 +1443,7 @@ def saat = {
         val çentikBoyu = if (i % 5 == 0) 0.9 else 0.95
         val (llx, lly, urx, ury) = (çentikBoyu * x, çentikBoyu * y, x, y)
         val (en, boy) = (urx - llx, ury - lly)
-        çiz(kalemRengi(kırmızı) * götür(llx, lly) -> Resim.doğru(en, boy))
+        çiz(kalemRengi(kırmızı) * götür(llx, lly) -> Resim.düz(en, boy))
     }
 }
 
@@ -1451,11 +1451,11 @@ canlandır { // bu döngü her saniyede yaklaşık 40 kere yinelenir
     val buan = BuAn()
     saat; çiz(kalemRengi(siyah) * götür(-yç - 5, -yç - 20) -> Resim.yazı(buan.yazıya))
     val s = pi2 * buan.saniye / 60 // saniyeKolu
-    çiz(kalemRengi(mavi) -> Resim.doğru(0.9 * yç * sinüs(s), 0.9 * yç * kosinüs(s)))
+    çiz(kalemRengi(mavi) -> Resim.düz(0.9 * yç * sinüs(s), 0.9 * yç * kosinüs(s)))
     val m = pi2 * buan.dakika / 60 // dakika kolu
-    çiz(kalemRengi(yeşil) -> Resim.doğru(0.8 * yç * sinüs(m), 0.8 * yç * kosinüs(m)))
+    çiz(kalemRengi(yeşil) -> Resim.düz(0.8 * yç * sinüs(m), 0.8 * yç * kosinüs(m)))
     val h = pi2 * buan.saat / 12 + m / 12 // saat kolu
-    çiz(kalemRengi(turuncu) -> Resim.doğru(0.6 * yç * sinüs(h), 0.6 * yç * kosinüs(h)))
+    çiz(kalemRengi(turuncu) -> Resim.düz(0.6 * yç * sinüs(h), 0.6 * yç * kosinüs(h)))
 }
 """.c,
     "Saatin kaç tane çizimden oluştuğunu hesabedebilir misin? Yanıt pekçok ülkedeki emeklilik yaşı! Neyseki bu 65 çizimi yapmak hem de saniyede 40 kere tekrar tekrar bizim bilgisayarımızı hiç yormuyor! Peki belki de yok, yok 63 tane çizgi, bir çember ve bir kaç da yazı diyerek itiraz edeceksin. Çok haklısın. Ve tebrikler!".p,
@@ -1597,13 +1597,13 @@ def dörtlü = Dizin((0, 0), (1, 0), (-1, 0), (0, 2)) // dokuzcanlı'nın altkü
     """// KS arttıkça oyun zorlaşır. Bir kenarda kaç tane nokta olsun?
 val KS = 4; val AS = KS * KS
 val YÇ = 20 // bu da noktaların yarıçapı
-case class Çizgi(n1: Nokta, n2: Nokta) {  // her çizgi iki noktayı bağlar
-    var çizgi = doğru(n1.x, n1.y, n2.x, n2.y) // bir doğru çizer
+case class Çizgi(n1: Nokta, n2: Nokta) { // her çizgi iki noktayı bağlar
+    var çizgi = birDoğruÇiz(n1.x, n1.y, n2.x, n2.y) // bir doğru çizer
 }
-def doğru(llx: Kesir, lly: Kesir, urx: Kesir, ury: Kesir) = {
+def birDoğruÇiz(llx: Kesir, lly: Kesir, urx: Kesir, ury: Kesir) = {
     val (en, boy) = (urx - llx, ury - lly)
-    val r = götür(llx, lly) -> Resim.doğru(en, boy)
-    çiz(r)
+    val r = götür(llx, lly) -> Resim.düz(en, boy)
+    r.çiz
     r
 }
 // bütün çizgiler. boş küme olarak başlarız
@@ -1611,7 +1611,7 @@ var çizgiler = Yöney[Çizgi]()
 // Noktayı tuvalde kaydıracağız. Yeri değişince ona bağlı çizgileri tekrar çizmemiz gerek
 case class Nokta(var x: Kesir, var y: Kesir) {
     val n = götür(x, y) * boyaRengi(mavi) -> Resim.daire(YÇ)
-    çiz(n)
+    n.çiz
     def yeniKonum(yeniX: Kesir, yeniY: Kesir) {
         x = yeniX; y = yeniY
         n.kondur(yeniX, yeniY)
@@ -1646,18 +1646,18 @@ def çizelim(hepsi: Yöney[Çizgi]) {
         val boy = karekökü(karesi(x2 - x1) + karesi(y2 - y1))
         val (xr, yr) = (YÇ / boy * (x2 - x1), YÇ / boy * (y2 - y1))
         çzg.çizgi.sil
-        çzg.çizgi = doğru(x1 + xr, y1 + yr, x2 - xr, y2 - yr)
+        çzg.çizgi = birDoğruÇiz(x1 + xr, y1 + yr, x2 - xr, y2 - yr)
     })
 }
 
 // kırmızı kareye basınca yeni bir düğümle baştan başlarız
 def kare(x: Kesir, y: Kesir, en: Kesir) = {
     val k = götür(x, y) * boyaRengi(kırmızı) -> Resim.dikdörtgen(en, en)
-    çiz(k)
+    k.çiz
     k
 }
 val b = kare(-KS * 35, -KS * 35, 20)
-b.fareyeTıklayınca{ (x, y) => serpiştir(noktalar) }
+b.fareyeTıklayınca { (x, y) => serpiştir(noktalar) }
 """.c
   )
 )

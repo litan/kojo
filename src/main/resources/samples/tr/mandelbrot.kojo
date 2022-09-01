@@ -156,7 +156,7 @@ def mKümesi(d: Dörtgen): İmge = {
                 imgeNoktasınıKur(img, xi, yi, if (z.uzunluğu < 2) siyah else (renk(i, x, y)))
             }
         }()
-        bellek eşle (d -> img)
+        bellek eşEkle (d -> img)
         img
     }
 }
@@ -290,12 +290,12 @@ def uzaklaş(oran: Kesir = 1.25) = {
     ayarla(oran)
 }
 def ayarla(oran: Kesir, ortala: İkil = yanlış, hedef: Nokta = fareKonumu) {
-    val yeni =
+    val dörtgen =
         if (ortala && fareResmeDokunuyor)
             sonDörtgen.büyüt(oran).ortala(nTuvaldenMKye(hedef))
         else sonDörtgen.büyüt(oran)
     resim.sil()
-    resim = resimGötür -> Resim.imge(mKümesi(yeni))
+    resim = resimGötür -> Resim.imge(mKümesi(dörtgen))
     resim.çiz()
     fareyiTanımla(resim)
 }

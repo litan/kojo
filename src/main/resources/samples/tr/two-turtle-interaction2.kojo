@@ -16,12 +16,12 @@ k2.kalemRenginiKur(Renk(0, 255, 0, 120))
 // Yaklaşık olarak saniyede 30 kere çalıştırılırlar. 
 // tepkiVer'in içinde çalışan komutlar çok zaman alırsa GUI yavaşlayabilir.
 // Hatta en kötü durumda Kojo'yu tekrar çalıştırman gerekebilir.
-k1.tepkiVer { bu =>
-  bu.noktayaDön(fareKonumu)
-  bu.ileri(2)
+k1.tepkiVer { kap =>
+  kap.noktayaDön(fareKonumu)
+  kap.ileri(2)
 }
 
-k2.tepkiVer { bu =>
-  bu.çevir(k1)
-  bu.ileri(1)
+k2.tepkiVer { kap =>
+  kap.çevir(k1)
+  kap.ileri(1)
 }

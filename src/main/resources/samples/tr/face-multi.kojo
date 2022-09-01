@@ -33,75 +33,75 @@ val saç = yeniKaplumbağa(-110, 100)
 val beden = yeniKaplumbağa(25, -125)
 val ayaklar = yeniKaplumbağa(0, -150)
 
-yüz.davran { bu =>
-    bu.boyamaRenginiKur(kırmızı)
-    kare(bu, 200, 200)
-    bu.görünmez()
+yüz.davran { kap =>
+    kap.boyamaRenginiKur(kırmızı)
+    kare(kap, 200, 200)
+    kap.görünmez()
 }
 
-göz1.davran { bu =>
-    bu.boyamaRenginiKur(sarı)
-    göz(bu, 50, 800)
-    bu.görünmez()
+göz1.davran { kap =>
+    kap.boyamaRenginiKur(sarı)
+    göz(kap, 50, 800)
+    kap.görünmez()
 }
 
-göz2.davran { bu =>
-    bu.boyamaRenginiKur(sarı)
-    göz(bu, 50, 800)
-    bu.görünmez()
+göz2.davran { kap =>
+    kap.boyamaRenginiKur(sarı)
+    göz(kap, 50, 800)
+    kap.görünmez()
 }
 
-ağız.davran { bu =>
-    bu.canlandırmaHızınıKur(2000)
-    bu.kalemRenginiKur(sarı)
-    bu.kalemKalınlığınıKur(14)
-    bu.sağ()
-    bu.ileri(100)
-    bu.görünmez()
+ağız.davran { kap =>
+    kap.canlandırmaHızınıKur(2000)
+    kap.kalemRenginiKur(sarı)
+    kap.kalemKalınlığınıKur(14)
+    kap.sağ()
+    kap.ileri(100)
+    kap.görünmez()
 }
 
-burun.davran { bu =>
-    bu.canlandırmaHızınıKur(4000)
-    bu.kalemRenginiKur(sarı)
-    bu.kalemKalınlığınıKur(20)
-    bu.ileri(50)
-    bu.görünmez()
+burun.davran { kap =>
+    kap.canlandırmaHızınıKur(4000)
+    kap.kalemRenginiKur(sarı)
+    kap.kalemKalınlığınıKur(20)
+    kap.ileri(50)
+    kap.görünmez()
 }
 
-saç.davran { bu =>
-    bu.canlandırmaHızınıKur(200)
-    bu.sağ()
-    bu.kalemRenginiKur(siyah)
-    bu.kalemKalınlığınıKur(30)
-    bu.ileri(220)
-    bu.sol()
+saç.davran { kap =>
+    kap.canlandırmaHızınıKur(200)
+    kap.sağ()
+    kap.kalemRenginiKur(siyah)
+    kap.kalemKalınlığınıKur(30)
+    kap.ileri(220)
+    kap.sol()
     yinele(10) {
-        bu.ileri(25)
-        bu.geri(25)
-        bu.sol()
-        bu.ileri(22)
-        bu.sağ()
+        kap.ileri(25)
+        kap.geri(25)
+        kap.sol()
+        kap.ileri(22)
+        kap.sağ()
     }
-    bu.ileri(25)
-    bu.görünmez()
+    kap.ileri(25)
+    kap.görünmez()
 }
 
-beden.davran { bu => 
-    bu.boyamaRenginiKur(sarı)
-    bu.daire(25)
-    bu.görünmez()
+beden.davran { kap => 
+    kap.boyamaRenginiKur(sarı)
+    kap.daire(25)
+    kap.görünmez()
 }
 
-ayaklar.davran { bu => 
-    bu.canlandırmaHızınıKur(3000)
-    bu.kalemRenginiKur(siyah)
-    bu.kalemKalınlığınıKur(30)
-    bu.sağ(180)
-    bu.konumVeYönüBelleğeYaz()
-    bu.sağ(30)
-    bu.ileri(30)
-    bu.konumVeYönüGeriYükle()
-    bu.sol(30)
-    bu.ileri(30)
-    bu.görünmez()
+ayaklar.davran { kap => 
+    kap.canlandırmaHızınıKur(3000)
+    kap.kalemRenginiKur(siyah)
+    kap.kalemKalınlığınıKur(30)
+    kap.sağ(180)
+    kap.konumVeYönüBelleğeYaz()
+    kap.sağ(30)
+    kap.ileri(30)
+    kap.konumVeYönüGeriYükle()
+    kap.sol(30)
+    kap.ileri(30)
+    kap.görünmez()
 }
