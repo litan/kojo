@@ -20,11 +20,7 @@ import java.awt.Color
 import java.awt.Dimension
 import java.awt.GradientPaint
 import java.awt.Paint
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import java.awt.event.ComponentAdapter
-import java.awt.event.ComponentEvent
-import java.awt.event.InputEvent
+import java.awt.event.{ActionEvent, ActionListener, ComponentAdapter, ComponentEvent, InputEvent, MouseEvent}
 import java.awt.geom.Point2D
 import java.util.concurrent.Future
 import java.util.logging.Logger
@@ -904,6 +900,36 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     stageArea.draw()
     stage.draw()
+  }
+
+  override protected def sendInputEventToInputManager(event: InputEvent, typ: Int): Unit = {
+    if (event.getID == MouseEvent.MOUSE_WHEEL) {
+      // ignore, as Piccolo does not know how to handle this
+    }
+    else {
+      try {
+        super.sendInputEventToInputManager(event, typ)
+      }
+      catch {
+        case re: RuntimeException =>
+          println(re.getMessage)
+          println(s"Unable to handle event - $event")
+      }
+    }
+
+    //    // eventChecker should be defined outside this method
+    //    val eventChecker = new PBasicInputEventHandler()
+    //    val inputManager = getRoot().getDefaultInputManager()
+    //    val piEvent = new PInputEvent(inputManager, event)
+    //    // only handle event if Piccolo knows about it
+    //    try {
+    //      if (eventChecker.acceptsEvent(piEvent, typ)) {
+    //        super.sendInputEventToInputManager(event, typ)
+    //      }
+    //    }
+    //    catch {
+    //      case re: RuntimeException =>
+    //    }
   }
 
   class Popup() extends JPopupMenu {
