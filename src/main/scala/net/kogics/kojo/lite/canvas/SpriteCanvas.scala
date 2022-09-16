@@ -903,33 +903,13 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   override protected def sendInputEventToInputManager(event: InputEvent, typ: Int): Unit = {
-    if (event.getID == MouseEvent.MOUSE_WHEEL) {
-      // ignore, as Piccolo does not know how to handle this
+    try {
+      super.sendInputEventToInputManager(event, typ)
     }
-    else {
-      try {
-        super.sendInputEventToInputManager(event, typ)
-      }
-      catch {
-        case re: RuntimeException =>
-          println(re.getMessage)
-          println(s"Unable to handle event - $event")
-      }
+    catch {
+      case _: RuntimeException =>
+        // Ignore events that Piccolo is unable to handle
     }
-
-    //    // eventChecker should be defined outside this method
-    //    val eventChecker = new PBasicInputEventHandler()
-    //    val inputManager = getRoot().getDefaultInputManager()
-    //    val piEvent = new PInputEvent(inputManager, event)
-    //    // only handle event if Piccolo knows about it
-    //    try {
-    //      if (eventChecker.acceptsEvent(piEvent, typ)) {
-    //        super.sendInputEventToInputManager(event, typ)
-    //      }
-    //    }
-    //    catch {
-    //      case re: RuntimeException =>
-    //    }
   }
 
   class Popup() extends JPopupMenu {
