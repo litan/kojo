@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="9.0.5" transformSequenceNumber="9">
   <directoryPresets config="/home/lalit/work/kojo/installer/icons" />
-  <application name="Kojo Learning Environment" applicationId="0071-0523-9450-8404" mediaDir="/home/lalit/kojo_installers/install4j" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}${compiler:sys.withJre}" pack200Compression="true" shortName="Kojo" publisher="Kogics Foundation" publisherWeb="www.kogics.net/kojo" version="2.9.23" macVolumeId="41bac862080108f9" javaMinVersion="1.8" javaMaxVersion="11" jdkMode="jdk" jdkName="JDK 1.8">
+  <application name="Kojo Learning Environment" applicationId="0071-0523-9450-8404" mediaDir="/home/lalit/kojo_installers/install4j" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}${compiler:sys.withJre}" pack200Compression="true" shortName="Kojo" publisher="Kogics Foundation" publisherWeb="www.kogics.net/kojo" version="2.9.24" macVolumeId="41bac862080108f9" javaMinVersion="1.8" javaMaxVersion="17" jdkMode="jdk" jdkName="JDK 1.8">
     <searchSequence>
       <registry />
       <envVar name="JAVA_HOME" />
     </searchSequence>
-    <jreBundles jdkProviderId="JBR" release="11/11.0.13-b1751.21">
+    <jreBundles jdkProviderId="JBR" release="17/17.0.4.1-b469.62">
       <modules>
         <module name="java.base" />
         <module name="java.compiler" />
@@ -626,8 +626,7 @@ return console.askYesNo(message, true);
       <jreBundle jdkProviderId="JBR" release="11.0.6-b765.25" />
     </windows>
   </mediaSets>
-  <buildIds>
+  <buildIds buildAll="false">
     <mediaSet refId="508" />
-    <mediaSet refId="514" />
   </buildIds>
 </install4j>
