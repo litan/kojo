@@ -675,7 +675,7 @@ import net.kogics.kojo.staging
     ik3.ölçek should be(33)
   }
 
-  ignore("Translation of java.util.Calendar and System.nanoTime etc to work") {
+  test("Translation of java.util.Calendar and System.nanoTime etc to work") {
     yinele (4) {
       val b = BuAn()
       val (saniye, dakika, saat) = (b.saniye, b.dakika, b.saat)
@@ -684,9 +684,9 @@ import net.kogics.kojo.staging
       saat >= 0 && saat <= 24 should be(true)
     }
     buSaniye > 1.0E9 should be(true)
+    // used to get > 80k, but now I get only > 44k. Let's be very safe (Lalit reported failure even for 4k):
     // println(s"buSaniye2=$buSaniye2")
-    // used to get > 80k, but now I get only > 44k. Let's be safe:
-    buSaniye2 > 4_000.0 should be(true) // Returns the current value of the running Java Virtual Machine's high-resolution time source, in nanoseconds.
+    buSaniye2 > 1.0 should be(true) // Returns the current value of the running Java Virtual Machine's high-resolution time source, in nanoseconds.
     buAn > 1_659_458_389_799L should be(true)
     buAn2 > İriSayı("1659457918531") should be(true)
     sayıyaKadarSay(5000, doğru) < 0.01 should be(true) // in my runs, we get: 0.003 (3 millisec)
