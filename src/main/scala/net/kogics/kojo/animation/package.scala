@@ -16,6 +16,7 @@ package net.kogics.kojo
 
 import net.kogics.kojo.core.{Picture, SCanvas}
 import net.kogics.kojo.kmath.KEasing
+import net.kogics.kojo.util.Utils
 
 package object animation {
   val noOp = () => {}
@@ -120,7 +121,7 @@ package object animation {
     var currPic: Picture = _
 
     private def nextState(s: Seq[Double], elapsedTimeMillis: Double): Seq[Double] = {
-      if (elapsedTimeMillis > durationMillis) {
+      if (elapsedTimeMillis >= durationMillis) {
         finalState
       }
       else {
@@ -132,36 +133,33 @@ package object animation {
 
     def run(onDone: () => Unit)(onStart: () => Unit)(implicit canvas: SCanvas): Unit = {
       import edu.umd.cs.piccolo.activities.PActivity
-
       import java.util.concurrent.Future
 
       val startMillis = System.currentTimeMillis
-      val initPic: Picture = picture.rect2(0, 0)
+      val initPic = picMaker(initState)
+
+      Utils.runInSwingThread {
+        initPic.draw()
+        currPic = initPic
+        onStart()
+      }
+
       lazy val anim: Future[PActivity] =
-        canvas.animateWithState((initPic, initState, false)) { case (pic, s, stop) =>
-          if (s == initState) {
-            onStart()
-          }
+        canvas.animateWithState((initPic, initState)) { case (pic, s) =>
+          val elapsedTimeMillis =
+            (System.currentTimeMillis - startMillis).toDouble
+          val ns = nextState(s, elapsedTimeMillis)
+
           pic.erase()
-          val pic2 = picMaker(s)
+          val pic2 = picMaker(ns)
           pic2.draw()
           currPic = pic2
 
-          if (stop) {
-            canvas.stopAnimationActivity(anim)
+          if (ns == finalState && elapsedTimeMillis >= durationMillis) {
             onDone()
-            (pic, s, stop)
+            canvas.stopAnimationActivity(anim)
           }
-          else {
-            val elapsedTimeMillis = (System.currentTimeMillis - startMillis).toDouble
-            val ns = nextState(s, elapsedTimeMillis)
-            if (ns == finalState && elapsedTimeMillis > durationMillis) {
-              (pic2, ns, true)
-            }
-            else {
-              (pic2, ns, false)
-            }
-          }
+          (pic2, ns)
         }
       anim
     }
