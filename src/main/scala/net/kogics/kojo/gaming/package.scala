@@ -19,13 +19,13 @@ import net.kogics.kojo.core.{Picture, SCanvas}
 
 package object gaming {
   trait GameMsgSink[Msg] {
-    def triggerUpdate(msg: Msg)
+    def triggerUpdate(msg: Msg): Unit
   }
 
   trait Sub[Msg] {
-    def run()
+    def run(): Unit
 
-    def cancel()
+    def cancel(): Unit
 
     var gameMsgSink: GameMsgSink[Msg] = _
   }
@@ -34,14 +34,14 @@ package object gaming {
     case class OnAnimationFrame[Msg](mapper: () => Msg)(implicit canvas: SCanvas) extends Sub[Msg] {
       var t: java.util.concurrent.Future[edu.umd.cs.piccolo.activities.PActivity] = _
 
-      def run() {
+      def run(): Unit = {
         t = canvas.timer(20) {
           val msg = mapper()
           gameMsgSink.triggerUpdate(msg)
         }
       }
 
-      def cancel() {
+      def cancel(): Unit = {
         canvas.stopAnimationActivity(t)
       }
     }
@@ -49,7 +49,7 @@ package object gaming {
     case class OnKeyDown[Msg](mapper: Int => Msg)(implicit canvas: SCanvas) extends Sub[Msg] {
       var t: java.util.concurrent.Future[edu.umd.cs.piccolo.activities.PActivity] = _
 
-      def run() {
+      def run(): Unit = {
         t = canvas.timer(20) {
           val pressedKeys = net.kogics.kojo.staging.Inputs.pressedKeys
           pressedKeys.foreach { keyCode =>
@@ -59,7 +59,7 @@ package object gaming {
         }
       }
 
-      def cancel() {
+      def cancel(): Unit = {
         canvas.stopAnimationActivity(t)
       }
     }
@@ -84,14 +84,14 @@ package object gaming {
       s.run()
     }
 
-    def triggerUpdate(msg: Msg) {
+    def triggerUpdate(msg: Msg): Unit = {
       currModel = update(currModel, msg)
       net.kogics.kojo.picture.PicCache.clear()
       currView.erase()
       currView = view(currModel)
       currView.draw()
       val updatedSubs = subscriptions(currModel)
-      if (updatedSubs.length == 0) {
+      if (updatedSubs.isEmpty) {
         currSubs.foreach { s =>
           s.cancel()
         }
