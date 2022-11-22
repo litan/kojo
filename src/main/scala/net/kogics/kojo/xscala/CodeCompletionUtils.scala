@@ -141,7 +141,7 @@ object CodeCompletionUtils {
     "timer" -> "timer(${milliSeconds}) {\n    ${cursor}\n}",
     "animate" -> "animate {\n    ${cursor}\n}",
     "animateWithState" -> "animateWithState(${initState}) { s =>\n    ${cursor}\n}",
-    "animateWithRedraw" -> "animateWithRedraw(${initState}, ${nextState}, ${code})",
+    "animateWithRedraw" -> "animateWithRedraw(${initState}, ${nextState}, ${stateView})",
     "drawLoop" -> "drawLoop {\n    ${cursor}\n}",
     "setup" -> "setup {\n    ${cursor}\n}",
     "schedule" -> "schedule(${seconds}) {\n    ${cursor}\n}",

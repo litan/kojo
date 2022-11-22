@@ -1021,18 +1021,31 @@ Here's a partial list of the available commands:
   def clearOutputError(): Unit = kojoCtx.clearOutputError()
   def insertOutputError(text: String): Unit = kojoCtx.insertOutputError(text)
 
-  def animateWithRedraw[S](init: S, nextState: S => S, code: S => Picture): Unit = {
+  def animateWithRedraw[S](initState: S, nextState: S => S, stateView: S => Picture): Unit = {
     import edu.umd.cs.piccolo.activities.PActivity
     import java.util.concurrent.Future
-    lazy val anim: Future[PActivity] = tCanvas.animateWithState(init) { state =>
-      tCanvas.erasePictures()
-      draw(code(state))
+    val initPic = stateView(initState)
+    initPic.draw()
+    lazy val anim: Future[PActivity] = tCanvas.animateWithState((initState, initPic)) { case (state, pic) =>
+      pic.erase()
+      val pic2 = stateView(state)
+      pic2.draw()
       val newState = nextState(state)
       if (newState == state) {
         tCanvas.stopAnimationActivity(anim)
       }
-      newState
+      (newState, pic2)
     }
     anim
+  }
+
+  def runAnimation[S](init: S, update: S => S, view: S => Picture): Unit =
+    animateWithRedraw(init, update, view)
+
+  type Sub[M] = gaming.Sub[M]
+  val Subscriptions = gaming.Subscriptions
+
+  def runGame[S, M](init: S, update: (S, M) => S, view: S => Picture, subscriptions: S => Seq[Sub[M]]): Unit = {
+    new gaming.Game(init, update, view, subscriptions)
   }
 }

@@ -1880,10 +1880,10 @@ repeat(5) {{
       </div>,
     "animateWithRedraw" ->
       <div>
-        <strong>animateWithRedraw</strong> (initState, nextState, code)<br/><br/>
+        <strong>animateWithRedraw</strong> (initState, nextState, stateView)<br/><br/>
         This is a version of animate that lets you cleanly separate the initial state of the animation from the
-        nextState function and the code that takes a state and returns a picture. For each iteration of the
-        animation loop, this function erases all the pictures on the canvas and then redraws the picture for
+        nextState function and the stateView function that takes a state and returns a picture. For each iteration of the
+        animation loop, this function erases the picture for the previous state and then draws the picture for
         the current state.
       </div>,
     "schedule" ->
