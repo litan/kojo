@@ -675,7 +675,7 @@ import net.kogics.kojo.staging
     ik3.ölçek should be(33)
   }
 
-  test("Translation of java.util.Calendar and System.nanoTime etc to work") {
+  ignore("Translation of java.util.Calendar and System.nanoTime etc to work") {
     yinele (4) {
       val b = BuAn()
       val (saniye, dakika, saat) = (b.saniye, b.dakika, b.saat)
