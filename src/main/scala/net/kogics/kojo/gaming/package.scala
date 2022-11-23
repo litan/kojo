@@ -15,7 +15,7 @@
  */
 package net.kogics.kojo
 
-import net.kogics.kojo.core.{Picture, SCanvas}
+import net.kogics.kojo.core.{Picture, Point, SCanvas}
 
 package object gaming {
   trait GameMsgSink[Msg] {
@@ -23,50 +23,42 @@ package object gaming {
   }
 
   trait Sub[Msg] {
-    def run(): Unit
-
-    def cancel(): Unit
-
-    var gameMsgSink: GameMsgSink[Msg] = _
+    def fire(gameMsgSink: GameMsgSink[Msg]): Unit
   }
 
   object Subscriptions {
-    case class OnAnimationFrame[Msg](mapper: () => Msg)(implicit canvas: SCanvas) extends Sub[Msg] {
-      var t: java.util.concurrent.Future[edu.umd.cs.piccolo.activities.PActivity] = _
+    case class OnAnimationFrame[Msg](mapper: () => Msg) extends Sub[Msg] {
+      def fire(gameMsgSink: GameMsgSink[Msg]): Unit = {
+        val msg = mapper()
+        gameMsgSink.triggerUpdate(msg)
+      }
+    }
 
-      def run(): Unit = {
-        t = canvas.timer(20) {
-          val msg = mapper()
+    case class OnKeyDown[Msg](mapper: Int => Msg) extends Sub[Msg] {
+      def fire(gameMsgSink: GameMsgSink[Msg]): Unit = {
+        val pressedKeys = net.kogics.kojo.staging.Inputs.pressedKeys
+        pressedKeys.foreach { keyCode =>
+          val msg = mapper(keyCode)
           gameMsgSink.triggerUpdate(msg)
         }
       }
-
-      def cancel(): Unit = {
-        canvas.stopAnimationActivity(t)
-      }
     }
 
-    case class OnKeyDown[Msg](mapper: Int => Msg)(implicit canvas: SCanvas) extends Sub[Msg] {
-      var t: java.util.concurrent.Future[edu.umd.cs.piccolo.activities.PActivity] = _
-
-      def run(): Unit = {
-        t = canvas.timer(20) {
-          val pressedKeys = net.kogics.kojo.staging.Inputs.pressedKeys
-          pressedKeys.foreach { keyCode =>
-            val msg = mapper(keyCode)
-            gameMsgSink.triggerUpdate(msg)
-          }
+    case class OnMousePress[Msg](mapper: Point => Msg) extends Sub[Msg] {
+      def fire(gameMsgSink: GameMsgSink[Msg]): Unit = {
+        import net.kogics.kojo.staging.Inputs
+        if (Inputs.mousePressedFlag) {
+          val msg = mapper(Inputs.mousePos)
+          gameMsgSink.triggerUpdate(msg)
         }
       }
-
-      def cancel(): Unit = {
-        canvas.stopAnimationActivity(t)
-      }
     }
 
-    def onAnimationFrame[Msg](mapper: => Msg)(implicit canvas: SCanvas): Sub[Msg] = OnAnimationFrame(() => mapper)
+    def onAnimationFrame[Msg](mapper: => Msg): Sub[Msg] = OnAnimationFrame(() => mapper)
 
-    def onKeyDown[Msg](mapper: Int => Msg)(implicit canvas: SCanvas): Sub[Msg] = OnKeyDown(mapper)
+    def onKeyDown[Msg](mapper: Int => Msg): Sub[Msg] = OnKeyDown(mapper)
+
+    def onMousePress[Msg](mapper: Point => Msg): Sub[Msg] = OnMousePress(mapper)
   }
 
   class Game[Model, Msg](
@@ -74,27 +66,42 @@ package object gaming {
                           update: (Model, Msg) => Model,
                           view: Model => Picture,
                           subscriptions: Model => Seq[Sub[Msg]]
-                        ) extends GameMsgSink[Msg] {
-    private var currModel = init
-    private var currView = view(currModel)
-    private val currSubs = subscriptions(currModel)
-    currView.draw()
-    currSubs.foreach { s =>
-      s.gameMsgSink = this
-      s.run()
+                        )(implicit canvas: SCanvas) extends GameMsgSink[Msg] {
+    private var currModel: Model = _
+    private var currSubs: Seq[Sub[Msg]] = _
+    private var currView: Picture = _
+    private var firstTime = true
+
+    var gameTimer = canvas.timer(20) {
+      if (firstTime) {
+        firstTime = false
+        currModel = init
+        currView = view(currModel)
+        currView.draw()
+        currSubs = subscriptions(currModel)
+      }
+      else {
+        fireTimerSubs()
+      }
+    }
+
+    def fireTimerSubs(): Unit = {
+      currSubs.foreach { sub =>
+        sub.fire(this)
+      }
+      if (currSubs.isEmpty) {
+        canvas.stopAnimationActivity(gameTimer)
+      }
     }
 
     def triggerUpdate(msg: Msg): Unit = {
-      currModel = update(currModel, msg)
-      net.kogics.kojo.picture.PicCache.clear()
-      currView.erase()
-      currView = view(currModel)
-      currView.draw()
-      val updatedSubs = subscriptions(currModel)
-      if (updatedSubs.isEmpty) {
-        currSubs.foreach { s =>
-          s.cancel()
-        }
+      if (currSubs.nonEmpty) {
+        currModel = update(currModel, msg)
+        val oldView = currView
+        currView = view(currModel)
+        oldView.erase()
+        currView.draw()
+        currSubs = subscriptions(currModel)
       }
     }
   }
