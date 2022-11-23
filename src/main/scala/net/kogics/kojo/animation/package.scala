@@ -138,7 +138,7 @@ package object animation {
       val startMillis = System.currentTimeMillis
       val initPic = picMaker(initState)
 
-      Utils.runInSwingThread {
+      Utils.runInSwingThreadNonBatched {
         initPic.draw()
         currPic = initPic
         onStart()

@@ -182,7 +182,7 @@ class Figure private (canvas: SCanvas, initX: Double, initY: Double) {
     @volatile var figAnimation: PActivity = null
     val promise = new FutureResult[PActivity]
 
-    Utils.runInSwingThread {
+    Utils.runInSwingThreadNonBatched {
       val _ = figAnimation // force a volatile read to trigger a StoreLoad memory barrier
       figAnimation = new PActivity(-1, rate, System.currentTimeMillis + delay) {
         override def activityStep(elapsedTime: Long): Unit = {

@@ -289,6 +289,20 @@ object Utils {
     })
   }
 
+  // a version of runInSwingThread - which can be useful if batching is not needed
+  def runInSwingThreadNonBatched(fn: => Unit): Unit = {
+    if (EventQueue.isDispatchThread) {
+      fn
+    }
+    else {
+      javax.swing.SwingUtilities.invokeLater(new Runnable {
+        override def run: Unit = {
+          fn
+        }
+      })
+    }
+  }
+
   val batchLock = new ReentrantLock
   val notFull = batchLock.newCondition
   val Max_Q_Size = 9000
@@ -299,7 +313,7 @@ object Utils {
     keepProcessingQ = false
   }
 
-  // this is the core of Kojo UI performance - so the code is a little low-level
+  // this is the core of Kojo UI/drawing performance - so the code is a little low-level
   def runInSwingThread(fn: => Unit): Unit = {
     if (EventQueue.isDispatchThread) {
       fn
