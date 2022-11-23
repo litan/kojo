@@ -19,7 +19,7 @@ import net.kogics.kojo.core.{Picture, Point, SCanvas}
 
 package object gaming {
   trait GameMsgSink[Msg] {
-    def triggerUpdate(msg: Msg): Unit
+    def triggerIncrementalUpdate(msg: Msg): Unit
   }
 
   trait Sub[Msg] {
@@ -30,7 +30,7 @@ package object gaming {
     case class OnAnimationFrame[Msg](mapper: () => Msg) extends Sub[Msg] {
       def fire(gameMsgSink: GameMsgSink[Msg]): Unit = {
         val msg = mapper()
-        gameMsgSink.triggerUpdate(msg)
+        gameMsgSink.triggerIncrementalUpdate(msg)
       }
     }
 
@@ -39,17 +39,17 @@ package object gaming {
         val pressedKeys = net.kogics.kojo.staging.Inputs.pressedKeys
         pressedKeys.foreach { keyCode =>
           val msg = mapper(keyCode)
-          gameMsgSink.triggerUpdate(msg)
+          gameMsgSink.triggerIncrementalUpdate(msg)
         }
       }
     }
 
-    case class OnMousePress[Msg](mapper: Point => Msg) extends Sub[Msg] {
+    case class OnMouseDown[Msg](mapper: Point => Msg) extends Sub[Msg] {
       def fire(gameMsgSink: GameMsgSink[Msg]): Unit = {
         import net.kogics.kojo.staging.Inputs
-        if (Inputs.mousePressedFlag) {
+        if (Inputs.mousePressedFlag && Inputs.mouseBtn == 1) {
           val msg = mapper(Inputs.mousePos)
-          gameMsgSink.triggerUpdate(msg)
+          gameMsgSink.triggerIncrementalUpdate(msg)
         }
       }
     }
@@ -58,7 +58,7 @@ package object gaming {
 
     def onKeyDown[Msg](mapper: Int => Msg): Sub[Msg] = OnKeyDown(mapper)
 
-    def onMousePress[Msg](mapper: Point => Msg): Sub[Msg] = OnMousePress(mapper)
+    def onMouseDown[Msg](mapper: Point => Msg): Sub[Msg] = OnMouseDown(mapper)
   }
 
   class Game[Model, Msg](
@@ -98,7 +98,7 @@ package object gaming {
       }
     }
 
-    def triggerUpdate(msg: Msg): Unit = {
+    def triggerIncrementalUpdate(msg: Msg): Unit = {
       if (currSubs.nonEmpty) {
         currModel = update(currModel, msg)
         currSubs = subscriptions(currModel)
