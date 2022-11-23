@@ -76,12 +76,16 @@ package object gaming {
       if (firstTime) {
         firstTime = false
         currModel = init
+        currSubs = subscriptions(currModel)
         currView = view(currModel)
         currView.draw()
-        currSubs = subscriptions(currModel)
       }
       else {
         fireTimerSubs()
+        val oldView = currView
+        currView = view(currModel)
+        oldView.erase()
+        currView.draw()
       }
     }
 
@@ -97,10 +101,6 @@ package object gaming {
     def triggerUpdate(msg: Msg): Unit = {
       if (currSubs.nonEmpty) {
         currModel = update(currModel, msg)
-        val oldView = currView
-        currView = view(currModel)
-        oldView.erase()
-        currView.draw()
         currSubs = subscriptions(currModel)
       }
     }
