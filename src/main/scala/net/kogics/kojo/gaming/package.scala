@@ -20,21 +20,31 @@ import net.kogics.kojo.core.{Picture, Point, SCanvas}
 package object gaming {
   trait GameMsgSink[Msg] {
     def triggerIncrementalUpdate(msg: Msg): Unit
+
+    def triggerUpdate(msg: Msg): Unit
   }
 
-  trait Sub[Msg] {
+  trait Sub[Msg]
+
+  trait NonTimerSub[Msg] extends Sub[Msg] {
+    def activate(gameMsgSink: GameMsgSink[Msg]): Unit
+
+    def deactivate(): Unit
+  }
+
+  trait TimerSub[Msg] extends Sub[Msg] {
     def fire(gameMsgSink: GameMsgSink[Msg]): Unit
   }
 
   object Subscriptions {
-    case class OnAnimationFrame[Msg](mapper: () => Msg) extends Sub[Msg] {
+    case class OnAnimationFrame[Msg](mapper: () => Msg) extends TimerSub[Msg] {
       def fire(gameMsgSink: GameMsgSink[Msg]): Unit = {
         val msg = mapper()
         gameMsgSink.triggerIncrementalUpdate(msg)
       }
     }
 
-    case class OnKeyDown[Msg](mapper: Int => Msg) extends Sub[Msg] {
+    case class OnKeyDown[Msg](mapper: Int => Msg) extends TimerSub[Msg] {
       def fire(gameMsgSink: GameMsgSink[Msg]): Unit = {
         val pressedKeys = net.kogics.kojo.staging.Inputs.pressedKeys
         pressedKeys.foreach { keyCode =>
@@ -44,7 +54,7 @@ package object gaming {
       }
     }
 
-    case class OnMouseDown[Msg](mapper: Point => Msg) extends Sub[Msg] {
+    case class OnMouseDown[Msg](mapper: Point => Msg) extends TimerSub[Msg] {
       def fire(gameMsgSink: GameMsgSink[Msg]): Unit = {
         import net.kogics.kojo.staging.Inputs
         if (Inputs.mousePressedFlag && Inputs.mouseBtn == 1) {
@@ -54,11 +64,27 @@ package object gaming {
       }
     }
 
+    case class OnMouseClick[Msg](mapper: Point => Msg)(implicit canvas: SCanvas) extends NonTimerSub[Msg] {
+      def activate(gameMsgSink: GameMsgSink[Msg]): Unit = {
+        canvas.onMouseClick { case (x, y) =>
+          val msg = mapper(Point(x, y))
+          gameMsgSink.triggerUpdate(msg)
+        }
+      }
+
+      def deactivate(): Unit = {
+        println("Deactivating mouse click subscription")
+        net.kogics.kojo.staging.Inputs.mouseClickHandler = None
+      }
+    }
+
     def onAnimationFrame[Msg](mapper: => Msg): Sub[Msg] = OnAnimationFrame(() => mapper)
 
     def onKeyDown[Msg](mapper: Int => Msg): Sub[Msg] = OnKeyDown(mapper)
 
     def onMouseDown[Msg](mapper: Point => Msg): Sub[Msg] = OnMouseDown(mapper)
+
+    def onMouseClick[Msg](mapper: Point => Msg)(implicit cavas: SCanvas): Sub[Msg] = OnMouseClick(mapper)
   }
 
   class Game[Model, Msg](
@@ -77,32 +103,72 @@ package object gaming {
         firstTime = false
         currModel = init
         currSubs = subscriptions(currModel)
+        nonTimerSubs.foreach(_.activate(this))
         currView = view(currModel)
         currView.draw()
       }
       else {
         fireTimerSubs()
-        val oldView = currView
-        currView = view(currModel)
-        oldView.erase()
-        currView.draw()
+        updateView()
       }
     }
 
-    def fireTimerSubs(): Unit = {
-      currSubs.foreach { sub =>
-        sub.fire(this)
+    def timerSubs: Seq[TimerSub[Msg]] = currSubs.filter(_.isInstanceOf[TimerSub[Msg]]).asInstanceOf[Seq[TimerSub[Msg]]]
+
+    def nonTimerSubs: Seq[NonTimerSub[Msg]] = currSubs.filter(_.isInstanceOf[NonTimerSub[Msg]]).asInstanceOf[Seq[NonTimerSub[Msg]]]
+
+    def updateView(): Unit = {
+      val oldView = currView
+      currView = view(currModel)
+      oldView.erase()
+      currView.draw()
+    }
+
+    def updateModelAndSubs(msg: Msg): Unit = {
+      currModel = update(currModel, msg)
+      val oldSubs = currSubs
+      currSubs = subscriptions(currModel)
+      handleSubChanges(oldSubs, currSubs)
+    }
+
+    def handleSubChanges(oldSubs: Seq[Sub[Msg]], newSubs: Seq[Sub[Msg]]): Unit = {
+      if (newSubs.length != oldSubs.length) {
+        val newSubsSet = Set(newSubs: _*)
+        oldSubs.foreach { sub =>
+          sub match {
+            case ntSub: NonTimerSub[Msg] =>
+              if (!newSubsSet.contains(ntSub)) {
+                ntSub.deactivate()
+              }
+            case _ =>
+          }
+        }
       }
+    }
+
+    def checkForStop(): Unit = {
       if (currSubs.isEmpty) {
         canvas.stopAnimationActivity(gameTimer)
       }
     }
 
+    def fireTimerSubs(): Unit = {
+      timerSubs.foreach { sub =>
+        sub.fire(this)
+      }
+      checkForStop()
+    }
+
     def triggerIncrementalUpdate(msg: Msg): Unit = {
       if (currSubs.nonEmpty) {
-        currModel = update(currModel, msg)
-        currSubs = subscriptions(currModel)
+        updateModelAndSubs(msg)
       }
+    }
+
+    def triggerUpdate(msg: Msg): Unit = {
+      updateModelAndSubs(msg)
+      updateView()
+      checkForStop()
     }
   }
 
