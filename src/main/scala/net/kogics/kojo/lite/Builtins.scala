@@ -1043,9 +1043,19 @@ Here's a partial list of the available commands:
     animateWithRedraw(init, update, view)
 
   type Sub[M] = gaming.Sub[M]
+  type CmdQ[M] = gaming.CmdQ[M]
   val Subscriptions = gaming.Subscriptions
+  lazy val CollisionDetector = new gaming.CollisionDetector()
 
   def runGame[S, M](init: S, update: (S, M) => S, view: S => Picture, subscriptions: S => Seq[Sub[M]]): Unit = {
-    new gaming.Game(init, update, view, subscriptions)
+    new gaming.Game(init, update, view, subscriptions, { s: S => Seq() })
+  }
+
+  def runGame[S, M](
+                     init: S, update: (S, M) => S, view: S => Picture,
+                     subscriptions: S => Seq[Sub[M]],
+                     cmdQs: S => Seq[CmdQ[M]]
+                   ): Unit = {
+    new gaming.Game(init, update, view, subscriptions, cmdQs)
   }
 }

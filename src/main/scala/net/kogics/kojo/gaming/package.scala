@@ -16,6 +16,7 @@
 package net.kogics.kojo
 
 import net.kogics.kojo.core.{Picture, Point, SCanvas}
+import net.kogics.kojo.util.Utils
 
 package object gaming {
   trait GameMsgSink[Msg] {
@@ -24,7 +25,7 @@ package object gaming {
     def triggerUpdate(msg: Msg): Unit
   }
 
-  trait Sub[Msg]
+  trait Sub[+Msg]
 
   trait NonTimerSub[Msg] extends Sub[Msg] {
     def activate(gameMsgSink: GameMsgSink[Msg]): Unit
@@ -87,16 +88,22 @@ package object gaming {
     def onMouseClick[Msg](mapper: Point => Msg)(implicit cavas: SCanvas): Sub[Msg] = OnMouseClick(mapper)
   }
 
+  trait CmdQ[+Msg] {
+    def run(): Msg
+  }
+
   class Game[Model, Msg](
                           init: => Model,
                           update: (Model, Msg) => Model,
                           view: Model => Picture,
-                          subscriptions: Model => Seq[Sub[Msg]]
+                          subscriptions: Model => Seq[Sub[Msg]],
+                          cmdQs: Model => Seq[CmdQ[Msg]]
                         )(implicit canvas: SCanvas) extends GameMsgSink[Msg] {
     private var currModel: Model = _
     private var currSubs: Seq[Sub[Msg]] = _
     private var currView: Picture = _
     private var firstTime = true
+    private var pendingCmdQs = collection.mutable.Set.empty[CmdQ[Msg]]
 
     var gameTimer = canvas.timer(20) {
       if (firstTime) {
@@ -104,12 +111,15 @@ package object gaming {
         currModel = init
         currSubs = subscriptions(currModel)
         nonTimerSubs.foreach(_.activate(this))
+        fireCmdQs() // happens async
         currView = view(currModel)
         currView.draw()
       }
       else {
         fireTimerSubs()
+        fireCmdQs() // happens async
         updateView()
+        checkForStop()
       }
     }
 
@@ -156,7 +166,20 @@ package object gaming {
       timerSubs.foreach { sub =>
         sub.fire(this)
       }
-      checkForStop()
+    }
+
+    def fireCmdQs(): Unit = {
+      val currCmdQs = cmdQs(currModel)
+      currCmdQs.filterNot(pendingCmdQs.contains).foreach { cmdQ =>
+        pendingCmdQs.add(cmdQ)
+        Utils.runAsync {
+          val msg = cmdQ.run()
+          Utils.runInSwingThreadNonBatched {
+            triggerUpdate(msg)
+            pendingCmdQs.remove(cmdQ)
+          }
+        }
+      }
     }
 
     def triggerIncrementalUpdate(msg: Msg): Unit = {
@@ -167,6 +190,8 @@ package object gaming {
 
     def triggerUpdate(msg: Msg): Unit = {
       updateModelAndSubs(msg)
+      // happens async
+      fireCmdQs()
       updateView()
       checkForStop()
     }
