@@ -144,16 +144,23 @@ package object gaming {
     }
 
     def handleSubChanges(oldSubs: Seq[Sub[Msg]], newSubs: Seq[Sub[Msg]]): Unit = {
-      if (newSubs.length != oldSubs.length) {
-        val newSubsSet = Set(newSubs: _*)
-        oldSubs.foreach { sub =>
-          sub match {
-            case ntSub: NonTimerSub[Msg] =>
-              if (!newSubsSet.contains(ntSub)) {
-                ntSub.deactivate()
-              }
-            case _ =>
-          }
+      if (newSubs != oldSubs) {
+        lazy val newSubsSet = Set(newSubs: _*)
+        oldSubs.foreach {
+          case oldNtSub: NonTimerSub[Msg] =>
+            if (!newSubsSet.contains(oldNtSub)) {
+              oldNtSub.deactivate()
+            }
+          case _ =>
+        }
+
+        lazy val oldSubsSet = Set(oldSubs: _*)
+        newSubs.foreach {
+          case newNtSub: NonTimerSub[Msg] =>
+            if (!oldSubsSet.contains(newNtSub)) {
+              newNtSub.activate(this)
+            }
+          case _ =>
         }
       }
     }

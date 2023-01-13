@@ -218,9 +218,16 @@ object Utils {
   def inSwingThread = EventQueue.isDispatchThread
 
   def runAsync(fn: => Unit): Unit = {
+    import scala.util.control.NonFatal
     new Thread(new Runnable {
       def run: Unit = {
-        fn
+        try {
+          fn
+        }
+        catch {
+          case NonFatal(e) =>
+            Log.log(Level.WARNING, "Problem on async runner thread", e)
+        }
       }
     }).start
   }
