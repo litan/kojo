@@ -571,30 +571,46 @@ class CodeExecutionSupport(
 
   def enableClearButton() = if (!clearButton.isEnabled) clearButton.setEnabled(true)
 
+  @volatile var inputBeingRead = false
+
+  def removeInputPanel(): Unit = {
+    inputBeingRead = false
+    outputPane.removeInputPanel()
+  }
+
   def readInput(prompt: String): String = {
     if (Utils.inSwingThread) {
       throw new RuntimeException("Input can't be read from the GUI thread")
     }
     else {
-      val input = new FutureResult[String]
-      Utils.runInSwingThread {
-        val inputField = outputPane.createReadInputPanel(prompt)
-        kojoCtx.activateOutputPane()
-        Utils.schedule(0.1) {
-          inputField.requestFocusInWindow(); kojoCtx.scrollOutputToEnd()
-        }
-        Utils.schedule(0.9) {
-          inputField.requestFocusInWindow()
-        }
-        inputField.addActionListener(new ActionListener {
-          def actionPerformed(e: ActionEvent): Unit = {
-            //          println("%s: %s" format (prompt, inputField.getText))
-            input.set(inputField.getText)
-            outputPane.removeInputPanel()
+      if (!inputBeingRead) {
+        inputBeingRead = true
+        val input = new FutureResult[String]
+        Utils.runInSwingThread {
+          val inputField = outputPane.createReadInputPanel(prompt)
+          kojoCtx.activateOutputPane()
+          Utils.schedule(0.1) {
+            inputField.requestFocusInWindow();
+            kojoCtx.scrollOutputToEnd()
           }
-        })
+          Utils.schedule(0.9) {
+            inputField.requestFocusInWindow()
+          }
+          inputField.addActionListener(new ActionListener {
+            def actionPerformed(e: ActionEvent): Unit = {
+              //          println("%s: %s" format (prompt, inputField.getText))
+              input.set(inputField.getText)
+              outputPane.removeInputPanel()
+            }
+          })
+        }
+        val ret = input.get
+        inputBeingRead = false
+        ret
       }
-      input.get
+      else {
+        throw new RuntimeException("Input reads cannot overlap")
+      }
     }
   }
 
@@ -625,7 +641,7 @@ class CodeExecutionSupport(
     else {
       stopInterpreter()
       stopActivity()
-      outputPane.removeInputPanel()
+      removeInputPanel()
     }
   }
 

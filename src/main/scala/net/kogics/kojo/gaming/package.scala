@@ -18,6 +18,8 @@ package net.kogics.kojo
 import net.kogics.kojo.core.{Picture, Point, SCanvas}
 import net.kogics.kojo.util.Utils
 
+import scala.util.control.NonFatal
+
 package object gaming {
   trait GameMsgSink[Msg] {
     def triggerIncrementalUpdate(msg: Msg): Unit
@@ -173,10 +175,16 @@ package object gaming {
       currCmdQs.filterNot(pendingCmdQs.contains).foreach { cmdQ =>
         pendingCmdQs.add(cmdQ)
         Utils.runAsync {
-          val msg = cmdQ.run()
-          Utils.runInSwingThreadNonBatched {
-            triggerUpdate(msg)
-            pendingCmdQs.remove(cmdQ)
+          try {
+            val msg = cmdQ.run()
+            Utils.runInSwingThreadNonBatched {
+              triggerUpdate(msg)
+              pendingCmdQs.remove(cmdQ)
+            }
+          }
+          catch {
+            case NonFatal(_) =>
+              pendingCmdQs.remove(cmdQ)
           }
         }
       }
