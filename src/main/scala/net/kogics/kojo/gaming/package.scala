@@ -98,52 +98,48 @@ package object gaming {
                           init: => Model,
                           update: (Model, Msg) => Model,
                           view: Model => Picture,
-                          subscriptions: Model => Seq[Sub[Msg]],
-                          cmdQs: Model => Seq[CmdQ[Msg]]
+                          subscriptions: Model => Seq[Sub[Msg]]
                         )(implicit canvas: SCanvas) extends GameMsgSink[Msg] {
     private var currModel: Model = _
     private var currSubs: Seq[Sub[Msg]] = _
     private var currView: Picture = _
     private var firstTime = true
-    private var pendingCmdQs = collection.mutable.Set.empty[CmdQ[Msg]]
 
-    var gameTimer = canvas.timer(20) {
+    private var gameTimer = canvas.timer(20) {
       if (firstTime) {
         firstTime = false
         currModel = init
         currSubs = subscriptions(currModel)
         nonTimerSubs.foreach(_.activate(this))
-        fireCmdQs() // happens async
         currView = view(currModel)
         currView.draw()
       }
       else {
         fireTimerSubs()
-        fireCmdQs() // happens async
         updateView()
         checkForStop()
       }
     }
 
-    def timerSubs: Seq[TimerSub[Msg]] = currSubs.filter(_.isInstanceOf[TimerSub[Msg]]).asInstanceOf[Seq[TimerSub[Msg]]]
+    private def timerSubs: Seq[TimerSub[Msg]] = currSubs.filter(_.isInstanceOf[TimerSub[Msg]]).asInstanceOf[Seq[TimerSub[Msg]]]
 
-    def nonTimerSubs: Seq[NonTimerSub[Msg]] = currSubs.filter(_.isInstanceOf[NonTimerSub[Msg]]).asInstanceOf[Seq[NonTimerSub[Msg]]]
+    private def nonTimerSubs: Seq[NonTimerSub[Msg]] = currSubs.filter(_.isInstanceOf[NonTimerSub[Msg]]).asInstanceOf[Seq[NonTimerSub[Msg]]]
 
-    def updateView(): Unit = {
+    private def updateView(): Unit = {
       val oldView = currView
       currView = view(currModel)
       oldView.erase()
       currView.draw()
     }
 
-    def updateModelAndSubs(msg: Msg): Unit = {
+    private def updateModelAndSubs(msg: Msg): Unit = {
       currModel = update(currModel, msg)
       val oldSubs = currSubs
       currSubs = subscriptions(currModel)
       handleSubChanges(oldSubs, currSubs)
     }
 
-    def handleSubChanges(oldSubs: Seq[Sub[Msg]], newSubs: Seq[Sub[Msg]]): Unit = {
+    private def handleSubChanges(oldSubs: Seq[Sub[Msg]], newSubs: Seq[Sub[Msg]]): Unit = {
       if (newSubs != oldSubs) {
         lazy val newSubsSet = Set(newSubs: _*)
         oldSubs.foreach {
@@ -165,34 +161,23 @@ package object gaming {
       }
     }
 
-    def checkForStop(): Unit = {
+    private def checkForStop(): Unit = {
       if (currSubs.isEmpty) {
         canvas.stopAnimationActivity(gameTimer)
       }
     }
 
-    def fireTimerSubs(): Unit = {
+    private def fireTimerSubs(): Unit = {
       timerSubs.foreach { sub =>
         sub.fire(this)
       }
     }
 
-    def fireCmdQs(): Unit = {
-      val currCmdQs = cmdQs(currModel)
-      currCmdQs.filterNot(pendingCmdQs.contains).foreach { cmdQ =>
-        pendingCmdQs.add(cmdQ)
-        Utils.runAsync {
-          try {
-            val msg = cmdQ.run()
-            Utils.runInSwingThreadNonBatched {
-              triggerUpdate(msg)
-              pendingCmdQs.remove(cmdQ)
-            }
-          }
-          catch {
-            case NonFatal(_) =>
-              pendingCmdQs.remove(cmdQ)
-          }
+    def runCommandQuery(cmdQ: CmdQ[Msg]): Unit = {
+      Utils.runAsync {
+        val msg = cmdQ.run()
+        Utils.runInSwingThreadNonBatched {
+          triggerUpdate(msg)
         }
       }
     }
@@ -205,8 +190,6 @@ package object gaming {
 
     def triggerUpdate(msg: Msg): Unit = {
       updateModelAndSubs(msg)
-      // happens async
-      fireCmdQs()
       updateView()
       checkForStop()
     }

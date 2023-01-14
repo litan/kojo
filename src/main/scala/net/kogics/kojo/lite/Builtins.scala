@@ -900,6 +900,7 @@ Here's a partial list of the available commands:
     cwidth = cb.width.toInt
     cheight = cb.height.toInt
     clearGameTime()
+    currGame = null
   }
 
   def size(width: Int, height: Int): Unit = {
@@ -1046,16 +1047,11 @@ Here's a partial list of the available commands:
   type CmdQ[M] = gaming.CmdQ[M]
   val Subscriptions = gaming.Subscriptions
   lazy val CollisionDetector = new gaming.CollisionDetector()
+  @volatile private var currGame: Option[gaming.Game[_, _]] = None
 
   def runGame[S, M](init: S, update: (S, M) => S, view: S => Picture, subscriptions: S => Seq[Sub[M]]): Unit = {
-    new gaming.Game(init, update, view, subscriptions, { s: S => Seq() })
+    currGame = Some(new gaming.Game(init, update, view, subscriptions))
   }
 
-  def runGame[S, M](
-                     init: S, update: (S, M) => S, view: S => Picture,
-                     subscriptions: S => Seq[Sub[M]],
-                     cmdQs: S => Seq[CmdQ[M]]
-                   ): Unit = {
-    new gaming.Game(init, update, view, subscriptions, cmdQs)
-  }
+  def runCommandQuery[M](cmdQ: CmdQ[M]): Unit = currGame.get.asInstanceOf[gaming.Game[_, M]].runCommandQuery(cmdQ)
 }
