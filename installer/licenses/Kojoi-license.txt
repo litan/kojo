@@ -1,5 +1,5 @@
 
-Copyright (C) 2009-2022 Lalit Pant <pant.lalit@gmail.com> as per contributions. Copyright (C) Project contributors as per contributions. Contributors retain copyright to their own contributions, and contribute their work to this project under the license specified below. Kojo is licensed under The GNU General Public License, Version 3. The full text of the license is available at: http://www.gnu.org/licenses/gpl.html, and is also reproduced below for quick reference.
+Copyright (C) 2009-2023 Lalit Pant <pant.lalit@gmail.com> as per contributions. Copyright (C) Project contributors as per contributions. Contributors retain copyright to their own contributions, and contribute their work to this project under the license specified below. Kojo is licensed under The GNU General Public License, Version 3. The full text of the license is available at: http://www.gnu.org/licenses/gpl.html, and is also reproduced below for quick reference.
 
 Kojo makes use of third-party software. A list of this software is available in the 'Help -> About' menu item in Kojo.
 
