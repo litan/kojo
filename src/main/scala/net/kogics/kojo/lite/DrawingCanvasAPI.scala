@@ -89,8 +89,8 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def timerWithState[S](rate: Long, init: S)(code: S => S): Future[PActivity] =
     tCanvas.timerWithState(rate, init)(code)
   def animate(code: => Unit) = tCanvas.animate(code)
-  def animateWithState[S](init: S)(code: S => S): Future[PActivity] =
-    tCanvas.animateWithState(init)(code)
+  def animateWithState[S](initState: S)(nextState: S => S): Future[PActivity] =
+    tCanvas.animateWithState(initState)(nextState)
   //  def animateWithState[S](init: S, nextState: S => S)(code: S => Unit): Future[PActivity] = {
   //    tCanvas.animateWithState(init) { s =>
   //      code(s)

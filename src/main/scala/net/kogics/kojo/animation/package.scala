@@ -137,9 +137,9 @@ package object animation {
 
       val startMillis = System.currentTimeMillis
       val initPic = picMaker(initState)
+      initPic.draw()
 
       Utils.runInSwingThreadNonBatched {
-        initPic.draw()
         currPic = initPic
         onStart()
       }
@@ -149,13 +149,12 @@ package object animation {
           val elapsedTimeMillis =
             (System.currentTimeMillis - startMillis).toDouble
           val ns = nextState(s, elapsedTimeMillis)
-
-          pic.erase()
           val pic2 = picMaker(ns)
+          pic.erase()
           pic2.draw()
           currPic = pic2
 
-          if (ns == finalState && elapsedTimeMillis >= durationMillis) {
+          if (elapsedTimeMillis >= durationMillis) {
             onDone()
             canvas.stopAnimationActivity(anim)
           }

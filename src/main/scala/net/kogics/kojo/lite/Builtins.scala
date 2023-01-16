@@ -1028,10 +1028,10 @@ Here's a partial list of the available commands:
     val initPic = stateView(initState)
     initPic.draw()
     lazy val anim: Future[PActivity] = tCanvas.animateWithState((initState, initPic)) { case (state, pic) =>
-      pic.erase()
-      val pic2 = stateView(state)
-      pic2.draw()
       val newState = nextState(state)
+      val pic2 = stateView(state)
+      pic.erase()
+      pic2.draw()
       if (newState == state) {
         tCanvas.stopAnimationActivity(anim)
       }
@@ -1039,9 +1039,6 @@ Here's a partial list of the available commands:
     }
     anim
   }
-
-  def runAnimation[S](init: S, update: S => S, view: S => Picture): Unit =
-    animateWithRedraw(init, update, view)
 
   type Sub[M] = gaming.Sub[M]
   type CmdQ[M] = gaming.CmdQ[M]

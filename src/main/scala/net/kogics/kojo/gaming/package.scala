@@ -18,8 +18,6 @@ package net.kogics.kojo
 import net.kogics.kojo.core.{Picture, Point, SCanvas}
 import net.kogics.kojo.util.Utils
 
-import scala.util.control.NonFatal
-
 package object gaming {
   trait GameMsgSink[Msg] {
     def triggerIncrementalUpdate(msg: Msg): Unit
