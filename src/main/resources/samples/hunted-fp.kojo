@@ -68,7 +68,7 @@ def update(m: Model, msg: Msg): Model = msg match {
         val p = m.player
         val gameOver =
             cd.collidesWithEdge(p.x, p.y, p.w, p.h) ||
-                m.hunters.exists { h =>
+                newm.hunters.exists { h =>
                     cd.collidesWith(p.x, p.y, p.w, p.h, h.x, h.y, h.w, h.h)
                 }
         newm.copy(gameOver = gameOver)
