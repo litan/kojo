@@ -118,6 +118,7 @@ package object animation {
     val stateSize = initState.size
     val durationMillis = duration * 1000
 
+    var currState: Seq[Double] = _
     var currPic: Picture = _
 
     private def nextState(s: Seq[Double], elapsedTimeMillis: Double): Seq[Double] = {
@@ -136,29 +137,34 @@ package object animation {
       import java.util.concurrent.Future
 
       val startMillis = System.currentTimeMillis
-      val initPic = picMaker(initState)
-
-      Utils.runInSwingThreadNonBatched {
-        initPic.draw()
-        currPic = initPic
-        onStart()
-      }
+      var firstTime = true
 
       lazy val anim: Future[PActivity] =
-        canvas.animateWithState((initPic, initState)) { case (pic, s) =>
-          val elapsedTimeMillis =
-            (System.currentTimeMillis - startMillis).toDouble
-          val ns = nextState(s, elapsedTimeMillis)
-          val pic2 = picMaker(ns)
-          pic.erase()
-          pic2.draw()
-          currPic = pic2
-
-          if (elapsedTimeMillis >= durationMillis) {
-            onDone()
-            canvas.stopAnimationActivity(anim)
+        canvas.animate {
+          if (firstTime) {
+            val initPic = picMaker(initState)
+            initPic.draw()
+            currState = initState
+            currPic = initPic
+            onStart()
+            firstTime = false
           }
-          (pic2, ns)
+          else {
+            val elapsedTimeMillis =
+              (System.currentTimeMillis - startMillis).toDouble
+            val ns = nextState(currState, elapsedTimeMillis)
+            val pic2 = picMaker(ns)
+            currPic.erase()
+            pic2.draw()
+
+            currState = ns
+            currPic = pic2
+
+            if (elapsedTimeMillis >= durationMillis) {
+              onDone()
+              canvas.stopAnimationActivity(anim)
+            }
+          }
         }
       anim
     }
