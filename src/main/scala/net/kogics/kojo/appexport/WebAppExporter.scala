@@ -84,7 +84,7 @@ $script
             val exportDir = s"$home/kojo-export"
             val displayExportDir = new File(exportDir).getCanonicalPath
             println(s"Downloading and extracting Web-App template to $displayExportDir...")
-            val templateUrl = new URL("https://github.com/litan/kojo/blob/master/src/main/resources/export/webapp.zip?raw=true")
+            val templateUrl = new URL("https://docs.kogics.net/assets/files/webapp.zip")
             Unzipper.unzipUrl(templateUrl, exportDir)
             println("Template downloading and extracting done.")
 
