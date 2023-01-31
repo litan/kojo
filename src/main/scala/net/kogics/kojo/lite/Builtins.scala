@@ -824,7 +824,7 @@ Here's a partial list of the available commands:
     }
   }
 
-  private def makeCenteredMessage(message: String, color: Color = black, fontSize: Int = 15): Picture = {
+  def makeCenteredMessage(message: String, color: Color = black, fontSize: Int = 15): Picture = {
     val cb = canvasBounds
     val te = textExtent(message, fontSize)
     penColor(color) *
