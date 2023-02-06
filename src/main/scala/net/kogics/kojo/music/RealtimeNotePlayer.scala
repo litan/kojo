@@ -30,7 +30,7 @@ class RealtimeNotePlayer {
 
   def setInstrument(instrumentCode: Int): Unit = synchronized {
     require(instrumentCode >= 0 && instrumentCode <= 127, "Instrument Code should be between 0 and 127")
-    val ins = new ShortMessage();
+    val ins = new ShortMessage()
     ins.setMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentCode, 0)
     val specifyInstrument = new MidiEvent(ins, trackTicks)
     track.add(specifyInstrument)
@@ -46,13 +46,13 @@ class RealtimeNotePlayer {
     track.add(noteOn)
     trackTicks += 1
 
-    val b = new ShortMessage();
+    val b = new ShortMessage()
     b.setMessage(ShortMessage.NOTE_OFF, 0, pitch, volume)
     val noteOff = new MidiEvent(b, trackTicks)
     track.add(noteOff)
 
     if (!sequencer.isRunning) {
-      sequencer.setTempoInMPQ(millis * 1000)
+      sequencer.setTempoInMPQ(millis * 1000f)
       sequencer.start()
     }
     else {
