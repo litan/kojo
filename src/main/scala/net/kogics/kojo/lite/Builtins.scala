@@ -27,6 +27,7 @@ import com.jhlabs.image.LightFilter.Light
 import javax.swing.JComponent
 import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
 import net.kogics.kojo.kmath.KEasing
+import net.kogics.kojo.music.RealtimeNotePlayer
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
 import net.kogics.kojo.xscala.{CodeCompletionUtils, Help, RepeatCommands}
@@ -260,6 +261,15 @@ Here's a partial list of the available commands:
     fuguePlayer.playMusicLoop(voice)
   }
   UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
+
+  lazy val rtnp = new RealtimeNotePlayer()
+  def playNote(note: Int, duration: Int, volume: Int = 80): Unit = {
+    rtnp.playNote(note, duration, volume)
+  }
+
+  def setNoteInstrument(instrumentCode: Int): Unit = {
+    rtnp.setInstrument(instrumentCode)
+  }
 
   UserCommand("textExtent", List("text", "fontSize"), "Determines the size/extent of the given text fragment for the given font size.")
 
