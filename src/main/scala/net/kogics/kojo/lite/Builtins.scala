@@ -455,6 +455,7 @@ Here's a partial list of the available commands:
   def stopAnimations() = kojoCtx.stopActivity()
   def stopAnimation() = kojoCtx.stopActivity()
   def isKeyPressed(key: Int) = staging.Inputs.isKeyPressed(key)
+  def pressedKeys: collection.Set[Int] = staging.Inputs.pressedKeys
   def activateCanvas() = kojoCtx.activateDrawingCanvas()
   def activateEditor() = kojoCtx.activateScriptEditor()
 
