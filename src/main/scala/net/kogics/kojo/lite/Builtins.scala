@@ -263,6 +263,7 @@ Here's a partial list of the available commands:
   UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
 
   lazy val rtnp = new RealtimeNotePlayer()
+  val Instrument = music.Instrument
   def playNote(note: Int, duration: Int, volume: Int = 80): Unit = {
     rtnp.playNote(note, duration, volume)
   }
@@ -1049,6 +1050,27 @@ Here's a partial list of the available commands:
       (newState, pic2)
     }
     anim
+  }
+
+  def animateWithSetupCanvasDraw(setupCanvas: CanvasDraw => Unit)(drawFrame: CanvasDraw => Unit): Unit = {
+    class Sketch {
+      def setup(canvas: CanvasDraw): Unit = {
+        setupCanvas(canvas)
+      }
+
+      def drawLoop(canvas: CanvasDraw) {
+        drawFrame(canvas)
+      }
+    }
+
+    val sketch = new Sketch
+    val pic = Picture.fromSketch(sketch, 1)
+    draw(pic)
+  }
+
+  def animateWithCanvasDraw(drawFrame: CanvasDraw => Unit): Unit = {
+    def setup(canvasDraw: CanvasDraw) {}
+    animateWithSetupCanvasDraw(setup)(drawFrame)
   }
 
   type Sub[M] = gaming.Sub[M]
