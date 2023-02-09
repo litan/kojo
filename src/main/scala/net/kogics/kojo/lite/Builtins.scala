@@ -1058,7 +1058,7 @@ Here's a partial list of the available commands:
         setupCanvas(canvas)
       }
 
-      def drawLoop(canvas: CanvasDraw) {
+      def drawLoop(canvas: CanvasDraw): Unit = {
         drawFrame(canvas)
       }
     }
@@ -1069,8 +1069,7 @@ Here's a partial list of the available commands:
   }
 
   def animateWithCanvasDraw(drawFrame: CanvasDraw => Unit): Unit = {
-    def setup(canvasDraw: CanvasDraw) {}
-    animateWithSetupCanvasDraw(setup)(drawFrame)
+    animateWithSetupCanvasDraw({canvas =>})(drawFrame)
   }
 
   type Sub[M] = gaming.Sub[M]
