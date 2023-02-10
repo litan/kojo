@@ -420,10 +420,12 @@ Here's a partial list of the available commands:
   def zIndex(idx: Int) = postDrawTransform { pic => pic.setZIndex(idx) }
   def clip(clipShape: java.awt.Shape) = picture.Clippedc(clipShape)
 
-  def rotated(pic: Picture, angle: Double) = pic.thatsRotated(angle)
-  def translated(pic: Picture, x: Double, y: Double) = pic.thatsTranslated(x, y)
-  def scaled(pic: Picture, factor: Double) = pic.thatsScaled(factor)
-  def filled(pic: Picture, color: Color) = pic.thatsFilledWith(color)
+  // some core picture transformations as regular functions - for educative use
+  def withRotation(pic: Picture, angle: Double) = pic.withRotation(angle)
+  def withTranslation(pic: Picture, x: Double, y: Double) = pic.withTranslation(x, y)
+  def withScaling(pic: Picture, factor: Double) = pic.withScaling(factor)
+  def withFillColor(pic: Picture, color: Color) = pic.withFillColor(color)
+  def withPenColor(pic: Picture, color: Color) = pic.withPenColor(color)
 
   implicit val _picCanvas = tCanvas
   def pict(painter: Painter) = picture.Pic(painter)
