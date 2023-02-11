@@ -451,11 +451,12 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withFading(distance: Int): Picture  = Fade(distance)(epic(this))
   def withBlurring(radius: Int): Picture = Blur(radius)(epic(this))
   def withAxes: Picture = PostDrawTransform { pic => pic.axesOn() }(this)
-  def withBounds: Picture = PostDrawTransform { pic => picBounds(pic) }(this)
+  def withLocalBounds: Picture = PostDrawTransform { pic => picLocalBounds(pic) }(this)
   def withOpacity(opacity: Double): Picture = PostDrawTransform { pic => pic.setOpacity(opacity) }(this)
   def withPosition(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.setPosition(x, y) }(this)
   def withZIndex(zIndex: Int): Picture = PostDrawTransform { pic => pic.setZIndex(zIndex) }(this)
   def withClipping(clipShape: Shape): Picture = new ClipPic(this, clipShape)(canvas)
+  def withPenCapJoin(capJoin: (Int, Int)): Picture = PostDrawTransform { pic => pic.setPenCapJoin(capJoin) }(this)
 }
 
 trait RedrawStopper extends Picture {

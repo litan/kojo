@@ -212,9 +212,10 @@ trait Picture extends InputAware {
   def withFading(distance: Int): Picture
   def withBlurring(radius: Int): Picture
   def withAxes: Picture
-  def withBounds: Picture
+  def withLocalBounds: Picture
   def withOpacity(opacity: Double): Picture
   def withPosition(x: Double, y: Double): Picture
   def withZIndex(idx: Int): Picture
   def withClipping(clipShape: Shape): Picture
+  def withPenCapJoin(capJoin: (Int, Int)): Picture
 }

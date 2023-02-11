@@ -10,10 +10,17 @@ class CapJoin {
   val CAP_ROUND = BasicStroke.CAP_ROUND
   val CAP_SQUARE = BasicStroke.CAP_SQUARE
 
+  // Note - CAPs are for "unclosed" lines
+  // Joins come into play where lines connect
+
   // good combos
   val BUTT_BEVEL = (CAP_BUTT, JOIN_BEVEL)
   val ROUND_ROUND = (CAP_ROUND, JOIN_ROUND)
   val SQUARE_MITER = (CAP_SQUARE, JOIN_MITER)
+
+  val ROUNDED_CORNERS = ROUND_ROUND
+  val SHARP_CORNERS = SQUARE_MITER
+  val SLOPING_CORNERS = BUTT_BEVEL
 }
 
 object CapJoinConstants {

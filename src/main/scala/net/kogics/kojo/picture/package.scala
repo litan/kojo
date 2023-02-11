@@ -56,7 +56,7 @@ package object picture {
   val flipY = FlipYc
   val axesOn = AxesOnc
 
-  private[picture] def picBounds(pic: Picture): Unit = Utils.runInSwingThread {
+  private[picture] def picLocalBounds(pic: Picture): Unit = Utils.runInSwingThread {
     import edu.umd.cs.piccolo.nodes.PPath
     val tnode = pic.tnode
     val b = tnode.getUnionOfChildrenBounds(null)
@@ -68,7 +68,7 @@ package object picture {
   }
 
   def bounds = PostDrawTransformc { pic =>
-    picBounds(pic)
+    picLocalBounds(pic)
   }
   def fill(color: Paint) = Fillc(color)
   def stroke(color: Paint) = Strokec(color)
