@@ -28,7 +28,7 @@ class RealtimeNotePlayer {
   sequencer.setSequence(sequence)
   setInstrument(0)
 
-  def setInstrument(instrumentCode: Int): Unit = synchronized {
+  def setInstrument(instrumentCode: Int): Unit = {
     require(instrumentCode >= 0 && instrumentCode <= 127, "Instrument Code should be between 0 and 127")
     val ins = new ShortMessage()
     ins.setMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentCode, 0)
@@ -36,7 +36,7 @@ class RealtimeNotePlayer {
     track.add(specifyInstrument)
   }
 
-  def playNote(pitch: Int, millis: Int, volume: Int): Unit = synchronized {
+  def playNote(pitch: Int, millis: Int, volume: Int): Unit = {
     require(pitch >= 0 && pitch <= 127, "Note pitch should be between 0 and 127")
     require(volume >= 0 && volume <= 127, "Note volume should be between 0 and 127")
 
@@ -58,5 +58,10 @@ class RealtimeNotePlayer {
     else {
       // ignore play command if earlier play is running
     }
+  }
+
+  def close(): Unit = {
+    sequence.deleteTrack(track)
+    sequencer.close()
   }
 }

@@ -262,14 +262,28 @@ Here's a partial list of the available commands:
   }
   UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
 
-  lazy val rtnp = new RealtimeNotePlayer()
   val Instrument = music.Instrument
-  def playNote(note: Int, duration: Int, volume: Int = 80): Unit = {
-    rtnp.playNote(note, duration, volume)
+  private var rtnp: Option[RealtimeNotePlayer] = None
+
+  private def checkNotePlayer(): Unit = {
+    if (rtnp.isEmpty) {
+      rtnp = Some(new RealtimeNotePlayer())
+    }
   }
 
-  def setNoteInstrument(instrumentCode: Int): Unit = {
-    rtnp.setInstrument(instrumentCode)
+  def playNote(note: Int, duration: Int, volume: Int = 80): Unit = Instrument.synchronized {
+    checkNotePlayer()
+    rtnp.get.playNote(note, duration, volume)
+  }
+
+  def setNoteInstrument(instrumentCode: Int): Unit = Instrument.synchronized {
+    checkNotePlayer()
+    rtnp.get.setInstrument(instrumentCode)
+  }
+
+  def resetNotePlayer(): Unit = Instrument.synchronized {
+    rtnp.foreach(_.close())
+    rtnp = None
   }
 
   UserCommand("textExtent", List("text", "fontSize"), "Determines the size/extent of the given text fragment for the given font size.")
