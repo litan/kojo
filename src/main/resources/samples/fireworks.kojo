@@ -1,6 +1,3 @@
-// Inspired  by
-// https://github.com/CodingTrain/Coding-Challenges/tree/main/027_FireWorks/Processing/CC_027_FireWorks_2D
-
 cleari()
 originBottomLeft()
 setBackground(black)
@@ -48,7 +45,7 @@ class Particle(x0: Double, y0: Double, hu: Double, seed: Boolean) {
 
     def explode() {
         // note, duration, volume
-        playNote(20, 60, 127)
+        playNote(15, 60, 127)
         exploded = true
     }
 
@@ -151,3 +148,9 @@ animate {
     updateState()
     viewState()
 }
+
+// Inspired  by
+// https://github.com/CodingTrain/Coding-Challenges/tree/main/027_FireWorks/Processing/CC_027_FireWorks_2D
+
+// For more details, check out:
+// https://github.com/litan/kojo-examples/tree/main/fireworks
