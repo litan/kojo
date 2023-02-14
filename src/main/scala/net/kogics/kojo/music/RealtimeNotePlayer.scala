@@ -17,9 +17,8 @@ package net.kogics.kojo.music
 import javax.sound.midi.{MidiEvent, MidiSystem, Sequence, ShortMessage}
 
 class RealtimeNotePlayer {
-  println("Getting Midi Sequencer...")
+  println("Initializing Midi Sequencer...")
   private val sequencer = MidiSystem.getSequencer()
-  println("Done")
   private val ticksPerQuarterNote = 1
   private val sequence = new Sequence(Sequence.PPQ, ticksPerQuarterNote)
   private var track = sequence.createTrack()
@@ -28,6 +27,8 @@ class RealtimeNotePlayer {
 
   sequencer.open()
   sequencer.setSequence(sequence)
+  Thread.sleep(2500) // give Midi Synth a chance to warm up, as in alda
+  println("Done")
   setInstrument(Instrument.PIANO)
 
   def setInstrument(instrumentCode: Int): Unit = {
