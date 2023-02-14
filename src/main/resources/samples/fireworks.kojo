@@ -4,7 +4,6 @@ setBackground(black)
 
 setNoteInstrument(Instrument.ACOUSTIC_BASS)
 playNote(50, 150)
-pause(.16)
 playNote(45, 200)
 
 val cb = canvasBounds
@@ -45,7 +44,7 @@ class Particle(x0: Double, y0: Double, hu: Double, seed: Boolean) {
 
     def explode() {
         // note, duration, volume
-        playNote(15, 60, 127)
+        playNote(15, 30, 127)
         exploded = true
     }
 
