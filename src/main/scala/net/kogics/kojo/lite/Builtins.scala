@@ -263,7 +263,7 @@ Here's a partial list of the available commands:
   UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
 
   val Instrument = music.Instrument
-  private var rtnp: Option[RealtimeNotePlayer] = None
+  @volatile private var rtnp: Option[RealtimeNotePlayer] = None
 
   private def checkNotePlayer(): Unit = {
     if (rtnp.isEmpty) {
@@ -271,17 +271,21 @@ Here's a partial list of the available commands:
     }
   }
 
-  def playNote(note: Int, duration: Int, volume: Int = 80): Unit = Instrument.synchronized {
+  def playNote(note: Int, duration: Int, volume: Int = 80): Unit = {
     checkNotePlayer()
     rtnp.get.playNote(note, duration, volume)
   }
 
-  def setNoteInstrument(instrumentCode: Int): Unit = Instrument.synchronized {
+  def setNoteInstrument(instrumentCode: Int): Unit = {
     checkNotePlayer()
     rtnp.get.setInstrument(instrumentCode)
   }
 
-  def resetNotePlayer(): Unit = Instrument.synchronized {
+  def stopNotePlayer(): Unit = {
+    rtnp.foreach(_.stop())
+  }
+
+  def resetNotePlayer(): Unit = {
     rtnp.foreach(_.close())
     rtnp = None
   }

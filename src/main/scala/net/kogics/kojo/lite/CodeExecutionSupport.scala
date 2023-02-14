@@ -656,6 +656,7 @@ class CodeExecutionSupport(
     fuguePlayer.stopBgMusic()
     mp3player.stopMp3()
     mp3player.stopMp3Loop()
+    builtins.stopNotePlayer()
   }
 
   def invalidCode(code: String): Boolean = {

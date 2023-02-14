@@ -14,53 +14,67 @@
  */
 package net.kogics.kojo.music
 
-import javax.sound.midi._
+import javax.sound.midi.{MidiEvent, MidiSystem, Sequence, ShortMessage}
 
 class RealtimeNotePlayer {
   println("Getting Midi Sequencer...")
   private val sequencer = MidiSystem.getSequencer()
   println("Done")
   private val sequence = new Sequence(Sequence.PPQ, 1)
-  private val track = sequence.createTrack()
+  private var track = sequence.createTrack()
   private var trackTicks = 0
+  private val channel = 0
 
   sequencer.open()
   sequencer.setSequence(sequence)
-  setInstrument(0)
+  setInstrument(Instrument.PIANO)
 
   def setInstrument(instrumentCode: Int): Unit = {
     require(instrumentCode >= 0 && instrumentCode <= 127, "Instrument Code should be between 0 and 127")
     val ins = new ShortMessage()
-    ins.setMessage(ShortMessage.PROGRAM_CHANGE, 0, instrumentCode, 0)
+    ins.setMessage(ShortMessage.PROGRAM_CHANGE, channel, instrumentCode, 0)
     val specifyInstrument = new MidiEvent(ins, trackTicks)
     track.add(specifyInstrument)
   }
 
-  def playNote(pitch: Int, millis: Int, volume: Int): Unit = {
+  def playNote(pitch: Int, duration: Int, volume: Int): Unit = {
     require(pitch >= 0 && pitch <= 127, "Note pitch should be between 0 and 127")
     require(volume >= 0 && volume <= 127, "Note volume should be between 0 and 127")
 
     val a = new ShortMessage()
-    a.setMessage(ShortMessage.NOTE_ON, 0, pitch, volume)
+    a.setMessage(ShortMessage.NOTE_ON, channel, pitch, volume)
     val noteOn = new MidiEvent(a, trackTicks)
     track.add(noteOn)
     trackTicks += 1
 
     val b = new ShortMessage()
-    b.setMessage(ShortMessage.NOTE_OFF, 0, pitch, volume)
+    b.setMessage(ShortMessage.NOTE_OFF, channel, pitch, volume)
     val noteOff = new MidiEvent(b, trackTicks)
     track.add(noteOff)
 
     if (!sequencer.isRunning) {
-      sequencer.setTempoInMPQ(millis * 1000f)
+      sequencer.setTempoInMPQ(duration * 1000f)
       sequencer.start()
     }
     else {
-      // ignore play command if earlier play is running
+      // let the running sequencer play this note after the previous ones are done
+      // the duration of this note is ignored
+    }
+  }
+
+  def stop(): Unit = {
+    if (sequencer.isRunning) {
+      sequencer.stop()
+      sequence.deleteTrack(track)
+      track = sequence.createTrack()
+      sequencer.setSequence(sequence)
+      trackTicks = 0
+      sequencer.setTickPosition(0)
     }
   }
 
   def close(): Unit = {
+    sequencer.stop()
     sequence.deleteTrack(track)
     sequencer.close()
   }
