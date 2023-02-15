@@ -271,9 +271,9 @@ Here's a partial list of the available commands:
     }
   }
 
-  def playNote(note: Int, duration: Int, volume: Int = 80): Unit = {
+  def playNote(pitch: Int, durationMillis: Int, volume: Int = 80): Unit = {
     checkNotePlayer()
-    rtnp.get.playNote(note, duration, volume)
+    rtnp.get.playNote(pitch, durationMillis, volume)
   }
 
   def setNoteInstrument(instrumentCode: Int): Unit = {

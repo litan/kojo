@@ -190,7 +190,8 @@ trait CoreBuiltins extends Rationals {
   def ColorLinearG(x1: Double, y1: Double, x2: Double, y2: Double, distribution: collection.Seq[Double], colors: collection.Seq[Color], cyclic: Boolean = false) =
     cm.linearMultipleGradient(x1, y1, x2, y2, distribution, colors, cyclic)
   def ColorHSB(h: Double, s: Double, b: Double) = java.awt.Color.getHSBColor((h / 360).toFloat, (s / 100).toFloat, (b / 100).toFloat)
-  def pause(secs: Double) = Thread.sleep((secs * 1000).toLong)
+  def pause(seconds: Double) = pauseMillis((seconds * 1000).toLong)
+  def pauseMillis(milliSeconds: Long) = Thread.sleep(milliSeconds)
 
   def clearOutput(): Unit
   def readln(prompt: String): String
