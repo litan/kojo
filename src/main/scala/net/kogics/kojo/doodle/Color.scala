@@ -1,22 +1,21 @@
 // Borrowed from: https://github.com/underscoreio/doodle
 package net.kogics.kojo.doodle
 
+import java.awt.{ Color => AwtColor }
+import java.awt.geom.Rectangle2D
 import java.awt.GradientPaint
 import java.awt.LinearGradientPaint
 import java.awt.MultipleGradientPaint
 import java.awt.RadialGradientPaint
 import java.awt.TexturePaint
-import java.awt.geom.Rectangle2D
-import java.awt.{Color => AwtColor}
 
 import scala.collection.mutable.ArrayBuffer
-
-import org.hsluv.HUSLColorConverter
 
 import net.kogics.kojo.syntax.angle._
 import net.kogics.kojo.syntax.normalized._
 import net.kogics.kojo.syntax.uByte._
 import net.kogics.kojo.util.Utils
+import org.hsluv.HUSLColorConverter
 
 sealed abstract class Color extends Product with Serializable {
 
@@ -48,19 +47,19 @@ sealed abstract class Color extends Product with Serializable {
 
   // Color manipulation ------------------------------------
 
-  /** Copies this color, changing the hue to the given value*/
+  /** Copies this color, changing the hue to the given value */
   def hue(angle: Double): Color =
     this.toHSLA.copy(h = angle.degrees)
 
-  /** Copies this color, changing the saturation to the given value*/
+  /** Copies this color, changing the saturation to the given value */
   def saturation(s: Double): Color =
     this.toHSLA.copy(s = s.normalized)
 
-  /** Copies this color, changing the lightness to the given value*/
+  /** Copies this color, changing the lightness to the given value */
   def lightness(l: Double): Color =
     this.toHSLA.copy(l = l.normalized)
 
-  /** Copies this color, changing the alpha to the given value*/
+  /** Copies this color, changing the alpha to the given value */
   def alpha(a: Double): Color =
     this.toHSLA.copy(a = a.normalized)
 
@@ -76,41 +75,33 @@ sealed abstract class Color extends Product with Serializable {
     original.copy(h = original.h + Angle.turns(turnFactor))
   }
 
-  /**
-   * Saturate the color by the given amount. This is an absolute
-   * amount, not an amount relative to the Color's current
-   * saturation. Saturation is clipped at Normalized.MaxValue
-   */
+  /** Saturate the color by the given amount. This is an absolute amount, not an amount relative to the Color's current
+    * saturation. Saturation is clipped at Normalized.MaxValue
+    */
   def saturate(saturation: Double) = {
     val original = this.toHSLA
     original.copy(s = Normalized.clip(original.s + saturation.normalized))
   }
 
-  /**
-   * Desaturate the color by the given amount. This is an absolute
-   * amount, not an amount relative to the Color's current
-   * saturation. Saturation is clipped at Normalized.MaxValue
-   */
+  /** Desaturate the color by the given amount. This is an absolute amount, not an amount relative to the Color's
+    * current saturation. Saturation is clipped at Normalized.MaxValue
+    */
   def desaturate(desaturation: Double) = {
     val original = this.toHSLA
     original.copy(s = Normalized.clip(original.s - desaturation.normalized))
   }
 
-  /**
-   * Lighten the color by the given amount. This is an absolute
-   * amount, not an amount relative to the Color's current
-   * lightness. Lightness is clipped at Normalized.MaxValue
-   */
+  /** Lighten the color by the given amount. This is an absolute amount, not an amount relative to the Color's current
+    * lightness. Lightness is clipped at Normalized.MaxValue
+    */
   def lighten(lightness: Double) = {
     val original = this.toHSLA
     original.copy(l = Normalized.clip(original.l + lightness.normalized))
   }
 
-  /**
-   * Darken the color by the given amount. This is an absolute
-   * amount, not an amount relative to the Color's current
-   * lightness. Lightness is clipped at Normalized.MaxValue
-   */
+  /** Darken the color by the given amount. This is an absolute amount, not an amount relative to the Color's current
+    * lightness. Lightness is clipped at Normalized.MaxValue
+    */
   def darken(darkness: Double) = {
     val original = this.toHSLA
     original.copy(l = Normalized.clip(original.l - darkness.normalized))
@@ -128,41 +119,33 @@ sealed abstract class Color extends Product with Serializable {
     original.copy(a = Normalized.clip(original.a - opacity.normalized))
   }
 
-  /**
-   * Saturate the color by the given *relative* amount. For example, calling
-   * `aColor.saturateBy(0.1.normalized` increases the saturation by 10% of the
-   * current saturation.
-   */
+  /** Saturate the color by the given *relative* amount. For example, calling `aColor.saturateBy(0.1.normalized`
+    * increases the saturation by 10% of the current saturation.
+    */
   def saturateBy(saturation: Double) = {
     val original = this.toHSLA
     original.copy(s = Normalized.clip(original.s.get * (1 + saturation)))
   }
 
-  /**
-   * Desaturate the color by the given *relative* amount. For example, calling
-   * `aColor.desaturateBy(0.1.normalized` decreases the saturation by 10% of the
-   * current saturation.
-   */
+  /** Desaturate the color by the given *relative* amount. For example, calling `aColor.desaturateBy(0.1.normalized`
+    * decreases the saturation by 10% of the current saturation.
+    */
   def desaturateBy(desaturation: Double) = {
     val original = this.toHSLA
     original.copy(s = Normalized.clip(original.s.get * (1 - desaturation)))
   }
 
-  /**
-   * Lighten the color by the given *relative* amount. For example, calling
-   * `aColor.lightenBy(0.1.normalized` increases the lightness by 10% of the
-   * current lightness.
-   */
+  /** Lighten the color by the given *relative* amount. For example, calling `aColor.lightenBy(0.1.normalized` increases
+    * the lightness by 10% of the current lightness.
+    */
   def lightenBy(lightness: Double) = {
     val original = this.toHSLA
     original.copy(l = Normalized.clip(original.l.get * (1 + lightness)))
   }
 
-  /**
-   * Darken the color by the given *relative* amount. For example, calling
-   * `aColor.darkenBy(0.1.normalized` decreases the lightness by 10% of the
-   * current lightness.
-   */
+  /** Darken the color by the given *relative* amount. For example, calling `aColor.darkenBy(0.1.normalized` decreases
+    * the lightness by 10% of the current lightness.
+    */
   def darkenBy(darkness: Double) = {
     val original = this.toHSLA
     original.copy(l = Normalized.clip(original.l.get * (1 - darkness)))
@@ -187,9 +170,9 @@ sealed abstract class Color extends Product with Serializable {
     (this.toRGBA, that.toRGBA) match {
       case (RGBA(r1, g1, b1, a1), RGBA(r2, g2, b2, a2)) =>
         Math.abs(r1 - r2) < 2 &&
-          Math.abs(g1 - g2) < 2 &&
-          Math.abs(b1 - b2) < 2 &&
-          Math.abs(a1 - a2) < 0.1
+        Math.abs(g1 - g2) < 2 &&
+        Math.abs(b1 - b2) < 2 &&
+        Math.abs(a1 - a2) < 0.1
     }
 
   def toCanvas: String =
@@ -223,13 +206,13 @@ sealed abstract class Color extends Product with Serializable {
         val rNormalized = r.toNormalized
         val gNormalized = g.toNormalized
         val bNormalized = b.toNormalized
-        val cMax = rNormalized max gNormalized max bNormalized
-        val cMin = rNormalized min gNormalized min bNormalized
+        val cMax = rNormalized.max(gNormalized).max(bNormalized)
+        val cMin = rNormalized.min(gNormalized).min(bNormalized)
         val delta = cMax - cMin
 
         val unnormalizedHue =
           if (cMax == rNormalized)
-            60 * (((gNormalized - bNormalized) / delta))
+            60 * ((gNormalized - bNormalized) / delta)
           else if (cMax == gNormalized)
             60 * (((bNormalized - rNormalized) / delta) + 2)
           else
@@ -300,16 +283,37 @@ object Color extends CommonColors {
     rgba(red, green, blue, 255)
 
   def hsla(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double, opacityFraction: Double): Color =
-    HSLA(Angle.degrees(hueAngle), saturationFraction.normalized, lightnessFraction.normalized, opacityFraction.normalized)
+    HSLA(
+      Angle.degrees(hueAngle),
+      saturationFraction.normalized,
+      lightnessFraction.normalized,
+      opacityFraction.normalized
+    )
 
   def hsl(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double): Color =
     hsla(hueAngle, saturationFraction, lightnessFraction, 1.0)
 
-  def linearGradient(x1: Double, y1: Double, c1: AwtColor, x2: Double, y2: Double, c2: AwtColor, cyclic: Boolean = false): GradientPaint =
+  def linearGradient(
+      x1: Double,
+      y1: Double,
+      c1: AwtColor,
+      x2: Double,
+      y2: Double,
+      c2: AwtColor,
+      cyclic: Boolean = false
+  ): GradientPaint =
     new GradientPaint(x1.toFloat, y1.toFloat, c1, x2.toFloat, y2.toFloat, c2, cyclic)
 
-  def radialMultipleGradient(x: Double, y: Double, radius: Double, distribution: collection.Seq[Double], colors: collection.Seq[AwtColor], cyclic: Boolean = false) = {
-    val cycleMode = if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
+  def radialMultipleGradient(
+      x: Double,
+      y: Double,
+      radius: Double,
+      distribution: collection.Seq[Double],
+      colors: collection.Seq[AwtColor],
+      cyclic: Boolean = false
+  ) = {
+    val cycleMode =
+      if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
     val floatD = ArrayBuffer.empty[Float]; distribution.foreach { n => floatD.append(n.toFloat) }
     new RadialGradientPaint(x.toFloat, y.toFloat, radius.toFloat, floatD.toArray, colors.toArray, cycleMode)
   }
@@ -317,8 +321,17 @@ object Color extends CommonColors {
   def radialGradient(cx: Double, cy: Double, c1: AwtColor, radius: Double, c2: AwtColor, cyclic: Boolean = false) =
     radialMultipleGradient(cx, cy, radius, Seq(0, 1), Seq(c1, c2), cyclic)
 
-  def linearMultipleGradient(x1: Double, y1: Double, x2: Double, y2: Double, distribution: collection.Seq[Double], colors: collection.Seq[AwtColor], cyclic: Boolean = false) = {
-    val cycleMode = if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
+  def linearMultipleGradient(
+      x1: Double,
+      y1: Double,
+      x2: Double,
+      y2: Double,
+      distribution: collection.Seq[Double],
+      colors: collection.Seq[AwtColor],
+      cyclic: Boolean = false
+  ) = {
+    val cycleMode =
+      if (cyclic) MultipleGradientPaint.CycleMethod.REFLECT else MultipleGradientPaint.CycleMethod.NO_CYCLE
     val floatD = ArrayBuffer.empty[Float]; distribution.foreach { n => floatD.append(n.toFloat) }
     new LinearGradientPaint(x1.toFloat, y1.toFloat, x2.toFloat, y2.toFloat, floatD.toArray, colors.toArray, cycleMode)
   }
@@ -335,7 +348,12 @@ object Color extends CommonColors {
     val rgbs = HUSLColorConverter.hsluvToRgb(Array(hueAngle, saturationFraction * 100, lightnessFraction * 100))
     rgb((rgbs(0) * 255).toInt, (rgbs(1) * 255).toInt, (rgbs(2) * 255).toInt)
   }
-  def hsluva(hueAngle: Double, saturationFraction: Double, lightnessFraction: Double, opacityFraction: Double): Color = {
+  def hsluva(
+      hueAngle: Double,
+      saturationFraction: Double,
+      lightnessFraction: Double,
+      opacityFraction: Double
+  ): Color = {
     val rgbs = HUSLColorConverter.hsluvToRgb(Array(hueAngle, saturationFraction * 100, lightnessFraction * 100))
     rgba((rgbs(0) * 255).toInt, (rgbs(1) * 255).toInt, (rgbs(2) * 255).toInt, (opacityFraction * 255).toInt)
   }

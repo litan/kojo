@@ -1,13 +1,19 @@
 package net.kogics.kojo.history
 
-import java.awt.BorderLayout
-import java.awt.Color
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
+import java.awt.BorderLayout
+import java.awt.Color
 import java.text.DateFormat
-
+import javax.swing.border.BevelBorder
+import javax.swing.border.CompoundBorder
+import javax.swing.border.EmptyBorder
+import javax.swing.event.ListSelectionEvent
+import javax.swing.event.ListSelectionListener
+import javax.swing.table.AbstractTableModel
+import javax.swing.table.DefaultTableCellRenderer
 import javax.swing.BorderFactory
 import javax.swing.DefaultCellEditor
 import javax.swing.JButton
@@ -18,19 +24,11 @@ import javax.swing.JTable
 import javax.swing.JTextField
 import javax.swing.ListSelectionModel
 import javax.swing.SwingConstants
-import javax.swing.border.BevelBorder
-import javax.swing.border.CompoundBorder
-import javax.swing.border.EmptyBorder
-import javax.swing.event.ListSelectionEvent
-import javax.swing.event.ListSelectionListener
-import javax.swing.table.AbstractTableModel
-import javax.swing.table.DefaultTableCellRenderer
 
 import net.kogics.kojo.core.CodeExecutionSupport
 import net.kogics.kojo.core.HistoryListener
 import net.kogics.kojo.lite.Theme
 import net.kogics.kojo.util.Utils
-
 import sun.swing.table.DefaultTableCellHeaderRenderer
 
 class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
@@ -103,20 +101,32 @@ class HistoryPanel(execSupport: CodeExecutionSupport) extends JPanel { hpanel =>
   table.setRowHeight(table.getRowHeight + 8)
   table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
   table.setRowSelectionInterval(cmdh.size, cmdh.size)
-  table.getTableHeader.getDefaultRenderer.asInstanceOf[DefaultTableCellHeaderRenderer].setHorizontalAlignment(SwingConstants.CENTER)
-  table.setDefaultRenderer(classOf[AnyRef], new DefaultTableCellRenderer {
-    override def getTableCellRendererComponent(table: JTable, value: Object, isSelected: Boolean,
-                                               hasFocus: Boolean, row: Int, column: Int) = {
-      val component = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).asInstanceOf[JComponent]
+  table.getTableHeader.getDefaultRenderer
+    .asInstanceOf[DefaultTableCellHeaderRenderer]
+    .setHorizontalAlignment(SwingConstants.CENTER)
+  table.setDefaultRenderer(
+    classOf[AnyRef],
+    new DefaultTableCellRenderer {
+      override def getTableCellRendererComponent(
+          table: JTable,
+          value: Object,
+          isSelected: Boolean,
+          hasFocus: Boolean,
+          row: Int,
+          column: Int
+      ) = {
+        val component =
+          super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column).asInstanceOf[JComponent]
 
-      val outsideBorder = BorderFactory.createLineBorder(new Color(240, 240, 240))
-      val insideBorder = new EmptyBorder(0, 3, 0, 2)
-      val border = new CompoundBorder(outsideBorder, insideBorder)
+        val outsideBorder = BorderFactory.createLineBorder(new Color(240, 240, 240))
+        val insideBorder = new EmptyBorder(0, 3, 0, 2)
+        val border = new CompoundBorder(outsideBorder, insideBorder)
 
-      component.setBorder(border)
-      component
+        component.setBorder(border)
+        component
+      }
     }
-  })
+  )
   table.getSelectionModel.addListSelectionListener(new ListSelectionListener {
     override def valueChanged(event: ListSelectionEvent): Unit = {
       if (!event.getValueIsAdjusting) {

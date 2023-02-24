@@ -1,26 +1,25 @@
 package net.kogics.kojo
 package lite
 
+import java.awt.{ Color => JColor }
+import java.awt.{ Font => JFont }
+import java.awt.image.BufferedImage
 import java.awt.GraphicsEnvironment
 import java.awt.Paint
-import java.awt.image.BufferedImage
-import java.awt.{Color => JColor}
-import java.awt.{Font => JFont}
 import java.net.URL
 import java.util.concurrent.CountDownLatch
 
 import scala.language.implicitConversions
 
+import io.github.jdiemke.triangulation.Triangle2D
 import net.kogics.kojo.core.Rectangle
 import net.kogics.kojo.core.TSCanvasFeatures
 import net.kogics.kojo.kmath.Rationals
+import net.kogics.kojo.picture.PicCache
 import net.kogics.kojo.turtle.LoTurtle
 import net.kogics.kojo.util.PerlinNoiseImproved
 import net.kogics.kojo.util.PerlinNoiseProcessing
 import net.kogics.kojo.util.Utils
-import net.kogics.kojo.picture.PicCache
-
-import io.github.jdiemke.triangulation.Triangle2D
 
 trait CoreBuiltins extends Rationals {
   def TSCanvas: TSCanvasFeatures
@@ -64,7 +63,7 @@ trait CoreBuiltins extends Rationals {
   val cm = doodle.Color
   implicit def rc2c(rc: doodle.Color): Color = rc.toAwt
   implicit def c2rc(c: Color): doodle.Color = Utils.awtColorToDoodleColor(c)
-  implicit def rcSeq2cSeq(rcs: collection.Seq[doodle.Color]): collection.Seq[Color] = rcs map rc2c
+  implicit def rcSeq2cSeq(rcs: collection.Seq[doodle.Color]): collection.Seq[Color] = rcs.map(rc2c)
 
   //  val Color = staging.KColor
   val noColor = C.noColor
@@ -112,15 +111,18 @@ trait CoreBuiltins extends Rationals {
   def setRandomSeed(seed: Long): Unit = { Random.setSeed(seed) }
   def random(upperBound: Int) = Random.nextInt(upperBound)
   def random(lowerBound: Int, upperBound: Int): Int = {
-    if (lowerBound >= upperBound) lowerBound else
+    if (lowerBound >= upperBound) lowerBound
+    else
       lowerBound + random(upperBound - lowerBound)
   }
   def randomDouble(upperBound: Double): Double = {
-    if ((upperBound == 0) || (upperBound != upperBound)) 0 else
+    if ((upperBound == 0) || (upperBound != upperBound)) 0
+    else
       Random.nextDouble * upperBound
   }
   def randomDouble(lowerBound: Double, upperBound: Double): Double = {
-    if (lowerBound >= upperBound) lowerBound else
+    if (lowerBound >= upperBound) lowerBound
+    else
       lowerBound + randomDouble(upperBound - lowerBound)
   }
 
@@ -130,8 +132,9 @@ trait CoreBuiltins extends Rationals {
   def randomInt = Random.nextInt
   def randomLong = Random.nextLong
   def randomFrom[T](seq: collection.Seq[T]) = seq(random(seq.length))
-  def randomFrom[T](seq: collection.Seq[T], weights: Seq[Int]): T = randomFrom(seq, weights map (_.toDouble))
-  def randomFrom[T](seq: collection.Seq[T], weights: collection.mutable.Seq[Int]): T = randomFrom(seq, weights map (_.toDouble))
+  def randomFrom[T](seq: collection.Seq[T], weights: Seq[Int]): T = randomFrom(seq, weights.map(_.toDouble))
+  def randomFrom[T](seq: collection.Seq[T], weights: collection.mutable.Seq[Int]): T =
+    randomFrom(seq, weights.map(_.toDouble))
   def randomFrom[T](seq: collection.Seq[T], weights: collection.Seq[Double]): T = {
     val sum = weights.sum
     val probabilities = if (Utils.doublesEqual(sum, 1.0, 1e-3)) {
@@ -172,7 +175,7 @@ trait CoreBuiltins extends Rationals {
     import io.github.jdiemke.triangulation.DelaunayTriangulator
     import io.github.jdiemke.triangulation.Vector2D
 
-    val triangulator = new DelaunayTriangulator((points map { p => new Vector2D(p.x, p.y) }).asJava)
+    val triangulator = new DelaunayTriangulator(points.map { p => new Vector2D(p.x, p.y) }.asJava)
     triangulator.triangulate()
     val tr = triangulator.getTriangles
     tr.asScala
@@ -185,11 +188,27 @@ trait CoreBuiltins extends Rationals {
   def Color(rgbHex: Int, hasAlpha: Boolean = false) = new Color(rgbHex, hasAlpha)
   def ColorG(x1: Double, y1: Double, c1: Color, x2: Double, y2: Double, c2: Color, cyclic: Boolean = false) =
     cm.linearGradient(x1, y1, c1, x2, y2, c2, cyclic)
-  def ColorRadialG(x: Double, y: Double, radius: Double, distribution: collection.Seq[Double], colors: collection.Seq[Color], cyclic: Boolean = false) =
+  def ColorRadialG(
+      x: Double,
+      y: Double,
+      radius: Double,
+      distribution: collection.Seq[Double],
+      colors: collection.Seq[Color],
+      cyclic: Boolean = false
+  ) =
     cm.radialMultipleGradient(x, y, radius, distribution, colors, cyclic)
-  def ColorLinearG(x1: Double, y1: Double, x2: Double, y2: Double, distribution: collection.Seq[Double], colors: collection.Seq[Color], cyclic: Boolean = false) =
+  def ColorLinearG(
+      x1: Double,
+      y1: Double,
+      x2: Double,
+      y2: Double,
+      distribution: collection.Seq[Double],
+      colors: collection.Seq[Color],
+      cyclic: Boolean = false
+  ) =
     cm.linearMultipleGradient(x1, y1, x2, y2, distribution, colors, cyclic)
-  def ColorHSB(h: Double, s: Double, b: Double) = java.awt.Color.getHSBColor((h / 360).toFloat, (s / 100).toFloat, (b / 100).toFloat)
+  def ColorHSB(h: Double, s: Double, b: Double) =
+    java.awt.Color.getHSBColor((h / 360).toFloat, (s / 100).toFloat, (b / 100).toFloat)
   def pause(seconds: Double) = pauseMillis((seconds * 1000).toLong)
   def pauseMillis(milliSeconds: Long) = Thread.sleep(milliSeconds)
 
@@ -232,7 +251,7 @@ trait CoreBuiltins extends Rationals {
   def scale(xf: Double, yf: Double) = picture.scale(xf, yf)
   def scalep(f: Double, x: Double, y: Double) = picture.scalep(f, x, y)
   def draw(pictures: Picture*): Unit = draw(pictures)
-  protected [lite] def checkForLargeDrawing(): Unit = {
+  protected[lite] def checkForLargeDrawing(): Unit = {
     if (PicCache.size > 60000) {
       println("There are too many pics in your drawing, and trying to draw them might freeze Kojo.")
       println("If you still want to go ahead with this, use the pic.draw() method.")

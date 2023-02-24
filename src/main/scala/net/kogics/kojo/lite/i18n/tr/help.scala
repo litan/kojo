@@ -18,7 +18,7 @@ package net.kogics.kojo.lite.i18n.tr
 
 object help {
   val templates = Map(
-    "englishTurtle" ->  "englishTurtle",
+    "englishTurtle" -> "englishTurtle",
     "yeniKaplumbağa" -> "yeniKaplumbağa(${x},${y},${kılık})",
     "a_kalıp" -> "a_kalıp()",
     "ileri" -> "ileri(${adım})",
@@ -87,7 +87,7 @@ object help {
   )
 
   val content = Map(
-    "englishTurtle" -> 
+    "englishTurtle" ->
       <div>
         <strong>englishTurtle</strong><br/><br/>
         Bu komut sadece İngilizce komutları bilen bir kaplumbağacık verir. Bu kaplumbağanın türü
@@ -105,7 +105,6 @@ repeat(4){{
       <br/><br/>
       yeniKaplumbağa komutuna da bir bakıver.
       </div>.toString,
-
     "yeniKaplumbağa" ->
       <div>
       <strong>yeniKaplumbağa</strong>(x, y, kılık) - Bu komut x,y noktasında yeni bir kaplumbağa oluşturur ve verilmişse ona bır kılık giydirir. Kılık verilmemişse kaplumbağa olarak çizer. Onun için de adı yeniKaplumbağa!
@@ -117,7 +116,6 @@ araba.ilerle(0,0)
 araba.kuzey()
       </pre>Bu örnek bir araba oluşturur, (100, 200) noktasından (0, 0) noktasına hızlıca giderek mavi bir doğru parçası, yani bir çizgi çizer.
       </div>.toString,
-
     "a_kalıp" -> <div>
       <strong>komut</strong>(g1, g2) - Açıklama ...
       <br/>
@@ -128,7 +126,6 @@ val x = komut
 x.metod
       </pre> Bu örnek ... açıklama ...
     </div>.toString,
-
     "ileri" -> <div><strong>ileri</strong>(adımSayısı) - Bu komut kaplumbağaya verilen sayı kadar adım atırarak baktığı doğrultuda ilerletir. Adım sayısı verilmemişse 25 adım atar.</div>.toString,
     "geri" -> "geri(${adımSayısı}) - ileri komutunun tersi",
     "sol" -> <div>
@@ -223,7 +220,6 @@ x.metod
       satıryaz(toplam)
       </pre>
             </div>.toString,
-
     "eksenler" ->
       <div>
       <strong>eksenler -> resim</strong> - Verilen resmin yerel eksenlerini çizerek yeni bir resim oluşturur.
@@ -246,16 +242,13 @@ x.metod
       </pre>
       Bu örnekte bir dikdörtgen çiziyor, onu (-100, -50) noktasına taşıyor, 45 derece döndürüyor ve içini maviye boyuyoruz. Bir de bu çizimin kendi eksenlerini yani yerel eksenlerini çiziyoruz. En sondaki eksenleriGöster komutuyla da genel ya da mutlak eksenleri gösteriyoruz.
     </div>.toString,
-
     "eksenleriGöster" ->
       <div>
       <strong>eksenleriGöster</strong> - Çizim tuvalinde yatay (X) ve dikey (Y) eksenlerini çizer.
       </div>.toString,
-
     "eksenleriGizle" ->
       <div>
       <strong>eksenleriGizle</strong> - Çizim tuvalindeki yatay (X) ve dikey (Y) eksenlerini siler.
       </div>.toString,
-
   )
 }

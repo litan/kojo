@@ -25,12 +25,11 @@ import org.fife.ui.rsyntaxtextarea.AbstractTokenMaker
 import org.fife.ui.rsyntaxtextarea.Token
 import org.fife.ui.rsyntaxtextarea.TokenMap
 import org.fife.ui.rsyntaxtextarea.TokenTypes
-
-import scalariform.ScalaVersions
+import scalariform.lexer.{ Token => SfToken }
 import scalariform.lexer.ScalaLexer
 import scalariform.lexer.TokenType
 import scalariform.lexer.Tokens
-import scalariform.lexer.{Token => SfToken}
+import scalariform.ScalaVersions
 
 class ScalariformTokenMaker extends AbstractTokenMaker {
 
@@ -76,7 +75,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
 
   override def getTokenList(segment: Segment, initialTokenType: Int, docOffset: Int): Token = {
     def addRstaToken(t: SfToken): Unit = {
-      debug("  %s" format t)
+      debug("  %s".format(t))
       // offset of token within its segment = offset in doc - offset of segment within doc
       val segStartOffset = t.offset - (docOffset - segment.offset)
       val segEndOffset = segStartOffset + t.length - 1
@@ -84,8 +83,13 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
       addToken(segment.array, segStartOffset, segEndOffset, convertTokenType(t.tokenType), docStartOffset)
     }
 
-    debug("\n---\nGetting tokens for Line. Doc Offset: %d, Seg Offset: %d, Length: %d".
-      format(docOffset, segment.offset, segment.length))
+    debug(
+      "\n---\nGetting tokens for Line. Doc Offset: %d, Seg Offset: %d, Length: %d".format(
+        docOffset,
+        segment.offset,
+        segment.length
+      )
+    )
     debug("Line Text:" + segment.toString)
 
     resetTokenList()
@@ -205,10 +209,9 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         val flen = upper - lower
         val docFragment = doc.getText(lower, flen)
         val newActive = rawTokenise(docFragment).map { t => t.copy(offset = t.offset + lower) }
-        docTokens =
-          preInactive.slice(0, preInactive.length - dropped) ++
-            newActive.slice(0, newActive.length - 1) ++
-            newPostInactive.slice(udropped, newPostInactive.length)
+        docTokens = preInactive.slice(0, preInactive.length - dropped) ++
+          newActive.slice(0, newActive.length - 1) ++
+          newPostInactive.slice(udropped, newPostInactive.length)
         showTiming(t0, "Incr")
       }
     }
@@ -242,23 +245,23 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     }
     else {
       sfType match {
-        case Tokens.WS                         => TokenTypes.WHITESPACE
-        case Tokens.CHARACTER_LITERAL          => TokenTypes.LITERAL_CHAR
-        case Tokens.INTEGER_LITERAL            => TokenTypes.LITERAL_NUMBER_DECIMAL_INT
-        case Tokens.FLOATING_POINT_LITERAL     => TokenTypes.LITERAL_NUMBER_FLOAT
-        case Tokens.STRING_LITERAL             => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
-        case Tokens.STRING_PART                => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
-        case Tokens.SYMBOL_LITERAL             => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
-        case Tokens.TRUE                       => TokenTypes.LITERAL_BOOLEAN
-        case Tokens.FALSE                      => TokenTypes.LITERAL_BOOLEAN
-        case Tokens.NULL                       => TokenTypes.LITERAL_CHAR
-        case Tokens.EOF                        => TokenTypes.WHITESPACE
-        case Tokens.LBRACE                     => TokenTypes.SEPARATOR
-        case Tokens.RBRACE                     => TokenTypes.SEPARATOR
-        case Tokens.LBRACKET                   => TokenTypes.SEPARATOR
-        case Tokens.RBRACKET                   => TokenTypes.SEPARATOR
-        case Tokens.LPAREN                     => TokenTypes.SEPARATOR
-        case Tokens.RPAREN                     => TokenTypes.SEPARATOR
+        case Tokens.WS                     => TokenTypes.WHITESPACE
+        case Tokens.CHARACTER_LITERAL      => TokenTypes.LITERAL_CHAR
+        case Tokens.INTEGER_LITERAL        => TokenTypes.LITERAL_NUMBER_DECIMAL_INT
+        case Tokens.FLOATING_POINT_LITERAL => TokenTypes.LITERAL_NUMBER_FLOAT
+        case Tokens.STRING_LITERAL         => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
+        case Tokens.STRING_PART            => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
+        case Tokens.SYMBOL_LITERAL         => TokenTypes.LITERAL_STRING_DOUBLE_QUOTE
+        case Tokens.TRUE                   => TokenTypes.LITERAL_BOOLEAN
+        case Tokens.FALSE                  => TokenTypes.LITERAL_BOOLEAN
+        case Tokens.NULL                   => TokenTypes.LITERAL_CHAR
+        case Tokens.EOF                    => TokenTypes.WHITESPACE
+        case Tokens.LBRACE                 => TokenTypes.SEPARATOR
+        case Tokens.RBRACE                 => TokenTypes.SEPARATOR
+        case Tokens.LBRACKET               => TokenTypes.SEPARATOR
+        case Tokens.RBRACKET               => TokenTypes.SEPARATOR
+        case Tokens.LPAREN                 => TokenTypes.SEPARATOR
+        case Tokens.RPAREN                 => TokenTypes.SEPARATOR
 
         case Tokens.XML_START_OPEN             => TokenTypes.MARKUP_TAG_DELIMITER
         case Tokens.XML_EMPTY_CLOSE            => TokenTypes.MARKUP_TAG_DELIMITER
@@ -274,7 +277,7 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
         case Tokens.XML_UNPARSED               => TokenTypes.MARKUP_CDATA
         case Tokens.XML_PROCESSING_INSTRUCTION => TokenTypes.MARKUP_PROCESSING_INSTRUCTION
 
-        case _                                 => TokenTypes.IDENTIFIER
+        case _ => TokenTypes.IDENTIFIER
       }
     }
   }

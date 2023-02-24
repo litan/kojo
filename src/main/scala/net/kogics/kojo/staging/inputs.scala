@@ -16,15 +16,15 @@
 package net.kogics.kojo
 package staging
 
-import Impl.API
 import core.Point
 import edu.umd.cs.piccolo.event.PBasicInputEventHandler
 import edu.umd.cs.piccolo.event.PInputEvent
 import util.Utils
+import Impl.API
 
 object Inputs {
   import edu.umd.cs.piccolo.event._
-  //import java.awt.event.InputEvent
+  // import java.awt.event.InputEvent
 
   @volatile
   var mousePos: Point = API.O
@@ -87,67 +87,64 @@ object Inputs {
     Utils.runInSwingThread {
       val iel = new PBasicInputEventHandler {
         // This method is invoked when a node gains the keyboard focus.
-        override def keyboardFocusGained(e: PInputEvent): Unit = {
-        }
+        override def keyboardFocusGained(e: PInputEvent): Unit = {}
         // This method is invoked when a node loses the keyboard focus.
-        override def keyboardFocusLost(e: PInputEvent): Unit = {
-        }
+        override def keyboardFocusLost(e: PInputEvent): Unit = {}
         // Will get called whenever a key has been pressed down.
         override def keyPressed(e: PInputEvent): Unit = {
           val evtCode = Utils.getKeyCode(e)
           if (heldReleasedKeys contains evtCode) {
             // system generated release - eat it up
-            heldReleasedKeys remove evtCode
+            heldReleasedKeys.remove(evtCode)
             // but call key press handlers anyway
-            keyPressedHandler.foreach { _ apply e }
+            keyPressedHandler.foreach { _.apply(e) }
           }
           else {
             pressedKeys.add(evtCode)
-            keyPressedHandler.foreach { _ apply e }
+            keyPressedHandler.foreach { _.apply(e) }
           }
         }
         // Will get called whenever a key has been released.
         override def keyReleased(e: PInputEvent): Unit = {
           val evtCode = Utils.getKeyCode(e)
-          heldReleasedKeys add evtCode
+          heldReleasedKeys.add(evtCode)
           Utils.schedule(0.002) {
             if (heldReleasedKeys contains evtCode) {
               // actual key release
-              pressedKeys remove evtCode
-              heldReleasedKeys remove evtCode
-              keyReleasedHandler.foreach { _ apply e }
+              pressedKeys.remove(evtCode)
+              heldReleasedKeys.remove(evtCode)
+              keyReleasedHandler.foreach { _.apply(e) }
             }
           }
         }
         // Will be called at the end of a full keystroke (down then up).
-        override def keyTyped(e: PInputEvent): Unit = {
-        }
+        override def keyTyped(e: PInputEvent): Unit = {}
         // Will be called at the end of a full click (mouse pressed followed by mouse released).
         override def mouseClicked(e: PInputEvent): Unit = {
           super.mouseClicked(e)
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
           mouseBtn = e.getButton
-          mouseClickHandler.foreach { _ apply e }
+          mouseClickHandler.foreach { _.apply(e) }
         }
         // Will be called when a drag is occurring.
         override def mouseDragged(e: PInputEvent): Unit = {
           super.mouseDragged(e)
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
-          mouseDragHandler.foreach { _ apply e }
+          mouseDragHandler.foreach { _.apply(e) }
         }
         // Will be invoked when the mouse enters a specified region.
         override def mouseEntered(e: PInputEvent): Unit = {
           super.mouseEntered(e)
-          //e.pushCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR))
+          // e.pushCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR))
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
         }
         // Will be invoked when the mouse leaves a specified region.
         override def mouseExited(e: PInputEvent): Unit = {
           super.mouseExited(e)
-          //e.popCursor
+          // e.popCursor
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
           // mousePressedFlag = false
@@ -157,7 +154,7 @@ object Inputs {
           super.mouseMoved(e)
           val p = e.getPosition
           mousePos = Point(p.getX, p.getY)
-          mouseMoveHandler.foreach { _ apply e }
+          mouseMoveHandler.foreach { _.apply(e) }
         }
         // Will be called when a mouse button is pressed down.
         override def mousePressed(e: PInputEvent): Unit = {

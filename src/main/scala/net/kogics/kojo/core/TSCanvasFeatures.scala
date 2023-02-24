@@ -30,7 +30,7 @@ trait TSCanvasFeatures {
   def showAxes(): Unit
   def hideAxes(): Unit
   def axesOn() = showAxes()
-  def axesOff()= hideAxes()
+  def axesOff() = hideAxes()
   def showGrid(): Unit
   def hideGrid(): Unit
   def gridOn() = showGrid()

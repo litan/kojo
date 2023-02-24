@@ -15,17 +15,23 @@
 package net.kogics.kojo.lite
 
 import javax.swing.JFrame
+
 import net.kogics.kojo.util.Utils
 
 class MacTweaks {
   def tweak(frame: JFrame): Unit = {
-    import com.apple.eawt.{ AboutHandler, Application }; import com.apple.eawt.AppEvent.AboutEvent; import javax.swing.JOptionPane
+    import com.apple.eawt.{ AboutHandler, Application }; import com.apple.eawt.AppEvent.AboutEvent;
+    import javax.swing.JOptionPane
     val app = Application.getApplication
     app.setDockIconImage(Utils.loadImage("/images/kojo48.png"))
     app.setAboutHandler(new AboutHandler {
       def handleAbout(e: AboutEvent): Unit = {
-        JOptionPane.showMessageDialog(frame, "The Kojo Learning Environment\nSee 'Help -> About' for more information",
-          "", JOptionPane.PLAIN_MESSAGE)
+        JOptionPane.showMessageDialog(
+          frame,
+          "The Kojo Learning Environment\nSee 'Help -> About' for more information",
+          "",
+          JOptionPane.PLAIN_MESSAGE
+        )
       }
     })
   }

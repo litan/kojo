@@ -9,7 +9,7 @@ final case class UnsignedByte(value: Byte) extends AnyVal {
     this.value - that.value
 
   def get: Int =
-    (value + 128)
+    value + 128
 
   def toNormalized: Normalized =
     Normalized.clip(get.toDouble / UnsignedByte.MaxValue.get.toDouble)

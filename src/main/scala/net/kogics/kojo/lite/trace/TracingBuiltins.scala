@@ -6,15 +6,14 @@ import java.awt.Paint
 
 import scala.tools.nsc.interpreter.IMain
 
+import edu.umd.cs.piccolo.activities.PActivity
+import edu.umd.cs.piccolo.PCamera
+import edu.umd.cs.piccolo.PLayer
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.NoOpSCanvas
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.xscala.RepeatCommands
-
-import edu.umd.cs.piccolo.PCamera
-import edu.umd.cs.piccolo.PLayer
-import edu.umd.cs.piccolo.activities.PActivity
 
 object TracingBuiltins extends CoreBuiltins with RepeatCommands {
 
@@ -64,8 +63,7 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
   def setOutputTextColor(color: Color) = {}
   def setOutputTextFontSize(size: Int) = {}
 
-  def playMp3Loop(mp3File: String): Unit = {
-  }
+  def playMp3Loop(mp3File: String): Unit = {}
 
   def setBackground(c: Paint): Unit = {}
   def stopActivity() = {}
@@ -84,7 +82,7 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
   def isTracing = true
   def kojoInterp = new TracingInterp // get reqT to work with tracing
   def print(obj: Any): Unit = {}
-  def println(obj: Any): Unit = print("%s\n" format (obj))
+  def println(obj: Any): Unit = print("%s\n".format(obj))
 
   def TexturePaint(file: String, x: Double, y: Double) = Color(247, 247, 247)
 
@@ -108,7 +106,7 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
   }
 
   class TracingTurtle(canvas: SCanvas, costume: String, x: Double, y: Double)
-    extends turtle.Turtle(canvas, costume, x, y) {
+      extends turtle.Turtle(canvas, costume, x, y) {
 
     override def act(fn: Turtle => Unit): Unit = {
       fn(this)

@@ -24,7 +24,7 @@ import net.kogics.kojo.core.Interpreter
 
 class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends StoppableCodeRunner with Interpreter {
   val interp = new IMain(settings, None, settings, new ReplReporterImpl(settings, out)) {
-    override protected def parentClassLoader = classOf[KojoInterpreter].getClassLoader
+    protected override def parentClassLoader = classOf[KojoInterpreter].getClassLoader
   }
   //  interp.setContextClassLoader()
 
@@ -34,7 +34,8 @@ class KojoInterpreter(settings: Interpreter.Settings, out: PrintWriter) extends 
       interp.interpret(code)
     }
   }
-  @annotation.nowarn def completions(id: String): List[String] = {
+  @annotation.nowarn
+  def completions(id: String): List[String] = {
     interp.presentationCompile(id.length + 1, s"$id.") match {
       case Right(value) =>
         value.candidates(0)._2

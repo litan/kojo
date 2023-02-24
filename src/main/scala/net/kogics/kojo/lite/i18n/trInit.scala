@@ -20,75 +20,92 @@
 
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.lite.{CoreBuiltins, Builtins}
-import net.kogics.kojo.xscala.RepeatCommands
-import net.kogics.kojo.core.Turtle
 import java.awt.Color
-import java.util.concurrent.Future  // todo
-import edu.umd.cs.piccolo.activities.PActivity  // todo
+import java.util.concurrent.Future // todo
+
+import edu.umd.cs.piccolo.activities.PActivity // todo
+import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.kmath.KEasing
+import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
+import net.kogics.kojo.xscala.RepeatCommands
 
 // Keep in alphabetical order
-object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsInTurkish with tr.CharMethodsInTurkish with
-    tr.ColorMethodsInTurkish with tr.CoreTypeMethodsInTurkish with tr.GeoMethodsInTurkish with
-    tr.LazyListMethodsInTurkish with tr.ListMethodsInTurkish with tr.MapMethodsInTurkish with
-    tr.MathMethodsInTurkish with tr.NumMethodsInTurkish with tr.OptionMethodsInTurkish with
-    tr.PartialFunctionMethodsInTurkish with tr.QueueMethodsInTurkish with tr.RangeMethodsInTurkish with
-    tr.SeqMethodsInTurkish with tr.SetMethodsInTurkish with tr.StringMethodsInTurkish with
-    tr.arayuz.SwingWidgetMethodsInTurkish with tr.VectorMethodsInTurkish {
+object TurkishAPI
+    extends tr.ArrayMethodsInTurkish
+    with tr.CalendarAndTimeUtilsInTurkish
+    with tr.CharMethodsInTurkish
+    with tr.ColorMethodsInTurkish
+    with tr.CoreTypeMethodsInTurkish
+    with tr.GeoMethodsInTurkish
+    with tr.LazyListMethodsInTurkish
+    with tr.ListMethodsInTurkish
+    with tr.MapMethodsInTurkish
+    with tr.MathMethodsInTurkish
+    with tr.NumMethodsInTurkish
+    with tr.OptionMethodsInTurkish
+    with tr.PartialFunctionMethodsInTurkish
+    with tr.QueueMethodsInTurkish
+    with tr.RangeMethodsInTurkish
+    with tr.SeqMethodsInTurkish
+    with tr.SetMethodsInTurkish
+    with tr.StringMethodsInTurkish
+    with tr.arayuz.SwingWidgetMethodsInTurkish
+    with tr.VectorMethodsInTurkish {
 
-  var builtins: CoreBuiltins = _ //unstable reference to module
+  var builtins: CoreBuiltins = _ // unstable reference to module
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
   import net.kogics.kojo.lite.i18n.tr // todo: better here than at the top scope?
   // Imports are intransitive (not visibly transitive). So, we "export" the ones that should be on the interface
   // todo: metaprog on these?
-  type Nesne=tr.Nesne
-  type Birim=tr.Birim
-  type Her=tr.Her
-  type HerDeğer=tr.HerDeğer
-  type HerGönder=tr.HerGönder
-  type Yok=tr.Yok
-  val  yok: Yok = tr.yok
-  type Hiç=tr.Hiç
-  type Boya=tr.Boya
-  type Hız=tr.Hız
-  type Nokta=tr.Nokta
-  type Dikdörtgen=tr.Dikdörtgen
-  type Üçgen=tr.Üçgen
-  type İkil=tr.İkil
-  type Seçim=tr.Seçim
+  type Nesne = tr.Nesne
+  type Birim = tr.Birim
+  type Her = tr.Her
+  type HerDeğer = tr.HerDeğer
+  type HerGönder = tr.HerGönder
+  type Yok = tr.Yok
+  val yok: Yok = tr.yok
+  type Hiç = tr.Hiç
+  type Boya = tr.Boya
+  type Hız = tr.Hız
+  type Nokta = tr.Nokta
+  type Dikdörtgen = tr.Dikdörtgen
+  type Üçgen = tr.Üçgen
+  type İkil = tr.İkil
+  type Seçim = tr.Seçim
 
   type KuralDışı = Exception
   type ÇalışmaSırasıKuralDışı = RuntimeException
 
-  type Diz[T]=tr.Diz[T]
+  type Diz[T] = tr.Diz[T]
   type Dizi[B] = tr.Dizi[B]
   type Dizin[A] = tr.Dizin[A]
-  type Dizim[T]=tr.Dizim[T]
-  type EsnekDizim[T]=tr.EsnekDizim[T]
+  type Dizim[T] = tr.Dizim[T]
+  type EsnekDizim[T] = tr.EsnekDizim[T]
   val Dizim = tr.Dizim
   val EsnekDizim = tr.EsnekDizim
 
-  type UzunlukBirimi=tr.UzunlukBirimi
+  type UzunlukBirimi = tr.UzunlukBirimi
 
-  type GeoYol=tr.GeoYol
-  type GeoNokta=tr.GeoNokta
-  type Grafik2B=tr.Grafik2B
+  type GeoYol = tr.GeoYol
+  type GeoNokta = tr.GeoNokta
+  type Grafik2B = tr.Grafik2B
 
   type Aralık = tr.Aralık
   val Aralık = tr.Aralık
   type Yığın[T] = tr.Yığın[T]
   val Yığın = tr.Yığın
-  type Eşlem[A,D] = tr.Eşlem[A,D]
+  type Eşlem[A, D] = tr.Eşlem[A, D]
   val Eşlem = tr.Eşlem
 
   // use tuples, case classes or other structure types when more args seem to be needed
-  type İşlev1[D,R] = tr.İşlev1[D,R]
-  type İşlev2[D1,D2,R] = tr.İşlev2[D1,D2,R]
-  type İşlev3[D1,D2,D3,R] = tr.İşlev3[D1,D2,D3,R]
+  type İşlev1[D, R] = tr.İşlev1[D, R]
+  type İşlev2[D1, D2, R] = tr.İşlev2[D1, D2, R]
+  type İşlev3[D1, D2, D3, R] = tr.İşlev3[D1, D2, D3, R]
 
-  val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) = (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
+  val (doğru, yanlış, yavaş, orta, hızlı, çokHızlı, noktaSayısı, santim, inç) =
+    (tr.doğru, tr.yanlış, tr.yavaş, tr.orta, tr.hızlı, tr.çokHızlı, tr.noktaSayısı, tr.santim, tr.inç)
 
   // todo
   // val Harf = tr.Harf
@@ -107,7 +124,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
 
   trait TurkishTurtle {
     def englishTurtle: Turtle
-    def sil(): Birim = englishTurtle.clear()  // bbx: does this do anything? See sil def below..
+    def sil(): Birim = englishTurtle.clear() // bbx: does this do anything? See sil def below..
     def göster = görünür _
     def gizle = görünmez _
     def görünür() = englishTurtle.visible()
@@ -125,8 +142,8 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
     def atla(x: Kesir, y: Kesir) = englishTurtle.jumpTo(x, y)
     def ilerle(x: Kesir, y: Kesir) = englishTurtle.moveTo(x, y)
     def zıpla(n: Kesir) = {
-      englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop(n) //hop change state to penDown after hop
+      englishTurtle.saveStyle() // to preserve pen state
+      englishTurtle.hop(n) // hop change state to penDown after hop
       englishTurtle.restoreStyle()
     }
     def zıpla(): Birim = zıpla(25)
@@ -180,7 +197,8 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
   }
 
   class Kaplumbağa(override val englishTurtle: Turtle) extends TurkishTurtle {
-    def this(startX: Kesir, startY: Kesir, costumeFileName: Yazı) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
+    def this(startX: Kesir, startY: Kesir, costumeFileName: Yazı) =
+      this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Kesir, startY: Kesir) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
     def uzaklık(öbürü: Kaplumbağa) = englishTurtle.distanceTo(öbürü.englishTurtle)
@@ -197,7 +215,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
       englishTurtle.react(f)
     }
   }
-  class Kaplumbağa0(t0: => Turtle) extends TurkishTurtle { //by-name construction as turtle0 is volatile }
+  class Kaplumbağa0(t0: => Turtle) extends TurkishTurtle { // by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
   object kaplumbağa extends Kaplumbağa0(builtins.TSCanvas.turtle0)
@@ -225,12 +243,12 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
 
   // TODO: other Color* constructors -- and Help Content
   // ../CoreBuiltins.scala
-  lazy val renkler = builtins.cm  // ColorMaker
+  lazy val renkler = builtins.cm // ColorMaker
   lazy val tuşlar = builtins.Kc // Key Codes
 
   def artalanıKur(r: Renk) = builtins.setBackground(r)
   def artalanıKur(b: Boya) = builtins.setBackground(b)
-  def artalanıKurDik  (r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
+  def artalanıKurDik(r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundV(r1, r2)
   def artalanıKurYatay(r1: Renk, r2: Renk) = builtins.TSCanvas.setBackgroundH(r1, r2)
 
   //  object KcSwe { //Key codes for Swedish keys
@@ -239,7 +257,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
   //    lazy val VK_Ö = 214
   //  }
 
-  //loops
+  // loops
   def yinele(n: Sayı)(diziKomut: => Birim): Birim = {
     RepeatCommands.repeat(n) { diziKomut }
   }
@@ -267,9 +285,9 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
     RepeatCommands.repeatFor(ilk to son) { diziKomut }
   }
 
-  //simple IO
+  // simple IO
   def satıroku(istem: Yazı = "") = builtins.readln(istem)
-  def satıryaz(data: Her) = println(data) //Transferred here from sv.tw.kojo.
+  def satıryaz(data: Her) = println(data) // Transferred here from sv.tw.kojo.
   def satıryaz() = println()
   def yaz(data: Her) = print(data)
 
@@ -292,7 +310,8 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
   def rastgeleDiziden[T](dizi: Dizi[T]) = builtins.randomFrom(dizi)
   def rastgeleDiziden[T](dizi: Dizi[T], ağırlıklar: Dizi[Kesir]) = builtins.randomFrom(dizi, ağırlıklar)
   // def diziKarıştır[T](xs: Dizi[T]): Dizi[T] = util.Random.shuffle(xs)
-  def rastgeleKarıştır[T, C](xs: IterableOnce[T])(implicit bf: collection.BuildFrom[xs.type, T, C]): C = util.Random.shuffle(xs)
+  def rastgeleKarıştır[T, C](xs: IterableOnce[T])(implicit bf: collection.BuildFrom[xs.type, T, C]): C =
+    util.Random.shuffle(xs)
 
   def durakla(saniye: Kesir) = builtins.pause(saniye)
 
@@ -305,7 +324,8 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
   def yazıyüzleri = builtins.availableFontNames
   def yazıyüzü(adı: Yazı, boyu: Sayı): Yazıyüzü = builtins.Font(adı, boyu)
   def yazıyüzü(adı: Yazı, boyu: Sayı, biçem: Sayı): Yazıyüzü = builtins.Font(adı, biçem, boyu)
-  def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıyüzüAdı: Yazı = yok): Dikdörtgen = builtins.textExtent(yazı, yazıBoyu, yazıyüzüAdı)
+  def yazıÇerçevesi(yazı: Yazı, yazıBoyu: Sayı, yazıyüzüAdı: Yazı = yok): Dikdörtgen =
+    builtins.textExtent(yazı, yazıBoyu, yazıyüzüAdı)
 
   val kaplumbağa0 = kaplumbağa
   def yeniKaplumbağa(x: Kesir, y: Kesir) = new Kaplumbağa(x, y)
@@ -350,7 +370,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
     def eni = en
     def boyu = boy
     def en: Kesir = ta.width
-    def boy:Kesir = ta.height
+    def boy: Kesir = ta.height
     def x: Kesir = ta.x
     def y: Kesir = ta.y
     def X = ta.x + ta.width
@@ -399,11 +419,11 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
   def gridiGizle() = richBuiltins.tCanvas.gridOff()
   def eksenleriGöster() = richBuiltins.tCanvas.axesOn()
   def eksenleriGizle() = richBuiltins.tCanvas.axesOff()
-  def açıÖlçeriGöster():richBuiltins.Picture = açıÖlçeriGöster(-tuvalAlanı.en/2, -tuvalAlanı.boy/2)
+  def açıÖlçeriGöster(): richBuiltins.Picture = açıÖlçeriGöster(-tuvalAlanı.en / 2, -tuvalAlanı.boy / 2)
   def açıÖlçeriGöster(x: Kesir, y: Kesir): richBuiltins.Picture = richBuiltins.tCanvas.showProtractor(x, y)
   def açıÖlçeriGizle() = richBuiltins.tCanvas.hideProtractor()
-  def cetveliGöster():richBuiltins.Picture = cetveliGöster(-tuvalAlanı.en/2, tuvalAlanı.boy/2)
-  def cetveliGöster(x: Kesir, y: Kesir):richBuiltins.Picture = richBuiltins.tCanvas.showScale(x, y)
+  def cetveliGöster(): richBuiltins.Picture = cetveliGöster(-tuvalAlanı.en / 2, tuvalAlanı.boy / 2)
+  def cetveliGöster(x: Kesir, y: Kesir): richBuiltins.Picture = richBuiltins.tCanvas.showScale(x, y)
 
   def çizimiKaydet(dosyaAdı: Yazı) = richBuiltins.tCanvas.exportImage(dosyaAdı)
   def çizimiKaydet(dosyaAdı: Yazı, en: Sayı, boy: Sayı) = richBuiltins.tCanvas.exportImage(dosyaAdı, en, boy)
@@ -412,8 +432,14 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
   def çizimiPulBoyundaKaydet(dosyaAdı: Yazı, boy: Sayı) = richBuiltins.tCanvas.exportThumbnail(dosyaAdı, boy)
 
   // todo: help doc
-  def Geçiş(süreSaniyeOlarak: Kesir, ilkEvre: Dizi[Kesir], sonEvre: Dizi[Kesir], kolaylaştırma: KEasing,
-    resimci: Dizi[Kesir] => Resim, bitinceGizle: İkil) = {
+  def Geçiş(
+      süreSaniyeOlarak: Kesir,
+      ilkEvre: Dizi[Kesir],
+      sonEvre: Dizi[Kesir],
+      kolaylaştırma: KEasing,
+      resimci: Dizi[Kesir] => Resim,
+      bitinceGizle: İkil
+  ) = {
     val resimci2 = new Function1[Dizi[Kesir], richBuiltins.Picture] { def apply(d: Dizi[Kesir]) = resimci(d).p }
     richBuiltins.Transition(süreSaniyeOlarak, ilkEvre, sonEvre, kolaylaştırma, resimci2, bitinceGizle)
   }
@@ -423,14 +449,16 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
     // todo: more to come
   }
   def canlandırmaDizisi(canlandırmalar: richBuiltins.Animation*) = richBuiltins.animSeq(canlandırmalar)
-  def canlandırmaDizisi(canlandırmalar: collection.Seq[richBuiltins.Animation]) = richBuiltins.animSeq(canlandırmalar.toSeq)
+  def canlandırmaDizisi(canlandırmalar: collection.Seq[richBuiltins.Animation]) =
+    richBuiltins.animSeq(canlandırmalar.toSeq)
   def oynat(canlandırma: richBuiltins.Animation) = richBuiltins.run(canlandırma)
   def artalandaOynat(kod: => Unit) = richBuiltins.runInBackground(kod)
   def fareKonumu = richBuiltins.mousePosition
   def yorumla(komutDizisi: Yazı) = richBuiltins.interpret(komutDizisi)
   def yineleSayaçla(miliSaniye: Uzun)(işlev: => Birim) = richBuiltins.tCanvas.timer(miliSaniye)(işlev)
   def canlandır(işlev: => Birim) = richBuiltins.tCanvas.animate(işlev)
-  def canlandırEvreyle[Evre](ilkEvre: Evre)(işlev: Evre => Evre): Future[PActivity] = richBuiltins.tCanvas.animateWithState(ilkEvre)(işlev)
+  def canlandırEvreyle[Evre](ilkEvre: Evre)(işlev: Evre => Evre): Future[PActivity] =
+    richBuiltins.tCanvas.animateWithState(ilkEvre)(işlev)
   def canlandırmayıDurdur(etkinlik: Future[PActivity]) = richBuiltins.tCanvas.stopAnimationActivity(etkinlik)
   def canlandırYenidenÇizerek[Evre](ilkEvre: Evre, sonrakiEvre: Evre => Evre, işlev: Evre => Resim): Birim = {
     val işlev2 = new Function1[Evre, richBuiltins.Picture] { def apply(e: Evre) = işlev(e).p }
@@ -455,9 +483,23 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
     println("Komudun çalışması $delta%.3f saniye sürdü.")
   }
 
-  def oyunSüresiniGöster(süreSaniyeOlarak: Sayı, mesaj: Yazı, renk: Renk = siyah, yazıBoyu: Sayı = 15, kx: Kesir = 10, ky: Kesir = 50) =
+  def oyunSüresiniGöster(
+      süreSaniyeOlarak: Sayı,
+      mesaj: Yazı,
+      renk: Renk = siyah,
+      yazıBoyu: Sayı = 15,
+      kx: Kesir = 10,
+      ky: Kesir = 50
+  ) =
     richBuiltins.showGameTime(süreSaniyeOlarak, mesaj, renk, yazıBoyu, kx, ky)
-  def oyunSüresiniGeriyeSayarakGöster(süreSaniyeOlarak: Sayı, mesaj: Yazı, renk: Renk = siyah, yazıBoyu: Sayı = 15, kx: Kesir = 10, ky: Kesir = 50) = richBuiltins.showGameTimeCountdown(süreSaniyeOlarak, mesaj, renk, yazıBoyu, kx, ky)
+  def oyunSüresiniGeriyeSayarakGöster(
+      süreSaniyeOlarak: Sayı,
+      mesaj: Yazı,
+      renk: Renk = siyah,
+      yazıBoyu: Sayı = 15,
+      kx: Kesir = 10,
+      ky: Kesir = 50
+  ) = richBuiltins.showGameTimeCountdown(süreSaniyeOlarak, mesaj, renk, yazıBoyu, kx, ky)
 
   def sırayaSok(kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.schedule(kaçSaniyeSonra)(komut)
   def sırayaSok(n: Sayı, kaçSaniyeSonra: Kesir)(komut: => Birim) = richBuiltins.scheduleN(n, kaçSaniyeSonra)(komut)
@@ -470,9 +512,50 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
   val Yöney2B = tr.Yöney2B
   val Resim = tr.Resim
 
-  import tr.{res => r}
-  val (döndür, döndürMerkezli, filtre, gürültü, örgü) = (r.döndür _, r.döndürMerkezli _, r.filtre _, r.gürültü _, r.örgü _)
-  val (büyütXY, saydamlık, ton, parlaklık, aydınlık, yansıtY, yansıtX, eksenler, boyaRengi, kalemRengi, kalemBoyu, çizimÖncesiİşlev, çizimSonrasıİşlev, çevir, yansıt, soluk, bulanık, noktaIşık, sahneIşığı) = (r.büyütXY _, r.saydamlık _, r.ton _, r.parlaklık _, r.aydınlık _, r.yansıtY, r.yansıtX, r.eksenler, r.boyaRengi _, r.kalemRengi _, r.kalemBoyu _, r.çizimÖncesiİşlev _, r.çizimSonrasıİşlev _, r.çevir _, r.yansıt _, r.soluk _, r.bulanık _, r.noktaIşık _, r.sahneIşığı _)
+  import tr.{ res => r }
+  val (döndür, döndürMerkezli, filtre, gürültü, örgü) =
+    (r.döndür _, r.döndürMerkezli _, r.filtre _, r.gürültü _, r.örgü _)
+  val (
+    büyütXY,
+    saydamlık,
+    ton,
+    parlaklık,
+    aydınlık,
+    yansıtY,
+    yansıtX,
+    eksenler,
+    boyaRengi,
+    kalemRengi,
+    kalemBoyu,
+    çizimÖncesiİşlev,
+    çizimSonrasıİşlev,
+    çevir,
+    yansıt,
+    soluk,
+    bulanık,
+    noktaIşık,
+    sahneIşığı
+  ) = (
+    r.büyütXY _,
+    r.saydamlık _,
+    r.ton _,
+    r.parlaklık _,
+    r.aydınlık _,
+    r.yansıtY,
+    r.yansıtX,
+    r.eksenler,
+    r.boyaRengi _,
+    r.kalemRengi _,
+    r.kalemBoyu _,
+    r.çizimÖncesiİşlev _,
+    r.çizimSonrasıİşlev _,
+    r.çevir _,
+    r.yansıt _,
+    r.soluk _,
+    r.bulanık _,
+    r.noktaIşık _,
+    r.sahneIşığı _
+  )
   def götür(n: Nokta) = r.götür(n)
   def götür(x: Kesir, y: Kesir) = r.götür(x, y)
   def götür(yy: Yöney2B) = r.götür(yy)
@@ -483,13 +566,16 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
   def büyüt(xOranı: Kesir, yOranı: Kesir) = r.büyüt(xOranı, yOranı)
   def ışıklar(ışıklar: com.jhlabs.image.LightFilter.Light*) = r.ışıklar(ışıklar: _*)
   def birEfekt(isim: Symbol, özellikler: Tuple2[Symbol, Any]*) = r.birEfekt(isim, özellikler: _*)
-  def NoktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = r.NoktaIşık(x, y, yön, yükseklik, uzaklık)
-  def SahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = r.SahneIşığı(x, y, yön, yükseklik, uzaklık)
+  def NoktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) =
+    r.NoktaIşık(x, y, yön, yükseklik, uzaklık)
+  def SahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) =
+    r.SahneIşığı(x, y, yön, yükseklik, uzaklık)
   def çiz(r2: Resim) = r.çiz(r2)
   def çiz(rler: Resim*) = r.çiz(rler: _*)
   def çiz(rler: collection.Seq[Resim]) = r.çiz(rler)
   def çizVeSakla(resimler: Resim*) = richBuiltins.drawAndHide(resimler.map(_.p): _*)
-  val (çizMerkezde, çizSahne, çizMerkezdeYazı, merkezeTaşı) = (r.çizMerkezde _, r.çizSahne _, r.çizMerkezdeYazı _, r.merkezeTaşı _)
+  val (çizMerkezde, çizSahne, çizMerkezdeYazı, merkezeTaşı) =
+    (r.çizMerkezde _, r.çizSahne _, r.çizMerkezdeYazı _, r.merkezeTaşı _)
   val (sahneKenarındanYansıtma, engeldenYansıtma) = (r.sahneKenarındanYansıtma _, r.engeldenYansıtma _)
 
   def imge(boy: Sayı, en: Sayı) = r.imge(boy, en)
@@ -524,7 +610,7 @@ object TurkishAPI extends tr.ArrayMethodsInTurkish with tr.CalendarAndTimeUtilsI
 
 object TurkishInit {
   def init(builtins: CoreBuiltins): Unit = {
-    //initialize unstable values:
+    // initialize unstable values:
     TurkishAPI.builtins = builtins
     tr.builtins = builtins
     builtins match {
@@ -536,12 +622,12 @@ object TurkishInit {
 
         //        b.setEditorTabSize(2)
 
-        //code completion
+        // code completion
         b.addCodeTemplates(
           "tr",
           codeTemplates
         )
-        //help texts
+        // help texts
         b.addHelpContent(
           "tr",
           helpContent
@@ -555,4 +641,3 @@ object TurkishInit {
   val codeTemplates = help.templates
   val helpContent = help.content
 }
-

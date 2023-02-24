@@ -1,14 +1,13 @@
 package net.kogics.kojo.lite
 
 import java.awt.Component
-
+import javax.swing.border.EmptyBorder
 import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JScrollPane
 import javax.swing.ScrollPaneConstants
-import javax.swing.border.EmptyBorder
 
 import net.kogics.kojo.core
 import net.kogics.kojo.util.Utils

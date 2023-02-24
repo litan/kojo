@@ -14,27 +14,32 @@
  */
 package net.kogics.kojo
 
-import java.awt.{Color, Font, Image, Paint}
 import java.awt.event.KeyEvent
 import java.awt.geom.GeneralPath
 import java.awt.image.BufferedImageOp
+import java.awt.Color
+import java.awt.Font
+import java.awt.Image
+import java.awt.Paint
 import java.net.URL
 import java.util.Random
 import javax.swing.JComponent
+
 import scala.swing.Graphics2D
+
 import com.jhlabs.image.LightFilter
 import com.jhlabs.image.LightFilter.Light
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.GeometryFactory
 import com.vividsolutions.jts.geom.PrecisionModel
+import core.Picture
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.picture.PicCache.freshPic
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.util.Vector2D
-import core.Picture
-import net.kogics.kojo.picture.PicCache.freshPic
 
 package object picture {
   type Painter = core.Painter
@@ -143,7 +148,8 @@ package object picture {
     write(s)
   }
 
-  def text(s0: Any, fontSize: Int, color: Color)(implicit canvas: SCanvas): TextPic = new TextPic(s0.toString, fontSize, color)
+  def text(s0: Any, fontSize: Int, color: Color)(implicit canvas: SCanvas): TextPic =
+    new TextPic(s0.toString, fontSize, color)
   def text(s0: Any, font: Font, color: Color)(implicit canvas: SCanvas): TextPic = {
     val ret = text(s0, 15, color)
     ret.setPenFont(font)
@@ -173,7 +179,9 @@ package object picture {
   def fromJava2d(w: Double, h: Double, fn: Graphics2D => Unit)(implicit canvas: SCanvas) =
     new Java2DPic(w, h, fn)
 
-  def fromJava2dDynamic(w: Double, h: Double, scaleOutFactor: Double, fn: Graphics2D => Unit, stopCheck: => Boolean)(implicit canvas: SCanvas) =
+  def fromJava2dDynamic(w: Double, h: Double, scaleOutFactor: Double, fn: Graphics2D => Unit, stopCheck: => Boolean)(
+      implicit canvas: SCanvas
+  ) =
     new Java2DPic(w * scaleOutFactor, h * scaleOutFactor, fn) {
       override def draw(): Unit = {
         super.draw()
@@ -407,15 +415,17 @@ package object picture {
     // returns points on the obstacle that contain the given collision coordinate
     def obstacleCollPoints(c: Coordinate): Option[Array[Coordinate]] = {
       obstacle.picGeom.getCoordinates.sliding(2).find { cs =>
-        val xcheck = if (cs(0).x > cs(1).x)
-          cs(0).x >= c.x && c.x >= cs(1).x
-        else
-          cs(0).x <= c.x && c.x <= cs(1).x
+        val xcheck =
+          if (cs(0).x > cs(1).x)
+            cs(0).x >= c.x && c.x >= cs(1).x
+          else
+            cs(0).x <= c.x && c.x <= cs(1).x
 
-        val ycheck = if (cs(0).y > cs(1).y)
-          cs(0).y >= c.y && c.y >= cs(1).y
-        else
-          cs(0).y <= c.y && c.y <= cs(1).y
+        val ycheck =
+          if (cs(0).y > cs(1).y)
+            cs(0).y >= c.y && c.y >= cs(1).y
+          else
+            cs(0).y <= c.y && c.y <= cs(1).y
         xcheck && ycheck
       }
     }

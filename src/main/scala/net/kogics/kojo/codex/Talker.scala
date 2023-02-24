@@ -31,7 +31,7 @@ object Talker {
 }
 
 class Talker(email: String, password: String, listener: TalkListener) {
-  
+
   @volatile var _cancel = false
 
   def fireEvent(msg: String): Unit = {
@@ -79,7 +79,7 @@ class Talker(email: String, password: String, listener: TalkListener) {
           if (Talker.Competition == category && (catData == null || catData.trim == "")) {
             fireProblem("Please provide a Competition Number (above) before uploading your sketch.")
           }
-        
+
           val session = new CodexSession(Talker.server)
           fireEvent(Utils.loadString(classOf[Talker], "Talker.login", Talker.server))
 
@@ -89,7 +89,7 @@ class Talker(email: String, password: String, listener: TalkListener) {
           }
           catch {
             case ex: RuntimeException => fireProblem(Utils.loadString(classOf[Talker], "Talker.login.error"))
-            case t: Throwable => fireProblem(t.getMessage)
+            case t: Throwable         => fireProblem(t.getMessage)
           }
 
           checkCancel()
@@ -104,12 +104,11 @@ class Talker(email: String, password: String, listener: TalkListener) {
             fireFinish(true)
           }
           catch {
-            case _: UploadTooBigException => fireProblem("The drawing is too big to upload. Try reducing your canvas size.")
+            case _: UploadTooBigException =>
+              fireProblem("The drawing is too big to upload. Try reducing your canvas size.")
             case _: RuntimeException => fireProblem(Utils.loadString(classOf[Talker], "Talker.upload.error"))
-            case t: Throwable => fireProblem(t.getMessage)
+            case t: Throwable        => fireProblem(t.getMessage)
           }
-
-
 
         }
         catch {

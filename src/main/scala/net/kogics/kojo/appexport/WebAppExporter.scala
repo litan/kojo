@@ -1,14 +1,15 @@
 package net.kogics.kojo.appexport
 
 import java.io._
-import java.net.{HttpURLConnection, URL}
+import java.net.HttpURLConnection
+import java.net.URL
 import java.nio.charset.StandardCharsets
 import java.util.zip.GZIPInputStream
 
-import net.kogics.kojo.util.Unzipper
-
-import scala.util.Using
 import scala.util.parsing.json._
+import scala.util.Using
+
+import net.kogics.kojo.util.Unzipper
 
 object WebAppExporter {
   def run(script: String): Unit = {
@@ -70,7 +71,8 @@ $script
       }
       println("Script compilation done.")
 
-      @annotation.nowarn def parseJson(json: String) = JSON.parseFull(json)
+      @annotation.nowarn
+      def parseJson(json: String) = JSON.parseFull(json)
 
       println("Parsing response...")
       val parsed = parseJson(content.toString)

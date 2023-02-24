@@ -24,7 +24,7 @@ trait VectorMethodsInTurkish {
     def apply[T](elemanlar: T*) = Vector.from(elemanlar)
     def unapplySeq[T](yler: Vector[T]) = Vector.unapplySeq(yler)
     def boş[T] = Vector.empty[T]
-    def doldur[T:ClassTag](b1: Sayı)(e: => T) = Vector.fill[T](b1)(e)
+    def doldur[T: ClassTag](b1: Sayı)(e: => T) = Vector.fill[T](b1)(e)
   }
 
   implicit class YöneyYöntemleri[A](y: Yöney[A]) {
@@ -47,7 +47,7 @@ trait VectorMethodsInTurkish {
     def soldanKatla[B](z: B)(işlev: (B, A) => B): B = y.foldLeft(z)(işlev)
     def sağdanKatla[B](z: B)(işlev: (A, B) => B): B = y.foldRight(z)(işlev)
     // https://github.com/scala/scala/blob/v2.12.7/src/library/scala/collection/TraversableOnce.scala#L1
-    def topla[B >: A](implicit num: scala.math.Numeric[B]) = y.sum(num)    // foldLeft(num.zero)(num.plus)
+    def topla[B >: A](implicit num: scala.math.Numeric[B]) = y.sum(num) // foldLeft(num.zero)(num.plus)
     def çarp[B >: A](implicit num: scala.math.Numeric[B]) = y.product(num) // foldLeft(num.one)(num.times)
     def yinelemesiz = y.distinct
     def yinelemesizİşlevle[B](işlev: A => B): Yöney[A] = y.distinctBy(işlev)

@@ -14,7 +14,8 @@
  */
 package net.kogics.kojo
 
-import net.kogics.kojo.core.{Picture, SCanvas}
+import net.kogics.kojo.core.Picture
+import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.kmath.KEasing
 import net.kogics.kojo.util.Utils
 
@@ -49,40 +50,41 @@ package object animation {
 
   object Animation {
     def apply(
-               duration: Double,
-               initState: Seq[Double],
-               finalState: Seq[Double],
-               easer: KEasing,
-               picMaker: Seq[Double] => Picture,
-               hideOnDone: Boolean
-             ): Animation = Transition(duration, initState, finalState, easer, picMaker, hideOnDone)
+        duration: Double,
+        initState: Seq[Double],
+        finalState: Seq[Double],
+        easer: KEasing,
+        picMaker: Seq[Double] => Picture,
+        hideOnDone: Boolean
+    ): Animation = Transition(duration, initState, finalState, easer, picMaker, hideOnDone)
 
     def apply(
-               duration: Double,
-               keyFrames: KeyFrames,
-               easers: Seq[KEasing],
-               picMaker: Seq[Double] => Picture,
-               hideOnDone: Boolean
-             ): Animation = Timeline(duration, keyFrames, easers, picMaker, hideOnDone)
+        duration: Double,
+        keyFrames: KeyFrames,
+        easers: Seq[KEasing],
+        picMaker: Seq[Double] => Picture,
+        hideOnDone: Boolean
+    ): Animation = Timeline(duration, keyFrames, easers, picMaker, hideOnDone)
   }
 
   private[animation] object AnimationUtils {
     def transitions(
-                     duration: Double,
-                     keyFrames: KeyFrames,
-                     easers: Seq[KEasing],
-                     picMaker: Seq[Double] => Picture,
-                     hideOnDone: Boolean
-                   ): Iterator[Transition] = {
+        duration: Double,
+        keyFrames: KeyFrames,
+        easers: Seq[KEasing],
+        picMaker: Seq[Double] => Picture,
+        hideOnDone: Boolean
+    ): Iterator[Transition] = {
       require(
         keyFrames.frames.length - 1 == easers.length,
         s"Incorrect number of easings for keyframes - required = ${keyFrames.frames.length - 1}, actual = ${easers.length}"
       )
-      keyFrames.frames.sliding(2).zip(easers).map { case (Seq(as1, as2), easer) =>
-        val tduration = (as2._1 - as1._1) / 100 * duration
-        val initState = as1._2
-        val finalState = as2._2
-        Transition(tduration, initState, finalState, easer, picMaker, hideOnDone)
+      keyFrames.frames.sliding(2).zip(easers).map {
+        case (Seq(as1, as2), easer) =>
+          val tduration = (as2._1 - as1._1) / 100 * duration
+          val initState = as1._2
+          val finalState = as2._2
+          Transition(tduration, initState, finalState, easer, picMaker, hideOnDone)
       }
     }
 
@@ -91,20 +93,21 @@ package object animation {
       require(frames.length > 1, "KeyFrames should have at least two frames")
       require(frames.head._1 == 0, "KeyFrames should start at 0%")
       require(frames.last._1 == 100, "KeyFrames should end at 100%")
-      frames.sliding(2).foreach { case (Seq(as1, as2)) =>
-        require(as2._1 > as1._1, "Keyframe start times should be in increasing order")
+      frames.sliding(2).foreach {
+        case (Seq(as1, as2)) =>
+          require(as2._1 > as1._1, "Keyframe start times should be in increasing order")
       }
     }
   }
 
   case class Transition(
-                         duration: Double, // in seconds
-                         initState: Seq[Double],
-                         finalState: Seq[Double],
-                         easer: KEasing,
-                         picMaker: Seq[Double] => Picture,
-                         hideOnDone: Boolean
-                       ) extends Animation {
+      duration: Double, // in seconds
+      initState: Seq[Double],
+      finalState: Seq[Double],
+      easer: KEasing,
+      picMaker: Seq[Double] => Picture,
+      hideOnDone: Boolean
+  ) extends Animation {
 
     def runner = new TransitionRunner(this)
 
@@ -177,13 +180,13 @@ package object animation {
   }
 
   case class Timeline(
-                       duration: Double,
-                       keyFrames: KeyFrames,
-                       easers: Seq[KEasing],
-                       picMaker: Seq[Double] => Picture,
-                       hideOnDone: Boolean,
-                       isReversed: Boolean = false
-                     ) extends Animation {
+      duration: Double,
+      keyFrames: KeyFrames,
+      easers: Seq[KEasing],
+      picMaker: Seq[Double] => Picture,
+      hideOnDone: Boolean,
+      isReversed: Boolean = false
+  ) extends Animation {
     AnimationUtils.checkKeyFrames(keyFrames)
 
     def runner = new TimelineRunner(this)
@@ -341,16 +344,16 @@ package object animation {
   }
 
   def animSeq(as: Seq[Animation]): Animation = as match {
-    case Seq() => throw new RuntimeException("To sequence animations, we need one animation at least!")
-    case Seq(a) => a
+    case Seq()       => throw new RuntimeException("To sequence animations, we need one animation at least!")
+    case Seq(a)      => a
     case Seq(a1, a2) => SeqAnimation(a1, a2)
-    case h +: tail => SeqAnimation(h, animSeq(tail))
+    case h +: tail   => SeqAnimation(h, animSeq(tail))
   }
 
   def animPar(as: Seq[Animation]): Animation = as match {
-    case Seq() => throw new RuntimeException("To `par` animations, we need one animation at least!")
-    case Seq(a) => a
+    case Seq()       => throw new RuntimeException("To `par` animations, we need one animation at least!")
+    case Seq(a)      => a
     case Seq(a1, a2) => ParAnimation(a1, a2)
-    case h +: tail => ParAnimation(h, animPar(tail))
+    case h +: tail   => ParAnimation(h, animPar(tail))
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  *   Lalit Pant <pant.lalit@gmail.com>,
  *   Eric Zoerner <eric.zoerner@gmail.com>
  *   Jacco Huysmans <jhuysmans@rhinofly.nl>
@@ -20,14 +20,15 @@
 
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.xscala.RepeatCommands
 
 object DutchAPI {
-  import net.kogics.kojo.core.Turtle
   import java.awt.Color
-  var builtins: net.kogics.kojo.lite.CoreBuiltins = _  //unstable reference to module
+
+  import net.kogics.kojo.core.Turtle
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ // unstable reference to module
 
   trait DutchTurtle {
     def engels: Turtle
@@ -43,13 +44,13 @@ object DutchAPI {
     def springNaar(x: Double, y: Double) = engels.jumpTo(x, y)
     def gaNaar(x: Double, y: Double) = engels.moveTo(x, y)
     def spring(n: Double) = {
-      engels.saveStyle() //to preserve pen state
-      engels.hop(n) //hop change state to penDown after hop
+      engels.saveStyle() // to preserve pen state
+      engels.hop(n) // hop change state to penDown after hop
       engels.restoreStyle()
     }
     def spring(): Unit = {
-      engels.saveStyle() //to preserve pen state
-      engels.hop() //hop change state to penDown after hop
+      engels.saveStyle() // to preserve pen state
+      engels.hop() // hop change state to penDown after hop
       engels.restoreStyle()
     }
     def start() = engels.home()
@@ -86,9 +87,9 @@ object DutchAPI {
     def this(startX: Double, startY: Double, kostuumBestandsNaam: String) =
       this(builtins.TSCanvas.newTurtle(startX, startY, kostuumBestandsNaam))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
-    def this() = this(0,0)
+    def this() = this(0, 0)
   }
-  class Schildpad0(t0: => Turtle) extends DutchTurtle { //by-name construction as turtle0 is volatile }
+  class Schildpad0(t0: => Turtle) extends DutchTurtle { // by-name construction as turtle0 is volatile }
     override def engels: Turtle = t0
   }
   object schildpad extends Schildpad0(builtins.TSCanvas.turtle0)
@@ -108,11 +109,11 @@ object DutchAPI {
   def achterGrond(kleur: Color) = builtins.setBackground(kleur)
   def achterGrondV(kleur1: Color, kleur2: Color) = builtins.TSCanvas.setBackgroundV(kleur1, kleur2)
 
-  //loops in Dutch
+  // loops in Dutch
   def herhaal(n: Int)(bloc: => Unit): Unit = {
     RepeatCommands.repeat(n)(bloc)
   }
-  def herhaalTel (n: Int)(bloc: Int => Unit): Unit = {
+  def herhaalTel(n: Int)(bloc: Int => Unit): Unit = {
     RepeatCommands.repeati(n)(bloc)
   }
 
@@ -120,10 +121,10 @@ object DutchAPI {
     RepeatCommands.repeatWhile(conditie)(bloc)
   }
 
-  //simple IO
-  def input(leidTekst: String = "") =  builtins.readln(leidTekst)
+  // simple IO
+  def input(leidTekst: String = "") = builtins.readln(leidTekst)
 
-  //math functions
+  // math functions
   def rondAf(getal: Number, aantalDecimalen: Int = 0): Double = {
     val factor = math.pow(10, aantalDecimalen)
     math.round(getal.doubleValue * factor) / factor
@@ -132,51 +133,54 @@ object DutchAPI {
   def willekeurigDecimaal(n: Int) = builtins.randomDouble(n)
   def kleur(r: Int, g: Int, b: Int) = builtins.Color(r, g, b)
 
-  //some type aliases in Dutch
+  // some type aliases in Dutch
   type GeheelGetal = Int
   type Decimaal = Double
   type Tekst = String
 
-  //speedTest
-  def systeemTijd() = BigDecimal(System.nanoTime()) / BigDecimal("1000000000") //seconds
+  // speedTest
+  def systeemTijd() = BigDecimal(System.nanoTime()) / BigDecimal("1000000000") // seconds
 
-  @annotation.nowarn def telTot(n: BigInt): Unit = {
+  @annotation.nowarn
+  def telTot(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** Tel van 1 tot ... ")
     val startTime = systeemTijd()
     while (c < n) {
       c = c + 1
-    } //takes time if n is large
+    } // takes time if n is large
     val stopTime = systeemTijd()
     println("" + n + " *** KLAAR!")
     val time = stopTime - startTime
     print("Het duurde ")
     if (time < 0.1)
-      println((time * 1000).round(new java.math.MathContext(2)) +
-                " millseconden.")
+      println(
+        (time * 1000).round(new java.math.MathContext(2)) +
+          " millseconden."
+      )
     else println((time * 10).toLong / 10.0 + " seconden.")
   }
 }
 
 object NlInit {
   def init(builtins: CoreBuiltins): Unit = {
-    //initialize unstable value
+    // initialize unstable value
     net.kogics.kojo.lite.i18n.DutchAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
         println("Welkom in Kojo met Nederlandse schildpad!")
         if (b.isScratchPad) {
-          //History for work you do in the Scratchpad will not be saved.
+          // History for work you do in the Scratchpad will not be saved.
           println("De geschiedenis wordt niet opgeslagen bij het sluiten van Kojo kladblok.")
         }
         b.setEditorTabSize(2)
 
-        //code completion
+        // code completion
         b.addCodeTemplates(
           "nl",
           codeTemplates
         )
-        //help texts
+        // help texts
         b.addHelpContent(
           "nl",
           helpContent
@@ -358,7 +362,7 @@ object NlInit {
     "zolangAls" -> <div><strong>zolangAls</strong>(voorwaarde) {{  opdrachten }} - herhaal <em>opdrachten</em> zolang als <em>voorwaarde</em> waar is.
       <br/><em>Voorbeeld:</em> <br/><br/>
       <pre>var i = 0
-        zolangAls(i{ "<" }10) {{
+        zolangAls(i{"<"}10) {{
         output(i)
         i = i + 1
         }}

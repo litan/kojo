@@ -3,18 +3,19 @@ package net.kogics.kojo.core
 import java.util.Date
 
 case class HistoryItem(
-  script: String,
-  file: String = "",
-  var id: Long = 0,
-  var starred: Boolean = false,
-  var tags: String = "",
-  at: Date = new Date)
+    script: String,
+    file: String = "",
+    var id: Long = 0,
+    var starred: Boolean = false,
+    var tags: String = "",
+    at: Date = new Date
+)
 
 trait HistoryListener {
   def itemAdded: Unit
   def selectionChanged(n: Int): Unit
   def ensureVisible(n: Int): Unit
-  def historyReady(): Unit  
+  def historyReady(): Unit
 }
 
 trait HistorySaver {

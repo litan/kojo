@@ -14,10 +14,10 @@
  */
 package net.kogics.kojo.lite
 
-import java.rmi.Remote
-import java.rmi.RemoteException
 import java.rmi.registry.LocateRegistry
 import java.rmi.server.UnicastRemoteObject
+import java.rmi.Remote
+import java.rmi.RemoteException
 
 import net.kogics.kojo.util.Utils
 
@@ -28,8 +28,8 @@ trait MultiInstanceHandler extends Remote {
 
 object MultiInstanceManager {
   // make mih static so that it does not get garbage collected
-  // we're trying to prevent the sporadic lack of activation of the first instance of Kojo from an nth instance 
-  // and the accompanying 'Problem - no such object in table' message that shows up in the Java Console  
+  // we're trying to prevent the sporadic lack of activation of the first instance of Kojo from an nth instance
+  // and the accompanying 'Problem - no such object in table' message that shows up in the Java Console
   val mih = new MultiInstanceHandlerImpl()
   def run(): Unit = {
     try {

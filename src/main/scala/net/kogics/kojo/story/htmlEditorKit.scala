@@ -21,19 +21,18 @@ import java.awt.Graphics
 import java.awt.Insets
 import java.awt.Rectangle
 import java.awt.Shape
-
-import org.scilab.forge.jlatexmath.ParseException
-import org.scilab.forge.jlatexmath.TeXConstants
-import org.scilab.forge.jlatexmath.TeXFormula
-
-import javax.swing.JLabel
+import javax.swing.text.html.CSS
+import javax.swing.text.html.HTML
+import javax.swing.text.html.HTMLEditorKit
 import javax.swing.text.Element
 import javax.swing.text.Position
 import javax.swing.text.StyleConstants
 import javax.swing.text.View
-import javax.swing.text.html.CSS
-import javax.swing.text.html.HTML
-import javax.swing.text.html.HTMLEditorKit
+import javax.swing.JLabel
+
+import org.scilab.forge.jlatexmath.ParseException
+import org.scilab.forge.jlatexmath.TeXConstants
+import org.scilab.forge.jlatexmath.TeXFormula
 
 object CustomHtmlEditorKit {
   val latexPrefix = "latex://"
@@ -51,18 +50,18 @@ class CustomHtmlEditorKit private extends HTMLEditorKit {
 }
 
 class CustomHtmlFactory extends HTMLEditorKit.HTMLFactory {
-  
+
   override def create(elem: Element) = {
     def hasLatexAttr(e: Element) = e.getAttributes().getAttribute(HTML.Attribute.SRC) match {
-      case src: String if (src.startsWith(CustomHtmlEditorKit.latexPrefix)) => true
-      case _ => false
+      case src: String if src.startsWith(CustomHtmlEditorKit.latexPrefix) => true
+      case _                                                              => false
     }
 
     val o = elem.getAttributes().getAttribute(StyleConstants.NameAttribute)
     val src = elem.getAttributes().getAttribute(HTML.Attribute.SRC)
     o match {
-      case kind: HTML.Tag if(kind == HTML.Tag.IMG && hasLatexAttr(elem)) => new LatexView(elem)
-      case _ => super.create(elem)
+      case kind: HTML.Tag if kind == HTML.Tag.IMG && hasLatexAttr(elem) => new LatexView(elem)
+      case _                                                            => super.create(elem)
     }
   }
 }
@@ -89,14 +88,15 @@ class LatexView(elem: Element) extends View(elem) {
     }
   }
 
-  val formula = try {
-    new TeXFormula(latex)
-  }
-  catch {
-    case pe: ParseException =>
-      output("Incorrect formula - %s.\nProblem: %s".format(latex, pe.getMessage))
-      new TeXFormula("\\text{Incorrect Formula. See output for details}")
-  }
+  val formula =
+    try {
+      new TeXFormula(latex)
+    }
+    catch {
+      case pe: ParseException =>
+        output("Incorrect formula - %s.\nProblem: %s".format(latex, pe.getMessage))
+        new TeXFormula("\\text{Incorrect Formula. See output for details}")
+    }
   val icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, size)
   icon.setInsets(new Insets(2, 2, 2, 2))
   val jl = new JLabel();

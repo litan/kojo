@@ -19,6 +19,7 @@ import java.awt.Desktop
 import java.net.URL
 import javax.swing._
 import javax.swing.event._
+
 import net.kogics.kojo.util.Utils
 
 class LinkListener(st: StoryTeller) extends HyperlinkListener {
@@ -29,18 +30,18 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
   def localpageLocation(url: String): (Int, Int) = {
     url match {
       case linkRegex(page, para) =>
-        (page.toInt, if (para=="") 1 else para.toInt)
+        (page.toInt, if (para == "") 1 else para.toInt)
       case linkPnameRegex(pageName, para) =>
         val pageNum = st.pageNumber(pageName)
         if (pageNum.isDefined)
-          (pageNum.get, if (para=="") 1 else para.toInt)
+          (pageNum.get, if (para == "") 1 else para.toInt)
         else
           throw new IllegalArgumentException()
       case _ =>
         throw new IllegalArgumentException()
     }
   }
-  
+
   // extract handler and data from runhandler url.
   def handlerData(url: String): (String, String) = {
     url.trim match {
@@ -50,7 +51,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
         throw new IllegalArgumentException()
     }
   }
-  
+
   // satisfy url click
   def gotoUrl(url: URL) = Utils.runInSwingThread {
     if (url.getProtocol == "http") {
@@ -66,7 +67,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
             st.showStatusError("Problem handling Url - %s: %s".format(url.toString, t.getMessage))
         }
       }
-      else if (url.getHost.toLowerCase == "runhandler")  {
+      else if (url.getHost.toLowerCase == "runhandler") {
         try {
           val d = handlerData(url.toString)
           st.handleLink(d._1, d._2)
@@ -80,7 +81,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
       }
       else {
         try {
-            Desktop.getDesktop().browse(url.toURI)
+          Desktop.getDesktop().browse(url.toURI)
         }
         catch {
           case t: Throwable =>
@@ -128,7 +129,7 @@ class LinkListener(st: StoryTeller) extends HyperlinkListener {
   }
 
   // for tests
-  private [story] def setStory(story: Story): Unit = {
+  private[story] def setStory(story: Story): Unit = {
     st.currStory = Some(story)
   }
 }

@@ -17,25 +17,24 @@
 package net.kogics.kojo
 package staging
 
-import edu.umd.cs.piccolo._
-import edu.umd.cs.piccolo.nodes._
-import edu.umd.cs.piccolo.util._
-import edu.umd.cs.piccolo.event._
-
-import net.kogics.kojo.util.Utils
-
 import javax.swing._
 
 import core._
-import math._
-import Impl.API
-
+import edu.umd.cs.piccolo._
+import edu.umd.cs.piccolo.event._
+import edu.umd.cs.piccolo.nodes._
+import edu.umd.cs.piccolo.util._
 import language.postfixOps
+import math._
+import net.kogics.kojo.util.Utils
+import Impl.API
 
 class Dot(val origin: Point) extends StrokedShape {
   val path = PPath.createLine(
-    origin.x.toFloat, origin.y.toFloat,
-    origin.x.toFloat, origin.y.toFloat
+    origin.x.toFloat,
+    origin.y.toFloat,
+    origin.x.toFloat,
+    origin.y.toFloat
   )
 
   override def toString = "Staging.Dot(" + origin + ")"
@@ -86,17 +85,21 @@ object Rectangle {
 }
 
 class RoundRectangle(
-  val origin: Point,
-  val endpoint: Point,
-  val curvature: Point
-) extends SimpleShape with Rounded {
+    val origin: Point,
+    val endpoint: Point,
+    val curvature: Point
+) extends SimpleShape
+    with Rounded {
   // precondition endpoint > origin
   require(width > 0 && height > 0, "A RoundRectangles's width and height should be more than 0.")
   val path =
     PPath.createRoundRectangle(
-      origin.x.toFloat, origin.y.toFloat,
-      width.toFloat, height.toFloat,
-      curvature.x.toFloat, curvature.y.toFloat
+      origin.x.toFloat,
+      origin.y.toFloat,
+      width.toFloat,
+      height.toFloat,
+      curvature.x.toFloat,
+      curvature.y.toFloat
     )
 
   override def toString =
@@ -112,8 +115,10 @@ object RoundRectangle {
 
 class Ellipse(val origin: Point, val endpoint: Point) extends Elliptical {
   val path = PPath.createEllipse(
-    (origin.x - radiusX).toFloat, (origin.y - radiusY).toFloat,
-    width.toFloat, height.toFloat
+    (origin.x - radiusX).toFloat,
+    (origin.y - radiusY).toFloat,
+    width.toFloat,
+    height.toFloat
   )
 
   override def toString = "Staging.Ellipse(" + origin + "," + endpoint + ")"
@@ -127,15 +132,24 @@ object Ellipse {
 }
 
 class Arc(
-  val origin: Point, val endpoint: Point,
-  val start: Double, val extent: Double,
-  val kind: Int
+    val origin: Point,
+    val endpoint: Point,
+    val start: Double,
+    val extent: Double,
+    val kind: Int
 ) extends Elliptical {
   val path = new PPath
-  path.setPathTo(new java.awt.geom.Arc2D.Double(
-      (origin.x - radiusX), (origin.y - radiusY), width, height,
-      -start, -extent, kind
-    ))
+  path.setPathTo(
+    new java.awt.geom.Arc2D.Double(
+      origin.x - radiusX,
+      origin.y - radiusY,
+      width,
+      height,
+      -start,
+      -extent,
+      kind
+    )
+  )
 
   override def toString = "Staging.Arc(" + origin + "," + endpoint + start + "," + extent + ")"
 }
@@ -147,72 +161,72 @@ object Arc {
   }
 }
 
-class Cross(val origin: Point,
-            val endpoint: Point,
-            val crossWidth: Double,
-            val ratio: Double,
-            val greek: Boolean) extends SimpleShape with CrossShape {
+class Cross(val origin: Point, val endpoint: Point, val crossWidth: Double, val ratio: Double, val greek: Boolean)
+    extends SimpleShape
+    with CrossShape {
   val pts = crossDims(width, height, crossWidth, ratio, greek).points()
-  val path = PPath.createPolyline((pts map { case Point(x, y) =>
-          new java.awt.geom.Point2D.Double(x + origin.x, y + origin.y)
-      }).toArray)
+  val path = PPath.createPolyline(pts.map {
+    case Point(x, y) =>
+      new java.awt.geom.Point2D.Double(x + origin.x, y + origin.y)
+  }.toArray)
   path.closePath
 
   override def toString = "Staging.Cross(" +
-  origin + "," + endpoint + "," + crossWidth + "," +
-  ratio + "," + greek + "," + ")"
+    origin + "," + endpoint + "," + crossWidth + "," +
+    ratio + "," + greek + "," + ")"
 }
 object Cross {
-  def apply(origin: Point, endpoint: Point, crossWidth: Double, ratio: Double, greek: Boolean) = 
-  {
+  def apply(origin: Point, endpoint: Point, crossWidth: Double, ratio: Double, greek: Boolean) = {
     val shape = new Cross(origin, endpoint, crossWidth, ratio, greek)
     Impl.figure0.addPnode(shape.node)
     shape
   }
 }
 
-class CrossOutline(val origin: Point,
-                   val endpoint: Point,
-                   val crossWidth: Double,
-                   val ratio: Double,
-                   val greek: Boolean) extends SimpleShape with CrossShape {
+class CrossOutline(
+    val origin: Point,
+    val endpoint: Point,
+    val crossWidth: Double,
+    val ratio: Double,
+    val greek: Boolean
+) extends SimpleShape
+    with CrossShape {
   val pts = crossDims(width, height, crossWidth, ratio, greek).outlinePoints()
-  val path = PPath.createPolyline((pts map { case Point(x, y) =>
-          new java.awt.geom.Point2D.Double(x + origin.x, y + origin.y)
-      }).toArray)
+  val path = PPath.createPolyline(pts.map {
+    case Point(x, y) =>
+      new java.awt.geom.Point2D.Double(x + origin.x, y + origin.y)
+  }.toArray)
   path.closePath
 
   override def toString = "Staging.CrossOutline(" +
-  origin + "," + endpoint + "," + crossWidth + "," +
-  ratio + "," + greek + "," + ")"
+    origin + "," + endpoint + "," + crossWidth + "," +
+    ratio + "," + greek + "," + ")"
 }
 object CrossOutline {
-  def apply(origin: Point, endpoint: Point, crossWidth: Double, ratio: Double, greek: Boolean) = 
-  {
+  def apply(origin: Point, endpoint: Point, crossWidth: Double, ratio: Double, greek: Boolean) = {
     val shape = new CrossOutline(origin, endpoint, crossWidth, ratio, greek)
     Impl.figure0.addPnode(shape.node)
     shape
   }
 }
 
-class Saltire(val origin: Point,
-              val endpoint: Point,
-              val crossWidth: Double) extends SimpleShape {
+class Saltire(val origin: Point, val endpoint: Point, val crossWidth: Double) extends SimpleShape {
   val points = Saltire.saltirePoints(width, height, crossWidth)
-  val path = PPath.createPolyline((points map { case Point(x, y) =>
-          new java.awt.geom.Point2D.Double(x + origin.x, y + origin.y)
-      }).toArray)
+  val path = PPath.createPolyline(points.map {
+    case Point(x, y) =>
+      new java.awt.geom.Point2D.Double(x + origin.x, y + origin.y)
+  }.toArray)
   path.closePath
 
   override def toString = "Staging.Saltire(" + origin + "," + endpoint + "," + crossWidth + ")"
 }
 object Saltire {
   def saltirePoints(len: Double, wid: Double, cw: Double) = {
-    val hl  = len / 2
-    val hw  = wid / 2
+    val hl = len / 2
+    val hw = wid / 2
     val hcw = cw / 2
-    val my  = cw * 0.36
-    val mx  = cw * 0.83
+    val my = cw * 0.36
+    val mx = cw * 0.83
     List(
       // 0-1     3-4
       // f  \   /  5
@@ -223,22 +237,22 @@ object Saltire {
       //  /   A   \
       // d  /   \  7
       // c-b     9-8
-      Point(0,         wid),
-      Point(0 + hcw,   wid),
-      Point(hl,        hw + my),
+      Point(0, wid),
+      Point(0 + hcw, wid),
+      Point(hl, hw + my),
       Point(len - hcw, wid),
-      Point(len,       wid),
-      Point(len,       wid - hcw),
-      Point(hl + mx,   hw),
-      Point(len,       hcw),
-      Point(len,       0),
+      Point(len, wid),
+      Point(len, wid - hcw),
+      Point(hl + mx, hw),
+      Point(len, hcw),
+      Point(len, 0),
       Point(len - hcw, 0),
-      Point(hl,        hw - my),
-      Point(hcw,       0),
-      Point(0,         0),
-      Point(0,         hcw),
-      Point(hl - mx,   hw),
-      Point(0,         wid - hcw)
+      Point(hl, hw - my),
+      Point(hcw, 0),
+      Point(0, 0),
+      Point(0, hcw),
+      Point(hl - mx, hw),
+      Point(0, wid - hcw)
     )
   }
 
@@ -249,44 +263,43 @@ object Saltire {
   }
 }
 
-@annotation.nowarn class SaltireOutline(val origin: Point,
-                     val endpoint: Point,
-                     val crossWidth: Double) extends SimpleShape {
+@annotation.nowarn
+class SaltireOutline(val origin: Point, val endpoint: Point, val crossWidth: Double) extends SimpleShape {
   val path = new PPath
 
   // TODO scale outset to crossWidth
   val points = Saltire.saltirePoints(width, height, crossWidth)
-  (points map (origin + _) grouped(4) zipWithIndex) foreach {
+  (points.map(origin + _).grouped(4) zipWithIndex).foreach {
     case (Seq(_, Point(x0, y0), Point(x1, y1), Point(x2, y2)), 0) =>
       path.moveTo(x0.toFloat - 1, y0.toFloat)
       path.lineTo(x0.toFloat + 2, y0.toFloat)
-      path.lineTo(x1.toFloat,     y1.toFloat + 1)
+      path.lineTo(x1.toFloat, y1.toFloat + 1)
       path.lineTo(x2.toFloat - 2, y2.toFloat)
       path.lineTo(x2.toFloat + 1, y2.toFloat)
-      path.lineTo(x1.toFloat,     y1.toFloat - 1)
+      path.lineTo(x1.toFloat, y1.toFloat - 1)
       path.closePath
     case (Seq(_, Point(x0, y0), Point(x1, y1), Point(x2, y2)), 1) =>
-      path.moveTo(x0.toFloat,     y0.toFloat + 2)
-      path.lineTo(x0.toFloat,     y0.toFloat - 1)
+      path.moveTo(x0.toFloat, y0.toFloat + 2)
+      path.lineTo(x0.toFloat, y0.toFloat - 1)
       path.lineTo(x1.toFloat + 4, y1.toFloat)
-      path.lineTo(x2.toFloat,     y2.toFloat + 1)
-      path.lineTo(x2.toFloat,     y2.toFloat - 2)
+      path.lineTo(x2.toFloat, y2.toFloat + 1)
+      path.lineTo(x2.toFloat, y2.toFloat - 2)
       path.lineTo(x1.toFloat - 1, y1.toFloat)
       path.closePath
     case (Seq(_, Point(x0, y0), Point(x1, y1), Point(x2, y2)), 2) =>
       path.moveTo(x0.toFloat + 1, y0.toFloat)
       path.lineTo(x0.toFloat - 2, y0.toFloat)
-      path.lineTo(x1.toFloat,     y1.toFloat - 1)
+      path.lineTo(x1.toFloat, y1.toFloat - 1)
       path.lineTo(x2.toFloat + 2, y2.toFloat)
       path.lineTo(x2.toFloat - 1, y2.toFloat)
-      path.lineTo(x1.toFloat,     y1.toFloat + 1)
+      path.lineTo(x1.toFloat, y1.toFloat + 1)
       path.closePath
     case (Seq(_, Point(x0, y0), Point(x1, y1), Point(x2, y2)), 3) =>
-      path.moveTo(x0.toFloat,     y0.toFloat - 2)
-      path.lineTo(x0.toFloat,     y0.toFloat + 1)
+      path.moveTo(x0.toFloat, y0.toFloat - 2)
+      path.lineTo(x0.toFloat, y0.toFloat + 1)
       path.lineTo(x1.toFloat - 4, y1.toFloat)
-      path.lineTo(x2.toFloat,     y2.toFloat - 1)
-      path.lineTo(x2.toFloat,     y2.toFloat + 2)
+      path.lineTo(x2.toFloat, y2.toFloat - 1)
+      path.lineTo(x2.toFloat, y2.toFloat + 2)
       path.lineTo(x1.toFloat + 1, y1.toFloat)
       path.closePath
   }
@@ -321,7 +334,7 @@ class Vector(val origin: Point, val endpoint: Point, val length: Double) extends
 
   val angle =
     if (origin.x < endpoint.x) { math.asin((endpoint.y - origin.y) / vlength) }
-  else { math.Pi - math.asin((endpoint.y - origin.y) / vlength) }
+    else { math.Pi - math.asin((endpoint.y - origin.y) / vlength) }
 
   node.rotateAboutPoint(angle, origin.x, origin.y)
 
@@ -338,7 +351,7 @@ object Vector {
 object Star {
   def apply(origin: Point, inner: Double, outer: Double, points: Int) = Utils.runInSwingThreadAndWait {
     val a = math.Pi / points // the angle between outer and inner point
-    val pts = Seq.tabulate(2 * points){ i =>
+    val pts = Seq.tabulate(2 * points) { i =>
       val aa = math.Pi / 2 + a * i
       if (i % 2 == 0) { origin + Point(outer * cos(aa), outer * sin(aa)) }
       else { origin + Point(inner * cos(aa), inner * sin(aa)) }

@@ -22,7 +22,7 @@ import util.Read._
 trait HandlerHolder[+T] {
   def handle(data: String): Unit
 }
-  
+
 class IntHandlerHolder(handler: Int => Unit) extends HandlerHolder[Int] {
   def handle(data: String): Unit = {
     handler(convertArg(data))
@@ -41,4 +41,3 @@ class VoidHandlerHolder(handler: () => Unit) extends HandlerHolder[Unit] {
     handler()
   }
 }
-

@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
- *   Lalit Pant <pant.lalit@gmail.com> 
+ *   Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -19,15 +19,16 @@
 
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.xscala.RepeatCommands
 
 object SwedishAPI {
-  import net.kogics.kojo.core.Turtle
   import java.awt.Color
-  var builtins: net.kogics.kojo.lite.CoreBuiltins = _  //unstable reference to module
-  
+
+  import net.kogics.kojo.core.Turtle
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ // unstable reference to module
+
   trait SwedishTurtle {
     def englishTurtle: Turtle
     def sudda() = englishTurtle.clear()
@@ -42,8 +43,8 @@ object SwedishAPI {
     def hoppaTill(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
     def gåTill(x: Double, y: Double) = englishTurtle.moveTo(x, y)
     def hoppa(steg: Double) = {
-      englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop(steg) //hop change state to penDown after hop
+      englishTurtle.saveStyle() // to preserve pen state
+      englishTurtle.hop(steg) // hop change state to penDown after hop
       englishTurtle.restoreStyle()
     }
     def hoppa(): Unit = hoppa(25)
@@ -78,37 +79,38 @@ object SwedishAPI {
     def nästaKostym() = englishTurtle.nextCostume()
   }
   class Padda(override val englishTurtle: Turtle) extends SwedishTurtle {
-    def this(startX: Double, startY: Double, kostymFilNamn: String) = this(builtins.TSCanvas.newTurtle(startX, startY, kostymFilNamn))
+    def this(startX: Double, startY: Double, kostymFilNamn: String) =
+      this(builtins.TSCanvas.newTurtle(startX, startY, kostymFilNamn))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
-    def this() = this(0,0)
+    def this() = this(0, 0)
   }
-  class Padda0(t0: => Turtle) extends SwedishTurtle { //by-name construction as turtle0 is volatile }
+  class Padda0(t0: => Turtle) extends SwedishTurtle { // by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
   object padda extends Padda0(builtins.TSCanvas.turtle0)
   def sudda() = builtins.TSCanvas.clear()
   def suddaUtdata() = builtins.clearOutput()
-  lazy val blå = builtins.blue 
-  lazy val röd = builtins.red 
-  lazy val gul = builtins.yellow 
-  lazy val grön = builtins.green 
+  lazy val blå = builtins.blue
+  lazy val röd = builtins.red
+  lazy val gul = builtins.yellow
+  lazy val grön = builtins.green
   lazy val lila = builtins.purple
-  lazy val rosa = builtins.pink 
-  lazy val brun = builtins.brown 
-  lazy val svart = builtins.black 
+  lazy val rosa = builtins.pink
+  lazy val brun = builtins.brown
+  lazy val svart = builtins.black
   lazy val vit = builtins.white
   lazy val genomskinlig = builtins.noColor
   def bakgrund(färg: Color) = builtins.setBackground(färg)
   def bakgrund2(färg1: Color, färg2: Color) = builtins.TSCanvas.setBackgroundV(färg1, färg2)
-  object KcSwe { //Key codes for Swedish keys
+  object KcSwe { // Key codes for Swedish keys
     lazy val VK_Å = 197
     lazy val VK_Ä = 196
     lazy val VK_Ö = 214
   }
-  
-  //loops in Swedish
+
+  // loops in Swedish
   def upprepa(n: Int)(block: => Unit): Unit = {
-    RepeatCommands.repeat(n){ block }
+    RepeatCommands.repeat(n) { block }
   }
 
   def räkneslinga(n: Int)(block: Int => Unit): Unit = {
@@ -116,48 +118,51 @@ object SwedishAPI {
   }
 
   def sålänge(villkor: => Boolean)(block: => Unit): Unit = {
-    RepeatCommands.repeatWhile (villkor) { block }
-  }  
+    RepeatCommands.repeatWhile(villkor) { block }
+  }
 
-  //simple IO
-  def indata(ledtext: String = "") =  builtins.readln(ledtext)
-  
-  //math functions
+  // simple IO
+  def indata(ledtext: String = "") = builtins.readln(ledtext)
+
+  // math functions
   def avrunda(tal: Number, antalDecimaler: Int = 0): Double = {
     val faktor = math.pow(10, antalDecimaler).toDouble
     math.round(tal.doubleValue * faktor).toLong / faktor
   }
   def slumptal(n: Int) = builtins.random(n)
   def slumptalMedDecimaler(n: Int) = builtins.randomDouble(n)
-  
-  //some type aliases in Swedish
+
+  // some type aliases in Swedish
   type Heltal = Int
   type Decimaltal = Double
   type Sträng = String
-  
-  //speedTest
-  def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
 
-  @annotation.nowarn def räknaTill(n: BigInt): Unit = {
+  // speedTest
+  def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") // sekunder
+
+  @annotation.nowarn
+  def räknaTill(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** Räknar från 1 till ... ")
     val startTid = systemtid
-    while (c < n) { c = c + 1 } //tar tid om n är stort
+    while (c < n) { c = c + 1 } // tar tid om n är stort
     val stoppTid = systemtid
     println("" + n + " *** KLAR!")
     val tid = stoppTid - startTid
     print("Det tog ")
     if (tid < 0.1)
-      println((tid * 1000).round(new java.math.MathContext(2)) +
-        " millisekunder.")
+      println(
+        (tid * 1000).round(new java.math.MathContext(2)) +
+          " millisekunder."
+      )
     else println((tid * 10).toLong / 10.0 + " sekunder.")
   }
-  
+
 }
 
 object SvInit {
   def init(builtins: CoreBuiltins): Unit = {
-    //initialize unstable value
+    // initialize unstable value
     net.kogics.kojo.lite.i18n.SwedishAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
@@ -167,12 +172,12 @@ object SvInit {
         }
         b.setEditorTabSize(2)
 
-        //code completion
+        // code completion
         b.addCodeTemplates(
           "sv",
           codeTemplates
         )
-        //help texts
+        // help texts
         b.addHelpContent(
           "sv",
           helpContent
@@ -181,7 +186,7 @@ object SvInit {
       case _ =>
     }
   }
-  
+
   val codeTemplates = Map(
     "fram" -> "fram(${steg})",
     "höger" -> "höger(${vinkel})",
@@ -346,7 +351,7 @@ räkneslinga(10) {{ i =>
     "sålänge" -> <div><strong>sålänge</strong>(villkor) {{  satser }} - upprepar <em>satser</em> så länge <em>villkor</em> är sant. 
         <br/><em>Exempel:</em> <br/><br/>
         <pre>var i = 0
-sålänge(i{ "<" }10) {{ 
+sålänge(i{"<"}10) {{ 
       utdata(i)
       i = i + 1
 }}

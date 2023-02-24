@@ -15,17 +15,23 @@
  */
 package net.kogics.kojo.lite
 
-import javax.swing.{JMenu, JOptionPane, JCheckBoxMenuItem, ImageIcon}
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import javax.swing.ImageIcon
+import javax.swing.JCheckBoxMenuItem
+import javax.swing.JMenu
+import javax.swing.JOptionPane
+
 import net.kogics.kojo.core
-import java.awt.event.{ActionEvent, ActionListener}
 import net.kogics.kojo.util.Utils
 
-/**
- * Creates the Language menu.
- *
- * @author Eric Zoerner <a href="mailto:eric.zoerner@gmail.com">eric.zoerner@gmail.com</a>
- * @author Christoph Knabe http://public.beuth-hochschule.de/~knabe/ 
- */
+/** Creates the Language menu.
+  *
+  * @author
+  *   Eric Zoerner <a href="mailto:eric.zoerner@gmail.com">eric.zoerner@gmail.com</a>
+  * @author
+  *   Christoph Knabe http://public.beuth-hochschule.de/~knabe/
+  */
 object LangMenuFactory {
 
   val supportedLanguages = List("en", "sv", "fr", "pl", "nl", "eo", /*"hi", */ "de", "ru", "it", "hr", "tr", "es")
@@ -36,16 +42,17 @@ object LangMenuFactory {
       override def actionPerformed(e: ActionEvent): Unit = {
         val lang = e.getActionCommand
         kojoCtx.userLanguage = lang
-        langMenus foreach {
-          mi =>
-            if (mi.getActionCommand != lang) {
-              mi.setSelected(false)
-            }
+        langMenus.foreach { mi =>
+          if (mi.getActionCommand != lang) {
+            mi.setSelected(false)
+          }
         }
-        JOptionPane.showMessageDialog(kojoCtx.frame,
-                                      Utils.loadString("S_LangChanged").format(e.getSource.asInstanceOf[JCheckBoxMenuItem].getText),
-                                      Utils.loadString("S_LangChange"),
-                                      JOptionPane.INFORMATION_MESSAGE)
+        JOptionPane.showMessageDialog(
+          kojoCtx.frame,
+          Utils.loadString("S_LangChanged").format(e.getSource.asInstanceOf[JCheckBoxMenuItem].getText),
+          Utils.loadString("S_LangChange"),
+          JOptionPane.INFORMATION_MESSAGE
+        )
       }
     }
 
@@ -68,11 +75,11 @@ object LangMenuFactory {
       Utils.loadIcon("/images/generic-flag.png")
       // langIcon(kojoCtx.userLanguage)
     )
-    supportedLanguages.foreach {lang => langMenu.add(langMenuItem(lang))}
+    supportedLanguages.foreach { lang => langMenu.add(langMenuItem(lang)) }
     langMenu
   }
 
-  private val langNames = Map (
+  private val langNames = Map(
     "en" -> "English",
     "sv" -> "Svenska (Swedish)",
     "fr" -> "Français (French)",

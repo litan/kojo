@@ -16,15 +16,14 @@
 package net.kogics.kojo
 package picture
 
+import java.awt.geom.AffineTransform
 import java.awt.Paint
 import java.awt.Shape
-import java.awt.geom.AffineTransform
 
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.kgeom.PolyLine
-
-import util.Utils
 import net.kogics.kojo.picture.PicCache.freshPic
+import util.Utils
 
 trait Transformer extends Picture with CorePicOps2 {
   val tpic: Picture
@@ -35,9 +34,10 @@ trait Transformer extends Picture with CorePicOps2 {
   def rotateAboutPoint(angle: Double, x: Double, y: Double) = tpic.rotateAboutPoint(angle, x, y)
   def scale(factor: Double) = tpic.scale(factor)
   def scaleAboutPoint(factor: Double, x: Double, y: Double) = tpic.scaleAboutPoint(factor, x, y)
-  def scaleAboutPoint(factorX: Double, factorY: Double, x: Double, y: Double) = tpic.scaleAboutPoint(factorX, factorY, x, y)
+  def scaleAboutPoint(factorX: Double, factorY: Double, x: Double, y: Double) =
+    tpic.scaleAboutPoint(factorX, factorY, x, y)
   def scale(xFactor: Double, yFactor: Double) = tpic.scale(xFactor, yFactor)
-  def shear(shearX:Double, shearY:Double):Unit = tpic.shear(shearX, shearY)
+  def shear(shearX: Double, shearY: Double): Unit = tpic.shear(shearX, shearY)
   def opacityMod(f: Double) = tpic.opacityMod(f)
   def hueMod(f: Double) = tpic.hueMod(f)
   def satMod(f: Double) = tpic.satMod(f)
@@ -267,7 +267,7 @@ case class PostDrawTransform(fn: Picture => Unit)(pic: Picture) extends Transfor
 
 abstract class ComposableTransformer extends Function1[Picture, Picture] { outer =>
   def apply(p: Picture): Picture
-  def -> (p: Picture) = apply(p)
+  def ->(p: Picture) = apply(p)
   def *(other: ComposableTransformer) = new ComposableTransformer {
     def apply(p: Picture): Picture = {
       outer.apply(other.apply(p))

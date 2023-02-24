@@ -58,7 +58,8 @@ object CodeCompletionUtils {
     "var",
     "while",
     "with",
-    "yield")
+    "yield"
+  )
 
   val KeywordTemplates = Map(
     "for" -> "for (i <- 1 to ${n}) {\n    ${cursor}\n}",
@@ -223,8 +224,8 @@ object CodeCompletionUtils {
     "breakpoint" -> "breakpoint(${msg})",
     "beginShape" -> "beginShape()",
     "endShape" -> "endShape()"
-)
-  
+  )
+
   val TwMethodTemplates = Map(
     "turnNorth" -> "turnNorth()",
     "turnSouth" -> "turnSouth()",
@@ -241,7 +242,7 @@ object CodeCompletionUtils {
     "morph" -> "morph { polyLines =>\n    ${cursor}\n}",
     "PolyLine" -> "PolyLine(List(Point2D(${x1}, ${y1}), Point2D(${x2}, ${y2})))",
     "dot" -> "dot(${diameter})",
-    
+
     // Picture Completions
     "InputAware.onMousePress" -> "onMousePress { (x, y) =>\n    ${cursor}\n}",
     "InputAware.onMouseRelease" -> "onMouseRelease { (x, y) =>\n    ${cursor}\n}",
@@ -277,30 +278,30 @@ object CodeCompletionUtils {
   def addTemplates(lang: String, templates: Map[String, String]): Unit = {
 //    import util.Typeclasses._
 //    langTemplates +=  (lang -> (langTemplates.getOrElse(lang, Map()) |+| templates))
-      langTemplates +=  (lang -> (langTemplates.getOrElse(lang, Map()) ++ templates))
+    langTemplates += (lang -> (langTemplates.getOrElse(lang, Map()) ++ templates))
   }
-  
+
   def clearLangTemplates(): Unit = {
     langTemplates.clear()
   }
-  
+
   def langMethodTemplate(name: String, lang: String): Option[String] = {
     langTemplates.get(lang) match {
       case Some(ts) => ts.get(name)
-      case None => None
+      case None     => None
     }
   }
-  
+
   def methodTemplate(completion: String): String = {
     BuiltinsMethodTemplates.getOrElse(
       completion,
       ExtraMethodTemplates.getOrElse(
-        completion, 
+        completion,
         langMethodTemplate(completion, System.getProperty("user.language")).getOrElse(null)
       )
     )
   }
-  
+
   def keywordTemplate(completion: String) = {
     KeywordTemplates.getOrElse(completion, null)
   }
@@ -310,13 +311,13 @@ object CodeCompletionUtils {
   val InternalVarsRe = java.util.regex.Pattern.compile("""res\d+|\p{Punct}.*""")
   val InternalMethodsRe = java.util.regex.Pattern.compile("""_.*|.*\$.*""")
 
-  def notIdChar(c: Char): Boolean =  NotIdChars.contains(c)
+  def notIdChar(c: Char): Boolean = NotIdChars.contains(c)
 
   def findLastIdentifier(rstr: String): Option[String] = {
     val str = " " + rstr
     var remaining = str.length
-    while(remaining > 0) {
-      if (notIdChar(str(remaining-1))) return Some(str.substring(remaining))
+    while (remaining > 0) {
+      if (notIdChar(str(remaining - 1))) return Some(str.substring(remaining))
       remaining -= 1
     }
     None
@@ -326,13 +327,13 @@ object CodeCompletionUtils {
     if (str.length == 0) return (None, None)
 
     if (str.endsWith(".")) {
-      (findLastIdentifier(str.substring(0, str.length-1)), None)
+      (findLastIdentifier(str.substring(0, str.length - 1)), None)
     }
     else {
       val lastDot = str.lastIndexOf('.')
       if (lastDot == -1) (None, findLastIdentifier(str))
       else {
-        val tPrefix = str.substring(lastDot+1)
+        val tPrefix = str.substring(lastDot + 1)
         if (tPrefix == findLastIdentifier(tPrefix).get)
           (findLastIdentifier(str.substring(0, lastDot)), Some(tPrefix))
         else

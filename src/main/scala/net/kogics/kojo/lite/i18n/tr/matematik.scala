@@ -16,12 +16,12 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
+import scala.{ Array => Dizik }
 import scala.language.implicitConversions
+
+import net.kogics.kojo.core.{ Point => Nokta }
 import org.apache.commons.math3.stat.StatUtils
 import org.apache.commons.math3.util.ArithmeticUtils
-import net.kogics.kojo.core.{Point => Nokta}
-
-import scala.{Array => Dizik}
 
 // translating math library
 trait MathMethodsInTurkish {
@@ -78,7 +78,8 @@ trait MathMethodsInTurkish {
   def enUfakOrtakKat(s1: Uzun, s2: Uzun) = ArithmeticUtils.lcm(s1, s2)
   def enİriOrtakPayda(s1: Uzun, s2: Uzun) = ArithmeticUtils.gcd(s1, s2)
 
-  def uzaklık(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir): Kesir = math.sqrt(math.pow(y2 - y1, 2) + math.pow(x2 - x1, 2))
+  def uzaklık(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir): Kesir =
+    math.sqrt(math.pow(y2 - y1, 2) + math.pow(x2 - x1, 2))
   def uzaklık(n1: Nokta, n2: Nokta): Kesir = uzaklık(n1.x, n1.y, n2.x, n2.y)
   def açı(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir): Kesir = math.atan2(y2 - y1, x2 - x1).toDegrees
   def açı(n1: Nokta, n2: Nokta): Kesir = açı(n1.x, n1.y, n2.x, n2.y)
@@ -86,6 +87,6 @@ trait MathMethodsInTurkish {
   def ortalama(sayılar: Dizik[Kesir]) = StatUtils.mean(sayılar)
   def değişim(sayılar: Dizik[Kesir]) = StatUtils.variance(sayılar)
   def değişim(sayılar: Dizik[Kesir], ortalama: Kesir) = StatUtils.variance(sayılar, ortalama)
-  
+
   // todo: more to come
 }

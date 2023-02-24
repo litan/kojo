@@ -14,10 +14,10 @@
  */
 package net.kogics.kojo.lite
 
-import java.rmi.RemoteException
 import java.rmi.registry.LocateRegistry
 import java.rmi.registry.Registry
 import java.rmi.server.UnicastRemoteObject
+import java.rmi.RemoteException
 
 import net.kogics.kojo.util.Utils
 
@@ -61,9 +61,11 @@ trait RmiMultiInstance {
   }
 
   def nthMain(args: Array[String]): Unit = Utils.safeProcess {
-    registry foreach { r =>
+    registry.foreach { r =>
       val mih = r.lookup(Utils.RmiHandlerName).asInstanceOf[MultiInstanceHandler]
-      println(s"[INFO] Connecting (via RMI) with args: ${args.mkString("[", ", ", "]")} to already running Kojo instance")
+      println(
+        s"[INFO] Connecting (via RMI) with args: ${args.mkString("[", ", ", "]")} to already running Kojo instance"
+      )
       mih.newInstance(args)
     }
   }

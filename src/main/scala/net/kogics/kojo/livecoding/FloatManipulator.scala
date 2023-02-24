@@ -15,7 +15,6 @@
 package net.kogics.kojo.livecoding
 
 import java.util.regex.Pattern
-
 import javax.swing.event.ChangeEvent
 import javax.swing.event.ChangeListener
 import javax.swing.text.JTextComponent
@@ -23,12 +22,13 @@ import javax.swing.JLabel
 import javax.swing.JSlider
 import javax.swing.JTextField
 import javax.swing.JToggleButton
+
 import net.kogics.kojo.util.Utils
 
 class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) {
   // support a max of 12 digits after decimal point
-  // formatting precision does not seem to work after 16 digits, so there has to be an upper limit 
-  val FloatPattern = Pattern.compile("""\d+\.\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?""")  
+  // formatting precision does not seem to work after 16 digits, so there has to be an upper limit
+  val FloatPattern = Pattern.compile("""\d+\.\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?\d?""")
 
   def matcher(possibleNumber: String) = FloatPattern.matcher(possibleNumber)
 
@@ -42,7 +42,7 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
 
   def activate(pane: JTextComponent, offset: Int, target0: String, targetStart: Int) = Utils.safeProcess {
 
-    def digitsAfterPoint(n: String) = { 
+    def digitsAfterPoint(n: String) = {
       val pointLoc = n.indexOf('.')
       val digits = n.length - 1 - pointLoc
       if (digits < 2) 2 else digits
@@ -80,8 +80,8 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
       slider.setMaximum(18)
       slider.setValue(9)
       slider.setMajorTickSpacing(1)
-      leftLabel.setText(uiDouble(formatter format slider2num(slider.getMinimum)))
-      rightLabel.setText(uiDouble(formatter format slider2num(slider.getMaximum)))
+      leftLabel.setText(uiDouble(formatter.format(slider2num(slider.getMinimum))))
+      rightLabel.setText(uiDouble(formatter.format(slider2num(slider.getMaximum))))
     }
     slider.setValue(9)
     slider.setPaintTicks(true)
@@ -95,7 +95,7 @@ class FloatManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) 
         inSliderChange = true
         doc.remove(targetStart, target.length())
         ntarget = slider2num(newnum)
-        target = uiDouble(formatter format ntarget)
+        target = uiDouble(formatter.format(ntarget))
         doc.insertString(targetStart, target, null);
         inSliderChange = false
 

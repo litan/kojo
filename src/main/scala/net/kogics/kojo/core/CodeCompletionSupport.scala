@@ -22,17 +22,17 @@ object MemberKind extends Enumeration {
 }
 
 case class CompletionInfo(
-  kind: MemberKind.Value,
-  name0: String,
-  signature: String,
-  owner: String,
-  prio: Int,
-  isJava: Boolean,
-  paramNames: List[List[String]], // parameter names (excluding any implicit parameter sections)
-  paramTypes: List[List[String]], // parameter types matching parameter names (excluding implicit parameter sections)
-  returnType: String,
-  fullyQualifiedName: String // for Class, Trait, Type, Objects: the fully qualified name
-  ) {
+    kind: MemberKind.Value,
+    name0: String,
+    signature: String,
+    owner: String,
+    prio: Int,
+    isJava: Boolean,
+    paramNames: List[List[String]], // parameter names (excluding any implicit parameter sections)
+    paramTypes: List[List[String]], // parameter types matching parameter names (excluding implicit parameter sections)
+    returnType: String,
+    fullyQualifiedName: String // for Class, Trait, Type, Objects: the fully qualified name
+) {
 
   val name = name0.trim
   def params: String = {
@@ -63,7 +63,7 @@ case class CompletionInfo(
     else {
       val contextInfo = for {
         names <- paramNames
-      } yield for { name <- names } yield "${%s}" format (name)
+      } yield for { name <- names } yield "${%s}".format(name)
 
       contextInfo.map(_.mkString("(", ", ", ")")).mkString("")
     }
@@ -77,7 +77,7 @@ case class CompletionInfo(
       case Var => s"$name$params: $returnType"
       case _   => s"$name: $owner"
     }
-    if (ret endsWith ": ") ret.substring(0, ret.length - 2) else ret
+    if (ret.endsWith(": ")) ret.substring(0, ret.length - 2) else ret
   }
 }
 

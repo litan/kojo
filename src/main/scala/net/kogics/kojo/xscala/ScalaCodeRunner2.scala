@@ -21,26 +21,25 @@ import java.util.logging.Level
 import java.util.logging.Logger
 
 import scala.collection.mutable.ListBuffer
-import scala.concurrent.Await
 import scala.concurrent.duration._
-
-import net.kogics.kojo.core
-import net.kogics.kojo.core.CodeRunner
-import net.kogics.kojo.core.CodingMode
-import net.kogics.kojo.core.CompletionInfo
-import net.kogics.kojo.core.VanillaMode
-import net.kogics.kojo.core.Interpreter.IR
-import net.kogics.kojo.core.Interpreter.Settings
-import net.kogics.kojo.core.RunContext
-import net.kogics.kojo.core.TwMode
-import net.kogics.kojo.util.Typeclasses.mkIdentity
-import net.kogics.kojo.util.Typeclasses.some
-import net.kogics.kojo.util.Utils
+import scala.concurrent.Await
 
 import akka.actor.Actor
 import akka.actor.Props
 import akka.pattern.ask
 import akka.util.Timeout
+import net.kogics.kojo.core
+import net.kogics.kojo.core.CodeRunner
+import net.kogics.kojo.core.CodingMode
+import net.kogics.kojo.core.CompletionInfo
+import net.kogics.kojo.core.Interpreter.IR
+import net.kogics.kojo.core.Interpreter.Settings
+import net.kogics.kojo.core.RunContext
+import net.kogics.kojo.core.TwMode
+import net.kogics.kojo.core.VanillaMode
+import net.kogics.kojo.util.Typeclasses.mkIdentity
+import net.kogics.kojo.util.Typeclasses.some
+import net.kogics.kojo.util.Utils
 
 class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) extends CodeRunner {
   val Log = Logger.getLogger("ScalaCodeRunner")
@@ -142,27 +141,33 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
   def askCodeRunner(m: Any): Any = {
     implicit val timeout = Timeout(MaxResponseTime)
-    val fresult = codeRunner ask m
+    val fresult = codeRunner.ask(m)
     Await.result(fresult, timeout.duration)
   }
 
   def varCompletions(prefix: Option[String]): (List[String], Int) = {
-    val resp = (this askCodeRunner VarCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
+    val resp = this.askCodeRunner(VarCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
     resp.data
   }
 
   def keywordCompletions(prefix: Option[String]): (List[String], Int) = {
-    val resp = (this askCodeRunner KeywordCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
+    val resp = this.askCodeRunner(KeywordCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
     resp.data
   }
 
-  def memberCompletions(code: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
-    val resp = (this askCodeRunner MemberCompletionRequest(code, caretOffset, objid, prefix)).asInstanceOf[CompletionResponse2]
+  def memberCompletions(
+      code: String,
+      caretOffset: Int,
+      objid: String,
+      prefix: Option[String]
+  ): (List[CompletionInfo], Int) = {
+    val resp =
+      this.askCodeRunner(MemberCompletionRequest(code, caretOffset, objid, prefix)).asInstanceOf[CompletionResponse2]
     resp.data
   }
 
   def typeAt(code: String, caretOffset: Int): String = {
-    (this askCodeRunner TypeAtRequest(code, caretOffset)).asInstanceOf[String]
+    this.askCodeRunner(TypeAtRequest(code, caretOffset)).asInstanceOf[String]
   }
 
   def activateTw(): Unit = {
@@ -180,7 +185,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
     def interruptionInProgress = interruptTimer.isDefined
 
-    @annotation.nowarn def interruptInterpreter(): Unit = synchronized {
+    @annotation.nowarn
+    def interruptInterpreter(): Unit = synchronized {
       // Runs on swing thread
       if (interruptionInProgress) {
         Log.info("Interruption of Interpreter Requested")
@@ -380,12 +386,12 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
       case CompileCode(code) =>
         try {
-          Log.info("CodeRunner actor compiling code:\n---\n%s\n---\n" format (code))
+          Log.info("CodeRunner actor compiling code:\n---\n%s\n---\n".format(code))
           InterruptionManager.onInterpreterStart(compilerAndRunner)
           runContext.onCompileStart()
 
           val ret = compile(code)
-          Log.info("CodeRunner actor done compiling code. Return value %s" format (ret.toString))
+          Log.info("CodeRunner actor done compiling code. Return value %s".format(ret.toString))
 
           if (ret == IR.Success) {
             runContext.onCompileSuccess()
@@ -406,19 +412,20 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
       case CompileRunCode(code) =>
         try {
-          Log.info("CodeRunner actor compiling/running code:\n---\n%s\n---\n" format (code))
+          Log.info("CodeRunner actor compiling/running code:\n---\n%s\n---\n".format(code))
           InterruptionManager.onInterpreterStart(compilerAndRunner)
           runContext.onInterpreterStart(code)
 
           val ret = compileAndRun(code)
-          Log.info("CodeRunner actor done compiling/running code. Return value %s" format (ret.toString))
+          Log.info("CodeRunner actor done compiling/running code. Return value %s".format(ret.toString))
 
           if (ret == IR.Success) {
             runContext.onRunSuccess()
           }
           else {
             Utils.clearGuiBatchQ()
-            if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
+            if (InterruptionManager.interruptionInProgress)
+              runContext.onRunSuccess() // user cancelled running code; no errors
             else runContext.onRunError()
           }
         }
@@ -442,12 +449,12 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
       case ParseCode(code, browseAst) =>
         try {
-          Log.info("CodeRunner actor parsing code:\n---\n%s\n---\n" format (code))
+          Log.info("CodeRunner actor parsing code:\n---\n%s\n---\n".format(code))
           InterruptionManager.onInterpreterStart(compilerAndRunner)
           runContext.onCompileStart()
 
           val ret = compilerAndRunner.parse(code, browseAst)
-          Log.info("CodeRunner actor done parsing code. Return value %s" format (ret.toString))
+          Log.info("CodeRunner actor done parsing code. Return value %s".format(ret.toString))
 
           if (ret == IR.Success) {
             runContext.onCompileSuccess()
@@ -492,12 +499,12 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
     def runCode(code: String, asWorksheet: Boolean): Unit = {
       try {
-        Log.info("CodeRunner actor running code:\n---\n%s\n---\n" format (code))
+        Log.info("CodeRunner actor running code:\n---\n%s\n---\n".format(code))
         InterruptionManager.onInterpreterStart(interp)
         runContext.onInterpreterStart(code)
 
         val ret = interpret(code, asWorksheet)
-        Log.info("CodeRunner actor done running code. Return value %s" format (ret.toString))
+        Log.info("CodeRunner actor done running code. Return value %s".format(ret.toString))
 
         if (ret == IR.Incomplete) showIncompleteCodeMsg(code)
 
@@ -506,7 +513,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
         }
         else {
           Utils.clearGuiBatchQ()
-          if (InterruptionManager.interruptionInProgress) runContext.onRunSuccess() // user cancelled running code; no errors
+          if (InterruptionManager.interruptionInProgress)
+            runContext.onRunSuccess() // user cancelled running code; no errors
           else runContext.onRunError()
         }
       }
@@ -543,7 +551,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     }
 
     def loadCompiler(): Unit = {
-      compilerAndRunner = new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext)
+      compilerAndRunner =
+        new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext)
       actorState.compilerAndRunner = compilerAndRunner
     }
 
@@ -559,13 +568,16 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
 
       if (Utils.installInitScripts.size > 0) {
-        kprintln(Utils.installInitScripts.mkString("\n---\nLoading Init Scripts (from install initk):\n * ", "\n * ", "\n---\n"))
+        kprintln(
+          Utils.installInitScripts
+            .mkString("\n---\nLoading Init Scripts (from install initk):\n * ", "\n * ", "\n---\n")
+        )
       }
     }
 
     def loadInitScripts(mode: CodingMode): Unit = {
       Utils.initCode(mode).foreach { code =>
-        //println("\nRunning initk code...")
+        // println("\nRunning initk code...")
         println()
         print(Utils.loadString("S_OutputInitkRunning"))
         println("...")
@@ -595,17 +607,19 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
             outputHandler.clearWorksheetError(); interpretWorksheetLines(lines.tail)
           case IR.Error =>
             if (InterruptionManager.interruptionInProgress) { outputHandler.flushWorksheetError(); IR.Error }
-            else tail match {
-              case Nil =>
-                outputHandler.flushWorksheetError(); IR.Error
-              case (code2, lnum2) :: tail2 => interpretWorksheetLines((s"$code\n$code2", lnum) :: tail2, true)
-            }
+            else
+              tail match {
+                case Nil =>
+                  outputHandler.flushWorksheetError(); IR.Error
+                case (code2, lnum2) :: tail2 => interpretWorksheetLines((s"$code\n$code2", lnum) :: tail2, true)
+              }
           case IR.Incomplete =>
             if (inError) { outputHandler.flushWorksheetError(); IR.Error }
-            else tail match {
-              case Nil                     => IR.Incomplete
-              case (code2, lnum2) :: tail2 => interpretWorksheetLines((s"$code\n$code2", lnum2) :: tail2)
-            }
+            else
+              tail match {
+                case Nil                     => IR.Incomplete
+                case (code2, lnum2) :: tail2 => interpretWorksheetLines((s"$code\n$code2", lnum2) :: tail2)
+              }
         }
     }
 
@@ -620,7 +634,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           case l if l.startsWith("*/") =>
             inMultiLineComment = false; true
           case l if l.startsWith("*") && inMultiLineComment => true
-          case _ => false
+          case _                                            => false
         }
       }
       val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => !shouldIgnoreLine(line) }
@@ -661,8 +675,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
     def showIncompleteCodeMsg(code: String): Unit = {
       val msg = """
-      |error: Incomplete code fragment
-      |You probably have a missing brace/bracket somewhere in your script
+                  |error: Incomplete code fragment
+                  |You probably have a missing brace/bracket somewhere in your script
       """.stripMargin
       runContext.reportError(msg)
     }
@@ -700,7 +714,12 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       (c2s, pfx.length)
     }
 
-    def memberCompletions(code0: String, caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int) = {
+    def memberCompletions(
+        code0: String,
+        caretOffset: Int,
+        objid: String,
+        prefix: Option[String]
+    ): (List[CompletionInfo], Int) = {
       val pfx = prefix.getOrElse("")
       val offset = caretOffset - pfx.length
       val code =
@@ -712,7 +731,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
         case Nil =>
           val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
           (ics.map { CompletionInfo(core.MemberKind.Var, _, "", "", 0, false, Nil, Nil, "", "") }, pfx.length)
-        case _@ ccs =>
+        case _ @ccs =>
           (ccs.filter { ci => ignoreCaseStartsWith(ci.name, pfx) }, pfx.length)
       }
     }

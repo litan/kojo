@@ -16,14 +16,13 @@
 package net.kogics.kojo.core
 
 trait SpriteListener {
-  /**
-   * Tell Listener that Sprite has pending commands in its queue
-   */
+
+  /** Tell Listener that Sprite has pending commands in its queue
+    */
   def hasPendingCommands(): Unit
 
-  /**
-   * Tell Listener that Sprite has no more pending commands.
-   */
+  /** Tell Listener that Sprite has no more pending commands.
+    */
   def pendingCommandsDone(): Unit
 }
 
@@ -42,4 +41,3 @@ class DelegatingSpriteListener extends SpriteListener {
   def hasPendingCommands() = realListener.hasPendingCommands()
   def pendingCommandsDone() = realListener.pendingCommandsDone()
 }
-

@@ -16,8 +16,9 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
-import collection.mutable.ArrayBuffer
 import scala.reflect.ClassTag
+
+import collection.mutable.ArrayBuffer
 
 // todo: this has only the bare essentials for Array and ArrayBuffer. Add more to the interface..
 object EsnekDizim {
@@ -27,7 +28,7 @@ object EsnekDizim {
 class EsnekDizim[T](val a: ArrayBuffer[T]) {
   def apply(yer: Sayı) = a(yer)
   def sayı = a.size
-  def ekle(eleman: T) = {a.append(eleman); this}
+  def ekle(eleman: T) = { a.append(eleman); this }
   def +=(eleman: T) = ekle(eleman)
   def çıkar(yer: Sayı) = a.remove(yer)
   def sil() = a.clear()
@@ -37,26 +38,27 @@ class EsnekDizim[T](val a: ArrayBuffer[T]) {
 }
 
 object Dizim {
-  def boş[T:ClassTag](b1: Sayı) = new Dizim(Array.ofDim[T](b1))
-  def boş[T:ClassTag](b1: Sayı, b2: Sayı) = new Dizim(Array.ofDim[T](b1, b2))
-  def boş[T:ClassTag](b1: Sayı, b2: Sayı, b3: Sayı) = new Dizim(Array.ofDim[T](b1, b2, b3))
+  def boş[T: ClassTag](b1: Sayı) = new Dizim(Array.ofDim[T](b1))
+  def boş[T: ClassTag](b1: Sayı, b2: Sayı) = new Dizim(Array.ofDim[T](b1, b2))
+  def boş[T: ClassTag](b1: Sayı, b2: Sayı, b3: Sayı) = new Dizim(Array.ofDim[T](b1, b2, b3))
 
-  def doldur[T:ClassTag](b1: Sayı)(e: => T) = new Dizim(Array.fill[T](b1)(e))
-  def doldur[T:ClassTag](b1: Sayı, b2: Sayı)(e: => T) = new Dizim(Array.fill[T](b1, b2)(e))
-  def doldur[T:ClassTag](b1: Sayı, b2: Sayı, b3: Sayı)(e: => T) = new Dizim(Array.fill[T](b1, b2, b3)(e))
+  def doldur[T: ClassTag](b1: Sayı)(e: => T) = new Dizim(Array.fill[T](b1)(e))
+  def doldur[T: ClassTag](b1: Sayı, b2: Sayı)(e: => T) = new Dizim(Array.fill[T](b1, b2)(e))
+  def doldur[T: ClassTag](b1: Sayı, b2: Sayı, b3: Sayı)(e: => T) = new Dizim(Array.fill[T](b1, b2, b3)(e))
 }
 class Dizim[T](val a: Array[T]) {
   def diziye = a.toSeq
   def yazıya = toString
   override def toString = String.valueOf(a)
   def apply(b1: Sayı) = a(b1)
-  @annotation.nowarn def boyut: Sayı = { // just an exercise -- not really needed
+  @annotation.nowarn
+  def boyut: Sayı = { // just an exercise -- not really needed
     var b = 1
     var p = a // scala style pointer
     var recurse = true
     while (recurse) p(0) match {
       case x: Array[T] => b += 1; p = x
-      case _ => recurse = false
+      case _           => recurse = false
     }
     b
   }
@@ -86,7 +88,7 @@ trait ArrayMethodsInTurkish {
     // Builds a new array by applying a function to all elements of this array.
     def işle[A](işlev: T => A)(implicit ct: ClassTag[A]): Dizik[A] = d.map(işlev)(ct)
     def işleYerinde(işlev: (T) => T): Dizik[T] = d.mapInPlace(işlev)
-    def düzİşle[A:ClassTag](işlev: T => Dizik[A]): Dizik[A] = d.flatMap(işlev)
+    def düzİşle[A: ClassTag](işlev: T => Dizik[A]): Dizik[A] = d.flatMap(işlev)
     def sıralı(implicit ord: Ordering[T]): Col = d.sorted(ord)
     def sırala[A](i: T => A)(implicit ord: Ordering[A]): Col = d.sortBy(i)
     def sırayaSok(önce: (T, T) => İkil): Col = d.sortWith(önce)
@@ -94,7 +96,7 @@ trait ArrayMethodsInTurkish {
     def soldanKatla[T2](z: T2)(işlev: (T2, T) => T2): T2 = d.foldLeft(z)(işlev)
     def sağdanKatla[T2](z: T2)(işlev: (T, T2) => T2): T2 = d.foldRight(z)(işlev)
     // https://github.com/scala/scala/blob/v2.12.7/src/library/scala/collection/TraversableOnce.scala#L1
-    def topla[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.sum(num)    // foldLeft(num.zero)(num.plus)
+    def topla[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.sum(num) // foldLeft(num.zero)(num.plus)
     def çarp[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.product(num) // foldLeft(num.one)(num.times)
     def yinelemesiz = d.distinct
     def yinelemesizİşlevle[T2](işlev: T => T2): Col = d.distinctBy(işlev)
@@ -102,13 +104,13 @@ trait ArrayMethodsInTurkish {
     def yazıYap(ara: Yazı): Yazı = d.mkString(ara)
     def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = d.mkString(baş, ara, son)
     def tersi = d.reverse
-    def değiştir[S >: T:ClassTag](yeri: Sayı, değeri: S): Dizik[S] = d.updated(yeri, değeri)
+    def değiştir[S >: T: ClassTag](yeri: Sayı, değeri: S): Dizik[S] = d.updated(yeri, değeri)
     def değiştirYerinde(yeri: Sayı, değeri: T): Birim = d.update(yeri, değeri)
     def herbiriİçin[S](işlev: T => S): Birim = d.foreach(işlev)
     def varMı(deneme: T => İkil): İkil = d.exists(deneme)
     def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
     def hepsiİçinDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
-    //def içeriyorMu[S >: T](öge: S): İkil = d.contains(öge)
+    // def içeriyorMu[S >: T](öge: S): İkil = d.contains(öge)
     def içeriyorMu(öge: T): İkil = d.contains(öge)
     def içeriyorMuDilim(dilim: Col): İkil = d.containsSlice(dilim)
     def al(n: Sayı): Col = d.take(n)
@@ -117,10 +119,10 @@ trait ArrayMethodsInTurkish {
     def düşür(n: Sayı): Col = d.drop(n)
     def düşürDoğruKaldıkça(deneme: T => İkil): Col = d.dropWhile(deneme)
     def düşürSağdan(n: Sayı): Col = d.dropRight(n)
-    //def sırası[S >: T](öge: S): Sayı = d.indexOf(öge)
-    //def sırası[S >: T](öge: S, başlamaNoktası: Sayı): Sayı = d.indexOf(öge, başlamaNoktası)
-    //def sırasıSondan[S >: T](öge: S): Sayı = d.lastIndexOf(öge)
-    //def sırasıSondan[S >: T](öge: S, sonNokta: Sayı): Sayı = d.lastIndexOf(öge, sonNokta)
+    // def sırası[S >: T](öge: S): Sayı = d.indexOf(öge)
+    // def sırası[S >: T](öge: S, başlamaNoktası: Sayı): Sayı = d.indexOf(öge, başlamaNoktası)
+    // def sırasıSondan[S >: T](öge: S): Sayı = d.lastIndexOf(öge)
+    // def sırasıSondan[S >: T](öge: S, sonNokta: Sayı): Sayı = d.lastIndexOf(öge, sonNokta)
     def sırası(öge: T): Sayı = d.indexOf(öge)
     def sırası(öge: T, başlamaNoktası: Sayı): Sayı = d.indexOf(öge, başlamaNoktası)
     def sırasıSondan(öge: T): Sayı = d.lastIndexOf(öge)
@@ -149,4 +151,3 @@ trait ArrayMethodsInTurkish {
   }
 
 }
-

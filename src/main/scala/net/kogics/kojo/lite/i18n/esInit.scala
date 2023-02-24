@@ -20,14 +20,15 @@
 
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.xscala.RepeatCommands
 
 object SpanishAPI {
-  import net.kogics.kojo.core.Turtle
   import java.awt.Color
-  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
+
+  import net.kogics.kojo.core.Turtle
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ // unstable reference to module
 
   trait SpanishTurtle {
     def englishTurtle: Turtle
@@ -43,8 +44,8 @@ object SpanishAPI {
     def saltoA(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
     def moverA(x: Double, y: Double) = englishTurtle.moveTo(x, y)
     def salto(n: Double) = {
-      englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop(n) //hop change state to penDown after hop
+      englishTurtle.saveStyle() // to preserve pen state
+      englishTurtle.hop(n) // hop change state to penDown after hop
       englishTurtle.restoreStyle()
     }
     def salto(): Unit = salto(25)
@@ -79,11 +80,12 @@ object SpanishAPI {
     def siguienteDisfraz() = englishTurtle.nextCostume()
   }
   class Tortuga(override val englishTurtle: Turtle) extends SpanishTurtle {
-    def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
+    def this(startX: Double, startY: Double, costumeFileName: String) =
+      this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
   }
-  class Tortuga0(t0: => Turtle) extends SpanishTurtle { //by-name construction as turtle0 is volatile }
+  class Tortuga0(t0: => Turtle) extends SpanishTurtle { // by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
   object tortuga extends Tortuga0(builtins.TSCanvas.turtle0)
@@ -108,7 +110,7 @@ object SpanishAPI {
   //    lazy val VK_Ö = 214
   //  }
 
-  //loops
+  // loops
   def repetir(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
@@ -125,13 +127,13 @@ object SpanishAPI {
     RepeatCommands.repeatFor(secuencia) { block }
   }
 
-  //simple IO
+  // simple IO
   def leerln(prompt: String = "") = builtins.readln(prompt)
 
-  def imprimirln(data: Any) = println(data) //Transferred here from sv.tw.kojo.
+  def imprimirln(data: Any) = println(data) // Transferred here from sv.tw.kojo.
   def imprimirln() = println()
 
-  //math functions
+  // math functions
   def redondear(numero: Number, digito: Int = 0): Double = {
     val faktor = math.pow(10, digito).toDouble
     math.round(numero.doubleValue * faktor).toLong / faktor
@@ -142,7 +144,7 @@ object SpanishAPI {
 
 object SpanishInit {
   def init(builtins: CoreBuiltins): Unit = {
-    //initialize unstable value
+    // initialize unstable value
     SpanishAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
@@ -153,12 +155,12 @@ object SpanishInit {
 
         //        b.setEditorTabSize(2)
 
-        //code completion
+        // code completion
         b.addCodeTemplates(
           "es",
           codeTemplates
         )
-        //help texts
+        // help texts
         b.addHelpContent(
           "es",
           helpContent

@@ -3,9 +3,9 @@ package net.kogics.kojo.lite
 import java.io.File
 
 object NewKojoInstance extends StubMain {
-   lazy val classpath = {
-     val cp = System.getProperty("java.class.path").split(File.pathSeparatorChar).toList
-     createCp(cp)
+  lazy val classpath = {
+    val cp = System.getProperty("java.class.path").split(File.pathSeparatorChar).toList
+    createCp(cp)
   }
 
   def firstInstance = true
@@ -13,5 +13,5 @@ object NewKojoInstance extends StubMain {
   def firstMainDone(): Unit = {}
   def nthMain(args: Array[String]) = throw new UnsupportedOperationException
   override def log(msg: String): Unit = {}
-  override def done(): Unit = { }
+  override def done(): Unit = {}
 }

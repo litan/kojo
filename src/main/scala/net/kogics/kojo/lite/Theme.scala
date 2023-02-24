@@ -16,12 +16,11 @@ package net.kogics.kojo.lite
 
 import java.awt.Color
 
-import org.fife.ui.rsyntaxtextarea.{Theme => RTheme}
-
-import com.formdev.flatlaf.{FlatDarkLaf, FlatLightLaf}
-
+import com.formdev.flatlaf.FlatDarkLaf
+import com.formdev.flatlaf.FlatLightLaf
 import net.kogics.kojo.core
 import net.kogics.kojo.util.Utils
+import org.fife.ui.rsyntaxtextarea.{ Theme => RTheme }
 
 trait Theme {
   def outputPaneFg: Color
@@ -77,7 +76,7 @@ class DarkTheme extends Theme {
   val outputPaneBg = new Color(0x2d2d2d)
   val errorPaneFg = "#F42E2E"
   val errorPaneBg = "#2d2d2d"
-  val errorColor = new Color(0xF42E2E)
+  val errorColor = new Color(0xf42e2e)
   val successColor = new Color(0x06cc06)
   val neutralColor = defaultBg
   val tracingBg = defaultBg

@@ -18,9 +18,13 @@ import java.awt.image.BufferedImage
 import java.io.File
 import java.net.URL
 
-import net.kogics.kojo.core.{Picture, Point, SCanvas}
+import net.kogics.kojo.core.Picture
+import net.kogics.kojo.core.Point
+import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.util.Utils
-import org.mapeditor.core.{MapLayer, TileLayer, Tile => MapTile}
+import org.mapeditor.core.{ Tile => MapTile }
+import org.mapeditor.core.MapLayer
+import org.mapeditor.core.TileLayer
 
 package object tiles {
 
@@ -58,7 +62,7 @@ package object tiles {
   case class Layer(index: Int, world: TileWorld)(implicit canvas: SCanvas) {
     val mapLayer = world.layerAt(index) match {
       case tl: TileLayer => tl
-      case _@ l          => println(s"Ignoring non-tile layer: $l"); null
+      case _ @l          => println(s"Ignoring non-tile layer: $l"); null
     }
 
     val tiles = Array.ofDim[Tile](world.height, world.width)
@@ -251,8 +255,7 @@ package object tiles {
       currentLevel.layers(layerIdx).removeTileAt(txy)
     }
 
-    def step(): Unit = {
-    }
+    def step(): Unit = {}
 
     // Draw level, player, overlay
     def draw(): Unit = {

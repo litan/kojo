@@ -15,16 +15,17 @@
 package net.kogics.kojo.livecoding
 
 import java.util.regex.Pattern
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.text.Document
+import javax.swing.text.JTextComponent
+import javax.swing.text.Utilities
 import javax.swing.JLabel
 import javax.swing.JSlider
 import javax.swing.JTextField
 import javax.swing.JToggleButton
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
-import javax.swing.text.Document
+
 import net.kogics.kojo.util.Utils
-import javax.swing.text.Utilities
-import javax.swing.text.JTextComponent
 
 class IntManipulator(ctx: ManipulationContext) extends NumberManipulator(ctx) {
   val IntPattern = Pattern.compile("\\d*")

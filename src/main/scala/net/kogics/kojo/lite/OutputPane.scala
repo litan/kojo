@@ -1,12 +1,5 @@
 package net.kogics.kojo.lite
 
-import java.awt.BorderLayout
-import java.awt.CardLayout
-import java.awt.Color
-import java.awt.Component
-import java.awt.Font
-import java.awt.Insets
-import java.awt.Toolkit
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusAdapter
@@ -15,7 +8,20 @@ import java.awt.event.InputEvent
 import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseWheelEvent
-
+import java.awt.BorderLayout
+import java.awt.CardLayout
+import java.awt.Color
+import java.awt.Component
+import java.awt.Font
+import java.awt.Insets
+import java.awt.Toolkit
+import javax.swing.event.HyperlinkEvent
+import javax.swing.event.HyperlinkListener
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
+import javax.swing.text.DefaultEditorKit
+import javax.swing.text.StyleConstants
+import javax.swing.text.StyleContext
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory
 import javax.swing.BoxLayout
@@ -30,13 +36,6 @@ import javax.swing.JTextField
 import javax.swing.JTextPane
 import javax.swing.KeyStroke
 import javax.swing.UIDefaults
-import javax.swing.event.HyperlinkEvent
-import javax.swing.event.HyperlinkListener
-import javax.swing.event.PopupMenuEvent
-import javax.swing.event.PopupMenuListener
-import javax.swing.text.DefaultEditorKit
-import javax.swing.text.StyleConstants
-import javax.swing.text.StyleContext
 
 import net.kogics.kojo.util.NoOpPainter
 import net.kogics.kojo.util.TerminalAnsiCodes
@@ -145,7 +144,8 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     val am = outputWindow.getActionMap
     val controlNumPlus = KeyStroke.getKeyStroke(KeyEvent.VK_ADD, InputEvent.CTRL_MASK)
     val controlPlus = KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, InputEvent.CTRL_MASK)
-    val controlShiftPlus = KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
+    val controlShiftPlus =
+      KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
     inputMap.put(controlNumPlus, "increase-font-size")
     inputMap.put(controlPlus, "increase-font-size")
     inputMap.put(controlShiftPlus, "increase-font-size")
@@ -160,8 +160,9 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     }
     val decrFontSizeItem = new JMenuItem(decreaseFontSizeAction)
     val controlNumMinus = KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, InputEvent.CTRL_MASK)
-    val controlMinus  = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_MASK)
-    val controlShiftMinus = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
+    val controlMinus = KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_MASK)
+    val controlShiftMinus =
+      KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK)
     inputMap.put(controlNumMinus, "decrease-font-size")
     inputMap.put(controlMinus, "decrease-font-size")
     inputMap.put(controlShiftMinus, "decrease-font-size")
@@ -169,7 +170,10 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     decrFontSizeItem.setAccelerator(controlMinus)
     add(decrFontSizeItem)
 
-    inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit.getMenuShortcutKeyMask), DefaultEditorKit.copyAction);
+    inputMap.put(
+      KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit.getMenuShortcutKeyMask),
+      DefaultEditorKit.copyAction
+    );
 
     errorWindow.addFocusListener(new FocusAdapter {
       override def focusGained(e: FocusEvent): Unit = {
@@ -195,7 +199,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
           action.actionPerformed(null)
         }
         else {
-          outoutSp.getMouseWheelListeners foreach { _.mouseWheelMoved(e) }
+          outoutSp.getMouseWheelListeners.foreach { _.mouseWheelMoved(e) }
         }
       }
     }
@@ -243,7 +247,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
   def appendOutput(s: String, color: Color): Unit = {
     if (TerminalAnsiCodes.isColoredString(s)) {
-      TerminalAnsiCodes.parse(s) foreach { cstr =>
+      TerminalAnsiCodes.parse(s).foreach { cstr =>
         appendOutput(cstr._1, cstr._2)
       }
     }
@@ -275,11 +279,11 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
 
     def errorLocation =
       <div style="margin:5px;">
-        { 
-          val key = if (errCount == 1) "S_OutputLocateError" else "S_OutputLocateFirstError"
-          if (errCount >= 1) { <a href={ errorLink }>{ Utils.loadString(key) }</a> 
-          } else { <span style="color:blue;">{ Utils.loadString("S_OutputCheckScriptButton") }</span> } 
-        }
+        {
+        val key = if (errCount == 1) "S_OutputLocateError" else "S_OutputLocateFirstError"
+        if (errCount >= 1) { <a href={errorLink}>{Utils.loadString(key)}</a> }
+        else { <span style="color:blue;">{Utils.loadString("S_OutputCheckScriptButton")}</span> }
+      }
       </div>
 
     val fontSize =
@@ -289,15 +293,15 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
         "large"
     val bg = Theme.currentTheme.errorPaneBg
     val errMsg =
-      <body style={ s"font-size:$fontSize;background-color:$bg" }>
+      <body style={s"font-size:$fontSize;background-color:$bg"}>
         <div style="margin:5px;">
-          <strong>{ Utils.loadString("S_OutputScriptProblem") }</strong>
+          <strong>{Utils.loadString("S_OutputScriptProblem")}</strong>
         </div>
-        { errorLocation }
-        <div style={ s"color:${Theme.currentTheme.errorPaneFg};margin:5px;" }>
-          <pre>{ errText }</pre>
+        {errorLocation}
+        <div style={s"color:${Theme.currentTheme.errorPaneFg};margin:5px;"}>
+          <pre>{errText}</pre>
         </div>
-        { if (errCount > 2) errorLocation }
+        {if (errCount > 2) errorLocation}
       </body>
 
     errorWindow.setText(errMsg.toString)
@@ -368,7 +372,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     //    outoutPanel.remove(readInputPanel)
     readInputPanel = new JPanel()
     readInputPanel.setLayout(new BoxLayout(readInputPanel, BoxLayout.Y_AXIS))
-    val label = new JLabel(" %s" format (prompt))
+    val label = new JLabel(" %s".format(prompt))
     label.setAlignmentX(Component.LEFT_ALIGNMENT)
     val lfont = label.getFont()
     label.setFont(new Font(lfont.getName, Font.BOLD, lfont.getSize + 2))
@@ -394,7 +398,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
     // works after nimbus painter hack
     outputWindow.setBackground(color)
 
-    // problem with code below: 
+    // problem with code below:
     // works only for previous text
     // does not fill out the whole background
     //    val background = new SimpleAttributeSet()

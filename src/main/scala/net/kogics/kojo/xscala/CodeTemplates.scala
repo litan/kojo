@@ -180,7 +180,7 @@ draw(pic)
   )
 
   def apply(name: String) = templates(name)
-  def asString(name: String) = 
+  def asString(name: String) =
     xml.Utility.escape(templates(name).replace("${cursor}", "|").replace("$", "")).replace("\n", "<br/>")
   def beforeCursor(name: String) = templates(name).split("""\$\{cursor\}""")(0)
   def afterCursor(name: String) = templates(name).split("""\$\{cursor\}""")(1)

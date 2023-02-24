@@ -19,10 +19,9 @@ import java.awt.Stroke
 
 import scala.collection.mutable.ArrayBuffer
 
+import edu.umd.cs.piccolo.PLayer
 import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.util.Utils
-
-import edu.umd.cs.piccolo.PLayer
 
 trait Turtle extends TurtleMover {
   def clear(): Unit
@@ -30,7 +29,7 @@ trait Turtle extends TurtleMover {
   def act(fn: Turtle => Unit) = Utils.runAsyncMonitored(fn(this))
   def react(fn: Turtle => Unit): Unit
   def distanceTo(other: Turtle): Double
-  def towards(t: Turtle): Unit = { val pos = t.position; towards(pos.x, pos.y)}
+  def towards(t: Turtle): Unit = { val pos = t.position; towards(pos.x, pos.y) }
   // stuff for the pictures module
   def tlayer: PLayer
   private[kojo] def penPaths: ArrayBuffer[PolyLine]

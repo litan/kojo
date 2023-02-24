@@ -16,23 +16,27 @@
 package net.kogics.kojo
 package lite
 
+import java.awt.geom.Point2D
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Font
 import java.awt.Toolkit
-import java.awt.geom.Point2D
 import java.io.File
 import java.io.FileInputStream
-import java.util.Properties
 import java.util.prefs.Preferences
-
+import java.util.Properties
+import javax.swing.plaf.FontUIResource
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
 import javax.swing.JMenu
 import javax.swing.UIManager
-import javax.swing.plaf.FontUIResource
 
+import bibliothek.gui.dock.common.mode.ExtendedMode
+import bibliothek.gui.dock.common.CControl
+import bibliothek.gui.dock.common.CGrid
+import bibliothek.gui.dock.common.CLocation
+import bibliothek.gui.dock.common.DefaultSingleCDockable
 import net.kogics.kojo.action.CloseFile
 import net.kogics.kojo.core.DelegatingSpriteListener
 import net.kogics.kojo.core.Picture
@@ -44,12 +48,6 @@ import net.kogics.kojo.lite.action.FullScreenSupport
 import net.kogics.kojo.lite.i18n.LangInit
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.util.Utils
-
-import bibliothek.gui.dock.common.CControl
-import bibliothek.gui.dock.common.CGrid
-import bibliothek.gui.dock.common.CLocation
-import bibliothek.gui.dock.common.DefaultSingleCDockable
-import bibliothek.gui.dock.common.mode.ExtendedMode
 
 class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
 
@@ -330,7 +328,8 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
     prefs.put("lastLoadStoreDir", lastLoadStoreDir)
   }
 
-  @volatile var _lastColor = new Color(Integer.parseInt(prefs.get("lastColor", Integer.toString(Color.red.getRGB()))), true)
+  @volatile var _lastColor =
+    new Color(Integer.parseInt(prefs.get("lastColor", Integer.toString(Color.red.getRGB()))), true)
   def lastColor: Color = _lastColor
   def lastColor_=(c: Color): Unit = {
     _lastColor = c

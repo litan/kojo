@@ -16,47 +16,46 @@
 package net.kogics.kojo
 package xscala
 
-import net.kogics.kojo.util.UserCommand
 import net.kogics.kojo.util.Throttler
 
 object RepeatCommands extends RepeatCommands
 
 trait RepeatCommands {
-  def repeat(n: Int) (fn: => Unit): Unit = {
+  def repeat(n: Int)(fn: => Unit): Unit = {
     var i = 0
-    while(i < n) {
+    while (i < n) {
       fn
       i += 1
     }
   }
 
-  def repeati(n: Int) (fn: Int => Unit): Unit = {
+  def repeati(n: Int)(fn: Int => Unit): Unit = {
     var i = 0
-    while(i < n) {
-      fn(i+1)
+    while (i < n) {
+      fn(i + 1)
       i += 1
     }
   }
 
-  def repeatWhile(cond: => Boolean) (fn: => Unit): Unit = {
+  def repeatWhile(cond: => Boolean)(fn: => Unit): Unit = {
     while (cond) {
       fn
       Throttler.throttle()
     }
   }
 
-  def repeatUntil(cond: => Boolean) (fn: => Unit): Unit = {
+  def repeatUntil(cond: => Boolean)(fn: => Unit): Unit = {
     while (!cond) {
       fn
       Throttler.throttle()
     }
   }
-  
+
   def repeatFor[T](seq: Iterable[T])(fn: T => Unit): Unit = {
     val iter = seq.iterator
     while (iter.hasNext) {
       fn(iter.next())
       Throttler.throttle()
     }
-  } 
+  }
 }

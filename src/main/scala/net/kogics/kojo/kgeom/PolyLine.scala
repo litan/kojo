@@ -17,10 +17,10 @@ package net.kogics.kojo.kgeom
 import java.awt._
 import java.awt.geom._
 
+import scala.collection._
+
 import edu.umd.cs.piccolo._
 import edu.umd.cs.piccolo.util._
-
-import scala.collection._
 
 object PolyLine {
   def apply(points: Seq[Point2D.Double]) = {
@@ -43,7 +43,7 @@ class PolyLine extends PNode {
   def addPoint(x: Double, y: Double): Unit = addPoint(new Point2D.Double(x, y))
   def lineTo(x: Double, y: Double) = addPoint(new Point2D.Double(x, y))
   def removeLastPoint(): Unit = {
-    points.remove(points.size-1)
+    points.remove(points.size - 1)
     buildGeneralPath()
   }
 
@@ -76,7 +76,7 @@ class PolyLine extends PNode {
     }
 
     polyLinePath.lineTo(p.x, p.y)
-    
+
     updateBounds()
   }
 
@@ -114,7 +114,7 @@ class PolyLine extends PNode {
 //    val b = stroke.createStrokedShape(polyLinePath).getBounds2D()
     val b = polyLinePath.getBounds2D()
     val w = stroke.getLineWidth
-    super.setBounds(b.getX()-w/2.0, b.getY()-w/2.0, b.getWidth()+w, b.getHeight()+w)
+    super.setBounds(b.getX() - w / 2.0, b.getY() - w / 2.0, b.getWidth() + w, b.getHeight() + w)
     repaint()
   }
 
@@ -140,7 +140,7 @@ class PolyLine extends PNode {
     println("Cannot set bounds")
     false
   }
-  
+
   def map(fn: Point2D.Double => Point2D.Double) = {
     val result = PolyLine(points.map(fn))
     result.setPaint(getPaint)

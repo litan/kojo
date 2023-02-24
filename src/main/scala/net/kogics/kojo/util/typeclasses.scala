@@ -18,9 +18,7 @@ import language.implicitConversions
 
 // Ideas and a good bit of code borrowed from Scalaz: https://github.com/scalaz/scalaz
 // Can't afford to bundle all of Scalaz within Kojo just yet (because of size constraints)
-object Typeclasses extends Semigroups
-                      with Identitys 
-                      with Function2s {
+object Typeclasses extends Semigroups with Identitys with Function2s {
   def some[A](a: A): Option[A] = Some(a)
   def none[A] = None
 }
@@ -40,16 +38,18 @@ object Semigroup {
   implicit def StringSemigroup: Semigroup[String] = semigroup(_ + _)
   implicit def IntSemigroup: Semigroup[Int] = semigroup(_ + _)
   implicit def ListSemigroup[A]: Semigroup[List[A]] = semigroup(_ ++ _)
-  implicit def OptionSemigroup[A : Semigroup]: Semigroup[Option[A]] = semigroup((a, b) => { (a,b) match {
-        case (Some(va), Some(vb)) => Some(va |+| vb)
-        case (Some(va), None) => Some(va)
-        case (None, Some(vb)) => Some(vb)
-        case (None, None) => None
-      }})
+  implicit def OptionSemigroup[A: Semigroup]: Semigroup[Option[A]] = semigroup((a, b) => {
+    (a, b) match {
+      case (Some(va), Some(vb)) => Some(va |+| vb)
+      case (Some(va), None)     => Some(va)
+      case (None, Some(vb))     => Some(vb)
+      case (None, None)         => None
+    }
+  })
 
-  implicit def MapSemigroup[K, V](implicit ss: Semigroup[V]): Semigroup[Map[K, V]] = semigroup {
-    (m1, m2) => {
-      // semigroups are not commutative, so order may matter. 
+  implicit def MapSemigroup[K, V](implicit ss: Semigroup[V]): Semigroup[Map[K, V]] = semigroup { (m1, m2) =>
+    {
+      // semigroups are not commutative, so order may matter.
       val (from, to, semigroup) = {
         if (m1.size > m2.size) (m2, m1, ss.append(_: V, _: V))
         else (m1, m2, (ss.append(_: V, _: V)).flip)
@@ -62,7 +62,7 @@ object Semigroup {
   }
 }
 
-trait Identity[A]  {
+trait Identity[A] {
   def value: A
   def |+|(a: => A)(implicit s: Semigroup[A]): A = s.append(value, a)
 }
@@ -74,7 +74,7 @@ trait Identitys {
   val unital = mkIdentity(())
 }
 
-object Identity { 
+object Identity {
   def apply[A](a: => A): Identity[A] = new Identity[A] {
     lazy val value = a
   }
@@ -83,7 +83,7 @@ object Identity {
 
 sealed trait Function2W[T1, T2, R] {
   val k: (T1, T2) => R
-  def flip : (T2, T1) => R = (v2: T2, v1: T1) => k(v1, v2)
+  def flip: (T2, T1) => R = (v2: T2, v1: T1) => k(v1, v2)
 }
 
 trait Function2s {

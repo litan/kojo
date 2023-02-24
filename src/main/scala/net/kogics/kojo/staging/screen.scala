@@ -16,16 +16,13 @@
 package net.kogics.kojo
 package staging
 
-import edu.umd.cs.piccolo._
-import edu.umd.cs.piccolo.nodes._
-import edu.umd.cs.piccolo.util._
-import edu.umd.cs.piccolo.event._
-
-//import net.kogics.kojo.util.Utils
-
 import javax.swing._
 
 import core._
+import edu.umd.cs.piccolo._
+import edu.umd.cs.piccolo.event._
+import edu.umd.cs.piccolo.nodes._
+import edu.umd.cs.piccolo.util._
 
 object Screen {
   val rect = Bounds(0, 0, 0, 0)
@@ -33,7 +30,7 @@ object Screen {
   def size(width: Int, height: Int) = {
     // TODO 560 is a value that works on my system, should be less ad-hoc
     val factor = 560
-    val xfactor = factor / (if (width < 0) -(height.abs) else height.abs) // sic!
+    val xfactor = factor / (if (width < 0) -height.abs else height.abs) // sic!
     val yfactor = factor / height
     Impl.canvas.zoomXY(xfactor, yfactor, width / 2, height / 2)
     rect.setRect(0, 0, width.abs, height.abs)

@@ -16,9 +16,9 @@ package net.kogics.kojo.lite
 
 import net.kogics.kojo.core.CodeRunner
 import net.kogics.kojo.core.CodingMode
-import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.TwMode
+import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.xscala
 import net.kogics.kojo.xscala.KojoInterpreter
 import net.kogics.kojo.xscala.ScalaCodeRunner2

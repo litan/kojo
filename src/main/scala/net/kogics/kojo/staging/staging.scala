@@ -17,132 +17,128 @@
 package net.kogics.kojo
 package staging
 
-import util.Utils
-import kmath.{Kmath => Math}
-import core.InputAware
-import core.Point
 import java.awt.BasicStroke
-import edu.umd.cs.piccolo.PNode
+import java.awt.Paint
+import java.util.concurrent.Future
+
+import scala.language.implicitConversions
+import scala.language.postfixOps
+
+import edu.umd.cs.piccolo.activities.PActivity
 import edu.umd.cs.piccolo.nodes.PPath
 import edu.umd.cs.piccolo.util.PBounds
-import edu.umd.cs.piccolo.event._
-import java.awt.Color
-import java.awt.Paint
-import net.kogics.kojo.core.UnitLen
+import edu.umd.cs.piccolo.PNode
 import net.kogics.kojo.core.InputAware
-import lite.canvas.SpriteCanvas
-import java.util.concurrent.Future
-import edu.umd.cs.piccolo.activities.PActivity
-import net.kogics.kojo.figure.Figure
+import net.kogics.kojo.core.Point
 import net.kogics.kojo.core.Turtle
-
-import language.implicitConversions
-import language.postfixOps
+import net.kogics.kojo.core.UnitLen
+import net.kogics.kojo.figure.Figure
+import net.kogics.kojo.kmath.{ Kmath => Math }
+import net.kogics.kojo.lite.canvas.SpriteCanvas
+import net.kogics.kojo.util.Utils
 
 object Impl {
   @volatile var canvas: SpriteCanvas = _
   @volatile var turtle0: Turtle = _
   @volatile var figure0: Figure = _
-  @volatile var API: API = _ 
+  @volatile var API: API = _
 }
 
-/**
- * Staging API
- *
- * This object contains the API for using Staging within Kojo scripts.
- *
- * DISCLAIMER
- *
- * Parts of this interface is written to approximately conform to the
- * Processing API as described in the reference at
- * <URL: http://processing.org/reference/>.
- * The implementation code is the work of Peter Lewerin
- * (<peter.lewerin@tele2.se>) and is not in any way derived from the
- * Processing source.
- */
+/** Staging API
+  *
+  * This object contains the API for using Staging within Kojo scripts.
+  *
+  * DISCLAIMER
+  *
+  * Parts of this interface is written to approximately conform to the Processing API as described in the reference at
+  * <URL: http://processing.org/reference/>. The implementation code is the work of Peter Lewerin
+  * (<peter.lewerin@tele2.se>) and is not in any way derived from the Processing source.
+  */
 class API(canvas: SpriteCanvas) {
   Impl.API = this
   Impl.canvas = canvas
   Impl.turtle0 = canvas.turtle0
   Impl.figure0 = canvas.figure0
-  //W#summary Developer home-page for the Staging Module
-  //W
-  //W=Introduction=
-  //W
-  //WThe Staging Module is currently being developed by Peter Lewerin.
-  //WThe original impetus came from a desire to run Processing-style code in Kojo.
-  //W
-  //WAt this point, the shape hierarchy is the most complete part, but
-  //Wutilities for color definition, time keeping etc are being added.
-  //W
-  //W=Examples=
-  //W
-  //W  * StagingHelloKojoExample
-  //W  * StagingArrayExample
-  //W  * StagingArrayTwoDeeExample
-  //W  * StagingClockExample
-  //W  * StagingColorWheelExample
-  //W  * StagingCreatingColorsExample
-  //W  * StagingDifferenceOfTwoSquaresExample
-  //W  * StagingEasingExample
-  //W  * StagingHueSaturationBrightnessExample
-  //W  * StagingSineOfAnAngleExample
-  //W
-  //W=Overview=
-  //W
-  //W==Points==
-  //W
-  //WStaging uses {{{net.kogics.kojo.core.Point}}} for coordinates.
-  //W
+  // W#summary Developer home-page for the Staging Module
+  // W
+  // W=Introduction=
+  // W
+  // WThe Staging Module is currently being developed by Peter Lewerin.
+  // WThe original impetus came from a desire to run Processing-style code in Kojo.
+  // W
+  // WAt this point, the shape hierarchy is the most complete part, but
+  // Wutilities for color definition, time keeping etc are being added.
+  // W
+  // W=Examples=
+  // W
+  // W  * StagingHelloKojoExample
+  // W  * StagingArrayExample
+  // W  * StagingArrayTwoDeeExample
+  // W  * StagingClockExample
+  // W  * StagingColorWheelExample
+  // W  * StagingCreatingColorsExample
+  // W  * StagingDifferenceOfTwoSquaresExample
+  // W  * StagingEasingExample
+  // W  * StagingHueSaturationBrightnessExample
+  // W  * StagingSineOfAnAngleExample
+  // W
+  // W=Overview=
+  // W
+  // W==Points==
+  // W
+  // WStaging uses {{{net.kogics.kojo.core.Point}}} for coordinates.
+  // W
 
-  //T PointTest begins
+  // T PointTest begins
   def point(x: Double, y: Double) = Point(x, y)
 
   implicit def tupleDDToPoint(tuple: (Double, Double)) = Point(tuple._1, tuple._2)
   implicit def tupleDIToPoint(tuple: (Double, Int)) = Point(tuple._1, tuple._2)
   implicit def tupleIDToPoint(tuple: (Int, Double)) = Point(tuple._1, tuple._2)
   implicit def tupleIIToPoint(tuple: (Int, Int)) = Point(tuple._1, tuple._2)
-  //implicit def baseShapeToPoint(b: BaseShape) = b.origin
-  //implicit def awtPointToPoint(p: java.awt.geom.Point2D) = Point(p.getX, p.getY)
-  //implicit def awtDimToPoint(d: java.awt.geom.Dimension2D) = Point(d.getWidth, d.getHeight)
+  // implicit def baseShapeToPoint(b: BaseShape) = b.origin
+  // implicit def awtPointToPoint(p: java.awt.geom.Point2D) = Point(p.getX, p.getY)
+  // implicit def awtDimToPoint(d: java.awt.geom.Dimension2D) = Point(d.getWidth, d.getHeight)
 
-  /** The point of origin, located at a corner of the user screen if
-   * `screenSize` has been called, or the middle of the screen otherwise. */
+  /** The point of origin, located at a corner of the user screen if `screenSize` has been called, or the middle of the
+    * screen otherwise.
+    */
   val O = Point(0, 0)
-  //T PointTest ends
+  // T PointTest ends
 
-  //W
-  //W==User Screen==
-  //W
-  //WThe zoom level and axis orientations can be set using `screenSize`.
-  //W
-  //T ScreenMethodsTest begins
+  // W
+  // W==User Screen==
+  // W
+  // WThe zoom level and axis orientations can be set using `screenSize`.
+  // W
+  // T ScreenMethodsTest begins
   def screenWidth = Screen.rect.getWidth.toInt
   def screenHeight = Screen.rect.getHeight.toInt
   def screenSize(width: Int, height: Int) = Screen.size(width, height)
 
-  /** The middle point of the user screen, or (0, 0) if `screenSize` hasn't
-   * been called. */
+  /** The middle point of the user screen, or (0, 0) if `screenSize` hasn't been called.
+    */
   def screenMid = Screen.rect.getCenter2D
 
-  /** The extreme point of the user screen (i.e. the opposite corner from
-   * the point of origin), or (0, 0) if `screenSize` hasn't been called. */
+  /** The extreme point of the user screen (i.e. the opposite corner from the point of origin), or (0, 0) if
+    * `screenSize` hasn't been called.
+    */
   def screenExt = Screen.rect.getExt
 
   /** Fills the user screen with the specified color. */
   def background(bc: Paint) = {
     withStyle(bc, null, 1) { rectangle(O, screenExt) }
   }
-  //T ScreenMethodsTest ends
+  // T ScreenMethodsTest ends
 
-  //W
-  //W==Simple shapes and text==
-  //W
-  //WGiven `Point`s or _x_ and _y_ coordinate values, simple shapes like dots,
-  //Wlines, rectangles, ellipses, and elliptic arcs can be drawn.  Texts can
-  //Walso be placed in this way.
-  //W
-  //T SimpleShapesTest begins
+  // W
+  // W==Simple shapes and text==
+  // W
+  // WGiven `Point`s or _x_ and _y_ coordinate values, simple shapes like dots,
+  // Wlines, rectangles, ellipses, and elliptic arcs can be drawn.  Texts can
+  // Walso be placed in this way.
+  // W
+  // T SimpleShapesTest begins
   def dot(x: Double, y: Double): Dot = Dot(Point(x, y))
   def dot(p: Point): Dot = Dot(p)
 
@@ -168,15 +164,20 @@ class API(canvas: SpriteCanvas) {
     Rectangle(p, Point(p.x + s, p.y + s))
 
   def roundRectangle(
-    x: Double, y: Double,
-    w: Double, h: Double,
-    rx: Double, ry: Double
+      x: Double,
+      y: Double,
+      w: Double,
+      h: Double,
+      rx: Double,
+      ry: Double
   ) =
     RoundRectangle(Point(x, y), Point(x + w, y + h), Point(rx, ry))
   def roundRectangle(
-    p: Point,
-    w: Double, h: Double,
-    rx: Double, ry: Double
+      p: Point,
+      w: Double,
+      h: Double,
+      rx: Double,
+      ry: Double
   ) =
     RoundRectangle(p, Point(p.x + w, p.y + h), Point(rx, ry))
   def roundRectangle(p1: Point, p2: Point, rx: Double, ry: Double) =
@@ -236,15 +237,15 @@ class API(canvas: SpriteCanvas) {
     CrossOutline(p1, p2, cw, r, greek)
   def saltire(p1: Point, p2: Point, s: Double) = Saltire(p1, p2, s)
   def saltireOutline(p1: Point, p2: Point, s: Double) = SaltireOutline(p1, p2, s)
-  //T SimpleShapesTest ends
-  
-  //W
-  //W==Complex Shapes==
-  //W
-  //WGiven a sequence of `Point`s, a number of complex shapes can be drawn,
-  //Wincluding basic polylines and polygons, and patterns of polylines/polygons.
-  //W
-  //T ComplexShapesTest begins
+  // T SimpleShapesTest ends
+
+  // W
+  // W==Complex Shapes==
+  // W
+  // WGiven a sequence of `Point`s, a number of complex shapes can be drawn,
+  // Wincluding basic polylines and polygons, and patterns of polylines/polygons.
+  // W
+  // T ComplexShapesTest begins
   def polyline(pts: Seq[Point]) = Polyline(pts)
 
   def polygon(pts: Seq[Point]): Polygon = Polygon(pts)
@@ -258,35 +259,35 @@ class API(canvas: SpriteCanvas) {
   def quadsShape(pts: Seq[Point]) = QuadsShape(pts)
   def quadStripShape(pts: Seq[Point]) = QuadStripShape(pts)
   def triangleFanShape(p0: Point, pts: Seq[Point]) = TriangleFanShape(p0, pts)
-  //T ComplexShapesTest ends
+  // T ComplexShapesTest ends
 
-  //W
-  //W==SVG Shapes==
-  //W
-  //WGiven an SVG element, the corresponding shape can be drawn.
-  //W
-  //T SvgShapesTest begins
+  // W
+  // W==SVG Shapes==
+  // W
+  // WGiven an SVG element, the corresponding shape can be drawn.
+  // W
+  // T SvgShapesTest begins
   def svgShape(node: scala.xml.Node) = SvgShape(node)
-  //T SvgShapesTest ends
-  
+  // T SvgShapesTest ends
+
   def sprite(x: Double, y: Double, fname: String) = Sprite(point(x, y), fname)
   def path(x: Double, y: Double) = Path(point(x, y))
   def group(shapes: List[Shape]) = Composite(shapes)
-  def group(shapes: Shape *) = Composite(shapes)
+  def group(shapes: Shape*) = Composite(shapes)
 
-  //W
-  //W==Color==
-  //W
-  //WColor values can be created with the method `color`, or using a
-  //W_color-maker_.  The methods `fill`, `noFill`,
-  //W`stroke`, and `noStroke` set the colors used to draw the insides and edges
-  //Wof figures.  The method `strokeWidth` doesn't actually affect color but is
-  //Wtypically used together with the color setting methods.  The method
-  //W`withStyle` allows the user to set fill color, stroke color, and stroke
-  //Wwidth temporarily.
-  //W
-  //W
-  //T ColorTest begins
+  // W
+  // W==Color==
+  // W
+  // WColor values can be created with the method `color`, or using a
+  // W_color-maker_.  The methods `fill`, `noFill`,
+  // W`stroke`, and `noStroke` set the colors used to draw the insides and edges
+  // Wof figures.  The method `strokeWidth` doesn't actually affect color but is
+  // Wtypically used together with the color setting methods.  The method
+  // W`withStyle` allows the user to set fill color, stroke color, and stroke
+  // Wwidth temporarily.
+  // W
+  // W
+  // T ColorTest begins
   def grayColors(grayMax: Int) =
     ColorMaker(GRAY(grayMax))
   def grayColorsWithAlpha(grayMax: Int, alphaMax: Int) =
@@ -307,40 +308,40 @@ class API(canvas: SpriteCanvas) {
   def setPenColor(color: Paint) = stroke(color)
   def setFillColor(color: Paint) = fill(color)
   def setPenThickness(w: Double) = strokeWidth(w)
-  
+
   def withStyle(fc: Paint, sc: Paint, sw: Double)(body: => Unit) =
     Style(fc, sc, sw)(body)
-  implicit def ColorToRichColor (c: java.awt.Color) = RichColor(c)
+  implicit def ColorToRichColor(c: java.awt.Color) = RichColor(c)
   def lerpColor(from: RichColor, to: RichColor, amt: Double) =
     RichColor.lerpColor(from, to, amt)
-  //T ColorTest ends
+  // T ColorTest ends
 
   Inputs.init()
 
-  //W
-  //W==Timekeeping==
-  //W
-  //WA number of methods report the current time.
-  //W
-  //T TimekeepingTest begins
+  // W
+  // W==Timekeeping==
+  // W
+  // WA number of methods report the current time.
+  // W
+  // T TimekeepingTest begins
   def millis = System.currentTimeMillis()
-  def time = System.currentTimeMillis()/1000.0
+  def time = System.currentTimeMillis() / 1000.0
 
   import java.util.Calendar
   def second = Calendar.getInstance().get(Calendar.SECOND)
   def minute = Calendar.getInstance().get(Calendar.MINUTE)
-  def hour   = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-  def day    = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-  def month  = Calendar.getInstance().get(Calendar.MONTH) + 1
-  def year   = Calendar.getInstance().get(Calendar.YEAR)
-  //T UtilsTest ends
+  def hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+  def day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+  def month = Calendar.getInstance().get(Calendar.MONTH) + 1
+  def year = Calendar.getInstance().get(Calendar.YEAR)
+  // T UtilsTest ends
 
-  //W
-  //W==Math==
-  //W
-  //WA number of methods perform number processing tasks.
-  //W
-  //T MathTest begins
+  // W
+  // W==Math==
+  // W
+  // WA number of methods perform number processing tasks.
+  // W
+  // T MathTest begins
   def constrain(value: Double, min: Double, max: Double) =
     Math.constrain(value, min, max)
 
@@ -364,15 +365,15 @@ class API(canvas: SpriteCanvas) {
   def mag(x: Double, y: Double) = dist(0, 0, x, y)
   def mag(p: Point) = dist(0, 0, p.x, p.y)
 
-  //W
-  //W==Trigonometry==
-  //W
-  //WA number of methods perform trigonometry tasks.
-  //W
+  // W
+  // W==Trigonometry==
+  // W
+  // WA number of methods perform trigonometry tasks.
+  // W
   val PI = math.Pi
-  val TWO_PI = 2*PI
-  val HALF_PI = PI/2
-  val QUARTER_PI = PI/4
+  val TWO_PI = 2 * PI
+  val HALF_PI = PI / 2
+  val QUARTER_PI = PI / 4
   def sin(a: Double) = math.sin(a)
   def cos(a: Double) = math.cos(a)
   def tan(a: Double) = math.tan(a)
@@ -381,15 +382,15 @@ class API(canvas: SpriteCanvas) {
   def atan(a: Double) = math.atan(a)
   def radians(deg: Double) = deg.toRadians
   def degrees(rad: Double) = rad.toDegrees
-  //T MathTest ends
+  // T MathTest ends
 
-  //W
+  // W
 
-  //W==Control==
-  //W
-  //WThere are methods for execution control and mouse feedback.
-  //W
-  //T ControlTest begins
+  // W==Control==
+  // W
+  // WThere are methods for execution control and mouse feedback.
+  // W
+  // T ControlTest begins
   def loop(fn: => Unit) = Impl.figure0.refresh(fn)
   def animate(fn: => Unit) = loop(fn)
   def stop() = Impl.figure0.stopRefresh()
@@ -421,8 +422,12 @@ class API(canvas: SpriteCanvas) {
     require(pts1.size == pts2.size, "The polygons don't match up.")
 
     var g0 = polygon(pts1)
-    for (i <- 0 to n ; amt = i / n.toFloat) {
-      val pts = (pts1 zip pts2) map { case(p1, p2) =>
+    for {
+      i <- 0 to n
+      amt = i / n.toFloat
+    } {
+      val pts = pts1.zip(pts2).map {
+        case (p1, p2) =>
           point(lerp(p1.x, p2.x, amt), lerp(p1.y, p2.y, amt))
       }
       g0.hide()
@@ -432,15 +437,15 @@ class API(canvas: SpriteCanvas) {
       }
     }
   }
-  //T ControlTest ends
+  // T ControlTest ends
 
   // expose some types in the API
   type Shape = staging.Shape
   type StrokedShape = staging.StrokedShape
 
-  //W
-  //W=Usage=
-  //W
+  // W
+  // W=Usage=
+  // W
 } // end of API
 
 abstract class ColorModes
@@ -452,7 +457,7 @@ case class GRAY(v: Int) extends ColorModes
 case class GRAYA(v: Int, a: Int) extends ColorModes
 
 //T ShapeMethodsTest begins
-trait Shape  extends InputAware {
+trait Shape extends InputAware {
   def pnode = node
   def node: PNode
   var sizeFactor = 1.0
@@ -487,11 +492,11 @@ trait Shape  extends InputAware {
   def setFillColor(color: Paint) = fill(color)
 
   def rotate(amount: Double) = turn(amount)
-  
+
   def rotateTo(angle: Double) = {
     turn(angle - _theta.toDegrees)
   }
-  
+
   def scale(amount: Double) = {
     Utils.runInSwingThread {
       node.scale(amount)
@@ -502,11 +507,11 @@ trait Shape  extends InputAware {
   def scaleTo(size: Double) = {
     scale(size / sizeFactor)
   }
-  
+
   def translate(p: Point): Unit = {
     translate(p.x, p.y)
   }
-  
+
   def offset(p: Point): Unit = {
     offset(p.x, p.y)
   }
@@ -540,7 +545,7 @@ trait Shape  extends InputAware {
       node.repaint()
     }
   }
-  
+
   def heading = Utils.runInSwingThreadAndWait {
     _theta.toDegrees
   }
@@ -559,7 +564,6 @@ trait Rounded {
   def radiusY = curvature.y
 }
 
-
 trait BaseShape extends Shape with core.RichTurtleCommands {
   val origin: Point
   import turtle.TurtleHelper._
@@ -573,12 +577,12 @@ trait BaseShape extends Shape with core.RichTurtleCommands {
       node.repaint()
     }
   }
-  
+
   def position = Utils.runInSwingThreadAndWait {
     val o = node.getOffset
     Point(o.getX + origin.x, o.getY + origin.y)
-  }  
-  
+  }
+
   def forward(n: Double): Unit = {
     Utils.runInSwingThread {
       val pos = position
@@ -586,7 +590,7 @@ trait BaseShape extends Shape with core.RichTurtleCommands {
       setPosition(xy._1, xy._2)
     }
   }
-  
+
   def towards(x: Double, y: Double): Unit = {
     Utils.runInSwingThread {
       val pos = position
@@ -677,17 +681,16 @@ object Text {
   }
 }
 
-
 trait PolyShape extends BaseShape {
   val points: Seq[Point]
   val origin = points(0)
-  //def toPolygon: Polygon = Polygon(points)
-  //def toPolyline: Polyline = Polyline(points)
+  // def toPolygon: Polygon = Polygon(points)
+  // def toPolyline: Polyline = Polyline(points)
 }
 
 trait CrossShape {
-  val xdims = Array.fill(8){0.0}
-  val ydims = Array.fill(8){0.0}
+  val xdims = Array.fill(8) { 0.0 }
+  val ydims = Array.fill(8) { 0.0 }
   def crossDims(len: Double, wid: Double, cw: Double, r: Double = 1, greek: Boolean = false) = {
     require(wid / 2 > cw)
     require(len / 2 > cw)
@@ -712,29 +715,50 @@ trait CrossShape {
     this
   }
   def points() = List(
-    Point(xdims(0), ydims(5)), Point(xdims(2), ydims(5)),
-    Point(xdims(2), ydims(7)), Point(xdims(5), ydims(7)),
-    Point(xdims(5), ydims(5)), Point(xdims(7), ydims(5)),
-    Point(xdims(7), ydims(2)), Point(xdims(5), ydims(2)),
-    Point(xdims(5), ydims(0)), Point(xdims(2), ydims(0)),
-    Point(xdims(2), ydims(2)), Point(xdims(0), ydims(2))
+    Point(xdims(0), ydims(5)),
+    Point(xdims(2), ydims(5)),
+    Point(xdims(2), ydims(7)),
+    Point(xdims(5), ydims(7)),
+    Point(xdims(5), ydims(5)),
+    Point(xdims(7), ydims(5)),
+    Point(xdims(7), ydims(2)),
+    Point(xdims(5), ydims(2)),
+    Point(xdims(5), ydims(0)),
+    Point(xdims(2), ydims(0)),
+    Point(xdims(2), ydims(2)),
+    Point(xdims(0), ydims(2))
   )
   def outlinePoints() = List(
-    Point(xdims(0), ydims(6)), Point(xdims(1), ydims(6)), Point(xdims(1), ydims(7)),
-    Point(xdims(3), ydims(7)), Point(xdims(3), ydims(4)), Point(xdims(0), ydims(4)),
-    Point(xdims(6), ydims(7)), Point(xdims(6), ydims(6)), Point(xdims(7), ydims(6)),
-    Point(xdims(7), ydims(4)), Point(xdims(4), ydims(4)), Point(xdims(4), ydims(7)),
-    Point(xdims(7), ydims(1)), Point(xdims(6), ydims(1)), Point(xdims(6), ydims(0)),
-    Point(xdims(4), ydims(0)), Point(xdims(4), ydims(3)), Point(xdims(7), ydims(3)),
-    Point(xdims(1), ydims(0)), Point(xdims(1), ydims(1)), Point(xdims(0), ydims(1)),
-    Point(xdims(0), ydims(3)), Point(xdims(3), ydims(3)), Point(xdims(3), ydims(0))
+    Point(xdims(0), ydims(6)),
+    Point(xdims(1), ydims(6)),
+    Point(xdims(1), ydims(7)),
+    Point(xdims(3), ydims(7)),
+    Point(xdims(3), ydims(4)),
+    Point(xdims(0), ydims(4)),
+    Point(xdims(6), ydims(7)),
+    Point(xdims(6), ydims(6)),
+    Point(xdims(7), ydims(6)),
+    Point(xdims(7), ydims(4)),
+    Point(xdims(4), ydims(4)),
+    Point(xdims(4), ydims(7)),
+    Point(xdims(7), ydims(1)),
+    Point(xdims(6), ydims(1)),
+    Point(xdims(6), ydims(0)),
+    Point(xdims(4), ydims(0)),
+    Point(xdims(4), ydims(3)),
+    Point(xdims(7), ydims(3)),
+    Point(xdims(1), ydims(0)),
+    Point(xdims(1), ydims(1)),
+    Point(xdims(0), ydims(1)),
+    Point(xdims(0), ydims(3)),
+    Point(xdims(3), ydims(3)),
+    Point(xdims(3), ydims(0))
   )
 }
 
-
 class Composite(val shapes: Seq[Shape]) extends Shape {
   val node = new PNode
-  shapes foreach { shape =>
+  shapes.foreach { shape =>
     node.addChild(shape.node)
   }
 
@@ -755,7 +779,7 @@ object Style {
 
   def save: Unit = {
     Utils.runInSwingThread {
-      savedStyles push Tuple3(f.fillColor, f.lineColor, f.lineStroke)
+      savedStyles.push(Tuple3(f.fillColor, f.lineColor, f.lineStroke))
     }
   }
 
@@ -781,7 +805,6 @@ object Style {
     finally { restore }
   }
 }
-
 
 class Bounds(x1: Double, y1: Double, x2: Double, y2: Double) {
   val bounds = new PBounds(x1, y1, x2 - x1, y2 - y1)

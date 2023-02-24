@@ -15,7 +15,7 @@
 
 package net.kogics.kojo.core
 
-import org.jfugue.{Rhythm => JFRhythm, _}
+import org.jfugue.{ Rhythm => JFRhythm, _ }
 
 trait Voice {
   def pattern(n: Int): Pattern
@@ -42,17 +42,18 @@ case class Rhythm(instrument: String, duration: String, beat: String) extends Vo
   }
 
   def beatChar(b: String): Char = {
-    b.find {c => c != '.'}.get
+    b.find { c => c != '.' }.get
   }
 }
 
-case class Score(voices: Voice *) extends Voice {
+case class Score(voices: Voice*) extends Voice {
   def pattern(n: Int): Pattern = {
     val score = new Pattern()
     var idx = 0
     val rhy = new JFRhythm()
     var rLayer = 1
-    voices.foreach { voice => voice match {
+    voices.foreach { voice =>
+      voice match {
         case Melody(i, m) =>
           val p = new Pattern("V%d I[%s] %s".format(idx, i, m))
           score.add(p, n)
@@ -63,7 +64,7 @@ case class Score(voices: Voice *) extends Voice {
           rhy.addSubstitution('.', "R%s".format(d))
           rLayer += 1
       }
-                    idx += 1
+      idx += 1
     }
     score.add(rhy.getPattern, n)
     score

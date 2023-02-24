@@ -5,13 +5,12 @@ import java.awt.Color
 import java.awt.Paint
 import java.util.concurrent.Future
 
+import edu.umd.cs.piccolo.activities.PActivity
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.TSCanvasFeatures
 import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.core.UnitLen
 import net.kogics.kojo.util.UserCommand
-
-import edu.umd.cs.piccolo.activities.PActivity
 
 // Turtle and Staging Canvas
 class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
@@ -26,7 +25,7 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def zoom(factor: Double, cx: Double, cy: Double) = tCanvas.zoom(factor, cx, cy)
   UserCommand("zoom", List("factor"), "Zooms in by the given factor, leaving the center point unchanged.")
   UserCommand.addSynopsisSeparator()
-  
+
   def scroll(x: Double, y: Double) = tCanvas.scroll(x, y)
 
   def viewRotate(a: Double): Unit = tCanvas.viewRotate(a)
@@ -44,15 +43,16 @@ class DrawingCanvasAPI(val tCanvas: SCanvas) extends TSCanvasFeatures {
   def hideAxes() = tCanvas.hideAxes()
   UserCommand("axesOff", Nil, "Hides the X and Y axes.")
 
-  def showProtractor() = tCanvas.showProtractor(-tCanvas.cbounds.getWidth/2, -tCanvas.cbounds.getHeight/2)
+  def showProtractor() = tCanvas.showProtractor(-tCanvas.cbounds.getWidth / 2, -tCanvas.cbounds.getHeight / 2)
   def showProtractor(x: Double, y: Double) = tCanvas.showProtractor(x, y)
   def hideProtractor() = tCanvas.hideProtractor()
-  def showScale() = tCanvas.showScale(-tCanvas.cbounds.getWidth/2, tCanvas.cbounds.getHeight/2)
+  def showScale() = tCanvas.showScale(-tCanvas.cbounds.getWidth / 2, tCanvas.cbounds.getHeight / 2)
   def showScale(x: Double, y: Double) = tCanvas.showScale(x, y)
   def hideScale() = tCanvas.hideScale()
-  
+
   def newTurtle(): Turtle = newTurtle(0, 0)
-  def newTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = tCanvas.newTurtle(x, y, costume)
+  def newTurtle(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") =
+    tCanvas.newTurtle(x, y, costume)
 
   def exportImage(filePrefix: String) = tCanvas.exportImage(filePrefix)
   def exportImage(filePrefix: String, width: Int, height: Int) = tCanvas.exportImage(filePrefix, width, height)

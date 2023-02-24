@@ -15,16 +15,14 @@
 
 package net.kogics.kojo.core
 
-import java.awt.Color
 import java.awt.geom.Point2D
-
+import java.awt.Color
 import javax.swing.Action
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JFrame
-
-import bibliothek.gui.dock.common.DefaultSingleCDockable
 import javax.swing.JMenu
 
+import bibliothek.gui.dock.common.DefaultSingleCDockable
 import net.kogics.kojo.doodle
 
 trait KojoCtx {

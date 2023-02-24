@@ -16,17 +16,17 @@
 package net.kogics.kojo
 package story
 
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Font
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import java.awt.event.ComponentAdapter
-import java.awt.event.ComponentEvent
 import java.util.logging.Logger
-
+import javax.swing.text.html.HTMLDocument
 import javax.swing.BorderFactory
 import javax.swing.BoxLayout
 import javax.swing.JButton
@@ -36,7 +36,6 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.JTextField
-import javax.swing.text.html.HTMLDocument
 
 import net.kogics.kojo.lite.Theme
 import net.kogics.kojo.util.Read
@@ -57,10 +56,10 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
   val pageFields = new collection.mutable.HashMap[String, JTextField]()
   val defaultMsg =
     <div style="text-align:center;color:#808080;font-size:15px">
-      { for (idx <- 1 to 6) yield { <br/> } }
-      <p> { xml.XML.loadString(Utils.loadString("S_StoryTellerIntroP1")) } </p>
-      <p> { Utils.loadString("S_StoryTellerIntroP2") } </p>
-      <p> { Utils.loadString("S_StoryTellerIntroP3") } </p>
+      {for (idx <- 1 to 6) yield { <br/> }}
+      <p> {xml.XML.loadString(Utils.loadString("S_StoryTellerIntroP1"))} </p>
+      <p> {Utils.loadString("S_StoryTellerIntroP2")} </p>
+      <p> {Utils.loadString("S_StoryTellerIntroP3")} </p>
     </div>
 
   //  setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
@@ -298,7 +297,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
 
   private def done() = {
     // call in gui thread
-    currStory foreach { _.stop() }
+    currStory.foreach { _.stop() }
     currStory = None
     clearHelper()
     stopMp3Loop()
@@ -378,8 +377,8 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       }
     }
     else {
-      showStatusError("Field with label - %s is not defined" format (label))
-      throw new IllegalArgumentException("Field with label - %s is not defined" format (label))
+      showStatusError("Field with label - %s is not defined".format(label))
+      throw new IllegalArgumentException("Field with label - %s is not defined".format(label))
     }
   }
 
@@ -446,7 +445,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       statusBar.setText(msg)
     }
     if (output) {
-      outputFn("[Storyteller] %s\n" format (msg))
+      outputFn("[Storyteller] %s\n".format(msg))
     }
   }
 
@@ -455,7 +454,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
       statusBar.setForeground(Color.red)
       statusBar.setText(msg)
     }
-    outputFn("[Storyteller] %s\n" format (msg))
+    outputFn("[Storyteller] %s\n".format(msg))
   }
 
   def playStory(story: Story) = Utils.runInSwingThread {
@@ -497,7 +496,7 @@ class StoryTeller(val kojoCtx: core.KojoCtx) extends JPanel with music.Mp3Player
     story.handleLinkEnter(name, data)
   }
   def handleLinkExit(name: String, data: String): Unit = {
-    if (currStory.isDefined) { // work around link exits showing up after story ends 
+    if (currStory.isDefined) { // work around link exits showing up after story ends
       story.handleLinkExit(name, data)
     }
   }

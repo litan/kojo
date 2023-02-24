@@ -15,7 +15,9 @@
  */
 package net.kogics.kojo
 
-import net.kogics.kojo.core.{Picture, Point, SCanvas}
+import net.kogics.kojo.core.Picture
+import net.kogics.kojo.core.Point
+import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.util.Utils
 
 package object gaming {
@@ -67,9 +69,10 @@ package object gaming {
 
     case class OnMouseClick[Msg](mapper: Point => Msg)(implicit canvas: SCanvas) extends NonTimerSub[Msg] {
       def activate(gameMsgSink: GameMsgSink[Msg]): Unit = {
-        canvas.onMouseClick { case (x, y) =>
-          val msg = mapper(Point(x, y))
-          gameMsgSink.triggerUpdate(msg)
+        canvas.onMouseClick {
+          case (x, y) =>
+            val msg = mapper(Point(x, y))
+            gameMsgSink.triggerUpdate(msg)
         }
       }
 
@@ -93,11 +96,12 @@ package object gaming {
   }
 
   class Game[Model, Msg](
-                          init: => Model,
-                          update: (Model, Msg) => Model,
-                          view: Model => Picture,
-                          subscriptions: Model => Seq[Sub[Msg]]
-                        )(implicit canvas: SCanvas) extends GameMsgSink[Msg] {
+      init: => Model,
+      update: (Model, Msg) => Model,
+      view: Model => Picture,
+      subscriptions: Model => Seq[Sub[Msg]]
+  )(implicit canvas: SCanvas)
+      extends GameMsgSink[Msg] {
     private var currModel: Model = _
     private var currSubs: Seq[Sub[Msg]] = _
     private var currView: Picture = _
@@ -119,9 +123,11 @@ package object gaming {
       }
     }
 
-    private def timerSubs: Seq[TimerSub[Msg]] = currSubs.filter(_.isInstanceOf[TimerSub[Msg]]).asInstanceOf[Seq[TimerSub[Msg]]]
+    private def timerSubs: Seq[TimerSub[Msg]] =
+      currSubs.filter(_.isInstanceOf[TimerSub[Msg]]).asInstanceOf[Seq[TimerSub[Msg]]]
 
-    private def nonTimerSubs: Seq[NonTimerSub[Msg]] = currSubs.filter(_.isInstanceOf[NonTimerSub[Msg]]).asInstanceOf[Seq[NonTimerSub[Msg]]]
+    private def nonTimerSubs: Seq[NonTimerSub[Msg]] =
+      currSubs.filter(_.isInstanceOf[NonTimerSub[Msg]]).asInstanceOf[Seq[NonTimerSub[Msg]]]
 
     private def updateView(): Unit = {
       val oldView = currView
@@ -211,9 +217,15 @@ package object gaming {
     }
 
     def collidesWith(
-                      x1: Double, y1: Double, w1: Double, h1: Double,
-                      x2: Double, y2: Double, w2: Double, h2: Double
-                    ): Boolean = {
+        x1: Double,
+        y1: Double,
+        w1: Double,
+        h1: Double,
+        x2: Double,
+        y2: Double,
+        w2: Double,
+        h2: Double
+    ): Boolean = {
       import java.awt.geom.Rectangle2D
       val r1 = new Rectangle2D.Double(x1, y1, w1, h1)
       val r2 = new Rectangle2D.Double(x2, y2, w2, h2)

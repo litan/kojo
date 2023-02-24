@@ -3,10 +3,9 @@ package net.kogics.kojo.lite.i18n
 import java.awt.Font
 import java.awt.GraphicsEnvironment
 import java.util.prefs.Preferences
-
+import javax.swing.plaf.FontUIResource
 import javax.swing.JMenu
 import javax.swing.UIManager
-import javax.swing.plaf.FontUIResource
 
 import net.kogics.kojo.lite.CoreBuiltins
 

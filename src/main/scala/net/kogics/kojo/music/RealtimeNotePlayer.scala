@@ -14,7 +14,10 @@
  */
 package net.kogics.kojo.music
 
-import javax.sound.midi.{MidiEvent, MidiSystem, Sequence, ShortMessage}
+import javax.sound.midi.MidiEvent
+import javax.sound.midi.MidiSystem
+import javax.sound.midi.Sequence
+import javax.sound.midi.ShortMessage
 
 class RealtimeNotePlayer {
   println("Initializing Midi Sequencer...")

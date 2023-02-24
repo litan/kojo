@@ -1,19 +1,18 @@
 package net.kogics.kojo.lite
 
 import java.awt.Color
-
+import javax.swing.event.ChangeEvent
 import javax.swing.JFrame
 import javax.swing.JLabel
 import javax.swing.JTabbedPane
 import javax.swing.SwingConstants
-import javax.swing.event.ChangeEvent
 
 import net.kogics.kojo.util.Utils
-import net.kogics.rithica.addition.{TopContainer => Adder}
-import net.kogics.rithica.division.{TopContainer => Divider}
-import net.kogics.rithica.multiplication.{TopContainer => Multiplier}
-import net.kogics.rithica.subtraction.{TopContainer => Subtractor}
-import net.kogics.rithica.ui.{TopContainer => ArithContainer}
+import net.kogics.rithica.addition.{ TopContainer => Adder }
+import net.kogics.rithica.division.{ TopContainer => Divider }
+import net.kogics.rithica.multiplication.{ TopContainer => Multiplier }
+import net.kogics.rithica.subtraction.{ TopContainer => Subtractor }
+import net.kogics.rithica.ui.{ TopContainer => ArithContainer }
 
 class ArithAerobicsPane(frame: JFrame, kojoCtx: KojoCtx) extends JTabbedPane {
 

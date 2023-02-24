@@ -17,9 +17,9 @@
 package net.kogics.kojo.lite.i18n.tr
 
 trait PartialFunctionMethodsInTurkish {
-  type Bölümselİşlev[D,R] = PartialFunction[D,R]
+  type Bölümselİşlev[D, R] = PartialFunction[D, R]
   // todo: implicit class doesn't work when f's type uses the alias above
-  implicit class PartialFunctionMethodsInTurkish[D,R](f: PartialFunction[D,R]) {
+  implicit class PartialFunctionMethodsInTurkish[D, R](f: PartialFunction[D, R]) {
     def tanımlıMı(d: D) = f.isDefinedAt(d)
   }
 }

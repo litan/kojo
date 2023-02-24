@@ -15,64 +15,68 @@
 
 package net.kogics.kojo.staging
 
-/**
- * Copied from java.awt.event.KeyEvent
- */
+/** Copied from java.awt.event.KeyEvent
+  */
 class KeyCodes {
 
   val VK_ENTER = '\n';
   val VK_BACK_SPACE = '\b';
   val VK_TAB = '\t';
   val VK_CANCEL = 0x03;
-  val VK_CLEAR = 0x0C;
+  val VK_CLEAR = 0x0c;
   val VK_SHIFT = 0x10;
   val VK_CONTROL = 0x11;
   val VK_ALT = 0x12;
   val VK_PAUSE = 0x13;
   val VK_CAPS_LOCK = 0x14;
-  val VK_ESCAPE = 0x1B;
+  val VK_ESCAPE = 0x1b;
   val VK_SPACE = 0x20;
   val VK_PAGE_UP = 0x21;
   val VK_PAGE_DOWN = 0x22;
   val VK_END = 0x23;
   val VK_HOME = 0x24;
-  /**
-   * Constant for the non-numpad <b>left</b> arrow key.
-   * @see #VK_KP_LEFT
-   */
+
+  /** Constant for the non-numpad <b>left</b> arrow key.
+    * @see
+    *   #VK_KP_LEFT
+    */
   val VK_LEFT = 0x25;
-  /**
-   * Constant for the non-numpad <b>up</b> arrow key.
-   * @see #VK_KP_UP
-   */
+
+  /** Constant for the non-numpad <b>up</b> arrow key.
+    * @see
+    *   #VK_KP_UP
+    */
   val VK_UP = 0x26;
-  /**
-   * Constant for the non-numpad <b>right</b> arrow key.
-   * @see #VK_KP_RIGHT
-   */
+
+  /** Constant for the non-numpad <b>right</b> arrow key.
+    * @see
+    *   #VK_KP_RIGHT
+    */
   val VK_RIGHT = 0x27;
-  /**
-   * Constant for the non-numpad <b>down</b> arrow key.
-   * @see #VK_KP_DOWN
-   */
+
+  /** Constant for the non-numpad <b>down</b> arrow key.
+    * @see
+    *   #VK_KP_DOWN
+    */
   val VK_DOWN = 0x28;
-  /**
-   * Constant for the comma key, ","
-   */
-  val VK_COMMA = 0x2C;
-  /**
-   * Constant for the minus key, "-"
-   * @since 1.2
-   */
-  val VK_MINUS = 0x2D;
-  /**
-   * Constant for the period key, "."
-   */
-  val VK_PERIOD = 0x2E;
-  /**
-   * Constant for the forward slash key, "/"
-   */
-  val VK_SLASH = 0x2F;
+
+  /** Constant for the comma key, ","
+    */
+  val VK_COMMA = 0x2c;
+
+  /** Constant for the minus key, "-"
+    * @since 1.2
+    */
+  val VK_MINUS = 0x2d;
+
+  /** Constant for the period key, "."
+    */
+  val VK_PERIOD = 0x2e;
+
+  /** Constant for the forward slash key, "/"
+    */
+  val VK_SLASH = 0x2f;
+
   /** VK_0 thru VK_9 are the same as ASCII '0' thru '9' (0x30 - 0x39) */
   val VK_0 = 0x30;
   val VK_1 = 0x31;
@@ -84,14 +88,15 @@ class KeyCodes {
   val VK_7 = 0x37;
   val VK_8 = 0x38;
   val VK_9 = 0x39;
-  /**
-   * Constant for the semicolon key, ";"
-   */
-  val VK_SEMICOLON = 0x3B;
-  /**
-   * Constant for the equals key, "="
-   */
-  val VK_EQUALS = 0x3D;
+
+  /** Constant for the semicolon key, ";"
+    */
+  val VK_SEMICOLON = 0x3b;
+
+  /** Constant for the equals key, "="
+    */
+  val VK_EQUALS = 0x3d;
+
   /** VK_A thru VK_Z are the same as ASCII 'A' thru 'Z' (0x41 - 0x5A) */
   val VK_A = 0x41;
   val VK_B = 0x42;
@@ -102,12 +107,12 @@ class KeyCodes {
   val VK_G = 0x47;
   val VK_H = 0x48;
   val VK_I = 0x49;
-  val VK_J = 0x4A;
-  val VK_K = 0x4B;
-  val VK_L = 0x4C;
-  val VK_M = 0x4D;
-  val VK_N = 0x4E;
-  val VK_O = 0x4F;
+  val VK_J = 0x4a;
+  val VK_K = 0x4b;
+  val VK_L = 0x4c;
+  val VK_M = 0x4d;
+  val VK_N = 0x4e;
+  val VK_O = 0x4f;
   val VK_P = 0x50;
   val VK_Q = 0x51;
   val VK_R = 0x52;
@@ -118,5 +123,5 @@ class KeyCodes {
   val VK_W = 0x57;
   val VK_X = 0x58;
   val VK_Y = 0x59;
-  val VK_Z = 0x5A;
+  val VK_Z = 0x5a;
 }

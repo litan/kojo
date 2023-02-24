@@ -1,19 +1,19 @@
 package net.kogics.kojo
 package core
 
+import java.awt.geom.AffineTransform
+import java.awt.image.BufferedImage
+import java.awt.image.BufferedImageOp
 import java.awt.Paint
 import java.awt.Shape
-import java.awt.geom.AffineTransform
-import java.awt.image.{BufferedImage, BufferedImageOp}
-import com.vividsolutions.jts.geom.Geometry
 
+import com.vividsolutions.jts.geom.Geometry
+import edu.umd.cs.piccolo.util.PBounds
+import edu.umd.cs.piccolo.PNode
 import net.kogics.kojo.kgeom.PolyLine
+import net.kogics.kojo.picture.ImageOp
 import net.kogics.kojo.util.Utils
 import net.kogics.kojo.util.Vector2D
-
-import edu.umd.cs.piccolo.PNode
-import edu.umd.cs.piccolo.util.PBounds
-import net.kogics.kojo.picture.ImageOp
 
 trait Picture extends InputAware {
   def canvas: SCanvas
@@ -28,7 +28,7 @@ trait Picture extends InputAware {
   def scaleAboutPoint(factor: Double, x: Double, y: Double): Unit
   def scaleAboutPoint(factorX: Double, factorY: Double, x: Double, y: Double): Unit
   def scale(xFactor: Double, yFactor: Double): Unit
-  def shear(shearX:Double, shearY:Double):Unit
+  def shear(shearX: Double, shearY: Double): Unit
   def translate(x: Double, y: Double): Unit
   def translate(v: Vector2D): Unit = translate(v.x, v.y): Unit
   def transv(v: Vector2D) = translate(v.x, v.y): Unit
@@ -179,7 +179,7 @@ trait Picture extends InputAware {
     animateToPosition(pos0.x + dx, pos0.y + dy, inMillis)(onEnd)
   }
 
-  def withRotation(angle: Double): Picture =  thatsRotated(angle)
+  def withRotation(angle: Double): Picture = thatsRotated(angle)
   def withRotationAround(angle: Double, x: Double, y: Double): Picture = thatsRotatedAround(angle, x, y)
   def withTranslation(x: Double, y: Double): Picture = thatsTranslated(x, y)
   def withScaling(factor: Double): Picture = thatsScaled(factor)
@@ -187,7 +187,7 @@ trait Picture extends InputAware {
   def withScalingAround(factor: Double, x: Double, y: Double): Picture = thatsScaledAround(factor, x, y)
   def withScalingAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture =
     thatsScaledAround(factorX, factorY, x, y)
-  def withShear(shearX:Double, shearY:Double): Picture = thatsSheared(shearX, shearY)
+  def withShear(shearX: Double, shearY: Double): Picture = thatsSheared(shearX, shearY)
   def withFillColor(color: Paint): Picture = thatsFilledWith(color)
   def withPenColor(color: Paint): Picture = thatsStrokeColored(color)
   def withPenThickness(t: Double): Picture = thatsStrokeSized(t)
@@ -200,7 +200,7 @@ trait Picture extends InputAware {
   def thatsScaled(factorX: Double, factorY: Double): Picture
   def thatsScaledAround(factor: Double, x: Double, y: Double): Picture
   def thatsScaledAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture
-  def thatsSheared(shearX:Double, shearY:Double):Picture
+  def thatsSheared(shearX: Double, shearY: Double): Picture
   def thatsFilledWith(color: Paint): Picture
   def thatsStrokeColored(color: Paint): Picture
   def thatsStrokeSized(t: Double): Picture

@@ -2,7 +2,7 @@
 package net.kogics.kojo
 
 package object syntax {
-  object angle      extends AngleSyntax
+  object angle extends AngleSyntax
   object normalized extends NormalizedSyntax
-  object uByte      extends UnsignedByteSyntax
+  object uByte extends UnsignedByteSyntax
 }

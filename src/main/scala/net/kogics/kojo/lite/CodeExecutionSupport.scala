@@ -15,26 +15,25 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.Color
-import java.awt.Cursor
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.Color
+import java.awt.Cursor
 import java.io.OutputStream
 import java.io.PrintStream
 import java.io.Writer
 import java.util.logging.Logger
-
-import javax.swing.JButton
-import javax.swing.JTextArea
 import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.text.Utilities
+import javax.swing.JButton
+import javax.swing.JTextArea
 
 import net.kogics.kojo.core.CodingMode
-import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.core.Interpreter
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.TwMode
+import net.kogics.kojo.core.VanillaMode
 import net.kogics.kojo.history.CommandHistory
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.lite.i18n.LangInit
@@ -43,25 +42,22 @@ import net.kogics.kojo.livecoding.InteractiveManipulator
 import net.kogics.kojo.livecoding.ManipulationContext
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.FutureResult
-
 import util.Utils
 
 object CodeExecutionSupport {
 
-  /**Contains the goal a user wants to reach, and the action he has to take for this.*/
+  /** Contains the goal a user wants to reach, and the action he has to take for this. */
   private case class Line(goal: String, action: Option[String])
 
-  /**The End-of-Line String used to separate lines of the welcome message*/
+  /** The End-of-Line String used to separate lines of the welcome message */
   val EOL = "\n"
-  val goalActionSeparator = "→" //instead of -> in order to save one position. Christoph 2017-02-24
+  val goalActionSeparator = "→" // instead of -> in order to save one position. Christoph 2017-02-24
 
-  /**
-   * Composes a welcome message from the head and a tabulated arrangement of the instructions.
-   * Each instruction should have the format "goal -> action".
-   * The instructions are splitted at the first occurrence of "->" and then tabulated.
-   * The "->" are replaced by the unicode arrow \u2192 "→" in order to save one character position.
-   * In the end all "→" are one below another when using a monospace font.
-   */
+  /** Composes a welcome message from the head and a tabulated arrangement of the instructions. Each instruction should
+    * have the format "goal -> action". The instructions are splitted at the first occurrence of "->" and then
+    * tabulated. The "->" are replaced by the unicode arrow \u2192 "→" in order to save one character position. In the
+    * end all "→" are one below another when using a monospace font.
+    */
   def makeTabulatedWelcomeMessage(head: String, instructions: List[String]): String = {
     require(head != null, "head != null")
     require(instructions != null, "instructions != null")
@@ -73,20 +69,20 @@ object CodeExecutionSupport {
     val maxGoalLine = (Line("", None) :: instructionsTrimmed).maxBy(line => line.goal.length)
     val maxGoalLen = maxGoalLine.goal.length
     val sb = new StringBuilder(head)
-    sb append EOL
+    sb.append(EOL)
     for (instr <- instructionsTrimmed) {
-      sb append "* "
-      sb append instr.goal
+      sb.append("* ")
+      sb.append(instr.goal)
       instr.action match {
         case Some(a) =>
-          sb append " " * (maxGoalLen - instr.goal.length)
-          sb append " "
-          sb append goalActionSeparator
-          sb append " "
-          sb append a
-        case None => //Nothing to append
+          sb.append(" " * (maxGoalLen - instr.goal.length))
+          sb.append(" ")
+          sb.append(goalActionSeparator)
+          sb.append(" ")
+          sb.append(a)
+        case None => // Nothing to append
       }
-      sb append EOL
+      sb.append(EOL)
     }
     sb.toString
   }
@@ -94,19 +90,21 @@ object CodeExecutionSupport {
 }
 
 class CodeExecutionSupport(
-  TSCanvas:      DrawingCanvasAPI,
-  Tw:            TurtleWorldAPI,
-  Staging:       staging.API,
-  storyTeller:   story.StoryTeller,
-  mp3player:     music.KMp3,
-  fuguePlayer:   music.FuguePlayer,
-  tCanvas:       SpriteCanvas,
-  scriptEditor0: => ScriptEditor,
-  val kojoCtx:   core.KojoCtx
-) extends core.CodeExecutionSupport with core.CodeCompletionSupport with ManipulationContext {
+    TSCanvas: DrawingCanvasAPI,
+    Tw: TurtleWorldAPI,
+    Staging: staging.API,
+    storyTeller: story.StoryTeller,
+    mp3player: music.KMp3,
+    fuguePlayer: music.FuguePlayer,
+    tCanvas: SpriteCanvas,
+    scriptEditor0: => ScriptEditor,
+    val kojoCtx: core.KojoCtx
+) extends core.CodeExecutionSupport
+    with core.CodeCompletionSupport
+    with ManipulationContext {
   // the script editor that gets passed in is not yet inited (the last remaining circular dependency!)
   // we access it via a lazy val
-  // and then import the stuff inside it, 
+  // and then import the stuff inside it,
   // which we could not do if we used a regular var that was inited in phase 2
   lazy val scriptEditor = scriptEditor0
   import scriptEditor._
@@ -243,7 +241,7 @@ class CodeExecutionSupport(
       showOutput(Utils.loadString("S_OutputScratchpadHistoryNotSave") + "\n", Color.red)
     }
     else {
-      val head = Utils.loadString("S_OutputWelcome") format Versions.KojoVersion
+      val head = Utils.loadString("S_OutputWelcome").format(Versions.KojoVersion)
       val instructions = List(
         Utils.loadString("S_OutputVisualPalette"),
         Utils.loadString("S_OutputHelp"),
@@ -836,20 +834,22 @@ class CodeExecutionSupport(
 
   // impure function!
   def extendSelection(code2run: CodeToRun) = {
-    code2run.selection.map {
-      case (selStart, selEnd) =>
-        val selStartLine = codePane.getLineOfOffset(selStart)
-        val selEndLine = codePane.getLineOfOffset(selEnd)
-        val selStartLineStart = codePane.getLineStartOffset(selStartLine)
-        val selStartLineEnd = getVisibleLineEndOffset(selStartLine)
-        val selEndLineStart = codePane.getLineStartOffset(selEndLine)
-        val selEndLineEnd = getVisibleLineEndOffset(selEndLine)
-        val newSelStart = if (selStartLineEnd == selStart) selStart else selStartLineStart
-        val newSelEnd = if (selEndLineStart == selEnd) selEnd else selEndLineEnd
-        codePane.setSelectionStart(newSelStart)
-        codePane.setSelectionEnd(newSelEnd)
-        CodeToRun(codePane.getSelectedText, Some(newSelStart, newSelEnd))
-    } getOrElse code2run
+    code2run.selection
+      .map {
+        case (selStart, selEnd) =>
+          val selStartLine = codePane.getLineOfOffset(selStart)
+          val selEndLine = codePane.getLineOfOffset(selEnd)
+          val selStartLineStart = codePane.getLineStartOffset(selStartLine)
+          val selStartLineEnd = getVisibleLineEndOffset(selStartLine)
+          val selEndLineStart = codePane.getLineStartOffset(selEndLine)
+          val selEndLineEnd = getVisibleLineEndOffset(selEndLine)
+          val newSelStart = if (selStartLineEnd == selStart) selStart else selStartLineStart
+          val newSelEnd = if (selEndLineStart == selEnd) selEnd else selEndLineEnd
+          codePane.setSelectionStart(newSelStart)
+          codePane.setSelectionEnd(newSelEnd)
+          CodeToRun(codePane.getSelectedText, Some(newSelStart, newSelEnd))
+      }
+      .getOrElse(code2run)
   }
 
   // Impure function!
@@ -939,7 +939,8 @@ class CodeExecutionSupport(
     val codeAndOffset = completionCodeAndOffset(caretOffset)
     codeRunner.memberCompletions(codeAndOffset._1, codeAndOffset._2, objid, prefix)
   }
-  def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) = xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
+  def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) =
+    xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
   def typeAt(caretOffset: Int) = {
     val codeAndOffset = completionCodeAndOffset(caretOffset)
     codeRunner.typeAt(codeAndOffset._1, codeAndOffset._2)
@@ -1011,8 +1012,7 @@ class CodeExecutionSupport(
       //        codePane.requestFocusInWindow
     }
 
-    def codeRunError() = {
-    }
+    def codeRunError() = {}
 
     def codeRun(code: String): Unit = {
       val tcode = code.trim()

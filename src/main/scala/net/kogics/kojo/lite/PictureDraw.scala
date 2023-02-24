@@ -14,8 +14,9 @@
  */
 package net.kogics.kojo.lite
 
-import net.kogics.kojo.util.Utils
 import java.awt.geom.AffineTransform
+
+import net.kogics.kojo.util.Utils
 
 class PictureDraw(val b: Builtins) {
   import b._
@@ -135,7 +136,7 @@ class PictureDraw(val b: Builtins) {
 
   def arc(cx: Double, cy: Double, width: Double, height: Double, start: Double, extent: Double) = {
     // not quite the full deal
-    returnPic(cx, cy, Picture.arc(width/2, -extent.toDegrees))
+    returnPic(cx, cy, Picture.arc(width / 2, -extent.toDegrees))
   }
 
   def line(x1: Double, y1: Double, x2: Double, y2: Double) = {

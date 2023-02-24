@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
- *   Lalit Pant <pant.lalit@gmail.com> 
+ *   Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -19,14 +19,15 @@
 
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.xscala.RepeatCommands
 
 object CroatianAPI {
-  import net.kogics.kojo.core.Turtle
   import java.awt.Color
-  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
+
+  import net.kogics.kojo.core.Turtle
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ // unstable reference to module
 
   trait CroatianTurtle {
     def englishTurtle: Turtle
@@ -42,8 +43,8 @@ object CroatianAPI {
     def skočiNa(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
     def idiNa(x: Double, y: Double) = englishTurtle.moveTo(x, y)
     def skoči(n: Double) = {
-      englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop(n) //hop change state to penDown after hop
+      englishTurtle.saveStyle() // to preserve pen state
+      englishTurtle.hop(n) // hop change state to penDown after hop
       englishTurtle.restoreStyle()
     }
     def skoči(): Unit = skoči(25)
@@ -78,11 +79,12 @@ object CroatianAPI {
     def sljedećiKostim() = englishTurtle.nextCostume()
   }
   class Kornjača(override val englishTurtle: Turtle) extends CroatianTurtle {
-    def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
+    def this(startX: Double, startY: Double, costumeFileName: String) =
+      this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
   }
-  class Kornjača0(t0: => Turtle) extends CroatianTurtle { //by-name construction as turtle0 is volatile }
+  class Kornjača0(t0: => Turtle) extends CroatianTurtle { // by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
   object kornjača extends Kornjača0(builtins.TSCanvas.turtle0)
@@ -107,7 +109,7 @@ object CroatianAPI {
   //    lazy val VK_Ö = 214
   //  }
 
-  //loops 
+  // loops
   def ponovi(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
@@ -124,13 +126,13 @@ object CroatianAPI {
     RepeatCommands.repeatFor(slijed) { block }
   }
 
-  //simple IO
+  // simple IO
   def čitajln(upit: String = "") = builtins.readln(upit)
 
-  def pišiln(data: Any) = println(data) //Transferred here from sv.tw.kojo.
+  def pišiln(data: Any) = println(data) // Transferred here from sv.tw.kojo.
   def pišiln() = println()
 
-  //math functions
+  // math functions
   def zaokruži(broj: Number, znamenka: Int = 0): Double = {
     val faktor = math.pow(10, znamenka).toDouble
     math.round(broj.doubleValue * faktor).toLong / faktor
@@ -138,7 +140,7 @@ object CroatianAPI {
   def slučajan(gornjaGranica: Int) = builtins.random(gornjaGranica)
   def slučajanDupli(gornjaGranica: Int) = builtins.randomDouble(gornjaGranica)
 
-  //some type aliases in Swedish
+  // some type aliases in Swedish
   type Broj = Int
   type Dvostruki = Double
   type Niz = String
@@ -146,7 +148,7 @@ object CroatianAPI {
 
 object hrInit {
   def init(builtins: CoreBuiltins): Unit = {
-    //initialize unstable value
+    // initialize unstable value
     CroatianAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
@@ -154,15 +156,15 @@ object hrInit {
         if (b.isScratchPad) {
           println("Povijest neće biti snimljena kada zatvorite Kojo podlogu za natuknice.")
         }
-        
+
 //        b.setEditorTabSize(2)
 
-        //code completion
+        // code completion
         b.addCodeTemplates(
           "hr",
           codeTemplates
         )
-        //help texts
+        // help texts
         b.addHelpContent(
           "hr",
           helpContent
@@ -259,7 +261,7 @@ object hrInit {
     "zrakeUgašene" -> <div><strong>zrakeUgašene</strong>() - Skriva kornjačine zrake koje su bile uključene sa <tt>zrakeUpaljene()</tt>.</div>.toString,
     "obriši" -> <div><strong>obriši</strong>() - Briše kornjačino platno i postavlja ju u sredinu.</div>.toString,
     "obrišiIzlaz" -> <div><strong>obrišiIzlaz</strong>() - Briše izlazni prozor.</div>.toString,
-    "postaviPozadinu" -> <div> <strong>postaviPozadinu</strong>(boja) - Postavlja pozadinu platna u određenu boju. Možete koristiti predefinirane boje za bojanje pozadine, ili možete stvoriti nove boje koristeći <tt>Boja</tt>, <tt>BojaHSB</tt>, i <tt>BojaG</tt> funkcije. </div> .toString,
+    "postaviPozadinu" -> <div> <strong>postaviPozadinu</strong>(boja) - Postavlja pozadinu platna u određenu boju. Možete koristiti predefinirane boje za bojanje pozadine, ili možete stvoriti nove boje koristeći <tt>Boja</tt>, <tt>BojaHSB</tt>, i <tt>BojaG</tt> funkcije. </div>.toString,
     "postaviPozadinuV" -> <div><strong>postaviPozadinuV</strong>(boja1, boja2) - Postavlja pozadinu platna u okomit obojani gradijent definiran s dvije boje. </div>.toString,
     "ponovi" -> <div><strong>ponovi</strong>(n){{ }} - Ponavlja određeni skup komandi (unutar vitičastih zagrada) n puta.<br/></div>.toString,
     "ponovii" -> <div><strong>ponovii</strong>(n) {{i => }} - Ponavlja određeni skup komandi (unutar vitičastih zagrada) n puta. Trenutna veličina iteratora dostupna je kao <tt>i</tt> unutar vitičastih zagrada. </div>.toString,

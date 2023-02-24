@@ -47,7 +47,7 @@ class Point(val x: Double, val y: Double) {
   override def hashCode: Int = 41 * (41 + x.hashCode) + y.hashCode
   override def equals(other: Any) = other match {
     case that: Point =>
-      (that canEqual this) && (this.x == that.x) && (this.y == that.y)
+      (that.canEqual(this)) && (this.x == that.x) && (this.y == that.y)
     case _ =>
       false
   }
@@ -56,7 +56,7 @@ class Point(val x: Double, val y: Double) {
 class Line(val p1: Point, val p2: Point)
 //class LineSegment(p1: Point, p2: Point) extends Line(p1, p2)
 class Ellipse(val center: Point, val w: Double, val h: Double)
-class Circle(center: Point, val radius: Double) extends Ellipse(center, 2*radius, 2*radius)
+class Circle(center: Point, val radius: Double) extends Ellipse(center, 2 * radius, 2 * radius)
 class Arc(val onEll: Ellipse, val start: Double, val extent: Double)
 class Angle(val size: Double)
 class Text(val content: String)
@@ -67,9 +67,10 @@ class Rectangle(val bLeft: Point, val tRight: Point) {
   override def toString = "Rectangle(%.2f , %.2f , %.2f , %.2f)".format(bLeft.x, bLeft.y, tRight.x, tRight.y)
 }
 class RoundRectangle(
-  override val bLeft: Point,
-  override val tRight: Point,
-  rx: Double, ry: Double
+    override val bLeft: Point,
+    override val tRight: Point,
+    rx: Double,
+    ry: Double
 ) extends Rectangle(bLeft, tRight)
 // class Square(bLeft: Point, tRight: Point) extends Rectangle(bLeft, tRight
 

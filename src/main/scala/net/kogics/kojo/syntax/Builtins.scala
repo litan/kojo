@@ -1,9 +1,11 @@
 package net.kogics.kojo.syntax
 
-import net.kogics.kojo.doodle.{ Angle, Normalized, UnsignedByte }
+import angle._
+import net.kogics.kojo.doodle.Angle
+import net.kogics.kojo.doodle.Normalized
+import net.kogics.kojo.doodle.UnsignedByte
 import normalized._
 import uByte._
-import angle._
 
 object Builtins {
   val Color = net.kogics.kojo.doodle.Color

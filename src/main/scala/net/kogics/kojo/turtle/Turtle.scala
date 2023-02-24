@@ -15,21 +15,27 @@
 package net.kogics.kojo
 package turtle
 
+import java.awt.geom.AffineTransform
+import java.awt.geom.Point2D
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Font
 import java.awt.Image
 import java.awt.Paint
 import java.awt.Stroke
-import java.awt.geom.AffineTransform
-import java.awt.geom.Point2D
 import java.util.concurrent.CountDownLatch
 
 import scala.collection.mutable
 
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.GeometryFactory
-
+import edu.umd.cs.piccolo.activities.PActivity
+import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
+import edu.umd.cs.piccolo.nodes.PImage
+import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolo.nodes.PText
+import edu.umd.cs.piccolo.PLayer
+import edu.umd.cs.piccolo.PNode
 import net.kogics.kojo.core.Point
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.core.Style
@@ -42,16 +48,14 @@ import net.kogics.kojo.turtle.TurtleHelper.thetaAfterTurn
 import net.kogics.kojo.turtle.TurtleHelper.thetaTowards
 import net.kogics.kojo.util.Utils
 
-import edu.umd.cs.piccolo.PLayer
-import edu.umd.cs.piccolo.PNode
-import edu.umd.cs.piccolo.activities.PActivity
-import edu.umd.cs.piccolo.activities.PActivity.PActivityDelegate
-import edu.umd.cs.piccolo.nodes.PImage
-import edu.umd.cs.piccolo.nodes.PPath
-import edu.umd.cs.piccolo.nodes.PText
-
-class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
-             initY: Double, hidden: Boolean = false, bottomLayer: Boolean = false) extends core.Turtle {
+class Turtle(
+    canvas: SCanvas,
+    costumeFile: String,
+    initX: Double,
+    initY: Double,
+    hidden: Boolean = false,
+    bottomLayer: Boolean = false
+) extends core.Turtle {
 
   //  private val Log = Logger.getLogger(getClass.getName)
   //  Log.info("Turtle being created in thread: " + Thread.currentThread.getName)
@@ -301,13 +305,13 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
     }
   }
 
-  // called for non-default turtles 
+  // called for non-default turtles
   def remove() = Utils.runInSwingThread {
     camera.removeLayer(layer) /*; camera.getRoot().removeChild(layer) */
     // this causes a very rare exeception for a subsequent endMove triggered by an earlier stop
     // so schedule memory reclamation for later
-    // we're reclaiming memory by clearing turtle fields because there's a reference to turtles 
-    // from the Piccolo animation timer, which makes them leak 
+    // we're reclaiming memory by clearing turtle fields because there's a reference to turtles
+    // from the Piccolo animation timer, which makes them leak
     // you can test all of this with VisualVM!
     Utils.schedule(60) {
       pen.clear()
@@ -370,7 +374,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
       throw new IllegalArgumentException("Negative delay not allowed")
     }
     // set it right here, as opposed to in the swing thread
-    // because all users of _animation delay use it within the calling thread 
+    // because all users of _animation delay use it within the calling thread
     // users are forward, arc, and moveTo
     _animationDelay = d
   }
@@ -616,7 +620,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   def setCostumes(costumeFiles: Vector[String]) = {
     require(costumeFiles.length > 1, "You need to specify at least two costumes")
     Utils.runInSwingThread {
-      costumes = Some(costumeFiles map Utils.loadImageC)
+      costumes = Some(costumeFiles.map(Utils.loadImageC))
       setCostumeHelper(costumes.get(0))
       currCostume = 0
     }
@@ -633,7 +637,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   def nextCostume() = {
     Utils.runInSwingThread {
-      costumes foreach { cseq =>
+      costumes.foreach { cseq =>
         currCostume = if (currCostume == cseq.length - 1) 0 else currCostume + 1
         setCostumeHelper(cseq(currCostume))
       }
@@ -694,7 +698,7 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
   def dumpState(): Unit = {
     Utils.runInSwingThread {
       val cIter = layer.getChildrenReference.iterator
-      println("Turtle Layer (%d children):\n" format (layer.getChildrenReference.size))
+      println("Turtle Layer (%d children):\n".format(layer.getChildrenReference.size))
       while (cIter.hasNext) {
         val node = cIter.next.asInstanceOf[PNode]
         println(stringRep(node))
@@ -704,9 +708,9 @@ class Turtle(canvas: SCanvas, costumeFile: String, initX: Double,
 
   private def stringRep(node: PNode): String = node match {
     case l: PolyLine =>
-      new StringBuilder().append("  Polyline:\n").append("    Points: %s\n" format l.points).toString
+      new StringBuilder().append("  Polyline:\n").append("    Points: %s\n".format(l.points)).toString
     case n: PNode =>
-      new StringBuilder().append("  PNode:\n").append("    Children: %s\n" format n.getChildrenReference).toString
+      new StringBuilder().append("  PNode:\n").append("    Children: %s\n".format(n.getChildrenReference)).toString
   }
 
   abstract class AbstractPen extends Pen {

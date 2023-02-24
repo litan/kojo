@@ -17,7 +17,6 @@ package net.kogics.kojo
 package codingmode
 
 import java.awt.event.ActionEvent
-
 import javax.swing.AbstractAction
 import javax.swing.JCheckBoxMenuItem
 

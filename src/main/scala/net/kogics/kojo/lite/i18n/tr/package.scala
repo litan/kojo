@@ -17,31 +17,45 @@
 
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.core.{Turtle, UnitLen, Pixel, Cm, Inch, VertexShape, Rectangle}
-import java.awt.{Color, Paint}
 import java.awt.image.BufferedImage
-import net.kogics.kojo.core.{Speed, Slow, Medium, Fast, SuperFast, Point}
+import java.awt.Color
+import java.awt.Paint
+
 import io.github.jdiemke.triangulation.Triangle2D
-import net.kogics.kojo.lite.{CoreBuiltins, Builtins}
+import net.kogics.kojo.core.Cm
+import net.kogics.kojo.core.Fast
+import net.kogics.kojo.core.Inch
+import net.kogics.kojo.core.Medium
+import net.kogics.kojo.core.Pixel
+import net.kogics.kojo.core.Point
+import net.kogics.kojo.core.Rectangle
+import net.kogics.kojo.core.Slow
+import net.kogics.kojo.core.Speed
+import net.kogics.kojo.core.SuperFast
+import net.kogics.kojo.core.Turtle
+import net.kogics.kojo.core.UnitLen
+import net.kogics.kojo.core.VertexShape
+import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
 
 package object tr {
-  var builtins: CoreBuiltins = _ //unstable reference to module
+  var builtins: CoreBuiltins = _ // unstable reference to module
   lazy val richBuiltins = builtins.asInstanceOf[Builtins]
 
   // some type aliases in Turkish -- Ctrl-t to return type info will also be in turkish
   type Nesne = Object
   type Birim = Unit
-  type Her   = Any
-  type HerDeğer  = AnyVal
-  type HerGönder = AnyRef  // Gönderge, gönderme todo...
-  type Yok   = Null
+  type Her = Any
+  type HerDeğer = AnyVal
+  type HerGönder = AnyRef // Gönderge, gönderme todo...
+  type Yok = Null
   val yok: Yok = null
-  type Hiç   = Nothing
+  type Hiç = Nothing
 
   type Boya = Paint
   type Renk = Color
 
-  type Hız  = Speed
+  type Hız = Speed
   type Nokta = Point
   type Dikdörtgen = Rectangle
   type Üçgen = Triangle2D
@@ -52,10 +66,10 @@ package object tr {
   // no type for Bit. But if there were, how about Parçacık?
 
   // duplicated from sayi.scala as they are used in other traits
-  type Lokma   = Byte
-  type Kısa    = Short
-  type Sayı    = Int
-  type Uzun    = Long
+  type Lokma = Byte
+  type Kısa = Short
+  type Sayı = Int
+  type Uzun = Long
   type İriSayı = BigInt
   type UfakKesir = Float
   type Kesir = Double
@@ -88,9 +102,9 @@ package object tr {
   type Bellekteİmge = BufferedImage
   type Bellekteİmgeİşlemi = java.awt.image.BufferedImageOp
 
-  type İşlev1[D,R] = Function1[D,R]
-  type İşlev2[D1,D2,R] = Function2[D1,D2,R]
-  type İşlev3[D1,D2,D3,R] = Function3[D1,D2,D3,R]
+  type İşlev1[D, R] = Function1[D, R]
+  type İşlev2[D1, D2, R] = Function2[D1, D2, R]
+  type İşlev3[D1, D2, D3, R] = Function3[D1, D2, D3, R]
 
   type Yazı = String
 
@@ -99,9 +113,9 @@ package object tr {
     def sesMp3üÇal(mp3dosyası: Yazı) = p.playMp3Sound(mp3dosyası)
     def çal(mp3dosyası: Yazı) = p.playMp3(mp3dosyası)
     def durdur() = p.stopMp3()
-    
+
     def önyükle(mp3dosyası: Yazı) = p.preloadMp3(mp3dosyası)
-    
+
     def döngülüÇal(mp3dosyası: Yazı) = p.playMp3Loop(mp3dosyası)
     def döngüyüDurdur() = p.stopMp3Loop()
   }

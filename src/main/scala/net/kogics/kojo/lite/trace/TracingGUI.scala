@@ -17,12 +17,11 @@ package net.kogics.kojo
 package lite
 package trace
 
-import java.awt.Color
-import java.awt.GradientPaint
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import java.awt.geom.Point2D
-
+import java.awt.Color
+import java.awt.GradientPaint
 import javax.swing.Box
 import javax.swing.BoxLayout
 import javax.swing.JButton
@@ -35,15 +34,14 @@ import javax.swing.SwingConstants
 
 import scala.collection.mutable.ArrayBuffer
 
-import net.kogics.kojo.core.Picture
-import net.kogics.kojo.lite.ScriptEditor
-import net.kogics.kojo.lite.topc.TraceHolder
-import net.kogics.kojo.picture.GPics
-import net.kogics.kojo.util.Utils
-
 import bibliothek.gui.dock.common.event.CDockableStateListener
 import bibliothek.gui.dock.common.intern.CDockable
 import bibliothek.gui.dock.common.mode.ExtendedMode
+import net.kogics.kojo.core.Picture
+import net.kogics.kojo.lite.topc.TraceHolder
+import net.kogics.kojo.lite.ScriptEditor
+import net.kogics.kojo.picture.GPics
+import net.kogics.kojo.util.Utils
 
 class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   val events: JPanel = new JPanel
@@ -102,7 +100,8 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
   }
 
   private def addEvent(me: MethodEvent): Unit = {
-    @annotation.nowarn def meSubLines(me: MethodEvent): Seq[(Point2D.Double, Point2D.Double)] = {
+    @annotation.nowarn
+    def meSubLines(me: MethodEvent): Seq[(Point2D.Double, Point2D.Double)] = {
       def nodeSeq = me.turtlePoints match {
         case Some(tp) => Vector(tp)
         case None     => Vector()
@@ -110,12 +109,13 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
 
       me.subcalls match {
         case Seq()   => nodeSeq
-        case x +: xs => nodeSeq ++ meSubLines(x) ++ (xs flatMap meSubLines)
+        case x +: xs => nodeSeq ++ meSubLines(x) ++ (xs.flatMap(meSubLines))
 
       }
     }
 
-    @annotation.nowarn def meSubTurns(me: MethodEvent): Seq[(Point2D.Double, Double, Double)] = {
+    @annotation.nowarn
+    def meSubTurns(me: MethodEvent): Seq[(Point2D.Double, Double, Double)] = {
       def nodeSeq = me.turtleTurn match {
         case Some(tt) => Vector(tt)
         case None     => Vector()
@@ -123,7 +123,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
 
       me.subcalls match {
         case Seq()   => nodeSeq
-        case x +: xs => nodeSeq ++ meSubTurns(x) ++ (xs flatMap meSubTurns)
+        case x +: xs => nodeSeq ++ meSubTurns(x) ++ (xs.flatMap(meSubTurns))
       }
     }
 
@@ -160,21 +160,21 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
               scriptEditor.markTraceLine(-1)
             }
 
-            currMarker foreach { _.erase() }
-            currPicsMarker foreach { p => p.setPenColor(Color.red); p.setPenThickness(2) }
+            currMarker.foreach { _.erase() }
+            currPicsMarker.foreach { p => p.setPenColor(Color.red); p.setPenThickness(2) }
             kojoCtx.repaintCanvas()
             currMarker = None
 
             currPicsMarker = mePictures(me)
             if (currPicsMarker.size > 0) {
-              currPicsMarker foreach { p => p.setPenColor(markingClr); p.setPenThickness(6) }
+              currPicsMarker.foreach { p => p.setPenColor(markingClr); p.setPenThickness(6) }
             }
             else {
               val subLines = meSubLines(me)
               if (subLines.size > 0) {
                 if (subLines.size < 375) {
                   val picCol = new ArrayBuffer[Picture]
-                  subLines foreach { ll =>
+                  subLines.foreach { ll =>
                     val pic1 = picture.stroke(Color.black) * picture.strokeWidth(10) -> kojoCtx.picLine(ll._1, ll._2)
                     val pic2 = picture.stroke(Color.yellow) * picture.strokeWidth(4) -> kojoCtx.picLine(ll._1, ll._2)
                     val marker = GPics(pic1, pic2)
@@ -196,7 +196,7 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
                     else if (p.y > maxy) maxy = p.y
                   }
 
-                  subLines foreach { ll =>
+                  subLines.foreach { ll =>
                     val p1 = ll._1; val p2 = ll._2
                     processBounds(p1)
                     processBounds(p2)
@@ -218,10 +218,26 @@ class TracingGUI(scriptEditor: ScriptEditor, kojoCtx: core.KojoCtx) {
                 val subTurns = meSubTurns(me)
                 def turnPic(turn: (Point2D.Double, Double, Double)) = {
                   val pos = turn._1; val oldTheta = turn._2; val newTheta = turn._3
-                  val arm11 = picture.stroke(Color.black) * picture.strokeWidth(10) * picture.rotp(Utils.rad2degrees(oldTheta), pos.x, pos.y) -> kojoCtx.picLine(pos, new Point2D.Double(pos.x + 25, pos.y))
-                  val arm12 = picture.stroke(Color.yellow) * picture.strokeWidth(4) * picture.rotp(Utils.rad2degrees(oldTheta), pos.x, pos.y) -> kojoCtx.picLine(pos, new Point2D.Double(pos.x + 25, pos.y))
-                  val arm21 = picture.stroke(Color.yellow) * picture.strokeWidth(10) * picture.rotp(Utils.rad2degrees(newTheta), pos.x, pos.y) -> kojoCtx.picLine(pos, new Point2D.Double(pos.x + 25, pos.y))
-                  val arm22 = picture.stroke(Color.black) * picture.strokeWidth(4) * picture.rotp(Utils.rad2degrees(newTheta), pos.x, pos.y) -> kojoCtx.picLine(pos, new Point2D.Double(pos.x + 25, pos.y))
+                  val arm11 = picture.stroke(Color.black) * picture.strokeWidth(10) * picture.rotp(
+                    Utils.rad2degrees(oldTheta),
+                    pos.x,
+                    pos.y
+                  ) -> kojoCtx.picLine(pos, new Point2D.Double(pos.x + 25, pos.y))
+                  val arm12 = picture.stroke(Color.yellow) * picture.strokeWidth(4) * picture.rotp(
+                    Utils.rad2degrees(oldTheta),
+                    pos.x,
+                    pos.y
+                  ) -> kojoCtx.picLine(pos, new Point2D.Double(pos.x + 25, pos.y))
+                  val arm21 = picture.stroke(Color.yellow) * picture.strokeWidth(10) * picture.rotp(
+                    Utils.rad2degrees(newTheta),
+                    pos.x,
+                    pos.y
+                  ) -> kojoCtx.picLine(pos, new Point2D.Double(pos.x + 25, pos.y))
+                  val arm22 = picture.stroke(Color.black) * picture.strokeWidth(4) * picture.rotp(
+                    Utils.rad2degrees(newTheta),
+                    pos.x,
+                    pos.y
+                  ) -> kojoCtx.picLine(pos, new Point2D.Double(pos.x + 25, pos.y))
                   picture.strokeWidth(5) -> GPics(arm11, arm12, arm21, arm22)
                 }
                 if (subTurns.size > 0) {

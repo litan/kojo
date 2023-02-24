@@ -18,7 +18,6 @@ import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
-
 import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JFrame
@@ -96,9 +95,15 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
   val r6 = RowPanel(filler(7), Label(Utils.loadString("S_ImageExport")))
   val r7 = RowPanel(
     filler(10),
-    Label(Utils.loadString("S_DPI")), dpiTf, filler(3),
-    Label(Utils.loadString("S_Dimension")), dimensionDd, filler(3),
-    Label(Utils.loadString("S_Inches")), inchesDd, filler(3)
+    Label(Utils.loadString("S_DPI")),
+    dpiTf,
+    filler(3),
+    Label(Utils.loadString("S_Dimension")),
+    dimensionDd,
+    filler(3),
+    Label(Utils.loadString("S_Inches")),
+    inchesDd,
+    filler(3)
   )
 
   def changeModality(modal: Boolean): Unit = {
@@ -187,18 +192,20 @@ class SettingsWindow(owner: JFrame) extends JDialog(owner) {
             }
         }
       }
-      val newDpi = if (newInches.trim == "") "" else {
-        val v = dpiTf.value
-        try {
-          assert(v.toInt > 0)
-          v
+      val newDpi =
+        if (newInches.trim == "") ""
+        else {
+          val v = dpiTf.value
+          try {
+            assert(v.toInt > 0)
+            v
+          }
+          catch {
+            case throwable: Throwable =>
+              newInches = ""
+              ""
+          }
         }
-        catch {
-          case throwable: Throwable =>
-            newInches = ""
-            ""
-        }
-      }
       val newDimension = dimensionDd.value
       val m = Map(
         "theme" -> newTheme,

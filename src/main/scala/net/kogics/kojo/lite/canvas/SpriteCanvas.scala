@@ -16,21 +16,38 @@ package net.kogics.kojo
 package lite
 package canvas
 
+import java.awt.event.ActionEvent
+import java.awt.event.ActionListener
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
+import java.awt.event.InputEvent
+import java.awt.event.MouseEvent
+import java.awt.geom.Point2D
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.GradientPaint
 import java.awt.Paint
-import java.awt.event.{ActionEvent, ActionListener, ComponentAdapter, ComponentEvent, InputEvent, MouseEvent}
-import java.awt.geom.Point2D
 import java.util.concurrent.Future
 import java.util.logging.Logger
-
+import javax.swing.event.PopupMenuEvent
+import javax.swing.event.PopupMenuListener
 import javax.swing.JCheckBoxMenuItem
 import javax.swing.JMenuItem
 import javax.swing.JPopupMenu
-import javax.swing.event.PopupMenuEvent
-import javax.swing.event.PopupMenuListener
 
+import edu.umd.cs.piccolo.activities.PActivity
+import edu.umd.cs.piccolo.event.PBasicInputEventHandler
+import edu.umd.cs.piccolo.event.PInputEvent
+import edu.umd.cs.piccolo.event.PInputEventFilter
+import edu.umd.cs.piccolo.event.PInputEventListener
+import edu.umd.cs.piccolo.event.PPanEventHandler
+import edu.umd.cs.piccolo.event.PZoomEventHandler
+import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolo.nodes.PText
+import edu.umd.cs.piccolo.util.PPaintContext
+import edu.umd.cs.piccolo.PCanvas
+import edu.umd.cs.piccolo.PNode
+import edu.umd.cs.piccolox.pswing.PSwingCanvas
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Pixel
@@ -42,20 +59,6 @@ import net.kogics.kojo.staging.Rectangle
 import net.kogics.kojo.turtle.Turtle
 import net.kogics.kojo.util.FileChooser
 import net.kogics.kojo.util.Utils
-
-import edu.umd.cs.piccolo.PCanvas
-import edu.umd.cs.piccolo.PNode
-import edu.umd.cs.piccolo.activities.PActivity
-import edu.umd.cs.piccolo.event.PBasicInputEventHandler
-import edu.umd.cs.piccolo.event.PInputEvent
-import edu.umd.cs.piccolo.event.PInputEventFilter
-import edu.umd.cs.piccolo.event.PInputEventListener
-import edu.umd.cs.piccolo.event.PPanEventHandler
-import edu.umd.cs.piccolo.event.PZoomEventHandler
-import edu.umd.cs.piccolo.nodes.PPath
-import edu.umd.cs.piccolo.nodes.PText
-import edu.umd.cs.piccolo.util.PPaintContext
-import edu.umd.cs.piccolox.pswing.PSwingCanvas
 
 class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas {
   val origLayer = getLayer()
@@ -212,7 +215,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     override def mouseWheelRotated(e: PInputEvent): Unit = {
       // If wheelRotation is 10, zoomFactor is 0, which causes an exception in zoomBy
-      // If wheelRotation is > 10, zoomFactor is < 0.  The fix is to limit 
+      // If wheelRotation is > 10, zoomFactor is < 0.  The fix is to limit
       // wheelRotation to 9.
       if (getZoomEventHandler != null) {
         val wheelRotation = math.min(e.getWheelRotation, 9)
@@ -348,8 +351,8 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     val labelPrec = if (scale % seedDelta == 0) math.log10(scale).round else prec
 
-    val labelText = "%%.%df" format (labelPrec)
-    val deltaFinder = "%%.%df" format (if (prec == 0) prec else prec - 1)
+    val labelText = "%%.%df".format(labelPrec)
+    val deltaFinder = "%%.%df".format(if (prec == 0) prec else prec - 1)
 
     val delta = {
       val d = seedDelta
@@ -425,10 +428,10 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
         axes.addChild(tick)
 
         if (!Utils.doublesEqual(ycoord, 0, 1 / math.pow(10, prec + 1))) {
-          val label = new PText(labelText format (ycoord))
+          val label = new PText(labelText.format(ycoord))
           label.setOffset(pt2.getX.toFloat, pt2.getY.toFloat)
           if (isInteger(label.getText)) {
-            label.setText("%.0f" format (ycoord))
+            label.setText("%.0f".format(ycoord))
             label.setTextPaint(TickIntegerLabelColor)
           }
           else {
@@ -463,10 +466,10 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
           axes.addChild(label)
         }
         else {
-          val label = new PText(labelText format (xcoord))
+          val label = new PText(labelText.format(xcoord))
           label.setOffset(pt2.getX.toFloat, pt2.getY.toFloat)
           if (isInteger(label.getText)) {
-            label.setText("%.0f" format (xcoord))
+            label.setText("%.0f".format(xcoord))
             label.setTextPaint(TickIntegerLabelColor)
           }
           else {
@@ -502,11 +505,13 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   def zoomBy(factor: Double, mousePos: Point2D): Unit = {
     require(factor != 0, "Zoom factor can't be 0.")
     val czoom = currZoom
-    if ((czoom < 1.0E-30 && factor < 1) ||
-      (czoom > 1.0E30 && factor > 1)) {
-      // restrict current zoom to practically usable range, with plenty to spare - canvas items 
-      // disappear after a zoom of approximately 1.0E(+-)10. 
-      // without restriction, the current zoom eventually becomes NaN or Infinity  
+    if (
+      (czoom < 1.0e-30 && factor < 1) ||
+      (czoom > 1.0e30 && factor > 1)
+    ) {
+      // restrict current zoom to practically usable range, with plenty to spare - canvas items
+      // disappear after a zoom of approximately 1.0E(+-)10.
+      // without restriction, the current zoom eventually becomes NaN or Infinity
       return
     }
 
@@ -639,9 +644,9 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   private def clearHelper(): Unit = {
-    // can't stop animation because it kills animations that run from within 
+    // can't stop animation because it kills animations that run from within
     // code blocks inside stories
-    // kojoCtx.stopAnimation()  
+    // kojoCtx.stopAnimation()
     gridOff()
     axesOff()
     Utils.runInSwingThreadAndWait {
@@ -766,7 +771,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
       requestFocusInWindow()
       getRoot.getDefaultInputManager.setKeyboardFocus(globalEl)
     }
-    // try to make this play well with 
+    // try to make this play well with
     // (a) a slow system or a fast system
     // (b) a toggle call at the beginning of a script or an activate call at the end
     Utils.schedule(0) { grabFocus() }
@@ -789,7 +794,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     c match {
       case color: Color if color.getAlpha == 255 =>
         // full screen windows get messed up with transparent color backgrounds
-        // so set window background only if color is fully opaque 
+        // so set window background only if color is fully opaque
         setBackgroundWrapper(color)
       case _ =>
         val bounds = cbounds
@@ -848,8 +853,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   }
 
   import core.Picture
-  val noPic = picture.Pic { t =>
-  }
+  val noPic = picture.Pic { t => }
   @volatile var stage: Picture = _
   @volatile var stageLeft: Picture = _
   @volatile var stageTop: Picture = _
@@ -902,13 +906,13 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     stage.draw()
   }
 
-  override protected def sendInputEventToInputManager(event: InputEvent, typ: Int): Unit = {
+  protected override def sendInputEventToInputManager(event: InputEvent, typ: Int): Unit = {
     try {
       super.sendInputEventToInputManager(event, typ)
     }
     catch {
       case _: RuntimeException =>
-        // Ignore events that Piccolo is unable to handle
+      // Ignore events that Piccolo is unable to handle
     }
   }
 
@@ -1029,7 +1033,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
 
     addSeparator()
 
-    add("<html><em>%s</em></html>" format (Utils.loadString("S_MouseActions")))
+    add("<html><em>%s</em></html>".format(Utils.loadString("S_MouseActions")))
     addPopupMenuListener(new PopupMenuListener {
       def popupMenuWillBecomeVisible(e: PopupMenuEvent): Unit = {
         axesItem.setState(_showAxes)

@@ -1,8 +1,14 @@
 package net.kogics.kojo.util
 
-import java.io.{BufferedOutputStream, File, FileInputStream, FileOutputStream, InputStream}
-import java.net.{HttpURLConnection, URL}
-import java.util.zip.{ZipEntry, ZipInputStream}
+import java.io.BufferedOutputStream
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
 
 import scala.reflect.io.Directory
 

@@ -1,11 +1,14 @@
 package net.kogics.kojo.livecoding
 
+import java.awt.event.ActionEvent
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Point
-import java.awt.event.ActionEvent
 import java.util.regex.Pattern
-
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.text.JTextComponent
+import javax.swing.text.Utilities
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory
 import javax.swing.JColorChooser
@@ -15,10 +18,6 @@ import javax.swing.JPanel
 import javax.swing.KeyStroke
 import javax.swing.PopupFactory
 import javax.swing.SwingUtilities
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
-import javax.swing.text.JTextComponent
-import javax.swing.text.Utilities
 
 import net.kogics.kojo.util.Utils
 
@@ -72,7 +71,7 @@ class ColorMakerManipulatorHexRgb(ctx: ManipulationContext) extends InteractiveM
       val lineOffset = offset - lineStart
       if (start <= lineOffset && lineOffset <= end) {
         target = m.group
-        val rgba = Seq(3, 4, 5, 7) map { e =>
+        val rgba = Seq(3, 4, 5, 7).map { e =>
           val ret = m.group(e)
           if (ret != null) ret.toInt else 255
         }
@@ -158,7 +157,12 @@ class ColorMakerManipulatorHexRgb(ctx: ManipulationContext) extends InteractiveM
               "ColorMaker.rgb(%d, %d, %d)".format(newColor.getRed, newColor.getGreen, newColor.getBlue)
             }
             else {
-              "ColorMaker.rgba(%d, %d, %d, %d)".format(newColor.getRed, newColor.getGreen, newColor.getBlue, newColor.getAlpha)
+              "ColorMaker.rgba(%d, %d, %d, %d)".format(
+                newColor.getRed,
+                newColor.getGreen,
+                newColor.getBlue,
+                newColor.getAlpha
+              )
             }
             doc.insertString(targetStart, target, null);
             inSliderChange = false

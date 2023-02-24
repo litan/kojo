@@ -16,11 +16,10 @@
 package net.kogics.kojo
 package staging
 
-import util.Utils
-import core._
-
 import edu.umd.cs.piccolo._
 import edu.umd.cs.piccolo.nodes._
+import net.kogics.kojo.core._
+import net.kogics.kojo.util.Utils
 
 object Sprite {
   def apply(p1: Point, fname: String) = {
@@ -43,9 +42,9 @@ class Sprite(val origin: Point, fname: String) extends BaseShape {
 
   val width = image.getWidth
   val height = image.getHeight
-  
+
   image.getTransformReference(true).setToScale(1, -1)
-  image.setOffset(-width/2, height/2)
+  image.setOffset(-width / 2, height / 2)
 
   imageHolder.addChild(image)
   imageHolder.setOffset(origin.x, origin.y)

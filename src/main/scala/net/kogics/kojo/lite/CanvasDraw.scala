@@ -1,8 +1,8 @@
 package net.kogics.kojo.lite
 
-import net.kogics.kojo.core.VertexShapeSupport
-
 import java.awt.geom.GeneralPath
+
+import net.kogics.kojo.core.VertexShapeSupport
 
 class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b: Builtins) extends VertexShapeSupport {
 

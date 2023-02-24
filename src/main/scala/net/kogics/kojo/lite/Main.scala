@@ -15,26 +15,25 @@
 package net.kogics.kojo
 package lite
 
+import java.awt.event.WindowAdapter
+import java.awt.event.WindowEvent
 import java.awt.BorderLayout
 import java.awt.Font
 import java.awt.Frame
 import java.awt.Toolkit
-import java.awt.event.WindowAdapter
-import java.awt.event.WindowEvent
 import java.io.File
 import java.util.logging.FileHandler
 import java.util.logging.Level
 import java.util.logging.Logger
 import java.util.logging.SimpleFormatter
-
 import javax.swing.JFrame
 import javax.swing.UIManager
 import javax.swing.WindowConstants
 
 import scala.jdk.CollectionConverters._
 
-import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
-
+import bibliothek.gui.dock.common.theme.ThemeMap
+import bibliothek.gui.dock.common.CControl
 import net.kogics.kojo.history.HistoryPanel
 import net.kogics.kojo.lite.canvas.SpriteCanvas
 import net.kogics.kojo.lite.topc.ArithAerobicsHolder
@@ -48,9 +47,7 @@ import net.kogics.kojo.music.KMp3
 import net.kogics.kojo.story.StoryTeller
 import net.kogics.kojo.turtle.TurtleWorldAPI
 import net.kogics.kojo.util.Utils
-
-import bibliothek.gui.dock.common.CControl
-import bibliothek.gui.dock.common.theme.ThemeMap
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
 object Main extends AppMenu with ScriptLoader { main =>
   @volatile var codePane: RSyntaxTextArea = _
@@ -64,9 +61,12 @@ object Main extends AppMenu with ScriptLoader { main =>
     val sysProps = System.getProperties.asScala.toBuffer
 
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%6$s%n")
-    // app name needs to be set right in the beginning (this applies to Mac; is ignored elsewhere) 
+    // app name needs to be set right in the beginning (this applies to Mac; is ignored elsewhere)
     System.setProperty("apple.awt.application.name", "Kojo")
-    kojoCtx = new KojoCtx(args.length == 1 && args(0) == "subKojo") // context needs to be created right up front to set user language
+    kojoCtx =
+      new KojoCtx(
+        args.length == 1 && args(0) == "subKojo"
+      ) // context needs to be created right up front to set user language
     if (Utils.isMac) {
       try {
         new MacTweaks().tweak(frame)
@@ -184,9 +184,9 @@ object Main extends AppMenu with ScriptLoader { main =>
     Log.info(s"Kojo version: ${Versions.KojoMajorVersion}, ${Versions.KojoVersion}")
     Log.info(s"Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}")
     val sortedSysProps = sysProps.sorted.foldLeft(new StringBuilder) {
-        case (sb, kv) =>
-          sb append s"\n${kv._1} = ${kv._2}"
-      }
+      case (sb, kv) =>
+        sb.append(s"\n${kv._1} = ${kv._2}")
+    }
     Log.info(s"System Properties:$sortedSysProps\n\n")
   }
 

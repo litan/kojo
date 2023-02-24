@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
  *   Lalit Pant <pant.lalit@gmail.com>,
  *   Mikołaj Sochacki <mbsochacki@wp.pl>
@@ -20,44 +20,45 @@
 
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
 
 object PolishAPI {
-  import net.kogics.kojo.core.Turtle
   import java.awt.Color
-  var builtins: net.kogics.kojo.lite.CoreBuiltins = _  //unstable reference to module
-  
+
+  import net.kogics.kojo.core.Turtle
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ // unstable reference to module
+
   trait PolishTurtle {
     def englishTurtle: Turtle
-    def czyść() = englishTurtle.clear() 
-    def pokaż() = englishTurtle.visible() 
-    def ukryj() = englishTurtle.invisible() 
-    def naprzód(kroki: Double) = englishTurtle.forward(kroki) 
-    def naprzód() = englishTurtle.forward(25) 
+    def czyść() = englishTurtle.clear()
+    def pokaż() = englishTurtle.visible()
+    def ukryj() = englishTurtle.invisible()
+    def naprzód(kroki: Double) = englishTurtle.forward(kroki)
+    def naprzód() = englishTurtle.forward(25)
     def tył() = englishTurtle.back()
-    def tył(kroki:Double) = englishTurtle.back(kroki)
-    def prawo(kąt: Double) = englishTurtle.right(kąt) 
-    def prawo() = englishTurtle.right(90) 
-    def lewo(kąt: Double) = englishTurtle.left(kąt) 
-    def lewo() = englishTurtle.left(90) 
-    def skoczDo(x: Double, y: Double) = englishTurtle.jumpTo(x, y) 
-    def idźDo(x: Double, y: Double) = englishTurtle.moveTo(x, y) 
+    def tył(kroki: Double) = englishTurtle.back(kroki)
+    def prawo(kąt: Double) = englishTurtle.right(kąt)
+    def prawo() = englishTurtle.right(90)
+    def lewo(kąt: Double) = englishTurtle.left(kąt)
+    def lewo() = englishTurtle.left(90)
+    def skoczDo(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
+    def idźDo(x: Double, y: Double) = englishTurtle.moveTo(x, y)
     def skocz(kroki: Double) = {
-      englishTurtle.saveStyle() 
-      englishTurtle.hop(kroki) 
+      englishTurtle.saveStyle()
+      englishTurtle.hop(kroki)
       englishTurtle.restoreStyle()
     }
     def skocz(): Unit = skocz(25)
-    def dom() = englishTurtle.home() 
-    def kierunek(x: Double, y: Double) = englishTurtle.towards(x, y) 
-    def ustawKąt(kąt: Double) = englishTurtle.setHeading(kąt) 
-    def kąt = englishTurtle.heading 
-    def wschód() = englishTurtle.setHeading(0) 
+    def dom() = englishTurtle.home()
+    def kierunek(x: Double, y: Double) = englishTurtle.towards(x, y)
+    def ustawKąt(kąt: Double) = englishTurtle.setHeading(kąt)
+    def kąt = englishTurtle.heading
+    def wschód() = englishTurtle.setHeading(0)
     def zachód() = englishTurtle.setHeading(180)
-    def północ() = englishTurtle.setHeading(90) 
+    def północ() = englishTurtle.setHeading(90)
     def południe() = englishTurtle.setHeading(-90)
-    def spowolnij(n: Long) = englishTurtle.setAnimationDelay(n) 
+    def spowolnij(n: Long) = englishTurtle.setAnimationDelay(n)
     def pisz(t: Any) = englishTurtle.write(t)
     def rozmiarCzcionki(s: Int) = englishTurtle.setPenFontSize(s)
     def łuk(promień: Double, kąt: Double) = englishTurtle.arc(promień, math.round(kąt).toInt)
@@ -67,10 +68,9 @@ object PolishAPI {
     def podnieśPisak() = englishTurtle.penUp()
     def czyśćStylPisaka = englishTurtle.style.down
     def kolor(c: java.awt.Color) = englishTurtle.setPenColor(c)
-    def kolorLosowy = builtins.Color(builtins.random(256), 
-	builtins.random(256), builtins.random(256))
-    def utwórzKolor(czerwony:Int, zielony:Int, niebieski:Int) = 
-	builtins.Color(czerwony, zielony, niebieski)
+    def kolorLosowy = builtins.Color(builtins.random(256), builtins.random(256), builtins.random(256))
+    def utwórzKolor(czerwony: Int, zielony: Int, niebieski: Int) =
+      builtins.Color(czerwony, zielony, niebieski)
     def wypełnienie(c: java.awt.Color) = englishTurtle.setFillColor(c)
     def grubość(n: Double) = englishTurtle.setPenThickness(n)
     def zapiszStyl() = englishTurtle.saveStyle()
@@ -84,25 +84,25 @@ object PolishAPI {
     def następnyKostium() = englishTurtle.nextCostume()
   }
   class Żółw(override val englishTurtle: Turtle) extends PolishTurtle {
-    def this(startX: Double, startY: Double, nazwaPlikuKostiumu: String) = 
-        this(builtins.TSCanvas.newTurtle(startX, startY, nazwaPlikuKostiumu))
+    def this(startX: Double, startY: Double, nazwaPlikuKostiumu: String) =
+      this(builtins.TSCanvas.newTurtle(startX, startY, nazwaPlikuKostiumu))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
-    def this() = this(0,0)
+    def this() = this(0, 0)
   }
-  class Żółw0(t0: => Turtle) extends PolishTurtle { //by-name construction as turtle0 is volatile }
+  class Żółw0(t0: => Turtle) extends PolishTurtle { // by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
   object żółw extends Żółw0(builtins.TSCanvas.turtle0)
   def czyść() = builtins.TSCanvas.clear()
   def czyśćWyjście() = builtins.clearOutput()
-  lazy val niebieski = builtins.blue //bla
-  lazy val czerwony = builtins.red 
-  lazy val żółty = builtins.yellow 
-  lazy val zielony = builtins.green 
+  lazy val niebieski = builtins.blue // bla
+  lazy val czerwony = builtins.red
+  lazy val żółty = builtins.yellow
+  lazy val zielony = builtins.green
   lazy val fioletowy = builtins.purple
-  lazy val różowy = builtins.pink 
-  lazy val brązowy = builtins.brown 
-  lazy val czarny = builtins.black 
+  lazy val różowy = builtins.pink
+  lazy val brązowy = builtins.brown
+  lazy val czarny = builtins.black
   lazy val biały = builtins.white
   lazy val przezroczysty = builtins.noColor
   lazy val szary = builtins.gray
@@ -110,8 +110,8 @@ object PolishAPI {
   def tło(kolor: Color) = builtins.setBackground(kolor)
   def tłoGradientPion(kolor1: Color, kolor2: Color) = builtins.TSCanvas.setBackgroundV(kolor1, kolor2)
   def tłoGradientPoz(kolor1: Color, kolor2: Color) = builtins.TSCanvas.setBackgroundH(kolor1, kolor2)
-  object KcPL { //Key codes Polish
-    lazy val VK_Ą = 260 
+  object KcPL { // Key codes Polish
+    lazy val VK_Ą = 260
     lazy val VK_Ę = 280
     lazy val VK_Ó = 211
     lazy val VK_Ś = 346
@@ -121,7 +121,7 @@ object PolishAPI {
     lazy val VK_Ć = 262
     lazy val VK_Ń = 323
   }
-  
+
   def powtarzaj(n: Int)(blok: => Unit): Unit = {
     for (i <- 1 to n) blok
   }
@@ -131,45 +131,45 @@ object PolishAPI {
   def dopóki(warunek: => Boolean)(blok: => Unit): Unit = {
     while (warunek) blok
   }
-  
-  //simple IO
-  def wejście(tekst: String = "") =  builtins.readln(tekst)
-  
-  //math functions
+
+  // simple IO
+  def wejście(tekst: String = "") = builtins.readln(tekst)
+
+  // math functions
   def zaokrągl(liczba: Number, miejscPoPrzecinku: Int = 0): Double = {
     val faktor = math.pow(10, miejscPoPrzecinku).toDouble
     math.round(liczba.doubleValue * faktor).toLong / faktor
   }
   def liczbaLosowa(n: Int) = builtins.random(n)
   def liczbaLosowaRzeczywista(n: Int) = builtins.randomDouble(n)
-  
-  //some type aliases in Polish
+
+  // some type aliases in Polish
   type Całkowita = Int
   type Rzeczywista = Double
   type Napis = String
-  
-  //speedTest
-  def czasSystemowy = System.nanoTime / 1000000000L //sekunder
+
+  // speedTest
+  def czasSystemowy = System.nanoTime / 1000000000L // sekunder
 }
 
 object PlInit {
   def init(builtins: CoreBuiltins): Unit = {
-    //initialize unstable value
+    // initialize unstable value
     net.kogics.kojo.lite.i18n.PolishAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
         println("Witamy w Kojo w polskiej wersji!")
         if (b.isScratchPad) {
-          println("Jesteś w brudnopisie, historia zmian nie zostanie zapisana po jego zamknięciu") 
+          println("Jesteś w brudnopisie, historia zmian nie zostanie zapisana po jego zamknięciu")
         }
         b.setEditorTabSize(2)
 
-        //code completion
+        // code completion
         b.addCodeTemplates(
           "pl",
           codeTemplates
         )
-        //help texts
+        // help texts
         b.addHelpContent(
           "pl",
           helpContent
@@ -178,7 +178,7 @@ object PlInit {
       case _ =>
     }
   }
-  
+
   val codeTemplates = Map(
     "naprzód" -> "naprzód(${kroki})",
     "tył" -> "tył(${kroki})",
@@ -296,9 +296,9 @@ naprzód(200)
 </pre> 
 lub za pomocą ustawKolor(cz,n,z)
        </div>.toString,
-"kolorLosowy" -> <div><strong>kolorLosowy</strong>()<br/> losuje kolor</div>.toString,
-"utwórzKolor" -> <div><strong>utwórzKolor</strong>(czerwony:Int, zielony:Int, niebieski:Int)<br/> tworzy kolor ze zmiesznia podanych kolorów</div>.toString,
-"wypełnienie" -> <div><strong>wypełnienie</strong>(kolor)<br/> Ustawia kolor wypełnienia. Aby wypełnić musimy wykonać figurę zamkniętą</div>.toString,
+    "kolorLosowy" -> <div><strong>kolorLosowy</strong>()<br/> losuje kolor</div>.toString,
+    "utwórzKolor" -> <div><strong>utwórzKolor</strong>(czerwony:Int, zielony:Int, niebieski:Int)<br/> tworzy kolor ze zmiesznia podanych kolorów</div>.toString,
+    "wypełnienie" -> <div><strong>wypełnienie</strong>(kolor)<br/> Ustawia kolor wypełnienia. Aby wypełnić musimy wykonać figurę zamkniętą</div>.toString,
     "grubość" -> <div><strong>grubość</strong>(grubość)<br/>Ustawia grubość pisaka</div>.toString,
     "zapiszStyl" -> <div><strong>zapiszStyl</strong>()<br/> Zapamiętuje styl (kolor, grubość pędzla, wypełnienie kolorem)<br/>>Odczyt stylu odbywa się za pomocą przywróćStyl</div>.toString,
     "przywróćStyl" -> <div><strong>przywróćStyl</strong>()<br/>Służy do odczytu zapamiętanego stylu  funkcją przwróćStyl</div>.toString,
@@ -311,7 +311,7 @@ lub za pomocą ustawKolor(cz,n,z)
     "czyśćWyjście" -> <div><strong>czyśćWyjście</strong>()<br/>czyści okno wyjścia (komunikatów)</div>.toString,
     "tło" -> <div><strong>tło</strong>(kolorTła)<br/>ustawia kolor tła, zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, przezroczysty.<br/>Możemy też użyć obiektu Color </div>.toString,
     "tłoGradientPion" -> <div><strong>tłoGradientPion</strong>(kolor1,kolor2)<br/> ustawia gradient zmieniający się w pionie od koloru kolor1 aż do koloru kolor2 <br/>Dostępe zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, pomarańczowy, szary, biały, przezroczysty.<br/>Można też użyć obiektu Color </div>.toString,
-"tłoGradientPoz" -> <div><strong>tłoGradientPion</strong>(kolor1,kolor2)<br/> ustawia gradient zmieniający się w poziomie od koloru kolor1 aż do koloru kolor2 <br/>Dostępe zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, pomarańczowy, szary, przezroczysty.<br/>Można też użyć obiektu Color </div>.toString,
+    "tłoGradientPoz" -> <div><strong>tłoGradientPion</strong>(kolor1,kolor2)<br/> ustawia gradient zmieniający się w poziomie od koloru kolor1 aż do koloru kolor2 <br/>Dostępe zdefiniowane kolory:<br/>niebieski, czerwony, żółty, zielony, fioletowy, różowy, brązowy, czarny, biały, pomarańczowy, szary, przezroczysty.<br/>Można też użyć obiektu Color </div>.toString,
     "powtarzaj" -> <div><strong>powtarzaj</strong>(ilość) {{ polecenia }} - powtarza <em>polecenia w nawiasie</em> zadaną ilość razy.
         <br/><em>Przykład:</em> <br/><br/>
         <pre>
@@ -332,7 +332,7 @@ powtarzajZLicznikem(10) {{ i =>
     "dopóki" -> <div><strong>dopóki</strong>(warunek) {{  polecenia }} - powtarza  <em>polecenia</em> dopóki warunek logiczny <em>warunek</em> jest prawdziwy
         <br/><em>Przykład:</em> <br/><br/>
         <pre>var i = 0
-dopóki(i{ "<" }10) {{ 
+dopóki(i{"<"}10) {{ 
       drukuj(i)
       i = i + 1
 }}

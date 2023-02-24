@@ -18,12 +18,13 @@
 
 package net.kogics.kojo.lite.i18n.tr
 
-import net.kogics.kojo.picture
 import java.awt.Paint
 
-import net.kogics.kojo.lite.{CoreBuiltins, Builtins}
 import net.kogics.kojo.core.Turtle
 import net.kogics.kojo.lite.i18n.TurkishAPI.Kaplumbağa
+import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
+import net.kogics.kojo.picture
 
 // this is to hold names to go to top level of TurkishAPI (and kojo editor)
 object res {
@@ -48,22 +49,26 @@ object res {
   def eksenler = AxesOnc
   def boyaRengi(r: Boya) = Fillc(r)
   def kalemRengi(r: Boya) = Strokec(r)
-  def kalemBoyu(b: Kesir) = StrokeWidthc(b)  // penThickness setPenThickness
+  def kalemBoyu(b: Kesir) = StrokeWidthc(b) // penThickness setPenThickness
   def çizimÖncesiİşlev(iv: Resim => Birim) = PreDrawTransformc(iv)
   def çizimSonrasıİşlev(iv: Resim => Birim) = PostDrawTransformc(iv)
   def çevir(sayı: Sayı) = Spinc(sayı)
   def yansıt(sayı: Sayı) = Reflectc(sayı)
   def soluk(n: Sayı) = Fadec(n)
   def bulanık(n: Sayı) = Blurc(n)
-  def noktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = PointLightc(x, y, yön, yükseklik, uzaklık)
-  def sahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = SpotLightc(x, y, yön, yükseklik, uzaklık)
+  def noktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) =
+    PointLightc(x, y, yön, yükseklik, uzaklık)
+  def sahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) =
+    SpotLightc(x, y, yön, yükseklik, uzaklık)
   def ışıklar(ışıklar: com.jhlabs.image.LightFilter.Light*) = Lightsc(ışıklar: _*)
   def birEfekt(isim: Symbol, özellikler: Tuple2[Symbol, Any]*) = SomeEffectc(isim, özellikler: _*)
   def filtre(filtre: java.awt.image.BufferedImageOp) = ApplyFilterc(filtre)
   def gürültü(miktar: Sayı, yoğunluk: Kesir) = Noisec(miktar, yoğunluk)
   def örgü(xBoyu: Kesir, xAra: Kesir, yBoyu: Kesir, yAra: Kesir) = Weavec(xBoyu, xAra, yBoyu, yAra)
-  def NoktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = picture.PointLight(x, y, yön, yükseklik, uzaklık)
-  def SahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) = picture.SpotLight(x, y, yön, yükseklik, uzaklık)
+  def NoktaIşık(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) =
+    picture.PointLight(x, y, yön, yükseklik, uzaklık)
+  def SahneIşığı(x: Kesir, y: Kesir, yön: Kesir, yükseklik: Kesir, uzaklık: Kesir) =
+    picture.SpotLight(x, y, yön, yükseklik, uzaklık)
   // ../../../core/Picture.scala
 
   def çiz(r: Resim) = Resim.çiz(r)
@@ -93,7 +98,7 @@ object res {
   // ../../../picture/transforms.scala
   abstract class ComposableTransformer extends Function1[Resim, Resim] { outer =>
     def apply(r: Resim): Resim
-    def -> (r: Resim) = apply(r)
+    def ->(r: Resim) = apply(r)
     def *(digeri: ComposableTransformer) = new ComposableTransformer {
       def apply(r: Resim): Resim = outer.apply(digeri.apply(r))
     }
@@ -106,22 +111,40 @@ object res {
     }
   }
 
-  case class Rotc(angle: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Rot(angle)(r.p)) }
-  case class Rotpc(angle: Double, x: Double, y: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Rotp(angle, x, y)(r.p)) }
-  case class Scalec(factor: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Scale(factor)(r.p)) }
-  case class ScaleXYc(x: Double, y: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.ScaleXY(x, y)(r.p)) }
+  case class Rotc(angle: Double) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.Rot(angle)(r.p))
+  }
+  case class Rotpc(angle: Double, x: Double, y: Double) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.Rotp(angle, x, y)(r.p))
+  }
+  case class Scalec(factor: Double) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.Scale(factor)(r.p))
+  }
+  case class ScaleXYc(x: Double, y: Double) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.ScaleXY(x, y)(r.p))
+  }
   case class Opacc(f: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Opac(f)(r.p)) }
   case class Huec(f: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Hue(f)(r.p)) }
   case class Satc(f: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Sat(f)(r.p)) }
   case class Britc(f: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Brit(f)(r.p)) }
-  case class Transc(x: Double, y: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Trans(x, y)(r.p)) }
-  case class Offsetc(x: Double, y: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Offset(x, y)(r.p)) }
+  case class Transc(x: Double, y: Double) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.Trans(x, y)(r.p))
+  }
+  case class Offsetc(x: Double, y: Double) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.Offset(x, y)(r.p))
+  }
   case object FlipYc extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.FlipY(r.p)) }
   case object FlipXc extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.FlipX(r.p)) }
   case object AxesOnc extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.AxesOn(r.p)) }
-  case class Fillc(color: Paint) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Fill(color)(r.p)) }
-  case class Strokec(color: Paint) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.Stroke(color)(r.p)) }
-  case class StrokeWidthc(w: Double) extends ComposableTransformer { def apply(r: Resim) = new Resim(picture.StrokeWidth(w)(r.p)) }
+  case class Fillc(color: Paint) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.Fill(color)(r.p))
+  }
+  case class Strokec(color: Paint) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.Stroke(color)(r.p))
+  }
+  case class StrokeWidthc(w: Double) extends ComposableTransformer {
+    def apply(r: Resim) = new Resim(picture.StrokeWidth(w)(r.p))
+  }
   case class PreDrawTransformc(fn: Resim => Birim) extends ComposableTransformer {
     def apply(r: Resim) = {
       val f2 = new Function1[richBuiltins.Picture, Unit] {
@@ -148,10 +171,12 @@ object res {
   case class Blurc(n: Int) extends ComposableImageEffect {
     def apply(r: Resim) = new Resim(picture.Blur(n)(epic(r)))
   }
-  case class PointLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
+  case class PointLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)
+      extends ComposableImageEffect {
     def apply(r: Resim) = new Resim(picture.PointLightEffect(x, y, direction, elevation, distance)(epic(r)))
   }
-  case class SpotLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
+  case class SpotLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)
+      extends ComposableImageEffect {
     def apply(r: Resim) = new Resim(picture.SpotLightEffect(x, y, direction, elevation, distance)(epic(r)))
   }
   case class Lightsc(lights: com.jhlabs.image.LightFilter.Light*) extends ComposableImageEffect {
@@ -212,9 +237,9 @@ class Resim(val p: richBuiltins.Picture) {
   def çarptıMı = çarpıştı _
   def çarpıştı(başkaResim: Resim): İkil = p.intersects(başkaResim.p)
   def çarpışmalar(başkaları: Set[Resim]): Set[Resim] =
-    başkaları.filter {this çarpıştı _}
+    başkaları.filter { this çarpıştı _ }
   def çarpışma(başkaları: Seq[Resim]): Option[Resim] =
-    başkaları.find {this çarpıştı _}
+    başkaları.find { this çarpıştı _ }
   def kesişim(başkaResim: Resim): com.vividsolutions.jts.geom.Geometry =
     p.intersection(başkaResim.p)
   def içinde(başkaResim: Resim) = p.contains(başkaResim.p)
@@ -236,10 +261,10 @@ class Resim(val p: richBuiltins.Picture) {
   def dönüşüm = p.transform
   def kalemRenginiKur = p.setPenColor _
   def kalemKalınlığınıKur(kalınlık: Sayı) = p.setPenThickness(kalınlık)
-  def kalemBoyunuKur(kalınlık: Sayı) = p.setPenThickness(kalınlık)  
+  def kalemBoyunuKur(kalınlık: Sayı) = p.setPenThickness(kalınlık)
   def kalemiKapa() = p.setNoPen()
-  //def setPenCapJoin(capJoin: (Int, Int)): Unit = setPenCapJoin(capJoin._1, capJoin._2)
-  //def setPenCapJoin(cap: Int, join: Int): Unit
+  // def setPenCapJoin(capJoin: (Int, Int)): Unit = setPenCapJoin(capJoin._1, capJoin._2)
+  // def setPenCapJoin(cap: Int, join: Int): Unit
   def boyamaRenginiKur(renk: Boya) = p.setFillColor(renk)
   def saydamlık = p.opacity
   def saydamlığıKur(s: Kesir) = p.setOpacity(s)
@@ -257,7 +282,7 @@ class Resim(val p: richBuiltins.Picture) {
   // ../../../picture/pics.scala
   def boşluk(uzunluk: Kesir): Resim = p match {
     case rd: picture.BasePicList => new Resim(rd.withGap(uzunluk))
-    case _ => this
+    case _                       => this
   }
   def imge = p.toImage
   def girdiyiAktar(r: Resim) = p.forwardInputTo(r.p)
@@ -299,13 +324,15 @@ object Resim {
   def yatay(boy: Kesir) = new Resim(richBuiltins.Picture.hline(boy))
   def dikey(boy: Kesir) = new Resim(richBuiltins.Picture.vline(boy))
   def dikdörtgen(en: Kesir, boy: Kesir) = new Resim(richBuiltins.Picture.rect(boy, en)) // they are swapped!
-                                                                                        // ../../../Picture/package.scala
+  // ../../../Picture/package.scala
   def satır(r: => Resim, kaçTane: Sayı) = new Resim(picture.row(r.p, kaçTane))
   def sütun(r: => Resim, kaçTane: Sayı) = new Resim(picture.col(r.p, kaçTane))
-  def yazı(içerik: Her, yazıBoyu: Sayı=15) = new Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
+  def yazı(içerik: Her, yazıBoyu: Sayı = 15) = new Resim(richBuiltins.Picture.text(içerik, yazıBoyu))
   def yazı(içerik: Her, yazıyüzü: Yazıyüzü) = new Resim(richBuiltins.Picture.text(içerik, yazıyüzü))
   def yazı(içerik: Her, yazıyüzü: Yazıyüzü, renk: Renk) = new Resim(richBuiltins.Picture.textu(içerik, yazıyüzü, renk))
-  def yazıRenkli(içerik: Her, yazıBoyu: Sayı, renk: Renk) = new Resim(richBuiltins.Picture.textu(içerik, yazıBoyu, renk))
+  def yazıRenkli(içerik: Her, yazıBoyu: Sayı, renk: Renk) = new Resim(
+    richBuiltins.Picture.textu(içerik, yazıBoyu, renk)
+  )
   def imge(dosyaAdı: Yazı) = new Resim(richBuiltins.Picture.image(dosyaAdı))
   def imge(dosyaAdı: Yazı, zarf: Resim) = new Resim(richBuiltins.Picture.image(dosyaAdı, zarf.p))
   def imge(url: java.net.URL) = new Resim(richBuiltins.Picture.image(url))
@@ -317,7 +344,7 @@ object Resim {
   // Resim.arayüz(Label("Merhaba"))
   // Resim.arayüz(Button("Merhaba")(println("Selam!")))
   def arayüz(parça: javax.swing.JComponent) = new Resim(richBuiltins.Picture.widget(parça))
-  def yatayBoşluk(en:  Kesir) = new Resim(richBuiltins.Picture.hgap(en))
+  def yatayBoşluk(en: Kesir) = new Resim(richBuiltins.Picture.hgap(en))
   def dikeyBoşluk(boy: Kesir) = new Resim(richBuiltins.Picture.vgap(boy))
   def yoldan(işlev: GeoYol => Birim) = new Resim(richBuiltins.Picture.fromPath(işlev))
   def noktadan(işlev: GeoNokta => Birim) = new Resim(richBuiltins.Picture.fromVertexShape(işlev))
@@ -325,14 +352,17 @@ object Resim {
     val f = new Function1[Turtle, Unit] { def apply(t: Turtle): Unit = işlev(new Kaplumbağa(t)) }
     new Resim(richBuiltins.Picture.fromTurtle(f))
   }
-  def tuvalden(en: Kesir, boy: Kesir)(işlev: Grafik2B => Birim) = new Resim(richBuiltins.Picture.fromCanvas(en, boy)(işlev))
-  def karalamadan() = ??? // ../../Builtins.scala  ~/src/kojo/git/kojo/src/main/scala/net/kogics/kojo/lite/Builtins.scala
+  def tuvalden(en: Kesir, boy: Kesir)(işlev: Grafik2B => Birim) = new Resim(
+    richBuiltins.Picture.fromCanvas(en, boy)(işlev)
+  )
+  def karalamadan() =
+    ??? // ../../Builtins.scala  ~/src/kojo/git/kojo/src/main/scala/net/kogics/kojo/lite/Builtins.scala
   def eksenleriGöster(r: Resim) = richBuiltins.Picture.showAxes(r.p)
   def eksenleriGöster(resimler: Resim*) = richBuiltins.Picture.showAxes(resimler.map(_.p): _*)
   def sınırlarıGöster(r: Resim) = richBuiltins.Picture.showBounds(r.p)
   def sınırlarıGöster(resimler: Resim*) = richBuiltins.Picture.showBounds(resimler.map(_.p): _*)
 
-  def tuval = tuvalSınırları  // stageBorder
+  def tuval = tuvalSınırları // stageBorder
   def tuvalinSınırları = tuvalSınırları
   def tuvalSınırları = new Resim(richBuiltins.tCanvas.stage)
   def tuvalinSolu = new Resim(richBuiltins.tCanvas.stageLeft)

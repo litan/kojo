@@ -42,14 +42,14 @@ class InterpOutputHandler(ctx: RunContext) {
   def showInterpOutput(lineFragment: String): Unit = {
     if (!interpOutputSuppressed) reportInterpOutput(lineFragment)
   }
-  
-  private def reportWorksheetOutput(output: String, line: Int): Unit = {
-      if (output.trim == "") return
 
-      val wline = line - includedLines
-      if (wline >= 0) {
-        ctx.reportWorksheetOutput(output, wline)
-      }
+  private def reportWorksheetOutput(output: String, line: Int): Unit = {
+    if (output.trim == "") return
+
+    val wline = line - includedLines
+    if (wline >= 0) {
+      ctx.reportWorksheetOutput(output, wline)
+    }
   }
 
   private def reportExceptionOutput(output0: String): Unit = {
@@ -62,7 +62,7 @@ class InterpOutputHandler(ctx: RunContext) {
     else {
       output0
     }
-    worksheetLineNum foreach { reportWorksheetOutput(output, _) }
+    worksheetLineNum.foreach { reportWorksheetOutput(output, _) }
     ctx.reportException(output)
   }
 
@@ -82,14 +82,14 @@ class InterpOutputHandler(ctx: RunContext) {
       }
     }
     else {
-      worksheetLineNum foreach { reportWorksheetOutput(output, _) }
+      worksheetLineNum.foreach { reportWorksheetOutput(output, _) }
       ctx.reportOutput(output)
     }
   }
 
   def flushWorksheetError(): Unit = {
-    firstWorksheetError foreach { msg =>
-      worksheetLineNum foreach { reportWorksheetOutput(msg.linesIterator.next(), _) }
+    firstWorksheetError.foreach { msg =>
+      worksheetLineNum.foreach { reportWorksheetOutput(msg.linesIterator.next(), _) }
       ctx.reportError(msg)
     }
     firstWorksheetError = None
@@ -131,14 +131,14 @@ class CompilerOutputHandler(ctx: RunContext) extends CompilerListener {
   }
 
   def warning(msg: String, line: Int, column: Int): Unit = {
-    println("Warning: %s\n" format (msg))
+    println("Warning: %s\n".format(msg))
   }
 
   def info(msg: String, line: Int, column: Int): Unit = {
-    println("Info: %s\n" format (msg))
+    println("Info: %s\n".format(msg))
   }
 
   def message(msg: String): Unit = {
-    println("%s\n" format (msg))
+    println("%s\n".format(msg))
   }
 }

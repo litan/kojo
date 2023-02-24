@@ -14,11 +14,13 @@
  */
 package net.kogics.kojo.util
 
-import java.util.jar._
 import java.io._
 import java.io.File
+import java.util.jar._
+import java.util.ArrayList
+import java.util.HashMap
+
 import net.kogics.kojo.util._
-import java.util.{HashMap, ArrayList}
 
 object PuzzleLoader {
 

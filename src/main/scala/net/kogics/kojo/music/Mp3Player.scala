@@ -19,14 +19,17 @@ package music
 import java.io._
 import java.net.URL
 import java.util.concurrent.locks.ReentrantLock
-import java.util.concurrent.{ConcurrentHashMap, TimeUnit}
-
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.TimeUnit
 import javax.swing.Timer
+
 import javazoom.jl.player.Player
 import net.kogics.kojo.core.KojoCtx
 import net.kogics.kojo.lite.LoadProgress
-import net.kogics.kojo.util.Utils.{giveupLock, withLock}
-import net.kogics.kojo.util.{AsyncQueuedRunner, Utils}
+import net.kogics.kojo.util.AsyncQueuedRunner
+import net.kogics.kojo.util.Utils
+import net.kogics.kojo.util.Utils.giveupLock
+import net.kogics.kojo.util.Utils.withLock
 
 object Mp3Player {
   val streamCache = new ConcurrentHashMap[String, Array[Byte]]()
@@ -37,7 +40,7 @@ trait Mp3Player {
   val pumpEvents: Boolean
   val kojoCtx: KojoCtx
   def showError(msg: String): Unit
-  lazy private val listener = kojoCtx.activityListener
+  private lazy val listener = kojoCtx.activityListener
 
   @volatile private var mp3Player: Option[Player] = None
   @volatile private var bgmp3Player: Option[Player] = None
@@ -94,35 +97,36 @@ trait Mp3Player {
       new ByteArrayInputStream(byteArray)
     }
     else {
-      val byteArrayIs = try {
-        if (fname.startsWith("http")) {
-          val is = new URL(fname).openConnection().getInputStream
-          val ba = inputStreamToByteArray(is)
-          updateCacheAndObtainInputStream(ba)
-        }
-        else {
-          val is = getClass.getResourceAsStream(fname)
-          if (is != null) {
+      val byteArrayIs =
+        try {
+          if (fname.startsWith("http")) {
+            val is = new URL(fname).openConnection().getInputStream
             val ba = inputStreamToByteArray(is)
             updateCacheAndObtainInputStream(ba)
           }
           else {
-            val mp3File = Utils.absolutePath(fname)
-            val f = new File(mp3File)
-            if (f.exists) {
-              val is = new FileInputStream(f)
+            val is = getClass.getResourceAsStream(fname)
+            if (is != null) {
               val ba = inputStreamToByteArray(is)
               updateCacheAndObtainInputStream(ba)
             }
             else {
-              null
+              val mp3File = Utils.absolutePath(fname)
+              val f = new File(mp3File)
+              if (f.exists) {
+                val is = new FileInputStream(f)
+                val ba = inputStreamToByteArray(is)
+                updateCacheAndObtainInputStream(ba)
+              }
+              else {
+                null
+              }
             }
           }
         }
-      }
-      catch {
-        case t: Throwable => null
-      }
+        catch {
+          case t: Throwable => null
+        }
       byteArrayIs
     }
   }
@@ -133,7 +137,7 @@ trait Mp3Player {
       fn(is)
     }
     else {
-      showError("MP3 file does not exist - %s" format (fname))
+      showError("MP3 file does not exist - %s".format(fname))
     }
   }
 
@@ -307,4 +311,3 @@ class KMp3(val kojoCtx: KojoCtx) extends Mp3Player {
   val pumpEvents = true
   def showError(msg: String) = println(msg)
 }
-

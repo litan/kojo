@@ -27,7 +27,11 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
   def jumpTo(x: Double, y: Double) = turtle0.jumpTo(x, y)
   UserCommand.addCompletion("jumpTo", List("x", "y"))
 
-  UserCommand("setPosition", List("x", "y"), "Sends the turtle to the point (x, y) without drawing a line. The turtle's heading is not changed.")
+  UserCommand(
+    "setPosition",
+    List("x", "y"),
+    "Sends the turtle to the point (x, y) without drawing a line. The turtle's heading is not changed."
+  )
 
   def position: Point = turtle0.position
   UserCommand.addSynopsis("position - Queries the turtle's position.")
@@ -37,7 +41,11 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
   UserCommand("moveTo", List("x", "y"), "Turns the turtle towards (x, y) and moves the turtle to that point. ")
 
   def turn(angle: Double) = turtle0.turn(angle)
-  UserCommand("turn", List("angle"), "Turns the turtle through a specified angle. Angles are positive for counter-clockwise turns.")
+  UserCommand(
+    "turn",
+    List("angle"),
+    "Turns the turtle through a specified angle. Angles are positive for counter-clockwise turns."
+  )
 
   UserCommand("right", Nil, "Turns the turtle 90 degrees right (clockwise).")
   UserCommand("right", List("angle"), "Turns the turtle angle degrees right (clockwise).")
@@ -48,10 +56,16 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
   def towards(x: Double, y: Double) = turtle0.towards(x, y)
   UserCommand("towards", List("x", "y"), "Turns the turtle towards the point (x, y).")
 
-  UserCommand("setHeading", List("angle"), "Sets the turtle's heading to angle (0 is towards the right side of the screen ('east'), 90 is up ('north')).")
+  UserCommand(
+    "setHeading",
+    List("angle"),
+    "Sets the turtle's heading to angle (0 is towards the right side of the screen ('east'), 90 is up ('north'))."
+  )
 
   def heading: Double = turtle0.heading
-  UserCommand.addSynopsis("heading - Queries the turtle's heading (0 is towards the right side of the screen ('east'), 90 is up ('north')).")
+  UserCommand.addSynopsis(
+    "heading - Queries the turtle's heading (0 is towards the right side of the screen ('east'), 90 is up ('north'))."
+  )
   UserCommand.addSynopsisSeparator()
 
   def penDown() = turtle0.penDown()
@@ -108,7 +122,11 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
   UserCommand("write", List("obj"), "Makes the turtle write the specified object as a string at its current location.")
 
   def setAnimationDelay(d: Long) = turtle0.setAnimationDelay(d)
-  UserCommand("setAnimationDelay", List("delay"), "Sets the turtle's speed. The specified delay is the amount of time (in milliseconds) taken by the turtle to move through a distance of one hundred steps.")
+  UserCommand(
+    "setAnimationDelay",
+    List("delay"),
+    "Sets the turtle's speed. The specified delay is the amount of time (in milliseconds) taken by the turtle to move through a distance of one hundred steps."
+  )
 
   def animationDelay = turtle0.animationDelay
   UserCommand.addSynopsis("animationDelay - Queries the turtle's delay setting.")
@@ -124,7 +142,11 @@ class TurtleWorldAPI(turtle0: => core.Turtle) extends TurtleMover {
 
   def setCostumeImage(image: Image) = turtle0.setCostumeImage(image)
   def setCostume(costumeFile: String) = turtle0.setCostume(costumeFile)
-  UserCommand("setCostume", List("costumeFile"), "Changes the costume (i.e. image) associated with the turtle to the image in the specified file.")
+  UserCommand(
+    "setCostume",
+    List("costumeFile"),
+    "Changes the costume (i.e. image) associated with the turtle to the image in the specified file."
+  )
 
   def setCostumes(costumeFiles: Vector[String]) = turtle0.setCostumes(costumeFiles)
   def setCostumeImages(images: Vector[Image]) = turtle0.setCostumeImages(images)

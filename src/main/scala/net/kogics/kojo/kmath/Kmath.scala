@@ -2,9 +2,10 @@ package net.kogics.kojo
 package kmath
 
 import scala.language.implicitConversions
+
+import net.kogics.kojo.core.Point
 import org.apache.commons.math3.stat.StatUtils
 import org.apache.commons.math3.util.ArithmeticUtils
-import net.kogics.kojo.core.Point
 
 object Kmath {
   implicit def seqToArrD(seq: Seq[Double]): Array[Double] = seq.toArray

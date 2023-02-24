@@ -15,12 +15,12 @@
 
 package net.kogics.kojo.picture
 
+import java.awt.image.BufferedImage
+import java.awt.image.BufferedImageOp
 import java.awt.AlphaComposite
 import java.awt.Color
 import java.awt.GradientPaint
 import java.awt.RenderingHints
-import java.awt.image.BufferedImage
-import java.awt.image.BufferedImageOp
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -30,15 +30,13 @@ import com.jhlabs.image.LightFilter.Light
 import com.jhlabs.image.NoiseFilter
 import com.jhlabs.image.WeaveFilter
 import com.vividsolutions.jts.geom.Coordinate
-
+import edu.umd.cs.piccolo.nodes.PImage
+import edu.umd.cs.piccolo.util.PPaintContext
+import edu.umd.cs.piccolo.PNode
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.picture.PicCache.freshPic
 import net.kogics.kojo.util.Utils
-
-import edu.umd.cs.piccolo.PNode
-import edu.umd.cs.piccolo.nodes.PImage
-import edu.umd.cs.piccolo.util.PPaintContext
 
 trait ImageOp {
   def filter(img: BufferedImage): BufferedImage
@@ -53,7 +51,9 @@ class FadeImageOp(n: Int) extends ImageOp {
     // draw initial image into new image
     g2.drawImage(img, 0, 0, null)
     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.DST_IN))
-    g2.setPaint(new GradientPaint(0, 0, new Color(0.0f, 0.0f, 0.0f, 1.0f), 0, n.toFloat, new Color(0.0f, 0.0f, 0.0f, 0.0f)))
+    g2.setPaint(
+      new GradientPaint(0, 0, new Color(0.0f, 0.0f, 0.0f, 1.0f), 0, n.toFloat, new Color(0.0f, 0.0f, 0.0f, 0.0f))
+    )
     g2.fillRect(0, 0, width.toInt, n);
     g2.setPaint(new Color(0.0f, 0.0f, 0.0f, 0.0f))
     g2.fillRect(0, n, width.toInt, height - n);
@@ -95,7 +95,7 @@ class LightsImageOp(lights: Light*) extends ImageOp {
   def filter(img: BufferedImage): BufferedImage = {
     val fltr = new LightFilter
     fltr.removeLight(fltr.getLights().get(0).asInstanceOf[Light])
-    lights foreach { fltr.addLight }
+    lights.foreach { fltr.addLight }
     fltr.filter(img, null)
   }
 }
@@ -163,8 +163,14 @@ trait EffectablePicture extends Picture {
   def applyFilter(filter: BufferedImageOp): Unit
 }
 
-class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2
-  with TNodeCacher with RedrawStopper with NonVectorPicOps with EffectablePicture {
+class EffectableImagePic(pic: Picture)(implicit val canvas: SCanvas)
+    extends Picture
+    with CorePicOps
+    with CorePicOps2
+    with TNodeCacher
+    with RedrawStopper
+    with NonVectorPicOps
+    with EffectablePicture {
   @volatile var effects = Vector.empty[ImageOp]
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
@@ -279,22 +285,28 @@ case class Blur(n: Int)(pic: EffectablePicture) extends EffectableTransformer(pi
   override def toString() = s"Blur($n) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
-case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
+case class PointLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(
+    pic: EffectablePicture
+) extends EffectableTransformer(pic) {
   def draw(): Unit = {
     tpic.pointLight(x, y, direction, elevation, distance)
     tpic.draw()
   }
   def copy = PointLightEffect(x, y, direction, elevation, distance)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"PointLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
+  override def toString() =
+    s"PointLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
-case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
+case class SpotLightEffect(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)(
+    pic: EffectablePicture
+) extends EffectableTransformer(pic) {
   def draw(): Unit = {
     tpic.spotLight(x, y, direction, elevation, distance)
     tpic.draw()
   }
   def copy = SpotLightEffect(x, y, direction, elevation, distance)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"SpotLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
+  override def toString() =
+    s"SpotLightEffect($x, $y, $direction, $elevation, $distance) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
 case class Lights(nlights: Light*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
@@ -315,16 +327,19 @@ case class Noise(amount: Int, density: Double)(pic: EffectablePicture) extends E
   override def toString() = s"Noise($amount, $density) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
-case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic: EffectablePicture) extends EffectableTransformer(pic) {
+case class Weave(xWidth: Double, xGap: Double, yWidth: Double, yGap: Double)(pic: EffectablePicture)
+    extends EffectableTransformer(pic) {
   def draw(): Unit = {
     tpic.weave(xWidth, xGap, yWidth, yGap)
     tpic.draw()
   }
   def copy = Weave(xWidth, xGap, yWidth, yGap)(pic.copy.asInstanceOf[EffectablePicture])
-  override def toString() = s"Weave($xWidth, $xGap, $yWidth, $yGap) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
+  override def toString() =
+    s"Weave($xWidth, $xGap, $yWidth, $yGap) (Id: ${System.identityHashCode(this)}) -> ${tpic.toString}"
 }
 
-case class SomeEffect(name: Symbol, props: Tuple2[Symbol, Any]*)(pic: EffectablePicture) extends EffectableTransformer(pic) {
+case class SomeEffect(name: Symbol, props: Tuple2[Symbol, Any]*)(pic: EffectablePicture)
+    extends EffectableTransformer(pic) {
   def draw(): Unit = {
     tpic.effect(name, props: _*)
     tpic.draw()
@@ -352,11 +367,13 @@ case class Blurc(n: Int) extends ComposableImageEffect {
   def apply(p: Picture) = Blur(n)(epic(p))
 }
 
-case class PointLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
+case class PointLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)
+    extends ComposableImageEffect {
   def apply(p: Picture) = PointLightEffect(x, y, direction, elevation, distance)(epic(p))
 }
 
-case class SpotLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double) extends ComposableImageEffect {
+case class SpotLightc(x: Double, y: Double, direction: Double, elevation: Double, distance: Double)
+    extends ComposableImageEffect {
   def apply(p: Picture) = SpotLightEffect(x, y, direction, elevation, distance)(epic(p))
 }
 

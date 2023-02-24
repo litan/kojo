@@ -1,12 +1,15 @@
 package net.kogics.kojo
 package livecoding
 
+import java.awt.{ Color => JColor }
+import java.awt.event.ActionEvent
 import java.awt.BorderLayout
 import java.awt.Point
-import java.awt.event.ActionEvent
-import java.awt.{Color => JColor}
 import java.util.regex.Pattern
-
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.text.JTextComponent
+import javax.swing.text.Utilities
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory
 import javax.swing.JColorChooser
@@ -16,10 +19,6 @@ import javax.swing.JPanel
 import javax.swing.KeyStroke
 import javax.swing.PopupFactory
 import javax.swing.SwingUtilities
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
-import javax.swing.text.JTextComponent
-import javax.swing.text.Utilities
 
 import net.kogics.kojo.doodle.Color
 import net.kogics.kojo.util.Utils
@@ -34,9 +33,10 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
   def isAbsent = colorPopup == null
   def isPresent = !isAbsent
 
-  lazy val ColorPattern = Pattern.compile("""(ColorMaker|cm)\.(%s)""" format (ctx.knownColors2.mkString("|")))
+  lazy val ColorPattern = Pattern.compile("""(ColorMaker|cm)\.(%s)""".format(ctx.knownColors2.mkString("|")))
   def matcher(possibleColor: String) = ColorPattern.matcher(possibleColor)
-  lazy val ColorPattern2 = Pattern.compile("""(ColorMaker|cm)\.hsl(a)?\((\d+),\s*(\d+\.?\d?\d?),\s*(\d+\.?\d?\d?)(,\s*(\d+\.?\d?\d?))?\)""")
+  lazy val ColorPattern2 =
+    Pattern.compile("""(ColorMaker|cm)\.hsl(a)?\((\d+),\s*(\d+\.?\d?\d?),\s*(\d+\.?\d?\d?)(,\s*(\d+\.?\d?\d?))?\)""")
   def matcher2(possibleColorLine: String) = ColorPattern2.matcher(possibleColorLine)
 
   def findColorFunction(pane: JTextComponent, offset: Int): Boolean = {
@@ -51,7 +51,7 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
       val lineOffset = offset - lineStart
       if (start <= lineOffset && lineOffset <= end) {
         target = m.group
-        val hsla = Seq(3, 4, 5, 7) map { e =>
+        val hsla = Seq(3, 4, 5, 7).map { e =>
           val ret = m.group(e)
           e match {
             case 3 => ret.toInt
@@ -157,7 +157,13 @@ class ColorMakerManipulatorKnownHsl(ctx: ManipulationContext) extends Interactiv
               Utils.strFormat("ColorMaker.hsl(%d, %.2f, %.2f)", hueAngle, ndc.saturation.get, ndc.lightness.get)
             }
             else {
-              Utils.strFormat("ColorMaker.hsla(%d, %.2f, %.2f, %.2f)", hueAngle, ndc.saturation.get, ndc.lightness.get, ndc.alpha.get)
+              Utils.strFormat(
+                "ColorMaker.hsla(%d, %.2f, %.2f, %.2f)",
+                hueAngle,
+                ndc.saturation.get,
+                ndc.lightness.get,
+                ndc.alpha.get
+              )
             }
             doc.insertString(targetStart, target, null);
             inSliderChange = false

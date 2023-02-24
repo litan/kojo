@@ -2,10 +2,10 @@ package net.kogics.kojo.core
 
 import java.awt.geom.GeneralPath
 
-import processing.core.PMatrix3D
-
 import scala.collection.mutable.ArrayBuffer
 import scala.language.implicitConversions
+
+import processing.core.PMatrix3D
 
 object VertexShapeSupport {
   val curveTightness = 0f
@@ -13,7 +13,24 @@ object VertexShapeSupport {
   val s = curveTightness
 
   val curveBasisMatrix = new PMatrix3D
-  curveBasisMatrix.set((s - 1) / 2f, (s + 3) / 2f, (-3 - s) / 2f, (1 - s) / 2f, 1 - s, (-5 - s) / 2f, s + 2, (s - 1) / 2f, (s - 1) / 2f, 0, (1 - s) / 2f, 0, 0, 1, 0, 0)
+  curveBasisMatrix.set(
+    (s - 1) / 2f,
+    (s + 3) / 2f,
+    (-3 - s) / 2f,
+    (1 - s) / 2f,
+    1 - s,
+    (-5 - s) / 2f,
+    s + 2,
+    (s - 1) / 2f,
+    (s - 1) / 2f,
+    0,
+    (1 - s) / 2f,
+    0,
+    0,
+    1,
+    0,
+    0
+  )
 
   val bezierBasisInverse = bezierBasisMatrix.get
   bezierBasisInverse.invert
@@ -31,7 +48,8 @@ trait VertexShapeSupport {
   private case class Vertex(x: Double, y: Double) extends ShapeVertex
   private case class CurveVertex(x: Double, y: Double) extends ShapeVertex
   private case class QuadVertex(x1: Double, y1: Double, x2: Double, y2: Double) extends ShapeVertex
-  private case class BezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double) extends ShapeVertex
+  private case class BezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double)
+      extends ShapeVertex
 
   private var shapeVertices: collection.mutable.ArrayBuffer[ShapeVertex] = _
   private var curveCoordX: Array[Float] = _
@@ -93,7 +111,17 @@ trait VertexShapeSupport {
     curveVertex(p.x, p.y)
   }
 
-  private def curveVertexSegment(gpath: GeneralPath, x1: Float, y1: Float, x2: Float, y2: Float, x3: Float, y3: Float, x4: Float, y4: Float): Unit = {
+  private def curveVertexSegment(
+      gpath: GeneralPath,
+      x1: Float,
+      y1: Float,
+      x2: Float,
+      y2: Float,
+      x3: Float,
+      y3: Float,
+      x4: Float,
+      y4: Float
+  ): Unit = {
     import VertexShapeSupport.curveToBezierMatrix
     curveInit
 
@@ -141,10 +169,14 @@ trait VertexShapeSupport {
         if (cvlen > 3) {
           curveVertexSegment(
             tempPath,
-            curveVertices(cvlen - 4).x.toFloat, curveVertices(cvlen - 4).y.toFloat,
-            curveVertices(cvlen - 3).x.toFloat, curveVertices(cvlen - 3).y.toFloat,
-            curveVertices(cvlen - 2).x.toFloat, curveVertices(cvlen - 2).y.toFloat,
-            curveVertices(cvlen - 1).x.toFloat, curveVertices(cvlen - 1).y.toFloat
+            curveVertices(cvlen - 4).x.toFloat,
+            curveVertices(cvlen - 4).y.toFloat,
+            curveVertices(cvlen - 3).x.toFloat,
+            curveVertices(cvlen - 3).y.toFloat,
+            curveVertices(cvlen - 2).x.toFloat,
+            curveVertices(cvlen - 2).y.toFloat,
+            curveVertices(cvlen - 1).x.toFloat,
+            curveVertices(cvlen - 1).y.toFloat
           )
         }
       case QuadVertex(x1, y1, x2, y2) =>

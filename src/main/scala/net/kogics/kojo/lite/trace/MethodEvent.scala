@@ -15,14 +15,14 @@
  */
 package net.kogics.kojo.lite.trace
 
-import com.sun.jdi.LocalVariable
-import com.sun.jdi.StackFrame
 import java.awt.geom.Point2D
-
-import net.kogics.kojo.core.Picture
-import scala.collection.mutable.ArrayBuffer
 import javax.swing.JComponent
 
+import scala.collection.mutable.ArrayBuffer
+
+import com.sun.jdi.LocalVariable
+import com.sun.jdi.StackFrame
+import net.kogics.kojo.core.Picture
 import net.kogics.kojo.lite.Theme
 
 class MethodEvent {
@@ -64,13 +64,21 @@ class MethodEvent {
 
   def entry(level: Int) = {
     if (rawName.endsWith("_$eq"))
-      <html><div style="font-family:Monospace"><span style="color:rgb(200,0,200)">{ "\u00b7 " * level } ASSIGN</span> { methodName } <span style="color:rgb(200,0,200)"> { assignArg }</span></div></html>.toString
+      <html><div style="font-family:Monospace"><span style="color:rgb(200,0,200)">{"\u00b7 " * level} ASSIGN</span> {
+        methodName
+      } <span style="color:rgb(200,0,200)"> {assignArg}</span></div></html>.toString
     else
-      <html><div style="font-family:Monospace"><span style={ s"color:${Theme.currentTheme.tracingCallColor}" } >{ "\u00b7 " * level } CALL</span> { methodName } <span style={ s"color:${Theme.currentTheme.tracingCallColor}" }>{ pargs }</span></div></html>.toString
+      <html><div style="font-family:Monospace"><span style={s"color:${Theme.currentTheme.tracingCallColor}"} >{
+        "\u00b7 " * level
+      } CALL</span> {methodName} <span style={s"color:${Theme.currentTheme.tracingCallColor}"}>{
+        pargs
+      }</span></div></html>.toString
   }
 
   def exit(level: Int) = {
-    <html><div style="font-family:Monospace"><span style="color:rgb(255,120,0)">{ "\u00b7 " * level } RETURN</span> { methodName } <span style="color:rgb(255,120,0)">= { pret }</span></div></html>.toString
+    <html><div style="font-family:Monospace"><span style="color:rgb(255,120,0)">{"\u00b7 " * level} RETURN</span> {
+      methodName
+    } <span style="color:rgb(255,120,0)">= {pret}</span></div></html>.toString
   }
 
   override def toString() = {
@@ -92,7 +100,7 @@ Caller Source Line: $callerLine
 
   def setParent(p: Option[MethodEvent]): Unit = {
     parent = p
-    parent foreach { _.addChild(this) }
+    parent.foreach { _.addChild(this) }
   }
 
   private def addChild(c: MethodEvent): Unit = { subcalls = subcalls :+ c }
@@ -108,7 +116,8 @@ Caller Source Line: $callerLine
       case x +: xs =>
         if (!x.uiElems.isEmpty)
           true
-        else if (visibleSubCall(x.subcalls)) true else visibleSubCall(xs)
+        else if (visibleSubCall(x.subcalls)) true
+        else visibleSubCall(xs)
     }
     visibleSubCall(subcalls)
   }

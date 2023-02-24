@@ -1,8 +1,7 @@
 // Borrowed from: https://github.com/underscoreio/doodle
 package net.kogics.kojo.doodle
 
-/**
-  * An angle in radians
+/** An angle in radians
   */
 final class Angle(val toRadians: Double) {
   def +(that: Angle): Angle =
@@ -61,7 +60,7 @@ final class Angle(val toRadians: Double) {
     new Angle(toRadians)
 
   override def equals(that: Any): Boolean =
-    (that.isInstanceOf[Angle] && that.asInstanceOf[Angle].toRadians == this.toRadians)
+    that.isInstanceOf[Angle] && that.asInstanceOf[Angle].toRadians == this.toRadians
 
   override def hashCode: Int =
     this.toRadians.hashCode
@@ -69,8 +68,8 @@ final class Angle(val toRadians: Double) {
 
 object Angle {
   val TwoPi = math.Pi * 2
-  val zero  = Angle(0.0)
-  val one   = Angle(TwoPi)
+  val zero = Angle(0.0)
+  val one = Angle(TwoPi)
 
   def degrees(deg: Double): Angle =
     Angle(deg * TwoPi / 360.0)
@@ -78,9 +77,7 @@ object Angle {
   def radians(rad: Double): Angle =
     Angle(rad)
 
-  /**
-    *  A turn represents angle as a proportion of a full turn around a
-    *  circle, with a full turn being 1.0
+  /** A turn represents angle as a proportion of a full turn around a circle, with a full turn being 1.0
     */
   def turns(t: Double): Angle =
     Angle(t * TwoPi)

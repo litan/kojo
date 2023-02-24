@@ -43,6 +43,6 @@ object PicCache {
   }
 
   def freshPics(ps: collection.Seq[Picture]): collection.Seq[Picture] = {
-    ps map freshPic
+    ps.map(freshPic)
   }
 }

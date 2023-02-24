@@ -20,17 +20,17 @@ import java.net.URL
 
 import scala.collection.mutable.ListBuffer
 import scala.language.postfixOps
-import scala.reflect.internal.Flags
 import scala.reflect.internal.util.AbstractFileClassLoader
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.OffsetPosition
 import scala.reflect.internal.util.Position
 import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
-import scala.tools.nsc.Global
-import scala.tools.nsc.Settings
+import scala.reflect.internal.Flags
 import scala.tools.nsc.interactive
 import scala.tools.nsc.io.VirtualDirectory
 import scala.tools.nsc.reporters.Reporter
+import scala.tools.nsc.Global
+import scala.tools.nsc.Settings
 import scala.tools.util.PathResolver
 
 import net.kogics.kojo.core.CompletionInfo
@@ -55,19 +55,19 @@ trait CompilerListener {
 
 // This class borrows code and ideas from scala.tools.nsc.Interpreter
 class CompilerAndRunner(
-  makeSettings: () => Settings,
-  initCode:     => Option[String],
-  listener:     CompilerListener,
-  runContext:   RunContext
+    makeSettings: () => Settings,
+    initCode: => Option[String],
+    listener: CompilerListener,
+    runContext: RunContext
 ) extends StoppableCodeRunner {
   import language.postfixOps
 
   var counter = 0
-  // The Counter above is used to define/create a new wrapper object for every run. The calling of the entry() 
-  //.method within this object results in the initialization of the object, which causes the user submitted 
+  // The Counter above is used to define/create a new wrapper object for every run. The calling of the entry()
+  // .method within this object results in the initialization of the object, which causes the user submitted
   // code to run.
   // If we don't increment the counter, the user code will not run (an object is initialized only once)
-  // If this approach turns out to be too memory intensive, I'm sure there are other ways of running user 
+  // If this approach turns out to be too memory intensive, I'm sure there are other ways of running user
   // submitted code.'
   val prefixHeader = "object Wrapper"
   val prefix0 = runContext.compilerPrefix
@@ -104,20 +104,21 @@ class CompilerAndRunner(
 
   val compilerClasspath: List[URL] = new PathResolver(settings).resultAsURLs.toList
   var classLoader = makeClassLoader
-  // needed to prevent pcompiler from making the interp's classloader as 
+  // needed to prevent pcompiler from making the interp's classloader as
   // its context loader (which causes a mem leak)
-  // we could make pcompiler lazy, but then the first completion takes a big hit 
+  // we could make pcompiler lazy, but then the first completion takes a big hit
 
   private def makeClassLoader = {
     val parent = new URLClassLoader(compilerClasspath, getClass.getClassLoader())
     new AbstractFileClassLoader(virtualDirectory, parent)
   }
-  private def loadByName(s: String): Class[_] = (classLoader loadClass s)
+  private def loadByName(s: String): Class[_] = classLoader.loadClass(s)
 
   val reporter = new Reporter {
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
       //      severity.count += 1
-      lazy val line = position.line - prefixLines - 1 // we added an extra line after the prefix in the code template. Take it off
+      lazy val line =
+        position.line - prefixLines - 1 // we added an extra line after the prefix in the code template. Take it off
       lazy val offset = position.start - offsetDelta - 1 // we added an extra newline char after the prefix
       severity match {
         case ERROR if position.isDefined =>
@@ -153,21 +154,23 @@ class CompilerAndRunner(
   }
 
   def compile(code0: String, stopPhase: List[String] = List("cleanup")) = {
-    compilerCode(code0) map { code =>
-      if (compiler.settings.stopAfter.value != stopPhase) {
-        // There seems to be a bug in the PhasesSetting contains method
-        // which makes the compiler not see the new stopAfter value
-        // So we make a new Settings
-        compiler.currentSettings = makeSettings2()
-        compiler.settings.stopAfter.value = stopPhase
-      }
+    compilerCode(code0)
+      .map { code =>
+        if (compiler.settings.stopAfter.value != stopPhase) {
+          // There seems to be a bug in the PhasesSetting contains method
+          // which makes the compiler not see the new stopAfter value
+          // So we make a new Settings
+          compiler.currentSettings = makeSettings2()
+          compiler.settings.stopAfter.value = stopPhase
+        }
 
-      val run = new compiler.Run
-      reporter.reset()
-      run.compileSources(List(new BatchSourceFile("scripteditor", code)))
-      //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
-      if (reporter.hasErrors) IR.Error else IR.Success
-    } getOrElse (IR.Error)
+        val run = new compiler.Run
+        reporter.reset()
+        run.compileSources(List(new BatchSourceFile("scripteditor", code)))
+        //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
+        if (reporter.hasErrors) IR.Error else IR.Success
+      }
+      .getOrElse(IR.Error)
   }
 
   def compileAndRun(code0: String) = {
@@ -185,7 +188,7 @@ class CompilerAndRunner(
         try {
           classLoader = makeClassLoader
           classLoader.asContext {
-            val loadedResultObject = loadByName("Wrapper%d" format (counter))
+            val loadedResultObject = loadByName("Wrapper%d".format(counter))
             loadedResultObject.getMethod("entry").invoke(loadedResultObject)
             IR.Success
           }
@@ -217,24 +220,26 @@ class CompilerAndRunner(
   }
 
   def parse(code0: String, browseAst: Boolean) = {
-    compilerCode(code0) map { code =>
-      compiler.currentSettings = makeSettings2()
-      compiler.settings.stopAfter.value = stopPhase()
-      if (browseAst) {
-        compiler.settings.browse.value = stopPhase()
-      }
-      val run = new compiler.Run
-      reporter.reset()
-      run.compileSources(List(new BatchSourceFile("scripteditor", code)))
+    compilerCode(code0)
+      .map { code =>
+        compiler.currentSettings = makeSettings2()
+        compiler.settings.stopAfter.value = stopPhase()
+        if (browseAst) {
+          compiler.settings.browse.value = stopPhase()
+        }
+        val run = new compiler.Run
+        reporter.reset()
+        run.compileSources(List(new BatchSourceFile("scripteditor", code)))
 
-      if (reporter.hasErrors) {
-        IR.Error
+        if (reporter.hasErrors) {
+          IR.Error
+        }
+        else {
+          compiler.printAllUnits()
+          IR.Success
+        }
       }
-      else {
-        compiler.printAllUnits()
-        IR.Success
-      }
-    } getOrElse (IR.Error)
+      .getOrElse(IR.Error)
   }
 
   // phase after which you want to stop
@@ -244,21 +249,21 @@ class CompilerAndRunner(
   }
 
   val preporter = new Reporter {
-    override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
-    }
+    override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {}
   }
 
   class KGlobal(s: Settings, r: Reporter) extends interactive.Global(s, r) {
     def mkCompletionProposal(sym: Symbol, tpe: Type, inherited: Boolean, viaView: Symbol): CompletionInfo = {
       // code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
-      val kind = if (sym.isSourceMethod && !sym.hasFlag(Flags.ACCESSOR | Flags.PARAMACCESSOR)) Def
-      else if (sym.hasPackageFlag) Package
-      else if (sym.isClass) Class
-      else if (sym.isTrait) Trait
-      else if (sym.isPackageObject) PackageObject
-      else if (sym.isModule) Object
-      else if (sym.isType) Type
-      else Val
+      val kind =
+        if (sym.isSourceMethod && !sym.hasFlag(Flags.ACCESSOR | Flags.PARAMACCESSOR)) Def
+        else if (sym.hasPackageFlag) Package
+        else if (sym.isClass) Class
+        else if (sym.isTrait) Trait
+        else if (sym.isPackageObject) PackageObject
+        else if (sym.isModule) Object
+        else if (sym.isType) Type
+        else Val
       val name = sym.decodedName
 
       val returnType =
@@ -270,8 +275,8 @@ class CompilerAndRunner(
         if (sym.isMethod) {
           "%s: %s".format(
             name +
-            (if (!sym.typeParams.isEmpty) sym.typeParams.map { _.name }.mkString("[", ",", "]") else "") +
-            tpe.paramss.map(_.map(_.tpe.toString).mkString("(", ", ", ")")).mkString,
+              (if (!sym.typeParams.isEmpty) sym.typeParams.map { _.name }.mkString("[", ",", "]") else "") +
+              tpe.paramss.map(_.map(_.tpe.toString).mkString("(", ", ", ")")).mkString,
             returnType
           )
         }
@@ -289,9 +294,11 @@ class CompilerAndRunner(
       if (sym.hasPackageFlag) relevance += 30
       // theoretically we'd need an 'ask' around this code, but given that
       // Any and AnyRef are definitely loaded, we call directly to definitions.
-      if (sym.owner == definitions.AnyClass
+      if (
+        sym.owner == definitions.AnyClass
         || sym.owner == definitions.AnyRefClass
-        || sym.owner == definitions.ObjectClass) {
+        || sym.owner == definitions.ObjectClass
+      ) {
         relevance += 40
       }
       val pfx = prefix
@@ -329,39 +336,41 @@ class CompilerAndRunner(
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
 
-    compilerCode(code0) map { code =>
-      classLoader.asContext {
-        val source = new BatchSourceFile("scripteditor", code)
-        val pos = new OffsetPosition(source, offset + offsetDelta + 1)
+    compilerCode(code0)
+      .map { code =>
+        classLoader.asContext {
+          val source = new BatchSourceFile("scripteditor", code)
+          val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
-        var r1 = new Response[Unit]
-        pcompiler.askReload(List(source), r1)
+          var r1 = new Response[Unit]
+          pcompiler.askReload(List(source), r1)
 
-        var resp = new Response[pcompiler.Tree]
-        pcompiler.askTypeAt(pos, resp)
+          var resp = new Response[pcompiler.Tree]
+          pcompiler.askTypeAt(pos, resp)
 
-        val respget = resp.get
-        val response: pcompiler.Response[String] = pcompiler.askForResponse { () =>
-          respget match {
-            case Left(x) =>
-              x match {
-                case t: pcompiler.ValOrDefDef => t.tpt.toString
-                case t: pcompiler.TypeDef     => t.name.toString
-                case t: pcompiler.ClassDef    => t.name.toString
-                case _                        => x.tpe.toString
-              }
+          val respget = resp.get
+          val response: pcompiler.Response[String] = pcompiler.askForResponse { () =>
+            respget match {
+              case Left(x) =>
+                x match {
+                  case t: pcompiler.ValOrDefDef => t.tpt.toString
+                  case t: pcompiler.TypeDef     => t.name.toString
+                  case t: pcompiler.ClassDef    => t.name.toString
+                  case _                        => x.tpe.toString
+                }
 
-            case Right(y) =>
-              // println("Right:" + y)
-              ""
+              case Right(y) =>
+                // println("Right:" + y)
+                ""
+            }
+          }
+          response.get match {
+            case Left(s)  => s
+            case Right(_) => ""
           }
         }
-        response.get match {
-          case Left(s)  => s
-          case Right(_) => ""
-        }
       }
-    } getOrElse ("")
+      .getOrElse("")
   }
 
   import core.CompletionInfo
@@ -373,61 +382,64 @@ class CompilerAndRunner(
     val queryOffset = if (selection) offset - 1 else offset
 
     completionQuery(augmentedCode, queryOffset, selection) match {
-      case Nil => if (selection) completionQuery(code, queryOffset, selection) else Nil
-      case _@ret => ret
+      case Nil    => if (selection) completionQuery(code, queryOffset, selection) else Nil
+      case _ @ret => ret
     }
   }
 
   private def completionQuery(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     import interactive._
 
-    compilerCode(code0) map { code =>
-      classLoader.asContext {
-        val source = new BatchSourceFile("scripteditor", code)
-        val pos = new OffsetPosition(source, offset + offsetDelta + 1)
+    compilerCode(code0)
+      .map { code =>
+        classLoader.asContext {
+          val source = new BatchSourceFile("scripteditor", code)
+          val pos = new OffsetPosition(source, offset + offsetDelta + 1)
 
-        val r1 = new Response[Unit]
-        pcompiler.askReload(List(source), r1)
+          val r1 = new Response[Unit]
+          pcompiler.askReload(List(source), r1)
 
-        val resp = new Response[List[pcompiler.Member]]
-        if (selection) {
-          pcompiler.askTypeCompletion(pos, resp)
-        }
-        else {
-          pcompiler.askScopeCompletion(pos, resp)
-        }
+          val resp = new Response[List[pcompiler.Member]]
+          if (selection) {
+            pcompiler.askTypeCompletion(pos, resp)
+          }
+          else {
+            pcompiler.askScopeCompletion(pos, resp)
+          }
 
-        val completionTimeout = 3000
-        resp.get(completionTimeout) match {
-          case Some(Left(completions)) =>
-            val response: pcompiler.Response[List[CompletionInfo]] = pcompiler.askForResponse { () =>
-              val elb = new ListBuffer[CompletionInfo]
-              completions.foreach { completion =>
-                try {
-                  completion match {
-                    case pcompiler.TypeMember(sym, tpe, true, inherited, viaView) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                      elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
-                    case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                      elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
-                    case _ =>
+          val completionTimeout = 3000
+          resp.get(completionTimeout) match {
+            case Some(Left(completions)) =>
+              val response: pcompiler.Response[List[CompletionInfo]] = pcompiler.askForResponse { () =>
+                val elb = new ListBuffer[CompletionInfo]
+                completions.foreach { completion =>
+                  try {
+                    completion match {
+                      case pcompiler.TypeMember(sym, tpe, true, inherited, viaView)
+                          if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                        elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
+                      case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                        elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
+                      case _ =>
+                    }
+                  }
+                  catch {
+                    case t: Throwable =>
+                      println("Completion Problem 0: " + t.getMessage())
+                    // ignore, and move on to the next one
                   }
                 }
-                catch {
-                  case t: Throwable =>
-                    println("Completion Problem 0: " + t.getMessage())
-                  // ignore, and move on to the next one
-                }
+                elb.toList
               }
-              elb.toList
-            }
-            response.get match {
-              case Left(l)  => l
-              case Right(_) => Nil
-            }
-          case Some(Right(_)) => Nil
-          case None           => Nil
+              response.get match {
+                case Left(l)  => l
+                case Right(_) => Nil
+              }
+            case Some(Right(_)) => Nil
+            case None           => Nil
+          }
         }
       }
-    } getOrElse (Nil)
+      .getOrElse(Nil)
   }
 }

@@ -18,15 +18,15 @@ package net.kogics.kojo.core
 import java.awt.Paint
 import java.util.concurrent.Future
 
+import edu.umd.cs.piccolo.activities.PActivity
+import edu.umd.cs.piccolo.util.PBounds
 import edu.umd.cs.piccolo.PCamera
 import edu.umd.cs.piccolo.PCanvas
 import edu.umd.cs.piccolo.PLayer
-import edu.umd.cs.piccolo.activities.PActivity
-import edu.umd.cs.piccolo.util.PBounds
 
 trait SCanvas extends TSCanvasFeatures {
   // stuff gets added here (instead of in the base class) if any of the following conditions hold:
-  // 1) there's a name clash with TurtleWorld 
+  // 1) there's a name clash with TurtleWorld
   // 2) the builtin method name is different from the canvas method name
   // 3) there is no builtin method corresponding to the canvas method
   def turtle0: Turtle

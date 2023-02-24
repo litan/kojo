@@ -15,9 +15,8 @@
 package net.kogics.kojo.lite.topc
 
 import javax.swing.JPanel
+
 import net.kogics.kojo.util.Utils
 
 class TraceHolder(val tracePanel: JPanel)
-  extends BaseHolder("TR", Utils.loadString("CTL_TraceTopComponent"), tracePanel) {
-
-}
+    extends BaseHolder("TR", Utils.loadString("CTL_TraceTopComponent"), tracePanel) {}

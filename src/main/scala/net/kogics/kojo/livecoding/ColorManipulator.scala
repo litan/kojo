@@ -1,28 +1,27 @@
 package net.kogics.kojo.livecoding
 
+import java.awt.event.ActionEvent
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Point
-import java.awt.event.ActionEvent
 import java.util.regex.Pattern
-
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.text.JTextComponent
+import javax.swing.text.Utilities
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory
 import javax.swing.JButton
 import javax.swing.JColorChooser
 import javax.swing.JComponent
+import javax.swing.JDialog
 import javax.swing.JPanel
 import javax.swing.KeyStroke
 import javax.swing.Popup
 import javax.swing.PopupFactory
 import javax.swing.SwingUtilities
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
-import javax.swing.text.JTextComponent
-import javax.swing.text.Utilities
 
 import net.kogics.kojo.util.Utils
-import javax.swing.JDialog
 
 class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator {
   var target = ""
@@ -34,7 +33,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
   def isAbsent = colorPopup == null
   def isPresent = !isAbsent
 
-  lazy val ColorPattern = Pattern.compile("""(C\.)?(%s)""" format (ctx.knownColors.mkString("|")))
+  lazy val ColorPattern = Pattern.compile("""(C\.)?(%s)""".format(ctx.knownColors.mkString("|")))
   def matcher(possibleColor: String) = ColorPattern.matcher(possibleColor)
   lazy val ColorPattern2 = Pattern.compile("""Color\((\d+),\s*(\d+),\s*(\d+)(,\s*(\d+))?\)""")
   def matcher2(possibleColorLine: String) = ColorPattern2.matcher(possibleColorLine)
@@ -51,7 +50,7 @@ class ColorManipulator(ctx: ManipulationContext) extends InteractiveManipulator 
       val lineOffset = offset - lineStart
       if (start <= lineOffset && lineOffset <= end) {
         target = m.group
-        val rgba = Seq(1, 2, 3, 5) map { e =>
+        val rgba = Seq(1, 2, 3, 5).map { e =>
           val ret = m.group(e)
           if (ret != null) ret.toInt else 255
         }

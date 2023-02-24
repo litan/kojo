@@ -14,14 +14,16 @@
  */
 package net.kogics.kojo.lite
 
-import java.awt.{Component, Dimension, Insets}
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-
+import java.awt.Component
+import java.awt.Dimension
+import java.awt.Insets
 import javax.swing._
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
 import javax.swing.text.html.HTMLEditorKit
+
 import net.kogics.kojo.action.CloseFile
 import net.kogics.kojo.action.LoadFrom
 import net.kogics.kojo.action.NewFile
@@ -148,7 +150,7 @@ trait AppMenu {
       val item = new JMenuItem(label)
       item.addActionListener(new ActionListener {
         def actionPerformed(ev: ActionEvent): Unit = {
-          //loadAndRunResource(root + file)
+          // loadAndRunResource(root + file)
           loadAndRunLocalizedResource(root, file)
         }
       })

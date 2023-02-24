@@ -28,11 +28,12 @@ case class Aralık(ilk: Sayı, son: Sayı, adım: Sayı = 1) {
   def yazı() = toString()
   def herÖgeİçin(komutlar: (Sayı) => Birim) = r.foreach(komutlar)
   override def toString() = {
-    val yazı = if (r.size <= 10) r.mkString("(", ", ", ")")
-    else {
-      val (başı, sonu) = (r.take(5), r.drop(r.size - 5))
-      başı.mkString("(", ", ", " ...") + sonu.mkString(" ", ", ", ")")
-    }
+    val yazı =
+      if (r.size <= 10) r.mkString("(", ", ", ")")
+      else {
+        val (başı, sonu) = (r.take(5), r.drop(r.size - 5))
+        başı.mkString("(", ", ", " ...") + sonu.mkString(" ", ", ", ")")
+      }
     s"Aralık$yazı"
   }
   def map[B](f: Sayı => B) = r.map(f)
@@ -47,10 +48,7 @@ case class Aralık(ilk: Sayı, son: Sayı, adım: Sayı = 1) {
 
 object Aralık {
   def apply(ilk: Sayı, son: Sayı, adım: Sayı = 1) = new Aralık(ilk, son, adım)
-  def kapalı(ilk: Sayı, son: Sayı, adım: Sayı = 1) = new Aralık(
-    ilk,
-    if (adım > 0) son+1 else son-1,
-    adım)
+  def kapalı(ilk: Sayı, son: Sayı, adım: Sayı = 1) = new Aralık(ilk, if (adım > 0) son + 1 else son - 1, adım)
   // copied from class Builtins ../../Builtins.scala
   def kesirden(ilk: Kesir, son: Kesir, adım: Kesir) = Range.BigDecimal(ilk, son, adım)
   def kesirdenAçık(ilk: Kesir, son: Kesir, adım: Kesir) = Range.BigDecimal(ilk, son, adım)

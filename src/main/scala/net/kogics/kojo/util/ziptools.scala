@@ -1,8 +1,8 @@
 // This was built to strip the signatures from the Kojo jars under Webstart
 // That solved the slow Tracing problem under Webstart
 // Since then, a better solution has been discovered to solve the slow Tracing problem under Webstart
-// Now, this stuff depends on commons-compress, which we don't want to include for the Webstart App because it is not needed any more 
-// So we comment out this code, to avoid having it in a production environment without its commons-compress dependency being available  
+// Now, this stuff depends on commons-compress, which we don't want to include for the Webstart App because it is not needed any more
+// So we comment out this code, to avoid having it in a production environment without its commons-compress dependency being available
 
 ///*
 // * Copyright (C) 2013 Lalit Pant <pant.lalit@gmail.com>

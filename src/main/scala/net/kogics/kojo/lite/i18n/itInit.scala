@@ -20,15 +20,15 @@
 
 package net.kogics.kojo.lite.i18n
 
-import java.awt.Font
-import java.awt.Paint
 import java.awt.geom.Point2D
+import java.awt.Font
 import java.awt.Image
+import java.awt.Paint
 
-import net.kogics.kojo.lite.CoreBuiltins
-import net.kogics.kojo.lite.Builtins
-import net.kogics.kojo.xscala.RepeatCommands
 import net.kogics.kojo.core.Voice
+import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
+import net.kogics.kojo.xscala.RepeatCommands
 
 object ItalianDirectionCases {
 
@@ -55,34 +55,34 @@ object ItalianSpeedCases {
   case object Velocissima extends Velocità
 }
 
-
 object ItalianCustomStatements {
 
   import scala.language.implicitConversions
 
-  class IfClauseExpression[T1, T2](fn1: => T1, fn2: => T2){
+  class IfClauseExpression[T1, T2](fn1: => T1, fn2: => T2) {
     lazy val pred = fn1
     lazy val compl = fn2
   }
 
-  implicit class TernaryAssocExpression(cond: => Boolean){
+  implicit class TernaryAssocExpression(cond: => Boolean) {
     def ??[T](thenFn: => T) = new IfClauseExpression(cond, thenFn)
   }
 
-  implicit class TernaryElseClauseExpression[T](falseFn: => T){
+  implicit class TernaryElseClauseExpression[T](falseFn: => T) {
     def ::(clause: IfClauseExpression[Boolean, T]) =
-      if(clause.pred) clause.compl else falseFn
+      if (clause.pred) clause.compl else falseFn
   }
 
   def isNotEmpty[T](value: T): Boolean = {
     Option(value) match {
       case None => false
-      case Some(v) => v match {
-        case false => false
-        case 0 => false
-        case s: String if s.isEmpty => false
-        case _ => true
-      }
+      case Some(v) =>
+        v match {
+          case false                  => false
+          case 0                      => false
+          case s: String if s.isEmpty => false
+          case _                      => true
+        }
     }
   }
 
@@ -94,14 +94,13 @@ object ItalianCustomStatements {
 
   implicit class OrOperator[T](thatFn: => T) {
     def oppure[A >: T](thisFn: A) = {
-      if(isNotEmpty(thatFn)) thatFn else thisFn
+      if (isNotEmpty(thatFn)) thatFn else thisFn
     }
   }
 
-  class IfThenClauseExpression[T](cond: => Boolean, thenFn: => T)
-    extends IfClauseExpression(cond, thenFn) {
+  class IfThenClauseExpression[T](cond: => Boolean, thenFn: => T) extends IfClauseExpression(cond, thenFn) {
     def altrimenti[T](elseFn: => T) = {
-      if(cond) thenFn else elseFn
+      if (cond) thenFn else elseFn
     }
   }
 
@@ -116,13 +115,14 @@ object ItalianCustomStatements {
 }
 
 object ItalianAPI {
+  import java.awt.Color
+
+  import net.kogics.kojo.core.Turtle
+  import net.kogics.kojo.util.Utils
   import ItalianDirectionCases._
   import ItalianSpeedCases._
-  import net.kogics.kojo.core.Turtle
-  import java.awt.Color
-  import net.kogics.kojo.util.Utils
 
-  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ // unstable reference to module
 
   import ItalianCustomStatements._
 
@@ -143,8 +143,8 @@ object ItalianAPI {
     def muoviVerso(x: Double, y: Double) = englishTurtle.moveTo(x, y)
     def cambiaPosizione(x: Double, y: Double) = englishTurtle.changePosition(x, y)
     def salta(n: Double) = {
-      englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop(n) //hop change state to penDown after hop
+      englishTurtle.saveStyle() // to preserve pen state
+      englishTurtle.hop(n) // hop change state to penDown after hop
       englishTurtle.restoreStyle()
     }
     def salta(): Unit = salta(25)
@@ -159,10 +159,10 @@ object ItalianAPI {
     def valoreRitardo = englishTurtle.animationDelay
     def ritardo(n: Long) = englishTurtle.setAnimationDelay(n)
     def velocità(v: Velocità) = v match {
-      case Lentissima => englishTurtle.setAnimationDelay(2000)
-      case Lenta => englishTurtle.setAnimationDelay(1000)
-      case Media => englishTurtle.setAnimationDelay(100)
-      case Veloce => englishTurtle.setAnimationDelay(10)
+      case Lentissima  => englishTurtle.setAnimationDelay(2000)
+      case Lenta       => englishTurtle.setAnimationDelay(1000)
+      case Media       => englishTurtle.setAnimationDelay(100)
+      case Veloce      => englishTurtle.setAnimationDelay(10)
       case Velocissima => englishTurtle.setAnimationDelay(0)
     }
     def lentezza(v: Long) = englishTurtle.setAnimationDelay(v)
@@ -217,11 +217,14 @@ object ItalianAPI {
     }
 
     def quadrato(passi: Double = 100, direzione: Direzione = Destra): Unit = {
-      square(passi, direzione match {
-        case Destra   => Right
-        case Sinistra => Left
+      square(
+        passi,
+        direzione match {
+          case Destra   => Right
+          case Sinistra => Left
 
-      })
+        }
+      )
     }
 
     def triangle(steps: Double, direction: Direction): Unit = {
@@ -239,7 +242,7 @@ object ItalianAPI {
 
     def polygon(side: Double, sides: Int) = {
       val a = 180 / (sides.toDouble / 2)
-      if(sides % 2 >= 0) englishTurtle.left(90 - a)
+      if (sides % 2 >= 0) englishTurtle.left(90 - a)
       RepeatCommands.repeat(sides) {
         englishTurtle.forward(side)
         englishTurtle.right(a)
@@ -249,17 +252,21 @@ object ItalianAPI {
     def poligono(lato: Double, lati: Int) = polygon(lato, lati)
 
     def triangolo(lato: Double, direzione: Direzione = Destra) = {
-      triangle(lato, direzione match {
-        case Destra   => Right
-        case Sinistra => Left
+      triangle(
+        lato,
+        direzione match {
+          case Destra   => Right
+          case Sinistra => Left
 
-      })
+        }
+      )
     }
 
   }
 
   class Tartaruga(override val englishTurtle: Turtle) extends ItalianTurtle {
-    def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
+    def this(startX: Double, startY: Double, costumeFileName: String) =
+      this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
 
@@ -273,9 +280,10 @@ object ItalianAPI {
   }
 
   def nuovaTartaruga(): Tartaruga = new Tartaruga(0, 0)
-  def nuovaTartaruga(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") = new Tartaruga(x, y, costume)
+  def nuovaTartaruga(x: Double = 0, y: Double = 0, costume: String = "/images/turtle32.png") =
+    new Tartaruga(x, y, costume)
 
-  class Tartaruga0(t0: => Turtle) extends ItalianTurtle { //by-name construction as turtle0 is volatile }
+  class Tartaruga0(t0: => Turtle) extends ItalianTurtle { // by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
 
@@ -296,7 +304,7 @@ object ItalianAPI {
   def sfondo(c: Color) = builtins.setBackground(c)
   def gradiente(c1: Color, c2: Color) = builtins.TSCanvas.setBackgroundV(c1, c2)
 
-  //loops
+  // loops
   def ripeti(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
@@ -313,13 +321,13 @@ object ItalianAPI {
     RepeatCommands.repeatFor(sequenza) { block }
   }
 
-  //simple IO
+  // simple IO
   def leggiLinea(pronto: String = "") = builtins.readln(pronto)
 
-  def scriviLinea(data: Any) = println(data) //Transferred here from sv.tw.kojo.
+  def scriviLinea(data: Any) = println(data) // Transferred here from sv.tw.kojo.
   def scriviLinea() = println()
 
-  //math functions
+  // math functions
   def arrotonda(numero: Number, cifre: Int = 0): Double = {
     val faktor = math.pow(10, cifre).toDouble
     math.round(numero.doubleValue * faktor).toLong / faktor
@@ -327,35 +335,36 @@ object ItalianAPI {
   def numeroCasuale(limitiSuperiori: Int) = builtins.random(limitiSuperiori)
   def numeroDecimaleCasuale(limitiSuperiori: Int) = builtins.randomDouble(limitiSuperiori)
 
-  //some type aliases in Swedish
+  // some type aliases in Swedish
   type Intero = Int
   type Decimale = Double
   type Stringa = String
 
-  //speedTest
-  def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") //sekunder
+  // speedTest
+  def systemtid = BigDecimal(System.nanoTime) / BigDecimal("1000000000") // sekunder
 
-  @annotation.nowarn def conta(n: BigInt): Unit = {
+  @annotation.nowarn
+  def conta(n: BigInt): Unit = {
     var c: BigInt = 1
     print("*** conta da 1 fino a ... ")
     val startTid = systemtid
-    while (c < n) { c = c + 1 } //tar tid om n är stort
+    while (c < n) { c = c + 1 } // tar tid om n är stort
     val stoppTid = systemtid
     println("" + n + " *** PRONTO!")
     val tid = stoppTid - startTid
     print("Ci sono voluti ")
     if (tid < 0.1)
-      println((tid * 1000).round(new java.math.MathContext(2)) +
-        " millisecondi.")
+      println(
+        (tid * 1000).round(new java.math.MathContext(2)) +
+          " millisecondi."
+      )
     else println((tid * 10).toLong / 10.0 + " secondi.")
   }
 }
 
-
-
 object ItInit {
   def init(builtins: CoreBuiltins): Unit = {
-    //initialize unstable value
+    // initialize unstable value
     ItalianAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
@@ -364,12 +373,12 @@ object ItInit {
           println("Lo storico non sarà salvato nel Blocco Note di Kojo alla chiusura.")
         }
         b.setEditorTabSize(2)
-        //code completion
+        // code completion
         b.addCodeTemplates(
           "it",
           codeTemplates
         )
-        //help texts
+        // help texts
         b.addHelpContent(
           "it",
           helpContent

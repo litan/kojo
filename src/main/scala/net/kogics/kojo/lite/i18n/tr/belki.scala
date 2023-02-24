@@ -57,4 +57,3 @@ trait OptionMethodsInTurkish {
     // todo: more to come
   }
 }
-

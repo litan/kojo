@@ -16,7 +16,7 @@ package net.kogics.kojo.util
 
 object Throttler {
   val systemThrottler = new Throttler(100, 0)
-  val hardSystemThrottler = new Throttler(100, 10)  
+  val hardSystemThrottler = new Throttler(100, 10)
   def throttle() = systemThrottler.throttle()
   def throttleHard() = hardSystemThrottler.throttle()
 }
@@ -26,11 +26,9 @@ class Throttler(after: Int, sleepTime: Int) {
     override def initialValue = 0
   }
 
-  /**
-   * Slow things down if stuff is happening too quickly
-   * Meant to slow down runaway computation inside the interpreter, so that the
-   * user can interrupt the runaway thread
-   */
+  /** Slow things down if stuff is happening too quickly Meant to slow down runaway computation inside the interpreter,
+    * so that the user can interrupt the runaway thread
+    */
   def throttle(): Unit = {
     val nc = numCalls.get + 1
     if (nc > after) {

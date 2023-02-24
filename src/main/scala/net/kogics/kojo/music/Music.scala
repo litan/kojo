@@ -16,7 +16,7 @@
 package net.kogics.kojo
 package music
 
-import org.jfugue.{Rhythm => JFRhythm, _}
+import org.jfugue.{ Rhythm => JFRhythm, _ }
 import util.Utils
 
 object Music {

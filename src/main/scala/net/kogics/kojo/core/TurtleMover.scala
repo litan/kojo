@@ -14,8 +14,12 @@
  */
 package net.kogics.kojo.core
 
-import java.awt.geom.{GeneralPath, PathIterator, Point2D}
-import java.awt.{Font, Image, Paint}
+import java.awt.geom.GeneralPath
+import java.awt.geom.PathIterator
+import java.awt.geom.Point2D
+import java.awt.Font
+import java.awt.Image
+import java.awt.Paint
 
 case class Style(penColor: Paint, penThickness: Double, fillColor: Paint, font: Font, down: Boolean)
 trait Speed

@@ -17,24 +17,35 @@ package net.kogics.kojo
 package lite
 package trace
 
-import java.awt.Color
-import java.awt.Font
 import java.awt.geom.AffineTransform
 import java.awt.geom.Point2D
+import java.awt.Color
+import java.awt.Font
 import java.io.File
 
-import scala.jdk.CollectionConverters._
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+import scala.jdk.CollectionConverters._
 import scala.reflect.internal.util.BatchSourceFile
 import scala.reflect.internal.util.Position
+import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.Global
 import scala.tools.nsc.Settings
-import scala.tools.nsc.reporters.Reporter
 import scala.util.control.Breaks.break
 import scala.util.control.Breaks.breakable
 import scala.util.matching.Regex
 
+import com.sun.jdi.connect.LaunchingConnector
+import com.sun.jdi.event.BreakpointEvent
+import com.sun.jdi.event.ClassPrepareEvent
+import com.sun.jdi.event.ExceptionEvent
+import com.sun.jdi.event.MethodEntryEvent
+import com.sun.jdi.event.MethodExitEvent
+import com.sun.jdi.event.ThreadStartEvent
+import com.sun.jdi.event.VMDeathEvent
+import com.sun.jdi.event.VMDisconnectEvent
+import com.sun.jdi.event.VMStartEvent
+import com.sun.jdi.request.EventRequest
 import com.sun.jdi.AbsentInformationException
 import com.sun.jdi.ArrayReference
 import com.sun.jdi.Bootstrap
@@ -49,18 +60,6 @@ import com.sun.jdi.StringReference
 import com.sun.jdi.ThreadReference
 import com.sun.jdi.Value
 import com.sun.jdi.VirtualMachine
-import com.sun.jdi.connect.LaunchingConnector
-import com.sun.jdi.event.BreakpointEvent
-import com.sun.jdi.event.ClassPrepareEvent
-import com.sun.jdi.event.ExceptionEvent
-import com.sun.jdi.event.MethodEntryEvent
-import com.sun.jdi.event.MethodExitEvent
-import com.sun.jdi.event.ThreadStartEvent
-import com.sun.jdi.event.VMDeathEvent
-import com.sun.jdi.event.VMDisconnectEvent
-import com.sun.jdi.event.VMStartEvent
-import com.sun.jdi.request.EventRequest
-
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.core.Turtle
@@ -144,7 +143,8 @@ def main(args: Array[String]) {
   def stop(): Unit = {
     traceListener.onEnd()
     if (vmRunning) {
-      try { currThread.virtualMachine.exit(1) } catch { case t: Throwable => }
+      try { currThread.virtualMachine.exit(1) }
+      catch { case t: Throwable => }
     }
   }
 
@@ -178,7 +178,8 @@ def main(args: Array[String]) {
 
   def launchVM() = {
     val conns = Bootstrap.virtualMachineManager.allConnectors
-    val connector = conns.asScala.find(_.name.equals("com.sun.jdi.RawCommandLineLaunch")).get.asInstanceOf[LaunchingConnector]
+    val connector =
+      conns.asScala.find(_.name.equals("com.sun.jdi.RawCommandLineLaunch")).get.asInstanceOf[LaunchingConnector]
 
     // set connector arguments
     val connArgs = connector.defaultArguments()
@@ -188,10 +189,13 @@ def main(args: Array[String]) {
 
     val port = 8001 + builtins.random(1000)
 
-    val cmdLine = if (System.getProperty("os.name").contains("Windows"))
-      s"""-Xrunjdwp:transport=dt_shmem,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" -client -Xms32m -Xmx768m Wrapper"""
-    else
-      s"""-Xrunjdwp:transport=dt_socket,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System.getProperty("java.class.path")}" -client -Xms32m -Xmx768m Wrapper"""
+    val cmdLine =
+      if (System.getProperty("os.name").contains("Windows"))
+        s"""-Xrunjdwp:transport=dt_shmem,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System
+            .getProperty("java.class.path")}" -client -Xms32m -Xmx768m Wrapper"""
+      else
+        s"""-Xrunjdwp:transport=dt_socket,address=127.0.0.1:$port,suspend=y -classpath "$tmpdir${File.pathSeparator}${System
+            .getProperty("java.class.path")}" -client -Xms32m -Xmx768m Wrapper"""
 
     val javaHome = System.getProperty("java.home")
     val javaExec =
@@ -221,7 +225,7 @@ def main(args: Array[String]) {
     vm.allThreads.asScala.find(_.name == name).getOrElse(null)
 
   def trace(code: String) = {
-    notSupported find { code.contains(_) } match {
+    notSupported.find { code.contains(_) } match {
       case Some(w) => println(s"Tracing is not supported for scripts that use $w")
       case None    => Utils.runAsync { realTrace(code) }
     }
@@ -231,7 +235,9 @@ def main(args: Array[String]) {
     try {
       traceListener.onStart()
       verboseTrace = if (System.getProperty("kojo.trace.verbose") == "true") true else false
-      traceLevel = try { System.getProperty("kojo.trace.level", "1").toInt } catch { case t: Throwable => 1 }
+      traceLevel =
+        try { System.getProperty("kojo.trace.level", "1").toInt }
+        catch { case t: Throwable => 1 }
       turtles.clear()
       pictures.clear()
       evtReqs = Vector[EventRequest]()
@@ -241,7 +247,7 @@ def main(args: Array[String]) {
 
       val success = compile(code)
       if (!success) {
-        pictureKeywords find { code.contains(_) } match {
+        pictureKeywords.find { code.contains(_) } match {
           case Some(_) =>
             val msg = """Picture tracing is only supported for scripts that use -
 Picture, PictureT,
@@ -262,7 +268,17 @@ that is not supported under Tracing.
 
       val vm = launchVM()
       println("Tracing started...")
-      val excludes = Array("java.*", "javax.*", "jdk.internal.*", "sun.*", "com.sun.*", "com.apple.*", "edu.umd.cs.piccolo.*", "net.kogics.kojo.util.*", "org.apache.commons.math.*")
+      val excludes = Array(
+        "java.*",
+        "javax.*",
+        "jdk.internal.*",
+        "sun.*",
+        "com.sun.*",
+        "com.apple.*",
+        "edu.umd.cs.piccolo.*",
+        "net.kogics.kojo.util.*",
+        "org.apache.commons.math.*"
+      )
 
       val evtQueue = vm.eventQueue
 
@@ -403,9 +419,11 @@ that is not supported under Tracing.
       return "null"
     }
 
-    if (frameVal.isInstanceOf[ObjectReference] &&
+    if (
+      frameVal.isInstanceOf[ObjectReference] &&
       !frameVal.isInstanceOf[StringReference] &&
-      !frameVal.isInstanceOf[ArrayReference]) {
+      !frameVal.isInstanceOf[ArrayReference]
+    ) {
       val objRef = frameVal.asInstanceOf[ObjectReference]
       val mthd = objRef.referenceType.methodsByName("toString").asScala.find(_.argumentTypes.size == 0).get
 
@@ -458,8 +476,8 @@ that is not supported under Tracing.
         !name.startsWith("box") &&
         !name.startsWith("unbox") &&
         !name.startsWith("wrap"))) &&
-        (callerLineNum > 0 &&
-          callerLineNum <= codeLines.size)
+    (callerLineNum > 0 &&
+      callerLineNum <= codeLines.size)
   }
 
   def handleMethodEntry(methodEnterEvt: MethodEntryEvent): Unit = {
@@ -486,21 +504,33 @@ that is not supported under Tracing.
     val methodObjectType = if (methodObject != null) methodObject.referenceType.name else ""
 
     val methodName = desugar(methodEnterEvt.method.name, methodObjectType)
-    val srcName = try { methodEnterEvt.location.sourceName } catch { case e: Throwable => "N/A" }
-    val callerSrcName = try { currThread.frame(1).location.sourceName } catch { case _: Throwable => "N/A" }
+    val srcName =
+      try { methodEnterEvt.location.sourceName }
+      catch { case e: Throwable => "N/A" }
+    val callerSrcName =
+      try { currThread.frame(1).location.sourceName }
+      catch { case _: Throwable => "N/A" }
     val lOffset = if (srcName == "scripteditor") lineNumOffset else 0
     val clOffset = if (callerSrcName == "scripteditor") lineNumOffset else 0
     val lineNum = methodEnterEvt.location.lineNumber - lOffset
-    val callerLineNum = try { currThread.frame(1).location.lineNumber - clOffset } catch { case _: Throwable => -1 }
-    val callerLine = if (callerSrcName == "scripteditor")
-      try { codeLines(callerLineNum - 1) } catch { case _: Throwable => "N/A" }
-    else
-      ""
-    val srcLine = if (srcName == "scripteditor")
-      try { codeLines(lineNum - 1) } catch { case _: Throwable => "N/A" }
-    else
-      ""
-    val localArgs = try { methodEnterEvt.method.arguments.asScala.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
+    val callerLineNum =
+      try { currThread.frame(1).location.lineNumber - clOffset }
+      catch { case _: Throwable => -1 }
+    val callerLine =
+      if (callerSrcName == "scripteditor")
+        try { codeLines(callerLineNum - 1) }
+        catch { case _: Throwable => "N/A" }
+      else
+        ""
+    val srcLine =
+      if (srcName == "scripteditor")
+        try { codeLines(lineNum - 1) }
+        catch { case _: Throwable => "N/A" }
+      else
+        ""
+    val localArgs =
+      try { methodEnterEvt.method.arguments.asScala.toList }
+      catch { case e: AbsentInformationException => List[LocalVariable]() }
 
     val isCommand = methodEnterEvt.method.returnTypeName == "void"
     def isTurtleCommand = isCommand && methodObjectType.contains("TracingTurtle")
@@ -543,9 +573,11 @@ that is not supported under Tracing.
     //    }
     newEvt.picture = currPicture
 
-    if ((callerSrcName == "scripteditor" &&
-      (callerLine.contains(methodName) || traceLevelEntry(methodName, callerLineNum))) ||
-      isPictureDraw) {
+    if (
+      (callerSrcName == "scripteditor" &&
+        (callerLine.contains(methodName) || traceLevelEntry(methodName, callerLineNum))) ||
+      isPictureDraw
+    ) {
       newEvt.args = methodArgs(targetToString)
       newEvt.targetObject = targetToString(methodObject)
       traceListener.onMethodEnter(newEvt)
@@ -565,10 +597,19 @@ that is not supported under Tracing.
     val methodObjectType = if (methodObject != null) methodObject.referenceType.name else ""
 
     val methodName = desugar(methodExitEvt.method.name, methodObjectType)
-    val localArgs = try { methodExitEvt.method.arguments.asScala.toList } catch { case e: AbsentInformationException => List[LocalVariable]() }
+    val localArgs =
+      try { methodExitEvt.method.arguments.asScala.toList }
+      catch { case e: AbsentInformationException => List[LocalVariable]() }
     val retVal = methodExitEvt.returnValue
 
-    handleMethodReturn(methodName, methodExitEvt.method.declaringType.name, methodExitEvt.method.signature, stkfrm, localArgs, retVal)
+    handleMethodReturn(
+      methodName,
+      methodExitEvt.method.declaringType.name,
+      methodExitEvt.method.signature,
+      stkfrm,
+      localArgs,
+      retVal
+    )
 
     val mthdEvent = getCurrentMethodEvent
     mthdEvent.foreach { ce =>
@@ -577,9 +618,11 @@ that is not supported under Tracing.
       val retValStr = localToString(retVal)
       ce.exitLineNum = lineNum
 
-      if (ce.callerSourceName == "scripteditor" &&
+      if (
+        ce.callerSourceName == "scripteditor" &&
         (ce.callerLine.contains(methodName) || traceLevelEntry(methodName, ce.callerLineNum)) &&
-        (ce.returnType != "void" || ce.hasVisibleSubcall)) {
+        (ce.returnType != "void" || ce.hasVisibleSubcall)
+      ) {
         ce.returnVal = targetToString(retVal)
         traceListener.onMethodExit(ce)
         handleOutputUiEvent(ce, false)
@@ -594,7 +637,14 @@ that is not supported under Tracing.
 
   var currPicture: Option[Picture] = None
 
-  def runPictureMethod(name: String, signature: String, methodObject: ObjectReference, methodObjectType: String, stkfrm: StackFrame, localArgs: List[LocalVariable]): Unit = {
+  def runPictureMethod(
+      name: String,
+      signature: String,
+      methodObject: ObjectReference,
+      methodObjectType: String,
+      stkfrm: StackFrame,
+      localArgs: List[LocalVariable]
+  ): Unit = {
     if (currPicture.isDefined) {
       return
     }
@@ -611,9 +661,10 @@ that is not supported under Tracing.
         pictures(caller).rotate(angle)
       case "scale" if signature.endsWith("CorePicOps;") =>
         val fx = stkfrm.getValue(localArgs(0)).toString.toDouble
-        val fy = if (localArgs.length == 2)
-          stkfrm.getValue(localArgs(1)).toString.toDouble
-        else fx
+        val fy =
+          if (localArgs.length == 2)
+            stkfrm.getValue(localArgs(1)).toString.toDouble
+          else fx
         pictures(caller).scale(fx, fy)
       case m @ _ =>
       //        println(s"**TODO** - Unimplemented Picture method - $m")
@@ -658,7 +709,11 @@ that is not supported under Tracing.
       case "gridOff" =>
         TSCanvas.gridOff()
       case "zoom" =>
-        val (x, y, z) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stkfrm.getValue(localArgs(0)).toString.toDouble)
+        val (x, y, z) = (
+          stkfrm.getValue(localArgs(0)).toString.toDouble,
+          stkfrm.getValue(localArgs(1)).toString.toDouble,
+          stkfrm.getValue(localArgs(0)).toString.toDouble
+        )
         TSCanvas.zoom(x, y, z)
       case "setBackgroundH" =>
         val c1 = colorValue(stkfrm.getValue(localArgs(0)))
@@ -675,10 +730,11 @@ that is not supported under Tracing.
 
   def runTurtleCommand(name: String, stkfrm: StackFrame, localArgs: List[LocalVariable], me: MethodEvent): Unit = {
     val caller = stkfrm.thisObject.uniqueID
-    val turtle = if (currPicture.isDefined)
-      currPicture.get.asInstanceOf[Pic].t
-    else
-      turtles.getOrElse(caller, builtins.TSCanvas.turtle0)
+    val turtle =
+      if (currPicture.isDefined)
+        currPicture.get.asInstanceOf[Pic].t
+      else
+        turtles.getOrElse(caller, builtins.TSCanvas.turtle0)
     val createdTurtle = turtles.contains(caller)
 
     def traceForward(me2: MethodEvent, step: Double): Unit = {
@@ -776,7 +832,8 @@ that is not supported under Tracing.
         }
       case "jumpTo" =>
         if (localArgs.length == 2) {
-          val (x, y) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
+          val (x, y) =
+            (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble)
           turtle.jumpTo(x, y)
         }
       case "setCostume" =>
@@ -796,8 +853,10 @@ that is not supported under Tracing.
           while (!done) {
             evtReqs.foreach(_.disable)
             try {
-              val headValue = arg.invokeMethod(currThread, head, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
-              val tailValue = arg.invokeMethod(currThread, tail, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+              val headValue =
+                arg.invokeMethod(currThread, head, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+              val tailValue =
+                arg.invokeMethod(currThread, tail, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
               val costume = headValue.asInstanceOf[StringReference].value
               arg = tailValue.asInstanceOf[ObjectReference]
               costumes = costumes :+ costume
@@ -884,12 +943,23 @@ that is not supported under Tracing.
     lpics.toList
   }
 
-  def handleMethodReturn(name: String, declaringType: String, signature: String, stkfrm: StackFrame, localArgs: List[LocalVariable], retVal: Value): Unit = {
+  def handleMethodReturn(
+      name: String,
+      declaringType: String,
+      signature: String,
+      stkfrm: StackFrame,
+      localArgs: List[LocalVariable],
+      retVal: Value
+  ): Unit = {
     name match {
       case "newTurtle" =>
         import builtins.TSCanvas
         if (localArgs.length == 3) {
-          val (x, y, costume) = (stkfrm.getValue(localArgs(0)).toString.toDouble, stkfrm.getValue(localArgs(1)).toString.toDouble, stringValue(stkfrm.getValue(localArgs(2))))
+          val (x, y, costume) = (
+            stkfrm.getValue(localArgs(0)).toString.toDouble,
+            stkfrm.getValue(localArgs(1)).toString.toDouble,
+            stringValue(stkfrm.getValue(localArgs(2)))
+          )
           val newTurtle = TSCanvas.newTurtle(x, y, costume)
           val ref = retVal.asInstanceOf[ObjectReference].uniqueID
           turtles(ref) = newTurtle
@@ -971,15 +1041,18 @@ that is not supported under Tracing.
 
     evtReqs.foreach(_.disable)
     val nameMthd = fontVal.referenceType.methodsByName("getFontName").get(0)
-    val nameValue = fontVal.invokeMethod(currThread, nameMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val nameValue =
+      fontVal.invokeMethod(currThread, nameMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val name = nameValue.asInstanceOf[StringReference].value
 
     val styleMthd = fontVal.referenceType.methodsByName("getStyle").get(0)
-    val styleValue = fontVal.invokeMethod(currThread, styleMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val styleValue =
+      fontVal.invokeMethod(currThread, styleMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val style = styleValue.asInstanceOf[IntegerValue].value
 
     val sizeMthd = fontVal.referenceType.methodsByName("getSize").get(0)
-    val sizeValue = fontVal.invokeMethod(currThread, sizeMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val sizeValue =
+      fontVal.invokeMethod(currThread, sizeMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val size = sizeValue.asInstanceOf[IntegerValue].value
     evtReqs.foreach(_.enable)
 
@@ -991,11 +1064,12 @@ that is not supported under Tracing.
     val str = targetToString(colorVal)
     val pattern = new Regex("\\d{1,3}")
     var rgb = Vector[Int]()
-    (pattern findAllIn str).foreach(c => rgb = rgb :+ c.toInt)
+    pattern.findAllIn(str).foreach(c => rgb = rgb :+ c.toInt)
 
     evtReqs.foreach(_.disable)
     val alphaMthd = colorVal.referenceType.methodsByName("getAlpha").get(0)
-    val alphaValue = colorVal.invokeMethod(currThread, alphaMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
+    val alphaValue =
+      colorVal.invokeMethod(currThread, alphaMthd, new java.util.ArrayList, ObjectReference.INVOKE_SINGLE_THREADED)
     val alpha = alphaValue.asInstanceOf[IntegerValue].value
     evtReqs.foreach(_.enable)
 
@@ -1011,7 +1085,7 @@ that is not supported under Tracing.
 
     val thrdStartVal = evtReqMgr.createThreadStartRequest
     thrdStartVal.setSuspendPolicy(EventRequest.SUSPEND_ALL)
-    //thrdStartVal.addThreadFilter(mainThread)
+    // thrdStartVal.addThreadFilter(mainThread)
     thrdStartVal.enable()
     evtReqs = evtReqs :+ thrdStartVal
   }

@@ -66,13 +66,13 @@ class IncrPage(val name: String, style: String, body: List[Para]) extends Viewab
 
   private def viewParas(n: Int) = {
     <body style={style}>
-      {body.take(n).map {para => para.body}}
+      {body.take(n).map { para => para.body }}
     </body>
   }
-  
+
   private def runCode(n: Int): Unit = {
     Utils.runAsyncMonitored {
-      body(n-1).code
+      body(n - 1).code
     }
   }
 
@@ -145,9 +145,9 @@ case class Story(pages: Viewable*) extends Viewable {
   }
 
   def hasView(pg: Int, para: Int) = {
-    if (pg > 0 && pg <= pages.size && para > 0 && para <= pages(pg-1).numViews) 
+    if (pg > 0 && pg <= pages.size && para > 0 && para <= pages(pg - 1).numViews)
       true
-    else 
+    else
       false
   }
 
@@ -157,7 +157,7 @@ case class Story(pages: Viewable*) extends Viewable {
     val targetPage = pg - 1
     if (currPage < targetPage) {
       while (currPage != targetPage) {
-        while(pages(currPage).hasNextView) {
+        while (pages(currPage).hasNextView) {
           pages(currPage).forward()
         }
         currPage += 1
@@ -166,9 +166,9 @@ case class Story(pages: Viewable*) extends Viewable {
         forward()
       }
     }
-    else if(currPage > targetPage) {
+    else if (currPage > targetPage) {
       while (currPage != targetPage) {
-        while(pages(currPage).hasPrevView) {
+        while (pages(currPage).hasPrevView) {
           pages(currPage).back()
         }
         currPage -= 1
@@ -179,7 +179,7 @@ case class Story(pages: Viewable*) extends Viewable {
     }
     else {
       // currPage == targetPage
-      while(pages(currPage).hasPrevView) {
+      while (pages(currPage).hasPrevView) {
         pages(currPage).back()
       }
       for (idx <- 1 until para) {
@@ -188,11 +188,11 @@ case class Story(pages: Viewable*) extends Viewable {
     }
   }
 
-  def location = (currPage+1, pages(currPage).currView)
+  def location = (currPage + 1, pages(currPage).currView)
 
   def pageNumber(name: String): Option[Int] = {
-    val idx = pages.indexWhere {e => name == e.name}
-    if (idx == -1) None else Some(idx+1)
+    val idx = pages.indexWhere { e => name == e.name }
+    if (idx == -1) None else Some(idx + 1)
   }
 
   def numViews = throw new UnsupportedOperationException
@@ -201,14 +201,14 @@ case class Story(pages: Viewable*) extends Viewable {
   def scrollToEnd = pages(currPage).scrollToEnd
 
   val noOpHandler = new StringHandlerHolder({ e => })
-  val handlers = collection.mutable.Map[String, HandlerHolder[Any]]() withDefaultValue(noOpHandler)
-  val linkEnterHandlers = collection.mutable.Map[String, HandlerHolder[Any]]() withDefaultValue(noOpHandler) 
-  val linkExitHandlers = collection.mutable.Map[String, HandlerHolder[Any]]() withDefaultValue(noOpHandler)
+  val handlers = collection.mutable.Map[String, HandlerHolder[Any]]().withDefaultValue(noOpHandler)
+  val linkEnterHandlers = collection.mutable.Map[String, HandlerHolder[Any]]().withDefaultValue(noOpHandler)
+  val linkExitHandlers = collection.mutable.Map[String, HandlerHolder[Any]]().withDefaultValue(noOpHandler)
 
   def addLinkHandler[T](name: String)(hm: HandlerHolder[T]) = Utils.runInSwingThread {
     handlers(name) = hm
   }
-  
+
   def handleLink(name: String, data: String): Unit = {
     handlers(name).handle(data)
   }
@@ -216,7 +216,7 @@ case class Story(pages: Viewable*) extends Viewable {
   def addLinkEnterHandler[T](name: String)(hm: HandlerHolder[T]) = Utils.runInSwingThread {
     linkEnterHandlers(name) = hm
   }
-  
+
   def handleLinkEnter(name: String, data: String): Unit = {
     linkEnterHandlers(name).handle(data)
   }
@@ -224,18 +224,18 @@ case class Story(pages: Viewable*) extends Viewable {
   def addLinkExitHandler[T](name: String)(hm: HandlerHolder[T]) = Utils.runInSwingThread {
     linkExitHandlers(name) = hm
   }
-  
+
   def handleLinkExit(name: String, data: String): Unit = {
     linkExitHandlers(name).handle(data)
   }
-  
+
   @volatile var stopFn: Option[() => Unit] = None
   def onStop(fn: => Unit): Unit = {
     stopFn = Some(() => fn)
   }
-  
+
   def stop(): Unit = {
     stopFn.foreach(_.apply())
   }
-  
+
 }

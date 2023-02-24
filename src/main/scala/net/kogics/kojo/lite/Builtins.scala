@@ -16,40 +16,50 @@
 package net.kogics.kojo
 package lite
 
+import java.awt.geom.Ellipse2D
 import java.awt.geom.GeneralPath
-import java.awt.geom.{Ellipse2D, Rectangle2D}
-import java.awt.image.{BufferedImage, BufferedImageOp}
-import java.awt.{Paint, Toolkit}
+import java.awt.geom.Rectangle2D
+import java.awt.image.BufferedImage
+import java.awt.image.BufferedImageOp
+import java.awt.Graphics2D
+import java.awt.Paint
+import java.awt.Toolkit
 import java.net.URL
+import javax.swing.JComponent
+
+import scala.language.implicitConversions
+
 import com.jhlabs.image.AbstractBufferedImageOp
 import com.jhlabs.image.LightFilter.Light
-
-import javax.swing.JComponent
-import net.kogics.kojo.core.{Rich2DPath, VertexShape, Voice}
+import net.kogics.kojo.core.Rich2DPath
+import net.kogics.kojo.core.VertexShape
+import net.kogics.kojo.core.Voice
 import net.kogics.kojo.kmath.KEasing
 import net.kogics.kojo.music.RealtimeNotePlayer
 import net.kogics.kojo.turtle.TurtleWorldAPI
-import net.kogics.kojo.util.{Throttler, UserCommand, Utils}
-import net.kogics.kojo.xscala.{CodeCompletionUtils, Help, RepeatCommands}
+import net.kogics.kojo.util.Throttler
+import net.kogics.kojo.util.UserCommand
+import net.kogics.kojo.util.Utils
+import net.kogics.kojo.xscala.CodeCompletionUtils
+import net.kogics.kojo.xscala.Help
+import net.kogics.kojo.xscala.RepeatCommands
 
-import scala.language.implicitConversions
-import scala.swing.Graphics2D
-
-// a static instance is needed for the compiler prefix code 
+// a static instance is needed for the compiler prefix code
 object Builtins {
   @volatile var instance: Builtins = _
 }
 
 class Builtins(
-  val TSCanvas:    DrawingCanvasAPI,
-  val Tw:          TurtleWorldAPI,
-  val Staging:     staging.API,
-  storyTeller:     story.StoryTeller,
-  mp3player:       music.KMp3,
-  fuguePlayer:     music.FuguePlayer,
-  val kojoCtx:     core.KojoCtx,
-  scalaCodeRunner: core.CodeRunner
-) extends CoreBuiltins with RepeatCommands { builtins =>
+    val TSCanvas: DrawingCanvasAPI,
+    val Tw: TurtleWorldAPI,
+    val Staging: staging.API,
+    storyTeller: story.StoryTeller,
+    mp3player: music.KMp3,
+    fuguePlayer: music.FuguePlayer,
+    val kojoCtx: core.KojoCtx,
+    scalaCodeRunner: core.CodeRunner
+) extends CoreBuiltins
+    with RepeatCommands { builtins =>
   Builtins.instance = this
   val tCanvas = TSCanvas.tCanvas
 
@@ -60,11 +70,17 @@ class Builtins(
   UserCommand.addCompletion("repeat", "(${n}) {\n    ${cursor}\n}")
   UserCommand.addSynopsis("repeat(n) {} - Repeats the commands within braces n number of times.")
   UserCommand.addCompletion("repeati", "(${n}) { i => \n    ${cursor}\n}")
-  UserCommand.addSynopsis("repeati(n) {} - Repeats the commands within braces n number of times. The current repeat index is available within the braces.")
+  UserCommand.addSynopsis(
+    "repeati(n) {} - Repeats the commands within braces n number of times. The current repeat index is available within the braces."
+  )
   UserCommand.addCompletion("repeatWhile", "(${condition}) {\n    ${cursor}\n}")
-  UserCommand.addSynopsis("repeatWhile(cond) {} - Repeats the commands within braces while the given condition is true.")
+  UserCommand.addSynopsis(
+    "repeatWhile(cond) {} - Repeats the commands within braces while the given condition is true."
+  )
   UserCommand.addCompletion("repeatUntil", "(${condition}) {\n    ${cursor}\n}")
-  UserCommand.addSynopsis("repeatUntil(cond) {} - Repeats the commands within braces until the given condition is true.")
+  UserCommand.addSynopsis(
+    "repeatUntil(cond) {} - Repeats the commands within braces until the given condition is true."
+  )
 
   def showScriptInOutput() = kojoCtx.showScriptInOutput()
   UserCommand("showScriptInOutput", Nil, "Enables the display of scripts in the output window when they run.")
@@ -73,7 +89,11 @@ class Builtins(
   UserCommand("hideScriptInOutput", Nil, "Stops the display of scripts in the output window.")
 
   def showVerboseOutput() = kojoCtx.showVerboseOutput()
-  UserCommand("showVerboseOutput", Nil, "Enables the display of output from the Scala interpreter. By default, output from the interpreter is shown only for single line scripts.")
+  UserCommand(
+    "showVerboseOutput",
+    Nil,
+    "Enables the display of output from the Scala interpreter. By default, output from the interpreter is shown only for single line scripts."
+  )
 
   def hideVerboseOutput() = kojoCtx.hideVerboseOutput()
   UserCommand("hideVerboseOutput", Nil, "Stops the display of output from the Scala interpreter.")
@@ -87,17 +107,21 @@ class Builtins(
 
   def print(obj: Any): Unit = {
     // Runs on Actor pool (interpreter) thread
-    kojoCtx.kprintln("%s" format (obj))
+    kojoCtx.kprintln("%s".format(obj))
     Throttler.throttleHard()
   }
   UserCommand.addCompletion("print", List("obj"))
 
-  def println(obj: Any): Unit = print("%s\n" format (obj))
+  def println(obj: Any): Unit = print("%s\n".format(obj))
   UserCommand.addCompletion("println", List("obj"))
   UserCommand.addSynopsis("println(obj) or print(obj) - Displays the given object as a string in the output window.")
 
   def readln(prompt: String): String = kojoCtx.readInput(prompt)
-  UserCommand("readln", List("promptString"), "Displays the given prompt in the output window and reads a line that the user enters.")
+  UserCommand(
+    "readln",
+    List("promptString"),
+    "Displays the given prompt in the output window and reads a line that the user enters."
+  )
 
   def onRunStart(): Unit = {
     BreakpointPane.onRunStart()
@@ -114,15 +138,35 @@ class Builtins(
   }
 
   def readInt(prompt: String): Int = readln(prompt).toInt
-  UserCommand("readInt", List("promptString"), "Displays the given prompt in the output window and reads an Integer value that the user enters.")
+  UserCommand(
+    "readInt",
+    List("promptString"),
+    "Displays the given prompt in the output window and reads an Integer value that the user enters."
+  )
 
   def readDouble(prompt: String): Double = readln(prompt).toDouble
-  UserCommand("readDouble", List("promptString"), "Displays the given prompt in the output window and reads a Double-precision Real value that the user enters.")
+  UserCommand(
+    "readDouble",
+    List("promptString"),
+    "Displays the given prompt in the output window and reads a Double-precision Real value that the user enters."
+  )
 
-  UserCommand("random", List("lowerBound", "upperBound"), "Returns a random Integer between 0 (inclusive) and upperBound (exclusive).")
-  UserCommand("randomDouble", List("lowerBound", "upperBound"), "Returns a random Double-precision Real between 0 (inclusive) and upperBound (exclusive).")
+  UserCommand(
+    "random",
+    List("lowerBound", "upperBound"),
+    "Returns a random Integer between 0 (inclusive) and upperBound (exclusive)."
+  )
+  UserCommand(
+    "randomDouble",
+    List("lowerBound", "upperBound"),
+    "Returns a random Double-precision Real between 0 (inclusive) and upperBound (exclusive)."
+  )
 
-  UserCommand("color", List("red", "green", "blue"), "Creates a new color based on the specified red, green, and blue levels.")
+  UserCommand(
+    "color",
+    List("red", "green", "blue"),
+    "Creates a new color based on the specified red, green, and blue levels."
+  )
 
   def setAstStopPhase(phase: String): Unit = kojoCtx.setAstStopPhase(phase)
   def astStopPhase = kojoCtx.astStopPhase
@@ -152,13 +196,24 @@ class Builtins(
   UserCommand("stPlayStory", List("story"), "Play the given story.")
 
   def stFormula(latex: String, size: Int = 18, cssColor: String = null) =
-    <div style={ "text-align:center;margin:6px;" }>
-      { if (cssColor != null) { <img src={ xml.Unparsed(story.CustomHtmlEditorKit.latexPrefix + latex) }
-            style={ "color:%s" format(cssColor) }
-            height={ "%d" format(size) } /> } else { <img src={ xml.Unparsed(story.CustomHtmlEditorKit.latexPrefix + latex) }
-            height={ "%d" format(size) } /> } }
+    <div style={"text-align:center;margin:6px;"}>
+      {
+      if (cssColor != null) {
+        <img src={xml.Unparsed(story.CustomHtmlEditorKit.latexPrefix + latex)}
+            style={"color:%s".format(cssColor)}
+            height={"%d".format(size)} />
+      }
+      else {
+        <img src={xml.Unparsed(story.CustomHtmlEditorKit.latexPrefix + latex)}
+            height={"%d".format(size)} />
+      }
+    }
     </div>
-  UserCommand("stFormula", List("latex"), "Converts the supplied latex string into html that can be displayed in the Story Teller Window.")
+  UserCommand(
+    "stFormula",
+    List("latex"),
+    "Converts the supplied latex string into html that can be displayed in the Story Teller Window."
+  )
 
   def stPlayMp3(mp3File: String): Unit = {
     storyTeller.playMp3(mp3File)
@@ -174,12 +229,18 @@ class Builtins(
     storyTeller.addButton(label)(fn)
   }
   UserCommand.addCompletion("stAddButton", " (${label}) {\n    ${cursor}\n}")
-  UserCommand.addSynopsis("stAddButton(label) {code} - Adds a button with the given label to the Story Teller Window, and runs the supplied code when the button is clicked.")
+  UserCommand.addSynopsis(
+    "stAddButton(label) {code} - Adds a button with the given label to the Story Teller Window, and runs the supplied code when the button is clicked."
+  )
 
   def stAddField(label: String, default: Any): Unit = {
     storyTeller.addField(label, default)
   }
-  UserCommand("stAddField", List("label", "default"), "Adds an input field with the supplied label and default value to the Story Teller Window.")
+  UserCommand(
+    "stAddField",
+    List("label", "default"),
+    "Adds an input field with the supplied label and default value to the Story Teller Window."
+  )
 
   implicit val StringRead = util.Read.StringRead
   implicit val DoubleRead = util.Read.DoubleRead
@@ -255,12 +316,20 @@ Here's a partial list of the available commands:
   def playMusicUntilDone(voice: Voice, n: Int = 1): Unit = {
     fuguePlayer.playMusicUntilDone(voice, n)
   }
-  UserCommand("playMusicUntilDone", List("score"), "Plays the specified melody, rhythm, or score, and waits till the music finishes.")
+  UserCommand(
+    "playMusicUntilDone",
+    List("score"),
+    "Plays the specified melody, rhythm, or score, and waits till the music finishes."
+  )
 
   def playMusicLoop(voice: Voice): Unit = {
     fuguePlayer.playMusicLoop(voice)
   }
-  UserCommand("playMusicLoop", List("score"), "Plays the specified melody, rhythm, or score in the background - in a loop.")
+  UserCommand(
+    "playMusicLoop",
+    List("score"),
+    "Plays the specified melody, rhythm, or score in the background - in a loop."
+  )
 
   val Instrument = music.Instrument
   @volatile private var rtnp: Option[RealtimeNotePlayer] = None
@@ -290,13 +359,25 @@ Here's a partial list of the available commands:
     rtnp = None
   }
 
-  UserCommand("textExtent", List("text", "fontSize"), "Determines the size/extent of the given text fragment for the given font size.")
+  UserCommand(
+    "textExtent",
+    List("text", "fontSize"),
+    "Determines the size/extent of the given text fragment for the given font size."
+  )
 
   def runInBackground(code: => Unit) = Utils.runAsyncMonitored(code)
-  UserCommand.addSynopsis("runInBackground", List("code"), "Runs the given code in the background, concurrently with other code that follows right after this command.")
+  UserCommand.addSynopsis(
+    "runInBackground",
+    List("code"),
+    "Runs the given code in the background, concurrently with other code that follows right after this command."
+  )
 
   def runInGuiThread(code: => Unit) = Utils.runInSwingThread(code)
-  UserCommand.addSynopsis("runInGuiThread", List("code"), "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command.")
+  UserCommand.addSynopsis(
+    "runInGuiThread",
+    List("code"),
+    "Runs the given code in the the GUI Thread, concurrently with other code that follows right after this command."
+  )
 
   def runInDrawingThread(code: => Unit) = Utils.runInSwingThread(code)
   def evalInDrawingThread[T](fn: => T) = Utils.runInSwingThreadAndWait(fn)
@@ -333,7 +414,10 @@ Here's a partial list of the available commands:
   }
   def reimportDefaults() = reimportBuiltins()
 
-  import story.{HandlerHolder, IntHandlerHolder, StringHandlerHolder, VoidHandlerHolder}
+  import story.HandlerHolder
+  import story.IntHandlerHolder
+  import story.StringHandlerHolder
+  import story.VoidHandlerHolder
   implicit def toIhm(handler: Int => Unit): HandlerHolder[Int] = new IntHandlerHolder(handler)
   implicit def toShm(handler: String => Unit): HandlerHolder[String] = new StringHandlerHolder(handler)
   implicit def toVhm(handler: () => Unit): HandlerHolder[Unit] = new VoidHandlerHolder(handler)
@@ -669,14 +753,18 @@ Here's a partial list of the available commands:
     def fromTurtle(fn: Turtle => Unit) = PictureT(fn)
     def fromCanvas(width: Double, height: Double)(fn: Graphics2D => Unit) = picture.fromJava2d(width, height, fn)
 
-    private[lite] def fromCanvasDynamic(width: Double, height: Double, scaleOutFactor: Double)
-                                       (fn: Graphics2D => Unit)(stopCheck: => Boolean) =
+    private[lite] def fromCanvasDynamic(width: Double, height: Double, scaleOutFactor: Double)(fn: Graphics2D => Unit)(
+        stopCheck: => Boolean
+    ) =
       picture.fromJava2dDynamic(width, height, scaleOutFactor, fn, stopCheck)
 
-    def fromSketch(sketch: {
-      def setup(cd: CanvasDraw): Unit
-      def drawLoop(cd: CanvasDraw): Unit
-    }, scaleOutFactor: Double = 1): Picture = {
+    def fromSketch(
+        sketch: {
+          def setup(cd: CanvasDraw): Unit
+          def drawLoop(cd: CanvasDraw): Unit
+        },
+        scaleOutFactor: Double = 1
+    ): Picture = {
       val sr = new SketchRunner(sketch, scaleOutFactor)
       sr.pic
     }
@@ -684,7 +772,8 @@ Here's a partial list of the available commands:
     def circle(radius: Double) = picture.circle(radius)
     // def circle(x: Double, y: Double, r: Double) = picture.offset(x, y) -> picture.circle(r)
     def ellipse(xRadius: Double, yRadius: Double) = picture.ellipse(xRadius, yRadius)
-    def ellipseInRect(width: Double, height: Double) = picture.trans(width / 2, height / 2) -> picture.ellipse(width / 2, height / 2)
+    def ellipseInRect(width: Double, height: Double) =
+      picture.trans(width / 2, height / 2) -> picture.ellipse(width / 2, height / 2)
     // def ellipse(x: Double, y: Double, rx: Double, ry: Double) = picture.offset(x, y) -> picture.ellipse(rx, ry)
     def arc(radius: Double, angle: Double) = picture.arc(radius, angle)
     def point = picture.trans(0, -0.01 / 2) -> line(0, 0.01)
@@ -786,10 +875,13 @@ Here's a partial list of the available commands:
       placeAndDraw(pic, 0, 0)
     }
 
-    def fromSketch(sketch: {
-      def setup(cd: CanvasDraw): Unit
-      def drawLoop(cd: CanvasDraw): Unit
-    }, scaleOutFactor: Double = 1): Picture = {
+    def fromSketch(
+        sketch: {
+          def setup(cd: CanvasDraw): Unit
+          def drawLoop(cd: CanvasDraw): Unit
+        },
+        scaleOutFactor: Double = 1
+    ): Picture = {
       val pic = Picture.fromSketch(sketch, scaleOutFactor)
       placeAndDraw(pic, 0, 0)
     }
@@ -797,14 +889,30 @@ Here's a partial list of the available commands:
   val pm = PictureMaker
 
   type Animation = animation.Animation
-  def Transition(durationSeconds: Double, fromState: Seq[Double], toState: Seq[Double], easer: KEasing,
-                 picMaker: Seq[Double] => Picture, hideOnDone: Boolean): Animation =
+  def Transition(
+      durationSeconds: Double,
+      fromState: Seq[Double],
+      toState: Seq[Double],
+      easer: KEasing,
+      picMaker: Seq[Double] => Picture,
+      hideOnDone: Boolean
+  ): Animation =
     animation.Animation(durationSeconds, fromState, toState, easer, picMaker, hideOnDone)
-  def Timeline(duration: Double, keyFrames: animation.KeyFrames, easer: KEasing,
-               picMaker: Seq[Double] => Picture, hideOnDone: Boolean): Animation =
+  def Timeline(
+      duration: Double,
+      keyFrames: animation.KeyFrames,
+      easer: KEasing,
+      picMaker: Seq[Double] => Picture,
+      hideOnDone: Boolean
+  ): Animation =
     animation.Animation(duration, keyFrames, Seq.fill(keyFrames.frames.length - 1)(easer), picMaker, hideOnDone)
-  def Timeline(duration: Double, keyFrames: animation.KeyFrames, easers: Seq[KEasing],
-               picMaker: Seq[Double] => Picture, hideOnDone: Boolean): Animation =
+  def Timeline(
+      duration: Double,
+      keyFrames: animation.KeyFrames,
+      easers: Seq[KEasing],
+      picMaker: Seq[Double] => Picture,
+      hideOnDone: Boolean
+  ): Animation =
     animation.Animation(duration, keyFrames, easers, picMaker, hideOnDone)
   implicit def iis2dds(is: (Int, Seq[Int])): (Double, Seq[Double]) = is match {
     case (i, si) => (i.toDouble, si.map(_.toDouble))
@@ -812,7 +920,7 @@ Here's a partial list of the available commands:
   implicit def ids2dds(is: (Int, Seq[Double])): (Double, Seq[Double]) = is match {
     case (i, sd) => (i.toDouble, sd)
   }
-  def KeyFrames(frames: (Double, Seq[Double])*)= animation.KeyFrames(frames)
+  def KeyFrames(frames: (Double, Seq[Double])*) = animation.KeyFrames(frames)
   def animSeq(as: Animation*): Animation = animSeq(as)
   def animSeq(as: collection.Seq[Animation]): Animation = animation.animSeq(as.toSeq)
   def animPar(as: Animation*): Animation = animPar(as)
@@ -879,12 +987,24 @@ Here's a partial list of the available commands:
     gameTimeRunning = false
   }
 
-  def showGameTimeCountdown(limitSecs: Int, endMsg: => String, color: Color = black, fontSize: Int = 15,
-    dx: Double = 10, dy: Double = 50) = showGameTime(limitSecs, endMsg, color, fontSize, dx, dy, true)
+  def showGameTimeCountdown(
+      limitSecs: Int,
+      endMsg: => String,
+      color: Color = black,
+      fontSize: Int = 15,
+      dx: Double = 10,
+      dy: Double = 50
+  ) = showGameTime(limitSecs, endMsg, color, fontSize, dx, dy, true)
 
-
-  def showGameTime(limitSecs: Int, endMsg: => String, color: Color = black, fontSize: Int = 15,
-    dx: Double = 10, dy: Double = 50, countDown: Boolean = false): Unit = {
+  def showGameTime(
+      limitSecs: Int,
+      endMsg: => String,
+      color: Color = black,
+      fontSize: Int = 15,
+      dx: Double = 10,
+      dy: Double = 50,
+      countDown: Boolean = false
+  ): Unit = {
     if (gameTimeRunning) {
       return
     }
@@ -985,10 +1105,13 @@ Here's a partial list of the available commands:
   type CanvasDraw = net.kogics.kojo.lite.CanvasDraw
   import scala.language.reflectiveCalls
 
-  class SketchRunner private[lite](sketch: {
-    def setup(cd: CanvasDraw): Unit
-    def drawLoop(cd: CanvasDraw): Unit
-  }, scaleFactor: Double = 1) {
+  class SketchRunner private[lite] (
+      sketch: {
+        def setup(cd: CanvasDraw): Unit
+        def drawLoop(cd: CanvasDraw): Unit
+      },
+      scaleFactor: Double = 1
+  ) {
     @volatile var inited = false
     @volatile var initStarted = false // to support breakpoints in setup
     @volatile var cd: CanvasDraw = null
@@ -1014,19 +1137,22 @@ Here's a partial list of the available commands:
     }
   }
 
-  def canvasSketch(sketch: {
-    def setup(cd: CanvasDraw): Unit
-    def drawLoop(cd: CanvasDraw): Unit
-  }, scaleOutFactor: Double = 1): Unit = {
+  def canvasSketch(
+      sketch: {
+        def setup(cd: CanvasDraw): Unit
+        def drawLoop(cd: CanvasDraw): Unit
+      },
+      scaleOutFactor: Double = 1
+  ): Unit = {
     val sr = new SketchRunner(sketch, scaleOutFactor)
     sr.draw()
   }
 
   type PictureDraw = net.kogics.kojo.lite.PictureDraw
   def pictureSketch(sketch: {
-                      def setup(cd: PictureDraw): Unit
-                      def drawLoop(cd: PictureDraw): Unit
-                    }): Unit = {
+    def setup(cd: PictureDraw): Unit
+    def drawLoop(cd: PictureDraw): Unit
+  }): Unit = {
 
     setup(sketch.setup(PictureDraw))
     drawLoop(sketch.drawLoop(PictureDraw))
@@ -1059,15 +1185,16 @@ Here's a partial list of the available commands:
     import java.util.concurrent.Future
     val initPic = stateView(initState)
     initPic.draw()
-    lazy val anim: Future[PActivity] = tCanvas.animateWithState((initState, initPic)) { case (state, pic) =>
-      val newState = nextState(state)
-      val pic2 = stateView(state)
-      pic.erase()
-      pic2.draw()
-      if (newState == state) {
-        tCanvas.stopAnimationActivity(anim)
-      }
-      (newState, pic2)
+    lazy val anim: Future[PActivity] = tCanvas.animateWithState((initState, initPic)) {
+      case (state, pic) =>
+        val newState = nextState(state)
+        val pic2 = stateView(state)
+        pic.erase()
+        pic2.draw()
+        if (newState == state) {
+          tCanvas.stopAnimationActivity(anim)
+        }
+        (newState, pic2)
     }
     anim
   }
@@ -1089,7 +1216,7 @@ Here's a partial list of the available commands:
   }
 
   def animateWithCanvasDraw(drawFrame: CanvasDraw => Unit): Unit = {
-    animateWithSetupCanvasDraw({canvas =>})(drawFrame)
+    animateWithSetupCanvasDraw { canvas => }(drawFrame)
   }
 
   type Sub[M] = gaming.Sub[M]

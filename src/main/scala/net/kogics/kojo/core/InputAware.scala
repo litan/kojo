@@ -116,7 +116,7 @@ trait InputAware {
     }
     pnode.addInputEventListener(h)
   }
-  
+
 //  import java.awt.event.KeyEvent
 //  def onKeyPress(fn: Int => Unit) = Utils.runInSwingThread {
 //    val eh = new PBasicInputEventHandler {

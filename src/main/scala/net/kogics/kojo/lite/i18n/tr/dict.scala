@@ -35,8 +35,8 @@ object dict {
     "map" -> "işle",
     "flatMap" -> "düzİşle", // "ABC".flatMap(_.toLower.toString * 3)
     "sorted" -> "sıralı",
-    "sortBy" -> "sırala",       // def sortBy[B](f: A => B)(implicit ord: Ordering[B]): C
-    "sortWith" -> "sırayaSok",  // def sortWith(lt: (A, A) => Boolean): C
+    "sortBy" -> "sırala", // def sortBy[B](f: A => B)(implicit ord: Ordering[B]): C
+    "sortWith" -> "sırayaSok", // def sortWith(lt: (A, A) => Boolean): C
     "reduce" -> "indirge",
     "fold" -> "katla",
     "foldLeft" -> "soldanKatla",
@@ -59,7 +59,7 @@ object dict {
     "foreach" -> "herbiriİçin",
     "compareTo" -> "kıyasla",
     "compareToIgnoreCase" -> "kıyaslaKüçükHarfBüyükHarfAyrımıYapmadan",
-    "eq" -> "aynıMı",  // AnyRef
+    "eq" -> "aynıMı", // AnyRef
     "equals" -> "eşitMi",
     "equalsIgnoreCase" -> "eşitMiKüçükHarfBüyükHarfAyrımıYapmadan",
     "startsWith" -> "başındaMı",
@@ -86,8 +86,8 @@ object dict {
     "zip" -> "ikile",
     "zipWithIndex" -> "ikileSırayla",
     "spin" -> "çevir",
-    "rgb" -> "kym",  // kırmızı yeşil mavi
-    "rgba" -> "kyms",  // saydamlık
+    "rgb" -> "kym", // kırmızı yeşil mavi
+    "rgba" -> "kyms", // saydamlık
     "linearGradient" -> "doğrusalDeğişim",
     "linearMultipleGradient" -> "doğrusalÇokluDeğişim",
     "radialGradient" -> "merkezdenDışarıDoğruDeğişim",
@@ -189,7 +189,7 @@ object dict {
     "false" -> "yanlış",
     "final" -> "son",
     "finally" -> "sonunda",
-    "for" -> "için",  // yerine içinYinele
+    "for" -> "için", // yerine içinYinele
     "forSome" -> "bazı", // eskitilmiş ve dilden çıkarılmış
     "given" -> "verilen",
     "if" -> "eğer",
@@ -274,9 +274,9 @@ object dict {
   )
 
   val type2en = Map()
-  val def2en = Map ()
-  val val2en = Map ()
-  val method2en = Map (
+  val def2en = Map()
+  val val2en = Map()
+  val method2en = Map(
     "Yöney.boş" -> "Vector.empty",
     "Küme.boş" -> "Set.empty",
     "Dizi.doldur" -> "Seq.tabulate",
@@ -313,10 +313,10 @@ object dict {
     "ay.çerçeveci.çizgiKenar" -> "javax.swing.BorderFactory.createLineBorder",
     "ay.çerçeveci.boşKenar" -> "javax.swing.BorderFactory.createEmptyBorder",
   )
-  val altkumeler = Map (
+  val altkumeler = Map(
     "ay" -> List("olay", "değişmez", "çerçeveci")
   )
-  val packageName2en = Map (
+  val packageName2en = Map(
     "ay" -> List("java.awt", "javax.swing"),
   )
   // todo: ./cinidunyasi.scala

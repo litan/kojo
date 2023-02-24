@@ -1,12 +1,15 @@
 package net.kogics.kojo.livecoding
 
+import java.awt.{ Color => JColor }
+import java.awt.event.ActionEvent
 import java.awt.BorderLayout
 import java.awt.Point
-import java.awt.event.ActionEvent
-import java.awt.{Color => JColor}
-import java.util.Locale
 import java.util.regex.Pattern
-
+import java.util.Locale
+import javax.swing.event.ChangeEvent
+import javax.swing.event.ChangeListener
+import javax.swing.text.JTextComponent
+import javax.swing.text.Utilities
 import javax.swing.AbstractAction
 import javax.swing.BorderFactory
 import javax.swing.JColorChooser
@@ -16,10 +19,6 @@ import javax.swing.JPanel
 import javax.swing.KeyStroke
 import javax.swing.PopupFactory
 import javax.swing.SwingUtilities
-import javax.swing.event.ChangeEvent
-import javax.swing.event.ChangeListener
-import javax.swing.text.JTextComponent
-import javax.swing.text.Utilities
 
 import net.kogics.kojo.doodle.Color
 import net.kogics.kojo.util.JUtils
@@ -35,7 +34,8 @@ class ColorMakerManipulatorHsv(ctx: ManipulationContext) extends InteractiveMani
   def isAbsent = colorPopup == null
   def isPresent = !isAbsent
 
-  lazy val ColorPattern2 = Pattern.compile("""(ColorMaker|cm)\.hsb(a)?\((\d+),\s*(\d+\.?\d?\d?),\s*(\d+\.?\d?\d?)(,\s*(\d+\.?\d?\d?))?\)""")
+  lazy val ColorPattern2 =
+    Pattern.compile("""(ColorMaker|cm)\.hsb(a)?\((\d+),\s*(\d+\.?\d?\d?),\s*(\d+\.?\d?\d?)(,\s*(\d+\.?\d?\d?))?\)""")
   def matcher2(possibleColorLine: String) = ColorPattern2.matcher(possibleColorLine)
 
   def findColorFunction(pane: JTextComponent, offset: Int): Boolean = {
@@ -50,7 +50,7 @@ class ColorMakerManipulatorHsv(ctx: ManipulationContext) extends InteractiveMani
       val lineOffset = offset - lineStart
       if (start <= lineOffset && lineOffset <= end) {
         target = m.group
-        val hsva = Seq(3, 4, 5, 7) map { e =>
+        val hsva = Seq(3, 4, 5, 7).map { e =>
           val ret = m.group(e)
           e match {
             case 3 => ret.toInt

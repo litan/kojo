@@ -31,13 +31,13 @@ case class Spin(n: Int)(pic: Picture) extends Effect {
     val lb = new collection.mutable.ListBuffer[Picture]
     lb += freshPic(pic)
     var angle = 360.0 / n
-    for (i <- 1 to n-1) {
+    for (i <- 1 to n - 1) {
       lb += rot(angle) -> pic.copy
       angle += 360.0 / n
     }
     GPics(lb.toList)
   }
-  
+
   def copy = Spin(n)(pic.copy)
 }
 
@@ -46,7 +46,7 @@ case class Reflect(n: Int)(pic: Picture) extends Effect {
   def reflectedP = {
     HPics(freshPic(pic), trans(n, 0)(FlipY(pic.copy)))
   }
-  
+
   def copy = Reflect(n)(pic.copy)
 }
 

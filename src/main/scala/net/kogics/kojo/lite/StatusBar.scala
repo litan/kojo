@@ -3,7 +3,6 @@ package net.kogics.kojo.lite
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Font
-
 import javax.swing.BorderFactory
 import javax.swing.JLabel
 import javax.swing.JPanel

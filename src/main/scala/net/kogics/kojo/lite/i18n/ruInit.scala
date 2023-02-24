@@ -1,7 +1,7 @@
 /*
- * Copyright (C) 2013 
+ * Copyright (C) 2013
  *   Bjorn Regnell <bjorn.regnell@cs.lth.se>,
- *   Lalit Pant <pant.lalit@gmail.com> 
+ *   Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License
  * Version 3 (the "License"); you may not use this file
@@ -19,14 +19,15 @@
 
 package net.kogics.kojo.lite.i18n
 
-import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.lite.Builtins
+import net.kogics.kojo.lite.CoreBuiltins
 import net.kogics.kojo.xscala.RepeatCommands
 
 object RussianAPI {
-  import net.kogics.kojo.core.Turtle
   import java.awt.Color
-  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ //unstable reference to module
+
+  import net.kogics.kojo.core.Turtle
+  var builtins: net.kogics.kojo.lite.CoreBuiltins = _ // unstable reference to module
 
   trait RussianTurtle {
     def englishTurtle: Turtle
@@ -42,8 +43,8 @@ object RussianAPI {
     def перепрыгни(x: Double, y: Double) = englishTurtle.jumpTo(x, y)
     def иди(x: Double, y: Double) = englishTurtle.moveTo(x, y)
     def прыгни(n: Double) = {
-      englishTurtle.saveStyle() //to preserve pen state
-      englishTurtle.hop(n) //hop change state to penDown after hop
+      englishTurtle.saveStyle() // to preserve pen state
+      englishTurtle.hop(n) // hop change state to penDown after hop
       englishTurtle.restoreStyle()
     }
     def прыгни(): Unit = прыгни(25)
@@ -78,11 +79,12 @@ object RussianAPI {
     def следующий_костюм() = englishTurtle.nextCostume()
   }
   class Черепашка(override val englishTurtle: Turtle) extends RussianTurtle {
-    def this(startX: Double, startY: Double, costumeFileName: String) = this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
+    def this(startX: Double, startY: Double, costumeFileName: String) =
+      this(builtins.TSCanvas.newTurtle(startX, startY, costumeFileName))
     def this(startX: Double, startY: Double) = this(startX, startY, "/images/turtle32.png")
     def this() = this(0, 0)
   }
-  class Черепашка0(t0: => Turtle) extends RussianTurtle { //by-name construction as turtle0 is volatile }
+  class Черепашка0(t0: => Turtle) extends RussianTurtle { // by-name construction as turtle0 is volatile }
     override def englishTurtle: Turtle = t0
   }
   object черепашка extends Черепашка0(builtins.TSCanvas.turtle0)
@@ -107,7 +109,7 @@ object RussianAPI {
   //    lazy val VK_Ö = 214
   //  }
 
-  //loops 
+  // loops
   def повтори(n: Int)(block: => Unit): Unit = {
     RepeatCommands.repeat(n) { block }
   }
@@ -124,13 +126,13 @@ object RussianAPI {
     RepeatCommands.repeatFor(последовательность) { block }
   }
 
-  //simple IO
+  // simple IO
   def прочти(подсказка: String = "") = builtins.readln(подсказка)
 
-  def напиши(data: Any) = println(data) //Transferred here from sv.tw.kojo.
+  def напиши(data: Any) = println(data) // Transferred here from sv.tw.kojo.
   def напиши() = println()
 
-  //math functions
+  // math functions
   def округли(число: Number, разряд: Int = 0): Double = {
     val faktor = math.pow(10, разряд).toDouble
     math.round(число.doubleValue * faktor).toLong / faktor
@@ -138,7 +140,7 @@ object RussianAPI {
   def случайное(верхняя_граница: Int) = builtins.random(верхняя_граница)
   def случайное_двойное(верхняя_граница: Int) = builtins.randomDouble(верхняя_граница)
 
-  //some type aliases in Swedish
+  // some type aliases in Swedish
   type целое = Int
   type двойное = Double
   type строка = String
@@ -146,7 +148,7 @@ object RussianAPI {
 
 object RussianInit {
   def init(builtins: CoreBuiltins): Unit = {
-    //initialize unstable value
+    // initialize unstable value
     RussianAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
@@ -154,15 +156,15 @@ object RussianInit {
         if (b.isScratchPad) {
           println("История не будет сохранена при закрытии блокнота Kojo.")
         }
-        
+
 //        b.setEditorTabSize(2)
 
-        //code completion
+        // code completion
         b.addCodeTemplates(
           "ru",
           codeTemplates
         )
-        //help texts
+        // help texts
         b.addHelpContent(
           "ru",
           helpContent

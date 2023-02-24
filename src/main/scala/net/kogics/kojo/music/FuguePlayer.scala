@@ -16,19 +16,20 @@
 package net.kogics.kojo
 package music
 
+import java.util.concurrent.locks.ReentrantLock
+import java.util.concurrent.TimeUnit
+import java.util.logging._
+import javax.swing.Timer
+
+import net.kogics.kojo.core.KojoCtx
+import org.jfugue.{ Rhythm => JFRhythm, _ }
 import util.Utils
 import util.Utils.withLock
 import Utils.giveupLock
-import org.jfugue.{Rhythm => JFRhythm, _}
-import java.util.logging._
-import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.ReentrantLock
-import javax.swing.Timer
-import net.kogics.kojo.core.KojoCtx
 
 class FuguePlayer(kojoCtx: KojoCtx) {
   val Log = Logger.getLogger(getClass.getName)
-  lazy private val listener = kojoCtx.activityListener
+  private lazy val listener = kojoCtx.activityListener
   private var currMusic: Option[Music] = None
   private var currBgMusic: Option[Music] = None
   val playLock = new ReentrantLock
@@ -60,22 +61,22 @@ class FuguePlayer(kojoCtx: KojoCtx) {
       }
     }
   }
-  
+
   private def stopAndCreate(voice: core.Voice, n: Int): Unit = {
     if (n > 10) {
       throw new IllegalArgumentException("Score repeat count cannot be more than 10")
     }
-    
-    stopMusic()    
+
+    stopMusic()
     currMusic = Some(Music(voice, n))
   }
-  
+
   def isMusicPlaying: Boolean = {
     withLock(playLock) {
       currMusic.isDefined
     }
   }
-  
+
   def playMusic(voice: core.Voice, n: Int = 1): Unit = {
     def done(): Unit = {
       stopFg = false
@@ -99,7 +100,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
           }
         }
       }
-      startPumpingEvents()      
+      startPumpingEvents()
     }
   }
 
@@ -123,7 +124,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
       done.await()
     }
   }
-  
+
   def playMusicLoop(voice: core.Voice): Unit = {
 
     def playLoop0(): Unit = {
@@ -152,7 +153,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
       currBgMusic = Some(Music(voice, 5))
       playLoop0()
       startPumpingEvents()
-    }       
+    }
   }
 
   def stopMusic(): Unit = {
@@ -160,7 +161,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
       if (currMusic.isDefined) {
         stopFg = true
         currMusic.get.stop()
-        while(stopFg) {
+        while (stopFg) {
           val signalled = stopped.await(20, TimeUnit.MILLISECONDS)
           if (!signalled) {
             try {
@@ -180,7 +181,7 @@ class FuguePlayer(kojoCtx: KojoCtx) {
       if (currBgMusic.isDefined) {
         stopBg = true
         currBgMusic.get.stop()
-        while(stopBg) {
+        while (stopBg) {
           val signalled = stopped.await(20, TimeUnit.MILLISECONDS)
           if (!signalled) {
             try {

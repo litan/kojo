@@ -4,13 +4,14 @@ package lite
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.Color
+import java.awt.Cursor
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JProgressBar
 import javax.swing.JWindow
 import javax.swing.Timer
+
 import util.Utils
-import java.awt.Cursor
 
 class SplashScreen extends JWindow {
 

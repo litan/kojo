@@ -17,16 +17,18 @@ package net.kogics.kojo
 package picture
 
 import java.awt.Font
+import java.util.concurrent.CountDownLatch
+
 import scala.collection.immutable.Queue
+
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.Point
+import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.kgeom.PolyLine
 import net.kogics.kojo.util.Utils
 import util.Utils
 import Cartooning._
 import Cartooning2._
-import java.util.concurrent.CountDownLatch
-import net.kogics.kojo.core.SCanvas
 
 object Cartooning {
   import language.implicitConversions
@@ -61,7 +63,7 @@ object Cartooning2 {
     math.abs(a - b) < accuracy
   }
 
-  //*** some utility functions related to PolyLines:
+  // *** some utility functions related to PolyLines:
 
   def isZero(pl: PolyLine) =
     (pl.size == 0) || (pl.size == 1) && (pl.points(0) == Point2D(0, 0))
@@ -74,7 +76,7 @@ object Cartooning2 {
   def extendPolyLineTo(pl: PolyLine, s: Int): PolyLine = {
     val n = s - pl.size
     if (n <= 0 || pl.size < 2) return pl
-    val pointBuffer = pl.points.toBuffer //copy; to not mutate pl
+    val pointBuffer = pl.points.toBuffer // copy; to not mutate pl
     var added = 0
     var i = 0
     while (added < n) {
@@ -99,7 +101,7 @@ object Cartooning2 {
     }
     result
   }
-  def cleanUpMidPoints(pl: PolyLine): PolyLine = { //not used yet
+  def cleanUpMidPoints(pl: PolyLine): PolyLine = { // not used yet
     val pts = pl.points.toBuffer
     var i = 0
     while (i < pts.size - 2) {
@@ -120,7 +122,7 @@ case class RichListDD(listDD: ListDD) {
     listDD match {
       case p :: ps =>
         jumpTo(p._1, p._2)
-        ps foreach { p => moveTo(p._1, p._2) }
+        ps.foreach { p => moveTo(p._1, p._2) }
       case _ =>
     }
   }
@@ -134,11 +136,11 @@ case class RichPicture(pic: Picture) {
     pic.morph(skel.morpher)
   }
   def printPicture(): Unit = {
-    //as there is no elaborate toString on Pictures in Kojo
-    //and we can't return a string as morph runs unsynched in another thread
+    // as there is no elaborate toString on Pictures in Kojo
+    // and we can't return a string as morph runs unsynched in another thread
     println("Picture(")
     pic.morph { polyLines =>
-      polyLines map { pl =>
+      polyLines.map { pl =>
         println("  " + plToString(pl))
         pl
       }
@@ -148,7 +150,7 @@ case class RichPicture(pic: Picture) {
   }
 }
 
-case class Skeleton(points: Array[Point2D]) { //was MorphTarget
+case class Skeleton(points: Array[Point2D]) { // was MorphTarget
   def size = points.size
   def extendTo(s: Int): Skeleton = {
     val n = s - size
@@ -193,21 +195,20 @@ case class Skeleton(points: Array[Point2D]) { //was MorphTarget
     result
   }
   def stepwiseMorpher(step: Double): Seq[PolyLine] => Seq[PolyLine] = {
-    //this is the actual morph function to be passed to pic.morph(mt.stepwiseMorpher(1)) 
+    // this is the actual morph function to be passed to pic.morph(mt.stepwiseMorpher(1))
     (pls: Seq[PolyLine]) =>
       {
-        pls map (pl => {
+        pls.map(pl => {
           if (!isZero(pl) && !isMorphedTo(pl, step)) approachTarget(pl, step)
           else pl
-        }
-        )
+        })
       }
   }
   def morpher: Seq[PolyLine] => Seq[PolyLine] = {
-    //a morph function to be passed to pic.morph(mySkeleton.morpher) 
+    // a morph function to be passed to pic.morph(mySkeleton.morpher)
     (pls: Seq[PolyLine]) =>
       {
-        pls map (pl => {
+        pls.map(pl => {
           if (!isZero(pl)) {
             val (mte, ple) = extendShortest(pl)
             for (i <- 0 until ple.size) {
@@ -220,8 +221,7 @@ case class Skeleton(points: Array[Point2D]) { //was MorphTarget
             result
           }
           else pl
-        }
-        )
+        })
       }
   }
   def toPicture(implicit canvas: SCanvas) = Pic { t =>
@@ -237,7 +237,7 @@ case class Skeleton(points: Array[Point2D]) { //was MorphTarget
 object Skeleton {
   import language.postfixOps
   def apply(pts: (Double, Double)*): Skeleton =
-    new Skeleton(pts map {
+    new Skeleton(pts.map {
       case (x, y) => Point2D(x, y)
     } toArray)
   def apply(pl: PolyLine) = new Skeleton(pl.points.toArray)
@@ -265,7 +265,7 @@ class Animator(canvas: SCanvas) {
   def schedule(w: AnimationStep): Unit = {
     addToAgenda(w)
   }
-  
+
   def stop() = canvas.stopAnimation() // TODO: canvas.figure0.stopAnimation(animation)
 
   def currTime = System.currentTimeMillis()
@@ -389,10 +389,12 @@ trait SpeakBalloon { self: AnimClip =>
       val fillColor = fill _
       val penColor = stroke _
       import staging.KColor._
-      wi.pic map { _.erase() }
+      wi.pic.map { _.erase() }
       wi.timeStamp = System.currentTimeMillis
-      wi.pic = Some(fillColor(white) * penColor(black) ->
-        speakPicture(lines: _*))
+      wi.pic = Some(
+        fillColor(white) * penColor(black) ->
+          speakPicture(lines: _*)
+      )
       wi.pic.foreach(_.draw())
     }
 

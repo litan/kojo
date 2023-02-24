@@ -16,46 +16,42 @@
 package net.kogics.kojo
 package staging
 
-import edu.umd.cs.piccolo._
-import edu.umd.cs.piccolo.nodes._
-import edu.umd.cs.piccolo.util._
-import edu.umd.cs.piccolo.event._
-
-//import net.kogics.kojo.util.Utils
-
 import javax.swing._
 
 import core._
-
+import edu.umd.cs.piccolo._
+import edu.umd.cs.piccolo.event._
+import edu.umd.cs.piccolo.nodes._
+import edu.umd.cs.piccolo.util._
 import language.postfixOps
 
 object SvgShape {
   import Impl.API
-  
-  def getAttr (ns: scala.xml.Node, s: String): Option[String] = {
+
+  def getAttr(ns: scala.xml.Node, s: String): Option[String] = {
     ns \ ("@" + s) text match {
       case "" => None
       case z  => Some(z)
     }
   }
 
-  private def matchXY (ns: scala.xml.Node, xn: String = "x", yn: String = "y") = {
-    val x = (getAttr(ns, xn) getOrElse "0").toDouble
-    val y = (getAttr(ns, yn) getOrElse "0").toDouble
+  private def matchXY(ns: scala.xml.Node, xn: String = "x", yn: String = "y") = {
+    val x = getAttr(ns, xn).getOrElse("0").toDouble
+    val y = getAttr(ns, yn).getOrElse("0").toDouble
     Point(x, y)
   }
 
-  private def matchWH (ns: scala.xml.Node) = {
-    val w = (getAttr(ns, "width") getOrElse "0").toDouble
-    val h = (getAttr(ns, "height") getOrElse "0").toDouble
+  private def matchWH(ns: scala.xml.Node) = {
+    val w = getAttr(ns, "width").getOrElse("0").toDouble
+    val h = getAttr(ns, "height").getOrElse("0").toDouble
     require(w >= 0, "Bad width for XML element " + ns)
     require(h >= 0, "Bad height for XML element " + ns)
     (w, h)
   }
 
-  private def matchRXY (ns: scala.xml.Node) = {
-    val x = (getAttr(ns, "rx") getOrElse "0").toDouble
-    val y = (getAttr(ns, "ry") getOrElse "0").toDouble
+  private def matchRXY(ns: scala.xml.Node) = {
+    val x = getAttr(ns, "rx").getOrElse("0").toDouble
+    val y = getAttr(ns, "ry").getOrElse("0").toDouble
     require(x >= 0, "Bad rx for XML element " + ns)
     require(y >= 0, "Bad ry for XML element " + ns)
     val rx = if (x != 0) x else y
@@ -69,11 +65,11 @@ object SvgShape {
 
   private def matchStrokeWidth(ns: scala.xml.Node) = getAttr(ns, "stroke-width")
 
-  private def matchPoints (ns: scala.xml.Node): Seq[Point] = {
+  private def matchPoints(ns: scala.xml.Node): Seq[Point] = {
     val pointsStr = ns \ "@points" text
     val splitter = "(:?,\\s*|\\s+)".r
-    val pointsItr = (splitter split pointsStr) map (_.toDouble) grouped(2)
-    (pointsItr map { a => Point(a(0), a(1)) }).toList
+    val pointsItr = splitter.split(pointsStr).map(_.toDouble).grouped(2)
+    pointsItr.map { a => Point(a(0), a(1)) }.toList
   }
 
   import staging.Style
@@ -83,11 +79,11 @@ object SvgShape {
     val sw_? = matchStrokeWidth(ns)
     Style.save
 
-    fc_? foreach { fc => API.fill(ColorMaker.color(fc)) }
+    fc_?.foreach { fc => API.fill(ColorMaker.color(fc)) }
 
-    sc_? foreach { sc => API.stroke(ColorMaker.color(sc)) }
+    sc_?.foreach { sc => API.stroke(ColorMaker.color(sc)) }
 
-    sw_? foreach { sw => API.strokeWidth(sw.toDouble) }
+    sw_?.foreach { sw => API.strokeWidth(sw.toDouble) }
   }
 
   private def matchRect(ns: scala.xml.Node) = {
@@ -99,7 +95,8 @@ object SvgShape {
     val res =
       if (p2.x != 0.0 || p2.y != 0.0) {
         RoundRectangle(p0, p1, p2)
-      } else {
+      }
+      else {
         Rectangle(p0, p1)
       }
     Style.restore
@@ -108,7 +105,7 @@ object SvgShape {
 
   private def matchCircle(ns: scala.xml.Node) = {
     val p0 = matchXY(ns, "cx", "cy")
-    val r = (getAttr(ns, "r") getOrElse "0").toDouble
+    val r = getAttr(ns, "r").getOrElse("0").toDouble
     val p1 = p0 + Point(r, r)
     setStyle(ns)
     val res = Ellipse(p0, p1)
@@ -135,7 +132,7 @@ object SvgShape {
   }
 
   private def matchText(ns: scala.xml.Node) = {
-    //TODO hmm not working
+    // TODO hmm not working
     val p1 = matchXY(ns)
     // should also support dx/dy, rotate, textLength, lengthAdjust
     // and font attributes (as far as piccolo/awt can support them)
@@ -182,12 +179,12 @@ object SvgShape {
         res
       case <path></path> =>
         matchPath(node)
-      case <g>{ shapes @ _* }</g> =>
+      case <g>{shapes @ _*}</g> =>
         new Shape { val node = null }
-        //for (s <- shapes) yield SvgShape(s)
-      case <svg>{ shapes @ _* }</svg> =>
+      // for (s <- shapes) yield SvgShape(s)
+      case <svg>{shapes @ _*}</svg> =>
         new Shape { val node = null }
-        //for (s <- shapes) yield SvgShape(s)
+      // for (s <- shapes) yield SvgShape(s)
       case _ => // unknown element, ignore
         new Shape { val node = null }
     }

@@ -19,7 +19,7 @@ package net.kogics.kojo.lite.i18n.tr
 trait GeoMethodsInTurkish {
   implicit class RectYöntemleri(d: Dikdörtgen) {
     def boyu = d.height
-    def eni  = d.width
+    def eni = d.width
     // todo: more to come
   }
 
@@ -44,7 +44,8 @@ trait GeoMethodsInTurkish {
     def bitir() = gn.endShape()
     def nokta(x: Kesir, y: Kesir) = gn.vertex(x, y)
     def ikinciDereceNokta(mx: Kesir, my: Kesir, x2: Kesir, y2: Kesir) = gn.quadraticVertex(mx, my, x2, y2)
-    def bezierNoktası(mx1: Kesir, my1: Kesir, mx2: Kesir, my2: Kesir, x2: Kesir, y2: Kesir) = gn.bezierVertex(mx1, my1, mx2, my2, x2, y2)
+    def bezierNoktası(mx1: Kesir, my1: Kesir, mx2: Kesir, my2: Kesir, x2: Kesir, y2: Kesir) =
+      gn.bezierVertex(mx1, my1, mx2, my2, x2, y2)
     def eğriNoktası(x: Kesir, y: Kesir) = gn.curveVertex(x, y)
     def açısalNokta(boyu: Kesir, açısı: Kesir) = gn.vertexRt(boyu, açısı)
     def açısalEğriNoktası(boyu: Kesir, açısı: Kesir) = gn.curveVertexRt(boyu, açısı)

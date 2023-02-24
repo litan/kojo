@@ -16,21 +16,21 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
-import collection.mutable.{Map}
+import collection.mutable.Map
 
 // todo: add more to the interface
 object Eşlem {
-  def boş[A,D] = new Eşlem[A,D](Map.empty[A,D])
-  def apply[A,D](elems: (A,D)*) = new Eşlem[A,D](Map.from(elems))
-  def değişmezden[A,D](m: collection.immutable.Map[A,D]) = new Eşlem[A,D](Map.from(m.iterator))
+  def boş[A, D] = new Eşlem[A, D](Map.empty[A, D])
+  def apply[A, D](elems: (A, D)*) = new Eşlem[A, D](Map.from(elems))
+  def değişmezden[A, D](m: collection.immutable.Map[A, D]) = new Eşlem[A, D](Map.from(m.iterator))
 }
-case class Eşlem[A,D](val m: Map[A,D]) {
+case class Eşlem[A, D](val m: Map[A, D]) {
   type Pair = (A, D)
   // todo: duplicated most of the api in Eşlek
   type Belki[T] = Option[T]
   def eşli(a: A) = m.contains(a)
   def eşEkle(ikili: Pair) = m += ikili
-  def +=(ikili: Pair) = this eşEkle ikili
+  def +=(ikili: Pair) = this.eşEkle(ikili)
   def -=(birinci: A) = m -= birinci
   def herbiriİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
   def herÖgeİçin(komutlar: ((A, D)) => Birim) = m.foreach(komutlar)
@@ -67,7 +67,7 @@ case class Eşlem[A,D](val m: Map[A,D]) {
   def soldanKatla[B](z: B)(işlev: (B, Pair) => B): B = m.foldLeft(z)(işlev)
   def sağdanKatla[B](z: B)(işlev: (Pair, B) => B): B = m.foldRight(z)(işlev)
 
-  def topla[T >: Pair](implicit num: scala.math.Numeric[T]) = m.sum(num) 
+  def topla[T >: Pair](implicit num: scala.math.Numeric[T]) = m.sum(num)
   def çarp[T >: Pair](implicit num: scala.math.Numeric[T]) = m.product(num)
 
   def yazıYap: Yazı = m.mkString

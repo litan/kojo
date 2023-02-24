@@ -16,32 +16,35 @@
 package net.kogics.kojo
 package picture
 
-import com.jhlabs.image.AbstractBufferedImageOp
-
+import java.awt.geom.AffineTransform
+import java.awt.image.BufferedImage
+import java.awt.image.BufferedImageOp
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Paint
 import java.awt.Shape
-import java.awt.geom.AffineTransform
-import java.awt.image.{BufferedImage, BufferedImageOp}
 import java.util.concurrent.Future
+
 import scala.collection.mutable.ArrayBuffer
+
+import com.jhlabs.image.AbstractBufferedImageOp
+import com.vividsolutions.jts.geom.util.AffineTransformation
 import com.vividsolutions.jts.geom.Coordinate
 import com.vividsolutions.jts.geom.Geometry
 import com.vividsolutions.jts.geom.TopologyException
-import com.vividsolutions.jts.geom.util.AffineTransformation
+import edu.umd.cs.piccolo.activities.PActivity
+import edu.umd.cs.piccolo.nodes.PPath
+import edu.umd.cs.piccolo.nodes.PText
+import edu.umd.cs.piccolo.PNode
 import net.kogics.kojo.core.Cm
 import net.kogics.kojo.core.Inch
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.Pixel
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.kgeom.PolyLine
+import net.kogics.kojo.kmath.{ Kmath => Math }
 import net.kogics.kojo.picture.PicCache.freshPics
-import net.kogics.kojo.kmath.{Kmath => Math}
 import net.kogics.kojo.util.Utils
-import edu.umd.cs.piccolo.PNode
-import edu.umd.cs.piccolo.activities.PActivity
-import edu.umd.cs.piccolo.nodes.{PPath, PText}
 
 trait GeomPolygon { self: Picture =>
   lazy val geomPoly = {
@@ -54,7 +57,9 @@ trait GeomPolygon { self: Picture =>
 }
 
 trait UnsupportedOps {
-  def notSupported(name: String, reason: String) = throw new UnsupportedOperationException(s"$name - operation not available $reason:\n${toString}")
+  def notSupported(name: String, reason: String) = throw new UnsupportedOperationException(
+    s"$name - operation not available $reason:\n${toString}"
+  )
 }
 
 trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with RedrawStopper =>
@@ -75,7 +80,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
 
   def draw(): Unit = {
     realDraw()
-    //    Need to do the following if we ever have turtle commands that modify the turtle's layer transform    
+    //    Need to do the following if we ever have turtle commands that modify the turtle's layer transform
     //    Utils.runInSwingThread {
     //      pgTransform = t2t(tnode.getTransformReference(true))
     //    }
@@ -138,7 +143,7 @@ trait CorePicOps extends GeomPolygon with UnsupportedOps { self: Picture with Re
     transformBy(AffineTransform.getScaleInstance(safeScaleFactor(xFactor), safeScaleFactor(yFactor)))
   }
 
-  def shear(shearX:Double, shearY:Double):Unit = {
+  def shear(shearX: Double, shearY: Double): Unit = {
     transformBy(AffineTransform.getShearInstance(shearX, shearY))
   }
 
@@ -433,7 +438,7 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
     PreDrawTransform { pic => pic.scaleAboutPoint(factor, x, y) }(this)
   def thatsScaledAround(factorX: Double, factorY: Double, x: Double, y: Double): Picture =
     PreDrawTransform { pic => pic.scaleAboutPoint(factorX, factorY, x, y) }(this)
-  def thatsSheared(shearX:Double, shearY:Double):Picture =
+  def thatsSheared(shearX: Double, shearY: Double): Picture =
     PreDrawTransform { pic => pic.shear(shearX, shearY) }(this)
   def thatsFilledWith(color: Paint): Picture = PostDrawTransform { pic => pic.setFillColor(color) }(this)
   def thatsStrokeColored(color: Paint): Picture = PostDrawTransform { pic => pic.setPenColor(color) }(this)
@@ -447,8 +452,8 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
     withEffect(filter2)
   }
   def withFlippedX: Picture = FlipY(this)
-  def withFlippedY: Picture  = FlipX(this)
-  def withFading(distance: Int): Picture  = Fade(distance)(epic(this))
+  def withFlippedY: Picture = FlipX(this)
+  def withFading(distance: Int): Picture = Fade(distance)(epic(this))
   def withBlurring(radius: Int): Picture = Blur(radius)(epic(this))
   def withAxes: Picture = PostDrawTransform { pic => pic.axesOn() }(this)
   def withLocalBounds: Picture = PostDrawTransform { pic => picLocalBounds(pic) }(this)
@@ -490,9 +495,15 @@ object Pic {
   def apply(painter: Painter)(implicit canvas: SCanvas) = new Pic(painter)
 }
 
-class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
+class Pic(painter: Painter)(implicit val canvas: SCanvas)
+    extends Picture
+    with CorePicOps
+    with CorePicOps2
+    with TNodeCacher
+    with RedrawStopper {
   @volatile var _t: canvas.TurtleLike = _
-  val ErrMsg = "Unable to create picture turtle. This could be because you have a draw() call after an animate{ } or morph{ } call"
+  val ErrMsg =
+    "Unable to create picture turtle. This could be because you have a draw() call after an animate{ } or morph{ } call"
 
   def t = {
     if (_t == null) Utils.runInSwingThreadAndWait(10000, ErrMsg) {
@@ -575,7 +586,7 @@ class Pic(painter: Painter)(implicit val canvas: SCanvas) extends Picture with C
     while (iter.hasNext) {
       iter.next match {
         case text: PText => text.setTextPaint(color)
-        case _ =>
+        case _           =>
       }
     }
   }
@@ -657,7 +668,11 @@ class Pic0(painter: Painter)(implicit canvas0: SCanvas) extends Pic(painter) {
 }
 
 abstract class BasePicList(val pics: List[Picture])
-  extends Picture with CorePicOps with CorePicOps2 with TNodeCacher with RedrawStopper {
+    extends Picture
+    with CorePicOps
+    with CorePicOps2
+    with TNodeCacher
+    with RedrawStopper {
   if (pics.isEmpty) {
     throw new IllegalArgumentException("A Picture List needs to have at least one Picture.")
   }
@@ -738,7 +753,7 @@ abstract class BasePicList(val pics: List[Picture])
   protected def initGeom() = {
     var pg = pics(0).picGeom
     pics.tail.foreach { pic =>
-      pg = pg union pic.picGeom
+      pg = pg.union(pic.picGeom)
     }
     pg
   }

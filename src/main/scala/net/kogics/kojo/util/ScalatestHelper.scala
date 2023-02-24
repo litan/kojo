@@ -22,4 +22,3 @@ object ScalatestHelper {
     suite.execute()
   }
 }
-
