@@ -16,6 +16,7 @@
 package net.kogics.kojo
 package xscala
 
+import java.io.File
 import java.net.URL
 
 import scala.collection.mutable.ListBuffer
@@ -26,7 +27,10 @@ import scala.reflect.internal.util.OffsetPosition
 import scala.reflect.internal.util.Position
 import scala.reflect.internal.util.ScalaClassLoader.URLClassLoader
 import scala.reflect.internal.Flags
+import scala.sys.process.Process
+import scala.sys.process.ProcessLogger
 import scala.tools.nsc.interactive
+import scala.tools.nsc.interpreter.Results
 import scala.tools.nsc.io.VirtualDirectory
 import scala.tools.nsc.reporters.Reporter
 import scala.tools.nsc.Global
@@ -91,18 +95,25 @@ class CompilerAndRunner(
 
   val virtualDirectory = new VirtualDirectory("(memory)", None)
 
-  def makeSettings2() = {
-    val stng = makeSettings()
-    stng.outputDirs.setSingleOutput(virtualDirectory)
+  def makeRunSettings = {
+    val settings = makeSettings()
+    settings.outputDirs.setSingleOutput(virtualDirectory)
     //    stng.deprecation.value = true
     //    stng.feature.value = true
     //    stng.unchecked.value = true
-    stng
+    settings
   }
 
-  val settings = makeSettings2()
+  def makeExecSettings: Settings = {
+    val settings = makeSettings()
+    settings.outputDirs.setSingleOutput(tempClassDir)
+    settings
+  }
 
-  val compilerClasspath: List[URL] = new PathResolver(settings).resultAsURLs.toList
+  val runSettings = makeRunSettings
+  lazy val execSettings = makeExecSettings
+
+  val compilerClasspath: List[URL] = new PathResolver(runSettings).resultAsURLs.toList
   var classLoader = makeClassLoader
   // needed to prevent pcompiler from making the interp's classloader as
   // its context loader (which causes a mem leak)
@@ -134,18 +145,18 @@ class CompilerAndRunner(
   }
 
   val compiler = classLoader.asContext {
-    new Global(settings, reporter)
+    new Global(runSettings, reporter)
   }
 
   def pfxWithCounter = "%s%d%s".format(prefixHeader, counter, prefix)
 
-  def compilerCode(code00: String): Option[String] = {
+  def codeForRunning(code0: String): Option[String] = {
     try {
-      val (code0, inclLines, includedChars) = Utils.preProcessInclude(code00)
+      val (code, inclLines, includedChars) = Utils.preProcessInclude(code0)
       val pfx = pfxWithCounter
       includedLines = inclLines
       offsetDelta = pfx.length + includedChars
-      Some(codeTemplate.format(pfx, code0))
+      Some(codeTemplate.format(pfx, code))
     }
     catch {
       case t: Throwable =>
@@ -153,14 +164,29 @@ class CompilerAndRunner(
     }
   }
 
-  def compile(code0: String, stopPhase: List[String] = List("cleanup")) = {
-    compilerCode(code0)
+  def codeForExecing(code0: String): Option[String] = {
+    try {
+      val (code, inclLines, includedChars) = Utils.preProcessInclude(code0)
+      val pfx = pfxWithCounter
+      includedLines = inclLines
+      offsetDelta = pfx.length + includedChars
+      Some(code)
+    }
+    catch {
+      case t: Throwable =>
+        listener.message(Utils.exceptionMessage(t)); None
+    }
+  }
+
+  def compileForRunning(code0: String, stopPhase: List[String] = List("cleanup")): Results.Result = {
+    codeForRunning(code0)
       .map { code =>
+        compiler.currentSettings = runSettings
         if (compiler.settings.stopAfter.value != stopPhase) {
           // There seems to be a bug in the PhasesSetting contains method
           // which makes the compiler not see the new stopAfter value
           // So we make a new Settings
-          compiler.currentSettings = makeSettings2()
+          compiler.currentSettings = makeRunSettings
           compiler.settings.stopAfter.value = stopPhase
         }
 
@@ -173,12 +199,25 @@ class CompilerAndRunner(
       .getOrElse(IR.Error)
   }
 
-  def compileAndRun(code0: String) = {
+  def compileForExecing(code0: String): Results.Result = {
+    codeForExecing(code0)
+      .map { code =>
+        compiler.currentSettings = execSettings
+        val run = new compiler.Run
+        reporter.reset()
+        run.compileSources(List(new BatchSourceFile("scripteditor", code)))
+        //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
+        if (reporter.hasErrors) IR.Error else IR.Success
+      }
+      .getOrElse(IR.Error)
+  }
+
+  def compileAndRun(code0: String): Results.Result = {
     if (!runContext.isStoryRunning) {
       virtualDirectory.clear()
     }
     counter += 1
-    val result = compile(code0, Nil)
+    val result = compileForRunning(code0, Nil)
 
     if (result == IR.Success) {
       if (Thread.interrupted) {
@@ -215,14 +254,37 @@ class CompilerAndRunner(
     }
   }
 
+  var execedProc: Option[Process] = None
+
+  def compileAndExec(code0: String): Results.Result = {
+    val result = compileForExecing(code0)
+    if (result == IR.Success) {
+      if (Thread.interrupted) {
+        IR.Error
+      }
+      else {
+        execedProc.foreach { proc =>
+          if (proc.isAlive()) {
+            proc.destroy()
+          }
+        }
+        execedProc = Some(execCompiled(processLogger))
+        IR.Success
+      }
+    }
+    else {
+      IR.Error
+    }
+  }
+
   def stop(interpThread: Thread): Unit = {
     interpThread.interrupt()
   }
 
   def parse(code0: String, browseAst: Boolean) = {
-    compilerCode(code0)
+    codeForRunning(code0)
       .map { code =>
-        compiler.currentSettings = makeSettings2()
+        compiler.currentSettings = makeRunSettings
         compiler.settings.stopAfter.value = stopPhase()
         if (browseAst) {
           compiler.settings.browse.value = stopPhase()
@@ -336,7 +398,7 @@ class CompilerAndRunner(
   def typeAt(code0: String, offset: Int): String = {
     import interactive._
 
-    compilerCode(code0)
+    codeForRunning(code0)
       .map { code =>
         classLoader.asContext {
           val source = new BatchSourceFile("scripteditor", code)
@@ -390,7 +452,7 @@ class CompilerAndRunner(
   private def completionQuery(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
     import interactive._
 
-    compilerCode(code0)
+    codeForRunning(code0)
       .map { code =>
         classLoader.asContext {
           val source = new BatchSourceFile("scripteditor", code)
@@ -441,5 +503,87 @@ class CompilerAndRunner(
         }
       }
       .getOrElse(Nil)
+  }
+
+  val processLogger = new ProcessLogger {
+    override def out(s: => String): Unit = {
+      println(s"[child-proc] $s")
+    }
+
+    override def err(s: => String): Unit = {
+      println(s"[child-proc-stderr] $s")
+    }
+
+    override def buffer[T](f: => T): T = ???
+  }
+
+  val tempClassDir = "%s/kojo_%s".format(
+    System.getProperty("java.io.tmpdir"),
+    System.getProperty("user.name")
+  )
+  val tmpDirOnDisk = new File(tempClassDir)
+  if (!tmpDirOnDisk.exists()) {
+    tmpDirOnDisk.mkdirs()
+  }
+  else {
+    tmpDirOnDisk.listFiles().foreach(_.delete())
+  }
+
+  def execCompiled(logger: ProcessLogger): Process = {
+    val classpath =
+      s""""$tempClassDir${File.pathSeparator}${System.getProperty(
+          "java.class.path"
+        )}""""
+
+    val javaHome = System.getProperty("java.home")
+    val javaExec =
+      if (new File(javaHome + "/bin/javaw.exe").exists)
+        javaHome + "/bin/javaw"
+      else
+        javaHome + "/bin/java"
+
+    val libPath: String = ""
+    val extraEnv: Seq[(String, String)] = Seq()
+
+    lazy val javaMajorVersion = {
+      val version = System.getProperty("java.specification.version").split('.')
+      val major =
+        if (version(0) == "1") version(1) // 1.8 is 8
+        else version(0) // later versions are 9, 10, etc
+      major.toInt
+    }
+
+    def isJava8 = javaMajorVersion == 8
+
+    def cmsGC =
+      "-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"
+
+    def reflectiveAccess =
+      "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED"
+
+    val javaVersionSpecificArgs = {
+      if (isJava8)
+        cmsGC
+      else
+        reflectiveAccess
+    }
+
+    val cmdArgs = s"-client -Xms128m -Xmx768m " +
+      "-Xss1m " +
+      s"$javaVersionSpecificArgs " +
+      "Launcher"
+
+    val command =
+      Seq(
+        javaExec,
+        "-cp",
+        classpath
+      )
+
+    val cmds = command.mkString(" ") + cmdArgs
+
+    val cwd = new File(runContext.baseDir)
+    val pb = Process(cmds, cwd, extraEnv: _*)
+    pb.run(logger)
   }
 }

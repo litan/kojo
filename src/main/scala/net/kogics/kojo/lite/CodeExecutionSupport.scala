@@ -527,6 +527,8 @@ class CodeExecutionSupport(
     }
 
     def isStoryRunning = storyTeller.currStory.isDefined
+
+    def baseDir: String = kojoCtx.baseDir
   }
 
   def makeCodeRunner: core.CodeRunner = {
@@ -690,9 +692,14 @@ class CodeExecutionSupport(
   }
 
   lazy val worksheetPragma = Utils.loadBundleString("S_WorksheetPragma")
+  lazy val execPragma = Utils.loadBundleString("S_ExecPragma")
 
   def isWorksheet(code: String) = {
     code.indexOf(worksheetPragma) != -1
+  }
+
+  def isToBeExeced(code: String) = {
+    code.indexOf(execPragma) != -1
   }
 
   def runIpmCode(code: String): Unit = {
@@ -816,7 +823,12 @@ class CodeExecutionSupport(
       val code = cleanWsOutput(code2run)
       preProcessCode(code)
       if (code2run.selection.isEmpty) {
-        codeRunner.compileRunCode(code)
+        if (isToBeExeced(code)) {
+          codeRunner.compileExecCode(code)
+        }
+        else {
+          codeRunner.compileRunCode(code)
+        }
       }
       else {
         codeRunner.runCode(code)

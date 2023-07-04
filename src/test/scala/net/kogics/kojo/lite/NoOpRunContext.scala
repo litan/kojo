@@ -28,4 +28,5 @@ class NoOpRunContext extends RunContext {
 
   def astStopPhase: String = "typer"
   def isStoryRunning: Boolean = false
+  def baseDir: String = "."
 }

@@ -28,6 +28,7 @@ trait CodeRunner {
   def parseCode(code: String, browseAst: Boolean): Unit
   def compileCode(code: String): Unit
   def compileRunCode(code: String): Unit
+  def compileExecCode(code: String): Unit
   def varCompletions(prefix: Option[String]): (List[String], Int)
   def keywordCompletions(prefix: Option[String]): (List[String], Int)
   def memberCompletions(
@@ -76,4 +77,6 @@ trait RunContext {
 
   def astStopPhase: String
   def isStoryRunning: Boolean
+
+  def baseDir: String
 }

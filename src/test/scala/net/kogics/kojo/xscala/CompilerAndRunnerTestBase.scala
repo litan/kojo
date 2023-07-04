@@ -67,7 +67,7 @@ abstract class CompilerAndRunnerTestBase {
   def testError1(): Unit = {
     val code = """val x = 10y
       """
-    runner.compile(code)
+    runner.compileForRunning(code)
     assertEquals(1, errLine)
     assertEquals(9, errColumn)
     assertEquals(8, errOffset)
@@ -90,7 +90,7 @@ class Data extends BaseData {
 val data = new Data()
 // inspect(data)
       """
-    runner.compile(code)
+    runner.compileForRunning(code)
     assertEquals(10, errLine)
     assertEquals(5, errColumn)
     assertEquals(215, errOffset)
@@ -120,7 +120,7 @@ back(200)
 penDown()
 tree(90)
       """
-    runner.compile(code)
+    runner.compileForRunning(code)
     assertEquals(8, errLine)
     assertEquals(14, errColumn)
     assertEquals(255, errOffset)
@@ -216,7 +216,7 @@ t8.invisible()
 t9.invisible()
 t10.invisible()
       """
-    runner.compile(code)
+    runner.compileForRunning(code)
     assertEquals(79, errLine)
     assertEquals(4, errColumn)
     assertEquals(1294, errOffset)
@@ -312,7 +312,7 @@ t8.invisible()
 t9.invisible()
 t10.invisible()
       """
-    runner.compile(code)
+    runner.compileForRunning(code)
     assertEquals(0, errLine)
     assertEquals(0, errColumn)
   }
@@ -330,7 +330,7 @@ animate {
 }
     """
 
-    runner.compile(code)
+    runner.compileForRunning(code)
     assertEquals(0, errLine)
     assertEquals(0, errColumn)
   }
