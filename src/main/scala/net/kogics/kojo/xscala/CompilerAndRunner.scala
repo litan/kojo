@@ -125,11 +125,13 @@ class CompilerAndRunner(
   }
   private def loadByName(s: String): Class[_] = classLoader.loadClass(s)
 
-  val reporter = new Reporter {
+  trait KojoReporter extends Reporter {
+    def lineDelta: Int
+
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
       //      severity.count += 1
       lazy val line =
-        position.line - prefixLines - 1 // we added an extra line after the prefix in the code template. Take it off
+        position.line - lineDelta
       lazy val offset = position.start - offsetDelta - 1 // we added an extra newline char after the prefix
       severity match {
         case ERROR if position.isDefined =>
@@ -142,6 +144,14 @@ class CompilerAndRunner(
           listener.message(msg)
       }
     }
+  }
+
+  val reporter = new KojoReporter {
+    val lineDelta = prefixLines + 1 // we added an extra line after the prefix in the code template.
+  }
+
+  val execReporter = new KojoReporter {
+    val lineDelta = 0
   }
 
   val compiler = classLoader.asContext {
@@ -167,9 +177,8 @@ class CompilerAndRunner(
   def codeForExecing(code0: String): Option[String] = {
     try {
       val (code, inclLines, includedChars) = Utils.preProcessInclude(code0)
-      val pfx = pfxWithCounter
       includedLines = inclLines
-      offsetDelta = pfx.length + includedChars
+      offsetDelta = includedChars
       Some(code)
     }
     catch {
@@ -182,6 +191,7 @@ class CompilerAndRunner(
     codeForRunning(code0)
       .map { code =>
         compiler.currentSettings = runSettings
+        compiler.reporter = reporter
         if (compiler.settings.stopAfter.value != stopPhase) {
           // There seems to be a bug in the PhasesSetting contains method
           // which makes the compiler not see the new stopAfter value
@@ -203,11 +213,12 @@ class CompilerAndRunner(
     codeForExecing(code0)
       .map { code =>
         compiler.currentSettings = execSettings
+        compiler.reporter = execReporter
         val run = new compiler.Run
-        reporter.reset()
+        execReporter.reset()
         run.compileSources(List(new BatchSourceFile("scripteditor", code)))
         //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
-        if (reporter.hasErrors) IR.Error else IR.Success
+        if (execReporter.hasErrors) IR.Error else IR.Success
       }
       .getOrElse(IR.Error)
   }
@@ -256,18 +267,30 @@ class CompilerAndRunner(
 
   var execedProc: Option[Process] = None
 
+  def deleteOldClassfiles(): Unit = {
+    tmpDirOnDisk.listFiles().foreach { f =>
+      val deleted = f.delete()
+      if (!deleted) {
+        println(s"Unable to delete old classfile - ${f.getName}")
+      }
+    }
+  }
+
   def compileAndExec(code0: String): Results.Result = {
+    execedProc.foreach { proc =>
+      if (proc.isAlive()) {
+        proc.destroy()
+      }
+    }
+
+    deleteOldClassfiles()
+
     val result = compileForExecing(code0)
     if (result == IR.Success) {
       if (Thread.interrupted) {
         IR.Error
       }
       else {
-        execedProc.foreach { proc =>
-          if (proc.isAlive()) {
-            proc.destroy()
-          }
-        }
         execedProc = Some(execCompiled(processLogger))
         IR.Success
       }
@@ -524,9 +547,6 @@ class CompilerAndRunner(
   val tmpDirOnDisk = new File(tempClassDir)
   if (!tmpDirOnDisk.exists()) {
     tmpDirOnDisk.mkdirs()
-  }
-  else {
-    tmpDirOnDisk.listFiles().foreach(_.delete())
   }
 
   def execCompiled(logger: ProcessLogger): Process = {
