@@ -126,13 +126,14 @@ class CompilerAndRunner(
   private def loadByName(s: String): Class[_] = classLoader.loadClass(s)
 
   trait KojoReporter extends Reporter {
-    def lineDelta: Int
+    def lineMod: Int
+    def offsetMod: Int
 
     override def info0(position: Position, msg: String, severity: Severity, force: Boolean): Unit = {
       //      severity.count += 1
       lazy val line =
-        position.line - lineDelta
-      lazy val offset = position.start - offsetDelta - 1 // we added an extra newline char after the prefix
+        position.line - lineMod
+      lazy val offset = position.point - offsetMod
       severity match {
         case ERROR if position.isDefined =>
           listener.error(msg, line, position.column, offset, position.lineContent)
@@ -147,11 +148,13 @@ class CompilerAndRunner(
   }
 
   val reporter = new KojoReporter {
-    val lineDelta = prefixLines + 1 // we added an extra line after the prefix in the code template.
+    def lineMod = prefixLines + 1 // we added an extra line after the prefix in the code template.
+    def offsetMod = offsetDelta + 1 // we added an extra newline char after the prefix
   }
 
   val execReporter = new KojoReporter {
-    val lineDelta = 0
+    def lineMod = 0
+    def offsetMod = 0
   }
 
   val compiler = classLoader.asContext {

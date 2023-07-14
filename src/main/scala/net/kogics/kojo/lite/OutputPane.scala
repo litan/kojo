@@ -86,6 +86,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
         e.getURL.toString match {
           case linkRegex(offset) =>
             codePane.select(offset.toInt, offset.toInt + 1)
+//            codePane.setCaretPosition(offset.toInt)
             kojoCtx.activateScriptEditor()
           case _ =>
         }
