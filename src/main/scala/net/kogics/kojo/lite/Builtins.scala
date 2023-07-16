@@ -1219,15 +1219,15 @@ Here's a partial list of the available commands:
     animateWithSetupCanvasDraw { canvas => }(drawFrame)
   }
 
-  type Sub[M] = gaming.Sub[M]
-  type CmdQ[M] = gaming.CmdQ[M]
-  val Subscriptions = gaming.Subscriptions
-  lazy val CollisionDetector = new gaming.CollisionDetector()
-  @volatile private var currGame: Option[gaming.Game[_, _]] = None
+  type Sub[M] = fpgaming.Sub[M]
+  type CmdQ[M] = fpgaming.CmdQ[M]
+  val Subscriptions = fpgaming.Subscriptions
+  lazy val CollisionDetector = new fpgaming.CollisionDetector()
+  @volatile private var currGame: Option[fpgaming.Game[_, _]] = None
 
   def runGame[S, M](init: S, update: (S, M) => S, view: S => Picture, subscriptions: S => Seq[Sub[M]]): Unit = {
-    currGame = Some(new gaming.Game(init, update, view, subscriptions))
+    currGame = Some(new fpgaming.Game(init, update, view, subscriptions))
   }
 
-  def runCommandQuery[M](cmdQ: CmdQ[M]): Unit = currGame.get.asInstanceOf[gaming.Game[_, M]].runCommandQuery(cmdQ)
+  def runCommandQuery[M](cmdQ: CmdQ[M]): Unit = currGame.get.asInstanceOf[fpgaming.Game[_, M]].runCommandQuery(cmdQ)
 }

@@ -20,7 +20,7 @@ import net.kogics.kojo.core.Point
 import net.kogics.kojo.core.SCanvas
 import net.kogics.kojo.util.Utils
 
-package object gaming {
+package object fpgaming {
   trait GameMsgSink[Msg] {
     def triggerIncrementalUpdate(msg: Msg): Unit
 
