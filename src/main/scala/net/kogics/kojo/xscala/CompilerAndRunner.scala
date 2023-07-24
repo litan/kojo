@@ -554,9 +554,7 @@ class CompilerAndRunner(
 
   def execCompiled(logger: ProcessLogger): Process = {
     val classpath =
-      s""""$tempClassDir${File.pathSeparator}${System.getProperty(
-          "java.class.path"
-        )}""""
+      s"$tempClassDir${File.pathSeparator}${System.getProperty("java.class.path")}"
 
     val javaHome = System.getProperty("java.home")
     val javaExec =
@@ -600,13 +598,11 @@ class CompilerAndRunner(
       Seq(
         javaExec,
         "-cp",
-        classpath
-      )
-
-    val cmds = command.mkString(" ") + cmdArgs
+        classpath,
+      ) ++ cmdArgs.split(' ')
 
     val cwd = new File(runContext.baseDir)
-    val pb = Process(cmds, cwd, extraEnv: _*)
+    val pb = Process(command, cwd, extraEnv: _*)
     pb.run(logger)
   }
 }
