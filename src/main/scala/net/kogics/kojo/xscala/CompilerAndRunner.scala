@@ -563,6 +563,13 @@ class CompilerAndRunner(
       else
         javaHome + "/bin/java"
 
+    val maxMem = {
+      Utils.appProperty("memory.max") match {
+        case Some(d) => d
+        case None => if (System.getProperty("sun.arch.data.model", "32") == "64") "2g" else "768m"
+      }
+    }
+
     val libPath: String = ""
     val extraEnv: Seq[(String, String)] = Seq()
 
@@ -579,20 +586,25 @@ class CompilerAndRunner(
     def cmsGC =
       "-XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled"
 
-    def reflectiveAccess =
-      "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED"
+    def reflectiveAccess = {
+      "--add-opens java.desktop/javax.swing.text.html=ALL-UNNAMED " +
+        "--add-opens java.desktop/sun.awt=ALL-UNNAMED " +
+        "--add-opens java.desktop/sun.swing=ALL-UNNAMED " +
+        "--add-opens java.desktop/sun.swing.table=ALL-UNNAMED " +
+        "--add-opens java.base/java.lang=ALL-UNNAMED"
+    }
+
+    def noScaling =
+      "-Dsun.java2d.uiScale.enabled=false"
 
     val javaVersionSpecificArgs = {
       if (isJava8)
         cmsGC
       else
-        reflectiveAccess
+        s"$reflectiveAccess $noScaling"
     }
 
-    val cmdArgs = s"-client -Xms128m -Xmx768m " +
-      "-Xss1m " +
-      s"$javaVersionSpecificArgs " +
-      "Launcher"
+    val cmdArgs = s"-client -Xms128m -Xmx$maxMem -Xss1m $javaVersionSpecificArgs Launcher"
 
     val command =
       Seq(
