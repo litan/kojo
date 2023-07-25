@@ -77,6 +77,14 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     println(s"Additional jars available (within libk) - $numLibkJars")
   }
 
+  def ensureExtensionDir(): Unit = {
+    val dir = new File(Utils.extensionsDir)
+    if (!dir.exists()) {
+      dir.mkdirs()
+    }
+  }
+
+  ensureExtensionDir()
   val extenstionDirs = Utils.dirsInDir(Utils.extensionsDir)
   if (extenstionDirs.length > 0) {
     println("\nScanning extensions...")
