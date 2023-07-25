@@ -95,6 +95,15 @@ class CompilerAndRunner(
 
   val virtualDirectory = new VirtualDirectory("(memory)", None)
 
+  val execClassLocation = "%s/kojo_%s".format(
+    System.getProperty("java.io.tmpdir"),
+    System.getProperty("user.name")
+  )
+  val execClassDir = new File(execClassLocation)
+  if (!execClassDir.exists()) {
+    execClassDir.mkdirs()
+  }
+
   def makeRunSettings = {
     val settings = makeSettings()
     settings.outputDirs.setSingleOutput(virtualDirectory)
@@ -106,7 +115,7 @@ class CompilerAndRunner(
 
   def makeExecSettings: Settings = {
     val settings = makeSettings()
-    settings.outputDirs.setSingleOutput(tempClassDir)
+    settings.outputDirs.setSingleOutput(execClassLocation)
     settings
   }
 
@@ -270,8 +279,11 @@ class CompilerAndRunner(
 
   var execedProc: Option[Process] = None
 
-  def deleteOldClassfiles(): Unit = {
-    tmpDirOnDisk.listFiles().foreach { f =>
+  def deleteOldExecClassfiles(): Unit = {
+    // this is on the context classloader for the compiler. Need to re-look at that
+    virtualDirectory.clear()
+
+    execClassDir.listFiles().foreach { f =>
       val deleted = f.delete()
       if (!deleted) {
         println(s"Unable to delete old classfile - ${f.getName}")
@@ -286,7 +298,7 @@ class CompilerAndRunner(
       }
     }
 
-    deleteOldClassfiles()
+    deleteOldExecClassfiles()
 
     val result = compileForExecing(code0)
     if (result == IR.Success) {
@@ -543,18 +555,9 @@ class CompilerAndRunner(
     override def buffer[T](f: => T): T = ???
   }
 
-  val tempClassDir = "%s/kojo_%s".format(
-    System.getProperty("java.io.tmpdir"),
-    System.getProperty("user.name")
-  )
-  val tmpDirOnDisk = new File(tempClassDir)
-  if (!tmpDirOnDisk.exists()) {
-    tmpDirOnDisk.mkdirs()
-  }
-
   def execCompiled(logger: ProcessLogger): Process = {
     val classpath =
-      s"$tempClassDir${File.pathSeparator}${System.getProperty("java.class.path")}"
+      s"$execClassLocation${File.pathSeparator}${System.getProperty("java.class.path")}"
 
     val javaHome = System.getProperty("java.home")
     val javaExec =
