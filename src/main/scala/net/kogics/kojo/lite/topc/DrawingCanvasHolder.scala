@@ -17,4 +17,8 @@ class DrawingCanvasHolder(val dc: SpriteCanvas, ctx: KojoCtx)
   def activateCanvas(): Unit = {
     dc.activate()
   }
+
+  def clearCanvas(): Unit = {
+    dc.clear()
+  }
 }
