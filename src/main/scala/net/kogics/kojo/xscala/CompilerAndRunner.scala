@@ -156,7 +156,7 @@ class CompilerAndRunner(
     }
   }
 
-  val reporter = new KojoReporter {
+  val runReporter = new KojoReporter {
     def lineMod = prefixLines + 1 // we added an extra line after the prefix in the code template.
     def offsetMod = offsetDelta + 1 // we added an extra newline char after the prefix
   }
@@ -167,7 +167,51 @@ class CompilerAndRunner(
   }
 
   val compiler = classLoader.asContext {
-    new Global(runSettings, reporter)
+    new Global(runSettings, runReporter)
+  }
+
+  object SRSwitcher {
+    val Run = 1
+    val Exec = 2
+    private var prevMode = Run
+
+    private var verbose = false
+    private def debugPrintln(s: => String): Unit = {
+      if (verbose) {
+        println(s)
+      }
+    }
+
+    def adjust(currMode: Int): Unit = {
+      if (prevMode == Exec && currMode == Run) {
+        debugPrintln("Changing to compiler run settings/reporter")
+        compiler.currentSettings = runSettings
+        compiler.reporter = runReporter
+        prevMode = Run
+      }
+      if (prevMode == Run && currMode == Exec) {
+        debugPrintln("Changing to compiler exec settings/reporter")
+        compiler.currentSettings = execSettings
+        compiler.reporter = execReporter
+        prevMode = Exec
+      }
+    }
+
+    def newRunSettings(setReporter: Boolean): Unit = {
+      debugPrintln("Changing to *new* compiler run settings")
+      compiler.currentSettings = makeRunSettings
+      if (setReporter && prevMode == Exec) {
+        debugPrintln("Changing to compiler run reporter")
+        compiler.reporter = runReporter
+      }
+      prevMode = Run
+    }
+
+    def restoreRunSettings(): Unit = {
+      debugPrintln("Restoring compiler run settings")
+      compiler.currentSettings = runSettings
+      verbose = if (System.getProperty("kojo.compiler.sr.verbose") == "true") true else false
+    }
   }
 
   def pfxWithCounter = "%s%d%s".format(prefixHeader, counter, prefix)
@@ -202,21 +246,22 @@ class CompilerAndRunner(
   def compileForRunning(code0: String, stopPhase: List[String] = List("cleanup")): Results.Result = {
     codeForRunning(code0)
       .map { code =>
-        compiler.currentSettings = runSettings
-        compiler.reporter = reporter
+        SRSwitcher.adjust(SRSwitcher.Run)
+        var sChanged = false
         if (compiler.settings.stopAfter.value != stopPhase) {
-          // There seems to be a bug in the PhasesSetting contains method
-          // which makes the compiler not see the new stopAfter value
-          // So we make a new Settings
-          compiler.currentSettings = makeRunSettings
+          SRSwitcher.newRunSettings(false)
+          sChanged = true
           compiler.settings.stopAfter.value = stopPhase
         }
 
         val run = new compiler.Run
-        reporter.reset()
+        runReporter.reset()
         run.compileSources(List(new BatchSourceFile("scripteditor", code)))
         //    println(s"[Debug] Script checking done till phase: ${compiler.globalPhase.prev}")
-        if (reporter.hasErrors) IR.Error else IR.Success
+        if (sChanged) {
+          SRSwitcher.restoreRunSettings()
+        }
+        if (runReporter.hasErrors) IR.Error else IR.Success
       }
       .getOrElse(IR.Error)
   }
@@ -224,8 +269,7 @@ class CompilerAndRunner(
   def compileForExecing(code0: String): Results.Result = {
     codeForExecing(code0)
       .map { code =>
-        compiler.currentSettings = execSettings
-        compiler.reporter = execReporter
+        SRSwitcher.adjust(SRSwitcher.Exec)
         val run = new compiler.Run
         execReporter.reset()
         run.compileSources(List(new BatchSourceFile("scripteditor", code)))
@@ -322,16 +366,16 @@ class CompilerAndRunner(
   def parse(code0: String, browseAst: Boolean) = {
     codeForRunning(code0)
       .map { code =>
-        compiler.currentSettings = makeRunSettings
+        SRSwitcher.newRunSettings(true)
         compiler.settings.stopAfter.value = stopPhase()
         if (browseAst) {
           compiler.settings.browse.value = stopPhase()
         }
         val run = new compiler.Run
-        reporter.reset()
+        runReporter.reset()
         run.compileSources(List(new BatchSourceFile("scripteditor", code)))
-
-        if (reporter.hasErrors) {
+        SRSwitcher.restoreRunSettings()
+        if (runReporter.hasErrors) {
           IR.Error
         }
         else {
