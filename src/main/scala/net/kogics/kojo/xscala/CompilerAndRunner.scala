@@ -566,7 +566,7 @@ class CompilerAndRunner(
       else
         javaHome + "/bin/java"
 
-    val extraArgs = if (Utils.isLinux) "-Dsun.java2d.xrender=false" else ""
+    val extraArgs = if (Utils.isLinux) "-Dsun.java2d.xrender=false " else ""
 
     val maxMem = {
       Utils.appProperty("memory.max") match {
@@ -609,7 +609,7 @@ class CompilerAndRunner(
         s"$reflectiveAccess $noScaling"
     }
 
-    val cmdArgs = s"-client -Xms128m -Xmx$maxMem -Xss1m $javaVersionSpecificArgs $extraArgs Launcher"
+    val cmdArgs = s"-client -Xms128m -Xmx$maxMem -Xss1m $javaVersionSpecificArgs ${extraArgs}Launcher"
 
     val command =
       Seq(
