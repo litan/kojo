@@ -304,9 +304,9 @@ class KojoCtx(val subKojo: Boolean) extends core.KojoCtx {
   def fileOpened(file: File): Unit = {
     fileName = file.getName
     topcs.seh.fileOpened(fileName)
-    Utils.runAsyncQueued {
-      topcs.dch.clearCanvas()
-    }
+//    Utils.runAsyncQueued {
+//      topcs.dch.clearCanvas()
+//    }
     CloseFile.onFileOpen()
   }
 
