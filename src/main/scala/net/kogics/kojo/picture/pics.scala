@@ -461,6 +461,7 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withPosition(x: Double, y: Double): Picture = PostDrawTransform { pic => pic.setPosition(x, y) }(this)
   def withZIndex(zIndex: Int): Picture = PostDrawTransform { pic => pic.setZIndex(zIndex) }(this)
   def withClipping(clipShape: Shape): Picture = new ClipPic(this, clipShape)(canvas)
+  def withClipping(clipPic: Picture): Picture = new ClipPicWithPic(this, clipPic)(canvas)
   def withPenCapJoin(capJoin: (Int, Int)): Picture = PostDrawTransform { pic => pic.setPenCapJoin(capJoin) }(this)
 }
 

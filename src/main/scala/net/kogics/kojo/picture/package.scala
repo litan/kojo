@@ -21,6 +21,7 @@ import java.awt.Color
 import java.awt.Font
 import java.awt.Image
 import java.awt.Paint
+import java.awt.Shape
 import java.net.URL
 import java.util.Random
 import javax.swing.JComponent
@@ -480,5 +481,22 @@ package object picture {
   protected[picture] def epic(p: Picture) = p match {
     case ep: EffectablePicture => ep
     case _                     => new EffectableImagePic(freshPic(p))(p.canvas)
+  }
+
+  def toShape(p: Picture): Shape = {
+    p.draw()
+    val coords = p.picGeom.getCoordinates
+    p.erase()
+    if (coords.length > 0) {
+      val path = new GeneralPath()
+      val fc = coords.head
+      path.moveTo(fc.x, fc.y)
+      coords.tail.foreach(c => path.lineTo(c.x, c.y))
+      path.closePath()
+      path
+    }
+    else {
+      throw new RuntimeException("Unable to convert picture to shape")
+    }
   }
 }

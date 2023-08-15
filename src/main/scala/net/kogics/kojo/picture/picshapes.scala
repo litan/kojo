@@ -615,7 +615,7 @@ class ClipPic(pic: Picture, clipShape: Shape)(implicit val canvas: SCanvas)
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
     val node = new PClip()
     node.append(clipShape, false)
-    _setPenColor(node, Color.black)
+    _setPenColor(node, null)
     _setPenThickness(node, 0)
     node.setPaint(null)
     node.addChild(pic.tnode)
@@ -631,3 +631,5 @@ class ClipPic(pic: Picture, clipShape: Shape)(implicit val canvas: SCanvas)
 
   def copy: net.kogics.kojo.core.Picture = new ClipPic(pic.copy, clipShape)
 }
+
+class ClipPicWithPic(pic: Picture, clipPic: Picture)(implicit canvas2: SCanvas) extends ClipPic(pic, toShape(clipPic))
