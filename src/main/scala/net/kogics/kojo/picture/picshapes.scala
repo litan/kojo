@@ -309,6 +309,14 @@ class LinePic(x: Double, y: Double)(implicit val canvas: SCanvas)
   def copy: net.kogics.kojo.core.Picture = new LinePic(x, y)
 }
 
+class KPath(s: Shape) extends PPath(s) {
+  override def paint(paintContext: PPaintContext): Unit = {
+    val g2 = paintContext.getGraphics
+    g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
+    super.paint(paintContext)
+  }
+}
+
 class PathPic(pathMaker: => GeneralPath)(implicit val canvas: SCanvas)
     extends Picture
     with CorePicOps
@@ -344,7 +352,7 @@ class PathPic(pathMaker: => GeneralPath)(implicit val canvas: SCanvas)
   }
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
-    val node = new PPath(path)
+    val node = new KPath(path)
     _setPenColor(node, Color.red)
     _setPenThickness(node, 2 / canvas.camScale)
     node.setPaint(null)
@@ -380,7 +388,7 @@ class Java2DPic(w: Double, h: Double, fn: Graphics2D => Unit)(implicit val canva
     val buffImg = graphicsConfiguration.createCompatibleImage(w.toInt, h.toInt, Transparency.TRANSLUCENT)
     val gbi = buffImg.createGraphics
     new PPaintContext(gbi).setRenderQuality(PPaintContext.HIGH_QUALITY_RENDERING)
-    // gbi.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
+    gbi.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
     fn(gbi)
     (buffImg, gbi)
   }
@@ -601,6 +609,14 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
   override def toString() = s"TextPic (Id: ${System.identityHashCode(this)})"
 }
 
+class KClip extends PClip {
+  override def paintAfterChildren(paintContext: PPaintContext): Unit = {
+    val g2 = paintContext.getGraphics
+    g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE)
+    super.paintAfterChildren(paintContext)
+  }
+}
+
 class ClipPic(pic: Picture, clipShape: Shape)(implicit val canvas: SCanvas)
     extends Picture
     with CorePicOps
@@ -613,7 +629,7 @@ class ClipPic(pic: Picture, clipShape: Shape)(implicit val canvas: SCanvas)
   }
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
-    val node = new PClip()
+    val node = new KClip()
     node.append(clipShape, false)
     _setPenColor(node, null)
     _setPenThickness(node, 0)
