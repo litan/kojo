@@ -36,6 +36,7 @@ import edu.umd.cs.piccolox.nodes.PClip
 import edu.umd.cs.piccolox.pswing.PSwing
 import net.kogics.kojo.core.Picture
 import net.kogics.kojo.core.SCanvas
+import net.kogics.kojo.picture.PicCache.freshPic
 import net.kogics.kojo.staging.CapJoinConstants._
 import net.kogics.kojo.util.Constants
 import net.kogics.kojo.util.Utils
@@ -617,13 +618,16 @@ class KClip extends PClip {
   }
 }
 
-class ClipPic(pic: Picture, clipShape: Shape)(implicit val canvas: SCanvas)
+class ClipPic(pic0: Picture, clipShape: Shape)(implicit val canvas: SCanvas)
     extends Picture
     with CorePicOps
     with CorePicOps2
     with TNodeCacher
     with RedrawStopper
     with PicShapeOps {
+
+  val pic = freshPic(pic0)
+
   def initGeom(): com.vividsolutions.jts.geom.Geometry = {
     throw new RuntimeException("Clip pic does not yet support geometry")
   }
@@ -648,4 +652,5 @@ class ClipPic(pic: Picture, clipShape: Shape)(implicit val canvas: SCanvas)
   def copy: net.kogics.kojo.core.Picture = new ClipPic(pic.copy, clipShape)
 }
 
-class ClipPicWithPic(pic: Picture, clipPic: Picture)(implicit canvas2: SCanvas) extends ClipPic(pic, toShape(clipPic))
+class ClipPicWithPic(pic: Picture, clipPic: Picture)(implicit canvas2: SCanvas)
+    extends ClipPic(pic, toShape(freshPic(clipPic)))

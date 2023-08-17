@@ -484,7 +484,7 @@ package object picture {
   }
 
   def toShape(p: Picture): Shape = {
-    p.draw()
+    p.invisible(); p.draw()
     val coords = p.picGeom.getCoordinates
     p.erase()
     if (coords.length > 0) {
