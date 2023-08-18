@@ -218,5 +218,6 @@ trait Picture extends InputAware {
   def withZIndex(idx: Int): Picture
   def withClipping(clipShape: Shape): Picture
   def withClipping(clipPic: Picture): Picture
+  def withMask(maskPic: Picture): Picture
   def withPenCapJoin(capJoin: (Int, Int)): Picture
 }
