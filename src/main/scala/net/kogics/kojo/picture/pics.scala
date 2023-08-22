@@ -464,6 +464,7 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
   def withClipping(clipPic: Picture): Picture = new ClipPicWithPic(this, clipPic)(canvas)
   def withMask(maskPic: Picture): Picture = this.withEffect(new MaskOp(maskPic))
   def withPenCapJoin(capJoin: (Int, Int)): Picture = PostDrawTransform { pic => pic.setPenCapJoin(capJoin) }(this)
+  def withNoPen(): Picture = PostDrawTransform { pic => pic.setNoPen() }(this)
 }
 
 trait RedrawStopper extends Picture {
