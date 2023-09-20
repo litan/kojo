@@ -1189,8 +1189,8 @@ Here's a partial list of the available commands:
       case (state, pic) =>
         val newState = nextState(state)
         val pic2 = stateView(state)
-        pic.erase()
         pic2.draw()
+        pic.erase()
         if (newState == state) {
           tCanvas.stopAnimationActivity(anim)
         }

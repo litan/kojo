@@ -157,8 +157,8 @@ package object animation {
               (System.currentTimeMillis - startMillis).toDouble
             val ns = nextState(currState, elapsedTimeMillis)
             val pic2 = picMaker(ns)
-            currPic.erase()
             pic2.draw()
+            currPic.erase()
 
             currState = ns
             currPic = pic2
