@@ -533,6 +533,7 @@ package object picture {
     }
 
     def filterRGB(x: Int, y: Int, pixel: Int): Int = {
+      val alpha = (pixel >> 24) & 0xff
       val red = (pixel >> 16) & 0xff
       val green = (pixel >> 8) & 0xff
       val blue = pixel & 0xff
@@ -542,7 +543,9 @@ package object picture {
       val mgreen = (maskPixel >> 8) & 0xff
       val mblue = maskPixel & 0xff
       val mgray = (mred + mgreen + mblue) / 3
-      val outPixel = mgray << 24 | red << 16 | green << 8 | blue
+
+      val outAlpha = math.min(alpha, mgray)
+      val outPixel = outAlpha << 24 | red << 16 | green << 8 | blue
       outPixel
     }
   }
