@@ -20,9 +20,10 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
 
   import java.awt.geom.AffineTransform
 
-  var fillColor: Color = null
+  var fillColor: Color = _
   var strokeColor: Color = cm.red
   var strokeThickness = 2.0
+  var textFont: Font = _
   var matrices = List.empty[AffineTransform]
   var penCap = ROUND
   var penJoin = MITER
@@ -88,6 +89,7 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     stroke = makeStroke(strokeThickness, penCap, penJoin)
   }
 
+  // keep this public so people can draw shapes beyond those supported by CanvasDraw
   def drawShape(s: java.awt.Shape): Unit = {
     if (fillColor != null) {
       g2d.setPaint(fillColor)
@@ -98,6 +100,28 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
       g2d.setStroke(stroke)
       g2d.draw(s)
     }
+  }
+
+  private def drawText(s: String, x: Double, y: Double): Unit = {
+    if (strokeColor != null) {
+      g2d.setPaint(strokeColor)
+      g2d.setStroke(stroke)
+    }
+    if (textFont != null) {
+      g2d.setFont(textFont)
+    }
+    pushMatrix()
+    scale(1, -1)
+    g2d.drawString(s, x.toFloat, -y.toFloat)
+    popMatrix()
+  }
+
+  def textFont(f: Font): Unit = {
+    textFont = f
+  }
+
+  def text(s: String, x: Double, y: Double): Unit = {
+    drawText(s, x, y)
   }
 
   def ellipse(cx: Double, cy: Double, w: Double, h: Double): Unit = {
