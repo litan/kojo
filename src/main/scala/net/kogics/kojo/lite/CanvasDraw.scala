@@ -23,7 +23,7 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
   var fillColor: Color = _
   var strokeColor: Color = cm.red
   var strokeThickness = 2.0
-  var textFont: Font = _
+  var textFont: Font = b.Font("Sans Serif", 15)
   var matrices = List.empty[AffineTransform]
   var penCap = ROUND
   var penJoin = MITER
@@ -107,12 +107,20 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
       g2d.setPaint(strokeColor)
       g2d.setStroke(stroke)
     }
-    if (textFont != null) {
-      g2d.setFont(textFont)
-    }
+    g2d.setFont(textFont)
     pushMatrix()
     scale(1, -1)
+//    val te = b.textExtent(s, textFont.getSize, textFont.getName)
+//    translate(0, te.height)
     g2d.drawString(s, x.toFloat, -y.toFloat)
+    popMatrix()
+  }
+
+  private def drawImage(image: Image, x: Int, y: Int): Unit = {
+    pushMatrix()
+    scale(1, -1)
+    translate(0, -image.getHeight(null))
+    g2d.drawImage(image, x, -y, null)
     popMatrix()
   }
 
@@ -122,6 +130,10 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
 
   def text(s: String, x: Double, y: Double): Unit = {
     drawText(s, x, y)
+  }
+
+  def image(img: Image, x: Int, y: Int): Unit = {
+    drawImage(img, x, y)
   }
 
   def ellipse(cx: Double, cy: Double, w: Double, h: Double): Unit = {
@@ -162,6 +174,8 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
   def rotate(angle: Double): Unit = {
     g2d.rotate(angle)
   }
+
+  def rotateDegrees(angle: Double): Unit = rotate(angle.toRadians)
 
   def scale(f: Double): Unit = {
     g2d.scale(f, f)
