@@ -95,11 +95,19 @@ draw(pic)
     <li></li>
 </ul>
 """,
-    "def (function)" -> """def ${funcName}(${in1}: ${Type1}, ${in2}: ${Type2}) = {
+    "deffn" -> """def ${funcName}(${in1}: ${Type1}) = {
     ${cursor}
 }
 """,
-    "def (command)" -> """def ${cmdName}(${in1}: ${Type1}, ${in2}: ${Type2}) {
+    "deffn2" -> """def ${funcName}(${in1}: ${Type1}, ${in2}: ${Type2}) = {
+    ${cursor}
+}
+""",
+    "defcmd" -> """def ${cmdName}(${in1}: ${Type1}) {
+    ${cursor}
+}
+""",
+    "defcmd2" -> """def ${cmdName}(${in1}: ${Type1}, ${in2}: ${Type2}) {
     ${cursor}
 }
 """,

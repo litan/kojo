@@ -935,11 +935,11 @@ The code that you provide to react runs about thirty times per second, in the UI
     "for" ->
       <div>
       Usage #1 [with commands]:<br/>
-      <strong>for</strong>(i &lt;- 1 to n) {{ commands }} - Repeats a block of commands (within braces) n number of times,
+      <strong>for</strong> (i &lt;- 1 to n) {{ commands }} - Repeats a block of commands (within braces) n number of times,
        making the repeat counter available within the block defined by the braces.<br/>
       <br/>
       Usage #2 [with an expression]:<br/>
-      <strong>for</strong>(i &lt;- 1 to n) yield {{ expression }} - Processes the elements in a generator/collection, 
+      <strong>for</strong> (i &lt;- 1 to n) yield {{ expression }} - Processes the elements in a generator/collection,
       yielding a new generator/collection.<br/>
       <br/>
       <em>Example:</em> <br/><br/>

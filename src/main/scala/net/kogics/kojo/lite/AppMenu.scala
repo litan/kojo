@@ -460,7 +460,7 @@ trait AppMenu {
               Version: ${Versions.KojoVersion}  <em>${Versions.KojoRevision}</em><br/>
               Build date: ${Versions.KojoBuildDate}<br/>
               <em>Java version: ${Versions.JavaVersion}. Scala version: ${Versions.ScalaVersion}</em> <br/><br/>
-              Copyright &copy; 2009-2023 Lalit Pant (pant.lalit@gmail.com) as per contributions.<br/>
+              Copyright &copy; 2009-2024 Lalit Pant (lalit@kogics.net) as per contributions.<br/>
               Copyright &copy; Project contributors as per contributions.<br/><br/>
               Please visit <em>http://www.kogics.net/kojo</em> for more information about Kojo.<br/><br/>
               <strong>Kojo</strong> Contributors:<ul>
