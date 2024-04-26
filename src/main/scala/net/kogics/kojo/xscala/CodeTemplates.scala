@@ -95,21 +95,43 @@ draw(pic)
     <li></li>
 </ul>
 """,
-    "deffn" -> """def ${funcName}(${in1}: ${Type1}) = {
+    "def_function" -> """def ${funcName}(${in1}: ${Type1}) = {
     ${cursor}
 }
 """,
-    "deffn2" -> """def ${funcName}(${in1}: ${Type1}, ${in2}: ${Type2}) = {
+    "def_function_2" -> """def ${funcName}(${in1}: ${Type1}, ${in2}: ${Type2}) = {
     ${cursor}
 }
 """,
-    "defcmd" -> """def ${cmdName}(${in1}: ${Type1}) {
+    "def_command_0" -> """def ${cmdName}() {
     ${cursor}
 }
 """,
-    "defcmd2" -> """def ${cmdName}(${in1}: ${Type1}, ${in2}: ${Type2}) {
+    "def_command_1" -> """def ${cmdName}(${in1}: ${Type1}) {
     ${cursor}
 }
+""",
+    "def_command_2" -> """def ${cmdName}(${in1}: ${Type1}, ${in2}: ${Type2}) {
+    ${cursor}
+}
+""",
+    "for_range_command" ->  """for (${idx} <- ${start} to ${end}) {
+    ${cursor}
+}
+""",
+    "for_seq_command" ->  """for (${e} <- ${seq}) {
+    ${cursor}
+}
+""",
+    "for_seq_expr" ->  """val result = for {
+    ${e} <- ${seq}
+} yield ${expr}${cursor}
+""",
+    "for_seq_expr_multi" ->  """val result = for {
+    ${e} <- ${seq}
+    ${e2} <- ${seq2}
+    if (${condition})
+} yield ${expr}${cursor}
 """,
     "canvasSketch" -> canvasSketch,
     "sketchpic" -> canvasSketch,

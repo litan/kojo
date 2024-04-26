@@ -1179,6 +1179,7 @@ Here's a partial list of the available commands:
   def getEditorText: String = kojoCtx.getEditorText
   def clearOutputError(): Unit = kojoCtx.clearOutputError()
   def insertOutputError(text: String): Unit = kojoCtx.insertOutputError(text)
+  def resolvedPath(fname: String): String = net.kogics.kojo.util.Utils.absolutePath(fname)
 
   def animateWithRedraw[S](initState: S, nextState: S => S, stateView: S => Picture): Unit = {
     import edu.umd.cs.piccolo.activities.PActivity
