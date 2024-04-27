@@ -95,7 +95,7 @@ draw(pic)
     <li></li>
 </ul>
 """,
-    "def_function" -> """def ${funcName}(${in1}: ${Type1}) = {
+    "def_function_1" -> """def ${funcName}(${in1}: ${Type1}) = {
     ${cursor}
 }
 """,

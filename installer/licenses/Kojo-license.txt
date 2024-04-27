@@ -1,5 +1,5 @@
 
-Copyright (C) 2009-2023 Lalit Pant <pant.lalit@gmail.com> as per contributions.
+Copyright (C) 2009-2024 Lalit Pant <pant.lalit@gmail.com> as per contributions.
 Copyright (C) Project contributors as per contributions.
 
 Contributors retain copyright to their own contributions,
