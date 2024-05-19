@@ -99,7 +99,8 @@ package object fpgaming {
       init: => Model,
       update: (Model, Msg) => Model,
       view: Model => Picture,
-      subscriptions: Model => Seq[Sub[Msg]]
+      subscriptions: Model => Seq[Sub[Msg]],
+      refreshRate: Long
   )(implicit canvas: SCanvas)
       extends GameMsgSink[Msg] {
     private var currModel: Model = _
@@ -107,7 +108,7 @@ package object fpgaming {
     private var currView: Picture = _
     private var firstTime = true
 
-    private var gameTimer = canvas.timer(20) {
+    private var gameTimer = canvas.timer(refreshRate) {
       if (firstTime) {
         firstTime = false
         currModel = init

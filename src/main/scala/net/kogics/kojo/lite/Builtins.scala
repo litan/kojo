@@ -1226,8 +1226,8 @@ Here's a partial list of the available commands:
   lazy val CollisionDetector = new fpgaming.CollisionDetector()
   @volatile private var currGame: Option[fpgaming.Game[_, _]] = None
 
-  def runGame[S, M](init: S, update: (S, M) => S, view: S => Picture, subscriptions: S => Seq[Sub[M]]): Unit = {
-    currGame = Some(new fpgaming.Game(init, update, view, subscriptions))
+  def runGame[S, M](init: S, update: (S, M) => S, view: S => Picture, subscriptions: S => Seq[Sub[M]], refreshRate: Long = 20): Unit = {
+    currGame = Some(new fpgaming.Game(init, update, view, subscriptions, refreshRate))
   }
 
   def runCommandQuery[M](cmdQ: CmdQ[M]): Unit = currGame.get.asInstanceOf[fpgaming.Game[_, M]].runCommandQuery(cmdQ)
