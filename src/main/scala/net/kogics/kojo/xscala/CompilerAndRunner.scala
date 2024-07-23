@@ -79,7 +79,7 @@ class CompilerAndRunner(
   def prefix = "%s%s\n".format(prefix0, initCode.getOrElse(""))
 
   var includedLines: Int = 0
-  def prefixLines = prefix.linesIterator.size + includedLines
+  def prefixIncludedLines = prefix.linesIterator.size + includedLines
 
   val codeTemplate = """%s
 %s
@@ -157,13 +157,13 @@ class CompilerAndRunner(
   }
 
   val runReporter = new KojoReporter {
-    def lineMod = prefixLines + 1 // we added an extra line after the prefix in the code template.
-    def offsetMod = offsetDelta + 1 // we added an extra newline char after the prefix
+    def lineMod = prefixIncludedLines + 1
+    def offsetMod = offsetDelta + 1
   }
 
   val execReporter = new KojoReporter {
-    def lineMod = 0
-    def offsetMod = 0
+    def lineMod = includedLines
+    def offsetMod = offsetDelta
   }
 
   val compiler = classLoader.asContext {
