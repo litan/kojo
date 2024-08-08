@@ -10,6 +10,7 @@ import java.net.URL
 import java.util.concurrent.CountDownLatch
 
 import scala.language.implicitConversions
+import scala.util.Random
 
 import io.github.jdiemke.triangulation.Triangle2D
 import net.kogics.kojo.core.Rectangle
@@ -35,6 +36,7 @@ trait CoreBuiltins extends Rationals {
   def Point2D(x: Double, y: Double) = new java.awt.geom.Point2D.Double(x, y)
 
   val Random = new java.util.Random
+  val sRandom = new Random(Random)
 
   val blue = JColor.blue
   val red = JColor.red
@@ -160,6 +162,8 @@ trait CoreBuiltins extends Rationals {
 
   def randomColor = Color(random(256), random(256), random(256))
   def randomTransparentColor = Color(random(256), random(256), random(256), 100 + random(156))
+  def shuffle[T](seq: collection.Seq[T]): collection.Seq[T] = sRandom.shuffle(seq)
+
   def initRandomGenerator(): Unit = {
     initRandomGenerator(System.currentTimeMillis())
   }
