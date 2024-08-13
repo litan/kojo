@@ -691,8 +691,8 @@ class CodeExecutionSupport(
     code.indexOf("stPlayStory") != -1
   }
 
-  lazy val worksheetPragma = Utils.loadBundleString("S_WorksheetPragma")
-  lazy val execPragma = Utils.loadBundleString("S_ExecPragma")
+  lazy val worksheetPragma = "#" + Utils.loadBundleString("S_WorksheetPragma")
+  lazy val execPragma = "#" + Utils.loadBundleString("S_ExecPragma")
 
   def isWorksheet(code: String) = {
     code.indexOf(worksheetPragma) != -1
