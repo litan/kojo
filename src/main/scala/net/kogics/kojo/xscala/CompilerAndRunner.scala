@@ -189,7 +189,7 @@ class CompilerAndRunner(
         compiler.reporter = runReporter
         prevMode = Run
       }
-      if (prevMode == Run && currMode == Exec) {
+      else if (prevMode == Run && currMode == Exec) {
         debugPrintln("Changing to compiler exec settings/reporter")
         compiler.currentSettings = execSettings
         compiler.reporter = execReporter
