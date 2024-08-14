@@ -50,6 +50,7 @@ trait VertexShapeSupport {
   private case class QuadVertex(x1: Double, y1: Double, x2: Double, y2: Double) extends ShapeVertex
   private case class BezierVertex(x1: Double, y1: Double, x2: Double, y2: Double, x3: Double, y3: Double)
       extends ShapeVertex
+  private case class ArcVertex(x: Double, y: Double, angle: Double) extends ShapeVertex
 
   private var shapeVertices: collection.mutable.ArrayBuffer[ShapeVertex] = _
   private var curveCoordX: Array[Float] = _
@@ -92,6 +93,11 @@ trait VertexShapeSupport {
   def curveVertex(x: Double, y: Double): Unit = {
     checkBegin()
     shapeVertices.append(CurveVertex(x, y))
+  }
+
+  def arcVertex(x: Double, y: Double, angle: Double): Unit = {
+    checkBegin()
+    shapeVertices.append(ArcVertex(x, y, angle))
   }
 
   private def rtToXy(r: Double, theta: Double): Point = {
@@ -153,6 +159,7 @@ trait VertexShapeSupport {
     }
 
     val tempPath = shapePath
+    lazy val tempRichPath = new Rich2DPath(tempPath)
     val curveVertices = ArrayBuffer.empty[CurveVertex]
     shapeVertices.foreach {
       case Vertex(x, y) =>
@@ -183,6 +190,8 @@ trait VertexShapeSupport {
         checkCurveFirstVertex(); tempPath.quadTo(x1, y1, x2, y2)
       case BezierVertex(x1, y1, x2, y2, x3, y3) =>
         checkCurveFirstVertex(); tempPath.curveTo(x1, y1, x2, y2, x3, y3)
+      case ArcVertex(x1, y1, angle1) =>
+        checkCurveFirstVertex(); tempRichPath.arcTo(x1, y1, angle1)
     }
     shapeVertices = null
     shapeDone(tempPath)
