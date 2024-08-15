@@ -1,17 +1,14 @@
 package net.kogics.kojo
 package lite
 
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
 import java.awt.Color
 import java.awt.Cursor
+import java.awt.Font
 import javax.swing.JLabel
 import javax.swing.JPanel
-import javax.swing.JProgressBar
 import javax.swing.JWindow
-import javax.swing.Timer
 
-import util.Utils
+import net.kogics.kojo.util.Utils
 
 class SplashScreen extends JWindow {
 
@@ -30,8 +27,16 @@ class SplashScreen extends JWindow {
   kojoIcon.setBounds(0, 0, 430, 280);
 
   val msg = new JLabel(Utils.loadString("S_Loading"))
-  msg.setBounds(55, 180, 250, 15);
+  msg.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15))
+  msg.setBounds(60, 140, 250, 15);
+
+  val versionString = s"v${Versions.KojoVersion} ${Versions.KojoRevision} "
+  val msg2 = new JLabel(versionString)
+  msg2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12))
+  msg2.setBounds(60, 160, 250, 15);
+
   panel.add(msg);
+  panel.add(msg2);
   panel.add(kojoIcon);
   setSize(430, 280);
   setLocationRelativeTo(null);
