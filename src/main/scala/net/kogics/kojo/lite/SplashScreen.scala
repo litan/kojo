@@ -27,16 +27,16 @@ class SplashScreen extends JWindow {
   kojoIcon.setBounds(0, 0, 430, 280);
 
   val msg = new JLabel(Utils.loadString("S_Loading"))
-  msg.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 15))
-  msg.setBounds(60, 140, 250, 15);
+  msg.setFont(new Font(Font.SANS_SERIF, Font.BOLD | Font.ITALIC, 14))
+  msg.setBounds(60, 150, 250, 20);
 
-  val versionString = s"v${Versions.KojoVersion} ${Versions.KojoRevision} "
-  val msg2 = new JLabel(versionString)
-  msg2.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12))
-  msg2.setBounds(60, 160, 250, 15);
+//  val versionString = s"v${Versions.KojoVersion} ${Versions.KojoRevision} "
+//  val msg2 = new JLabel(versionString)
+//  msg2.setFont(new Font(Font.MONOSPACED, Font.BOLD, 15))
+//  msg2.setBounds(60, 165, 250, 20);
 
   panel.add(msg);
-  panel.add(msg2);
+//  panel.add(msg2);
   panel.add(kojoIcon);
   setSize(430, 280);
   setLocationRelativeTo(null);
