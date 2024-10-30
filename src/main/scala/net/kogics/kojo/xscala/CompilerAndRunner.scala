@@ -232,10 +232,11 @@ class CompilerAndRunner(
 
   def codeForExecing(code0: String): Option[String] = {
     try {
-      val (code, inclLines, includedChars) = Utils.preProcessInclude(code0)
-      includedLines = inclLines
-      offsetDelta = includedChars
-      Some(code)
+      val (code1, inclLines1, includedChars1) = Utils.preProcessInclude(code0)
+      val (code2, inclLines2, includedChars2) = Utils.preProcessExec(code1)
+      includedLines = inclLines1 + inclLines2
+      offsetDelta = includedChars1 + includedChars2
+      Some(code2)
     }
     catch {
       case t: Throwable =>

@@ -820,42 +820,45 @@ object Utils {
   lazy val filenameRE = ("""//\s*#""" ++ includePragma).r
   lazy val basecodeRE = ("""//(\s)*#""" ++ includePragma ++ """(.*)""").r
 
+  private def addKojoExtension(fileName: String) = {
+    val justFileName = new File(fileName).getName
+    if (!justFileName.contains(".")) fileName + ".kojo" else fileName
+  }
+
+  private def readFileContent(fileName: String, fileNameDotKojo: String) = {
+    val file = new File(fileName)
+    if (file.exists) {
+      stripCR(file.readAsString)
+    }
+    else {
+      val res = loadResource(fileNameDotKojo)
+      if (res == null) {
+        file.readAsString // trigger exception
+      }
+      else {
+        stripCR(res)
+      }
+    }
+  }
+
+  private def countLines(s: String) = s.count(_ == '\n')
+
   def preProcessInclude(code: String): (String, Int, Int) = {
     val included = new mutable.HashSet[String]()
 
     def _preProcessInclude(code: String): (String, Int, Int) = {
-      def countLines(s: String) = s.count(_ == '\n')
       val includes = includeRE.findAllIn(code)
       def getFileName(s: String) = filenameRE.replaceFirstIn(s, "").trim
-      def addKojoExtension(fileName: String) = {
-        val justFileName = new File(fileName).getName
-        if (!justFileName.contains(".")) fileName + ".kojo" else fileName
-      }
       def load(fileName0: String): String = {
         val fileNameDotKojo = addKojoExtension(fileName0)
         val fileName = absolutePath(fileNameDotKojo)
-        def readFileContent = {
-          val file = new File(fileName)
-          if (file.exists) {
-            stripCR(file.readAsString)
-          }
-          else {
-            val res = loadResource(fileNameDotKojo)
-            if (res == null) {
-              file.readAsString // trigger exception
-            }
-            else {
-              stripCR(res)
-            }
-          }
-        }
         try {
           if (included.contains(fileName)) {
             ""
           }
           else {
             included.add(fileName)
-            val fileContent = readFileContent
+            val fileContent = readFileContent(fileName, fileNameDotKojo)
             val codeToInclude = s"// #begin-include: $fileName\n$fileContent\n// #end-include: $fileName\n"
             val (result, _, _) = _preProcessInclude(codeToInclude) // non-tail-recursive call
             result
@@ -870,6 +873,37 @@ object Utils {
     }
 
     _preProcessInclude(code)
+  }
+
+  lazy val execPragma = loadBundleString("S_ExecPragma")
+  lazy val execPattern = ("""//\s*#""" ++ execPragma ++ """\s+template\s+(.*)""").r
+
+  def preProcessExec(code: String): (String, Int, Int) = {
+    def load(fileName0: String): String = {
+      val fileNameDotKojo = addKojoExtension(fileName0)
+      val fileName = absolutePath(fileNameDotKojo)
+      try {
+        readFileContent(fileName, fileNameDotKojo)
+      }
+      catch { case e: Throwable => throw new IllegalArgumentException(s"Error when including file: $fileName", e) }
+    }
+
+    execPattern.findFirstMatchIn(code) match {
+      case Some(m) =>
+        val filename = m.group(1)
+        val template = load(filename)
+        val splits = template.split("""\$\{usercode}""")
+        if (splits.length == 1) {
+          (code, 0, 0)
+        }
+        else {
+          val prefix = splits(0)
+          val suffix = splits(1)
+//          val codeStripped = execPattern.replaceFirstIn(code, "")
+          (prefix + code + suffix, countLines(prefix), prefix.length)
+        }
+      case None => (code, 0, 0)
+    }
   }
 
   def scrollToOffset(offset: Int, comp: JTextComponent): Unit = {
