@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <install4j version="10.0.6" transformSequenceNumber="10">
   <directoryPresets config="/home/lalit/work/kojo/installer/icons" />
-  <application name="Kojo Learning Environment" applicationId="0071-0523-9450-8404" mediaDir="/home/lalit/kojo_installers/install4j" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}${compiler:sys.withJre}" shortName="Kojo" publisher="Kogics Foundation" publisherWeb="www.kogics.net/kojo" version="2.9.29" macVolumeId="41bac862080108f9" javaMinVersion="1.8" javaMaxVersion="17" jdkMode="jdk" jdkName="JDK 1.8">
+  <application name="Kojo Learning Environment" applicationId="0071-0523-9450-8404" mediaDir="/home/lalit/kojo_installers/install4j" mediaFilePattern="${compiler:sys.shortName}_${compiler:sys.platform}_${compiler:sys.version}${compiler:sys.withJre}" shortName="Kojo" publisher="Kogics Foundation" publisherWeb="www.kogics.net/kojo" version="2.9.30" macVolumeId="41bac862080108f9" javaMinVersion="1.8" javaMaxVersion="17" jdkMode="jdk" jdkName="JDK 1.8">
     <searchSequence>
       <registry />
       <envVar name="JAVA_HOME" />
