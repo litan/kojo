@@ -63,6 +63,7 @@ trait Picture extends InputAware {
   def intersection(other: Picture): Geometry
   def contains(other: Picture): Boolean
   def distanceTo(other: Picture): Double
+  def isCloser(other: Picture, distance: Double): Boolean = distanceTo(other) < distance
   def area: Double
   def perimeter: Double
   def picGeom: Geometry
