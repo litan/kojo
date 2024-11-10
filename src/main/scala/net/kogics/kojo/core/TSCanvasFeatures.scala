@@ -79,4 +79,5 @@ trait TSCanvasFeatures {
   def onAnimationStop(fn: => Unit): Unit
   def resetPanAndZoom(): Unit
   def disablePanAndZoom(): Unit
+  def frameDeltaTime: Double
 }

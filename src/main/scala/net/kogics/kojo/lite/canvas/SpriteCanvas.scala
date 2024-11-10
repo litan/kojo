@@ -820,11 +820,27 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
     setCanvasBackground(paint)
   }
 
-  def timer(rate: Long)(fn: => Unit): Future[PActivity] = figure0.refresh(rate, 0)(fn)
+  private var prevFrameTime: Double = _
+  def timer(rate: Long)(fn: => Unit): Future[PActivity] = {
+    prevFrameTime = -1
+    figure0.refresh(rate, 0)(fn)
+  }
   def timerWithState[S](rate: Long, initState: S)(nextState: S => S): Future[PActivity] = {
     var state = initState
     timer(rate) {
       state = nextState(state)
+    }
+  }
+  def frameDeltaTime: Double = {
+    val currFrameTime = System.currentTimeMillis() / 1000.0
+    if (prevFrameTime == -1) {
+      prevFrameTime = currFrameTime
+      0
+    }
+    else {
+      val delta = currFrameTime - prevFrameTime
+      prevFrameTime = currFrameTime
+      delta
     }
   }
   def animate(fn: => Unit): Future[PActivity] = timer(1000 / kojoCtx.fps)(fn)
