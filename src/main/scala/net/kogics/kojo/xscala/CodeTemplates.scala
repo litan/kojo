@@ -206,7 +206,8 @@ draw(pic)
     ${cursor}
     2 shouldBe 2
 }
-"""
+""",
+    "execPicGaming" -> "// #exec template /picgaming${cursor}\n"
   )
 
   def apply(name: String) = templates(name)
