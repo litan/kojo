@@ -3,7 +3,7 @@ clearOutput()
 cleari()
 disablePanAndZoom()
 
-println("To win the game, find and drink the red-ball potion and then return to the starting point to drink the (initially covered) green-ball potion.")
+println("To win the game, find and drink the red-ball potion and then return to the starting point to drink the (initially covered) green-star potion.")
 println(s"\nTo modify the game layout, change '$installDir/examples/tiledgame/level1.tmx' using the Tiled editor from www.mapeditor.org")
 
 scroll(-canvasBounds.x, canvasBounds.y)
@@ -18,7 +18,11 @@ class Player(tx: Int, ty: Int, world: TileWorld) {
 
     // player images are 30x40
     // scale the player down to fit into a 24 pixel wide tile
-    def playerPicture(img: Image) = scale(0.8) -> Picture.image(img)
+    def playerPicture(img: Image) = {
+        val pic = Picture.image(img)
+        pic.scale(0.8)
+        pic
+    }
 
     val stillRight = picBatch(playerPicture(sheet.imageAt(0, 0)))
     val stillLeft = picBatch(playerPicture(sheet.imageAt(0, 1)))
@@ -181,7 +185,12 @@ class AttackerUpDown(tx: Int, ty: Int, world: TileWorld) {
     val sheet = SpriteSheet("tiles.png", 24, 24)
     // make attacker slighty smaller than a tile - to prevent picture based collision
     // with the player in an adjacent tile
-    def attackerPicture(img: Image) = scale(0.98) * trans(0.2, 0.2) -> Picture.image(img)
+    def attackerPicture(img: Image) = {
+        val pic = Picture.image(img)
+        pic.translate(0.2, 0.2)
+        pic.scale(0.98)
+        pic
+    }
 
     var currentPic = picBatch(List(
         sheet.imageAt(0, 6),
@@ -236,17 +245,25 @@ val attackers = List(
     new AttackerUpDown(35, 3, tileWorld)
 )
 
-val goal = trans(12, 12) * fillColor(cm.greenYellow) * penColor(black) -> Picture.circle(10)
+val goal = {
+    val pic = Picture.image("target.png")
+    pic.scale(0.3)
+    pic
+}
 goal.setPosition(tileWorld.tileToKojo(TileXY(9, 2)))
-goal.setOpacity(0.2)
-draw(goal)
+goal.setOpacity(0.4)
 
-val halfwayGoal = trans(12, 12) * fillColor(cm.red) * penColor(black) -> Picture.circle(10)
+val halfwayGoal = {
+    val pic = Picture.image("halfway-target.png")
+    pic.scale(0.5)
+    pic
+}
 halfwayGoal.setPosition(tileWorld.tileToKojo(TileXY(41, 15)))
-draw(halfwayGoal)
 
 tileWorld.draw()
 player.draw()
+draw(goal)
+draw(halfwayGoal)
 attackers.foreach { attacker =>
     attacker.draw()
 }
