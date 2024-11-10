@@ -327,12 +327,17 @@ class CompilerAndRunner(
   def deleteOldExecClassfiles(): Unit = {
     // this is on the context classloader for the compiler. Need to re-look at that
     virtualDirectory.clear()
-
-    execClassDir.listFiles().foreach { f =>
-      val deleted = f.delete()
-      if (!deleted) {
-        println(s"Unable to delete old classfile - ${f.getName}")
+    val oldFiles = execClassDir.listFiles()
+    if (oldFiles != null) {
+      oldFiles.foreach { f =>
+        val deleted = f.delete()
+        if (!deleted) {
+          println(s"Unable to delete earlier classfile - ${f.getName}")
+        }
       }
+    }
+    else {
+      println(s"Unable to delete earlier class files in - ${execClassDir.getName}")
     }
   }
 
