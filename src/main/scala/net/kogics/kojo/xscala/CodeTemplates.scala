@@ -207,7 +207,10 @@ draw(pic)
     2 shouldBe 2
 }
 """,
-    "execPicGaming" -> "// #exec template /picgaming${cursor}\n"
+    "include" -> "// #include ${filename}${cursor}\n",
+    "exec" -> "// #exec${cursor}\n",
+    "execTemplate" -> "// #exec template ${filename}${cursor}\n",
+    "execPicGaming" -> "// #exec template /picgaming${cursor}\n",
   )
 
   def apply(name: String) = templates(name)
