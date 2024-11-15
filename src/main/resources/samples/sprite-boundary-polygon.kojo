@@ -1,6 +1,5 @@
 cleari()
 clearOutput()
-disablePanAndZoom()
 
 val sprite = Picture.image(Costume.womanWaving)
 // Make the sprite point to your own image via the following:
@@ -13,7 +12,7 @@ draw(sprite)
 val doubleArray = true
 
 println("Load your own sprite image above by changing the code as described at the start of the script.\n")
-println("Then click around the sprite image to create a polygonal boundary for the sprite.\n")
+println("Then click around the sprite image to create a polygonal boundary for the sprite (and feel free to zoom in while doing this).\n")
 println("Click twice (slowly) at the same point to finish off the boundary.\n")
 println("The last point (that you clicked twice at) is connected to the first point to create the boundary.\n")
 
@@ -50,7 +49,7 @@ onMouseClick { (x, y) =>
         points.append(points.head)
         val pts = points
             .flatMap(pt => Array(pt.x, pt.y))
-            .map(n => if (doubleArray) s"${n}" else s"${n}f")
+            .map(n => if (doubleArray) f"${n}%.1f" else f"${n}%.1ff")
 
         println("Boundary Array:\n")
         println(pts.mkString("Array(", ", ", ")"))
