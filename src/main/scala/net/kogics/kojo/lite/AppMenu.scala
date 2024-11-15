@@ -428,6 +428,7 @@ trait AppMenu {
     toolsMenu.add(menuItemFor("S_TurtleController", "turtle-controller.kojo"))
     toolsMenu.add(menuItemFor("S_ArduinoProgramming", "arduino-prog.kojo"))
     toolsMenu.add(menuItemFor("S_StartingChallenges", "get-started.kojo", "/challenge/"))
+    toolsMenu.add(menuItemFor("S_SpriteBoundaryPolygon", "sprite-boundary-polygon.kojo"))
     menuBar.add(toolsMenu)
 
     val helpMenu = newJMenu(Utils.loadString("S_Help"))
