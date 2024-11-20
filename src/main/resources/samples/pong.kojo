@@ -9,14 +9,26 @@ val PaddleW = 25
 val BallR = 15
 val Height = canvasBounds.height
 val Width = canvasBounds.width
-val PaddleSpeed = 5
+val PaddleSpeed = 400
 val pScaleFactor = 1.01
-val BallSpeed = 5
+val BallSpeed = 400
 val bScaleFactor = 1.001
 
-def paddle = penColor(darkGray) * fillColor(red) -> Picture.rectangle(PaddleW, PaddleH)
-def vline = penColor(white) -> Picture.vline(Height)
-def ball = penColor(cm.rgb(0, 230, 0)) * fillColor(cm.rgb(0, 230, 0)) -> Picture.circle(BallR)
+def paddle: Picture = {
+    val pic = Picture.rectangle(PaddleW, PaddleH)
+    pic.setPenColor(darkGray); pic.setFillColor(red)
+    pic
+}
+def vline = {
+    val pic = Picture.rectangle(0, Height)
+    pic.setPenColor(white)
+    pic
+}
+def ball = {
+    val pic = Picture.circle(BallR)
+    pic.setPenColor(cm.rgb(0, 230, 0)); pic.setFillColor(cm.rgb(0, 230, 0))
+    pic
+}
 
 class PaddleVelocity(speed0: Double, lastUp0: Boolean) {
     var speed = speed0
@@ -35,28 +47,42 @@ class Score(score0: Int, left0: Boolean) {
     var score = score0
     var left = left0
     val xt = if (left) -50 else 50
-    val pScore = Picture.textu(score, 20)
+    val pScore = Picture.text(score.toString, 20, cm.lightSteelBlue)
     pScore.translate(xt, Height / 2 - 10)
-    pScore.setPenColor(cm.lightSteelBlue)
     def incrScore() {
         score += 1
-        pScore.update(score)
+        pScore.setText(score.toString)
     }
 }
 
 val topbot = Seq(stageTop, stageBot)
-val paddle1 = trans(-Width / 2, 0) -> paddle
-val paddle2 = trans(Width / 2 - PaddleW, 0) -> paddle
-val centerLine = trans(0, -Height / 2) -> vline
-val leftGutter = trans(-Width / 2 + PaddleW, -Height / 2) -> vline
-val rightGutter = trans(Width / 2 - PaddleW, -Height / 2) -> vline
+val paddle1 = {
+    val pic = paddle; pic.translate(-Width / 2, 0)
+    pic
+}
+val paddle2 = {
+    val pic = paddle; pic.translate(Width / 2 - PaddleW, 0)
+    pic
+}
+val centerLine = {
+    val pic = vline; pic.translate(0, -Height / 2)
+    pic
+}
+val leftGutter = {
+    val pic = vline; pic.translate(-Width / 2 + PaddleW, -Height / 2)
+    pic
+}
+val rightGutter = {
+    val pic = vline; pic.translate(Width / 2 - PaddleW, -Height / 2)
+    pic
+}
 val gutters = Seq(leftGutter, rightGutter)
 val paddles = Seq(paddle1, paddle2)
 val gameBall = ball
 
 draw(paddle1, paddle2, centerLine, leftGutter, rightGutter, gameBall)
 
-val ballVel = Vector2D(BallSpeed, 3)
+val ballVel = Vector2D(BallSpeed, BallSpeed * 0.75)
 var currBallVel: Vector2D = ballVel
 
 val paddleVelocity = Map(
@@ -71,7 +97,8 @@ draw(scores(paddle1).pScore)
 draw(scores(paddle2).pScore)
 
 animate {
-    gameBall.translate(currBallVel)
+    val dt = frameDeltaTime
+    gameBall.translate(currBallVel * dt)
 
     if (gameBall.collision(paddles).isDefined) {
         currBallVel = Vector2D(-currBallVel.x, currBallVel.y)
@@ -90,13 +117,13 @@ animate {
         scores(paddle1).incrScore()
     }
     else {
-        currBallVel = (currBallVel * bScaleFactor).limit(11)
+        currBallVel = (currBallVel * bScaleFactor).limit(800)
     }
-    paddleBehavior(paddle1, Kc.VK_A, Kc.VK_Z)
-    paddleBehavior(paddle2, Kc.VK_UP, Kc.VK_DOWN)
+    paddleBehavior(paddle1, Kc.VK_A, Kc.VK_Z, dt)
+    paddleBehavior(paddle2, Kc.VK_UP, Kc.VK_DOWN, dt)
 }
 
-def paddleBehavior(paddle: Picture, upkey: Int, downkey: Int) {
+def paddleBehavior(paddle: Picture, upkey: Int, downkey: Int, dt: Double) {
     val pVel = paddleVelocity(paddle)
     if (isKeyPressed(upkey) && !paddle.collidesWith(stageTop)) {
         if (pVel.lastUp) {
@@ -105,7 +132,7 @@ def paddleBehavior(paddle: Picture, upkey: Int, downkey: Int) {
         else {
             pVel.reset(!pVel.lastUp)
         }
-        paddle.translate(0, pVel.speed)
+        paddle.translate(0, pVel.speed * dt)
     }
     else if (isKeyPressed(downkey) && !paddle.collidesWith(stageBot)) {
         if (!pVel.lastUp) {
@@ -114,7 +141,7 @@ def paddleBehavior(paddle: Picture, upkey: Int, downkey: Int) {
         else {
             pVel.reset(!pVel.lastUp)
         }
-        paddle.translate(0, -pVel.speed)
+        paddle.translate(0, -pVel.speed * dt)
     }
     else {
         pVel.reset(pVel.lastUp)

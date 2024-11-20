@@ -731,8 +731,9 @@ Here's a partial list of the available commands:
   val PicShape = Picture
   implicit def p2rp(path: GeneralPath): Rich2DPath = new Rich2DPath(path)
   object Picture {
-    def text(content: Any, fontSize: Int = 15) = picture.text(content, fontSize, red)
+    def text(content: Any, fontSize: Int = 15, color: Color = red) = picture.text(content, fontSize, color)
     def text(content: Any, font: Font) = picture.text(content, font, red)
+    def text(content: Any, font: Font, color: Color) = picture.text(content, font, color)
     def textu(content: Any, fontSize: Int = 15, color: Color = red) = picture.text(content, fontSize, color)
     def textu(content: Any, font: Font, color: Color) = picture.text(content, font, color)
     def rect(h: Double, w: Double) = picture.rect2(w, h)
