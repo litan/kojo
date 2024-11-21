@@ -8,15 +8,21 @@ val cb = canvasBounds
 drawStage(ColorMaker.hsl(240, 0.20, 0.16))
 
 def xCenteredPosition(picWidth: Double) = {
-    cb.x + (cb.width - picWidth) / 2
+    cb.x + (cb.width - picWidth) / 2 + picWidth / 2
 }
 
 class Lander {
     val bodyWidth = 40; val bodyHeight = 70
     val thrusterWidth = 20; val thrusterHeight = 35
-    val body = fillColor(red) -> Picture.rectangle(bodyWidth, bodyHeight)
+    val body = {
+        val pic = Picture.rectangle(bodyWidth, bodyHeight); pic.setFillColor(red)
+        pic
+    }
     body.setPosition(xCenteredPosition(bodyWidth), cb.y + cb.height - bodyHeight - 10)
-    val thruster = fillColor(orange) -> Picture.rectangle(thrusterWidth, thrusterHeight)
+    val thruster = {
+        val pic = Picture.rectangle(thrusterWidth, thrusterHeight); pic.setFillColor(orange)
+        pic
+    }
     setThrusterPosition()
 
     val gravity = Vector2D(0, -0.1)
@@ -68,15 +74,12 @@ class Lander {
 }
 
 class Moon {
-    val pic = Picture {
-        setPenColor(cm.lightBlue)
-        setFillColor(cm.darkGray)
-        right(45)
-        right(90, 500)
-    }
+    val pic = Picture.ellipse(350, 150)
+    pic.setPenColor(cm.lightBlue)
+    pic.setFillColor(cm.darkGray)
 
     // width of the moon is around 710 pixels
-    pic.setPosition(xCenteredPosition(710), cb.y)
+    pic.setPosition(xCenteredPosition(710), cb.y - 50)
 
     def draw() {
         pic.draw()
