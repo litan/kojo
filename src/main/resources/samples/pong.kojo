@@ -82,7 +82,7 @@ val gameBall = ball
 
 draw(paddle1, paddle2, centerLine, leftGutter, rightGutter, gameBall)
 
-val ballVel = Vector2D(BallSpeed, BallSpeed * 0.75)
+val ballVel = Vector2D(BallSpeed, BallSpeed * 0.65)
 var currBallVel: Vector2D = ballVel
 
 val paddleVelocity = Map(
@@ -104,6 +104,7 @@ animate {
         currBallVel = Vector2D(-currBallVel.x, currBallVel.y)
     }
     else if (gameBall.collision(topbot).isDefined) {
+        gameBall.translate(-currBallVel * dt)
         currBallVel = Vector2D(currBallVel.x, -currBallVel.y)
     }
     else if (gameBall.collidesWith(leftGutter)) {
