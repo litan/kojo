@@ -151,6 +151,7 @@ trait Picture extends InputAware {
   def above(other: Picture): Picture
   def below(other: Picture): Picture = other.above(this)
   def on(other: Picture): Picture
+  def over(other: Picture): Picture = on(other)
   def under(other: Picture): Picture = other.on(this)
   def animateToPosition(x: Double, y: Double, inMillis: Long)(onEnd: => Unit): Unit = Utils.runInSwingThread {
     import edu.umd.cs.piccolo.activities.PActivity

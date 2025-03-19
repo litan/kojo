@@ -422,7 +422,7 @@ trait CorePicOps2 extends GeomPolygon { self: Picture =>
     }
   }
 
-  def beside(other: Picture): Picture = HPics2(this, other)
+  def beside(other: Picture): Picture = HPics2(other, this)
   def above(other: Picture): Picture = VPics2(other, this)
   def on(other: Picture): Picture = GPics2(other, this)
 
