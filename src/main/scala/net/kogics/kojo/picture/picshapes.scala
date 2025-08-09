@@ -593,7 +593,7 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
     ptext.setText(t)
   }
 
-  def setPenFont(f: Font) = Utils.runInSwingThread {
+  def setPenFont(f: Font) = Utils.runInSwingThreadAndWait {
     ptext.setFont(f)
   }
 
@@ -606,7 +606,12 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
     ptext.setText(newData.toString)
   }
 
-  def copy: net.kogics.kojo.core.Picture = new TextPic(text, size, color)
+  def copy: net.kogics.kojo.core.Picture = {
+    val tp = new TextPic(text, size, color)
+    tp.setPenFont(ptext.getFont)
+    tp
+  }
+
   override def toString() = s"TextPic (Id: ${System.identityHashCode(this)})"
 }
 
