@@ -159,6 +159,17 @@ trait NonVectorPicOps { self: Picture with CorePicOps =>
     notSupported("foreachPolyLine", "for non-vector picture")
 }
 
+object KPath {
+  val TEMP_RECTANGLE = new Rectangle2D.Float()
+
+  def createRectangle(x: Float, y: Float, width: Float, height: Float): PPath = {
+    TEMP_RECTANGLE.setFrame(x, y, width, height)
+    val result = new KPath(TEMP_RECTANGLE)
+    result.setPaint(Color.white)
+    result
+  }
+}
+
 class CirclePic(r: Double)(implicit val canvas: SCanvas)
     extends Picture
     with CorePicOps
@@ -271,7 +282,7 @@ class RectanglePic(w: Double, h: Double)(implicit val canvas: SCanvas)
   }
 
   def makeTnode: edu.umd.cs.piccolo.PNode = Utils.runInSwingThreadAndPause {
-    val node = PPath.createRectangle(0, 0, w.toFloat, h.toFloat)
+    val node = KPath.createRectangle(0, 0, w.toFloat, h.toFloat)
     _setPenColor(node, Color.red)
     _setPenThickness(node, 2 / canvas.camScale)
     node.setPaint(null)
