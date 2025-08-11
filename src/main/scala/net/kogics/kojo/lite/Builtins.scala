@@ -741,7 +741,7 @@ Here's a partial list of the available commands:
     // def rectangle(x: Double, y: Double, w: Double, h: Double) = picture.offset(x, y) -> picture.rect2(w, h)
     def vline(length: Double) = picture.vline(length)
     def hline(length: Double) = picture.hline(length)
-    def line(width: Double, height: Double) = picture.line(width, height)
+    def line(x: Double, y: Double) = picture.line(x, y)
     // def line(x1: Double, y1: Double, x2: Double, y2: Double) = picture.offset(x1, y1) -> picture.line(x2 - x1, y2 - y1)
     def fromPath(fn: GeneralPath => Unit) = picture.fromPath {
       val path = new GeneralPath(); fn(path)
