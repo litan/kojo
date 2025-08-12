@@ -634,8 +634,28 @@ class TextPic(text: String, size: Int, color: Color)(implicit val canvas: SCanva
 
   def copy: net.kogics.kojo.core.Picture = {
     val tp = new TextPic(text, size, color)
+    // currently account for only font and blOrigin mutations
     tp.setPenFont(ptext.getFont)
+    if (blOrigin) {
+      tp.originBottomLeft()
+    }
     tp
+  }
+
+  @volatile var blOrigin = false
+  def originBottomLeft(): Unit = Utils.runInSwingThreadAndWait {
+    blOrigin = true
+    val b = ptext.getBounds
+    ptext.translate(0, -b.height)
+    if (isDrawn) {
+      tnode.repaint()
+    }
+  }
+
+  def withBottomLeftOrigin: Picture = {
+    val ret = this.copy.asInstanceOf[TextPic]
+    ret.originBottomLeft()
+    ret
   }
 
   override def toString() = s"TextPic (Id: ${System.identityHashCode(this)})"
