@@ -598,6 +598,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       compilerAndRunner =
         new CompilerAndRunner(makeSettings, compilerInitCode, new CompilerOutputHandler(runContext), runContext)
       actorState.compilerAndRunner = compilerAndRunner
+      // warm up the compiler
+      compile("9")
     }
 
     def initInterp(): Unit = {
