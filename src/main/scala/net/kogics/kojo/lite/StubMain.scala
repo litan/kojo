@@ -112,17 +112,14 @@ trait StubMain {
     }
 
     def noScaling =
-      "-Dsun.java2d.uiScale.enabled=false"
+      "-Dsun.java2d.uiScale=1.0"
 
     val javaVersionSpecificArgs = {
       if (Utils.isJava8) {
         s"$maybeMarlin $cmsGC".trim
       }
       else {
-        if (Utils.isWin)
-          s"$reflectiveAccess"
-        else
-          s"$reflectiveAccess $noScaling"
+        s"$reflectiveAccess"
       }
     }
 
