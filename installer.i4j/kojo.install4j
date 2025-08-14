@@ -626,6 +626,9 @@ return console.askYesNo(message, true);
     </windows>
   </mediaSets>
   <buildIds buildAll="false">
+    <mediaSet refId="60" />
     <mediaSet refId="508" />
+    <mediaSet refId="514" />
+    <mediaSet refId="600" />
   </buildIds>
 </install4j>
