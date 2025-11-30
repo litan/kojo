@@ -103,6 +103,11 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   codePanes.foreach(_.setCodeFoldingEnabled(true))
 
   codePanes.foreach(Theme.currentTheme.loadEditorTheme.apply(_))
+  codePanes.foreach { cp =>
+    val oldf = cp.getFont
+    val f = oldf.deriveFont(getFont.getSize.toFloat)
+    cp.setFont(f)
+  }
 
   val inputMap = codePane.getInputMap
   val inputMap2 = codePane2.getInputMap

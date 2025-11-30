@@ -155,10 +155,16 @@ trait StubMain {
       }
     }
 
+    val jvmDevOpts = Utils.appProperty("jvm.dev.opts") match {
+      case Some(opts) => opts.concat(" ")
+      case None => ""
+    }
+
     val cmdArgs = s"-client -Xms128m -Xmx$maxMem " +
       "-Xss1m " +
       s"$javaVersionSpecificArgs " +
       extraArgs +
+      jvmDevOpts +
       s"net.kogics.kojo.lite.Main ${kojoArgs.mkString(" ")}"
 
     val command =
