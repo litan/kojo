@@ -126,7 +126,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     }
   }
   Utils.safeProcessSilent {
-    for (i <- 1 to 3 + kojoCtx.screenDpiFontDelta) { increaseFontSizeAction.actionPerformed(null) }
+    for (i <- 1 to kojoCtx.screenDpiFontDelta) { increaseFontSizeAction.actionPerformed(null) }
   }
 
   RSyntaxTextArea.setTemplatesEnabled(true)
