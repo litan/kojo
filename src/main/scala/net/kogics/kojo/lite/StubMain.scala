@@ -112,14 +112,14 @@ trait StubMain {
     }
 
     def noScaling =
-      "-Dsun.java2d.uiScale.enabled=false"
+      "-Dsun.java2d.uiScale=1.0"
 
     val javaVersionSpecificArgs = {
       if (Utils.isJava8) {
         s"$maybeMarlin $cmsGC".trim
       }
       else {
-        s"$reflectiveAccess $noScaling"
+        s"$reflectiveAccess"
       }
     }
 
@@ -155,10 +155,16 @@ trait StubMain {
       }
     }
 
+    val jvmDevOpts = Utils.appProperty("jvm.dev.opts") match {
+      case Some(opts) => opts.concat(" ")
+      case None => ""
+    }
+
     val cmdArgs = s"-client -Xms128m -Xmx$maxMem " +
       "-Xss1m " +
       s"$javaVersionSpecificArgs " +
       extraArgs +
+      jvmDevOpts +
       s"net.kogics.kojo.lite.Main ${kojoArgs.mkString(" ")}"
 
     val command =

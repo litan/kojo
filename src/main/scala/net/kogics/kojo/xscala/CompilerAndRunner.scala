@@ -565,10 +565,10 @@ class CompilerAndRunner(
                 completions.foreach { completion =>
                   try {
                     completion match {
-                      case pcompiler.TypeMember(sym, tpe, true, inherited, viaView)
+                      case pcompiler.TypeMember(sym, tpe, true, inherited, viaView, _)
                           if !sym.isConstructor /*&& nameMatches(sym)*/ =>
                         elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
-                      case pcompiler.ScopeMember(sym, tpe, true, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                      case pcompiler.ScopeMember(sym, tpe, true, _, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
                         elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
                       case _ =>
                     }
@@ -649,14 +649,11 @@ class CompilerAndRunner(
         "--add-opens java.base/java.lang=ALL-UNNAMED"
     }
 
-    def noScaling =
-      "-Dsun.java2d.uiScale.enabled=false"
-
     val javaVersionSpecificArgs = {
       if (isJava8)
         cmsGC
       else
-        s"$reflectiveAccess $noScaling"
+        s"$reflectiveAccess"
     }
 
     val cmdArgs = s"-client -Xms128m -Xmx$maxMem -Xss1m $javaVersionSpecificArgs ${extraArgs}Launcher"

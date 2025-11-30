@@ -63,10 +63,9 @@ object Main extends AppMenu with ScriptLoader { main =>
     System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tc, %3$s] %4$s: %5$s%6$s%n")
     // app name needs to be set right in the beginning (this applies to Mac; is ignored elsewhere)
     System.setProperty("apple.awt.application.name", "Kojo")
-    kojoCtx =
-      new KojoCtx(
-        args.length == 1 && args(0) == "subKojo"
-      ) // context needs to be created right up front to set user language
+    kojoCtx = new KojoCtx(
+      args.length == 1 && args(0) == "subKojo"
+    ) // context needs to be created right up front to set user language
     if (Utils.isMac) {
       try {
         new MacTweaks().tweak(frame)
@@ -87,7 +86,6 @@ object Main extends AppMenu with ScriptLoader { main =>
     }
 
     Utils.schedule(0.3) {
-      updateDefaultFonts(12 + kojoCtx.screenDpiFontDelta)
       Theme.currentTheme.loadLookAndFeel()
       kojoCtx.lookAndFeelReady()
 
@@ -226,9 +224,4 @@ object Main extends AppMenu with ScriptLoader { main =>
   def runMultiInstancehandler(): Unit = {
     MultiInstanceManager.run()
   }
-
-  private def updateDefaultFonts(size: Int): Unit = {
-    // not needed with FlatLAF
-  }
-
 }
