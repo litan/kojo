@@ -1,5 +1,7 @@
 package net.kogics.kojo.lite
 
+import com.formdev.flatlaf.util.UIScale
+
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.FocusAdapter
@@ -675,7 +677,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       button.setActionCommand(actionCommand)
       button.setToolTipText(toolTipText)
       button.addActionListener(actionListener)
-      button.setIcon(Utils.loadIcon(imageFile))
+      Utils.setupScaledButtonIcon(button, imageFile)
       // button.setMnemonic(KeyEvent.VK_ENTER)
       button.setBorderPainted(false)
       button
@@ -690,7 +692,9 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       case n if n < 6 => 24
       case _          => 36
     }
-    toolbar.setPreferredSize(new Dimension(0, imageFolder + imageFolder / 6))
+    val scale = UIScale.getUserScaleFactor
+    val tsz = ((imageFolder + imageFolder / 6) * scale).toInt
+    toolbar.setPreferredSize(new Dimension(0, tsz))
 
     import Theme.currentTheme.checkPng
     import Theme.currentTheme.clearOwPng

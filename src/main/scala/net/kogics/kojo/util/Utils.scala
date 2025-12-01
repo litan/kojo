@@ -50,15 +50,18 @@ import java.util.ResourceBundle
 import javax.imageio.ImageIO
 import javax.swing.text.JTextComponent
 import javax.swing.ImageIcon
+import javax.swing.JButton
 import javax.swing.JComponent
 import javax.swing.JDialog
 import javax.swing.KeyStroke
 import javax.swing.Timer
+import javax.swing.UIManager
 
 import scala.collection.mutable
 import scala.collection.mutable.HashMap
 
 import akka.actor.ActorSystem
+import com.formdev.flatlaf.util.ScaledImageIcon
 import edu.umd.cs.piccolo.event.PInputEvent
 import net.kogics.kojo.core.CodingMode
 import net.kogics.kojo.core.KojoCtx
@@ -126,6 +129,28 @@ object Utils {
 
   def loadIconC(fname: String): ImageIcon = {
     iconCache.getOrElseUpdate(fname, loadIcon(fname))
+  }
+
+  def setupScaledButtonIcon(button: JButton, imagePath: String): Unit = {
+    // 1. Base icon (your old non-scaled one)
+    val baseIcon = loadIcon(imagePath)
+
+    // 2. Scaled icon for normal state
+    val scaledIcon = new ScaledImageIcon(baseIcon)
+    button.setIcon(scaledIcon)
+
+    // 3. Ask LAF to create a disabled version *from the base ImageIcon*
+    val disabled = UIManager.getLookAndFeel.getDisabledIcon(button, baseIcon)
+
+    // 4. If we got one, wrap it too
+    if (disabled != null) {
+      val disabledScaled =
+        disabled match {
+          case img: ImageIcon => new ScaledImageIcon(img)
+          case other          => other // fallback – in case LAF returns a non-ImageIcon
+        }
+      button.setDisabledIcon(disabledScaled)
+    }
   }
 
   def loadResource(res: String): String = {
