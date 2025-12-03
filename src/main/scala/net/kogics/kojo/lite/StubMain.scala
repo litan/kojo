@@ -157,7 +157,17 @@ trait StubMain {
 
     val jvmDevOpts = Utils.appProperty("jvm.dev.opts") match {
       case Some(opts) => opts.concat(" ")
-      case None => ""
+      case None =>
+        var ret = ""
+        if (Utils.isWin) {
+          import com.formdev.flatlaf.util.UIScale
+          val gc = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDefaultConfiguration
+          val systemScaleFactor = UIScale.getSystemScaleFactor(gc)
+          if (systemScaleFactor > 1 && systemScaleFactor < 2) {
+            ret = s"-Dsun.java2d.uiScale=1 -Dflatlaf.uiScale=$systemScaleFactor "
+          }
+        }
+        ret
     }
 
     val cmdArgs = s"-client -Xms128m -Xmx$maxMem " +
