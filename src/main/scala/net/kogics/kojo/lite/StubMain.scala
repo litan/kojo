@@ -163,7 +163,7 @@ trait StubMain {
           import com.formdev.flatlaf.util.UIScale
           val gc = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDefaultConfiguration
           val systemScaleFactor = UIScale.getSystemScaleFactor(gc)
-          if (systemScaleFactor > 1 && systemScaleFactor < 2) {
+          if (systemScaleFactor > 1.0 && systemScaleFactor < 1.7) {
             ret = s"-Dsun.java2d.uiScale=1 -Dflatlaf.uiScale=$systemScaleFactor "
           }
         }
