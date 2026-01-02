@@ -6,8 +6,8 @@ object ScalatestHelper {
 
   class TestRun extends FunSuite {
     override def suiteName = "test-run"
-    def register(name: String)(fn: => Unit) = test(name)(fn)
-    def registerIgnored(name: String)(fn: => Unit) = ignore(name)(fn)
+    def register(name: String)(fn: => Unit) = this.test(name)(fn)
+    def registerIgnored(name: String)(fn: => Unit) = this.ignore(name)(fn)
   }
 
   def test(name: String)(fn: => Unit): Unit = {

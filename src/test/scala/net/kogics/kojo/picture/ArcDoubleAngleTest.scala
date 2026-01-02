@@ -11,7 +11,7 @@ import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
 class ArcDoubleAngleTest extends FunSuite with Matchers {
   val kojoCtx = new NoOpKojoCtx
-  implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
+  implicit val spriteCanvas: SpriteCanvas = new SpriteCanvas(kojoCtx)
 
   test("touching") {
     val arc1 = arc(100, 45.6)

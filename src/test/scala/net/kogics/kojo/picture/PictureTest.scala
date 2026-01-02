@@ -32,7 +32,7 @@ import util.Utils.doublesEqual
 class PictureTest extends FunSuite with Matchers with xscala.RepeatCommands {
 
   val kojoCtx = new NoOpKojoCtx
-  implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
+  implicit val spriteCanvas: SpriteCanvas = new SpriteCanvas(kojoCtx)
   val Staging = new staging.API(spriteCanvas) // required for the animation test
 
   val psize = 50

@@ -28,7 +28,7 @@ import net.kogics.kojo.lite.canvas.SpriteCanvas
 class PictureEqualsHashTest extends FunSuite with Matchers with xscala.RepeatCommands {
 
   val kojoCtx = new NoOpKojoCtx
-  implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
+  implicit val spriteCanvas: SpriteCanvas = new SpriteCanvas(kojoCtx)
 
   case class Box1(p: Painter) extends Pic(p) {
     override def copy: Box1 = new Box1(p)

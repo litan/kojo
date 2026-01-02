@@ -28,7 +28,7 @@ import org.scalatestplus.junit.JUnitRunner
 class PictureClosenessTest extends FunSuite with Matchers with RepeatCommands {
 
   val kojoCtx = new NoOpKojoCtx
-  implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
+  implicit val spriteCanvas: SpriteCanvas = new SpriteCanvas(kojoCtx)
 
   object Picture {
     def rectangle(width: Double, height: Double) = picture.rect2(width, height)

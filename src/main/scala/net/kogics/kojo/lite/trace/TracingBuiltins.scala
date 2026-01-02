@@ -86,7 +86,7 @@ object TracingBuiltins extends CoreBuiltins with RepeatCommands {
 
   def TexturePaint(file: String, x: Double, y: Double) = Color(247, 247, 247)
 
-  implicit val picCanvas = TSCanvas
+  implicit val picCanvas: TracingTSCanvas = TSCanvas
   def Picture(fn: => Unit) = new picture.Pic(t => fn)
   def PictureT(fn: Turtle => Unit) = new picture.Pic(fn)
   def picStack(pics: Picture*) = new GPics(pics.toList)

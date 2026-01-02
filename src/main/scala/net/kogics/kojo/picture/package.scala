@@ -189,7 +189,7 @@ package object picture {
     new Java2DPic(w * scaleOutFactor, h * scaleOutFactor, fn) {
       override def draw(): Unit = {
         super.draw()
-        scale(1 / scaleOutFactor)
+        this.scale(1 / scaleOutFactor)
         canvas.animate {
           update()
           if (stopCheck) {

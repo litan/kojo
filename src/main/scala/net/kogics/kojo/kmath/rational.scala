@@ -9,13 +9,13 @@ import org.apache.commons.math3.fraction.BigFraction
 import org.apache.commons.math3.fraction.BigFractionFormat
 
 trait Rationals {
-  implicit def itor(n: Int) = Rational(new BigFraction(n))
-  implicit def ltor(n: Long) = Rational(new BigFraction(n))
-  implicit def dtor(n: Double) = {
+  implicit def itor(n: Int): Rational = Rational(new BigFraction(n))
+  implicit def ltor(n: Long): Rational = Rational(new BigFraction(n))
+  implicit def dtor(n: Double): Rational = {
     val ret = Rational(new BigFraction(n, 1e-9, Int.MaxValue))
     if (n != 0 && ret == 0) Rational(new BigFraction(n)) else ret
   }
-  implicit def ftor(n: Float) = Rational(new BigFraction(n))
+  implicit def ftor(n: Float): Rational = Rational(new BigFraction(n))
 
   implicit class RationalMaker(val sc: StringContext) {
     val bff = new BigFractionFormat

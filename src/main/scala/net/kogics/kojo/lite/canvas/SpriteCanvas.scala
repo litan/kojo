@@ -126,7 +126,7 @@ class SpriteCanvas(val kojoCtx: core.KojoCtx) extends PSwingCanvas with SCanvas 
   @volatile var turtle = newTurtle()
   val pictures = origLayer
   //  getCamera.addLayer(getCamera.getLayerCount - 1, pictures)
-  implicit val picCanvas = this
+  implicit val picCanvas: SpriteCanvas = this
 
   def turtle0 = turtle
   val figure0 = figure

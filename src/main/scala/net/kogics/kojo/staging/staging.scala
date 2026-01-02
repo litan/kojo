@@ -92,10 +92,10 @@ class API(canvas: SpriteCanvas) {
   // T PointTest begins
   def point(x: Double, y: Double) = Point(x, y)
 
-  implicit def tupleDDToPoint(tuple: (Double, Double)) = Point(tuple._1, tuple._2)
-  implicit def tupleDIToPoint(tuple: (Double, Int)) = Point(tuple._1, tuple._2)
-  implicit def tupleIDToPoint(tuple: (Int, Double)) = Point(tuple._1, tuple._2)
-  implicit def tupleIIToPoint(tuple: (Int, Int)) = Point(tuple._1, tuple._2)
+  implicit def tupleDDToPoint(tuple: (Double, Double)): Point = Point(tuple._1, tuple._2)
+  implicit def tupleDIToPoint(tuple: (Double, Int)): Point = Point(tuple._1, tuple._2)
+  implicit def tupleIDToPoint(tuple: (Int, Double)): Point = Point(tuple._1, tuple._2)
+  implicit def tupleIIToPoint(tuple: (Int, Int)): Point = Point(tuple._1, tuple._2)
   // implicit def baseShapeToPoint(b: BaseShape) = b.origin
   // implicit def awtPointToPoint(p: java.awt.geom.Point2D) = Point(p.getX, p.getY)
   // implicit def awtDimToPoint(d: java.awt.geom.Dimension2D) = Point(d.getWidth, d.getHeight)
@@ -311,7 +311,7 @@ class API(canvas: SpriteCanvas) {
 
   def withStyle(fc: Paint, sc: Paint, sw: Double)(body: => Unit) =
     Style(fc, sc, sw)(body)
-  implicit def ColorToRichColor(c: java.awt.Color) = RichColor(c)
+  implicit def ColorToRichColor(c: java.awt.Color): RichColor = RichColor(c)
   def lerpColor(from: RichColor, to: RichColor, amt: Double) =
     RichColor.lerpColor(from, to, amt)
   // T ColorTest ends

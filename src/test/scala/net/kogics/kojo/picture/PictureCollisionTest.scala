@@ -28,7 +28,7 @@ import net.kogics.kojo.lite.canvas.SpriteCanvas
 class PictureCollisionTest extends FunSuite with Matchers with xscala.RepeatCommands {
 
   val kojoCtx = new NoOpKojoCtx
-  implicit val spriteCanvas = new SpriteCanvas(kojoCtx)
+  implicit val spriteCanvas: SpriteCanvas = new SpriteCanvas(kojoCtx)
 
   val psize = 50.0
   val delta = 0.01

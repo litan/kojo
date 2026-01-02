@@ -18,7 +18,7 @@ import java.io._
 
 object RichFile {
   import language.implicitConversions
-  implicit def enrichFile(f: File) = new RichFile(f)
+  implicit def enrichFile(f: File): RichFile = new RichFile(f)
 }
 
 class RichFile(f: File) {

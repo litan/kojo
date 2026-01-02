@@ -541,11 +541,11 @@ class CodeExecutionSupport(
   def setActivityListener(): Unit = {
     kojoCtx.setActivityListener(new core.AbstractSpriteListener {
       def interpreterDone = runButton.isEnabled
-      override def hasPendingCommands: Unit = {
+      override def hasPendingCommands(): Unit = {
         pendingCommands = true
         stopButton.setEnabled(true)
       }
-      override def pendingCommandsDone: Unit = {
+      override def pendingCommandsDone(): Unit = {
         pendingCommands = false
         if (interpreterDone && Utils.noMonitoredThreads) stopButton.setEnabled(false)
       }
