@@ -111,9 +111,6 @@ trait StubMain {
         "--add-opens java.base/java.lang=ALL-UNNAMED"
     }
 
-    def noScaling =
-      "-Dsun.java2d.uiScale=1.0"
-
     val javaVersionSpecificArgs = {
       if (Utils.isJava8) {
         s"$maybeMarlin $cmsGC".trim
