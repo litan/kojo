@@ -16,6 +16,7 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Event
 import java.awt.Font
+import java.awt.GraphicsEnvironment
 import java.awt.Point
 import java.awt.Toolkit
 import javax.swing.event.CaretEvent
@@ -73,6 +74,10 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   val codePane = new RSyntaxTextArea(5, 80)
   val codePane2 = new RSyntaxTextArea(5, 80)
   val codePanes = List(codePane, codePane2)
+  private val preferredEditorFontFamily = GraphicsEnvironment
+    .getLocalGraphicsEnvironment
+    .getAvailableFontFamilyNames
+    .find(_.equalsIgnoreCase("Consolas"))
   val statusStrip = new StatusStrip()
   val (
     toolbar,
@@ -107,7 +112,11 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   codePanes.foreach(Theme.currentTheme.loadEditorTheme.apply(_))
   codePanes.foreach { cp =>
     val oldf = cp.getFont
-    val f = oldf.deriveFont(getFont.getSize.toFloat)
+    val baseFont = preferredEditorFontFamily match {
+      case Some(family) => new Font(family, oldf.getStyle, oldf.getSize)
+      case None         => oldf
+    }
+    val f = baseFont.deriveFont(getFont.getSize.toFloat)
     cp.setFont(f)
   }
 
@@ -298,31 +307,15 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         def getSelectedText = codePane.getSelectedText
 
         def searchEvent(ev: SearchEvent): Unit = {
-          val searchContext = toolbar.getSearchContext
-          def find(): Unit = {
-            var found = SearchEngine.find(codePane, searchContext)
-            if (found.getCount == 0) {
-              val oldDot = codePane.getCaret.getDot
-              codePane.getCaret.setDot(0)
-              found = SearchEngine.find(codePane, searchContext)
-              if (found.getCount == 0) {
-                codePane.getCaret.setDot(oldDot)
-              }
-            }
-          }
+          val searchContext = ev.getSearchContext
 
           ev.getType match {
             case SearchEvent.Type.MARK_ALL =>
               SearchEngine.markAll(codePane, searchContext)
             case SearchEvent.Type.FIND =>
-              find()
+              SearchEngine.find(codePane, searchContext)
             case SearchEvent.Type.REPLACE =>
-              val result = SearchEngine.replace(codePane, searchContext)
-              val nextFindRange = result.getMatchRange
-              if (nextFindRange.getEndOffset == nextFindRange.getStartOffset) {
-                // nothing found; try from beginning of document
-                find()
-              }
+              SearchEngine.replace(codePane, searchContext)
             case SearchEvent.Type.REPLACE_ALL =>
               SearchEngine.replaceAll(codePane, searchContext);
             case _ =>
@@ -334,6 +327,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
         override def addNotify() = {
           val searchContext = getSearchContext
           searchContext.setMarkAll(false)
+          searchContext.setSearchWrap(true)
           val sel = codePane.getSelectedText
           if (sel != null) {
             searchContext.setSearchFor(sel)
