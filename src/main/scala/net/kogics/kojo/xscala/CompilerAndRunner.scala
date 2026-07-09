@@ -47,6 +47,7 @@ import net.kogics.kojo.core.MemberKind.PackageObject
 import net.kogics.kojo.core.MemberKind.Trait
 import net.kogics.kojo.core.MemberKind.Type
 import net.kogics.kojo.core.MemberKind.Val
+import net.kogics.kojo.core.MemberKind.Var
 import net.kogics.kojo.core.RunContext
 import net.kogics.kojo.util.Utils
 
@@ -406,13 +407,14 @@ class CompilerAndRunner(
     def mkCompletionProposal(sym: Symbol, tpe: Type, inherited: Boolean, viaView: Symbol): CompletionInfo = {
       // code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
       val kind =
-        if (sym.isSourceMethod && !sym.hasFlag(Flags.ACCESSOR | Flags.PARAMACCESSOR)) Def
+        if (sym.isMethod && !sym.hasFlag(Flags.ACCESSOR | Flags.PARAMACCESSOR)) Def
         else if (sym.hasPackageFlag) Package
-        else if (sym.isClass) Class
         else if (sym.isTrait) Trait
+        else if (sym.isClass) Class
         else if (sym.isPackageObject) PackageObject
         else if (sym.isModule) Object
         else if (sym.isType) Type
+        else if (sym.isVar) Var
         else Val
       val name = sym.decodedName
 
@@ -525,20 +527,42 @@ class CompilerAndRunner(
 
   import core.CompletionInfo
 
-  def completions(code: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
-    val augmentedCode =
-      "%s ;} // %s".format(code.substring(0, offset), code.substring(offset))
-
+  def completions(code: String, offset: Int, selection: Boolean, prefix: String = ""): List[CompletionInfo] = {
     val queryOffset = if (selection) offset - 1 else offset
+    val codeBeforeCaret = code.substring(0, offset)
 
-    completionQuery(augmentedCode, queryOffset, selection) match {
-      case Nil    => if (selection) completionQuery(code, queryOffset, selection) else Nil
-      case _ @ret => ret
+    def closeOpenBraces(code: String) = {
+      val openBraces = code.count(_ == '{')
+      val closeBraces = code.count(_ == '}')
+      "\n" + ("}" * math.max(0, openBraces - closeBraces))
     }
+
+    // Try the real source first, then a prefix-only recovery shape. The
+    // recovery keeps the query offset stable while giving the presentation
+    // compiler enough closing syntax to type the tree at the caret.
+    val recovery =
+      if (selection && codeBeforeCaret.endsWith(".")) {
+        "%s???%s".format(codeBeforeCaret, closeOpenBraces(codeBeforeCaret))
+      }
+      else {
+        "%s ;%s".format(codeBeforeCaret, closeOpenBraces(codeBeforeCaret))
+      }
+
+    val queryCodes =
+      List(code, recovery).distinct
+
+    queryCodes
+      .iterator
+      .map { queryCode => completionQuery(queryCode, queryOffset, selection, prefix) }
+      .find(_.nonEmpty)
+      .getOrElse(Nil)
   }
 
-  private def completionQuery(code0: String, offset: Int, selection: Boolean): List[CompletionInfo] = {
+  private def completionQuery(code0: String, offset: Int, selection: Boolean, prefix: String): List[CompletionInfo] = {
     import interactive._
+
+    def nameMatches(completion: CompletionInfo) =
+      completion.name.toLowerCase.startsWith(prefix.toLowerCase)
 
     codeForRunning(code0)
       .map { code =>
@@ -579,7 +603,7 @@ class CompilerAndRunner(
                     // ignore, and move on to the next one
                   }
                 }
-                elb.toList
+                elb.toList.filter(nameMatches)
               }
               response.get match {
                 case Left(l)  => l

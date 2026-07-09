@@ -33,6 +33,7 @@ libraryDependencies ++= Seq(
     "org.scalatest" %% "scalatest" % "3.0.8" intransitive(),
     "org.scalactic" %% "scalactic" % "3.0.8" intransitive(),
     "junit" % "junit" % "4.10" % "test",
+    "com.novocode" % "junit-interface" % "0.11" % "test",
     "org.jmock" % "jmock" % "2.5.1" % "test",
     "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
     ("org.jmock" % "jmock-junit4" % "2.5.1" intransitive()) % "test",

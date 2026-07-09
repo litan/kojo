@@ -777,7 +777,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           code0.substring(0, offset).concat(code0.substring(offset + pfx.length))
         else code0
 
-      compilerAndRunner.completions(code, offset, objid != null) match {
+      compilerAndRunner.completions(code, offset, objid != null, pfx) match {
         case Nil =>
           val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
           (ics.map { CompletionInfo(core.MemberKind.Var, _, "", "", 0, false, Nil, Nil, "", "") }, pfx.length)
