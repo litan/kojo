@@ -568,6 +568,17 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
       val ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
       val actionKey = DefaultEditorKit.insertBreakAction
 
+      println("\nENTER reset diagnostics:")
+
+      codePanes.zipWithIndex.foreach { case (pane, i) =>
+        val currKey = pane.getInputMap.get(ks)
+        val currAction = pane.getActionMap.get(currKey)
+        println(s"Pre ENTER reset: pane=${i + 1}, current binding=$currKey, action=$currAction")
+        println("---")
+      }
+
+      println("Resetting ENTER binding and action...")
+
       codePanes.foreach { pane =>
         pane.getInputMap.put(ks, actionKey)
         pane.getActionMap.put(
@@ -575,6 +586,8 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
           new RSyntaxTextAreaEditorKit.InsertBreakAction()
         )
       }
+
+      println("ENTER key reset. Please try Enter again")
     }
   }
   popup.add(new JMenuItem(resetEnterBindingAction), idx)
