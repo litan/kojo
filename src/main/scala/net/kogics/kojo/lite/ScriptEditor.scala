@@ -25,6 +25,7 @@ import javax.swing.event.DocumentEvent
 import javax.swing.event.DocumentListener
 import javax.swing.event.PopupMenuEvent
 import javax.swing.event.PopupMenuListener
+import javax.swing.text.DefaultEditorKit
 import javax.swing.text.Utilities
 import javax.swing.AbstractAction
 import javax.swing.Action
@@ -560,6 +561,23 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
   idx += 1
 
   popup.add(syntaxColoringMenu, idx)
+  idx += 1
+
+  val resetEnterBindingAction = new AbstractAction(Utils.loadString("S_ResetEnterKey")) {
+    def actionPerformed(ev: ActionEvent): Unit = {
+      val ks = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0)
+      val actionKey = DefaultEditorKit.insertBreakAction
+
+      codePanes.foreach { pane =>
+        pane.getInputMap.put(ks, actionKey)
+        pane.getActionMap.put(
+          actionKey,
+          new RSyntaxTextAreaEditorKit.InsertBreakAction()
+        )
+      }
+    }
+  }
+  popup.add(new JMenuItem(resetEnterBindingAction), idx)
   idx += 1
 
   popup.add(modeMenu, idx)
