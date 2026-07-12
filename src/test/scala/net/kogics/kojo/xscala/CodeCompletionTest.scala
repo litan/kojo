@@ -98,4 +98,10 @@ class CodeCompletionTest {
   def test15 = {
     assertEquals((None, Some("ab")), CodeCompletionUtils.findIdentifier("s.map {abc => ab"))
   }
+
+  @Test
+  def testExpressionReceiverUsesEmptyReceiverId(): Unit = {
+    assertEquals((Some(""), None), CodeCompletionUtils.findIdentifier("makePicture()."))
+    assertEquals((Some(""), Some("wi")), CodeCompletionUtils.findIdentifier("makePicture().wi"))
+  }
 }
