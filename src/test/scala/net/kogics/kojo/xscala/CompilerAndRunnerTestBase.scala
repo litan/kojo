@@ -539,4 +539,25 @@ drawCentered(completionPic)
 
     assertEquals(MemberKind.Def, completionNamed(cs, "withPenThickness").kind)
   }
+
+  @Test
+  def testPictureCompletionAfterDrawingBlockWithLocalValues(): Unit = {
+    val code = """
+def cross = Picture {
+    val margin = 2
+    val len = 50
+    setPenThickness(4)
+    setPenColor(ColorMaker.hsl(200, 1.00, 0.50))
+    setPosition(margin, margin)
+    lineTo(len - margin, len - margin)
+    setPosition(len - margin, margin)
+    lineTo(margin, len - margin)
+}.withP@@
+"""
+
+    val cs = completionsAt(code, memberCompletion = true, completionPrefix = "withP")
+
+    assertEquals(MemberKind.Def, completionNamed(cs, "withPenThickness").kind)
+    assertEquals(MemberKind.Def, completionNamed(cs, "withPenColor").kind)
+  }
 }

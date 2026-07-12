@@ -486,7 +486,9 @@ class CompilerAndRunner(
   }
 
   val pcompiler = classLoader.asContext {
-    new KGlobal(makeSettings(), preporter)
+    val settings = makeSettings()
+    settings.processArgumentString("-Ypresentation-any-thread")
+    new KGlobal(settings, preporter)
   }
 
   def typeAt(code0: String, offset: Int): String = {
@@ -532,8 +534,11 @@ class CompilerAndRunner(
   import core.CompletionInfo
 
   def completions(code: String, offset: Int, memberCompletion: Boolean, completionPrefix: String = ""): List[CompletionInfo] = {
-    val queryOffset = if (memberCompletion) offset - 1 else offset
     val codeBeforeCaret = code.substring(0, offset)
+    val cursorMarker = "_CURSOR_"
+
+    def withCursor(codeBefore: String, codeAfter: String) =
+      s"$codeBefore$completionPrefix$cursorMarker $codeAfter"
 
     def closeOpenBraces(code: String) = {
       val openBraces = code.count(_ == '{')
@@ -541,19 +546,15 @@ class CompilerAndRunner(
       "\n" + ("}" * math.max(0, openBraces - closeBraces))
     }
 
-    // Try the real source first, then a prefix-only recovery shape. The
-    // recovery keeps the query offset stable while giving the presentation
-    // compiler enough closing syntax to type the tree at the caret.
-    val recovery =
-      if (memberCompletion && codeBeforeCaret.endsWith(".")) {
-        "%s???%s".format(codeBeforeCaret, closeOpenBraces(codeBeforeCaret))
-      }
-      else {
-        "%s ;%s".format(codeBeforeCaret, closeOpenBraces(codeBeforeCaret))
-      }
+    // A synthetic identifier keeps the tree at the caret parseable. The
+    // presentation compiler uses the marker position to recover the entered
+    // prefix and the receiver type.
+    val sourceWithCursor = withCursor(codeBeforeCaret, code.substring(offset))
+    val recovery = withCursor(codeBeforeCaret, closeOpenBraces(codeBeforeCaret))
+    val queryOffset = offset + completionPrefix.length
 
     val queryCodes =
-      List(code, recovery).distinct
+      List(sourceWithCursor, recovery).distinct
 
     queryCodes
       .iterator
@@ -571,51 +572,35 @@ class CompilerAndRunner(
     codeForRunning(code0)
       .map { code =>
         classLoader.asContext {
-          val source = new BatchSourceFile("scripteditor", code)
-          val pos = new OffsetPosition(source, offset + offsetDelta + 1)
+          val run = new pcompiler.TyperRun
+          val unit = pcompiler.newCompilationUnit(code, "scripteditor")
+          val richUnit = new pcompiler.RichCompilationUnit(unit.source)
+          pcompiler.unitOfFile(richUnit.source.file) = richUnit
+          val pos = richUnit.position(offset + offsetDelta + 1)
+          val ignoreCasePrefixMatcher = (entered: pcompiler.Name) => (candidate: pcompiler.Name) =>
+            candidate.toString.toLowerCase.startsWith(entered.toString.toLowerCase)
+          val completions = pcompiler.completionsAt(pos).matchingResults(ignoreCasePrefixMatcher)
 
-          val r1 = new Response[Unit]
-          pcompiler.askReload(List(source), r1)
-
-          val resp = new Response[List[pcompiler.Member]]
-          if (memberCompletion) {
-            pcompiler.askTypeCompletion(pos, resp)
-          }
-          else {
-            pcompiler.askScopeCompletion(pos, resp)
-          }
-
-          val completionTimeout = 3000
-          resp.get(completionTimeout) match {
-            case Some(Left(completions)) =>
-              val response: pcompiler.Response[List[CompletionInfo]] = pcompiler.askForResponse { () =>
-                val elb = new ListBuffer[CompletionInfo]
-                completions.foreach { completion =>
-                  try {
-                    completion match {
-                      case pcompiler.TypeMember(sym, tpe, true, inherited, viaView, _)
-                          if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                        elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView, completionPrefix)
-                      case pcompiler.ScopeMember(sym, tpe, true, _, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                        elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol, completionPrefix)
-                      case _ =>
-                    }
-                  }
-                  catch {
-                    case t: Throwable =>
-                      println("Completion Problem 0: " + t.getMessage())
-                    // ignore, and move on to the next one
-                  }
-                }
-                elb.toList.filter(nameMatches)
+          val elb = new ListBuffer[CompletionInfo]
+          completions.foreach { completion =>
+            try {
+              completion match {
+                case pcompiler.TypeMember(sym, tpe, true, inherited, viaView, _)
+                    if memberCompletion && !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                  elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView, completionPrefix)
+                case pcompiler.ScopeMember(sym, tpe, true, _, _)
+                    if !memberCompletion && !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                  elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol, completionPrefix)
+                case _ =>
               }
-              response.get match {
-                case Left(l)  => l
-                case Right(_) => Nil
-              }
-            case Some(Right(_)) => Nil
-            case None           => Nil
+            }
+            catch {
+              case t: Throwable =>
+                println("Completion Problem 0: " + t.getMessage())
+              // ignore, and move on to the next one
+            }
           }
+          elb.toList.filter(nameMatches)
         }
       }
       .getOrElse(Nil)
