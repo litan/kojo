@@ -404,7 +404,13 @@ class CompilerAndRunner(
   }
 
   class KGlobal(s: Settings, r: Reporter) extends interactive.Global(s, r) {
-    def mkCompletionProposal(sym: Symbol, tpe: Type, inherited: Boolean, viaView: Symbol): CompletionInfo = {
+    def mkCompletionProposal(
+        sym: Symbol,
+        tpe: Type,
+        inherited: Boolean,
+        viaView: Symbol,
+        completionPrefix: String
+    ): CompletionInfo = {
       // code borrowed from Scala Eclipse Plugin, after my own hacks in this area failed with 2.10.1
       val kind =
         if (sym.isMethod && !sym.hasFlag(Flags.ACCESSOR | Flags.PARAMACCESSOR)) Def
@@ -438,12 +444,12 @@ class CompilerAndRunner(
 
       val container = sym.owner.enclClass.fullName
 
-      // rudimentary relevance, place own members before inherited ones, and before view-provided ones
-      var relevance = 100
-      if (!sym.isLocalToBlock) relevance += 10 // non-local symbols are less relevant than local ones
-      if (inherited) relevance += 10
-      if (viaView != NoSymbol) relevance += 20
-      if (sym.hasPackageFlag) relevance += 30
+      // Rudimentary relevance: prefer own members over inherited and view-provided members.
+      var relevancePenalty = 100
+      if (!sym.isLocalToBlock) relevancePenalty += 10 // non-local symbols are less relevant than local ones
+      if (inherited) relevancePenalty += 10
+      if (viaView != NoSymbol) relevancePenalty += 20
+      if (sym.hasPackageFlag) relevancePenalty += 30
       // theoretically we'd need an 'ask' around this code, but given that
       // Any and AnyRef are definitely loaded, we call directly to definitions.
       if (
@@ -451,11 +457,9 @@ class CompilerAndRunner(
         || sym.owner == definitions.AnyRefClass
         || sym.owner == definitions.ObjectClass
       ) {
-        relevance += 40
+        relevancePenalty += 40
       }
-      val pfx = prefix
-      val casePenalty = if (name.take(pfx.length) != pfx.mkString) 50 else 0
-      relevance += casePenalty
+      if (!name.startsWith(completionPrefix)) relevancePenalty += 50
 
       val namesAndTypes = for {
         section <- sym.paramss
@@ -471,7 +475,7 @@ class CompilerAndRunner(
         name,
         signature,
         container,
-        relevance,
+        -relevancePenalty,
         sym.isJavaDefined,
         scalaParamNames,
         paramTypes,
@@ -591,9 +595,9 @@ class CompilerAndRunner(
                     completion match {
                       case pcompiler.TypeMember(sym, tpe, true, inherited, viaView, _)
                           if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                        elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView)
+                        elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView, completionPrefix)
                       case pcompiler.ScopeMember(sym, tpe, true, _, _) if !sym.isConstructor /*&& nameMatches(sym)*/ =>
-                        elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol)
+                        elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol, completionPrefix)
                       case _ =>
                     }
                   }

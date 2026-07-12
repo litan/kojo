@@ -170,7 +170,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       knownHelp.getOrElse(completion.fullCompletion)
 
     new TemplateCompletion(this, display, display, rstaTemplate(template), null, help) {
-      setRelevance(-completion.prio)
+      setRelevance(completion.relevance)
       override def getIcon = kindIcon(kind)
     }
   }

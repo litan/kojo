@@ -487,6 +487,21 @@ class CompletionTestNested {
   }
 
   @Test
+  def testExactCasePrefixMatchHasHigherRelevance(): Unit = {
+    val code = """
+val rightCase = 1
+val RightCase = 2
+ri@@
+"""
+
+    val cs = completionsAt(code, memberCompletion = false, completionPrefix = "ri")
+    val exactCase = completionNamed(cs, "rightCase")
+    val differentCase = completionNamed(cs, "RightCase")
+
+    assertEquals(50, exactCase.relevance - differentCase.relevance)
+  }
+
+  @Test
   def testPictureBuilderCompletions(): Unit = {
     val code = """
 cleari()

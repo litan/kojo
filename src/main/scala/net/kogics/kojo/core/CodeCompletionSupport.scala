@@ -26,7 +26,7 @@ case class CompletionInfo(
     name0: String,
     signature: String,
     owner: String,
-    prio: Int,
+    relevance: Int,
     isJava: Boolean,
     paramNames: List[List[String]], // parameter names (excluding any implicit parameter sections)
     paramTypes: List[List[String]], // parameter types matching parameter names (excluding implicit parameter sections)
