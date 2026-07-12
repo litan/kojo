@@ -266,7 +266,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     }
     execSupport.kojoCtx.hideAppWaitCursor()
     val proposals2 = new java.util.ArrayList[Completion]
-    val filterMap = mutable.HashMap.empty[String, TemplateCompletion]
+    val filterMap = mutable.HashMap.empty[(String, Int), TemplateCompletion]
 
     def bareName(c: TemplateCompletion) = {
       val name = c.getInputText
@@ -293,9 +293,9 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       //      println("---")
       //      println(pp.getInputText)
       //      println(pp.getSummary)
-      val bName = bareName(pp)
+      val filterKey = (bareName(pp), pp.getParamCount)
 
-      filterMap.get(bName) match {
+      filterMap.get(filterKey) match {
         case Some(c) =>
           // there is a previous proposal
           // does it have help?
@@ -308,11 +308,11 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
               proposals2.remove(c)
             }
             proposals2.add(p)
-            filterMap(bName) = pp
+            filterMap(filterKey) = pp
           }
         case None =>
           proposals2.add(p)
-          filterMap(bName) = pp
+          filterMap(filterKey) = pp
       }
     }
     proposals2
