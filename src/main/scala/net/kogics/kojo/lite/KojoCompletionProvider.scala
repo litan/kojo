@@ -29,6 +29,10 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
   val TEMPLATE = 5
   val VALUE = 4
   val VARIABLE = 3
+  val TRAIT = 11
+  val TYPE = 12
+  val OBJECT = 13
+  val PACKAGE_OBJECT = 14
 
   setListCellRenderer(new CompletionCellRenderer) // needed for icons to show up
   setAutoActivationRules(false, null)
@@ -80,11 +84,11 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     import core.MemberKind._
     def kind = completion.kind match {
       case Class         => CLASS
-      case Trait         => CLASS
-      case Type          => CLASS
-      case Object        => PACKAGE
+      case Trait         => TRAIT
+      case Type          => TYPE
+      case Object        => OBJECT
       case Package       => PACKAGE
-      case PackageObject => PACKAGE
+      case PackageObject => PACKAGE_OBJECT
       case Def           => METHOD
       case Val           => VALUE
       case Var           => VARIABLE
@@ -181,7 +185,11 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       case VALUE            => "/images/kindval.png"
       case VARIABLE         => "/images/kindvar.png"
       case CLASS            => "/images/kindclass.png"
+      case TRAIT            => "/images/kindtrait.png"
+      case TYPE             => "/images/kindtype.png"
+      case OBJECT           => "/images/kindobject.png"
       case PACKAGE          => "/images/kindpackage.gif"
+      case PACKAGE_OBJECT   => "/images/kindpackageobject.png"
       case METHOD           => "/images/kindmethod.png"
       case KEYWORD          => "/images/scala16x16.png"
       case TEMPLATE         => "/images/kindtemplate.png"
