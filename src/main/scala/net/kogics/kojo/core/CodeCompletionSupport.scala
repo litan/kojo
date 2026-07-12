@@ -82,8 +82,13 @@ case class CompletionInfo(
 }
 
 trait CodeCompletionSupport {
-  def varCompletions(prefix: Option[String]): (List[String], Int)
-  def keywordCompletions(prefix: Option[String]): (List[String], Int)
-  def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]): (List[CompletionInfo], Int)
-  def objidAndPrefix(caretOffset: Int): (Option[String], Option[String])
+  def interpreterNameCompletions(completionPrefix: Option[String]): (List[String], Int)
+  def keywordCompletions(completionPrefix: Option[String]): (List[String], Int)
+  // receiverId is null for scope completion.
+  def compilerCompletions(
+      caretOffset: Int,
+      receiverId: String,
+      completionPrefix: Option[String]
+  ): (List[CompletionInfo], Int)
+  def receiverIdAndPrefix(caretOffset: Int): (Option[String], Option[String])
 }

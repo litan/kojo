@@ -29,13 +29,13 @@ trait CodeRunner {
   def compileCode(code: String): Unit
   def compileRunCode(code: String): Unit
   def compileExecCode(code: String): Unit
-  def varCompletions(prefix: Option[String]): (List[String], Int)
-  def keywordCompletions(prefix: Option[String]): (List[String], Int)
-  def memberCompletions(
+  def interpreterNameCompletions(completionPrefix: Option[String]): (List[String], Int)
+  def keywordCompletions(completionPrefix: Option[String]): (List[String], Int)
+  def compilerCompletions(
       code: String,
       caretOffset: Int,
-      objid: String,
-      prefix: Option[String]
+      receiverId: String,
+      completionPrefix: Option[String]
   ): (List[CompletionInfo], Int)
   def typeAt(code: String, caretOffset: Int): String
   def activateTw(): Unit

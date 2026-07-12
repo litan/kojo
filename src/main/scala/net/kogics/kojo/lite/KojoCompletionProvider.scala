@@ -44,11 +44,13 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
         val nextIsBrace = (i + 1 < t.length) && t.charAt(i + 1) == '{'
         if (nextIsBrace) {
           sawInterpolation = true
-          sb.append('$')      // keep '$' as-is for "${...}"
-        } else {
-          sb.append("$$")     // escape plain '$'
+          sb.append('$') // keep '$' as-is for "${...}"
         }
-      } else {
+        else {
+          sb.append("$$") // escape plain '$'
+        }
+      }
+      else {
         sb.append(ch)
       }
       i += 1
@@ -203,7 +205,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     }
   }
 
-  var (objid: Option[String], prefix: Option[String]) = (None, None)
+  var (receiverId: Option[String], completionPrefix: Option[String]) = (None, None)
 
   def complete(comp: JTextComponent): List[Completion] = {
     val proposals = collection.mutable.ArrayBuffer.empty[Completion]
@@ -211,18 +213,22 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     execSupport.kojoCtx.showAppWaitCursor()
 
     try {
-      if (objid.isEmpty) {
-        val (varCompletions, voffset) = execSupport.varCompletions(prefix)
-        varCompletions.foreach { completion =>
+      if (receiverId.isEmpty) {
+        val (interpreterCompletions, interpreterPrefixLength) =
+          execSupport.interpreterNameCompletions(completionPrefix)
+        interpreterCompletions.foreach { completion =>
           if (!completion.contains("$")) {
-            proposals.append(proposal(caretOffset - voffset, completion, VARIABLE, methodTemplate(completion)))
+            proposals.append(
+              proposal(caretOffset - interpreterPrefixLength, completion, VARIABLE, methodTemplate(completion))
+            )
           }
         }
 
-        val (memberCompletions, coffset) = execSupport.memberCompletions(caretOffset, null, prefix)
-        memberCompletions.foreach { completion =>
+        val (compilerCompletions, compilerPrefixLength) =
+          execSupport.compilerCompletions(caretOffset, null, completionPrefix)
+        compilerCompletions.foreach { completion =>
           try {
-            proposals.append(proposal2(caretOffset - coffset, completion))
+            proposals.append(proposal2(caretOffset - compilerPrefixLength, completion))
           }
           catch {
             case t: Throwable =>
@@ -231,19 +237,25 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
           }
         }
 
-        val (keywordCompletions, koffset) = execSupport.keywordCompletions(prefix)
+        val (keywordCompletions, keywordPrefixLength) = execSupport.keywordCompletions(completionPrefix)
         keywordCompletions.foreach { completion =>
           proposals.append(
-            proposal(caretOffset - koffset, completion, KEYWORD, CodeCompletionUtils.keywordTemplate(completion))
+            proposal(
+              caretOffset - keywordPrefixLength,
+              completion,
+              KEYWORD,
+              CodeCompletionUtils.keywordTemplate(completion)
+            )
           )
         }
 
-        addTemplateProposals(proposals, prefix.getOrElse(""), caretOffset)
+        addTemplateProposals(proposals, completionPrefix.getOrElse(""), caretOffset)
       }
       else {
-        val (memberCompletions, coffset) = execSupport.memberCompletions(caretOffset, objid.get, prefix)
-        memberCompletions.foreach { completion =>
-          proposals.append(proposal2(caretOffset - coffset, completion))
+        val (compilerCompletions, compilerPrefixLength) =
+          execSupport.compilerCompletions(caretOffset, receiverId.get, completionPrefix)
+        compilerCompletions.foreach { completion =>
+          proposals.append(proposal2(caretOffset - compilerPrefixLength, completion))
         }
       }
     }
@@ -312,9 +324,9 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     }
     else {
       val caretOffset = comp.getCaretPosition
-      val (oid, pfx) = execSupport.objidAndPrefix(caretOffset)
-      objid = oid; prefix = pfx
-      prefix.getOrElse("")
+      val (parsedReceiverId, parsedCompletionPrefix) = execSupport.receiverIdAndPrefix(caretOffset)
+      receiverId = parsedReceiverId; completionPrefix = parsedCompletionPrefix
+      completionPrefix.getOrElse("")
     }
   }
 

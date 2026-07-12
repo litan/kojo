@@ -141,9 +141,14 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
   case class CompileExecCode(code: String)
   case class CompileCode(code: String)
   case class ParseCode(code: String, browseAst: Boolean)
-  case class VarCompletionRequest(prefix: Option[String])
-  case class KeywordCompletionRequest(prefix: Option[String])
-  case class MemberCompletionRequest(code: String, caretOffset: Int, objid: String, prefix: Option[String])
+  case class InterpreterNameCompletionRequest(completionPrefix: Option[String])
+  case class KeywordCompletionRequest(completionPrefix: Option[String])
+  case class CompilerCompletionRequest(
+      code: String,
+      caretOffset: Int,
+      receiverId: String,
+      completionPrefix: Option[String]
+  )
   case class TypeAtRequest(code: String, caretOffset: Int)
   case class CompletionResponse(data: (List[String], Int))
   case class CompletionResponse2(data: (List[CompletionInfo], Int))
@@ -158,24 +163,26 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     Await.result(fresult, timeout.duration)
   }
 
-  def varCompletions(prefix: Option[String]): (List[String], Int) = {
-    val resp = this.askCodeRunner(VarCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
+  def interpreterNameCompletions(completionPrefix: Option[String]): (List[String], Int) = {
+    val resp = this.askCodeRunner(InterpreterNameCompletionRequest(completionPrefix)).asInstanceOf[CompletionResponse]
     resp.data
   }
 
-  def keywordCompletions(prefix: Option[String]): (List[String], Int) = {
-    val resp = this.askCodeRunner(KeywordCompletionRequest(prefix)).asInstanceOf[CompletionResponse]
+  def keywordCompletions(completionPrefix: Option[String]): (List[String], Int) = {
+    val resp = this.askCodeRunner(KeywordCompletionRequest(completionPrefix)).asInstanceOf[CompletionResponse]
     resp.data
   }
 
-  def memberCompletions(
+  def compilerCompletions(
       code: String,
       caretOffset: Int,
-      objid: String,
-      prefix: Option[String]
+      receiverId: String,
+      completionPrefix: Option[String]
   ): (List[CompletionInfo], Int) = {
     val resp =
-      this.askCodeRunner(MemberCompletionRequest(code, caretOffset, objid, prefix)).asInstanceOf[CompletionResponse2]
+      this
+        .askCodeRunner(CompilerCompletionRequest(code, caretOffset, receiverId, completionPrefix))
+        .asInstanceOf[CompletionResponse2]
     resp.data
   }
 
@@ -517,19 +524,19 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
           InterruptionManager.onInterpreterFinish()
         }
 
-      case VarCompletionRequest(prefix) =>
+      case InterpreterNameCompletionRequest(completionPrefix) =>
         safeProcessCompletionReq {
-          varCompletions(prefix)
+          interpreterNameCompletions(completionPrefix)
         }
 
-      case KeywordCompletionRequest(prefix) =>
+      case KeywordCompletionRequest(completionPrefix) =>
         safeProcessCompletionReq {
-          keywordCompletions(prefix)
+          keywordCompletions(completionPrefix)
         }
 
-      case MemberCompletionRequest(code, caretOffset, objid, prefix) =>
+      case CompilerCompletionRequest(code, caretOffset, receiverId, completionPrefix) =>
         safeProcessCompletionReq2 {
-          memberCompletions(code, caretOffset, objid, prefix)
+          compilerCompletions(code, caretOffset, receiverId, completionPrefix)
         }
 
       case TypeAtRequest(code, caretOffset) =>
@@ -735,7 +742,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
     def ignoreCaseStartsWith(s1: String, s2: String) = s1.toLowerCase.startsWith(s2.toLowerCase)
 
-    def completions(identifier: String) = {
+    def interpreterMemberCompletions(identifier: String) = {
       def methodFilter(s: String) = !MethodDropFilter.contains(s) && !InternalMethodsRe.matcher(s).matches
 
       Log.fine("Finding Identifier completions for: " + identifier)
@@ -746,8 +753,8 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       completions
     }
 
-    def varCompletions(prefix: Option[String]): (List[String], Int) = {
-      val pfx = prefix.getOrElse("")
+    def interpreterNameCompletions(completionPrefix: Option[String]): (List[String], Int) = {
+      val pfx = completionPrefix.getOrElse("")
       if (interpInited) {
         def varFilter(s: String) = !VarDropFilter.contains(s) && !InternalVarsRe.matcher(s).matches
         val c2s = interp.unqualifiedIds.filter { s => ignoreCaseStartsWith(s, pfx) && varFilter(s) }
@@ -758,28 +765,31 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
     }
 
-    def keywordCompletions(prefix: Option[String]): (List[String], Int) = {
-      val pfx = prefix.getOrElse("")
+    def keywordCompletions(completionPrefix: Option[String]): (List[String], Int) = {
+      val pfx = completionPrefix.getOrElse("")
       val c2s = Keywords.filter { s => s != null && ignoreCaseStartsWith(s, pfx) }
       (c2s, pfx.length)
     }
 
-    def memberCompletions(
+    def compilerCompletions(
         code0: String,
         caretOffset: Int,
-        objid: String,
-        prefix: Option[String]
+        receiverId: String,
+        completionPrefix: Option[String]
     ): (List[CompletionInfo], Int) = {
-      val pfx = prefix.getOrElse("")
+      val pfx = completionPrefix.getOrElse("")
       val offset = caretOffset - pfx.length
       val code =
         if (pfx.length > 0)
           code0.substring(0, offset).concat(code0.substring(offset + pfx.length))
         else code0
 
-      compilerAndRunner.completions(code, offset, objid != null, pfx) match {
+      compilerAndRunner.completions(code, offset, receiverId != null, pfx) match {
         case Nil =>
-          val ics = Option(objid).filter(_.nonEmpty).toList.flatMap(completions).filter { ignoreCaseStartsWith(_, pfx) }
+          val ics =
+            Option(receiverId).filter(_.nonEmpty).toList.flatMap(interpreterMemberCompletions).filter {
+              ignoreCaseStartsWith(_, pfx)
+            }
           (ics.map { CompletionInfo(core.MemberKind.Var, _, "", "", 0, false, Nil, Nil, "", "") }, pfx.length)
         case _ @ccs =>
           (ccs.filter { ci => ignoreCaseStartsWith(ci.name, pfx) }, pfx.length)

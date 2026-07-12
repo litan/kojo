@@ -945,13 +945,14 @@ class CodeExecutionSupport(
     if (caretOffset > cpt.length) ""
     else cpt.substring(0, caretOffset)
   }
-  def varCompletions(prefix: Option[String]) = codeRunner.varCompletions(prefix)
-  def keywordCompletions(prefix: Option[String]) = codeRunner.keywordCompletions(prefix)
-  def memberCompletions(caretOffset: Int, objid: String, prefix: Option[String]) = {
+  def interpreterNameCompletions(completionPrefix: Option[String]) =
+    codeRunner.interpreterNameCompletions(completionPrefix)
+  def keywordCompletions(completionPrefix: Option[String]) = codeRunner.keywordCompletions(completionPrefix)
+  def compilerCompletions(caretOffset: Int, receiverId: String, completionPrefix: Option[String]) = {
     val codeAndOffset = completionCodeAndOffset(caretOffset)
-    codeRunner.memberCompletions(codeAndOffset._1, codeAndOffset._2, objid, prefix)
+    codeRunner.compilerCompletions(codeAndOffset._1, codeAndOffset._2, receiverId, completionPrefix)
   }
-  def objidAndPrefix(caretOffset: Int): (Option[String], Option[String]) =
+  def receiverIdAndPrefix(caretOffset: Int): (Option[String], Option[String]) =
     xscala.CodeCompletionUtils.findIdentifier(codeFragment(caretOffset))
   def typeAt(caretOffset: Int) = {
     val codeAndOffset = completionCodeAndOffset(caretOffset)
