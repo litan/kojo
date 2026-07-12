@@ -16,15 +16,14 @@
 package net.kogics.kojo
 package xscala
 
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
-import org.junit.Assert._
-
 import scala.tools.nsc.Settings
 
 import net.kogics.kojo.core.CompletionInfo
 import net.kogics.kojo.core.MemberKind
+import org.junit.After
+import org.junit.Assert._
+import org.junit.Before
+import org.junit.Test
 
 abstract class CompilerAndRunnerTestBase {
   private val CompletionMarker = "@@"
@@ -46,14 +45,11 @@ abstract class CompilerAndRunnerTestBase {
       errOffset = offset
     }
 
-    def warning(msg: String, line: Int, column: Int): Unit = {
-    }
+    def warning(msg: String, line: Int, column: Int): Unit = {}
 
-    def info(msg: String, line: Int, column: Int): Unit = {
-    }
+    def info(msg: String, line: Int, column: Int): Unit = {}
 
-    def message(msg: String): Unit = {
-    }
+    def message(msg: String): Unit = {}
   }
 
   val runner = makeRunner()
@@ -62,25 +58,29 @@ abstract class CompilerAndRunnerTestBase {
 
   def completionsAt(
       codeWithMarker: String,
-      selection: Boolean,
-      prefix: String = ""
+      memberCompletion: Boolean,
+      completionPrefix: String = ""
   ): List[CompletionInfo] = {
     val markerOffset = codeWithMarker.indexOf(CompletionMarker)
     assertTrue("missing completion marker", markerOffset >= 0)
     assertEquals("multiple completion markers", markerOffset, codeWithMarker.lastIndexOf(CompletionMarker))
 
     val codeWithPrefix = codeWithMarker.patch(markerOffset, "", CompletionMarker.length)
-    val offset = markerOffset - prefix.length
+    val offset = markerOffset - completionPrefix.length
     assertTrue("completion prefix extends before start of source", offset >= 0)
-    if (prefix.nonEmpty) {
-      assertEquals("prefix must appear immediately before marker", prefix, codeWithPrefix.substring(offset, markerOffset))
+    if (completionPrefix.nonEmpty) {
+      assertEquals(
+        "prefix must appear immediately before marker",
+        completionPrefix,
+        codeWithPrefix.substring(offset, markerOffset)
+      )
     }
 
     val code =
-      if (prefix.nonEmpty) codeWithPrefix.substring(0, offset).concat(codeWithPrefix.substring(markerOffset))
+      if (completionPrefix.nonEmpty) codeWithPrefix.substring(0, offset).concat(codeWithPrefix.substring(markerOffset))
       else codeWithPrefix
 
-    runner.completions(code, offset, selection, prefix)
+    runner.completions(code, offset, memberCompletion, completionPrefix)
   }
 
   def completionNamed(completions: List[CompletionInfo], name: String): CompletionInfo = {
@@ -374,7 +374,7 @@ animate {
     val code = """val s = "hello"
 s."""
 
-    val cs = runner.completions(code, code.length, selection = true, prefix = "sub")
+    val cs = runner.completions(code, code.length, memberCompletion = true, completionPrefix = "sub")
     val substring = cs.find(_.name == "substring")
 
     assertTrue(substring.isDefined)
@@ -385,7 +385,7 @@ s."""
   def testVarCompletionKind(): Unit = {
     val code = "var count = 1\n"
 
-    val cs = runner.completions(code, code.length, selection = false, prefix = "co")
+    val cs = runner.completions(code, code.length, memberCompletion = false, completionPrefix = "co")
     val count = cs.find(_.name == "count")
 
     assertTrue(count.isDefined)
@@ -417,7 +417,7 @@ val completionTestX = new CompletionTestX
 completionTestX.m@@
 """
 
-    val cs = completionsAt(code, selection = true, prefix = "m")
+    val cs = completionsAt(code, memberCompletion = true, completionPrefix = "m")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "m1").kind)
     assertEquals(MemberKind.Def, completionNamed(cs, "m2").kind)
@@ -442,7 +442,7 @@ val completionTestY = new CompletionTestY
 completionTestY.@@
 """
 
-    val cs = completionsAt(code, selection = true)
+    val cs = completionsAt(code, memberCompletion = true)
 
     assertEquals(MemberKind.Val, completionNamed(cs, "v1").kind)
     assertEquals(MemberKind.Var, completionNamed(cs, "v2").kind)
@@ -464,7 +464,7 @@ val completionTestZ = new CompletionTestZ
 completionSq@@
 """
 
-    val cs = completionsAt(code, selection = false, prefix = "completionSq")
+    val cs = completionsAt(code, memberCompletion = false, completionPrefix = "completionSq")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "completionSquare").kind)
   }
@@ -480,7 +480,7 @@ class CompletionTestNested {
 }
 """
 
-    val cs = completionsAt(code, selection = false, prefix = "n")
+    val cs = completionsAt(code, memberCompletion = false, completionPrefix = "n")
 
     assertEquals(MemberKind.Val, completionNamed(cs, "narg").kind)
     assertEquals(MemberKind.Def, completionNamed(cs, "nested").kind)
@@ -500,7 +500,7 @@ def completionPic = {
 drawCentered(completionPic)
 """
 
-    val cs = completionsAt(code, selection = true, prefix = "with")
+    val cs = completionsAt(code, memberCompletion = true, completionPrefix = "with")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "withPenColor").kind)
     assertEquals(MemberKind.Def, completionNamed(cs, "withFillColor").kind)
@@ -520,7 +520,7 @@ def completionPic = {
 drawCentered(completionPic)
 """
 
-    val cs = completionsAt(code, selection = true, prefix = "with")
+    val cs = completionsAt(code, memberCompletion = true, completionPrefix = "with")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "withPenThickness").kind)
   }

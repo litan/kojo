@@ -527,8 +527,8 @@ class CompilerAndRunner(
 
   import core.CompletionInfo
 
-  def completions(code: String, offset: Int, selection: Boolean, prefix: String = ""): List[CompletionInfo] = {
-    val queryOffset = if (selection) offset - 1 else offset
+  def completions(code: String, offset: Int, memberCompletion: Boolean, completionPrefix: String = ""): List[CompletionInfo] = {
+    val queryOffset = if (memberCompletion) offset - 1 else offset
     val codeBeforeCaret = code.substring(0, offset)
 
     def closeOpenBraces(code: String) = {
@@ -541,7 +541,7 @@ class CompilerAndRunner(
     // recovery keeps the query offset stable while giving the presentation
     // compiler enough closing syntax to type the tree at the caret.
     val recovery =
-      if (selection && codeBeforeCaret.endsWith(".")) {
+      if (memberCompletion && codeBeforeCaret.endsWith(".")) {
         "%s???%s".format(codeBeforeCaret, closeOpenBraces(codeBeforeCaret))
       }
       else {
@@ -553,16 +553,16 @@ class CompilerAndRunner(
 
     queryCodes
       .iterator
-      .map { queryCode => completionQuery(queryCode, queryOffset, selection, prefix) }
+      .map { queryCode => completionQuery(queryCode, queryOffset, memberCompletion, completionPrefix) }
       .find(_.nonEmpty)
       .getOrElse(Nil)
   }
 
-  private def completionQuery(code0: String, offset: Int, selection: Boolean, prefix: String): List[CompletionInfo] = {
+  private def completionQuery(code0: String, offset: Int, memberCompletion: Boolean, completionPrefix: String): List[CompletionInfo] = {
     import interactive._
 
     def nameMatches(completion: CompletionInfo) =
-      completion.name.toLowerCase.startsWith(prefix.toLowerCase)
+      completion.name.toLowerCase.startsWith(completionPrefix.toLowerCase)
 
     codeForRunning(code0)
       .map { code =>
@@ -574,7 +574,7 @@ class CompilerAndRunner(
           pcompiler.askReload(List(source), r1)
 
           val resp = new Response[List[pcompiler.Member]]
-          if (selection) {
+          if (memberCompletion) {
             pcompiler.askTypeCompletion(pos, resp)
           }
           else {

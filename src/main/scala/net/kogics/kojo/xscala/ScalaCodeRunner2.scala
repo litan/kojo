@@ -779,7 +779,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
 
       compilerAndRunner.completions(code, offset, objid != null, pfx) match {
         case Nil =>
-          val ics = completions(objid).filter { ignoreCaseStartsWith(_, pfx) }
+          val ics = Option(objid).filter(_.nonEmpty).toList.flatMap(completions).filter { ignoreCaseStartsWith(_, pfx) }
           (ics.map { CompletionInfo(core.MemberKind.Var, _, "", "", 0, false, Nil, Nil, "", "") }, pfx.length)
         case _ @ccs =>
           (ccs.filter { ci => ignoreCaseStartsWith(ci.name, pfx) }, pfx.length)
