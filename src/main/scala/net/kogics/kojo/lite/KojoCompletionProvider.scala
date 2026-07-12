@@ -22,11 +22,13 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
   val Log = Logger.getLogger(getClass.getName)
 
   val METHOD = 10
-  val VARIABLE = 9
+  val INTERPRETER_NAME = 9
   val CLASS = 8
   val PACKAGE = 7
   val KEYWORD = 6
   val TEMPLATE = 5
+  val VALUE = 4
+  val VARIABLE = 3
 
   setListCellRenderer(new CompletionCellRenderer) // needed for icons to show up
   setAutoActivationRules(false, null)
@@ -84,7 +86,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       case Package       => PACKAGE
       case PackageObject => PACKAGE
       case Def           => METHOD
-      case Val           => VARIABLE
+      case Val           => VALUE
       case Var           => VARIABLE
     }
 
@@ -175,12 +177,14 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
 
   def kindIcon(kind: Int) = {
     val fname = kind match {
-      case VARIABLE => "/images/kindvar.png"
-      case CLASS    => "/images/kindclass.png"
-      case PACKAGE  => "/images/kindpackage.gif"
-      case METHOD   => "/images/kindmethod.png"
-      case KEYWORD  => "/images/scala16x16.png"
-      case TEMPLATE => "/images/kindtemplate.png"
+      case INTERPRETER_NAME => "/images/kindname.png"
+      case VALUE            => "/images/kindval.png"
+      case VARIABLE         => "/images/kindvar.png"
+      case CLASS            => "/images/kindclass.png"
+      case PACKAGE          => "/images/kindpackage.gif"
+      case METHOD           => "/images/kindmethod.png"
+      case KEYWORD          => "/images/scala16x16.png"
+      case TEMPLATE         => "/images/kindtemplate.png"
     }
     Utils.loadIconC(fname)
   }
@@ -219,7 +223,12 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
         interpreterCompletions.foreach { completion =>
           if (!completion.contains("$")) {
             proposals.append(
-              proposal(caretOffset - interpreterPrefixLength, completion, VARIABLE, methodTemplate(completion))
+              proposal(
+                caretOffset - interpreterPrefixLength,
+                completion,
+                INTERPRETER_NAME,
+                methodTemplate(completion)
+              )
             )
           }
         }

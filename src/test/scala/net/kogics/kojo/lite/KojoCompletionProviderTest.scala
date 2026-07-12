@@ -33,4 +33,17 @@ class KojoCompletionProviderTest extends FunSuite with Matchers {
   test("rstaTemplate leaves non-$ strings unchanged except for appending ${cursor}") {
     provider.rstaTemplate("clear") shouldBe "clear${cursor}"
   }
+
+  test("completion name, value, and variable icons are available at 16 by 16 pixels") {
+    val icons = Seq(
+      provider.kindIcon(provider.INTERPRETER_NAME),
+      provider.kindIcon(provider.VALUE),
+      provider.kindIcon(provider.VARIABLE)
+    )
+
+    icons.foreach { icon =>
+      icon.getIconWidth shouldBe 16
+      icon.getIconHeight shouldBe 16
+    }
+  }
 }
