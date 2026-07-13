@@ -56,11 +56,7 @@ abstract class CompilerAndRunnerTestBase {
 
   def makeRunner(): CompilerAndRunner
 
-  def completionsAt(
-      codeWithMarker: String,
-      memberCompletion: Boolean,
-      completionPrefix: String = ""
-  ): List[CompletionInfo] = {
+  def completionsAt(codeWithMarker: String, completionPrefix: String = ""): List[CompletionInfo] = {
     val markerOffset = codeWithMarker.indexOf(CompletionMarker)
     assertTrue("missing completion marker", markerOffset >= 0)
     assertEquals("multiple completion markers", markerOffset, codeWithMarker.lastIndexOf(CompletionMarker))
@@ -80,7 +76,7 @@ abstract class CompilerAndRunnerTestBase {
       if (completionPrefix.nonEmpty) codeWithPrefix.substring(0, offset).concat(codeWithPrefix.substring(markerOffset))
       else codeWithPrefix
 
-    runner.completions(code, offset, memberCompletion, completionPrefix)
+    runner.completions(code, offset, completionPrefix)
   }
 
   def completionNamed(completions: List[CompletionInfo], name: String): CompletionInfo = {
@@ -374,7 +370,7 @@ animate {
     val code = """val s = "hello"
 s."""
 
-    val cs = runner.completions(code, code.length, memberCompletion = true, completionPrefix = "sub")
+    val cs = runner.completions(code, code.length, completionPrefix = "sub")
     val substring = cs.find(_.name == "substring")
 
     assertTrue(substring.isDefined)
@@ -385,7 +381,7 @@ s."""
   def testVarCompletionKind(): Unit = {
     val code = "var count = 1\n"
 
-    val cs = runner.completions(code, code.length, memberCompletion = false, completionPrefix = "co")
+    val cs = runner.completions(code, code.length, completionPrefix = "co")
     val count = cs.find(_.name == "count")
 
     assertTrue(count.isDefined)
@@ -417,7 +413,7 @@ val completionTestX = new CompletionTestX
 completionTestX.m@@
 """
 
-    val cs = completionsAt(code, memberCompletion = true, completionPrefix = "m")
+    val cs = completionsAt(code, completionPrefix = "m")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "m1").kind)
     assertEquals(MemberKind.Def, completionNamed(cs, "m2").kind)
@@ -442,7 +438,7 @@ val completionTestY = new CompletionTestY
 completionTestY.@@
 """
 
-    val cs = completionsAt(code, memberCompletion = true)
+    val cs = completionsAt(code)
 
     assertEquals(MemberKind.Val, completionNamed(cs, "v1").kind)
     assertEquals(MemberKind.Var, completionNamed(cs, "v2").kind)
@@ -464,7 +460,7 @@ val completionTestZ = new CompletionTestZ
 completionSq@@
 """
 
-    val cs = completionsAt(code, memberCompletion = false, completionPrefix = "completionSq")
+    val cs = completionsAt(code, completionPrefix = "completionSq")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "completionSquare").kind)
   }
@@ -480,7 +476,7 @@ class CompletionTestNested {
 }
 """
 
-    val cs = completionsAt(code, memberCompletion = false, completionPrefix = "n")
+    val cs = completionsAt(code, completionPrefix = "n")
 
     assertEquals(MemberKind.Val, completionNamed(cs, "narg").kind)
     assertEquals(MemberKind.Def, completionNamed(cs, "nested").kind)
@@ -494,7 +490,7 @@ val RightCase = 2
 ri@@
 """
 
-    val cs = completionsAt(code, memberCompletion = false, completionPrefix = "ri")
+    val cs = completionsAt(code, completionPrefix = "ri")
     val exactCase = completionNamed(cs, "rightCase")
     val differentCase = completionNamed(cs, "RightCase")
 
@@ -515,7 +511,7 @@ def completionPic = {
 drawCentered(completionPic)
 """
 
-    val cs = completionsAt(code, memberCompletion = true, completionPrefix = "with")
+    val cs = completionsAt(code, completionPrefix = "with")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "withPenColor").kind)
     assertEquals(MemberKind.Def, completionNamed(cs, "withFillColor").kind)
@@ -535,7 +531,7 @@ def completionPic = {
 drawCentered(completionPic)
 """
 
-    val cs = completionsAt(code, memberCompletion = true, completionPrefix = "with")
+    val cs = completionsAt(code, completionPrefix = "with")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "withPenThickness").kind)
   }
@@ -555,7 +551,7 @@ def cross = Picture {
 }.withP@@
 """
 
-    val cs = completionsAt(code, memberCompletion = true, completionPrefix = "withP")
+    val cs = completionsAt(code, completionPrefix = "withP")
 
     assertEquals(MemberKind.Def, completionNamed(cs, "withPenThickness").kind)
     assertEquals(MemberKind.Def, completionNamed(cs, "withPenColor").kind)

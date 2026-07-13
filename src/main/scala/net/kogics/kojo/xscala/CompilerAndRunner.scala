@@ -533,7 +533,7 @@ class CompilerAndRunner(
 
   import core.CompletionInfo
 
-  def completions(code: String, offset: Int, memberCompletion: Boolean, completionPrefix: String = ""): List[CompletionInfo] = {
+  def completions(code: String, offset: Int, completionPrefix: String = ""): List[CompletionInfo] = {
     val codeBeforeCaret = code.substring(0, offset)
     val cursorMarker = "_CURSOR_"
 
@@ -558,12 +558,12 @@ class CompilerAndRunner(
 
     queryCodes
       .iterator
-      .map { queryCode => completionQuery(queryCode, queryOffset, memberCompletion, completionPrefix) }
+      .map { queryCode => completionQuery(queryCode, queryOffset, completionPrefix) }
       .find(_.nonEmpty)
       .getOrElse(Nil)
   }
 
-  private def completionQuery(code0: String, offset: Int, memberCompletion: Boolean, completionPrefix: String): List[CompletionInfo] = {
+  private def completionQuery(code0: String, offset: Int, completionPrefix: String): List[CompletionInfo] = {
     import interactive._
 
     def nameMatches(completion: CompletionInfo) =
@@ -586,10 +586,10 @@ class CompilerAndRunner(
             try {
               completion match {
                 case pcompiler.TypeMember(sym, tpe, true, inherited, viaView, _)
-                    if memberCompletion && !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                    if !sym.isConstructor =>
                   elb += pcompiler.mkCompletionProposal(sym, tpe, inherited, viaView, completionPrefix)
                 case pcompiler.ScopeMember(sym, tpe, true, _, _)
-                    if !memberCompletion && !sym.isConstructor /*&& nameMatches(sym)*/ =>
+                    if !sym.isConstructor =>
                   elb += pcompiler.mkCompletionProposal(sym, tpe, false, pcompiler.NoSymbol, completionPrefix)
                 case _ =>
               }
