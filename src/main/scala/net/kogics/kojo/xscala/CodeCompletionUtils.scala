@@ -17,7 +17,7 @@ package net.kogics.kojo
 package xscala
 
 object CodeCompletionUtils {
-  val NotIdChars = """ .(){}!%&+\-<=>?@\\^`|~#:/*""" + "\n\r\t"
+  val NotIdChars = """ .()[]{}!,;%&+\-<=>?@\\^`|~#:/*""" + "\n\r\t"
 
   val Keywords = List(
     "abstract",

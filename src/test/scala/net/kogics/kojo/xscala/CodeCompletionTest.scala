@@ -104,4 +104,12 @@ class CodeCompletionTest {
     assertEquals((Some(""), None), CodeCompletionUtils.findIdentifier("makePicture()."))
     assertEquals((Some(""), Some("wi")), CodeCompletionUtils.findIdentifier("makePicture().wi"))
   }
+
+  @Test
+  def testAdditionalIdentifierDelimiters(): Unit = {
+    assertEquals((None, Some("pri")), CodeCompletionUtils.findIdentifier("someFunction(10,pri"))
+    assertEquals((None, Some("pri")), CodeCompletionUtils.findIdentifier("val n = 10;pri"))
+    assertEquals((None, Some("Int")), CodeCompletionUtils.findIdentifier("List[Int"))
+    assertEquals((Some(""), Some("ma")), CodeCompletionUtils.findIdentifier("items[index].ma"))
+  }
 }
