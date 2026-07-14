@@ -1,5 +1,5 @@
 // Copyright (C) 2015 Anusha Pant <anusha.pant@gmail.com>
-// The contents of this file are subject to 
+// The contents of this file are subject to
 // the GNU General Public License Version 3 (http://www.gnu.org/copyleft/gpl.html)
 
 val font = Font("Sans Serif", 40)
@@ -28,7 +28,7 @@ def clearOnFocus(t: TextField[String]) {
 }
 clearOnFocus(text1); clearOnFocus(text2)
 
-var fracPic = PicShape.hline(0)
+var fracPic: Picture = PicShape.hline(0)
 val button = Button("Draw fraction") {
     try {
         fracPic.erase()
