@@ -296,8 +296,6 @@ trait AppMenu {
     genProgMenu.add(menuItemForInstalledFile("S_Anagrams", "examples/anagram/anagram.kojo"))
     samplesMenu.add(genProgMenu)
 
-    samplesMenu.addSeparator()
-
     val mathActivityMenu = newJMenu(Utils.loadString("S_MathActivities"))
     mathActivityMenu.add(menuItemFor("S_AdditionGame", "addition-game.kojo"))
     mathActivityMenu.add(menuItemFor("S_SubtractionGame", "subtraction-game.kojo"))
@@ -309,7 +307,8 @@ trait AppMenu {
     mathActivityMenu.add(menuItemFor("S_AnglesAnimation", "angles.kojo"))
     mathActivityMenu.add(menuItemFor("S_UnitCircle", "unit-circle.kojo"))
     // mathActivityMenu.add(menuItemFor("S_SolvingLinearEquations", "solving-linear-equations.kojo"))
-    samplesMenu.add(mathActivityMenu)
+    // samplesMenu.addSeparator()
+    // samplesMenu.add(mathActivityMenu)
 
     menuBar.add(samplesMenu)
 
@@ -429,6 +428,8 @@ trait AppMenu {
     toolsMenu.add(menuItemFor("S_ArduinoProgramming", "arduino-prog.kojo"))
     toolsMenu.add(menuItemFor("S_StartingChallenges", "get-started.kojo", "/challenge/"))
     toolsMenu.add(menuItemFor("S_SpriteBoundaryPolygon", "sprite-boundary-polygon.kojo"))
+    toolsMenu.addSeparator()
+    toolsMenu.add(mathActivityMenu)
     menuBar.add(toolsMenu)
 
     val helpMenu = newJMenu(Utils.loadString("S_Help"))
