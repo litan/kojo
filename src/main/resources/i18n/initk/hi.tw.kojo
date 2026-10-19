@@ -19,6 +19,6 @@
 
 // make Hindi names visible
 val HindiAPI = net.kogics.kojo.lite.i18n.HindiAPI
-import HindiAPI.{builtins => _, _ }
+import HindiAPI.{builtins => _, दोहराओ, _}
 // hide turtle.clear
 import कछुआ.{खाली => _, _}
