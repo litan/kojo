@@ -69,6 +69,8 @@ object LangInit {
         TurkishInit.init(b)
       case "es" =>
         SpanishInit.init(b)
+      case "hi" =>
+        HindiInit.init(b)
       case _ =>
     }
   }
