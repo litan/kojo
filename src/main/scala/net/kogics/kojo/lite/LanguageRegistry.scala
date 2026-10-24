@@ -1,0 +1,42 @@
+/*
+ * Copyright (C) 2026
+ *   Bulent Basaran <ben@scala.org> https://github.com/bulent2k2
+ *
+ * The contents of this file are subject to the GNU General Public License
+ * Version 3 (the "License"); you may not use this file
+ * except in compliance with the License. You may obtain a copy of
+ * the License at http://www.gnu.org/copyleft/gpl.html
+ *
+ * Software distributed under the License is distributed on an "AS
+ * IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * rights and limitations under the License.
+ *
+ */
+package net.kogics.kojo.lite
+
+/** Launcher metadata only. Construction must not initialize editor/API/UI code or do I/O. */
+final case class LanguageDescriptor(
+    code: String,
+    alternativeToolchain: Option[String] = None,
+    downloadMessage: String = LanguageRegistry.defaultDownloadMessage
+)
+
+object LanguageRegistry {
+  val defaultDownloadMessage = "Downloading the Scala toolchain"
+
+  val registrations: List[LanguageDescriptor] = List(
+    LanguageDescriptor("en"),
+    LanguageDescriptor("tr", Some("tr"), "Türkçe Scala derleyicisi indiriliyor"),
+    LanguageDescriptor("sv", Some("sv"), "Laddar ner Scala-verktygen för svenska")
+  )
+
+  def forLanguage(code: String): LanguageDescriptor =
+    registrations.find(_.code == code).getOrElse(LanguageDescriptor(code))
+
+  val alternativeToolchainCodes: Set[String] = registrations.flatMap(_.alternativeToolchain).toSet
+
+  def downloadMessage(toolchain: String): String =
+    registrations.find(_.alternativeToolchain.contains(toolchain))
+      .map(_.downloadMessage).getOrElse(defaultDownloadMessage)
+}

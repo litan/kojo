@@ -63,8 +63,8 @@ In Kojo: **Settings → Language → Svenska**, then **restart Kojo**. On the ne
 start you will see it fetch the Swedish toolchain once:
 
     [INFO] Fetching the 'sv' Scala toolchain 2.13.18 from https://github.com/...
-    [INFO] 'sv' Scala toolchain ready in ~/.kojo/lite/scala-sv/2.13.18
-    [INFO] Scala toolchain: ~/.kojo/lite/scala-sv/2.13.18 (user language 'sv', ...)
+    [INFO] 'sv' Scala toolchain ready in <installation>/toolchains/scala-sv/2.13.18
+    [INFO] Scala toolchain: <installation>/toolchains/scala-sv/2.13.18 (user language 'sv', ...)
 
 Now this should compile, run, and show `värde`/`variabel` in keyword colour:
 
@@ -157,9 +157,9 @@ cp ~/src/scala-sv/build/pack/lib/scala-{library,reflect,compiler}.jar .
 cp ~/src/scalariform-sv/scalariform/target/scala-2.13/scalariform_2.13-0.2.10.jar scalariform.jar
 shasum -a 256 scala-library.jar scala-reflect.jar scala-compiler.jar scalariform.jar > SHA256SUMS
 
-# Kojo caches a fetched toolchain and will not re-fetch while it looks complete,
-# so clear it before every try:
-rm -rf ~/.kojo/lite/scala-sv/2.13.18
+# A valid local set is verified offline and reused, not compared with the remote
+# build. Remove this installation's version directory before testing rebuilt jars:
+rm -rf ~/kojo-sv/Kojo-z/toolchains/scala-sv/2.13.18
 
 _JAVA_OPTIONS="-Dkojo.toolchain.url=file://$HOME/sv-toolchain" ~/kojo-sv/Kojo-z/bin/kojo
 ```
@@ -169,7 +169,7 @@ edit → rebuild → try loop with no GitHub release involved. **Clear the cache
 directory every time**, otherwise Kojo keeps using the jars it already has.
 
 All four jars plus `SHA256SUMS` must be present, or Kojo refuses the whole
-toolchain and quietly falls back to stock Scala (it says so in the log).
+toolchain and retains stock Scala with an explicit localized-keywords-unavailable diagnostic.
 
 ### B5. Also update the Kojo-side keyword list
 
@@ -220,9 +220,12 @@ template maps empty until then.
 
 ## Gotchas, collected
 
-- **Java 17+ fails the build** — use Java 11 or 8 (the CMS GC flags).
-- **A cached toolchain is never re-checked.** `rm -rf ~/.kojo/lite/scala-sv/2.13.18`
-  after rebuilding jars, or you will test yesterday's build and not know it.
+- **The `sbt.sh` wrapper requires Java 8** (its CMS flag); `build.sbt` itself
+  selects CMS/test flags conditionally for newer JDKs.
+- **Local toolchains are verified offline on reuse.** Remove this installation's
+  `toolchains/scala-sv/2.13.18` directory after rebuilding remote jars, so the new
+  build is fetched. Missing/corrupt local sets are rejected; replace or remove
+  them before retrying. See [installation setup](../localization.md#level-4).
 - **`scalariform.jar` must be English + your language only** — see B3.
 - **Language changes need a Kojo restart** — the toolchain is chosen by the
   launcher before the app starts.

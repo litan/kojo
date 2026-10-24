@@ -11,10 +11,6 @@ cd installer
 scala cp-staging-jars.scala
 cd ..
 
-# Stage the stock Scala toolchain into lib/scala-en; the launcher boots on it.
-# The Turkish-keyword toolchain is not packaged - it is fetched on demand.
-./stage-scala-toolchains.sh installerbuild/lib
-
 cp -va installer/* installerbuild/
 cd installerbuild
 rm *.*

@@ -59,7 +59,7 @@ object ConsoleProgress extends FetchProgress {
  * missing display can't wedge the download), and bar updates are throttled,
  * so a 20 MB fetch doesn't flood the event queue with repaints.
  */
-class SwingFetchProgress(lang: String) extends FetchProgress {
+class SwingFetchProgress(downloading: String) extends FetchProgress {
   @volatile private var cancelledFlag = false
   override def cancelled: Boolean = cancelledFlag
 
@@ -73,14 +73,6 @@ class SwingFetchProgress(lang: String) extends FetchProgress {
   private def onEdt(body: => Unit): Unit = SwingUtilities.invokeLater(new Runnable {
     def run(): Unit = body
   })
-
-  // Localized "downloading the Scala toolchain" line; English for any language
-  // that hasn't provided its own. New keyword languages add a case here.
-  private def downloading: String = lang match {
-    case "tr" => "Türkçe Scala derleyicisi indiriliyor"
-    case "sv" => "Laddar ner Scala-verktygen för svenska"
-    case _    => "Downloading the Scala toolchain"
-  }
 
   private def ensureDialog(): Unit = onEdt {
     if (dialog == null) {
@@ -150,9 +142,9 @@ class SwingFetchProgress(lang: String) extends FetchProgress {
 object FetchProgress {
 
   /** A window when there is a display to put it on, plain logging otherwise. */
-  def forLauncher(lang: String): FetchProgress =
+  def forLauncher(message: String = LanguageRegistry.defaultDownloadMessage): FetchProgress =
     if (GraphicsEnvironment.isHeadless) ConsoleProgress
     else
-      try new SwingFetchProgress(lang)
+      try new SwingFetchProgress(message)
       catch { case _: Throwable => ConsoleProgress }
 }

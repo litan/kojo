@@ -47,7 +47,6 @@
       <java mainClass="net.kogics.kojo.lite.DesktopMain">
         <classPath>
           <scanDirectory location="lib" failOnError="false" />
-          <scanDirectory location="lib/scala-en" failOnError="false" />
         </classPath>
       </java>
       <vmOptionsFile mode="none" />

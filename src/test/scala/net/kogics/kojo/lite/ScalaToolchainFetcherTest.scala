@@ -16,180 +16,161 @@
 package net.kogics.kojo.lite
 
 import java.io.File
-import java.io.FileOutputStream
 import java.nio.file.Files
-import java.security.MessageDigest
-import java.util.zip.ZipEntry
-import java.util.zip.ZipOutputStream
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 
-/**
- * Drives the whole on-demand fetch path against a local directory served over
- * file://, so the tests never touch the network.
- */
 @RunWith(classOf[JUnitRunner])
 class ScalaToolchainFetcherTest extends FunSuite with Matchers {
+  import ToolchainTestSupport._
   val version = "2.13.18"
-  // a non-Turkish code, so these also prove the fetch path is language-agnostic
-  val lang = "sv"
+  val lang = "sv" // proves the fetcher is language-neutral
 
-  def sha256(f: File): String = {
-    val digest = MessageDigest.getInstance("SHA-256")
-    digest.digest(Files.readAllBytes(f.toPath)).map(b => f"$b%02x").mkString
+  def withRelease(body: (File, File, Recorder) => Unit): Unit = withTempDir { root =>
+    val remote = provision(new File(root, "remote"), s"$version-test-build")
+    val dest = new File(root, "installation/toolchains/scala-sv/2.13.18")
+    withProperty("kojo.toolchain.url", remote.toURI.toString) { body(remote, dest, new Recorder) }
   }
 
-  /** A minimal but real jar; scala-library.jar gets a library.properties. */
-  def makeJar(dir: File, name: String, scalaVersion: Option[String]): File = {
-    val jar = new File(dir, name)
-    val zos = new ZipOutputStream(new FileOutputStream(jar))
-    try {
-      zos.putNextEntry(new ZipEntry("marker.txt"))
-      zos.write(s"$name for test".getBytes("UTF-8"))
-      zos.closeEntry()
-      scalaVersion.foreach { v =>
-        zos.putNextEntry(new ZipEntry("library.properties"))
-        zos.write(s"version.number=$v\nmaven.version.number=$v\n".getBytes("UTF-8"))
-        zos.closeEntry()
+  test("published toolchain is fetched as a complete set with retained checksums and progress") {
+    withRelease { (remote, dir, recorder) =>
+      ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(Some(dir))
+      ScalaToolchainFetcher.isComplete(dir) should be(true)
+      recorder.jars.map(_._1) should be(ScalaToolchainFetcher.jarNames)
+      recorder.jars.foreach { case (_, total) => total should be > 0L }
+      recorder.received should be(ScalaToolchainFetcher.jarNames.map(n => new File(dir, n).length).sum)
+      recorder.finishedCalls should be(1)
+      dir.getParentFile.listFiles().map(_.getName).toList should be(List(version))
+      Files.readAllBytes(new File(dir, "SHA256SUMS").toPath).toSeq should be(
+        Files.readAllBytes(new File(remote, "SHA256SUMS").toPath).toSeq)
+    }
+  }
+
+  test("verified provisioned toolchain is reused offline without downloads or writes") {
+    withRelease { (_, dir, recorder) =>
+      provision(dir, version)
+      val timestamps = dir.listFiles().map(f => f.getName -> f.lastModified()).toMap
+      withProperty("kojo.toolchain.url", "file:///unreachable/") {
+        ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(Some(dir))
+      }
+      dir.listFiles().map(f => f.getName -> f.lastModified()).toMap should be(timestamps)
+      recorder.jars should be(empty)
+      recorder.finishedCalls should be(1)
+    }
+  }
+
+  for (damage <- List("checksum", "zip", "library-version", "reflect-version", "compiler-version", "missing", "missing-checksum")) {
+    test(s"download rejects $damage and exposes no partial destination") {
+      withRelease { (remote, dir, recorder) =>
+        damage match {
+          case "checksum" => Files.write(new File(remote, "scala-reflect.jar").toPath, "tampered".getBytes("UTF-8"))
+          case "zip" =>
+            Files.write(new File(remote, "scalariform.jar").toPath, "not a zip".getBytes("UTF-8"))
+            writeChecksums(remote)
+          case "missing" => new File(remote, "scala-compiler.jar").delete()
+          case "missing-checksum" => Files.write(new File(remote, "SHA256SUMS").toPath, Array.emptyByteArray)
+          case other =>
+            val jar = Map("library-version" -> "scala-library.jar", "reflect-version" -> "scala-reflect.jar",
+              "compiler-version" -> "scala-compiler.jar")(other)
+            makeJar(remote, jar, "2.13.15")
+            writeChecksums(remote)
+        }
+        ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(None)
+        dir.exists should be(false)
+        dir.getParentFile.listFiles().toList should be(Nil)
+        recorder.messages.exists(_.contains("[WARNING]")) should be(true)
+        recorder.finishedCalls should be(1)
       }
     }
-    finally zos.close()
-    jar
   }
 
-  /** Builds a fake release directory, with SHA256SUMS, and returns its file:// URL. */
-  def publish(libraryVersion: String = s"$version-20260823-123456-abcdef0"): (File, String) = {
-    val remote = Files.createTempDirectory("kojo-toolchain-remote").toFile
-    val jars = ScalaToolchainFetcher.jarNames.map { n =>
-      makeJar(remote, n, if (n == "scala-library.jar") Some(libraryVersion) else None)
-    }
-    val sums = jars.map(j => s"${sha256(j)}  ${j.getName}").mkString("\n") + "\n"
-    Files.write(new File(remote, ScalaToolchainFetcher.checksumFileName).toPath, sums.getBytes("UTF-8"))
-    (remote, remote.toURI.toString)
-  }
-
-  def withRemote(url: String)(body: => Unit): Unit = {
-    val old = System.getProperty("kojo.toolchain.url")
-    try {
-      System.setProperty("kojo.toolchain.url", url)
-      body
-    }
-    finally {
-      if (old == null) System.clearProperty("kojo.toolchain.url") else System.setProperty("kojo.toolchain.url", old)
+  for (damage <- List("checksum", "missing", "version", "checksums")) {
+    test(s"reused toolchain is validated offline ($damage)") {
+      withRelease { (_, dir, recorder) =>
+        provision(dir, if (damage == "version") "2.12.20" else version)
+        damage match {
+          case "checksum" => Files.write(new File(dir, "scala-library.jar").toPath, Array[Byte](1))
+          case "missing" => new File(dir, "scalariform.jar").delete()
+          case "checksums" => new File(dir, "SHA256SUMS").delete()
+          case _ =>
+        }
+        ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(None)
+        recorder.jars should be(empty)
+        recorder.messages.exists(_.contains("[WARNING]")) should be(true)
+      }
     }
   }
 
-  /** ensureAvailable caches under the user's home; run each case in its own version dir. */
-  def freshVersion(tag: String): String = s"$version-test-$tag"
-
-  test("a published toolchain is fetched, verified and installed") {
-    val v = freshVersion("ok")
-    val (remote, url) = publish(s"$v-20260823-123456-abcdef0")
-    val dir = ScalaToolchainFetcher.cacheDir(v, lang)
-    deleteRecursively(dir)
-    withRemote(url) {
-      val got = ScalaToolchainFetcher.ensureAvailable(v, lang, silent)
-      got.isDefined should be(true)
-      ScalaToolchainFetcher.isComplete(got.get) should be(true)
-      // nothing half-written left behind
-      got.get.listFiles.count(_.getName.endsWith(".part")) should be(0)
+  test("offline fetch reports the reason and cleans its staging directory") {
+    withRelease { (_, dir, recorder) =>
+      withProperty("kojo.toolchain.url", "file:///definitely/not/here/") {
+        ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(None)
+      }
+      dir.exists should be(false)
+      dir.getParentFile.listFiles().toList should be(Nil)
+      recorder.finishedCalls should be(1)
+      recorder.messages.exists(_.contains("[WARNING]")) should be(true)
     }
-    deleteRecursively(remote)
-    deleteRecursively(dir)
   }
 
-  test("the download reports each jar and its bytes") {
-    val v = freshVersion("progress")
-    val (remote, url) = publish(s"$v-20260823-123456-abcdef0")
-    val dir = ScalaToolchainFetcher.cacheDir(v, lang)
-    deleteRecursively(dir)
-    val recorder = new Recorder
-    withRemote(url) {
-      ScalaToolchainFetcher.ensureAvailable(v, lang, recorder).isDefined should be(true)
+  test("an unwritable destination reports failure without publishing jars") {
+    withRelease { (_, dir, recorder) =>
+      // A file in place of a parent is a deterministic write failure, even as root.
+      val blocked = new File(dir.getParentFile, "blocked")
+      blocked.getParentFile.mkdirs()
+      blocked.createNewFile()
+      val target = new File(blocked, version)
+      ScalaToolchainFetcher.ensureAvailable(target, version, lang, recorder) should be(None)
+      target.exists should be(false)
+      recorder.messages.exists(_.contains("[WARNING]")) should be(true)
+      recorder.finishedCalls should be(1)
     }
-    recorder.jars.map(_._1) should be(ScalaToolchainFetcher.jarNames)
-    recorder.jars.foreach { case (_, total) => total should be > 0L }
-    recorder.received should be(ScalaToolchainFetcher.jarNames.map(n => new File(dir, n).length).sum)
-    recorder.finishedCalls should be(1)
-    deleteRecursively(remote)
-    deleteRecursively(dir)
   }
 
-  test("an already cached toolchain is used without fetching") {
-    val v = freshVersion("cached")
-    val dir = ScalaToolchainFetcher.cacheDir(v, lang)
-    deleteRecursively(dir)
-    dir.mkdirs()
-    ScalaToolchainFetcher.jarNames.foreach(n => makeJar(dir, n, None))
-    withRemote("file:///nonexistent-so-a-fetch-would-fail/") {
-      ScalaToolchainFetcher.ensureAvailable(v, lang, silent) should be(Some(dir))
+  test("concurrent downloads publish one complete set and clean only their own staging") {
+    withRelease { (_, dir, _) =>
+      val ready = new java.util.concurrent.CountDownLatch(2)
+      val pool = java.util.concurrent.Executors.newFixedThreadPool(2)
+      try {
+        val tasks = (1 to 2).map { _ =>
+          pool.submit(new java.util.concurrent.Callable[Option[File]] {
+            def call(): Option[File] = {
+              val progress = new Recorder {
+                override def startJar(name: String, total: Long): Unit = {
+                  if (name == ScalaToolchainFetcher.jarNames.head) {
+                    ready.countDown()
+                    require(ready.await(10, java.util.concurrent.TimeUnit.SECONDS), "second download did not start")
+                  }
+                  super.startJar(name, total)
+                }
+              }
+              val result = ScalaToolchainFetcher.ensureAvailable(dir, version, lang, progress)
+              require(result.isDefined, progress.messages.mkString("; "))
+              result
+            }
+          })
+        }
+        tasks.foreach(_.get(20, java.util.concurrent.TimeUnit.SECONDS) should be(Some(dir)))
+        ScalaToolchainFetcher.isComplete(dir) should be(true)
+        dir.getParentFile.listFiles().toList should be(List(dir))
+      }
+      finally pool.shutdownNow()
     }
-    deleteRecursively(dir)
   }
 
-  test("a tampered jar is rejected and nothing is installed") {
-    val (remote, url) = publish()
-    // corrupt one jar after the checksums were published
-    Files.write(new File(remote, "scala-reflect.jar").toPath, "not the jar you signed".getBytes("UTF-8"))
-    val v = freshVersion("tampered")
-    val dir = ScalaToolchainFetcher.cacheDir(v, lang)
-    deleteRecursively(dir)
-    withRemote(url) {
-      ScalaToolchainFetcher.ensureAvailable(v, lang, silent) should be(None)
+  test("cancellation publishes no partial set and leaves other invocations alone") {
+    withRelease { (_, dir, _) =>
+      dir.getParentFile.mkdirs()
+      val otherStaging = new File(dir.getParentFile, ".another-launcher.part")
+      otherStaging.createNewFile()
+      val cancelled = new Recorder { override def cancelled: Boolean = true }
+      ScalaToolchainFetcher.ensureAvailable(dir, version, lang, cancelled) should be(None)
+      dir.exists should be(false)
+      dir.getParentFile.listFiles().toList should be(List(otherStaging))
+      cancelled.finishedCalls should be(1)
     }
-    ScalaToolchainFetcher.isComplete(dir) should be(false)
-    // and no half-written file is left lying around
-    Option(dir.listFiles).getOrElse(Array.empty).count(_.getName.endsWith(".part")) should be(0)
-    deleteRecursively(remote)
-    deleteRecursively(dir)
-  }
-
-  test("a toolchain built for another Scala release is rejected") {
-    val (remote, url) = publish("2.13.15-20230909-175640-c8d4123")
-    val v = freshVersion("wrongversion")
-    val dir = ScalaToolchainFetcher.cacheDir(v, lang)
-    deleteRecursively(dir)
-    withRemote(url) {
-      ScalaToolchainFetcher.ensureAvailable(v, lang, silent) should be(None)
-    }
-    ScalaToolchainFetcher.isComplete(dir) should be(false)
-    deleteRecursively(remote)
-    deleteRecursively(dir)
-  }
-
-  test("an unreachable download leaves no cache and reports the reason") {
-    val v = freshVersion("offline")
-    val dir = ScalaToolchainFetcher.cacheDir(v, lang)
-    deleteRecursively(dir)
-    val recorder = new Recorder
-    withRemote("file:///definitely/not/here/") {
-      ScalaToolchainFetcher.ensureAvailable(v, lang, recorder) should be(None)
-    }
-    recorder.messages.exists(_.contains("[WARNING]")) should be(true)
-    recorder.finishedCalls should be(1)
-    ScalaToolchainFetcher.isComplete(dir) should be(false)
-    deleteRecursively(dir)
-  }
-
-  /** Records what the fetcher reports, so progress is covered too. */
-  class Recorder extends FetchProgress {
-    val messages = collection.mutable.ListBuffer.empty[String]
-    val jars = collection.mutable.ListBuffer.empty[(String, Long)]
-    var received = 0L
-    var finishedCalls = 0
-    def message(msg: String): Unit = messages += msg
-    def startJar(name: String, totalBytes: Long): Unit = jars += (name -> totalBytes)
-    def bytes(n: Long): Unit = received += n
-    def finished(): Unit = finishedCalls += 1
-  }
-
-  val silent = new Recorder
-
-  def deleteRecursively(f: File): Unit = {
-    if (f.isDirectory) Option(f.listFiles).foreach(_.foreach(deleteRecursively))
-    f.delete()
   }
 }

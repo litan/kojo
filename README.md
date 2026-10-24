@@ -23,6 +23,10 @@ sbt
 #### Intellij IDEA  
 Do a `File -> New -> Project from Existing Sources` and import/open the root folder of the Kojo repo. Then import the new project via sbt.
 
+Localized compiler toolchains use the checkout's `toolchains/` directory and
+stock sbt/IDE dependencies. See [runtime toolchain setup](localization.md#level-4)
+for installation discovery, overrides, provisioning and failure diagnostics.
+
 #### Emacs
 
 Put the following in your .emacs config file:

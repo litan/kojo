@@ -72,22 +72,67 @@ not a coding one: a chosen keyword can no longer be used as an identifier, so it
 must not collide with the Level-2 API or the samples. See `scala-sv/KEYWORDS.md`.
 
 **2. The runtime toolchain toggle.**
-Kojo ships the stock compiler and swaps in the patched one at launch for the
-localized language — see `lite/ScalaToolchain.scala`, which today chooses between
-`scala-en` and `scala-tr` by `user.language`, and `ScalaToolchainFetcher`, which
-downloads the patched jars on demand from a GitHub release. Adding a language
-means (a) publishing its patched jars as a release, and (b) generalizing the
-`tr`-vs-`en` choice in `ScalaToolchain` to pick the right variant per language.
-Doing this as a general "language → toolchain" lookup, rather than a second
-hard-coded branch, is strongly preferred.
+Kojo builds and starts its desktop launcher with normal stock Scala dependencies.
+Before starting the desktop Kojo child JVM, `lite/ScalaToolchain.scala` selects the
+registered alternative for the user's language. `lite/LanguageRegistry.scala`
+contains lightweight descriptors for Turkish and Swedish; adding a language
+means registering its toolchain code and progress message there and publishing
+its patched jars. Resolving these descriptors does not initialize editor or
+language API implementations.
+
+The launcher removes exactly scala-library, scala-reflect, scala-compiler and
+scalariform (including versioned Maven filenames), prepends the complete
+replacement set, and preserves the order of other dependencies. This works in
+packaged and IntelliJ/Coursier launches. English and languages without an
+alternative retain their original dependencies and trigger no downloads.
+
+Toolchains belong to an installation: the application directory for packaged
+Kojo, or the individual repository checkout for development. Downloads go to
+`<installation>/toolchains/scala-<code>/<scala-version>/`, outside `lib` and
+ignored by Git in development. The Scala release comes from the launcher's
+compiler. The root is discovered from `lib/rithica.jar` on the incoming
+classpath; `-Dkojo.install.dir=/absolute/path/to/installation` overrides it.
+Discovery failure never substitutes the home or working directory. IntelliJ
+should launch `net.kogics.kojo.lite.DesktopMain` with stock project dependencies;
+no patched `scalaHome` setting is needed. Scratchpads inherit the running Kojo's
+classpath and toolchain without selecting or downloading again. Language changes
+take effect on a full Kojo restart, preserving the existing scratchpad behavior.
+No toolchain system properties need to be forwarded to child JVMs. Set the
+installation override if the run configuration does not include the checkout's
+`lib/rithica.jar`.
+
+Selection precedence is `-Dkojo.toolchain=<code>`, then the existing
+`kojo.properties` setting, then the persisted UI language. `en` explicitly keeps
+stock Scala. A compiler override does not change the UI language. Release
+assets are downloaded directly from
+`https://github.com/bulent2k2/scala-2/releases/download/v<scala-version>-<code>/`;
+`-Dkojo.toolchain.url=<release-directory-URL>` overrides this URL.
+
+All four jars and `SHA256SUMS` are required. Downloaded sets are validated in a
+private staging directory before publication. Reused sets are checked offline
+against retained SHA-256 checksums, jar structure, and the library, reflect and
+compiler Scala versions. A protected installation can use an already-provisioned
+valid set without writing. If discovery, validation, downloading or writing
+fails, Kojo retains the entire original classpath and reports that localized
+keyword compilation is unavailable, with the language, release, destination and
+reason. Provision the set as an administrator or use a writable installation.
+For a damaged/incomplete existing set, remove that version directory manually
+and retry, or provision a valid replacement.
+
+Old `~/.kojo/lite/scala-*` directories are neither read nor migrated nor deleted.
+Clean them up manually only after older installations no longer need them.
+Different installations download independently; pruning, shared download caches
+and patched-build revision tracking are deferred. In particular, a valid local
+set is not compared against newer builds published for the same Scala release;
+remove its version directory when testing a rebuilt toolchain.
 
 **3. Code formatting.**
 The in-editor formatter (`ScriptEditor`'s format action → `ScalaFormatter.format`)
 uses scalariform's parser, which has its own keyword table. Stock scalariform
 does not know the localized keywords, so it mis-parses localized code and
-formatting fails. The Turkish build therefore ships a **patched scalariform**
-(`lib/scalariform.jar`, from a fork of scalariform whose `Keywords` set includes
-the Turkish words; the pristine English copy is kept at `scala-tr/en/scalariform.jar`).
+formatting fails. The alternative toolchain therefore includes a **patched scalariform**
+from a fork whose `Keywords` set includes the localized words. Kojo's normal
+`lib/scalariform.jar` remains the stock formatter for the build and desktop launcher.
 A Swedish edition needs the same: add the Swedish keywords to a scalariform fork,
 build it, and ship it as the `scala-sv` toolchain's `scalariform.jar`.
 

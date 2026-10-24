@@ -19,12 +19,12 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
 import java.net.URL
+import java.nio.file.Files
 import java.security.MessageDigest
 import java.util.zip.ZipFile
 
 import scala.io.Source
-
-import net.kogics.kojo.util.Utils
+import scala.util.control.NonFatal
 
 /**
  * Fetches a keyword-patched Scala toolchain on demand, so that a Kojo package
@@ -32,16 +32,14 @@ import net.kogics.kojo.util.Utils
  * one language ever load. Language-agnostic: `lang` is the toolchain code
  * (`tr`, `sv`, ...); the assets live in a `v<version>-<lang>` release.
  *
- * The jars land in ~/.kojo/lite/scala-<lang>/<version>/ - user-writable, so no
- * admin rights are needed and the download survives a reinstall. Nothing is
- * fetched unless a keyword toolchain is actually selected (by user language
- * or by -Dkojo.toolchain=<lang>), and a failure is never fatal: Kojo falls
- * back to the stock toolchain and says why.
+ * The caller supplies an installation-owned destination. Nothing is fetched
+ * unless an alternative is selected. Existing installations are verified offline
+ * without writes, so administrators can provision protected installations too.
  *
  * Every downloaded jar must clear three checks before it is used:
  *   - its SHA-256 matches the published SHA256SUMS
  *   - it opens as a zip (a truncated download fails here, not at runtime)
- *   - scala-library.jar reports the Scala version Kojo was built against,
+ *   - library, reflect and compiler report the launcher's Scala release,
  *     so a toolchain from a different Scala release can never be paired
  *     with Kojo's classes
  *
@@ -59,72 +57,95 @@ object ScalaToolchainFetcher {
   private val ConnectTimeoutMs = 15 * 1000
   private val ReadTimeoutMs = 60 * 1000
 
-  // Staged (.part) files carry a per-JVM tag, so two Kojo instances fetching
-  // concurrently cannot clobber each other's half-written files; the rename
-  // into the final name at the end is per-file last-writer-wins of verified,
-  // identical content.
-  private val stagingTag = java.lang.Long.toHexString(System.nanoTime())
-
   def baseUrlFor(version: String, lang: String): String =
     System.getProperty("kojo.toolchain.url", s"$defaultBaseUrl/v$version-$lang").stripSuffix("/")
 
-  def cacheDir(version: String, lang: String): File =
-    new File(s"${Utils.userDir}${File.separator}.kojo${File.separator}lite${File.separator}scala-$lang", version)
-
-  /** True when every jar of the toolchain is present in `dir`. */
   def isComplete(dir: File): Boolean =
-    dir.isDirectory && jarNames.forall(n => new File(dir, n).isFile)
+    dir.isDirectory && jarNames.forall(n => new File(dir, n).isFile) && new File(dir, checksumFileName).isFile
 
-  /**
-   * Returns a directory holding the `lang` keyword toolchain for `version`,
-   * fetching it first if it is not cached yet. None if it could not be made
-   * available - the caller then stays on the stock toolchain.
-   */
-  def ensureAvailable(version: String, lang: String, progress: FetchProgress = ConsoleProgress): Option[File] = {
-    val dir = cacheDir(version, lang)
-    if (isComplete(dir)) Some(dir)
-    else
-      try fetchInto(dir, version, lang, progress)
-      catch {
-        case e: Throwable =>
-          progress.message(s"[WARNING] Could not fetch the '$lang' Scala toolchain: ${e.getMessage}")
-          None
+  /** Validate the entire set, including locally retained checksums, before use. */
+  private def validate(dir: File, version: String): Unit = {
+    require(isComplete(dir), s"incomplete toolchain in $dir (four jars and $checksumFileName required)")
+    val expected = checksums(new File(dir, checksumFileName).toURI.toString)
+    jarNames.foreach { name =>
+      val jar = new File(dir, name)
+      val want = expected.getOrElse(name, throw new IllegalStateException(s"$checksumFileName has no entry for $name"))
+      val digest = MessageDigest.getInstance("SHA-256")
+      val in = Files.newInputStream(jar.toPath)
+      try {
+        val buf = new Array[Byte](64 * 1024)
+        var n = in.read(buf)
+        while (n != -1) {
+          digest.update(buf, 0, n)
+          n = in.read(buf)
+        }
       }
-      finally {
-        discardPartials(dir)
-        progress.finished()
+      finally in.close()
+      val got = digest.digest().map(b => f"$b%02x").mkString
+      require(got.equalsIgnoreCase(want), s"checksum mismatch for $jar (got $got, expected $want)")
+      verifyZip(jar, name)
+      name match {
+        case "scala-library.jar"  => verifyScalaVersion(jar, "library.properties", version)
+        case "scala-reflect.jar"  => verifyScalaVersion(jar, "reflect.properties", version)
+        case "scala-compiler.jar" => verifyScalaVersion(jar, "compiler.properties", version)
+        case _ =>
       }
+    }
   }
 
-  /** Removes anything a failed fetch left half-written. */
-  private def discardPartials(dir: File): Unit =
-    Option(dir.listFiles).foreach(_.filter(_.getName.endsWith(".part")).foreach(_.delete()))
+  /** A damaged existing installation is reported, never silently trusted or overwritten. */
+  def ensureAvailable(dir: File, version: String, lang: String,
+      progress: FetchProgress = ConsoleProgress): Option[File] = {
+    try {
+      if (dir.exists()) {
+        validate(dir, version)
+        Some(dir)
+      }
+      else fetchInto(dir, version, lang, progress)
+    }
+    catch {
+      case NonFatal(e) =>
+        progress.message(s"[WARNING] Could not prepare the '$lang' Scala toolchain $version in $dir: ${e.getMessage}")
+        None
+    }
+    finally progress.finished()
+  }
+
+  private def discardStaging(dir: File): Unit = {
+    Option(dir.listFiles()).foreach(_.foreach(_.delete()))
+    dir.delete()
+  }
 
   private def fetchInto(dir: File, version: String, lang: String, progress: FetchProgress): Option[File] = {
     val base = baseUrlFor(version, lang)
     progress.message(s"[INFO] Fetching the '$lang' Scala toolchain $version from $base")
-    dir.mkdirs()
-    val expected = checksums(s"$base/$checksumFileName")
-    val staged = jarNames.map { name =>
-      val want = expected.getOrElse(
-        name,
-        throw new RuntimeException(s"$checksumFileName has no entry for $name")
-      )
-      val tmp = new File(dir, s"$name.$stagingTag.part")
-      val actual = download(new URL(s"$base/$name"), tmp, name, progress)
-      if (!actual.equalsIgnoreCase(want)) {
-        tmp.delete()
-        throw new RuntimeException(s"checksum mismatch for $name (got $actual, expected $want)")
+    val parent = dir.getAbsoluteFile.getParentFile.toPath
+    Files.createDirectories(parent)
+    // Each invocation owns a separate sibling directory; failed/concurrent downloads
+    // cannot expose partial sets or delete another launcher's work.
+    val staged = Files.createTempDirectory(parent, s".${dir.getName}-").toFile
+    try {
+      val expected = checksums(s"$base/$checksumFileName")
+      jarNames.foreach { name =>
+        val want = expected.getOrElse(name, throw new IllegalStateException(s"$checksumFileName has no entry for $name"))
+        val actual = download(new URL(s"$base/$name"), new File(staged, name), name, progress)
+        require(actual.equalsIgnoreCase(want), s"checksum mismatch for $name (got $actual, expected $want)")
       }
-      verifyZip(tmp, name)
-      if (name == "scala-library.jar") verifyScalaVersion(tmp, version)
-      (tmp, new File(dir, name))
+      val sums = jarNames.map(n => s"${expected(n)}  $n").mkString("", "\n", "\n")
+      Files.write(new File(staged, checksumFileName).toPath, sums.getBytes("UTF-8"))
+      validate(staged, version)
+      // Publish the whole validated directory in one same-filesystem move. Never
+      // replace an existing directory; another launcher may have just installed it.
+      try Files.move(staged.toPath, dir.toPath)
+      catch {
+        // Linux can report DirectoryNotEmptyException when the other rename
+        // wins between the provider's existence check and its rename syscall.
+        case _: java.nio.file.FileSystemException if dir.isDirectory => validate(dir, version)
+      }
+      progress.message(s"[INFO] '$lang' Scala toolchain ready in $dir")
+      Some(dir)
     }
-    // only publish the jars into their final names once all of them are good,
-    // so an interrupted fetch can never leave a half-usable toolchain behind
-    staged.foreach { case (tmp, target) => if (!tmp.renameTo(target)) throw new RuntimeException(s"cannot install $target") }
-    progress.message(s"[INFO] '$lang' Scala toolchain ready in $dir")
-    Some(dir)
+    finally discardStaging(staged)
   }
 
   private def checksums(url: String): Map[String, String] = {
@@ -181,11 +202,11 @@ object ScalaToolchainFetcher {
     finally zf.close()
   }
 
-  private def verifyScalaVersion(libraryJar: File, wanted: String): Unit = {
-    val zf = new ZipFile(libraryJar)
+  private def verifyScalaVersion(jar: File, propertiesFile: String, wanted: String): Unit = {
+    val zf = new ZipFile(jar)
     try {
-      val entry = Option(zf.getEntry("library.properties"))
-        .getOrElse(throw new RuntimeException("scala-library.jar has no library.properties"))
+      val entry = Option(zf.getEntry(propertiesFile))
+        .getOrElse(throw new RuntimeException(s"${jar.getName} has no $propertiesFile"))
       val props = new java.util.Properties()
       val is = zf.getInputStream(entry)
       try props.load(is)
@@ -195,7 +216,7 @@ object ScalaToolchainFetcher {
       // exact release or the release followed by a suffix - but not a longer
       // release that merely begins with the same digits
       if (!(got == wanted || got.startsWith(wanted + "-") || got.startsWith(wanted + "+"))) {
-        throw new RuntimeException(s"toolchain is Scala $got, but Kojo needs $wanted")
+        throw new RuntimeException(s"${jar.getName} is Scala $got, but Kojo needs $wanted")
       }
     }
     finally zf.close()

@@ -18,129 +18,99 @@ package net.kogics.kojo.lite
 import java.io.File
 import java.util.prefs.Preferences
 
+import scala.util.control.NonFatal
+
 import net.kogics.kojo.util.Utils
 
-/**
- * Picks the Scala toolchain for the real Kojo JVM, so that Turkish users get
- * the compiler patched with Turkish keywords and everybody else gets the
- * stock one.
- *
- * A packaged Kojo ships two toolchain directories next to the regular jars:
- *   - lib/scala-en: stock scala-library, scala-reflect, scala-compiler and
- *     scalariform jars (English and all other non-Turkish languages), at the
- *     same Scala version the patched jars were built from (staged by
- *     stage-scala-toolchains.sh)
- *   - lib/scala-tr: the Turkish-keyword-patched build of the same four jars
- *     (dez=val, den=var, tanim=def, ...)
- *
- * The launcher JVM always boots on lib/scala-en (see installer/bin/kojo and
- * friends). Before spawning the real Kojo JVM, `select` swaps the toolchain
- * entries on the classpath for the ones matching the persisted user language
- * (the same "Kojolite-Prefs"/"user.language" preference that KojoCtx writes;
- * a language change already requires a Kojo restart, which relaunches this
- * launcher). -Dkojo.toolchain=en|tr overrides the language-based choice, and
- * a kojo.toolchain entry in the per-install kojo.properties does the same
- * (the Koco install4j package sets -Dkojo.toolchain=tr, so it compiles
- * Turkish keywords out of the box even before a language preference exists).
- *
- * If no toolchain directory is on the launcher classpath - e.g. a dev run
- * via sbt, where scalaHome pins the toolchain, or an old-style package -
- * the classpath is left untouched.
+/** Selects installation-owned alternatives for the desktop Kojo child JVM.
+ * The desktop launcher/build retain stock Scala dependencies, including IDE/Maven jars.
+ * Scratchpads inherit the running Kojo's selected dependencies without selecting again.
  */
 object ScalaToolchain {
-  // Languages that ship a keyword-patched Scala toolchain (scala-<code>).
-  // Keep in sync with i18n.KeywordLangs.packs; kept standalone (not read from
-  // there) so the launcher JVM need not load the i18n packages just to choose.
-  val keywordLanguages: Set[String] = Set("tr", "sv")
-
-  val englishDirName = "scala-en"
-  def variantDir(lang: String): String = s"scala-$lang"
-  val turkishDirName = variantDir("tr") // = "scala-tr"; kept for tests/back-compat
-  private val variantDirNames: Set[String] = keywordLanguages.map(variantDir) + englishDirName
+  val keywordLanguages: Set[String] = LanguageRegistry.alternativeToolchainCodes
   val prefsNodeName = "Kojolite-Prefs" // keep in sync with KojoCtx.prefs
 
   def userLanguage: String = {
     val default = System.getProperty("user.language", "en")
-    try {
-      Preferences.userRoot().node(prefsNodeName).get("user.language", default)
-    }
-    catch {
-      case _: Exception => default // prefs can be unavailable in sandboxed/headless setups
-    }
+    try Preferences.userRoot().node(prefsNodeName).get("user.language", default)
+    catch { case NonFatal(_) => default }
   }
 
   private def parseOverride(value: String, source: String): Option[String] = value match {
-    case "en"                              => Some(englishDirName)
-    case lang if keywordLanguages(lang)    => Some(variantDir(lang))
+    case "en"                          => Some("en")
+    case lang if keywordLanguages(lang) => Some(lang)
     case other =>
-      val expected = ("en" +: keywordLanguages.toList.sorted).map("'" + _ + "'").mkString(", ")
+      val expected = ("en" +: keywordLanguages.toList.sorted).mkString(", ")
       println(s"[WARNING] Ignoring unknown kojo.toolchain '$other' (from $source); expected $expected.")
       None
   }
 
-  def variantDirName: String = {
-    val fromSysProp = Option(System.getProperty("kojo.toolchain")).flatMap(parseOverride(_, "system property"))
-    def fromAppProp = Utils.appProperty("kojo.toolchain").flatMap(parseOverride(_, "kojo.properties"))
-    def fromLanguage = if (keywordLanguages(userLanguage)) variantDir(userLanguage) else englishDirName
+  def selectedCode: String =
+    chooseCode(Option(System.getProperty("kojo.toolchain")), Utils.appProperty("kojo.toolchain"), userLanguage)
+
+  private[lite] def chooseCode(system: Option[String], app: => Option[String], language: => String): String = {
+    val fromSysProp = system.flatMap(parseOverride(_, "system property"))
+    def fromAppProp = app.flatMap(parseOverride(_, "kojo.properties"))
+    def fromLanguage = LanguageRegistry.forLanguage(language).alternativeToolchain.getOrElse("en")
     fromSysProp.orElse(fromAppProp).getOrElse(fromLanguage)
   }
 
-
-  /**
-   * The Scala release Kojo is running on, e.g. "2.13.18" - taken from the
-   * compiler on the launcher classpath. compiler.properties is not shaded by
-   * anything else in lib/, unlike library.properties (scalariform bundles a
-   * copy of that one).
-   */
+  /** Read the release from the launcher compiler, never scalariform's bundled library.properties. */
   def scalaRelease: Option[String] =
     try """(\d+\.\d+\.\d+)""".r.findFirstIn(scala.tools.nsc.Properties.versionNumberString)
-    catch { case _: Throwable => None }
+    catch {
+      case _: LinkageError => None
+      case NonFatal(_) => None
+    }
 
-  /**
-   * Where the jars of `variant` live. Normally the directory shipped inside the
-   * package; when a keyword toolchain was not packaged (the on-demand case),
-   * the copy under ~/.kojo/lite/scala-<lang>, fetching it if this is the first
-   * time. English (and any non-keyword variant) is only ever used as packaged.
-   */
-  private def resolveVariantDir(packaged: File, variant: String): File = {
-    def packagedHasJars = Utils.filesInDir(packaged.getPath, "jar").nonEmpty
-    val lang = variant.stripPrefix("scala-")
-    if (!keywordLanguages(lang) || packagedHasJars) packaged
-    else
-      scalaRelease
-        .flatMap(v => ScalaToolchainFetcher.ensureAvailable(v, lang, FetchProgress.forLauncher(lang)))
-        .getOrElse {
-          println(s"[WARNING] The '$lang' Scala toolchain is not available; falling back to the stock one.")
-          packaged
-        }
+  /** Follow Kojo's lib/rithica.jar convention, with no home/current-directory fallback. */
+  def installationRoot(cp: List[String]): Option[File] = {
+    val explicit = Option(System.getProperty("kojo.install.dir"))
+    explicit match {
+      case Some(path) =>
+        require(path.trim.nonEmpty, "kojo.install.dir is empty")
+        val root = new File(path).getCanonicalFile
+        require(root.isDirectory, s"kojo.install.dir is not an installation directory: $root")
+        Some(root)
+      case None =>
+        cp.iterator.map(p => new File(p).getAbsoluteFile)
+          .filter(f => f.getName == "rithica.jar" && f.isFile)
+          .flatMap(f => Option(f.getParentFile).filter(_.getName == "lib"))
+          .flatMap(lib => Option(lib.getParentFile)).take(1).toList.headOption.map(_.getCanonicalFile)
+    }
   }
 
-  def select(cp: List[String]): List[String] = select(cp, variantDirName)
+  def toolchainDir(root: File, code: String, version: String): File =
+    new File(root, s"toolchains/scala-$code/$version")
 
-  def select(cp: List[String], variant: String): List[String] = {
-    def variantParent(entry: String): Option[File] =
-      Option(new File(entry).getParentFile).filter(dir => variantDirNames.contains(dir.getName))
+  def select(cp: List[String]): List[String] = select(cp, selectedCode)
 
-    val toolchainRoots = cp.flatMap(e => variantParent(e).flatMap(dir => Option(dir.getParentFile))).distinct
-    toolchainRoots match {
-      case Nil => cp
-      case root :: _ =>
-        val variantDir = resolveVariantDir(new File(root, variant), variant)
-        val jars = Utils.filesInDir(variantDir.getPath, "jar").sorted.map(new File(variantDir, _).getPath)
-        if (jars.isEmpty) {
-          println(s"[WARNING] No Scala toolchain jars found in $variantDir; classpath left unchanged.")
-          cp
-        }
-        else {
-          val overrideProp = System.getProperty("kojo.toolchain", "<unset>")
-          println(s"[INFO] Scala toolchain: $variantDir (user language '$userLanguage', kojo.toolchain=$overrideProp)")
-          val expected = Set("scala-library.jar", "scala-reflect.jar", "scala-compiler.jar", "scalariform.jar")
-          val missing = expected -- jars.map(new File(_).getName).toSet
-          if (missing.nonEmpty) {
-            println(s"[WARNING] Incomplete Scala toolchain in $variantDir; missing: ${missing.mkString(", ")}")
-          }
-          jars ::: cp.filterNot(e => variantParent(e).isDefined)
-        }
+  def select(cp: List[String], code: String): List[String] = {
+    if (!keywordLanguages(code)) return cp
+    var release = "<unknown>"
+    var location = "<unresolved>"
+    def fallback(reason: String): List[String] = {
+      println(s"[WARNING] Scala toolchain '$code', Scala $release, location $location: $reason. " +
+        "Localized keyword compilation is unavailable; retaining the original classpath. " +
+        "Provision a valid toolchain in the installation or use a writable installation (-Dkojo.install.dir).")
+      cp
     }
+    try {
+      release = scalaRelease.getOrElse(throw new IllegalStateException("cannot determine the launcher Scala release"))
+      val root = installationRoot(cp).getOrElse(throw new IllegalStateException(
+        "cannot discover installation from lib/rithica.jar; set -Dkojo.install.dir"))
+      val dir = toolchainDir(root, code, release)
+      location = dir.getPath
+      ScalaToolchainFetcher.ensureAvailable(dir, release, code,
+        FetchProgress.forLauncher(LanguageRegistry.downloadMessage(code))) match {
+        case Some(available) =>
+          val jars = ScalaToolchainFetcher.jarNames.map(n => new File(available, n).getPath).toList
+          println(s"[INFO] Scala toolchain '$code', Scala $release, location $available " +
+            s"(user language '$userLanguage', kojo.toolchain=${System.getProperty("kojo.toolchain", "<unset>")})")
+          jars ::: cp.filterNot(e => ScalaToolchainCheck.isToolchainJarName(new File(e).getName))
+        case None => fallback("toolchain download or validation failed (see preceding diagnostic)")
+      }
+    }
+    catch { case NonFatal(e) => fallback(e.getMessage) }
   }
 }

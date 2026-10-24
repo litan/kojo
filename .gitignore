@@ -27,3 +27,6 @@ log
 .vscode
 scala-en-jars/
 
+
+# Installation-owned localized compiler downloads (development checkout)
+/toolchains/

@@ -61,8 +61,8 @@ class KeywordLangsTest extends FunSuite with Matchers with BeforeAndAfter {
   }
 
   test("the registry and the launcher's language list stay in sync") {
-    // ScalaToolchain.keywordLanguages is a standalone copy (the launcher must
-    // not load the i18n packages); this pins the two lists together.
+    // Launcher codes come from lightweight LanguageRegistry metadata, which
+    // must stay in sync with the editor's keyword packs.
     net.kogics.kojo.lite.ScalaToolchain.keywordLanguages should be(KeywordLangs.codes)
   }
 }

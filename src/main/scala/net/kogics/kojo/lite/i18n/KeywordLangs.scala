@@ -25,7 +25,7 @@ package net.kogics.kojo.lite.i18n
  * `dez x = 5` (Turkish) instead of `val x = 5`. Turkish is the reference
  * implementation. To add a language:
  *   1. build its keyword-patched Scala toolchain (see scala-tr/, scala-sv/),
- *   2. add its code to `ScalaToolchain.keywordLanguages` (launcher side), and
+ *   2. register its toolchain in `LanguageRegistry` (launcher side), and
  *   3. add one `Pack(...)` to `packs` below (editor side).
  * None of the three consumers above needs to change.
  *
@@ -49,7 +49,7 @@ object KeywordLangs {
 
   /**
    * The registered language codes. Must equal ScalaToolchain.keywordLanguages -
-   * that list is kept standalone so the launcher JVM need not load these
+   * that set comes from lightweight metadata so the launcher need not load these
    * packages, and KeywordLangsTest asserts the two stay in sync.
    */
   val codes: Set[String] = packs.keySet

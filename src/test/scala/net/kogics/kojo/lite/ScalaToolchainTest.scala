@@ -25,79 +25,145 @@ import org.scalatest.Matchers
 
 @RunWith(classOf[JUnitRunner])
 class ScalaToolchainTest extends FunSuite with Matchers {
+  import ToolchainTestSupport._
 
-  // lib/{scala-en,scala-tr} dirs with toolchain jars, plus a regular jar in lib.
-  // deleteOnExit deletes in reverse registration order, so register each parent
-  // before its children and the whole tree is cleaned up at JVM exit.
-  def makeLibDir(): File = {
-    val lib = Files.createTempDirectory("kojo-toolchain-test").toFile
-    lib.deleteOnExit()
-    val toolchainJars = Seq("scala-library.jar", "scala-reflect.jar", "scala-compiler.jar", "scalariform.jar")
-    Seq(ScalaToolchain.englishDirName, ScalaToolchain.turkishDirName).foreach { variant =>
-      val dir = new File(lib, variant)
-      dir.mkdirs()
-      dir.deleteOnExit()
-      toolchainJars.foreach { name =>
-        val jar = new File(dir, name)
-        jar.createNewFile()
-        jar.deleteOnExit()
+  val version = ScalaToolchain.scalaRelease.get
+
+  def launcherCp(root: File, maven: Boolean): List[String] = {
+    val lib = new File(root, "lib")
+    lib.mkdirs()
+    val rithica = new File(lib, "rithica.jar")
+    rithica.createNewFile()
+    val jars = if (maven) List(
+      "/coursier/org/scala-lang/scala-library/2.13.18/scala-library-2.13.18.jar",
+      "/coursier/org/scala-lang/scala-reflect/2.13.18/scala-reflect-2.13.18.jar",
+      "/coursier/org/scala-lang/scala-compiler/2.13.18/scala-compiler-2.13.18.jar",
+      "/coursier/org/scalariform/scalariform_2.13/0.2.10/scalariform_2.13-0.2.10.jar"
+    ) else ScalaToolchainFetcher.jarNames.map(n => new File(lib, n).getPath).toList
+    List("/kojo/classes", rithica.getPath) ::: jars ::: List("/lib/scala-swing.jar", "/extra/helper.jar")
+  }
+
+  for (maven <- List(false, true)) {
+    test(s"complete substitution preserves unrelated dependency order (Maven layout: $maven)") {
+      withTempDir { root =>
+        withProperty("kojo.install.dir", null) {
+          val dir = provision(ScalaToolchain.toolchainDir(root, "tr", version), version)
+          val cp = launcherCp(root, maven)
+          val selected = ScalaToolchain.select(cp, "tr")
+          selected.take(4) should be(ScalaToolchainFetcher.jarNames.map(n => new File(dir, n).getPath).toList)
+          selected.drop(4) should be(List("/kojo/classes", new File(root, "lib/rithica.jar").getPath,
+            "/lib/scala-swing.jar", "/extra/helper.jar"))
+        }
       }
     }
-    val kojoJar = new File(lib, "kojo.jar")
-    kojoJar.createNewFile()
-    kojoJar.deleteOnExit()
-    lib
   }
 
-  def launcherCp(lib: File): List[String] = {
-    val enDir = new File(lib, ScalaToolchain.englishDirName)
-    new File(lib, "kojo.jar").getPath :: enDir.listFiles.map(_.getPath).toList
-  }
-
-  test("classpath without toolchain dirs is left unchanged (dev mode)") {
-    val cp = List("/some/place/scala-library.jar", "/some/place/kojo.jar")
-    ScalaToolchain.select(cp, ScalaToolchain.turkishDirName) should be(cp)
-  }
-
-  test("selecting the Turkish variant swaps the toolchain jars") {
-    val lib = makeLibDir()
-    val selected = ScalaToolchain.select(launcherCp(lib), ScalaToolchain.turkishDirName)
-    val trDir = new File(lib, ScalaToolchain.turkishDirName).getPath
-    selected.filter(_.endsWith("scala-compiler.jar")) should be(List(s"$trDir${File.separator}scala-compiler.jar"))
-    selected.count(_.contains(ScalaToolchain.englishDirName)) should be(0)
-    selected should contain(new File(lib, "kojo.jar").getPath)
-  }
-
-  test("selecting the English variant keeps the stock toolchain jars") {
-    val lib = makeLibDir()
-    val selected = ScalaToolchain.select(launcherCp(lib), ScalaToolchain.englishDirName)
-    val enDir = new File(lib, ScalaToolchain.englishDirName).getPath
-    selected.filter(_.endsWith("scala-compiler.jar")) should be(List(s"$enDir${File.separator}scala-compiler.jar"))
-    selected.count(_.contains(ScalaToolchain.turkishDirName)) should be(0)
-  }
-
-  test("missing variant dir leaves the classpath unchanged") {
-    val lib = makeLibDir()
-    val cp = launcherCp(lib)
-    ScalaToolchain.select(cp, "scala-xx") should be(cp)
-  }
-
-  test("toolchain jars come before the other jars") {
-    val lib = makeLibDir()
-    val selected = ScalaToolchain.select(launcherCp(lib), ScalaToolchain.turkishDirName)
-    selected.indexWhere(_.endsWith("scala-library.jar")) should be < selected.indexOf(new File(lib, "kojo.jar").getPath)
-  }
-
-  test("kojo.toolchain overrides the language-based choice") {
-    val old = System.getProperty("kojo.toolchain")
-    try {
-      System.setProperty("kojo.toolchain", "tr")
-      ScalaToolchain.variantDirName should be(ScalaToolchain.turkishDirName)
-      System.setProperty("kojo.toolchain", "en")
-      ScalaToolchain.variantDirName should be(ScalaToolchain.englishDirName)
+  test("stock and unknown selections do not resolve or download alternatives") {
+    withTempDir { root =>
+      withProperty("kojo.install.dir", new File(root, "missing").getPath) {
+        val cp = List("/some/scala-library-2.13.18.jar", "/kojo/classes")
+        List("en", "de", "xx").foreach(code => ScalaToolchain.select(cp, code) should be(cp))
+        root.listFiles().toList should be(Nil)
+      }
     }
-    finally {
-      if (old == null) System.clearProperty("kojo.toolchain") else System.setProperty("kojo.toolchain", old)
+  }
+
+  test("installation override supports launches without rithica and takes precedence over discovery") {
+    withTempDir { root =>
+      val overrideRoot = new File(root, "override")
+      overrideRoot.mkdirs()
+      val dir = provision(ScalaToolchain.toolchainDir(overrideRoot, "sv", version), version)
+      withProperty("kojo.install.dir", overrideRoot.getPath) {
+        ScalaToolchain.installationRoot(launcherCp(root, true)) should be(Some(overrideRoot))
+        ScalaToolchain.select(List("/kojo/classes"), "sv").head should be(new File(dir, "scala-library.jar").getPath)
+      }
     }
+  }
+
+  test("discovery has no home or working-directory fallback") {
+    withProperty("kojo.install.dir", null) {
+      val cp = List("/some/place/scala-library.jar", "/some/place/kojo.jar")
+      ScalaToolchain.installationRoot(cp) should be(None)
+      ScalaToolchain.select(cp, "tr") should be(cp)
+    }
+  }
+
+  test("invalid explicit installation does not use a discovered installation") {
+    withTempDir { root =>
+      withProperty("kojo.install.dir", new File(root, "missing").getPath) {
+        val cp = launcherCp(root, true)
+        ScalaToolchain.select(cp, "tr") should be(cp)
+        new File(root, "toolchains").exists should be(false)
+      }
+    }
+  }
+
+  for (damage <- List("missing", "checksum", "wrongversion", "no-checksums")) {
+    test(s"$damage toolchain retains the entire original classpath") {
+      withTempDir { root =>
+        withProperty("kojo.install.dir", root.getPath) {
+          val dir = provision(ScalaToolchain.toolchainDir(root, "tr", version),
+            if (damage == "wrongversion") "2.12.20" else version)
+          damage match {
+            case "missing" => new File(dir, "scala-compiler.jar").delete()
+            case "checksum" => Files.write(new File(dir, "scala-reflect.jar").toPath, Array[Byte](1, 2, 3))
+            case "no-checksums" => new File(dir, "SHA256SUMS").delete()
+            case _ =>
+          }
+          val cp = launcherCp(root, true)
+          ScalaToolchain.select(cp, "tr") should be(cp)
+        }
+      }
+    }
+  }
+
+  test("separate installations, versions and languages have separate destinations") {
+    withTempDir { root =>
+      val one = new File(root, "one")
+      val two = new File(root, "two")
+      val paths = List(ScalaToolchain.toolchainDir(one, "tr", version),
+        ScalaToolchain.toolchainDir(two, "tr", version), ScalaToolchain.toolchainDir(one, "sv", version),
+        ScalaToolchain.toolchainDir(one, "tr", "2.13.99"))
+      paths.distinct.size should be(4)
+    }
+  }
+
+  test("system override, app property and UI language keep their precedence") {
+    ScalaToolchain.chooseCode(Some("tr"), Some("sv"), "en") should be("tr")
+    ScalaToolchain.chooseCode(Some("en"), Some("tr"), "tr") should be("en")
+    ScalaToolchain.chooseCode(None, Some("sv"), "tr") should be("sv")
+    ScalaToolchain.chooseCode(None, None, "tr") should be("tr")
+    ScalaToolchain.chooseCode(Some("unknown"), Some("sv"), "tr") should be("sv")
+    ScalaToolchain.chooseCode(None, None, "de") should be("en")
+    withProperty("kojo.toolchain", "tr") { ScalaToolchain.selectedCode should be("tr") }
+    withProperty("kojo.toolchain", "en") { ScalaToolchain.selectedCode should be("en") }
+  }
+
+  test("scratchpads retain the running toolchain even when selection would choose another language") {
+    withTempDir { root =>
+      val trDir = provision(ScalaToolchain.toolchainDir(root, "tr", version), version)
+      val svDir = provision(ScalaToolchain.toolchainDir(root, "sv", version), version)
+      withProperty("kojo.install.dir", root.getPath) {
+        val runningCp = ScalaToolchain.select(launcherCp(root, true), "tr")
+        withProperty("kojo.toolchain", "sv") {
+          ScalaToolchain.selectedCode should be("sv")
+          withProperty("java.class.path", runningCp.mkString(File.pathSeparator)) {
+            val scratchpadCp = NewKojoInstance.classpath.split(File.pathSeparatorChar).toList
+            scratchpadCp.takeRight(runningCp.size) should be(runningCp)
+            scratchpadCp should contain(new File(trDir, "scala-compiler.jar").getPath)
+            scratchpadCp should not contain(new File(svDir, "scala-compiler.jar").getPath)
+          }
+        }
+      }
+    }
+  }
+
+  test("metadata uses stock defaults without initializing language implementations") {
+    LanguageRegistry.forLanguage("en").alternativeToolchain should be(None)
+    LanguageRegistry.forLanguage("de").alternativeToolchain should be(None)
+    LanguageRegistry.alternativeToolchainCodes should be(Set("tr", "sv"))
+    LanguageRegistry.downloadMessage("tr") should include("Türkçe")
+    LanguageRegistry.downloadMessage("sv") should include("svenska")
+    LanguageRegistry.downloadMessage("xx") should be(LanguageRegistry.defaultDownloadMessage)
   }
 }
