@@ -56,11 +56,13 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
   test("published toolchain is fetched as a complete set with retained checksums and progress") {
     withRelease { (remote, dir, recorder) =>
       ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(Some(dir))
+      recorder.connectingCalls should be(1)
       ScalaToolchainFetcher.isComplete(dir) should be(true)
       recorder.jars.map(_._1) should be(ScalaToolchainFetcher.jarNames)
       recorder.jars.foreach { case (_, total) => total should be > 0L }
       recorder.received should be(ScalaToolchainFetcher.jarNames.map(n => new File(dir, n).length).sum)
       recorder.finishedCalls should be(1)
+      recorder.failureCalls should be(0)
       dir.getParentFile.listFiles().map(_.getName).toList should be(List(version))
       Files.readAllBytes(new File(dir, "SHA256SUMS").toPath).toSeq should be(
         Files.readAllBytes(new File(remote, "SHA256SUMS").toPath).toSeq)
@@ -76,6 +78,7 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
       }
       dir.listFiles().map(f => f.getName -> f.lastModified()).toMap should be(timestamps)
       recorder.jars should be(empty)
+      recorder.connectingCalls should be(0)
       recorder.finishedCalls should be(1)
     }
   }
@@ -83,7 +86,9 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
   test("HTTP downloads follow redirects and accept checksums and jars without content negotiation failures") {
     withRelease { (remote, dir, recorder) =>
       val requested = new java.util.concurrent.ConcurrentLinkedQueue[String]()
+      val progressBeforeRequest = new java.util.concurrent.atomic.AtomicBoolean(true)
       withHttpServer { exchange =>
+        if (recorder.connectingCalls != 1) progressBeforeRequest.set(false)
         val path = exchange.getRequestURI.getPath
         if (exchange.getRequestHeaders.getFirst("Accept") != "*/*") {
           exchange.sendResponseHeaders(406, -1)
@@ -105,6 +110,7 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
           withClue(recorder.messages.mkString("; ")) { result should be(Some(dir)) }
         }
         requested.toArray.toSeq should be(ScalaToolchainFetcher.checksumFileName +: ScalaToolchainFetcher.jarNames)
+        progressBeforeRequest.get should be(true)
         ScalaToolchainFetcher.isComplete(dir) should be(true)
         recorder.received should be(ScalaToolchainFetcher.jarNames.map(n => new File(dir, n).length).sum)
         recorder.jars.foreach { case (_, total) => total should be > 0L }
@@ -148,50 +154,83 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
           dir.getParentFile.listFiles().toList should be(Nil)
           recorder.messages.exists(_.contains(s"HTTP $status")) should be(true)
           recorder.finishedCalls should be(1)
+          recorder.failureCalls should be(1)
         }
       }
     }
   }
 
-  test("HTTP cancellation aborts a streaming jar without waiting for its remaining bytes") {
+  test("download failure is acknowledged after staging cleanup and before finishing") {
     withRelease { (remote, dir, _) =>
-      val release = new java.util.concurrent.CountDownLatch(1)
-      val pool = java.util.concurrent.Executors.newSingleThreadExecutor()
-      try {
-        withHttpServer { exchange =>
-          if (exchange.getRequestURI.getPath == "/SHA256SUMS") {
-            val sums = Files.readAllBytes(new File(remote, "SHA256SUMS").toPath)
-            exchange.sendResponseHeaders(200, sums.length.toLong)
-            exchange.getResponseBody.write(sums)
-          }
-          else {
-            exchange.sendResponseHeaders(200, 1024 * 1024)
-            exchange.getResponseBody.write(1)
-            exchange.getResponseBody.flush()
-            release.await(10, java.util.concurrent.TimeUnit.SECONDS)
-          }
-        } { base =>
-          withProperty("kojo.toolchain.url", base) {
-            val cancelled = new Recorder { override def cancelled: Boolean = true }
-            try {
-              val result = pool.submit(new java.util.concurrent.Callable[Option[File]] {
-                def call(): Option[File] = ScalaToolchainFetcher.ensureAvailable(dir, version, lang, cancelled)
-              })
-              result.get(5, java.util.concurrent.TimeUnit.SECONDS) should be(None)
-              withClue(cancelled.messages.mkString("; ")) {
-                cancelled.messages.exists(_.contains("download cancelled")) should be(true)
-              }
-              cancelled.finishedCalls should be(1)
-              dir.exists should be(false)
-              dir.getParentFile.listFiles().toList should be(Nil)
-            }
-            finally release.countDown()
-          }
+      Files.write(new File(remote, "scala-reflect.jar").toPath, "damaged".getBytes("UTF-8"))
+      val recorder = new Recorder {
+        override def downloadFailed(): Unit = {
+          super.downloadFailed()
+          failureCalls should be(1)
+          finishedCalls should be(0)
+          dir.exists should be(false)
+          dir.getParentFile.listFiles().toList should be(Nil)
         }
       }
-      finally {
-        release.countDown()
-        pool.shutdownNow()
+      ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(None)
+      recorder.connectingCalls should be(1)
+      recorder.failureCalls should be(1)
+      recorder.finishedCalls should be(1)
+      dir.exists should be(false)
+      dir.getParentFile.listFiles().toList should be(Nil)
+    }
+  }
+
+  for (phase <- List("checksum headers", "checksum body", "jar headers", "jar body")) {
+    test(s"HTTP cancellation aborts while waiting for $phase") {
+      withRelease { (remote, dir, recorder) =>
+        val waiting = new java.util.concurrent.CountDownLatch(1)
+        val release = new java.util.concurrent.CountDownLatch(1)
+        val pool = java.util.concurrent.Executors.newSingleThreadExecutor()
+        try {
+          withHttpServer { exchange =>
+            val name = exchange.getRequestURI.getPath.stripPrefix("/")
+            val isChecksum = name == ScalaToolchainFetcher.checksumFileName
+            if (isChecksum == phase.startsWith("checksum")) {
+              if (phase.endsWith("body")) {
+                exchange.sendResponseHeaders(200, 1024 * 1024)
+                exchange.getResponseBody.write(1)
+                exchange.getResponseBody.flush()
+              }
+              waiting.countDown()
+              release.await(10, java.util.concurrent.TimeUnit.SECONDS)
+            }
+            else {
+              val bytes = Files.readAllBytes(new File(remote, name).toPath)
+              exchange.sendResponseHeaders(200, bytes.length.toLong)
+              exchange.getResponseBody.write(bytes)
+            }
+          } { base =>
+            withProperty("kojo.toolchain.url", base) {
+              try {
+                val result = pool.submit(new java.util.concurrent.Callable[Option[File]] {
+                  def call(): Option[File] = ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder)
+                })
+                waiting.await(5, java.util.concurrent.TimeUnit.SECONDS) should be(true)
+                recorder.connectingCalls should be(1)
+                recorder.cancel()
+                result.get(5, java.util.concurrent.TimeUnit.SECONDS) should be(None)
+                withClue(recorder.messages.mkString("; ")) {
+                  recorder.messages.exists(_.contains("download cancelled")) should be(true)
+                }
+                recorder.finishedCalls should be(1)
+                recorder.failureCalls should be(0)
+                dir.exists should be(false)
+                dir.getParentFile.listFiles().toList should be(Nil)
+              }
+              finally release.countDown()
+            }
+          }
+        }
+        finally {
+          release.countDown()
+          pool.shutdownNow()
+        }
       }
     }
   }
@@ -305,6 +344,7 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
       dir.exists should be(false)
       dir.getParentFile.listFiles().toList should be(List(otherStaging))
       cancelled.finishedCalls should be(1)
+      cancelled.failureCalls should be(0)
     }
   }
 }

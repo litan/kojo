@@ -15,20 +15,32 @@
  */
 package net.kogics.kojo.lite
 
+final case class DownloadFailurePrompt(message: String, continueLabel: String = "Continue")
+
 /** Launcher metadata only. Construction must not initialize editor/API/UI code or do I/O. */
 final case class LanguageDescriptor(
     code: String,
     alternativeToolchain: Option[String] = None,
-    downloadMessage: String = LanguageRegistry.defaultDownloadMessage
+    downloadMessage: String = LanguageRegistry.defaultDownloadMessage,
+    downloadFailurePrompt: DownloadFailurePrompt = LanguageRegistry.defaultDownloadFailurePrompt
 )
 
 object LanguageRegistry {
   val defaultDownloadMessage = "Downloading the Scala toolchain"
+  val defaultDownloadFailurePrompt = DownloadFailurePrompt(
+    "Localised keyword support couldn't be downloaded.\n" +
+      "Kojo can continue using standard Scala keywords.")
 
   val registrations: List[LanguageDescriptor] = List(
     LanguageDescriptor("en"),
-    LanguageDescriptor("tr", Some("tr"), "Türkçe Scala derleyicisi indiriliyor"),
-    LanguageDescriptor("sv", Some("sv"), "Laddar ner Scala-verktygen för svenska")
+    LanguageDescriptor("tr", Some("tr"), "Türkçe Scala derleyicisi indiriliyor", DownloadFailurePrompt(
+      "Türkçe anahtar sözcük desteği indirilemedi.\n" +
+        "Kojo, standart Scala anahtar sözcükleriyle devam edebilir.",
+      "Devam et")),
+    LanguageDescriptor("sv", Some("sv"), "Laddar ner Scala-verktygen för svenska", DownloadFailurePrompt(
+      "Stödet för svenska nyckelord kunde inte laddas ner.\n" +
+        "Kojo kan fortsätta med vanliga Scala-nyckelord.",
+      "Fortsätt"))
   )
 
   def forLanguage(code: String): LanguageDescriptor =
@@ -39,4 +51,8 @@ object LanguageRegistry {
   def downloadMessage(toolchain: String): String =
     registrations.find(_.alternativeToolchain.contains(toolchain))
       .map(_.downloadMessage).getOrElse(defaultDownloadMessage)
+
+  def downloadFailurePrompt(toolchain: String): DownloadFailurePrompt =
+    registrations.find(_.alternativeToolchain.contains(toolchain))
+      .map(_.downloadFailurePrompt).getOrElse(defaultDownloadFailurePrompt)
 }

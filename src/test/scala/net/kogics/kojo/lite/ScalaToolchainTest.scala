@@ -165,5 +165,6 @@ class ScalaToolchainTest extends FunSuite with Matchers {
     LanguageRegistry.downloadMessage("tr") should include("Türkçe")
     LanguageRegistry.downloadMessage("sv") should include("svenska")
     LanguageRegistry.downloadMessage("xx") should be(LanguageRegistry.defaultDownloadMessage)
+    LanguageRegistry.downloadFailurePrompt("xx") should be(LanguageRegistry.defaultDownloadFailurePrompt)
   }
 }

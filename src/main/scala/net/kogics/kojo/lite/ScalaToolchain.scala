@@ -102,7 +102,7 @@ object ScalaToolchain {
       val dir = toolchainDir(root, code, release)
       location = dir.getPath
       ScalaToolchainFetcher.ensureAvailable(dir, release, code,
-        FetchProgress.forLauncher(LanguageRegistry.downloadMessage(code))) match {
+        FetchProgress.forLauncher(LanguageRegistry.downloadMessage(code), LanguageRegistry.downloadFailurePrompt(code))) match {
         case Some(available) =>
           val jars = ScalaToolchainFetcher.jarNames.map(n => new File(available, n).getPath).toList
           println(s"[INFO] Scala toolchain '$code', Scala $release, location $available " +

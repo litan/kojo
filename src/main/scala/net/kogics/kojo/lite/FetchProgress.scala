@@ -17,10 +17,13 @@ package net.kogics.kojo.lite
 
 import java.awt.BorderLayout
 import java.awt.Dimension
+import java.awt.FlowLayout
 import java.awt.GraphicsEnvironment
+import java.util.concurrent.CountDownLatch
 
 import javax.swing.border.EmptyBorder
 import javax.swing.BoxLayout
+import javax.swing.JButton
 import javax.swing.JDialog
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -30,13 +33,41 @@ import javax.swing.WindowConstants
 
 /** How the toolchain download reports itself. */
 trait FetchProgress {
+  /** Called before preparing the client or opening the first connection. */
+  def connecting(): Unit = ()
   def message(msg: String): Unit
   def startJar(name: String, totalBytes: Long): Unit
   def bytes(n: Long): Unit
   def finished(): Unit
+  /** The launcher may wait for acknowledgement; headless callers continue immediately. */
+  def downloadFailed(): Unit = ()
 
-  /** Polled by the download loop; true once the user has asked to stop. */
-  def cancelled: Boolean = false
+  @volatile private var cancelledFlag = false
+  private var cancelAction: () => Unit = () => ()
+
+  def cancelled: Boolean = cancelledFlag
+
+  def cancel(): Unit = {
+    val action = synchronized {
+      cancelledFlag = true
+      val active = cancelAction
+      cancelAction = () => ()
+      active
+    }
+    action()
+  }
+
+  /** Register the current request, or cancel it immediately if already stopped. */
+  private[lite] def onCancel(action: () => Unit): Unit = {
+    val runNow = synchronized {
+      if (cancelled) true
+      else {
+        cancelAction = action
+        false
+      }
+    }
+    if (runNow) action()
+  }
 }
 
 /** The default: just log. Used by the tests and by headless runs. */
@@ -55,17 +86,18 @@ object ConsoleProgress extends FetchProgress {
  * the language the user has chosen), falling back to English; the log line
  * alongside it stays in English.
  *
- * Every UI touch is posted to the EDT (never invokeAndWait, so a slow or
- * missing display can't wedge the download), and bar updates are throttled,
+ * Every UI touch is posted to the EDT (never invokeAndWait). Only the launcher
+ * thread waits for failure acknowledgement; bar updates are throttled,
  * so a 20 MB fetch doesn't flood the event queue with repaints.
  */
-class SwingFetchProgress(downloading: String) extends FetchProgress {
-  @volatile private var cancelledFlag = false
-  override def cancelled: Boolean = cancelledFlag
-
+class SwingFetchProgress(downloading: String,
+    failurePrompt: DownloadFailurePrompt = LanguageRegistry.defaultDownloadFailurePrompt) extends FetchProgress {
   private var dialog: JDialog = _
+  private var finishedFlag = false
   private var bar: JProgressBar = _
   private var label: JLabel = _
+  private var actions: JPanel = _
+  private val failureAcknowledged = new CountDownLatch(1)
   private var received = 0L
   private var total = 0L
   private var lastPainted = 0L
@@ -74,8 +106,9 @@ class SwingFetchProgress(downloading: String) extends FetchProgress {
     def run(): Unit = body
   })
 
-  private def ensureDialog(): Unit = onEdt {
-    if (dialog == null) {
+  // Called only on the EDT.
+  private def ensureDialog(): Unit = {
+    if (dialog == null && !cancelled && !finishedFlag) {
       label = new JLabel(s"$downloading...")
       bar = new JProgressBar(0, 100)
       bar.setIndeterminate(true)
@@ -86,15 +119,23 @@ class SwingFetchProgress(downloading: String) extends FetchProgress {
       content.add(label)
       content.add(javax.swing.Box.createVerticalStrut(10))
       content.add(bar)
+      actions = new JPanel(new FlowLayout(FlowLayout.CENTER))
+      val proceed = new JButton(failurePrompt.continueLabel)
+      proceed.addActionListener(_ => failureAcknowledged.countDown())
+      actions.add(proceed)
+      actions.setVisible(false)
+      content.add(actions)
       dialog = new JDialog(null: java.awt.Frame, "Kojo", false)
       // closing the window cancels the download; Kojo then starts on stock Scala
       dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
       dialog.addWindowListener(new java.awt.event.WindowAdapter {
         override def windowClosing(e: java.awt.event.WindowEvent): Unit = {
-          cancelledFlag = true
+          cancel()
+          failureAcknowledged.countDown()
         }
       })
       dialog.getContentPane.add(content, BorderLayout.CENTER)
+      dialog.getRootPane.setDefaultButton(proceed)
       dialog.pack()
       dialog.setLocationRelativeTo(null)
       dialog.setVisible(true)
@@ -103,13 +144,36 @@ class SwingFetchProgress(downloading: String) extends FetchProgress {
 
   def message(msg: String): Unit = println(msg)
 
+  override def connecting(): Unit = onEdt { ensureDialog() }
+
+  override def downloadFailed(): Unit = {
+    require(!SwingUtilities.isEventDispatchThread, "Download failure acknowledgement must wait outside the EDT")
+    onEdt {
+      try {
+        if (cancelled || finishedFlag || dialog == null) failureAcknowledged.countDown()
+        else {
+          label.setText("<html><body style='width: 360px'>" + failurePrompt.message.replace("\n", "<br>") + "</body></html>")
+          bar.setVisible(false)
+          actions.setVisible(true)
+          dialog.pack()
+        }
+      }
+      catch {
+        case scala.util.control.NonFatal(e) =>
+          message(s"[WARNING] Could not show the toolchain download failure: ${e.getMessage}")
+          failureAcknowledged.countDown()
+      }
+    }
+    failureAcknowledged.await()
+  }
+
   def startJar(name: String, totalBytes: Long): Unit = {
     println(s"[INFO] ... $name")
     received = 0L
     total = totalBytes
     lastPainted = 0L
-    ensureDialog()
     onEdt {
+      ensureDialog()
       if (label != null) label.setText(s"$downloading: $name")
       if (bar != null) {
         bar.setIndeterminate(totalBytes <= 0)
@@ -131,6 +195,8 @@ class SwingFetchProgress(downloading: String) extends FetchProgress {
   }
 
   def finished(): Unit = onEdt {
+    finishedFlag = true
+    failureAcknowledged.countDown()
     if (dialog != null) {
       dialog.setVisible(false)
       dialog.dispose()
@@ -142,9 +208,10 @@ class SwingFetchProgress(downloading: String) extends FetchProgress {
 object FetchProgress {
 
   /** A window when there is a display to put it on, plain logging otherwise. */
-  def forLauncher(message: String = LanguageRegistry.defaultDownloadMessage): FetchProgress =
+  def forLauncher(message: String = LanguageRegistry.defaultDownloadMessage,
+      failurePrompt: DownloadFailurePrompt = LanguageRegistry.defaultDownloadFailurePrompt): FetchProgress =
     if (GraphicsEnvironment.isHeadless) ConsoleProgress
     else
-      try new SwingFetchProgress(message)
+      try new SwingFetchProgress(message, failurePrompt)
       catch { case _: Throwable => ConsoleProgress }
 }

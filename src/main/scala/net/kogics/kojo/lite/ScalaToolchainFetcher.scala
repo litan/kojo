@@ -118,6 +118,7 @@ object ScalaToolchainFetcher {
     catch {
       case NonFatal(e) =>
         progress.message(s"[WARNING] Could not prepare the '$lang' Scala toolchain $version in $dir: ${e.getMessage}")
+        if (!progress.cancelled) progress.downloadFailed()
         None
     }
     finally progress.finished()
@@ -129,6 +130,8 @@ object ScalaToolchainFetcher {
   }
 
   private def fetchInto(dir: File, version: String, lang: String, progress: FetchProgress): Option[File] = {
+    progress.connecting()
+    checkCancelled(progress)
     val base = baseUrlFor(version, lang)
     progress.message(s"[INFO] Fetching the '$lang' Scala toolchain $version from $base")
     val parent = dir.getAbsoluteFile.getParentFile.toPath
@@ -139,7 +142,7 @@ object ScalaToolchainFetcher {
     try {
       val client = newHttpClient()
       try {
-        val expected = withInputStream(new URL(s"$base/$checksumFileName"), client) { (in, _) =>
+        val expected = withInputStream(new URL(s"$base/$checksumFileName"), client, progress) { (in, _) =>
           checksums(Source.fromInputStream(in, "UTF-8"))
         }
         jarNames.foreach { name =>
@@ -150,6 +153,7 @@ object ScalaToolchainFetcher {
         val sums = jarNames.map(n => s"${expected(n)}  $n").mkString("", "\n", "\n")
         Files.write(new File(staged, checksumFileName).toPath, sums.getBytes("UTF-8"))
         validate(staged, version)
+        checkCancelled(progress)
         // Publish the whole validated directory in one same-filesystem move. Never
         // replace an existing directory; another launcher may have just installed it.
         try Files.move(staged.toPath, dir.toPath)
@@ -185,25 +189,42 @@ object ScalaToolchainFetcher {
       .build()
   }
 
-  private[lite] def withInputStream[A](url: URL, client: CloseableHttpClient)(read: (InputStream, Long) => A): A = {
+  private def checkCancelled(progress: FetchProgress): Unit =
+    if (progress.cancelled) throw new RuntimeException("download cancelled")
+
+  private[lite] def withInputStream[A](url: URL, client: CloseableHttpClient,
+      progress: FetchProgress = ConsoleProgress)(read: (InputStream, Long) => A): A = {
+    checkCancelled(progress)
     url.getProtocol match {
       case "http" | "https" =>
         val request = new HttpGet(url.toURI)
         // GitHub release assets reject Java's default Accept header with HTTP 406.
         request.setHeader("Accept", "*/*")
-        Using.resource(client.execute(request)) { response =>
-          try {
-            if (response.getCode != 200) throw new IOException(s"HTTP ${response.getCode} downloading $url")
-            val entity = Option(response.getEntity).getOrElse(throw new IOException(s"No response body from $url"))
-            read(entity.getContent, entity.getContentLength)
-          }
-          catch {
-            case NonFatal(e) =>
-              // Abort before closing: cancellation must not drain the rest of a jar.
-              request.cancel()
-              throw e
+        progress.onCancel(() => {
+          request.cancel()
+          ()
+        })
+        try {
+          checkCancelled(progress)
+          Using.resource(client.execute(request)) { response =>
+            try {
+              checkCancelled(progress)
+              if (response.getCode != 200) throw new IOException(s"HTTP ${response.getCode} downloading $url")
+              val entity = Option(response.getEntity).getOrElse(throw new IOException(s"No response body from $url"))
+              read(entity.getContent, entity.getContentLength)
+            }
+            catch {
+              case NonFatal(e) =>
+                // Abort before closing: cancellation must not drain the rest of a jar.
+                request.cancel()
+                throw e
+            }
           }
         }
+        catch {
+          case NonFatal(e) if progress.cancelled => throw new RuntimeException("download cancelled", e)
+        }
+        finally progress.onCancel(() => ())
       case _ =>
         val conn = url.openConnection()
         conn.setConnectTimeout(ConnectTimeoutMs)
@@ -235,14 +256,14 @@ object ScalaToolchainFetcher {
   private def download(url: URL, target: File, name: String, progress: FetchProgress,
       client: CloseableHttpClient): String = {
     val digest = MessageDigest.getInstance("SHA-256")
-    withInputStream(url, client) { (in, totalBytes) =>
+    withInputStream(url, client, progress) { (in, totalBytes) =>
       progress.startJar(name, totalBytes)
       val out = new FileOutputStream(target)
       try {
         val buf = new Array[Byte](64 * 1024)
         var n = in.read(buf)
         while (n > 0) {
-          if (progress.cancelled) throw new RuntimeException("download cancelled")
+          checkCancelled(progress)
           digest.update(buf, 0, n)
           out.write(buf, 0, n)
           progress.bytes(n.toLong)

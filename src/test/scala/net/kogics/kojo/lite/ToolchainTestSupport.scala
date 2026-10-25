@@ -65,13 +65,19 @@ object ToolchainTestSupport {
   }
 
   class Recorder extends FetchProgress {
+    @volatile var connectingCalls = 0
     val messages = collection.mutable.ListBuffer.empty[String]
     val jars = collection.mutable.ListBuffer.empty[(String, Long)]
     var received = 0L
     var finishedCalls = 0
+    var failureCalls = 0
+    override def connecting(): Unit = { connectingCalls += 1 }
     def message(msg: String): Unit = { messages += msg }
     def startJar(name: String, totalBytes: Long): Unit = { jars += (name -> totalBytes) }
     def bytes(n: Long): Unit = { received += n }
     def finished(): Unit = { finishedCalls += 1 }
+    override def downloadFailed(): Unit = {
+      failureCalls += 1
+    }
   }
 }
