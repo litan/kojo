@@ -16,7 +16,10 @@
 package net.kogics.kojo.lite
 
 import java.io.File
+import java.net.InetSocketAddress
 import java.nio.file.Files
+
+import com.sun.net.httpserver.HttpServer
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
@@ -59,6 +62,38 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
       dir.listFiles().map(f => f.getName -> f.lastModified()).toMap should be(timestamps)
       recorder.jars should be(empty)
       recorder.finishedCalls should be(1)
+    }
+  }
+
+  test("HTTP downloads accept checksums and jars without content negotiation failures") {
+    withRelease { (remote, dir, recorder) =>
+      val requested = new java.util.concurrent.ConcurrentLinkedQueue[String]()
+      val server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0)
+      server.createContext("/", exchange => {
+        try {
+          if (exchange.getRequestHeaders.getFirst("Accept") != "*/*") {
+            exchange.sendResponseHeaders(406, -1)
+          }
+          else {
+            val name = exchange.getRequestURI.getPath.stripPrefix("/")
+            requested.add(name)
+            val bytes = Files.readAllBytes(new File(remote, name).toPath)
+            exchange.sendResponseHeaders(200, bytes.length.toLong)
+            exchange.getResponseBody.write(bytes)
+          }
+        }
+        finally exchange.close()
+      })
+      server.start()
+      try {
+        withProperty("kojo.toolchain.url", s"http://127.0.0.1:${server.getAddress.getPort}") {
+          ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(Some(dir))
+        }
+        requested.toArray.toSeq should be(ScalaToolchainFetcher.checksumFileName +: ScalaToolchainFetcher.jarNames)
+        ScalaToolchainFetcher.isComplete(dir) should be(true)
+        recorder.finishedCalls should be(1)
+      }
+      finally server.stop(0)
     }
   }
 

@@ -150,6 +150,8 @@ object ScalaToolchainFetcher {
 
   private def checksums(url: String): Map[String, String] = {
     val conn = new URL(url).openConnection()
+    // GitHub release assets reject Java 8's default Accept header with HTTP 406.
+    conn.setRequestProperty("Accept", "*/*")
     conn.setConnectTimeout(ConnectTimeoutMs)
     conn.setReadTimeout(ReadTimeoutMs)
     val src = Source.fromInputStream(conn.getInputStream, "UTF-8")
@@ -173,6 +175,7 @@ object ScalaToolchainFetcher {
   private def download(url: URL, target: File, name: String, progress: FetchProgress): String = {
     val digest = MessageDigest.getInstance("SHA-256")
     val conn = url.openConnection()
+    conn.setRequestProperty("Accept", "*/*")
     conn.setConnectTimeout(ConnectTimeoutMs)
     conn.setReadTimeout(ReadTimeoutMs)
     progress.startJar(name, conn.getContentLengthLong)

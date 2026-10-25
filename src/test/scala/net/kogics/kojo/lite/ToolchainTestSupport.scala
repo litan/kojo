@@ -10,7 +10,7 @@ import java.util.zip.ZipOutputStream
 /** Offline fixtures; all files belong to a temporary root cleaned even on assertion failure. */
 object ToolchainTestSupport {
   def withTempDir(body: File => Unit): Unit = {
-    val root = Files.createTempDirectory("kojo-toolchain-test-").toFile
+    val root = Files.createTempDirectory("kojo-toolchain-test-").toRealPath().toFile
     try body(root)
     finally deleteRecursively(root)
   }
