@@ -17,6 +17,7 @@ package net.kogics.kojo.lite
 
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.InputStream
 import java.net.URL
 import java.nio.file.Files
@@ -24,7 +25,18 @@ import java.security.MessageDigest
 import java.util.zip.ZipFile
 
 import scala.io.Source
+import scala.util.Using
 import scala.util.control.NonFatal
+
+import org.apache.hc.client5.http.DnsResolver
+import org.apache.hc.client5.http.SystemDefaultDnsResolver
+import org.apache.hc.client5.http.classic.methods.HttpGet
+import org.apache.hc.client5.http.config.RequestConfig
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
+import org.apache.hc.client5.http.impl.classic.HttpClients
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder
+import org.apache.hc.core5.http.io.SocketConfig
+import org.apache.hc.core5.util.Timeout
 
 /**
  * Fetches a keyword-patched Scala toolchain on demand, so that a Kojo package
@@ -54,7 +66,7 @@ object ScalaToolchainFetcher {
 
   // A dead or stalled connection must not hang the launcher: connect fast,
   // and give a stalled read a minute before giving up and falling back.
-  private val ConnectTimeoutMs = 15 * 1000
+  private val ConnectTimeoutMs = 10 * 1000
   private val ReadTimeoutMs = 60 * 1000
 
   def baseUrlFor(version: String, lang: String): String =
@@ -66,7 +78,7 @@ object ScalaToolchainFetcher {
   /** Validate the entire set, including locally retained checksums, before use. */
   private def validate(dir: File, version: String): Unit = {
     require(isComplete(dir), s"incomplete toolchain in $dir (four jars and $checksumFileName required)")
-    val expected = checksums(new File(dir, checksumFileName).toURI.toString)
+    val expected = checksums(Source.fromFile(new File(dir, checksumFileName), "UTF-8"))
     jarNames.foreach { name =>
       val jar = new File(dir, name)
       val want = expected.getOrElse(name, throw new IllegalStateException(s"$checksumFileName has no entry for $name"))
@@ -125,36 +137,84 @@ object ScalaToolchainFetcher {
     // cannot expose partial sets or delete another launcher's work.
     val staged = Files.createTempDirectory(parent, s".${dir.getName}-").toFile
     try {
-      val expected = checksums(s"$base/$checksumFileName")
-      jarNames.foreach { name =>
-        val want = expected.getOrElse(name, throw new IllegalStateException(s"$checksumFileName has no entry for $name"))
-        val actual = download(new URL(s"$base/$name"), new File(staged, name), name, progress)
-        require(actual.equalsIgnoreCase(want), s"checksum mismatch for $name (got $actual, expected $want)")
+      val client = newHttpClient()
+      try {
+        val expected = withInputStream(new URL(s"$base/$checksumFileName"), client) { (in, _) =>
+          checksums(Source.fromInputStream(in, "UTF-8"))
+        }
+        jarNames.foreach { name =>
+          val want = expected.getOrElse(name, throw new IllegalStateException(s"$checksumFileName has no entry for $name"))
+          val actual = download(new URL(s"$base/$name"), new File(staged, name), name, progress, client)
+          require(actual.equalsIgnoreCase(want), s"checksum mismatch for $name (got $actual, expected $want)")
+        }
+        val sums = jarNames.map(n => s"${expected(n)}  $n").mkString("", "\n", "\n")
+        Files.write(new File(staged, checksumFileName).toPath, sums.getBytes("UTF-8"))
+        validate(staged, version)
+        // Publish the whole validated directory in one same-filesystem move. Never
+        // replace an existing directory; another launcher may have just installed it.
+        try Files.move(staged.toPath, dir.toPath)
+        catch {
+          // Linux can report DirectoryNotEmptyException when the other rename
+          // wins between the provider's existence check and its rename syscall.
+          case _: java.nio.file.FileSystemException if dir.isDirectory => validate(dir, version)
+        }
+        progress.message(s"[INFO] '$lang' Scala toolchain ready in $dir")
+        Some(dir)
       }
-      val sums = jarNames.map(n => s"${expected(n)}  $n").mkString("", "\n", "\n")
-      Files.write(new File(staged, checksumFileName).toPath, sums.getBytes("UTF-8"))
-      validate(staged, version)
-      // Publish the whole validated directory in one same-filesystem move. Never
-      // replace an existing directory; another launcher may have just installed it.
-      try Files.move(staged.toPath, dir.toPath)
-      catch {
-        // Linux can report DirectoryNotEmptyException when the other rename
-        // wins between the provider's existence check and its rename syscall.
-        case _: java.nio.file.FileSystemException if dir.isDirectory => validate(dir, version)
-      }
-      progress.message(s"[INFO] '$lang' Scala toolchain ready in $dir")
-      Some(dir)
+      finally client.close()
     }
     finally discardStaging(staged)
   }
 
-  private def checksums(url: String): Map[String, String] = {
-    val conn = new URL(url).openConnection()
-    // GitHub release assets reject Java 8's default Accept header with HTTP 406.
-    conn.setRequestProperty("Accept", "*/*")
-    conn.setConnectTimeout(ConnectTimeoutMs)
-    conn.setReadTimeout(ReadTimeoutMs)
-    val src = Source.fromInputStream(conn.getInputStream, "UTF-8")
+  // HttpClient tries every resolved address on connection failure. Reuse one
+  // client per fetch so later jars can use the working connection too.
+  private[lite] def newHttpClient(dnsResolver: DnsResolver = SystemDefaultDnsResolver.INSTANCE): CloseableHttpClient = {
+    val manager = PoolingHttpClientConnectionManagerBuilder.create()
+      .useSystemProperties()
+      .setDnsResolver(dnsResolver)
+      .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(Timeout.ofMilliseconds(ReadTimeoutMs)).build())
+      .build()
+    HttpClients.custom()
+      .useSystemProperties()
+      .setConnectionManager(manager)
+      .setDefaultRequestConfig(RequestConfig.custom()
+        .setConnectTimeout(Timeout.ofMilliseconds(ConnectTimeoutMs))
+        .setConnectionRequestTimeout(Timeout.ofMilliseconds(ConnectTimeoutMs))
+        .setResponseTimeout(Timeout.ofMilliseconds(ReadTimeoutMs))
+        .build())
+      .build()
+  }
+
+  private[lite] def withInputStream[A](url: URL, client: CloseableHttpClient)(read: (InputStream, Long) => A): A = {
+    url.getProtocol match {
+      case "http" | "https" =>
+        val request = new HttpGet(url.toURI)
+        // GitHub release assets reject Java's default Accept header with HTTP 406.
+        request.setHeader("Accept", "*/*")
+        Using.resource(client.execute(request)) { response =>
+          try {
+            if (response.getCode != 200) throw new IOException(s"HTTP ${response.getCode} downloading $url")
+            val entity = Option(response.getEntity).getOrElse(throw new IOException(s"No response body from $url"))
+            read(entity.getContent, entity.getContentLength)
+          }
+          catch {
+            case NonFatal(e) =>
+              // Abort before closing: cancellation must not drain the rest of a jar.
+              request.cancel()
+              throw e
+          }
+        }
+      case _ =>
+        val conn = url.openConnection()
+        conn.setConnectTimeout(ConnectTimeoutMs)
+        conn.setReadTimeout(ReadTimeoutMs)
+        val in = conn.getInputStream
+        try read(in, conn.getContentLengthLong)
+        finally in.close()
+    }
+  }
+
+  private def checksums(src: Source): Map[String, String] = {
     try
       src
         .getLines()
@@ -172,15 +232,11 @@ object ScalaToolchainFetcher {
   }
 
   /** Downloads `url` into `target`, returning the SHA-256 of what arrived. */
-  private def download(url: URL, target: File, name: String, progress: FetchProgress): String = {
+  private def download(url: URL, target: File, name: String, progress: FetchProgress,
+      client: CloseableHttpClient): String = {
     val digest = MessageDigest.getInstance("SHA-256")
-    val conn = url.openConnection()
-    conn.setRequestProperty("Accept", "*/*")
-    conn.setConnectTimeout(ConnectTimeoutMs)
-    conn.setReadTimeout(ReadTimeoutMs)
-    progress.startJar(name, conn.getContentLengthLong)
-    val in: InputStream = conn.getInputStream
-    try {
+    withInputStream(url, client) { (in, totalBytes) =>
+      progress.startJar(name, totalBytes)
       val out = new FileOutputStream(target)
       try {
         val buf = new Array[Byte](64 * 1024)
@@ -195,7 +251,6 @@ object ScalaToolchainFetcher {
       }
       finally out.close()
     }
-    finally in.close()
     digest.digest().map(b => f"$b%02x").mkString
   }
 

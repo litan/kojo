@@ -16,11 +16,15 @@
 package net.kogics.kojo.lite
 
 import java.io.File
+import java.net.InetAddress
 import java.net.InetSocketAddress
+import java.net.URL
 import java.nio.file.Files
 
+import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpServer
 
+import org.apache.hc.client5.http.DnsResolver
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
@@ -36,6 +40,17 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
     val remote = provision(new File(root, "remote"), s"$version-test-build")
     val dest = new File(root, "installation/toolchains/scala-sv/2.13.18")
     withProperty("kojo.toolchain.url", remote.toURI.toString) { body(remote, dest, new Recorder) }
+  }
+
+  def withHttpServer(handler: HttpExchange => Unit)(body: String => Unit): Unit = {
+    val server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0)
+    server.createContext("/", exchange => {
+      try handler(exchange)
+      finally exchange.close()
+    })
+    server.start()
+    try body(s"http://127.0.0.1:${server.getAddress.getPort}")
+    finally server.stop(0)
   }
 
   test("published toolchain is fetched as a complete set with retained checksums and progress") {
@@ -65,35 +80,119 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
     }
   }
 
-  test("HTTP downloads accept checksums and jars without content negotiation failures") {
+  test("HTTP downloads follow redirects and accept checksums and jars without content negotiation failures") {
     withRelease { (remote, dir, recorder) =>
       val requested = new java.util.concurrent.ConcurrentLinkedQueue[String]()
-      val server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0)
-      server.createContext("/", exchange => {
-        try {
-          if (exchange.getRequestHeaders.getFirst("Accept") != "*/*") {
-            exchange.sendResponseHeaders(406, -1)
-          }
-          else {
-            val name = exchange.getRequestURI.getPath.stripPrefix("/")
-            requested.add(name)
-            val bytes = Files.readAllBytes(new File(remote, name).toPath)
-            exchange.sendResponseHeaders(200, bytes.length.toLong)
-            exchange.getResponseBody.write(bytes)
-          }
+      withHttpServer { exchange =>
+        val path = exchange.getRequestURI.getPath
+        if (exchange.getRequestHeaders.getFirst("Accept") != "*/*") {
+          exchange.sendResponseHeaders(406, -1)
         }
-        finally exchange.close()
-      })
-      server.start()
-      try {
-        withProperty("kojo.toolchain.url", s"http://127.0.0.1:${server.getAddress.getPort}") {
-          ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(Some(dir))
+        else if (!path.startsWith("/assets/")) {
+          exchange.getResponseHeaders.set("Location", s"http://localhost:${exchange.getLocalAddress.getPort}/assets$path")
+          exchange.sendResponseHeaders(302, -1)
+        }
+        else {
+          val name = path.stripPrefix("/assets/")
+          requested.add(name)
+          val bytes = Files.readAllBytes(new File(remote, name).toPath)
+          exchange.sendResponseHeaders(200, bytes.length.toLong)
+          exchange.getResponseBody.write(bytes)
+        }
+      } { base =>
+        withProperty("kojo.toolchain.url", base) {
+          val result = ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder)
+          withClue(recorder.messages.mkString("; ")) { result should be(Some(dir)) }
         }
         requested.toArray.toSeq should be(ScalaToolchainFetcher.checksumFileName +: ScalaToolchainFetcher.jarNames)
         ScalaToolchainFetcher.isComplete(dir) should be(true)
+        recorder.received should be(ScalaToolchainFetcher.jarNames.map(n => new File(dir, n).length).sum)
+        recorder.jars.foreach { case (_, total) => total should be > 0L }
         recorder.finishedCalls should be(1)
       }
-      finally server.stop(0)
+    }
+  }
+
+  test("HTTP connections try the next resolved IP when the first address cannot connect") {
+    withHttpServer { exchange =>
+      exchange.sendResponseHeaders(200, 2)
+      exchange.getResponseBody.write("ok".getBytes("UTF-8"))
+    } { base =>
+      val resolver = new DnsResolver {
+        def resolve(host: String): Array[InetAddress] = Array(
+          InetAddress.getByAddress(Array[Byte](127, 0, 0, 2)),
+          InetAddress.getByAddress(Array[Byte](127, 0, 0, 1)))
+        def resolveCanonicalHostname(host: String): String = host
+      }
+      val client = ScalaToolchainFetcher.newHttpClient(resolver)
+      try {
+        // The server listens only on 127.0.0.1; 127.0.0.2 must fail first.
+        val url = new URL(base.replace("127.0.0.1", "toolchain.test"))
+        val text = ScalaToolchainFetcher.withInputStream(url, client) { (in, _) =>
+          scala.io.Source.fromInputStream(in, "UTF-8").mkString
+        }
+        text should be("ok")
+      }
+      finally client.close()
+    }
+  }
+
+  for (status <- List(404, 406, 500)) {
+    test(s"HTTP $status reports the status and cleans staging without publishing a toolchain") {
+      withRelease { (_, dir, recorder) =>
+        withHttpServer(_.sendResponseHeaders(status, -1)) { base =>
+          withProperty("kojo.toolchain.url", base) {
+            ScalaToolchainFetcher.ensureAvailable(dir, version, lang, recorder) should be(None)
+          }
+          dir.exists should be(false)
+          dir.getParentFile.listFiles().toList should be(Nil)
+          recorder.messages.exists(_.contains(s"HTTP $status")) should be(true)
+          recorder.finishedCalls should be(1)
+        }
+      }
+    }
+  }
+
+  test("HTTP cancellation aborts a streaming jar without waiting for its remaining bytes") {
+    withRelease { (remote, dir, _) =>
+      val release = new java.util.concurrent.CountDownLatch(1)
+      val pool = java.util.concurrent.Executors.newSingleThreadExecutor()
+      try {
+        withHttpServer { exchange =>
+          if (exchange.getRequestURI.getPath == "/SHA256SUMS") {
+            val sums = Files.readAllBytes(new File(remote, "SHA256SUMS").toPath)
+            exchange.sendResponseHeaders(200, sums.length.toLong)
+            exchange.getResponseBody.write(sums)
+          }
+          else {
+            exchange.sendResponseHeaders(200, 1024 * 1024)
+            exchange.getResponseBody.write(1)
+            exchange.getResponseBody.flush()
+            release.await(10, java.util.concurrent.TimeUnit.SECONDS)
+          }
+        } { base =>
+          withProperty("kojo.toolchain.url", base) {
+            val cancelled = new Recorder { override def cancelled: Boolean = true }
+            try {
+              val result = pool.submit(new java.util.concurrent.Callable[Option[File]] {
+                def call(): Option[File] = ScalaToolchainFetcher.ensureAvailable(dir, version, lang, cancelled)
+              })
+              result.get(5, java.util.concurrent.TimeUnit.SECONDS) should be(None)
+              withClue(cancelled.messages.mkString("; ")) {
+                cancelled.messages.exists(_.contains("download cancelled")) should be(true)
+              }
+              cancelled.finishedCalls should be(1)
+              dir.exists should be(false)
+              dir.getParentFile.listFiles().toList should be(Nil)
+            }
+            finally release.countDown()
+          }
+        }
+      }
+      finally {
+        release.countDown()
+        pool.shutdownNow()
+      }
     }
   }
 
