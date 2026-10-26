@@ -41,10 +41,12 @@ import net.kogics.kojo.util.NoOpPainter
 import net.kogics.kojo.util.TerminalAnsiCodes
 import net.kogics.kojo.util.Utils
 
-// updateResult returns the arg as is unless we are in Turkish locale
-import net.kogics.kojo.lite.i18n.tr.updateResult
+import net.kogics.kojo.lite.i18n.LanguageBehavior
 
-class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
+class OutputPane(
+    execSupport: CodeExecutionSupport,
+    languageBehavior: LanguageBehavior = LanguageBehavior.current
+) extends JPanel {
   lazy val codePane = execSupport.codePane
   val kojoCtx = execSupport.kojoCtx
 
@@ -304,7 +306,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
         {if (errCount > 2) errorLocation}
       </body>
 
-    errorWindow.setText(updateResult(errMsg.toString))
+    errorWindow.setText(languageBehavior.updateResult(errMsg.toString))
     errorWindow.setCaretPosition(0)
     outLayout.show(this, "Error")
     // For the case where a warning is sent to the regular Output window
@@ -326,7 +328,7 @@ class OutputPane(execSupport: CodeExecutionSupport) extends JPanel {
   }
 
   def showOutputHelper(outText: String, color: Color): Unit = {
-    appendOutput(updateResult(outText), color)
+    appendOutput(languageBehavior.updateResult(outText), color)
     execSupport.enableClearButton()
   }
 

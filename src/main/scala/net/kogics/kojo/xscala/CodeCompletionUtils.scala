@@ -16,12 +16,12 @@
 package net.kogics.kojo
 package xscala
 
-import net.kogics.kojo.lite.i18n.KeywordLangs
+import net.kogics.kojo.lite.i18n.LanguageEditorDataRegistry
 
 object CodeCompletionUtils {
   val NotIdChars = """ .()[]{}!,;%&+\-<=>?@\\^`|~#:/*""" + "\n\r\t"
 
-  val Keywords = KeywordLangs.keywords ++ List(
+  val EnglishKeywords = List(
     "abstract",
     "case",
     "catch",
@@ -63,11 +63,15 @@ object CodeCompletionUtils {
     "yield"
   )
 
-  val KeywordTemplates = Map(
+  def Keywords: List[String] = LanguageEditorDataRegistry.current.allKeywords
+
+  val EnglishKeywordTemplates = Map(
     "for" -> "for (i <- 1 to ${n}) {\n    ${cursor}\n}",
     "while" -> "while (${condition}) {\n    ${cursor}\n}",
     "if" -> "if (${condition}) {\n    ${cursor}\n}"
-  ) ++ KeywordLangs.keywordTemplates
+  )
+
+  def KeywordTemplates: Map[String, String] = LanguageEditorDataRegistry.current.allKeywordTemplates
 
   // UserCommand adds to this
   val BuiltinsMethodTemplates = collection.mutable.Map(

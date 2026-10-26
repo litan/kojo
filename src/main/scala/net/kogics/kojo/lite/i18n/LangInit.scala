@@ -10,6 +10,9 @@ import javax.swing.UIManager
 import net.kogics.kojo.lite.CoreBuiltins
 
 object LangInit {
+  // Captured after locale setup in init; changing the preference requires a restart.
+  lazy val language: String = System.getProperty("user.language", "en")
+
   def init(prefs: Preferences) = {
     val userLanguage = prefs.get("user.language", System.getProperty("user.language"))
     if (userLanguage != null && userLanguage.trim != "") {
@@ -17,6 +20,12 @@ object LangInit {
       java.util.Locale.setDefault(new java.util.Locale(userLanguage, oldLocale.getCountry, oldLocale.getVariant))
       System.setProperty("user.language", userLanguage)
     }
+    language match {
+      case "sv" => SvInit.preInit()
+      case "tr" => TurkishInit.preInit()
+      case _    =>
+    }
+    LanguageBehavior.current
     userLanguage
   }
 

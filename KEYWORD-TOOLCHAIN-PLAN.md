@@ -65,11 +65,12 @@ Avoid runtime dependence on downloaded toolchains under `~/.kojo/lite`.
 ## Relationship to the language-interface refactor
 
 The companion task is described in
-[LANGUAGE-SUPPORT-REFACTOR-PLAN.md](LANGUAGE-SUPPORT-REFACTOR-PLAN.md).
-The tasks are largely independent. Recommended order: establish the small
-shared registration boundary below, implement this toolchain task, then do the
-editor/presentation refactor. The broader refactor is not a prerequisite for
-fixing the IDE launch failure.
+[LANGUAGE-SUPPORT-REFACTOR-PLAN-V2.md](LANGUAGE-SUPPORT-REFACTOR-PLAN-V2.md).
+The toolchain task is complete. The revised editor/presentation plan registers
+static editor data through early language-specific `preInit()` hooks and
+introduces a small `LanguageBehavior` interface; the launcher registry remains
+lightweight metadata. The broader refactor is not a prerequisite for fixing the
+IDE launch failure.
 
 Both tasks must minimize changes to existing core code. The comparison baseline
 is `/home/lalit/t1/work/kojo` at commit
@@ -97,9 +98,9 @@ preserve its Turkish collections/help, samples, and macOS fullscreen fix.
 - Move the existing Turkish/Swedish progress strings out of the shared Swing
   progress implementation into the descriptors; pass the selected text to the
   UI, with the existing English fallback.
-- The companion task will attach lazy editor-support factories to these same
-  registrations. Do not create that larger interface as a prerequisite here.
-  If the companion task has already introduced the registry, reuse it.
+- The revised companion task keeps editor data and behavior separate from these
+  launcher registrations. See its plan for early `preInit()` data hooks and
+  `LanguageBehavior`; do not attach editor-support factories to the descriptors.
 - Preserve the existing distinction between UI language and an explicit compiler
   override: `kojo.toolchain=tr` may select a Turkish compiler without changing
   the user's UI language.

@@ -69,7 +69,11 @@ import org.fife.ui.rtextarea.SearchEngine
 import scalariform.formatter.preferences._
 import scalariform.formatter.ScalaFormatter
 
-class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
+class ScriptEditor(
+    val execSupport: CodeExecutionSupport,
+    frame: JFrame,
+    languageBehavior: i18n.LanguageBehavior = i18n.LanguageBehavior.current
+) extends JPanel with EditorFileSupport {
 
   var tabSize = 4
   val codePane = new RSyntaxTextArea(5, 80)
@@ -151,7 +155,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     ctm.addTemplate(ct)
   }
 
-  val provider = new KojoCompletionProvider(execSupport)
+  val provider = new KojoCompletionProvider(execSupport, languageBehavior)
   codePanes.foreach { pane =>
     val ac = new AutoCompletion(provider)
     ac.setParameterAssistanceEnabled(true)
@@ -375,9 +379,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     def actionPerformed(ev: ActionEvent): Unit = {
       val codePane = execSupport.codePane
       val offset = codePane.getCaretPosition
-      import net.kogics.kojo.lite.i18n.tr.updateTypes
-      // updateTypes returns the arg as is unless we are in Turkish locale
-      val typeAt = updateTypes(execSupport.typeAt(offset))
+      val typeAt = languageBehavior.updateTypes(execSupport.typeAt(offset))
       val wordStart = Utilities.getWordStart(codePane, offset)
       val wordEnd = Utilities.getWordEnd(codePane, offset)
       val word0 = codePane.getDocument.getText(wordStart, wordEnd - wordStart)

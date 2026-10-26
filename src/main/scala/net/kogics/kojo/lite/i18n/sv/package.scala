@@ -19,7 +19,7 @@ package net.kogics.kojo.lite.i18n
  * Swedish Level-4 (keyword) localization — a STUB, mirroring `i18n.tr`.
  *
  * Only the piece the editor needs to recognize Swedish keywords is here: the
- * keyword list, which `i18n.KeywordLangs` exposes for syntax highlighting. The
+ * keyword list, registered by `SvInit.preInit()` for highlighting/completion. The
  * words are the exact strings encoded in `scala-sv/swedish-keywords.patch` and
  * are AI-generated drafts pending native review (see scala-sv/KEYWORDS.md).
  *

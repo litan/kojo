@@ -1,5 +1,7 @@
 package net.kogics.kojo.xscala
 
+import net.kogics.kojo.lite.i18n.LanguageEditorDataRegistry
+
 object CodeTemplates {
   // this template is used twice, so define as val outside the map
   val canvasSketch = """cleari()
@@ -28,7 +30,7 @@ val pic = Picture.fromSketch(sketch, 1)
 draw(pic)
 """
 
-  val templates = Map(
+  val BaseTemplates = Map(
     "pre" -> """<pre>
     ${cursor}
 </pre>
@@ -211,7 +213,9 @@ draw(pic)
     "exec" -> "// #exec${cursor}\n",
     "execTemplate" -> "// #exec template ${filename}${cursor}\n",
     "execPicGaming" -> "// #exec template /picgaming${cursor}\n",
-  ) ++ net.kogics.kojo.lite.i18n.KeywordLangs.codeTemplates // empty unless the current language localizes keywords
+  )
+
+  def templates: Map[String, String] = LanguageEditorDataRegistry.current.allSnippets
 
   def apply(name: String) = templates(name)
   def asString(name: String) =

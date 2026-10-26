@@ -51,6 +51,6 @@ object templates {
     "den_türlü" -> "den ${değişkeninAdı}: ${TürAdı} = ${değer}${cursor}\n",
   )
 
-  // gated alias kept for any direct callers; KeywordLangs uses codeTemplatesRaw
+  // Gated alias kept for direct callers; early editor registration uses codeTemplatesRaw.
   val codeTemplates: Map[String, String] = if (!isTurkish) Map() else codeTemplatesRaw
 }

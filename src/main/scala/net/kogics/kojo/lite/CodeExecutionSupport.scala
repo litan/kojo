@@ -98,7 +98,8 @@ class CodeExecutionSupport(
     fuguePlayer: music.FuguePlayer,
     tCanvas: SpriteCanvas,
     scriptEditor0: => ScriptEditor,
-    val kojoCtx: core.KojoCtx
+    val kojoCtx: core.KojoCtx,
+    languageBehavior: i18n.LanguageBehavior = i18n.LanguageBehavior.current
 ) extends core.CodeExecutionSupport
     with core.CodeCompletionSupport
     with ManipulationContext {
@@ -119,7 +120,7 @@ class CodeExecutionSupport(
 
   System.setOut(new PrintStream(new WriterOutputStream(new OutputWindowWriter)))
   System.setErr(new PrintStream(new WriterOutputStream(new OutputWindowColoredWriter(Color.red))))
-  val outputPane = new OutputPane(this)
+  val outputPane = new OutputPane(this, languageBehavior)
   doWelcome()
 
   val commandHistory = CommandHistory(kojoCtx)
@@ -384,8 +385,8 @@ class CodeExecutionSupport(
     def onInterpreterInit() = {
       showOutput(" " * 38 + "_____\n\n")
       outputPane.clearLastOutput()
-      startingUp = false
       LangInit.initPhase2(builtins)
+      startingUp = false
     }
 
     def onInterpreterStart(code: String): Unit = {
@@ -509,15 +510,12 @@ class CodeExecutionSupport(
       appendToCodePaneLine(lineNum, result.trim.replaceAll("\r?\n", " | "))
     }
 
-    import net.kogics.kojo.lite.i18n.tr.updateResult
-
     private def appendToCodePaneLine(lineNum: Int, result: String) = Utils.runInSwingThread {
       val insertPos = getVisibleLineEndOffset(lineNum + selectionOffset)
       val dot = codePane.getCaretPosition
       val selStart = codePane.getSelectionStart()
       val selEnd = codePane.getSelectionEnd()
-      // updateResult returns the arg as is unless we are in Turkish locale:
-      codePane.insert(WorksheetMarker + updateResult(result), insertPos)
+      codePane.insert(WorksheetMarker + languageBehavior.updateResult(result), insertPos)
       if (dot == insertPos) {
         if (selStart == selEnd) {
           codePane.setCaretPosition(dot)

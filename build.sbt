@@ -14,6 +14,7 @@ lazy val cmsFlags = {
 run / javaOptions ++= Seq("-Xmx1024m", "-Xss1m") ++ cmsFlags
 
 Test / fork := true
+Test / parallelExecution := false
 // Java 9+ needs these opens for the cglib/jmock based tests; harmless on Java 8.
 lazy val testAddOpens =
   if (System.getProperty("java.specification.version").split('.').last.toInt >= 9)

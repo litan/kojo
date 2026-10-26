@@ -136,19 +136,77 @@ from a fork whose `Keywords` set includes the localized words. Kojo's normal
 A Swedish edition needs the same: add the Swedish keywords to a scalariform fork,
 build it, and ship it as the `scala-sv` toolchain's `scalariform.jar`.
 
-**4. Syntax highlighting (colors).**
-`lexer/ScalariformTokenMaker.scala` colors keywords. It already re-marks any token
-that scalariform returned as an identifier but that the localized keyword set
-recognizes — via `net.kogics.kojo.lite.i18n.tr.isTurkishKeyword` and the
-`turkishKeywords` set in `lite/i18n/tr/package.scala`. A new language needs the
-same keyword set exposed to the token maker. The clean way is to generalize
-`isTurkishKeyword` to "is a keyword in the current language", backed by a
-per-language set, so completion (`xscala/CodeCompletionUtils.scala`) and templates
-(`xscala/CodeTemplates.scala`) — which also read `turkishKeywords` today — pick up
-the new language for free.
+**4. Editor contributions and presentation.**
+`lexer/ScalariformTokenMaker.scala` classifies identifiers using
+`LanguageEditorDataRegistry.current.keywordSet`, from the same registered data
+used by completion. The editor data is independent of toolchain metadata: a
+language can contribute editor features without registering a patched compiler,
+and a compiler registration need not supply all editor features.
 
-**In short:** Level 4 = one small compiler patch (mechanical, per the stub) plus a
-generalization of the currently Turkish-specific toolchain/editor plumbing to be
-language-agnostic. The first is a contributor's PR to the language's own scala
-fork; the second is best done once, in Kojo core, so the third language after
-Turkish and Swedish is nearly free.
+Add a parameterless `preInit()` to the language's initialization object, following
+`SvInit` or `TurkishInit`, and dispatch to it from `LangInit.init`. This early
+hook registers static data without a builtins instance:
+
+```scala
+def preInit(): Unit = LanguageEditorDataRegistry.register(
+  LanguageEditorData(
+    keywords = List("localizedVal"),
+    keywordTemplates = Map("localizedVal" -> "localizedVal ${name} = ${value}"),
+    snippets = Map("localized_block" -> "localizedVal ${name} = ${cursor}0\n"),
+    keywordHelp = Map(TwMode -> Map("val" -> "Localized explanation of val"))
+  )
+)
+```
+
+`LangInit.init` establishes the locale and captures the active UI language,
+registers its editor data, and selects its `LanguageBehavior` before the output
+pane, runner, or editor is constructed. Only the selected language is loaded.
+Language-menu changes require a restart; a compiler override does not change
+editor selection. Repeated registration replaces a whole immutable record.
+The registry holds only the active record in a private volatile reference;
+`register(data)` replaces it and `current` reads the reference directly.
+Unknown or unregistered languages have empty contributions and English defaults.
+RSTA installs the effective snippets during normal editor construction, so no
+later editor activation or highlighting refresh is needed.
+
+Keep the existing `init(builtins)` for API bindings, greetings, editor settings,
+`b.addCodeTemplates` (method completion templates), and `b.addHelpContent` (API
+help). The new `snippets` field names larger trigger-based blocks separately
+from those method templates. Tracing performs its initialization in a separate
+JVM and registers data locally in that process.
+
+The bundled RSTA native snippet-trigger matcher accepts ASCII letters/digits and
+underscores. Unicode triggers such as Turkish `dez_türlü` are installed and work
+through completion-based expansion, but native trigger lookup does not find
+them. Supporting Unicode in that native matcher is separate work.
+
+All point lookups take the first match:
+
+| Contribution | Lookup order |
+| --- | --- |
+| Keyword template | English/base → localized → no template |
+| Snippet trigger | Base → localized → missing |
+| Method template | Builtins → coding-mode templates → registered language templates → no template |
+| Help | Localized keyword help for the active coding mode → common English → coding-mode English → registered language API help → no help |
+
+Keyword help intentionally precedes English help: Turkish explanations retain
+English topic keys such as `for`, `def`, `if`, and `val`, and override their help
+only in turtle mode. Ordinary API help retains its fallback position. Keyword
+completion enumerates localized keywords followed by English keywords. Shared
+accessors cache enumeration tables centrally; providers and runners do not
+maintain copies. Changing coding mode clears legacy method templates/API help
+as before, while static keywords, snippets, and keyword help remain registered.
+
+For language-specific output/worksheet translations, Show Type, completion type
+presentation, or additional owner rules, implement `LanguageBehavior` and add
+its selection to `LanguageBehavior.forLanguage`. The defaults preserve text and
+add no owner rules. `recognizesOwner` permits looking up help/templates for an
+owner; `allowsPlainNameFallback` separately permits an unqualified lookup after
+a qualified miss. The Turkish implementation delegates to existing raw
+translations and recognizes the full Turkish package prefix. `CodeExecutionSupport`,
+`ScriptEditor`, `OutputPane`, and `KojoCompletionProvider` accept an optional
+constructor behavior that defaults to `LanguageBehavior.current` and is captured
+once. Execution support passes its behavior to the output pane; the editor passes
+its behavior to the completion provider. Tests can supply behavior without
+changing the process's language selection. Translation algorithms and public
+language APIs remain in language-specific code.

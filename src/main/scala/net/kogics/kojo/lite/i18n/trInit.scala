@@ -645,6 +645,15 @@ object TurkishAPI
 }
 
 object TurkishInit {
+  def preInit(): Unit = LanguageEditorDataRegistry.register(
+    LanguageEditorData(
+      tr.keywordList,
+      tr.keywordTemplateMap,
+      tr.codeTemplateMap,
+      Map(net.kogics.kojo.core.TwMode -> tr.KeywordHelp.content)
+    )
+  )
+
   def init(builtins: CoreBuiltins): Unit = {
     // initialize unstable values:
     TurkishAPI.bi = builtins

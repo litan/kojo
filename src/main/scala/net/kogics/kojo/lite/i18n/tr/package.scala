@@ -145,7 +145,7 @@ package object tr {
     "yeni", "yineleDoğruKaldıkça", "yok", "yoksa"
   )
   val turkishKeywords = if (!isTurkish) List() else _trKeywords
-  // raw, locale-independent data registered into i18n/KeywordLangs.scala
+  // Raw, locale-independent editor data registered by TurkishInit.preInit().
   val keywordList: List[String] = _trKeywords
   val keywordTemplateMap: Map[String, String] = templates.keywordTemplates
   val codeTemplateMap: Map[String, String] = templates.codeTemplatesRaw
