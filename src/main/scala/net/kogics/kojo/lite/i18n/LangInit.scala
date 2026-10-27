@@ -1,10 +1,8 @@
 package net.kogics.kojo.lite.i18n
 
 import java.awt.Font
-import java.awt.GraphicsEnvironment
 import java.util.prefs.Preferences
 import javax.swing.plaf.FontUIResource
-import javax.swing.text.StyleContext
 import javax.swing.JMenu
 import javax.swing.UIManager
 
@@ -31,35 +29,17 @@ object LangInit {
     userLanguage
   }
 
-  lazy val fontForHindi = {
-    val stream = getClass.getResourceAsStream("/i18n/NotoSansDevanagariUI-Regular.ttf")
-    val font = try Font.createFont(Font.TRUETYPE_FONT, stream)
-    finally stream.close()
-    GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(font)
-    // Some look and feels, including Metal, only define component fonts.
-    val defaultFont = Option(UIManager.getLookAndFeelDefaults.getFont("defaultFont"))
-      .getOrElse(UIManager.getFont("Label.font"))
-    val defaultSize = defaultFont.getSize
-    // Noto's Devanagari UI font needs Swing's fallback for Latin text in mixed-language labels.
-    StyleContext.getDefaultStyleContext.getFont(font.getFamily, Font.PLAIN, defaultSize + 4)
-  }
+  // Retained for callers that explicitly need the Hindi font.
+  lazy val fontForHindi: Font = hi.HindiLanguageBehavior.font
 
   def lookAndFeelReady(): Unit = {
-    System.getProperty("user.language") match {
-      case "hi" =>
-        val defaults = UIManager.getLookAndFeelDefaults
-        val keys = Seq("defaultFont")
-        keys.foreach { defaults.put(_, new FontUIResource(fontForHindi)) }
-      case _ =>
+    LanguageBehavior.current.customUiFont.foreach { font =>
+      UIManager.getLookAndFeelDefaults.put("defaultFont", new FontUIResource(font))
     }
   }
 
   def menuReady(m: JMenu): Unit = {
-    System.getProperty("user.language") match {
-      case "hi" =>
-        m.setFont(fontForHindi)
-      case _ =>
-    }
+    LanguageBehavior.current.customUiFont.foreach(m.setFont)
   }
 
   def initPhase2(b: CoreBuiltins): Unit = {

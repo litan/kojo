@@ -26,7 +26,7 @@ import javax.swing.JMenu
 import javax.swing.JOptionPane
 
 import net.kogics.kojo.core
-import net.kogics.kojo.lite.i18n.LangInit
+import net.kogics.kojo.lite.i18n.LanguageBehavior
 import net.kogics.kojo.util.Utils
 
 /** Creates the Language menu.
@@ -65,9 +65,7 @@ object LangMenuFactory {
     def langMenuItem(langCode: String) = {
       val langName = langNames(langCode)
       val mitem = new JCheckBoxMenuItem(langName)
-      if (langCode == "hi") {
-        mitem.setFont(LangInit.fontForHindi)
-      }
+      LanguageBehavior.forLanguage(langCode).customUiFont.foreach(mitem.setFont)
       mitem.addActionListener(langHandler)
       mitem.setActionCommand(langCode)
       // mitem.setIcon(langIcon(langCode))
@@ -90,10 +88,10 @@ object LangMenuFactory {
 
   private[lite] def languageChangePane(message: String, lang: String): JOptionPane = {
     val pane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION)
-    if (lang == "hi") {
-      // The current UI may still be English. Apply Hindi support to each wrapped message label.
+    LanguageBehavior.forLanguage(lang).customUiFont.foreach { font =>
+      // The current UI may use another language. Update each wrapped message label.
       def setMessageFont(component: Component): Unit = component match {
-        case label: JLabel => label.setFont(LangInit.fontForHindi)
+        case label: JLabel => label.setFont(font)
         case container: Container => container.getComponents.foreach(setMessageFont)
         case _ =>
       }

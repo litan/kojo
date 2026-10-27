@@ -1,9 +1,11 @@
 package net.kogics.kojo.lite.i18n
 
-import java.io.File
+import java.io.{File, InputStream}
 import java.net.URLClassLoader
 import java.util.Locale
 import java.util.prefs.{AbstractPreferences, Preferences}
+import javax.swing.{JMenu, SwingUtilities, UIManager}
+import javax.swing.plaf.FontUIResource
 import scala.language.existentials
 
 import net.kogics.kojo.lite.ToolchainTestSupport.withProperty
@@ -32,11 +34,19 @@ class LanguageInitializationTest extends FunSuite with Matchers {
     test(s"$code startup registers data and fixes selection before any consumer is constructed") {
       val urls = System.getProperty("java.class.path").split(File.pathSeparator).map(p => new File(p).toURI.toURL)
       val loader = new URLClassLoader(urls, null) {
+        override def getResourceAsStream(name: String): InputStream = {
+          if (name == "i18n/NotoSansDevanagariUI-Regular.ttf") {
+            throw new AssertionError("Startup loaded the Hindi font before look-and-feel setup")
+          }
+          super.getResourceAsStream(name)
+        }
+
         override def loadClass(name: String, resolve: Boolean): Class[_] = {
           if (name.startsWith("net.kogics.kojo.lite.i18n.TurkishAPI") ||
               name.startsWith("net.kogics.kojo.lite.i18n.SwedishAPI") ||
               name.startsWith("net.kogics.kojo.lite.i18n.HindiAPI") ||
-              (code != "tr" && name.startsWith("net.kogics.kojo.lite.i18n.tr."))) {
+              (code != "tr" && name.startsWith("net.kogics.kojo.lite.i18n.tr.")) ||
+              (code != "hi" && name.startsWith("net.kogics.kojo.lite.i18n.hi.HindiLanguageBehavior"))) {
             throw new ClassNotFoundException("Startup unexpectedly loaded " + name)
           }
           super.loadClass(name, resolve)
@@ -60,6 +70,30 @@ class LanguageInitializationTest extends FunSuite with Matchers {
         isKeyword should be(java.lang.Boolean.valueOf(Set("tr", "sv", "hi")(code)))
         val (behaviorsClass, behaviors) = module("net.kogics.kojo.lite.i18n.LanguageBehavior")
         val behavior = behaviorsClass.getMethod("current").invoke(behaviors)
+        if (code == "hi") behavior.getClass.getName should endWith("hi.HindiLanguageBehavior$")
+        if (code != "hi") {
+          behavior.getClass.getMethod("customUiFont").invoke(behavior).toString should be("None")
+          SwingUtilities.invokeAndWait(new Runnable {
+            def run(): Unit = {
+              val defaults = UIManager.getLookAndFeelDefaults
+              val original = defaults.get("defaultFont")
+              val font = new FontUIResource("Serif", java.awt.Font.ITALIC, 19)
+              val menu = new JMenu("menu")
+              menu.setFont(font)
+              try {
+                defaults.put("defaultFont", font)
+                initClass.getMethod("lookAndFeelReady").invoke(init)
+                initClass.getMethod("menuReady", classOf[JMenu]).invoke(init, menu)
+                defaults.get("defaultFont") should be theSameInstanceAs font
+                menu.getFont should be theSameInstanceAs font
+              }
+              finally {
+                if (original == null) defaults.remove("defaultFont")
+                else defaults.put("defaultFont", original)
+              }
+            }
+          })
+        }
         def present = behavior.getClass.getMethod("updateTypes", classOf[String]).invoke(behavior, "Int")
         present should be(translated)
         // Simulate a menu preference update and an unrelated compiler override.

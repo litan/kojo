@@ -1,5 +1,7 @@
 package net.kogics.kojo.lite.i18n
 
+import java.awt.Font
+
 import net.kogics.kojo.core.{CompletionInfo, MemberKind}
 import net.kogics.kojo.lite.KojoCompletionProvider
 import net.kogics.kojo.xscala.{CodeCompletionUtils, CodeTemplates, Help}
@@ -10,6 +12,16 @@ import org.scalatest.junit.JUnitRunner
 /** Observable behavior captured before extracting the language hooks. */
 @RunWith(classOf[JUnitRunner])
 class LanguageBehaviorTest extends FunSuite with Matchers with BeforeAndAfter {
+  test("default font hooks preserve the existing family, style and fractional size") {
+    val font = new Font(Font.MONOSPACED, Font.BOLD | Font.ITALIC, 12)
+    for (code <- List("en", "sv", "de", "tr", "xx"); size <- List(12.0f, 15.5f)) {
+      val behavior = LanguageBehavior.forLanguage(code)
+      behavior.customUiFont should be(None)
+      behavior.editorLinePadding should be(0)
+      behavior.editorFont(font, size) should be(font.deriveFont(size))
+    }
+  }
+
   test("default behavior is identity and Turkish owner rules require the full package prefix") {
     for (language <- List("en", "sv", "de", "xx")) {
       val behavior = LanguageBehavior.forLanguage(language)

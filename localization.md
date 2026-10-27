@@ -233,3 +233,13 @@ once. Execution support passes its behavior to the output pane; the editor passe
 its behavior to the completion provider. Tests can supply behavior without
 changing the process's language selection. Translation algorithms and public
 language APIs remain in language-specific code.
+
+Font presentation also belongs to `LanguageBehavior`: `customUiFont` optionally
+overrides UI/menu fonts, `editorFont(baseFont, baseSize)` selects the editor font,
+and `editorLinePadding` supplies extra pixels for line layout and repainting.
+The defaults leave UI fonts untouched, derive the editor's existing font at the
+requested size, and add no padding. Hindi supplies the bundled Noto font with
+the UI size increase, editor size factor, and one-pixel lower-matra margin.
+Font loading and UI-default lookup stay lazy because behavior selection precedes
+look-and-feel setup. Language-menu entries and language-change messages use the
+target language's behavior, so Hindi labels render in an English UI as well.

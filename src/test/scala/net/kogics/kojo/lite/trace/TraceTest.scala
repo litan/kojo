@@ -242,7 +242,13 @@ perimeter
     endEvents.size should be(4)
 
     val position = endEvents(0)
-    assert(position.pret === s"Point(40.00 , 0.00)" || position.pret ===  s"Point(40,00 , 0,00)")
+    // Point.toString is localized in the traced JVM; compare the coordinates
+    // independently of the digit shapes used by its display locale.
+    val positionText = position.pret.map { c =>
+      val digit = Character.digit(c, 10)
+      if (digit < 0) c else ('0' + digit).toChar
+    }
+    assert(positionText === "Point(40.00 , 0.00)" || positionText === "Point(40,00 , 0,00)")
 
     val heading = endEvents(1)
     assert(heading.pret === "180.0")

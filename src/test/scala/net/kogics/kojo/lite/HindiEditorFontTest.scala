@@ -1,13 +1,14 @@
 package net.kogics.kojo.lite
 
-import java.awt.{Rectangle, RenderingHints}
+import java.awt.{Font, Rectangle, RenderingHints}
 import java.awt.font.TextLayout
 import java.awt.image.BufferedImage
 import java.lang.reflect.InvocationTargetException
 import javax.swing.{JFrame, SwingUtilities}
 import net.kogics.kojo.lite.i18n.{LangInit, LanguageBehavior}
 import net.kogics.kojo.util.Utils
-import org.fife.ui.rsyntaxtextarea.{RSyntaxTextArea, SyntaxConstants, TokenTypes}
+import org.fife.ui.rsyntaxtextarea.{RSyntaxTextArea, RSyntaxTextAreaEditorKit, SyntaxConstants, TokenTypes}
+import org.fife.ui.rtextarea.RTextArea
 import org.jmock.{Expectations, Mockery}
 import org.jmock.Expectations.returnValue
 import org.jmock.lib.legacy.ClassImposteriser
@@ -24,8 +25,15 @@ class HindiEditorFontTest extends FunSuite with Matchers {
     catch { case e: InvocationTargetException => throw e.getCause }
   }
 
-  private def withEditor(language: String)(body: ScriptEditor => Unit): Unit = {
+  private def withEditor(language: String)(body: ScriptEditor => Unit): Unit =
+    withEditor(language, LanguageBehavior.forLanguage(language))(body)
+
+  private def withEditor(language: String, behavior: LanguageBehavior)(body: ScriptEditor => Unit): Unit = {
     val previousContext = Utils.kojoCtx
+    val manager = RSyntaxTextArea.getCodeTemplateManager()
+    val savedTemplates = manager.getTemplates
+    val templatesEnabled = RSyntaxTextArea.getTemplatesEnabled()
+    val iconGroup = RTextArea.getIconGroup()
     val context = new Mockery
     context.setImposteriser(ClassImposteriser.INSTANCE)
     val execution = context.mock(classOf[CodeExecutionSupport])
@@ -38,7 +46,7 @@ class HindiEditorFontTest extends FunSuite with Matchers {
     })
     val frame = new JFrame
     try {
-      val editor = new ScriptEditor(execution, frame, LanguageBehavior.Default)
+      val editor = new ScriptEditor(execution, frame, behavior)
       editor.showInterpreterPane()
       frame.setContentPane(editor)
       frame.setUndecorated(true)
@@ -51,8 +59,69 @@ class HindiEditorFontTest extends FunSuite with Matchers {
     finally {
       frame.dispose()
       Utils.kojoCtx = previousContext
+      manager.replaceTemplates(savedTemplates)
+      RSyntaxTextArea.setTemplatesEnabled(templatesEnabled)
+      if (iconGroup != null) RTextArea.setIconGroup(iconGroup)
     }
     context.assertIsSatisfied()
+  }
+
+  test("default and Turkish editor fonts and line metrics match the original initialization") {
+    onEdt {
+      for (language <- List("en", "hi");
+          behavior <- List(LanguageBehavior.Default, LanguageBehavior.forLanguage("tr"))) {
+        withEditor(language, behavior) { editor =>
+          val expected = new RSyntaxTextArea(5, 80)
+          expected.setSyntaxEditingStyle(editor.codePane.getSyntaxEditingStyle)
+          Theme.currentTheme.loadEditorTheme.apply(expected)
+          expected.setFont(expected.getFont.deriveFont(editor.getFont.getSize2D))
+          val increase = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
+          for (_ <- 1 to 2) increase.actionPerformedImpl(null, expected)
+          editor.codePanes.foreach { pane =>
+            pane.getFont should be(expected.getFont)
+            pane.getLineHeight should be(expected.getLineHeight)
+            pane.getMaxAscent should be(expected.getMaxAscent)
+            for (kind <- List(TokenTypes.IDENTIFIER, TokenTypes.RESERVED_WORD,
+                TokenTypes.COMMENT_EOL, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE)) {
+              pane.getFontForTokenType(kind) should be(expected.getFontForTokenType(kind))
+            }
+          }
+        }
+      }
+    }
+  }
+
+  test("an injected behavior controls fonts and padding independently of the context language") {
+    onEdt {
+      val selected = LanguageBehavior.current
+      val requestedSizes = collection.mutable.ListBuffer.empty[Float]
+      val customFont = new Font(Font.SERIF, Font.ITALIC, 20).deriveFont(20.5f)
+      val behavior = new LanguageBehavior {
+        override def editorFont(baseFont: Font, baseSize: Float): Font = {
+          requestedSizes += baseSize
+          customFont
+        }
+        override def editorLinePadding: Int = 3
+      }
+      withEditor("hi", behavior) { editor =>
+        requestedSizes.toList should be(List.fill(2)(editor.getFont.getSize2D))
+        val expected = new RSyntaxTextArea(5, 80)
+        expected.setSyntaxEditingStyle(editor.codePane.getSyntaxEditingStyle)
+        Theme.currentTheme.loadEditorTheme.apply(expected)
+        expected.setFont(customFont)
+        val increase = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
+        for (_ <- 1 to 2) increase.actionPerformedImpl(null, expected)
+        editor.codePanes.foreach { pane =>
+          pane.getFont should be(expected.getFont)
+          pane.getLineHeight should be(expected.getLineHeight + 3)
+          pane.getMaxAscent should be(expected.getMaxAscent)
+        }
+      }
+      withEditor("en", LanguageBehavior.forLanguage("hi")) { editor =>
+        editor.codePanes.foreach(checkMatras)
+      }
+      (LanguageBehavior.current eq selected) should be(true)
+    }
   }
 
   private def checkMatras(pane: RSyntaxTextArea): Unit = {
