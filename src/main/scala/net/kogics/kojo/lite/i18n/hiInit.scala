@@ -154,7 +154,7 @@ object HindiInit {
     HindiAPI.builtins = builtins
     builtins match {
       case b: Builtins =>
-        println("Welcome to Kojo with the Swedish turtle!")
+        println("हिंदी कोजो में आपका स्वागत है!")
         if (b.isScratchPad) {
           println("History will not be saved when you close Kojo Scratchpad.")
         }
