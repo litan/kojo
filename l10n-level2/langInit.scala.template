@@ -145,6 +145,10 @@ object $$lang$API {
 }
 
 object $$lang$Init {
+  def preInit(): Unit = LanguageEditorDataRegistry.register(
+    LanguageEditorData($$langCode$.keywordList, $$langCode$.keywordTemplateMap, $$langCode$.codeTemplateMap)
+  )
+
   def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     $$lang$API.builtins = builtins
