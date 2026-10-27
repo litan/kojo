@@ -63,14 +63,21 @@ object ScalaToolchainFetcher {
   val checksumFileName = "SHA256SUMS"
 
   private val defaultBaseUrl = "https://github.com/bulent2k2/scala-2/releases/download"
+  private val downloadBaseUrls: Map[String, String] = Map(
+    "hi" -> "https://github.com/litan/scala-indic/releases/download",
+    "tr" -> defaultBaseUrl,
+    "sv" -> defaultBaseUrl
+  )
 
   // A dead or stalled connection must not hang the launcher: connect fast,
   // and give a stalled read a minute before giving up and falling back.
   private val ConnectTimeoutMs = 10 * 1000
   private val ReadTimeoutMs = 60 * 1000
 
-  def baseUrlFor(version: String, lang: String): String =
-    System.getProperty("kojo.toolchain.url", s"$defaultBaseUrl/v$version-$lang").stripSuffix("/")
+  def baseUrlFor(version: String, lang: String): String = {
+    val base = downloadBaseUrls.getOrElse(lang, defaultBaseUrl).stripSuffix("/")
+    System.getProperty("kojo.toolchain.url", s"$base/v$version-$lang").stripSuffix("/")
+  }
 
   def isComplete(dir: File): Boolean =
     dir.isDirectory && jarNames.forall(n => new File(dir, n).isFile) && new File(dir, checksumFileName).isFile

@@ -36,6 +36,25 @@ class ScalaToolchainFetcherTest extends FunSuite with Matchers {
   val version = "2.13.18"
   val lang = "sv" // proves the fetcher is language-neutral
 
+  test("Hindi releases use scala-indic while other languages retain the Scala fork") {
+    withProperty("kojo.toolchain.url", null) {
+      ScalaToolchainFetcher.baseUrlFor(version, "hi") should be(
+        s"https://github.com/litan/scala-indic/releases/download/v$version-hi")
+      for (code <- List("tr", "sv", "xx")) {
+        ScalaToolchainFetcher.baseUrlFor(version, code) should be(
+          s"https://github.com/bulent2k2/scala-2/releases/download/v$version-$code")
+      }
+    }
+  }
+
+  test("explicit toolchain URL overrides language defaults and removes the trailing slash") {
+    withProperty("kojo.toolchain.url", "https://example.com/toolchain/") {
+      for (code <- List("hi", "tr", "sv")) {
+        ScalaToolchainFetcher.baseUrlFor(version, code) should be("https://example.com/toolchain")
+      }
+    }
+  }
+
   def withRelease(body: (File, File, Recorder) => Unit): Unit = withTempDir { root =>
     val remote = provision(new File(root, "remote"), s"$version-test-build")
     val dest = new File(root, "installation/toolchains/scala-sv/2.13.18")

@@ -123,9 +123,13 @@ installation override if the run configuration does not include the checkout's
 Selection precedence is `-Dkojo.toolchain=<code>`, then the existing
 `kojo.properties` setting, then the persisted UI language. `en` explicitly keeps
 stock Scala. A compiler override does not change the UI language. Release
-assets are downloaded directly from
-`https://github.com/bulent2k2/scala-2/releases/download/v<scala-version>-<code>/`;
-`-Dkojo.toolchain.url=<release-directory-URL>` overrides this URL.
+assets are downloaded from the language's base URL in
+`ScalaToolchainFetcher.downloadBaseUrls`, followed by
+`/v<scala-version>-<code>/`. Hindi uses
+`https://github.com/litan/scala-indic/releases/download`; Turkish and Swedish use
+`https://github.com/bulent2k2/scala-2/releases/download`, which is also the
+fallback for languages without a configured base URL.
+`-Dkojo.toolchain.url=<release-directory-URL>` overrides the complete URL.
 
 All four jars and `SHA256SUMS` are required. Downloaded sets are validated in a
 private staging directory before publication. Reused sets are checked offline
