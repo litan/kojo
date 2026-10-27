@@ -79,11 +79,10 @@ class ScriptEditor(
   val codePane: RSyntaxTextArea = new ScriptEditorTextArea(5, 80, languageBehavior.editorLinePadding)
   val codePane2: RSyntaxTextArea = new ScriptEditorTextArea(5, 80, languageBehavior.editorLinePadding)
   val codePanes = List(codePane, codePane2)
-  private val preferredEditorFontFamily: Option[String] = None
-//  GraphicsEnvironment
-//    .getLocalGraphicsEnvironment
-//    .getAvailableFontFamilyNames
-//    .find(_.equalsIgnoreCase("Consolas"))
+  private val preferredEditorFontFamily = GraphicsEnvironment
+    .getLocalGraphicsEnvironment
+    .getAvailableFontFamilyNames
+    .find(_.equalsIgnoreCase("Consolas"))
   val statusStrip = new StatusStrip()
   val (
     toolbar,

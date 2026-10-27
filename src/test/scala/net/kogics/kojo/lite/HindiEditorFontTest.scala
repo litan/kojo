@@ -1,6 +1,6 @@
 package net.kogics.kojo.lite
 
-import java.awt.{Font, Rectangle, RenderingHints}
+import java.awt.{Font, GraphicsEnvironment, Rectangle, RenderingHints}
 import java.awt.font.TextLayout
 import java.awt.image.BufferedImage
 import java.lang.reflect.InvocationTargetException
@@ -74,7 +74,12 @@ class HindiEditorFontTest extends FunSuite with Matchers {
           val expected = new RSyntaxTextArea(5, 80)
           expected.setSyntaxEditingStyle(editor.codePane.getSyntaxEditingStyle)
           Theme.currentTheme.loadEditorTheme.apply(expected)
-          expected.setFont(expected.getFont.deriveFont(editor.getFont.getSize2D))
+          val themedFont = expected.getFont
+          val baseFont = GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
+            .find(_.equalsIgnoreCase("Consolas"))
+            .map(family => new Font(family, themedFont.getStyle, themedFont.getSize))
+            .getOrElse(themedFont)
+          expected.setFont(baseFont.deriveFont(editor.getFont.getSize2D))
           val increase = new RSyntaxTextAreaEditorKit.IncreaseFontSizeAction
           for (_ <- 1 to 2) increase.actionPerformedImpl(null, expected)
           editor.codePanes.foreach { pane =>
