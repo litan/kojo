@@ -35,7 +35,10 @@ object LangInit {
     val font = try Font.createFont(Font.TRUETYPE_FONT, stream)
     finally stream.close()
     GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(font)
-    val defaultSize = UIManager.getLookAndFeelDefaults.get("defaultFont").asInstanceOf[Font].getSize
+    // Some look and feels, including Metal, only define component fonts.
+    val defaultFont = Option(UIManager.getLookAndFeelDefaults.getFont("defaultFont"))
+      .getOrElse(UIManager.getFont("Label.font"))
+    val defaultSize = defaultFont.getSize
     // Noto's Devanagari UI font needs Swing's fallback for Latin text in mixed-language labels.
     StyleContext.getDefaultStyleContext.getFont(font.getFamily, Font.PLAIN, defaultSize + 2)
   }
