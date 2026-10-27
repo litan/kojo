@@ -17,12 +17,16 @@ package net.kogics.kojo.lite
 
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
+import java.awt.Component
+import java.awt.Container
 import javax.swing.ImageIcon
 import javax.swing.JCheckBoxMenuItem
+import javax.swing.JLabel
 import javax.swing.JMenu
 import javax.swing.JOptionPane
 
 import net.kogics.kojo.core
+import net.kogics.kojo.lite.i18n.LangInit
 import net.kogics.kojo.util.Utils
 
 /** Creates the Language menu.
@@ -34,7 +38,7 @@ import net.kogics.kojo.util.Utils
   */
 object LangMenuFactory {
 
-  val supportedLanguages = List("en", "sv", "fr", "pl", "nl", "eo", /*"hi", */ "de", "ru", "it", "hr", "tr", "es")
+  val supportedLanguages = List("en", "sv", "fr", "pl", "nl", "eo", "hi", "de", "ru", "it", "hr", "tr", "es")
 
   def createLangMenu()(implicit kojoCtx: core.KojoCtx) = {
     var langMenus: Seq[JCheckBoxMenuItem] = Vector()
@@ -47,18 +51,23 @@ object LangMenuFactory {
             mi.setSelected(false)
           }
         }
-        JOptionPane.showMessageDialog(
-          kojoCtx.frame,
+        val pane = languageChangePane(
           Utils.loadString("S_LangChanged").format(e.getSource.asInstanceOf[JCheckBoxMenuItem].getText),
-          Utils.loadString("S_LangChange"),
-          JOptionPane.INFORMATION_MESSAGE
+          lang
         )
+        val dialog = pane.createDialog(kojoCtx.frame, Utils.loadString("S_LangChange"))
+        pane.selectInitialValue()
+        try dialog.setVisible(true)
+        finally dialog.dispose()
       }
     }
 
     def langMenuItem(langCode: String) = {
       val langName = langNames(langCode)
       val mitem = new JCheckBoxMenuItem(langName)
+      if (langCode == "hi") {
+        mitem.setFont(LangInit.fontForHindi)
+      }
       mitem.addActionListener(langHandler)
       mitem.setActionCommand(langCode)
       // mitem.setIcon(langIcon(langCode))
@@ -77,6 +86,20 @@ object LangMenuFactory {
     )
     supportedLanguages.foreach { lang => langMenu.add(langMenuItem(lang)) }
     langMenu
+  }
+
+  private[lite] def languageChangePane(message: String, lang: String): JOptionPane = {
+    val pane = new JOptionPane(message, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION)
+    if (lang == "hi") {
+      // The current UI may still be English. Apply Hindi support to each wrapped message label.
+      def setMessageFont(component: Component): Unit = component match {
+        case label: JLabel => label.setFont(LangInit.fontForHindi)
+        case container: Container => container.getComponents.foreach(setMessageFont)
+        case _ =>
+      }
+      setMessageFont(pane)
+    }
+    pane
   }
 
   private val langNames = Map(

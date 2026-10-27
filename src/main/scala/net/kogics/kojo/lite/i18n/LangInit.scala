@@ -4,6 +4,7 @@ import java.awt.Font
 import java.awt.GraphicsEnvironment
 import java.util.prefs.Preferences
 import javax.swing.plaf.FontUIResource
+import javax.swing.text.StyleContext
 import javax.swing.JMenu
 import javax.swing.UIManager
 
@@ -30,10 +31,13 @@ object LangInit {
   }
 
   lazy val fontForHindi = {
-    val font = Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream("/i18n/gargi.ttf"))
+    val stream = getClass.getResourceAsStream("/i18n/NotoSansDevanagariUI-Regular.ttf")
+    val font = try Font.createFont(Font.TRUETYPE_FONT, stream)
+    finally stream.close()
     GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(font)
     val defaultSize = UIManager.getLookAndFeelDefaults.get("defaultFont").asInstanceOf[Font].getSize
-    font.deriveFont(Font.PLAIN, defaultSize + 4.0f)
+    // Noto's Devanagari UI font needs Swing's fallback for Latin text in mixed-language labels.
+    StyleContext.getDefaultStyleContext.getFont(font.getFamily, Font.PLAIN, defaultSize + 2)
   }
 
   def lookAndFeelReady(): Unit = {
@@ -74,6 +78,8 @@ object LangInit {
         TurkishInit.init(b)
       case "es" =>
         SpanishInit.init(b)
+      case "hi" =>
+        HindiInit.init(b)
       case _ =>
     }
   }

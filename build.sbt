@@ -25,6 +25,29 @@ testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-s")
 
 autoScalaLibrary := false
 
+val refreshHindiBundle = taskKey[File]("Refresh the checked-in Hindi resource bundle from its UTF-8 source")
+
+refreshHindiBundle := {
+    val log = streams.value.log
+    val source = baseDirectory.value / "src/main/i18n/Bundle_hi.properties"
+    val cached = baseDirectory.value / "src/main/resources/net/kogics/kojo/lite/Bundle_hi.properties"
+    val header = "# Generated from src/main/i18n/Bundle_hi.properties; do not edit this copy.\n" +
+        "# Run ./sbt.sh refreshHindiBundle after editing the UTF-8 source.\n"
+    val sourceText = IO.read(source, java.nio.charset.StandardCharsets.UTF_8)
+    val escaped = sourceText.flatMap { c =>
+        if (c > 0x7f) "\\u%04X".format(c.toInt) else c.toString
+    }
+    val generated = header + escaped
+    if (!cached.exists || IO.read(cached, java.nio.charset.StandardCharsets.US_ASCII) != generated) {
+        IO.write(cached, generated, java.nio.charset.StandardCharsets.US_ASCII)
+        log.info("Refreshed the cached Hindi resource bundle")
+    }
+    cached
+}
+
+Compile / compile := ((Compile / compile) dependsOn refreshHindiBundle).value
+Compile / unmanagedResources := ((Compile / unmanagedResources) dependsOn refreshHindiBundle).value
+
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % scalaVer,
     "org.scala-lang" % "scala-compiler" % scalaVer,
