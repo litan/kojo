@@ -76,8 +76,9 @@ class ScriptEditor(
 ) extends JPanel with EditorFileSupport {
 
   var tabSize = 4
-  val codePane = new RSyntaxTextArea(5, 80)
-  val codePane2 = new RSyntaxTextArea(5, 80)
+  private val hindiEditor = kojoCtx.userLanguage == "hi"
+  val codePane: RSyntaxTextArea = new ScriptEditorTextArea(5, 80, hindiEditor)
+  val codePane2: RSyntaxTextArea = new ScriptEditorTextArea(5, 80, hindiEditor)
   val codePanes = List(codePane, codePane2)
   private val preferredEditorFontFamily: Option[String] = None
 //  GraphicsEnvironment
@@ -118,11 +119,16 @@ class ScriptEditor(
   codePanes.foreach(Theme.currentTheme.loadEditorTheme.apply(_))
   codePanes.foreach { cp =>
     val oldf = cp.getFont
-    val baseFont = preferredEditorFontFamily match {
-      case Some(family) => new Font(family, oldf.getStyle, oldf.getSize)
-      case None         => oldf
-    }
-    val f = baseFont.deriveFont(getFont.getSize.toFloat)
+    val baseFont =
+      if (hindiEditor) i18n.LangInit.fontForHindi.deriveFont(oldf.getStyle)
+      else preferredEditorFontFamily match {
+        case Some(family) => new Font(family, oldf.getStyle, oldf.getSize)
+        case None         => oldf
+      }
+    // Use Devanagari font metrics for line layout and repaint bounds as well as glyphs.
+    // Its letter bodies need a larger point size to match the usual Roman editor font.
+    val size = getFont.getSize2D * (if (hindiEditor) 1.1f else 1.0f)
+    val f = baseFont.deriveFont(size)
     cp.setFont(f)
   }
 

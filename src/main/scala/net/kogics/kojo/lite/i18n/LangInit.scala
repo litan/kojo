@@ -41,7 +41,7 @@ object LangInit {
       .getOrElse(UIManager.getFont("Label.font"))
     val defaultSize = defaultFont.getSize
     // Noto's Devanagari UI font needs Swing's fallback for Latin text in mixed-language labels.
-    StyleContext.getDefaultStyleContext.getFont(font.getFamily, Font.PLAIN, defaultSize + 2)
+    StyleContext.getDefaultStyleContext.getFont(font.getFamily, Font.PLAIN, defaultSize + 4)
   }
 
   def lookAndFeelReady(): Unit = {
