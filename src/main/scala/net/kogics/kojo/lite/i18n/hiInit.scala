@@ -145,6 +145,10 @@ object HindiAPI {
 }
 
 object HindiInit {
+  def preInit(): Unit = LanguageEditorDataRegistry.register(
+    LanguageEditorData(keywords = List("मान", "चर", "परिभाषा"))
+  )
+
   def init(builtins: CoreBuiltins): Unit = {
     //initialize unstable value
     HindiAPI.builtins = builtins

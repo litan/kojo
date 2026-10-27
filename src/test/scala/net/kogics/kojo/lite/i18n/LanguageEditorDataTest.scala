@@ -35,7 +35,7 @@ class LanguageEditorDataTest extends FunSuite with Matchers {
     }
   }
 
-  test("preInit registers static Turkish and Swedish data without builtins") {
+  test("preInit registers static Turkish, Swedish and Hindi data without builtins") {
     val previous = LanguageEditorDataRegistry.current
     try {
       TurkishInit.preInit()
@@ -51,6 +51,15 @@ class LanguageEditorDataTest extends FunSuite with Matchers {
       swedish.keywordSet should not contain "dez"
       swedish.keywordTemplates should be(empty)
       swedish.keywordHelp should be(empty)
+      HindiInit.preInit()
+      val hindi = LanguageEditorDataRegistry.current
+      hindi.keywordSet should be(Set("मान", "चर", "परिभाषा"))
+      CodeCompletionUtils.Keywords.take(3) should be(List("मान", "चर", "परिभाषा"))
+      CodeCompletionUtils.Keywords should contain("val")
+      hindi.keywordSet should not contain "värde"
+      hindi.keywordSet should not contain "dez"
+      HindiInit.preInit()
+      LanguageEditorDataRegistry.current should be(hindi)
     }
     finally LanguageEditorDataRegistry.register(previous)
   }

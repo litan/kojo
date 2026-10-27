@@ -43,13 +43,13 @@ class ScalaToolchainTest extends FunSuite with Matchers {
     List("/kojo/classes", rithica.getPath) ::: jars ::: List("/lib/scala-swing.jar", "/extra/helper.jar")
   }
 
-  for (maven <- List(false, true)) {
-    test(s"complete substitution preserves unrelated dependency order (Maven layout: $maven)") {
+  for (code <- List("tr", "sv", "hi"); maven <- List(false, true)) {
+    test(s"$code substitution preserves unrelated dependency order (Maven layout: $maven)") {
       withTempDir { root =>
         withProperty("kojo.install.dir", null) {
-          val dir = provision(ScalaToolchain.toolchainDir(root, "tr", version), version)
+          val dir = provision(ScalaToolchain.toolchainDir(root, code, version), version)
           val cp = launcherCp(root, maven)
-          val selected = ScalaToolchain.select(cp, "tr")
+          val selected = ScalaToolchain.select(cp, code)
           selected.take(4) should be(ScalaToolchainFetcher.jarNames.map(n => new File(dir, n).getPath).toList)
           selected.drop(4) should be(List("/kojo/classes", new File(root, "lib/rithica.jar").getPath,
             "/lib/scala-swing.jar", "/extra/helper.jar"))
@@ -133,6 +133,10 @@ class ScalaToolchainTest extends FunSuite with Matchers {
     ScalaToolchain.chooseCode(Some("en"), Some("tr"), "tr") should be("en")
     ScalaToolchain.chooseCode(None, Some("sv"), "tr") should be("sv")
     ScalaToolchain.chooseCode(None, None, "tr") should be("tr")
+    ScalaToolchain.chooseCode(None, None, "hi") should be("hi")
+    ScalaToolchain.chooseCode(Some("hi"), Some("tr"), "en") should be("hi")
+    ScalaToolchain.chooseCode(None, Some("hi"), "en") should be("hi")
+    ScalaToolchain.chooseCode(Some("en"), None, "hi") should be("en")
     ScalaToolchain.chooseCode(Some("unknown"), Some("sv"), "tr") should be("sv")
     ScalaToolchain.chooseCode(None, None, "de") should be("en")
     withProperty("kojo.toolchain", "tr") { ScalaToolchain.selectedCode should be("tr") }
@@ -161,7 +165,10 @@ class ScalaToolchainTest extends FunSuite with Matchers {
   test("metadata uses stock defaults without initializing language implementations") {
     LanguageRegistry.forLanguage("en").alternativeToolchain should be(None)
     LanguageRegistry.forLanguage("de").alternativeToolchain should be(None)
-    LanguageRegistry.alternativeToolchainCodes should be(Set("tr", "sv"))
+    LanguageRegistry.forLanguage("hi").alternativeToolchain should be(Some("hi"))
+    LanguageRegistry.alternativeToolchainCodes should be(Set("tr", "sv", "hi"))
+    LanguageRegistry.downloadMessage("hi") should include("हिंदी")
+    LanguageRegistry.downloadFailurePrompt("hi").continueLabel should be("जारी रखें")
     LanguageRegistry.downloadMessage("tr") should include("Türkçe")
     LanguageRegistry.downloadMessage("sv") should include("svenska")
     LanguageRegistry.downloadMessage("xx") should be(LanguageRegistry.defaultDownloadMessage)

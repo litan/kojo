@@ -33,6 +33,10 @@ object LanguageRegistry {
 
   val registrations: List[LanguageDescriptor] = List(
     LanguageDescriptor("en"),
+    LanguageDescriptor("hi", Some("hi"), "हिंदी Scala टूलचेन डाउनलोड हो रहा है", DownloadFailurePrompt(
+      "हिंदी कुंजीशब्द समर्थन डाउनलोड नहीं हो सका।\n" +
+        "कोजो Scala के मानक कुंजीशब्दों के साथ जारी रह सकता है।",
+      "जारी रखें")),
     LanguageDescriptor("tr", Some("tr"), "Türkçe Scala derleyicisi indiriliyor", DownloadFailurePrompt(
       "Türkçe anahtar sözcük desteği indirilemedi.\n" +
         "Kojo, standart Scala anahtar sözcükleriyle devam edebilir.",

@@ -27,13 +27,15 @@ class LanguageInitializationTest extends FunSuite with Matchers {
   }
 
   for ((code, keyword, translated) <- List(
-      ("en", "dez", "Int"), ("tr", "dez", "Sayı"), ("sv", "värde", "Int"), ("xx", "dez", "Int"))) {
+      ("en", "dez", "Int"), ("tr", "dez", "Sayı"), ("sv", "värde", "Int"),
+      ("hi", "मान", "Int"), ("xx", "dez", "Int"))) {
     test(s"$code startup registers data and fixes selection before any consumer is constructed") {
       val urls = System.getProperty("java.class.path").split(File.pathSeparator).map(p => new File(p).toURI.toURL)
       val loader = new URLClassLoader(urls, null) {
         override def loadClass(name: String, resolve: Boolean): Class[_] = {
           if (name.startsWith("net.kogics.kojo.lite.i18n.TurkishAPI") ||
               name.startsWith("net.kogics.kojo.lite.i18n.SwedishAPI") ||
+              name.startsWith("net.kogics.kojo.lite.i18n.HindiAPI") ||
               (code != "tr" && name.startsWith("net.kogics.kojo.lite.i18n.tr."))) {
             throw new ClassNotFoundException("Startup unexpectedly loaded " + name)
           }
@@ -55,7 +57,7 @@ class LanguageInitializationTest extends FunSuite with Matchers {
           val keywordSet = data.getClass.getMethod("keywordSet").invoke(data)
           keywordSet.getClass.getMethod("contains", classOf[Object]).invoke(keywordSet, keyword)
         }
-        isKeyword should be(java.lang.Boolean.valueOf(code == "tr" || code == "sv"))
+        isKeyword should be(java.lang.Boolean.valueOf(Set("tr", "sv", "hi")(code)))
         val (behaviorsClass, behaviors) = module("net.kogics.kojo.lite.i18n.LanguageBehavior")
         val behavior = behaviorsClass.getMethod("current").invoke(behaviors)
         def present = behavior.getClass.getMethod("updateTypes", classOf[String]).invoke(behavior, "Int")
@@ -64,7 +66,7 @@ class LanguageInitializationTest extends FunSuite with Matchers {
         prefs.put("user.language", "de")
         System.setProperty("user.language", "de")
         System.setProperty("kojo.toolchain", "en")
-        isKeyword should be(java.lang.Boolean.valueOf(code == "tr" || code == "sv"))
+        isKeyword should be(java.lang.Boolean.valueOf(Set("tr", "sv", "hi")(code)))
         present should be(translated)
         initClass.getMethod("language").invoke(init) should be(code)
       }}

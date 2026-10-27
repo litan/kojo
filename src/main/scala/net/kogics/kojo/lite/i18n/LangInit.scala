@@ -22,6 +22,7 @@ object LangInit {
       System.setProperty("user.language", userLanguage)
     }
     language match {
+      case "hi" => HindiInit.preInit()
       case "sv" => SvInit.preInit()
       case "tr" => TurkishInit.preInit()
       case _    =>
