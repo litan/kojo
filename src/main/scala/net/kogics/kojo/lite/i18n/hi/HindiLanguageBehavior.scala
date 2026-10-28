@@ -24,8 +24,11 @@ object HindiLanguageBehavior extends LanguageBehavior {
   override def customUiFont: Option[Font] = Some(font)
 
   override def editorFont(baseFont: Font, baseSize: Float): Font =
-    font.deriveFont(baseFont.getStyle).deriveFont(baseSize * 1.1f)
+    new Font(Font.MONOSPACED, baseFont.getStyle, 1).deriveFont(baseSize * 1.1f)
 
-  // Lower matras extend one pixel beyond RSyntaxTextArea's metrics at some sizes.
-  override def editorLinePadding: Int = 1
+  // Lower matras in the monospace fallback extend beyond RSyntaxTextArea's metrics.
+  override def editorBottomPadding: Int = 2
+
+  // Upper matras need space above the monospace fallback's reported ascent.
+  override def editorTopPadding: Int = 1
 }

@@ -5,7 +5,7 @@ import java.awt.font.TextLayout
 import java.awt.image.BufferedImage
 import java.lang.reflect.InvocationTargetException
 import javax.swing.{JFrame, SwingUtilities}
-import net.kogics.kojo.lite.i18n.{LangInit, LanguageBehavior}
+import net.kogics.kojo.lite.i18n.LanguageBehavior
 import net.kogics.kojo.util.Utils
 import org.fife.ui.rsyntaxtextarea.{RSyntaxTextArea, RSyntaxTextAreaEditorKit, SyntaxConstants, TokenTypes}
 import org.fife.ui.rtextarea.RTextArea
@@ -106,7 +106,8 @@ class HindiEditorFontTest extends FunSuite with Matchers {
           requestedSizes += baseSize
           customFont
         }
-        override def editorLinePadding: Int = 3
+        override def editorBottomPadding: Int = 3
+        override def editorTopPadding: Int = 2
       }
       withEditor("hi", behavior) { editor =>
         requestedSizes.toList should be(List.fill(2)(editor.getFont.getSize2D))
@@ -118,8 +119,8 @@ class HindiEditorFontTest extends FunSuite with Matchers {
         for (_ <- 1 to 2) increase.actionPerformedImpl(null, expected)
         editor.codePanes.foreach { pane =>
           pane.getFont should be(expected.getFont)
-          pane.getLineHeight should be(expected.getLineHeight + 3)
-          pane.getMaxAscent should be(expected.getMaxAscent)
+          pane.getLineHeight should be(expected.getLineHeight + 5)
+          pane.getMaxAscent should be(expected.getMaxAscent + 2)
         }
       }
       withEditor("en", LanguageBehavior.forLanguage("hi")) { editor =>
@@ -137,7 +138,7 @@ class HindiEditorFontTest extends FunSuite with Matchers {
       for (kind <- List(TokenTypes.IDENTIFIER, TokenTypes.RESERVED_WORD,
           TokenTypes.COMMENT_EOL, TokenTypes.LITERAL_STRING_DOUBLE_QUOTE)) {
         val font = pane.getFontForTokenType(kind)
-        font.getFamily should be(LangInit.fontForHindi.getFamily)
+        font.getFamily should be(Font.MONOSPACED)
         font.canDisplayUpTo("किं कीं कुं कूँ कृं हैं हूँ val") should be(-1)
         val layout = new TextLayout("किं कीं कुं कूँ कृं हैं हूँ", font, graphics.getFontRenderContext)
         val ink = layout.getPixelBounds(null, 0, 0)

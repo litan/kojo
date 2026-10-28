@@ -1,6 +1,6 @@
 package net.kogics.kojo.lite.i18n
 
-import java.awt.Font
+import java.awt.{Font, GraphicsEnvironment}
 
 import net.kogics.kojo.core.{CompletionInfo, MemberKind}
 import net.kogics.kojo.lite.KojoCompletionProvider
@@ -12,13 +12,18 @@ import org.scalatest.junit.JUnitRunner
 /** Observable behavior captured before extracting the language hooks. */
 @RunWith(classOf[JUnitRunner])
 class LanguageBehaviorTest extends FunSuite with Matchers with BeforeAndAfter {
-  test("default font hooks preserve the existing family, style and fractional size") {
+  test("default font hooks prefer Consolas when available and preserve style and fractional size") {
     val font = new Font(Font.MONOSPACED, Font.BOLD | Font.ITALIC, 12)
+    val expectedFont = GraphicsEnvironment.getLocalGraphicsEnvironment.getAvailableFontFamilyNames
+      .find(_.equalsIgnoreCase("Consolas"))
+      .map(family => new Font(family, font.getStyle, font.getSize))
+      .getOrElse(font)
     for (code <- List("en", "sv", "de", "tr", "xx"); size <- List(12.0f, 15.5f)) {
       val behavior = LanguageBehavior.forLanguage(code)
       behavior.customUiFont should be(None)
-      behavior.editorLinePadding should be(0)
-      behavior.editorFont(font, size) should be(font.deriveFont(size))
+      behavior.editorBottomPadding should be(0)
+      behavior.editorTopPadding should be(0)
+      behavior.editorFont(font, size) should be(expectedFont.deriveFont(size))
     }
   }
 

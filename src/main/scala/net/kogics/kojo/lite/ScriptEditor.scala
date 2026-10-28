@@ -16,7 +16,6 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Event
 import java.awt.Font
-import java.awt.GraphicsEnvironment
 import java.awt.Point
 import java.awt.Toolkit
 import javax.swing.event.CaretEvent
@@ -76,13 +75,11 @@ class ScriptEditor(
 ) extends JPanel with EditorFileSupport {
 
   var tabSize = 4
-  val codePane: RSyntaxTextArea = new ScriptEditorTextArea(5, 80, languageBehavior.editorLinePadding)
-  val codePane2: RSyntaxTextArea = new ScriptEditorTextArea(5, 80, languageBehavior.editorLinePadding)
+  val codePane: RSyntaxTextArea =
+    new ScriptEditorTextArea(5, 80, languageBehavior.editorBottomPadding, languageBehavior.editorTopPadding)
+  val codePane2: RSyntaxTextArea =
+    new ScriptEditorTextArea(5, 80, languageBehavior.editorBottomPadding, languageBehavior.editorTopPadding)
   val codePanes = List(codePane, codePane2)
-  private val preferredEditorFontFamily = GraphicsEnvironment
-    .getLocalGraphicsEnvironment
-    .getAvailableFontFamilyNames
-    .find(_.equalsIgnoreCase("Consolas"))
   val statusStrip = new StatusStrip()
   val (
     toolbar,
@@ -116,12 +113,7 @@ class ScriptEditor(
 
   codePanes.foreach(Theme.currentTheme.loadEditorTheme.apply(_))
   codePanes.foreach { cp =>
-    val oldf = cp.getFont
-    val baseFont = preferredEditorFontFamily match {
-      case Some(family) => new Font(family, oldf.getStyle, oldf.getSize)
-      case None         => oldf
-    }
-    cp.setFont(languageBehavior.editorFont(baseFont, getFont.getSize2D))
+    cp.setFont(languageBehavior.editorFont(cp.getFont, getFont.getSize2D))
   }
 
   val inputMap = codePane.getInputMap
