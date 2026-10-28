@@ -71,7 +71,7 @@ class LanguageInitializationTest extends FunSuite with Matchers {
         val (behaviorsClass, behaviors) = module("net.kogics.kojo.lite.i18n.LanguageBehavior")
         val behavior = behaviorsClass.getMethod("current").invoke(behaviors)
         behavior.getClass.getMethod("splashMessageFontSizeDelta").invoke(behavior) should be(
-          if (code == "hi") 2 else 0)
+          if (code == "hi") 3 else 0)
         if (code == "hi") behavior.getClass.getName should endWith("hi.HindiLanguageBehavior$")
         if (code != "hi") {
           behavior.getClass.getMethod("customUiFont").invoke(behavior).toString should be("None")
