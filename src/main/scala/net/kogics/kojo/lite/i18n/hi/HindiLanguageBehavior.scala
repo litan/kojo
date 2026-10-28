@@ -23,6 +23,8 @@ object HindiLanguageBehavior extends LanguageBehavior {
 
   override def customUiFont: Option[Font] = Some(font)
 
+  override def splashMessageFontSizeDelta: Int = 3
+
   override def editorFont(baseFont: Font, baseSize: Float): Font =
     new Font(Font.MONOSPACED, baseFont.getStyle, 1).deriveFont(baseSize * 1.1f)
 

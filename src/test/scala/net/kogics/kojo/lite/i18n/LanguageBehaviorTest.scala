@@ -21,6 +21,7 @@ class LanguageBehaviorTest extends FunSuite with Matchers with BeforeAndAfter {
     for (code <- List("en", "sv", "de", "tr", "xx"); size <- List(12.0f, 15.5f)) {
       val behavior = LanguageBehavior.forLanguage(code)
       behavior.customUiFont should be(None)
+      behavior.splashMessageFontSizeDelta should be(0)
       behavior.editorBottomPadding should be(0)
       behavior.editorTopPadding should be(0)
       behavior.editorFont(font, size) should be(expectedFont.deriveFont(size))

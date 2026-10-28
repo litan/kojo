@@ -9,6 +9,7 @@ trait LanguageBehavior {
   def recognizesOwner(owner: String): Boolean = false
   def allowsPlainNameFallback(owner: String): Boolean = false
   def customUiFont: Option[Font] = None
+  def splashMessageFontSizeDelta: Int = 0
   def editorFont(baseFont: Font, baseSize: Float): Font = {
     val preferredFont = LanguageBehavior.preferredEditorFontFamily match {
       case Some(family) => new Font(family, baseFont.getStyle, baseFont.getSize)
