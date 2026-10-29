@@ -1,11 +1,12 @@
 package net.kogics.kojo.lite
 
-import java.awt.{Font, GraphicsEnvironment, Rectangle, RenderingHints}
+import java.awt.{Font, GraphicsEnvironment, Rectangle, RenderingHints, Toolkit}
+import java.awt.event.{ActionEvent, InputEvent, KeyEvent}
 import java.awt.font.TextLayout
 import java.awt.image.BufferedImage
 import java.lang.reflect.InvocationTargetException
-import javax.swing.{JFrame, SwingUtilities}
-import net.kogics.kojo.lite.i18n.LanguageBehavior
+import javax.swing.{JFrame, KeyStroke, SwingUtilities}
+import net.kogics.kojo.lite.i18n.{HindiInit, LanguageBehavior, LanguageEditorDataRegistry}
 import net.kogics.kojo.util.Utils
 import org.fife.ui.rsyntaxtextarea.{RSyntaxTextArea, RSyntaxTextAreaEditorKit, SyntaxConstants, TokenTypes}
 import org.fife.ui.rtextarea.RTextArea
@@ -93,6 +94,41 @@ class HindiEditorFontTest extends FunSuite with Matchers {
           }
         }
       }
+    }
+  }
+
+  test("the Hindi aage snippet expands through the existing shortcut in both editor panes") {
+    onEdt {
+      val previousData = LanguageEditorDataRegistry.current
+      try {
+        HindiInit.preInit()
+        withEditor("hi") { editor =>
+          val proposals = collection.mutable.ArrayBuffer.empty[org.fife.ui.autocomplete.Completion]
+          editor.provider.addTemplateProposals(proposals, "aag", 3)
+          proposals.map(_.getInputText).toList should be(List("aage"))
+          proposals.head.asInstanceOf[org.fife.ui.autocomplete.TemplateCompletion]
+            .getInsertionInfo(editor.codePane, false).getTextToInsert should be("आगे()")
+
+          val shortcut = KeyStroke.getKeyStroke(
+            KeyEvent.VK_SPACE,
+            Toolkit.getDefaultToolkit.getMenuShortcutKeyMask | InputEvent.SHIFT_DOWN_MASK
+          )
+          val before = "// before\n"
+          val after = "\n// after"
+          editor.codePanes.foreach { pane =>
+            pane.setText(before + "aage" + after)
+            pane.setCaretPosition(before.length + "aage".length)
+            val action = pane.getActionMap.get(pane.getInputMap.get(shortcut))
+            action should not be (null)
+            action.actionPerformed(new ActionEvent(pane, ActionEvent.ACTION_PERFORMED, ""))
+            pane.getText should be(before + "आगे()" + after)
+            pane.getCaretPosition should be(before.length + "आगे(".length)
+            pane.replaceSelection("100")
+            pane.getText should be(before + "आगे(100)" + after)
+          }
+        }
+      }
+      finally LanguageEditorDataRegistry.register(previousData)
     }
   }
 

@@ -40,6 +40,7 @@ class LanguageEditorDataTest extends FunSuite with Matchers {
     try {
       TurkishInit.preInit()
       val turkish = LanguageEditorDataRegistry.current
+      CodeTemplates.templates should not contain key ("aage")
       turkish.keywordSet should contain("dez")
       turkish.keywordSet should not contain "val"
       turkish.keywordHelp(TwMode)("val") should include("dez")
@@ -47,12 +48,14 @@ class LanguageEditorDataTest extends FunSuite with Matchers {
       LanguageEditorDataRegistry.current should be(turkish)
       SvInit.preInit()
       val swedish = LanguageEditorDataRegistry.current
+      CodeTemplates.templates should not contain key ("aage")
       swedish.keywordSet should contain("värde")
       swedish.keywordSet should not contain "dez"
       swedish.keywordTemplates should be(empty)
       swedish.keywordHelp should be(empty)
       HindiInit.preInit()
       val hindi = LanguageEditorDataRegistry.current
+      CodeTemplates("aage") should be("आगे(${cursor})")
       hindi.keywordSet should be(Set("मान", "चर", "परिभाषा"))
       CodeCompletionUtils.Keywords.take(3) should be(List("मान", "चर", "परिभाषा"))
       CodeCompletionUtils.Keywords should contain("val")
@@ -60,6 +63,8 @@ class LanguageEditorDataTest extends FunSuite with Matchers {
       hindi.keywordSet should not contain "dez"
       HindiInit.preInit()
       LanguageEditorDataRegistry.current should be(hindi)
+      LanguageEditorDataRegistry.register(LanguageEditorDataRegistry.Empty)
+      CodeTemplates.templates should not contain key ("aage")
     }
     finally LanguageEditorDataRegistry.register(previous)
   }
