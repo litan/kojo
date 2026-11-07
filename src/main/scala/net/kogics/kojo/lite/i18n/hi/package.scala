@@ -7,6 +7,20 @@ package object hi {
 
   val keywordTemplateMap: Map[String, String] = Map.empty
   val codeTemplateMap: Map[String, String] = Map(
-    "aage" -> "आगे(${cursor})"
+    "maan" -> "मान ${cursor} = ",
+    "char" -> "चर ${cursor} = ",
+    "paribhasha" -> "परिभाषा ${cursor}() = {\n    \n}",
+    "aage" -> "आगे(${cursor})",
+    "poncho" -> "पोंछो(${cursor})",
+    "dayen" -> "दाएँ(${cursor})",
+    "bayen" -> "बाएँ(${cursor})",
+    "dohrao" -> "दोहराओ(${cursor}) {\n    \n}",
+    "kudo" -> "कूदो(${cursor})",
+    "kalam_niche" -> "कलम_नीचे(${cursor})",
+    "kalam_upar" -> "कलम_ऊपर(${cursor})",
+    "kalam_niche_hai" -> "कलम_नीचे_है${cursor} ",
+    "kalam_ka_rang" -> "कलम_का_रंग(${cursor})",
+    "kalam_ki_motai" -> "कलम_की_मोटाई(${cursor})",
+    "bharne_ka_rang" -> "भरने_का_रंग(${cursor})"
   )
 }
