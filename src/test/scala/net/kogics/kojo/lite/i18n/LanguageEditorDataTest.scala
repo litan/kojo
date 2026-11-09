@@ -56,8 +56,8 @@ class LanguageEditorDataTest extends FunSuite with Matchers {
       HindiInit.preInit()
       val hindi = LanguageEditorDataRegistry.current
       CodeTemplates("aage") should be("आगे(${cursor})")
-      hindi.keywordSet should be(Set("मान", "चर", "परिभाषा"))
-      CodeCompletionUtils.Keywords.take(3) should be(List("मान", "चर", "परिभाषा"))
+      hindi.keywordSet should be(Set("मान", "चर", "परिभाषा", "यदि", "अन्यथा"))
+      CodeCompletionUtils.Keywords.take(5) should be(List("मान", "चर", "परिभाषा", "यदि", "अन्यथा"))
       CodeCompletionUtils.Keywords should contain("val")
       hindi.keywordSet should not contain "värde"
       hindi.keywordSet should not contain "dez"
