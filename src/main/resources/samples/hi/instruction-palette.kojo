@@ -46,20 +46,20 @@ import scala.collection.mutable.LinkedHashMap
 
 val tTemplates = LinkedHashMap(
     "पोंछो()                " -> "पोंछो()",
-    "forward(n)           " -> "forward(${c})",
-    "hop(n)               " -> "hop(${c})",
-    "right(a)             " -> "right(${c})",
-    "left(a)              " -> "left(${c})",
-    "setSpeed(s)          " -> "setSpeed(${c}medium)",
-    "setPenColor(c)       " -> "setPenColor(${c}randomColor)",
-    "setFillColor(c)      " -> "setFillColor(${c}blue)",
-    "setPenThickness(t)   " -> "setPenThickness(${c}4)",
-    "setBackground(c)     " -> "setBackground(${c}black)",
+    "आगे()           " -> "आगे(${c})",
+    "कूदो()               " -> "कूदो(${c})",
+    "दाएँ()             " -> "दाएँ(${c})",
+    "बाएँ()              " -> "बाएँ(${c})",
+    "setSpeed()          " -> "setSpeed(${c}medium)",
+    "कलम_का_रंग()       " -> "कलम_का_रंग(${c}randomColor)",
+    "भरने_का_रंग()      " -> "भरने_का_रंग(${c}blue)",
+    "कलम_की_मोटाई()   " -> "कलम_की_मोटाई(${c}4)",
+    "पृष्ठभूमि()     " -> "पृष्ठभूमि(${c}black)",
     "savePosHe()          " -> "savePosHe()",
     "restorePosHe()       " -> "restorePosHe()",
-    "repeat(n) {...}      " -> """repeat(${c}4) {
+    "दोहराओ() {...}      " -> """दोहराओ(${c}4) {
 }""",
-    "def       [command]  " -> """def ${c}newcmd() {
+    "चर       [command]  " -> """चर ${c}newcmd() {
 }"""
 )
 
