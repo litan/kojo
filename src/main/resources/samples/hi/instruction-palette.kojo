@@ -7,7 +7,7 @@ val headerStyle = "text-align:center;font-size:95%;color:#fafafa;font-weight:bol
 val codeStyle = "background-color:#4a6cd4;margin-top:3px"
 val linkStyle = "color:#fafafa"
 val summaryLinkStyle = "color:#1a1a1a"
-val codeLinkStyle = "text-decoration:none;font-size:x-small;color:#fafafa;"
+val codeLinkStyle = "text-decoration:none;font-size:medium;color:#fafafa;"
 val footerStyle = "font-size:90%;margin-top:15px;color:#1a1a1a;"
 val helpStyle = "color:black;background-color:#ffffcc;margin:10px;"
 val footerPanelColor = Color(0x93989c)
@@ -59,7 +59,7 @@ val tTemplates = LinkedHashMap(
     "restorePosHe()       " -> "restorePosHe()",
     "दोहराओ() {...}      " -> """दोहराओ(${c}4) {
 }""",
-    "परिभाषा       [command]  " -> """परिभाषा ${c}newcmd() {
+    "परिभाषा       [निर्देश]  " -> """परिभाषा ${c}newcmd() {
 }"""
 )
 
