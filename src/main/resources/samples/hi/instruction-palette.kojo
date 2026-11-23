@@ -59,7 +59,7 @@ val tTemplates = LinkedHashMap(
     "restorePosHe()       " -> "restorePosHe()",
     "दोहराओ() {...}      " -> """दोहराओ(${c}4) {
 }""",
-    "चर       [command]  " -> """चर ${c}newcmd() {
+    "परिभाषा       [command]  " -> """परिभाषा ${c}newcmd() {
 }"""
 )
 
