@@ -43,7 +43,7 @@ class ScalaToolchainTest extends FunSuite with Matchers {
     List("/kojo/classes", rithica.getPath) ::: jars ::: List("/lib/scala-swing.jar", "/extra/helper.jar")
   }
 
-  for (code <- List("tr", "sv", "hi"); maven <- List(false, true)) {
+  for (code <- List("tr", "hi"); maven <- List(false, true)) {
     test(s"$code substitution preserves unrelated dependency order (Maven layout: $maven)") {
       withTempDir { root =>
         withProperty("kojo.install.dir", null) {
@@ -58,11 +58,11 @@ class ScalaToolchainTest extends FunSuite with Matchers {
     }
   }
 
-  test("stock and unknown selections do not resolve or download alternatives") {
+  test("stock, disabled Swedish and unknown selections do not resolve or download alternatives") {
     withTempDir { root =>
       withProperty("kojo.install.dir", new File(root, "missing").getPath) {
         val cp = List("/some/scala-library-2.13.18.jar", "/kojo/classes")
-        List("en", "de", "xx").foreach(code => ScalaToolchain.select(cp, code) should be(cp))
+        List("en", "sv", "de", "xx").foreach(code => ScalaToolchain.select(cp, code) should be(cp))
         root.listFiles().toList should be(Nil)
       }
     }
@@ -72,10 +72,10 @@ class ScalaToolchainTest extends FunSuite with Matchers {
     withTempDir { root =>
       val overrideRoot = new File(root, "override")
       overrideRoot.mkdirs()
-      val dir = provision(ScalaToolchain.toolchainDir(overrideRoot, "sv", version), version)
+      val dir = provision(ScalaToolchain.toolchainDir(overrideRoot, "hi", version), version)
       withProperty("kojo.install.dir", overrideRoot.getPath) {
         ScalaToolchain.installationRoot(launcherCp(root, true)) should be(Some(overrideRoot))
-        ScalaToolchain.select(List("/kojo/classes"), "sv").head should be(new File(dir, "scala-library.jar").getPath)
+        ScalaToolchain.select(List("/kojo/classes"), "hi").head should be(new File(dir, "scala-library.jar").getPath)
       }
     }
   }
@@ -129,33 +129,40 @@ class ScalaToolchainTest extends FunSuite with Matchers {
   }
 
   test("system override, app property and UI language keep their precedence") {
-    ScalaToolchain.chooseCode(Some("tr"), Some("sv"), "en") should be("tr")
+    ScalaToolchain.chooseCode(Some("tr"), Some("hi"), "en") should be("tr")
     ScalaToolchain.chooseCode(Some("en"), Some("tr"), "tr") should be("en")
-    ScalaToolchain.chooseCode(None, Some("sv"), "tr") should be("sv")
+    ScalaToolchain.chooseCode(None, Some("hi"), "tr") should be("hi")
     ScalaToolchain.chooseCode(None, None, "tr") should be("tr")
     ScalaToolchain.chooseCode(None, None, "hi") should be("hi")
     ScalaToolchain.chooseCode(Some("hi"), Some("tr"), "en") should be("hi")
     ScalaToolchain.chooseCode(None, Some("hi"), "en") should be("hi")
     ScalaToolchain.chooseCode(Some("en"), None, "hi") should be("en")
-    ScalaToolchain.chooseCode(Some("unknown"), Some("sv"), "tr") should be("sv")
+    ScalaToolchain.chooseCode(Some("unknown"), Some("hi"), "tr") should be("hi")
     ScalaToolchain.chooseCode(None, None, "de") should be("en")
     withProperty("kojo.toolchain", "tr") { ScalaToolchain.selectedCode should be("tr") }
     withProperty("kojo.toolchain", "en") { ScalaToolchain.selectedCode should be("en") }
   }
 
+  test("disabled Swedish uses stock Scala and is ignored as an explicit override") {
+    ScalaToolchain.chooseCode(None, None, "sv") should be("en")
+    ScalaToolchain.chooseCode(Some("sv"), Some("hi"), "tr") should be("hi")
+    ScalaToolchain.chooseCode(None, Some("sv"), "tr") should be("tr")
+    ScalaToolchain.chooseCode(Some("sv"), Some("sv"), "sv") should be("en")
+  }
+
   test("scratchpads retain the running toolchain even when selection would choose another language") {
     withTempDir { root =>
       val trDir = provision(ScalaToolchain.toolchainDir(root, "tr", version), version)
-      val svDir = provision(ScalaToolchain.toolchainDir(root, "sv", version), version)
+      val hiDir = provision(ScalaToolchain.toolchainDir(root, "hi", version), version)
       withProperty("kojo.install.dir", root.getPath) {
         val runningCp = ScalaToolchain.select(launcherCp(root, true), "tr")
-        withProperty("kojo.toolchain", "sv") {
-          ScalaToolchain.selectedCode should be("sv")
+        withProperty("kojo.toolchain", "hi") {
+          ScalaToolchain.selectedCode should be("hi")
           withProperty("java.class.path", runningCp.mkString(File.pathSeparator)) {
             val scratchpadCp = NewKojoInstance.classpath.split(File.pathSeparatorChar).toList
             scratchpadCp.takeRight(runningCp.size) should be(runningCp)
             scratchpadCp should contain(new File(trDir, "scala-compiler.jar").getPath)
-            scratchpadCp should not contain(new File(svDir, "scala-compiler.jar").getPath)
+            scratchpadCp should not contain(new File(hiDir, "scala-compiler.jar").getPath)
           }
         }
       }
@@ -165,12 +172,14 @@ class ScalaToolchainTest extends FunSuite with Matchers {
   test("metadata uses stock defaults without initializing language implementations") {
     LanguageRegistry.forLanguage("en").alternativeToolchain should be(None)
     LanguageRegistry.forLanguage("de").alternativeToolchain should be(None)
+    LanguageRegistry.forLanguage("sv").alternativeToolchain should be(None)
     LanguageRegistry.forLanguage("hi").alternativeToolchain should be(Some("hi"))
-    LanguageRegistry.alternativeToolchainCodes should be(Set("tr", "sv", "hi"))
+    LanguageRegistry.alternativeToolchainCodes should be(Set("tr", "hi"))
     LanguageRegistry.downloadMessage("hi") should include("हिंदी")
     LanguageRegistry.downloadFailurePrompt("hi").continueLabel should be("जारी रखें")
     LanguageRegistry.downloadMessage("tr") should include("Türkçe")
-    LanguageRegistry.downloadMessage("sv") should include("svenska")
+    LanguageRegistry.downloadMessage("sv") should be(LanguageRegistry.defaultDownloadMessage)
+    LanguageRegistry.downloadFailurePrompt("sv") should be(LanguageRegistry.defaultDownloadFailurePrompt)
     LanguageRegistry.downloadMessage("xx") should be(LanguageRegistry.defaultDownloadMessage)
     LanguageRegistry.downloadFailurePrompt("xx") should be(LanguageRegistry.defaultDownloadFailurePrompt)
   }

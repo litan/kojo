@@ -67,7 +67,7 @@ class LanguageInitializationTest extends FunSuite with Matchers {
           val keywordSet = data.getClass.getMethod("keywordSet").invoke(data)
           keywordSet.getClass.getMethod("contains", classOf[Object]).invoke(keywordSet, keyword)
         }
-        isKeyword should be(java.lang.Boolean.valueOf(Set("tr", "sv", "hi")(code)))
+        isKeyword should be(java.lang.Boolean.valueOf(Set("tr", "hi")(code)))
         val (behaviorsClass, behaviors) = module("net.kogics.kojo.lite.i18n.LanguageBehavior")
         val behavior = behaviorsClass.getMethod("current").invoke(behaviors)
         behavior.getClass.getMethod("splashMessageFontSizeDelta").invoke(behavior) should be(
@@ -102,7 +102,7 @@ class LanguageInitializationTest extends FunSuite with Matchers {
         prefs.put("user.language", "de")
         System.setProperty("user.language", "de")
         System.setProperty("kojo.toolchain", "en")
-        isKeyword should be(java.lang.Boolean.valueOf(Set("tr", "sv", "hi")(code)))
+        isKeyword should be(java.lang.Boolean.valueOf(Set("tr", "hi")(code)))
         present should be(translated)
         initClass.getMethod("language").invoke(init) should be(code)
       }}
