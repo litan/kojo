@@ -41,10 +41,10 @@ object LanguageRegistry {
       "Türkçe anahtar sözcük desteği indirilemedi.\n" +
         "Kojo, standart Scala anahtar sözcükleriyle devam edebilir.",
       "Devam et")),
-    LanguageDescriptor("sv", Some("sv"), "Laddar ner Scala-verktygen för svenska", DownloadFailurePrompt(
-      "Stödet för svenska nyckelord kunde inte laddas ner.\n" +
-        "Kojo kan fortsätta med vanliga Scala-nyckelord.",
-      "Fortsätt"))
+//    LanguageDescriptor("sv", Some("sv"), "Laddar ner Scala-verktygen för svenska", DownloadFailurePrompt(
+//      "Stödet för svenska nyckelord kunde inte laddas ner.\n" +
+//        "Kojo kan fortsätta med vanliga Scala-nyckelord.",
+//      "Fortsätt"))
   )
 
   def forLanguage(code: String): LanguageDescriptor =

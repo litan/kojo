@@ -21,7 +21,7 @@ object LangInit {
     }
     language match {
       case "hi" => HindiInit.preInit()
-      case "sv" => SvInit.preInit()
+//      case "sv" => SvInit.preInit()
       case "tr" => TurkishInit.preInit()
       case _    =>
     }
