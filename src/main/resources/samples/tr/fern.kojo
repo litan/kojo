@@ -1,5 +1,5 @@
-def eğreltiOtu(x: Kesir) {
-    if (x > 1) {
+tanım eğreltiOtu(x: Kesir) {
+    eğer (x > 1) {
         biçimleriBelleğeYaz()
         kalemKalınlığınıKur(x / 10 + 1)
         kalemRenginiKur(Renk(0, mutlakDeğer(200 - x * 3).sayıya, 40))
@@ -16,7 +16,7 @@ def eğreltiOtu(x: Kesir) {
     }
 }
 
-def eğreltiOtuResim = Resim {
+tanım eğreltiOtuResim = Resim {
     eğreltiOtu(45)
 }
 
@@ -24,7 +24,7 @@ silVeSakla()
 canlandırmaHızınıKur(10)
 artalanıKurDik(Renk(255, 255, 150), beyaz)
 
-val otVeYansıması = Resim.diziDikey(
+dez otVeYansıması = Resim.diziDikey(
     yansıtX -> (soluk(230) * bulanık(2) -> eğreltiOtuResim),
     götür(-20, 0) * kalemRengi(Renk(234, 234, 234)) * kalemBoyu(1) -> Resim.yatay(40),
     götür(0, 3) -> eğreltiOtuResim

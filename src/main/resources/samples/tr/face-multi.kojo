@@ -4,7 +4,7 @@ silVeSakla()
 // k:       kareyi çizen kaplumbağa
 // boy:     karenin kenar uzunluğu
 // bekleme: kaplumbağanın hızını ayarlayarak eş zamanlı çizmek için
-def kare(k: Kaplumbağa, boy: Sayı, bekleme: Sayı) = {
+tanım kare(k: Kaplumbağa, boy: Sayı, bekleme: Sayı) = {
     k.canlandırmaHızınıKur(bekleme)
     yinele(4) {
         k.ileri(boy)
@@ -12,7 +12,7 @@ def kare(k: Kaplumbağa, boy: Sayı, bekleme: Sayı) = {
     }
 }
 
-def göz(k: Kaplumbağa, boy: Sayı, gecikmeSüresi: Sayı) {
+tanım göz(k: Kaplumbağa, boy: Sayı, gecikmeSüresi: Sayı) {
     kare(k, boy, gecikmeSüresi)
     k.kalemiKaldır()
     k.ileri(boy / 4)
@@ -24,14 +24,14 @@ def göz(k: Kaplumbağa, boy: Sayı, gecikmeSüresi: Sayı) {
     kare(k, boy / 2, gecikmeSüresi)
 }
 
-val yüz = yeniKaplumbağa(-100, -100)
-val göz1 = yeniKaplumbağa(-75, 25)
-val göz2 = yeniKaplumbağa(25, 25)
-val ağız = yeniKaplumbağa(-50, -50)
-val burun = yeniKaplumbağa(0, -25)
-val saç = yeniKaplumbağa(-110, 100)
-val beden = yeniKaplumbağa(25, -125)
-val ayaklar = yeniKaplumbağa(0, -150)
+dez yüz = yeniKaplumbağa(-100, -100)
+dez göz1 = yeniKaplumbağa(-75, 25)
+dez göz2 = yeniKaplumbağa(25, 25)
+dez ağız = yeniKaplumbağa(-50, -50)
+dez burun = yeniKaplumbağa(0, -25)
+dez saç = yeniKaplumbağa(-110, 100)
+dez beden = yeniKaplumbağa(25, -125)
+dez ayaklar = yeniKaplumbağa(0, -150)
 
 yüz.davran { kap =>
     kap.boyamaRenginiKur(kırmızı)

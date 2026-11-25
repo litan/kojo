@@ -161,6 +161,10 @@ object SwedishAPI {
 }
 
 object SvInit {
+  def preInit(): Unit = LanguageEditorDataRegistry.register(
+    LanguageEditorData(sv.keywordList, sv.keywordTemplateMap, sv.codeTemplateMap)
+  )
+
   def init(builtins: CoreBuiltins): Unit = {
     // initialize unstable value
     net.kogics.kojo.lite.i18n.SwedishAPI.builtins = builtins

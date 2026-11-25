@@ -4,11 +4,11 @@
 // Kaplumbağaları eş zamanlı hareket ettirmek için
 // kaplumbağa.davran yerine kaplumbağa.tepkiVer metodunu kullanalım
 silVeSakla()
-val k1 = yeniKaplumbağa(-500, 0)
+dez k1 = yeniKaplumbağa(-500, 0)
 k1.kalemRenginiKur(Renk(0, 0, 255, 120))
 k1.kalemKalınlığınıKur(4)
 
-val k2 = yeniKaplumbağa(500, 0)
+dez k2 = yeniKaplumbağa(500, 0)
 k2.kalemRenginiKur(Renk(0, 255, 0, 120))
 
 // tepkiVer'in çalıştırdığı komut dizisi GUI yani grafik ara yüz ile birlikte

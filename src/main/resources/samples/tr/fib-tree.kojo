@@ -2,22 +2,22 @@
 //     http://lalitpant.blogspot.in/2012/05/recursive-drawing-with-kojo.html
 // Bu sefer Kojo'nun zengin Resim dilini (Pictures API) kullanalım
 
-val büyüklük = 100
-def resim = Resim {
+dez büyüklük = 100
+tanım resim = Resim {
     yinele(4) {
         ileri(büyüklük)
         sağ()
     }
 }
 
-def gövde = büyüt(0.13, 1) * kalemRengi(renksiz) * boyaRengi(siyah) -> resim
+tanım gövde = büyüt(0.13, 1) * kalemRengi(renksiz) * boyaRengi(siyah) -> resim
 
 sil()
 artalanıKur(Renk(255, 170, 29))
 gizle()
 
-def çizim(n: Sayı): Resim = {
-    if (n <= 1)
+tanım çizim(n: Sayı): Resim = {
+    eğer (n <= 1)
         gövde
     else
         Resim.dizi(

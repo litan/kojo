@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
+set -ex
 java -version
-set -x 
 # Build Kojo
 rm -rf dist
 ./sbt.sh clean test buildDist
@@ -20,5 +20,5 @@ cp licenses/Kojo-license.txt .
 cd ..
 rm -rf Kojo-z Kojo-z??
 mv installerbuild Kojo-z
-rm Kojo.zip Kojo??.zip
+rm -f Kojo.zip Kojo??.zip
 zip -r Kojo.zip Kojo-z/*

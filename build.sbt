@@ -4,13 +4,49 @@ version := "2.9"
 scalaVersion := scalaVer
 run / fork := true
 scalacOptions := Seq("-feature", "-deprecation")
-run / javaOptions ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
+// The CMS flags target Java 8. Java 14 removed them, and a JVM given them there
+// refuses to start at all ("Unrecognized VM option"), so `sbt run` and `sbt test`
+// both fail on a modern JDK. Add them only on a JVM that still understands them.
+lazy val cmsFlags = {
+  val major = System.getProperty("java.specification.version").split('.').last.toInt
+  if (major < 14) Seq("-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled") else Seq.empty[String]
+}
+run / javaOptions ++= Seq("-Xmx1024m", "-Xss1m") ++ cmsFlags
 
 Test / fork := true
-Test / javaOptions ++= Seq("-Xmx1024m", "-Xss1m", "-XX:+UseConcMarkSweepGC", "-XX:+CMSClassUnloadingEnabled")
+Test / parallelExecution := false
+// Java 9+ needs these opens for the cglib/jmock based tests; harmless on Java 8.
+lazy val testAddOpens =
+  if (System.getProperty("java.specification.version").split('.').last.toInt >= 9)
+    Seq("--add-opens", "java.base/java.lang=ALL-UNNAMED", "--add-opens", "java.base/java.util=ALL-UNNAMED")
+  else Seq.empty[String]
+Test / javaOptions ++= Seq("-Xmx1024m", "-Xss1m") ++ cmsFlags ++ testAddOpens
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-s")
 
 autoScalaLibrary := false
+
+val refreshHindiBundle = taskKey[File]("Refresh the checked-in Hindi resource bundle from its UTF-8 source")
+
+refreshHindiBundle := {
+    val log = streams.value.log
+    val source = baseDirectory.value / "src/main/i18n/Bundle_hi.properties"
+    val cached = baseDirectory.value / "src/main/resources/net/kogics/kojo/lite/Bundle_hi.properties"
+    val header = "# Generated from src/main/i18n/Bundle_hi.properties; do not edit this copy.\n" +
+        "# Run ./sbt.sh refreshHindiBundle after editing the UTF-8 source.\n"
+    val sourceText = IO.read(source, java.nio.charset.StandardCharsets.UTF_8)
+    val escaped = sourceText.flatMap { c =>
+        if (c > 0x7f) "\\u%04X".format(c.toInt) else c.toString
+    }
+    val generated = header + escaped
+    if (!cached.exists || IO.read(cached, java.nio.charset.StandardCharsets.US_ASCII) != generated) {
+        IO.write(cached, generated, java.nio.charset.StandardCharsets.US_ASCII)
+        log.info("Refreshed the cached Hindi resource bundle")
+    }
+    cached
+}
+
+Compile / compile := ((Compile / compile) dependsOn refreshHindiBundle).value
+Compile / unmanagedResources := ((Compile / unmanagedResources) dependsOn refreshHindiBundle).value
 
 libraryDependencies ++= Seq(
     "org.scala-lang" % "scala-library" % scalaVer,
@@ -41,7 +77,10 @@ libraryDependencies ++= Seq(
     "org.objenesis" % "objenesis" % "1.0" % "test",
     "org.hamcrest" % "hamcrest-core" % "1.1" % "test",
     "org.hamcrest" % "hamcrest-library" % "1.1" % "test",
-    ("org.scalacheck"  %% "scalacheck" % "1.14.3" intransitive()) % "test"
+    ("org.scalacheck"  %% "scalacheck" % "1.14.3" intransitive()) % "test",
+    // the Turkish API exposes parallel sequences (ParDizi, in i18n/tr/dizin.scala),
+    // and user scripts gain .par with it
+    "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0"
 )
 
 //Build distribution

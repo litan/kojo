@@ -2,26 +2,26 @@
 // Araçlar menüsünden çağırdığımızda sessizce çalıştırılır ve (epey esaslı ve güçlü bir yazılım olarak) tarihçeye eklenir. 
 // Ama doğrudan yükleyip kendin de çalıştırabilirsin.
 
-val pageStyle = "background-color:#93989c; margin:5px;font-size:small;"
-val titleStyle = "font-size:95%;text-align:center;color:#1a1a1a;margin-top:5px;margin-bottom:3px;"
-val headerStyle = "text-align:center;font-size:95%;color:#fafafa;font-weight:bold;"
-val codeStyle = "background-color:#4a6cd4;margin-top:3px"
-val linkStyle = "color:#fafafa"
-val summaryLinkStyle = "color:#1a1a1a"
-val codeLinkStyle = "text-decoration:none;font-size:x-small;color:#fafafa;"
-val footerStyle = "font-size:90%;margin-top:15px;color:#1a1a1a;"
-val helpStyle = "color:black;background-color:#ffffcc;margin:10px;"
-val footerPanelColor = Color(0x93989c)
+dez pageStyle = "background-color:#93989c; margin:5px;font-size:small;"
+dez titleStyle = "font-size:95%;text-align:center;color:#1a1a1a;margin-top:5px;margin-bottom:3px;"
+dez headerStyle = "text-align:center;font-size:95%;color:#fafafa;font-weight:bold;"
+dez codeStyle = "background-color:#4a6cd4;margin-top:3px"
+dez linkStyle = "color:#fafafa"
+dez summaryLinkStyle = "color:#1a1a1a"
+dez codeLinkStyle = "text-decoration:none;font-size:x-small;color:#fafafa;"
+dez footerStyle = "font-size:90%;margin-top:15px;color:#1a1a1a;"
+dez helpStyle = "color:black;background-color:#ffffcc;margin:10px;"
+dez footerPanelColor = Color(0x93989c)
 
-val Turtle = "t"
-val Pictures = "p"
-val PictureXforms = "pt"
-val ControlFlow = "cf"
-val Abstraction = "a"
-val Conditions = "c"
-val Summary = "s"
+dez Turtle = "t"
+dez Pictures = "p"
+dez PictureXforms = "pt"
+dez ControlFlow = "cf"
+dez Abstraction = "a"
+dez Conditions = "c"
+dez Summary = "s"
 
-val catName = Map(
+dez catName = Map(
     Turtle -> "Kaplumbağacık",
     Pictures -> "Resim",
     PictureXforms -> "Resim Değişimleri",
@@ -29,7 +29,7 @@ val catName = Map(
     Abstraction -> "Soyutlama",
     Conditions -> "Koşullar"
 )
-def navLinks =
+tanım navLinks =
     <div style={ headerStyle }>
         <a style={ linkStyle } href={ "http://localpage/" + Turtle }>{ catName(Turtle) }</a> | <a style={ linkStyle } href={ "http://localpage/" + Pictures }>{ catName(Pictures) }</a> <br/>
         <a style={ linkStyle } href={ "http://localpage/" + PictureXforms }>{ catName(PictureXforms) }</a> <br/>
@@ -38,14 +38,14 @@ def navLinks =
         <hr/>
     </div>
 
-def footer =
+tanım footer =
     <div style={ footerStyle }>
         Mavi kutucuklara tıklayarak içindeki komutu yazılımcık düzenleyicisine taşıyabilirsin. İmleçin olduğu satır boşsa oraya, yoksa bir sonraki satıra yazılıverir.<br/>
     </div>
 
-import scala.collection.mutable.LinkedHashMap
+getir scala.collection.mutable.LinkedHashMap
 
-val tTemplates = LinkedHashMap(
+dez tTemplates = LinkedHashMap(
     "sil()                " -> "sil()",
     "ileri(adım)          " -> "ileri(${c})",
     "zıpla(adım)          " -> "zıpla(${c})",
@@ -60,11 +60,11 @@ val tTemplates = LinkedHashMap(
     "konumVeYönüGeriYükle()" -> "konumVeYönüGeriYükle()",
     "yinele(s) {...}      " -> """yinele(${c}4) {
 }""",
-    "def       [komut]  " -> """def ${c}yeniKomut() {
+    "tanım       [komut]  " -> """tanım ${c}yeniKomut() {
 }"""
 )
 
-val cfTemplates = LinkedHashMap(
+dez cfTemplates = LinkedHashMap(
     "yinele     [komut]  " -> """yinele(${c}4) {
     ileri(50)
     sağ(90)
@@ -72,25 +72,25 @@ val cfTemplates = LinkedHashMap(
     "yineleİçin [komut]  " -> """yineleİçin(${c}1 |-| 5) { n =>
     satıryaz(n)
 }""",
-    "if         [komut]  " -> """if (${c}doğru) {
+    "eğer       [komut]  " -> """eğer (${c}doğru) {
     boyamaRenginiKur(mavi)
 }""",
-    "if-else    [komut]  " -> """if (${c}doğru) {
+    "eğer-yoksa [komut]  " -> """eğer (${c}doğru) {
     boyamaRenginiKur(mavi)
 }
-else {
+yoksa {
     boyamaRenginiKur(yeşil)
 }""",
-    "if-else    [deyiş]     " -> """if (${c}doğru) 5 else 9""",
-    "for        [komut]  " -> """for (i <- ${c}1 |-| 4) {
+    "eğer-yoksa [deyiş]     " -> """eğer (${c}doğru) 5 yoksa 9""",
+    "için       [komut]  " -> """için (i <- ${c}1 |-| 4) {
     satıryaz(i)
 }""",
-    "for        [deyiş]     " -> """for (${c}i <- 1 |-| 4) yield (2 * i)""",
-    "özyinele   [komut]  " -> """def ${c}desen(adım: Sayı) {
-    if (adım <= 10) {
+    "için       [deyiş]     " -> """için (${c}i <- 1 |-| 4) ver (2 * i)""",
+    "özyinele   [komut]  " -> """tanım ${c}desen(adım: Sayı) {
+    eğer (adım <= 10) {
         ileri(adım)
     }
-    else {
+    yoksa {
         ileri(adım)
         sağ(90)
         desen(adım - 5)
@@ -98,23 +98,23 @@ else {
 }
 sil; hızıKur(orta); desen(100); desen(100); görünmez
 """,
-    "özyinele   [işlev]" -> """def faktöryel(s: Sayı): Sayı =
-    if (s == 0) 1 else s * faktöryel(s - 1)
+    "özyinele   [işlev]" -> """tanım faktöryel(s: Sayı): Sayı =
+    eğer (s == 0) 1 yoksa s * faktöryel(s - 1)
 satıryaz("f(5)=" + faktöryel(5))
-val s = 10
+dez s = 10
 satıryaz(s"f($s)=${faktöryel(s)}")"""
 )
 
-val aTemplates = LinkedHashMap(
-    "val       [deyiş]     " -> "val x = ${c}10",
-    "def       [komut]  " -> """def ${c}yeniKomut(adım: Sayı) {
+dez aTemplates = LinkedHashMap(
+    "dez       [deyiş] " -> "dez x = ${c}10",
+    "tanım     [komut] " -> """tanım ${c}yeniKomut(adım: Sayı) {
     ileri(adım)
 }""",
-    "def       [işlev] " -> """def ${c}irisi(sayı1: Sayı, sayı2: Sayı) =
-        if (sayı1 > sayı2) sayı1 else sayı2"""
+    "tanım     [işlev] " -> """tanım ${c}irisi(sayı1: Sayı, sayı2: Sayı) =
+        eğer (sayı1 > sayı2) sayı1 yoksa sayı2"""
 )
 
-val pTemplates = LinkedHashMap(
+dez pTemplates = LinkedHashMap(
     "Resim                  " -> """Resim {
     ${c}ileri(50)
 }""",
@@ -128,12 +128,12 @@ val pTemplates = LinkedHashMap(
     "Resim.daire(yç)        " -> "Resim.daire(${c}50)",
     "Resim.elips(yçx, yçy)  " -> "Resim.elips(${c}50, 25)",
     "Resim.yazı(y, boyu)    " -> """Resim.yazı(${c}"Merhaba!", 18)""",
-    "Resim.imge(f)          " -> "Resim.imge(${c}Costume.womanWaving)",
-    "Resim.arayüz(jc1)      " -> """Resim.arayüz(${c}Label("Selam!"))""",
-    "Resim.arayüz(jc2)      " -> """Resim.arayüz(${c}Button("Selam!")(satıryaz("Nasılsın?")))"""
+    "Resim.imge(f)          " -> "Resim.imge(${c}Çizim.elSallayanKadın)",
+    "Resim.arayüz(jc1)      " -> """Resim.arayüz(${c}ay.Tanıt("Selam!"))""",
+    "Resim.arayüz(jc2)      " -> """Resim.arayüz(${c}ay.Düğme("Selam!")(satıryaz("Nasılsın?")))"""
 )
 
-val ptTemplates = LinkedHashMap(
+dez ptTemplates = LinkedHashMap(
     "döndür(açı)          " -> "döndür(${c}45)",
     "büyüt(oran)          " -> "büyüt(${c}2.5)",
     "götür(x,y)           " -> "götür(${c}10, 10)",
@@ -149,7 +149,7 @@ val ptTemplates = LinkedHashMap(
     "eksenler             " -> "eksenler"
 )
 
-val cTemplates = LinkedHashMap(
+dez cTemplates = LinkedHashMap(
     "==   [eşittir]         " -> "${c}2 == 2",
     "!=   [eşit değil]      " -> "${c}1 != 2",
     ">    [büyüktür]        " -> "${c}2 > 1",
@@ -158,7 +158,7 @@ val cTemplates = LinkedHashMap(
     "<=   [küçük ya da eşit]" -> "${c}1 <= 2"
 )
 
-val instructions = Map(
+dez instructions = Map(
     "t" -> tTemplates.keys.toIndexedSeq,
     "cf" -> cfTemplates.keys.toIndexedSeq,
     "a" -> aTemplates.keys.toIndexedSeq,
@@ -167,7 +167,7 @@ val instructions = Map(
     "c" -> cTemplates.keys.toIndexedSeq
 )
 
-val templates = Map(
+dez templates = Map(
     "t" -> tTemplates,
     "cf" -> cfTemplates,
     "a" -> aTemplates,
@@ -176,19 +176,19 @@ val templates = Map(
     "c" -> cTemplates
 )
 
-def runLink(category: String, n: Int) = s"http://runhandler/$category/$n"
-def code(category: String, n: Int) =
+tanım runLink(category: String, n: Int) = s"http://runhandler/$category/$n"
+tanım code(category: String, n: Int) =
     <div style={ codeStyle }>
         <pre><code><a href={ runLink(category, n) } style={ codeLinkStyle }> { instructions(category)(n) }</a></code></pre>
     </div>
 
-def pageFor(cat: String) = Page(
+tanım pageFor(cat: String) = Page(
     name = cat,
     body =
         <body style={ pageStyle }>
         { navLinks }
         <div style={ titleStyle }><a style={ summaryLinkStyle } href={ "http://runhandler/%s/%s" format(Summary, cat) }>{ catName(cat) }</a></div>
-        { for (i <- 0 until instructions(cat).length) yield (if (instructions(cat)(i) == "") <br/> else code(cat, i)) }
+        { için (i <- 0 until instructions(cat).length) ver (eğer (instructions(cat)(i) == "") <br/> yoksa code(cat, i)) }
         { footer }
         </body>,
     code = {
@@ -197,7 +197,7 @@ def pageFor(cat: String) = Page(
     }
 )
 
-val story = Story(
+dez story = Story(
     pageFor(Turtle),
     pageFor(ControlFlow),
     pageFor(Abstraction),
@@ -208,25 +208,25 @@ val story = Story(
 
 switchToDefaultPerspective()
 stClear()
-val stWidth = {
-    val l = new javax.swing.JLabel("")
-    val te = textExtent("http://runhandler/cc/nn Pg n#n ", l.getFont.getSize, l.getFont.getName)
+dez stWidth = {
+    dez l = yeni javax.swing.JLabel("")
+    dez te = textExtent("http://runhandler/cc/nn Pg n#n ", l.getFont.getSize, l.getFont.getName)
     math.max(50, te.width.toInt)
 }
 stSetStorytellerWidth(stWidth)
 
-import javax.swing._
-import java.awt.event._
-@volatile var helpFrame: JWindow = _
-@volatile var helpPane: JEditorPane = _
-@volatile var footerPanel: JPanel = _
-@volatile var helpOn = yanlış
+getir javax.swing._
+getir java.awt.event._
+@volatile den helpFrame: JWindow = _
+@volatile den helpPane: JEditorPane = _
+@volatile den footerPanel: JPanel = _
+@volatile den helpOn = yanlış
 
-def insertCodeInline(cat: String, idx: Int) {
+tanım insertCodeInline(cat: String, idx: Int) {
     stInsertCodeInline(templates(cat)(instructions(cat)(idx)))
     helpFrame.setVisible(yanlış)
 }
-def insertCodeBlock(cat: String, idx: Int) {
+tanım insertCodeBlock(cat: String, idx: Int) {
     stInsertCodeBlock(templates(cat)(instructions(cat)(idx)))
     helpFrame.setVisible(yanlış)
 }
@@ -238,27 +238,27 @@ stAddLinkHandler(PictureXforms, story) { idx: Int => insertCodeInline(PictureXfo
 stAddLinkHandler(Abstraction, story) { idx: Int => insertCodeBlock(Abstraction, idx) }
 stAddLinkHandler(Conditions, story) { idx: Int => insertCodeInline(Conditions, idx) }
 
-def keyFor(cat: String, n: Int) = {
+tanım keyFor(cat: String, n: Int) = {
     instructions(cat)(n).takeWhile(c => c != '(' && c != '-' && c != '[').trim
 }
 
-def showCatHelp(cat: String, idx: Int) {
+tanım showCatHelp(cat: String, idx: Int) {
     showHelp(keyFor(cat, idx))
 }
 
-def showCatSummary(cat: String) {
+tanım showCatSummary(cat: String) {
     showHelp(catName(cat) + "Palette")
 }
 
-def showHelp(key: String) {
-    if (helpOn) {
+tanım showHelp(key: String) {
+    eğer (helpOn) {
         helpPane.setText(s"""<body style="$helpStyle">
         ${stHelpFor(key)}
         </body>
         """
         )
         helpPane.setCaretPosition(0)
-        val cloc = stCanvasLocation
+        dez cloc = stCanvasLocation
         helpFrame.setLocation(cloc.x + 5, cloc.y + 5)
         helpFrame.setVisible(doğru)
         // try to make sure that the help pane gains focus
@@ -284,41 +284,41 @@ stOnStoryStop(story) {
 stPlayStory(story)
 
 runInGuiThread {
-    helpFrame = new JWindow(stFrame)
+    helpFrame = yeni JWindow(stFrame)
     helpFrame.setBounds(300, 100, 500, 300)
-    helpPane = new JEditorPane
+    helpPane = yeni JEditorPane
     helpPane.setBackground(Color(255, 255, 51))
     helpPane.setContentType("text/html")
     helpPane.setEditable(yanlış)
-    val helpScroller = new JScrollPane(helpPane)
+    dez helpScroller = yeni JScrollPane(helpPane)
     helpScroller.setBorder(BorderFactory.createLineBorder(gray, 1))
     helpFrame.getContentPane.add(helpScroller)
-    helpPane.addFocusListener(new FocusAdapter {
-        override def focusLost(e: FocusEvent) = schedule(0.3) {
-            if (!helpPane.isFocusOwner) { // make Linux work
+    helpPane.addFocusListener(yeni FocusAdapter {
+        baskın tanım focusLost(e: FocusEvent) = schedule(0.3) {
+            eğer (!helpPane.isFocusOwner) { // make Linux work
                 helpFrame.setVisible(yanlış)
             }
         }
     })
 
-    footerPanel = new JPanel
+    footerPanel = yeni JPanel
     footerPanel.setBackground(footerPanelColor)
-    val helpLabel = new JLabel("Canlı Yardım"); helpLabel.setForeground(Color(0xfafafa))
+    dez helpLabel = yeni JLabel("Canlı Yardım"); helpLabel.setForeground(Color(0xfafafa))
     footerPanel.add(helpLabel)
-    val onButton = new JRadioButton("Açık"); onButton.setForeground(Color(0xfafafa))
+    dez onButton = yeni JRadioButton("Açık"); onButton.setForeground(Color(0xfafafa))
     onButton.setSelected(yanlış)
-    val offButton = new JRadioButton("Kapalı"); offButton.setForeground(Color(0xfafafa))
+    dez offButton = yeni JRadioButton("Kapalı"); offButton.setForeground(Color(0xfafafa))
     offButton.setSelected(doğru)
-    val onOff = new ButtonGroup; onOff.add(onButton); onOff.add(offButton)
+    dez onOff = yeni ButtonGroup; onOff.add(onButton); onOff.add(offButton)
     footerPanel.add(onButton)
     footerPanel.add(offButton)
-    onButton.addActionListener(new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
+    onButton.addActionListener(yeni ActionListener {
+        baskın tanım actionPerformed(e: ActionEvent) {
             helpOn = doğru
         }
     })
-    offButton.addActionListener(new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
+    offButton.addActionListener(yeni ActionListener {
+        baskın tanım actionPerformed(e: ActionEvent) {
             helpOn = yanlış
         }
     })

@@ -12,6 +12,31 @@ import java.util.Locale
 class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
   
   val kojoCtx = new NoOpKojoCtx
+
+  @Test def roundDoubleIsIndependentOfFormattingLocale(): Unit = {
+    val previousLocale = Locale.getDefault(Locale.Category.FORMAT)
+    val locales = List(Locale.US, new Locale("sv", "SE"), new Locale("tr", "TR"),
+      new Locale("hi", "IN"), Locale.GERMANY)
+    val examples = List(
+      (625.0, 2, 625.0),
+      (105.0, 2, 105.0),
+      (0.0, 2, 0.0),
+      (123.456, 2, 123.46),
+      (-123.456, 2, -123.46),
+      (1.234567, 4, 1.2346),
+      (2.6, 0, 3.0)
+    )
+    try {
+      for (locale <- locales) {
+        Locale.setDefault(Locale.Category.FORMAT, locale)
+        for ((value, precision, expected) <- examples) {
+          assertEquals(s"locale=$locale, value=$value, precision=$precision",
+            expected, Utils.roundDouble(value, precision), 0.0)
+        }
+      }
+    }
+    finally Locale.setDefault(Locale.Category.FORMAT, previousLocale)
+  }
   
   
   @Test def loadLocalizedResourceExistingGerman(): Unit ={

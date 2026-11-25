@@ -1,7 +1,7 @@
 // Bu program çalışınca fareyi tuvale götür.
 silVeSakla()
-val k1 = yeniKaplumbağa(-500, 0)
-val k2 = yeniKaplumbağa(500, 0)
+dez k1 = yeniKaplumbağa(-500, 0)
+dez k2 = yeniKaplumbağa(500, 0)
 
 // davran komuduyla çalışan komut dizisi arkadan gelen komutlarla paralel çalışır
 // bu sayede iki kaplumbağa eş zamanlı hareket ederler

@@ -242,6 +242,23 @@ trait AppMenu {
     physicsMenu.add(menuItemFor("S_NewtonsSecond", "physics-fma.kojo"))
     samplesMenu.add(physicsMenu)
 
+    // A journey: each sample adds one idea to the one before it. The order is
+    // deliberate; the roadmap is written at the top of bounce-start.kojo.
+    val simulationMenu = newJMenu(Utils.loadString("S_Simulation"))
+    simulationMenu.add(menuItemFor("S_SimStart", "bounce-start.kojo"))
+    simulationMenu.add(menuItemFor("S_SimReflection", "bounce-reflect.kojo"))
+    simulationMenu.add(menuItemFor("S_SimTable", "bounce-table.kojo"))
+    simulationMenu.add(menuItemFor("S_SimGravity", "bounce-gravity.kojo"))
+    simulationMenu.add(menuItemFor("S_SimFriction", "bounce-friction.kojo"))
+    simulationMenu.add(menuItemFor("S_SimTwoBodies", "nbody-two.kojo"))
+    simulationMenu.add(menuItemFor("S_ThreeBodies", "nbody-three.kojo"))
+    simulationMenu.add(menuItemFor("S_FourBodiesByHand", "nbody-four-by-hand.kojo"))
+    simulationMenu.add(menuItemFor("S_FourBodies", "nbody-four.kojo"))
+    simulationMenu.add(menuItemFor("S_StableTriple", "nbody-stable-triple.kojo"))
+    simulationMenu.add(menuItemFor("S_SolarSystem", "nbody-solar.kojo"))
+    simulationMenu.add(menuItemFor("S_SimCollision", "bounce-collision.kojo"))
+    samplesMenu.add(simulationMenu)
+
     val generativeArtMenu = newJMenu(Utils.loadString("S_GenerativeArt"))
     generativeArtMenu.add(menuItemFor("S_TiledLines", "genart-tiled-lines.kojo"))
     generativeArtMenu.add(menuItemFor("S_JoyDivision", "genart-joy-division.kojo"))
@@ -499,6 +516,8 @@ trait AppMenu {
                <li>Anay Kamat</li>
                <li>Vasu Sethia</li>
                <li>Mudit Pant</li>
+               <li>Sonika Thakral</li>
+               <li>Rishabh Rathore</li>
               </ul>
               <strong>Kojo</strong> is licensed under The GNU General Public License (GPL). The full text of the GPL is available at: http://www.gnu.org/licenses/gpl.html<br/><br/>
               Kojo runs on the Java Platform.<br/><br/>

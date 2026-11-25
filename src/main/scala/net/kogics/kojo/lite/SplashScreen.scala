@@ -8,6 +8,7 @@ import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JWindow
 
+import net.kogics.kojo.lite.i18n.LanguageBehavior
 import net.kogics.kojo.util.Utils
 
 class SplashScreen extends JWindow {
@@ -27,8 +28,9 @@ class SplashScreen extends JWindow {
   kojoIcon.setBounds(0, 0, 430, 280);
 
   val msg = new JLabel(Utils.loadString("S_Loading"))
-  msg.setFont(new Font(Font.SANS_SERIF, Font.BOLD | Font.ITALIC, 14))
-  msg.setBounds(60, 150, 250, 20);
+  msg.setFont(new Font(Font.SANS_SERIF, Font.BOLD | Font.ITALIC,
+    14 + LanguageBehavior.current.splashMessageFontSizeDelta))
+  msg.setBounds(60, 150, 250, math.max(20, msg.getPreferredSize.height));
 
 //  val versionString = s"v${Versions.KojoVersion} ${Versions.KojoRevision} "
 //  val msg2 = new JLabel(versionString)

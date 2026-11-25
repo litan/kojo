@@ -1,31 +1,33 @@
 // Başlamak için fareyle topa tıklayıp geri çek, sapan atıyormuş gibi
 // Fareyle raketler çizerek topa yol ver. Bir dakika içinde hedefi vur.
 
+// Bu oyun fikri ve ses mp3'lerini şuradan aldık: https://github.com/shadaj/collidium
+
 kojoVarsayılanİkinciBakışaçısınıKur()
 silVeSakla()
 
 çizSahne(koyuGri)
-val ta = tuvalAlanı
-val engelSayısı = 5
-val engellerArasıUzaklık = ta.eni / (engelSayısı + 1)
-val topunGöreceKonumuBaşta = (engellerArasıUzaklık / 4).sayıya
-def topunGöreceKonumu = topunGöreceKonumuBaşta + rastgele(topunGöreceKonumuBaşta)
-val topunBoyu = 20
+dez ta = tuvalAlanı
+dez engelSayısı = 5
+dez engellerArasıUzaklık = ta.eni / (engelSayısı + 1)
+dez topunGöreceKonumuBaşta = (engellerArasıUzaklık / 4).sayıya
+tanım topunGöreceKonumu = topunGöreceKonumuBaşta + rastgele(topunGöreceKonumuBaşta)
+dez topunBoyu = 20
 
-val topunZarfı = kalemRengi(kırmızı) * götür(topunBoyu, topunBoyu) -> Resim.daire(topunBoyu)
-val top1 = Resim.imge("/media/collidium/ball1.png", topunZarfı)
-val top2 = Resim.imge("/media/collidium/ball2.png", topunZarfı)
-val top3 = Resim.imge("/media/collidium/ball3.png", topunZarfı)
-val top4 = Resim.imge("/media/collidium/ball4.png", topunZarfı)
+dez topunZarfı = kalemRengi(kırmızı) * götür(topunBoyu, topunBoyu) -> Resim.daire(topunBoyu)
+dez top1 = Resim.imge(Çizim.top1, topunZarfı)
+dez top2 = Resim.imge(Çizim.top2, topunZarfı)
+dez top3 = Resim.imge(Çizim.top3, topunZarfı)
+dez top4 = Resim.imge(Çizim.top4, topunZarfı)
 
-val top = büyüt(0.5) -> Resim.küme(top1, top2, top3, top4)
+dez top = büyüt(0.5) -> Resim.küme(top1, top2, top3, top4)
 top.götür(ta.x + topunGöreceKonumu, ta.y + topunGöreceKonumu)
 
-val hedef = götür(-ta.x - topunGöreceKonumu, -ta.y - topunGöreceKonumu) *
+dez hedef = götür(-ta.x - topunGöreceKonumu, -ta.y - topunGöreceKonumu) *
     kalemRengi(kırmızı) * boyaRengi(kırmızı) -> Resim.daire(topunBoyu / 4)
 
-val duvarBoyası = DokumaBoya("/media/collidium/bwall.png", 0, 0)
-val engeller = (1 |-| engelSayısı).işle { n =>
+dez duvarBoyası = DokumaBoya(Çizim.tuğla, 0, 0)
+dez engeller = (1 |-| engelSayısı).işle { n =>
     götür(ta.x + n * engellerArasıUzaklık, ta.y + ta.boyu / 4) *
         boyaRengi(duvarBoyası) * kalemRengi(renksiz) ->
         Resim.dikdörtgen(12, ta.boyu / 2)
@@ -34,11 +36,11 @@ val engeller = (1 |-| engelSayısı).işle { n =>
 çiz(top, hedef)
 çizVeSakla(topunZarfı)
 engeller.herbiriİçin { o => çiz(o) }
-sesMp3üÇal("/media/collidium/hit.mp3")
+sesMp3üÇal(Ses.vuruş)
 
-def doğruÇiz(ps: EsnekDizim[Nokta], r: Renk) = Resim {
-    val boy = 4
-    def karecik() {
+tanım doğruÇiz(ps: EsnekDizim[Nokta], r: Renk) = Resim {
+    dez boy = 4
+    tanım karecik() {
         zıpla(-boy / 2)
         sol(90)
         zıpla(-boy / 2)
@@ -57,17 +59,17 @@ def doğruÇiz(ps: EsnekDizim[Nokta], r: Renk) = Resim {
     konumuKur(ps(0).x, ps(0).y)
     karecik()
 }
-val sapanNoktaları = EsnekDizim.boş[Nokta]
-var sapan = Resim.yatay(1)
-var raket = Resim.yatay(1)
-var geçiciRaket = raket
+dez sapanNoktaları = EsnekDizim.boş[Nokta]
+den sapan = Resim.yatay(1)
+den raket = Resim.yatay(1)
+den geçiciRaket = raket
 çizVeSakla(raket)
 
 top.fareyeBasınca { (x, y) =>
     sapanNoktaları += Nokta(top.konum.x + topunBoyu/2, top.konum.y + topunBoyu/2)
 }
 top.fareyiSürükleyince { (x, y) =>
-    if (sapanNoktaları.sayı > 1) {
+    eğer (sapanNoktaları.sayı > 1) {
         sapanNoktaları.çıkar(1)
     }
     sapanNoktaları += Nokta(x, y)
@@ -78,9 +80,9 @@ top.fareyiSürükleyince { (x, y) =>
 top.fareyiBırakınca { (x, y) =>
     sapan.sil()
     top.girdiyiAktar(Resim.tuvalBölgesi)
-    var hız = if (sapanNoktaları.sayı == 1)
+    den hız = eğer (sapanNoktaları.sayı == 1)
         Yöney2B(1, 1)
-    else
+    yoksa
         Yöney2B(
             sapanNoktaları(0).x - sapanNoktaları(1).x,
             sapanNoktaları(0).y - sapanNoktaları(1).y
@@ -89,43 +91,44 @@ top.fareyiBırakınca { (x, y) =>
     canlandır {
         top.götür(hız)
         top.sonrakiniGöster()
-        if (top.çarptıMı(Resim.tuvalinSınırları)) {
-            sesMp3üÇal("/media/collidium/hit.mp3")
+        eğer (top.çarptıMı(Resim.tuvalinSınırları)) {
+            sesMp3üÇal(Ses.vuruş)
             hız = sahneKenarındanYansıtma(top, hız)
         }
-        else if (top.çarptıMı(raket)) {
-            sesMp3üÇal("/media/collidium/hit.mp3")
+        yoksa eğer (top.çarptıMı(raket)) {
+            sesMp3üÇal(Ses.vuruş)
             hız = engeldenYansıtma(top, hız, raket)
             top.götür(hız)
         }
-        else if (top.çarptıMı(hedef)) {
+        yoksa eğer (top.çarptıMı(hedef)) {
             hedef.kalemRenginiKur(yeşil)
             hedef.boyamaRenginiKur(yeşil)
             çizMerkezdeYazı("Yaşasın! Kazandın!", yeşil, 20)
             durdur()
-            sesMp3üÇal("/media/collidium/win.mp3")
+
+          sesMp3üÇal(Ses.yaşasın)
         }
-        top.çarpışma(engeller) match {
-            case Biri(engel) =>
-                sesMp3üÇal("/media/collidium/hit.mp3")
+        top.çarpışma(engeller) eşle {
+            durum Biri(engel) =>
+                sesMp3üÇal(Ses.vuruş)
                 hız = engeldenYansıtma(top, hız, engel)
-                while (top.çarptıMı(engel)) {
+                yineleDoğruKaldıkça (top.çarptıMı(engel)) {
                     top.götür(hız)
                 }
-            case Hiçbiri =>
+            durum Hiçbiri =>
         }
     }
     oyunSüresiniGeriyeSayarakGöster(60, "Süre doldu. Tekrar dene", renkler.lightBlue, 20) // açık mavi
 }
 
-val raketNoktaları = EsnekDizim.boş[Nokta]
+dez raketNoktaları = EsnekDizim.boş[Nokta]
 Resim.tuvalBölgesi.fareyeBasınca { (x, y) =>
     raket.sil()
     raketNoktaları.sil()
     raketNoktaları += Nokta(x, y)
 }
 Resim.tuvalBölgesi.fareyiSürükleyince { (x, y) =>
-    if (raketNoktaları.sayı > 1) {
+    eğer (raketNoktaları.sayı > 1) {
         raketNoktaları.çıkar(1)
     }
     raketNoktaları += Nokta(x, y)
@@ -134,10 +137,10 @@ Resim.tuvalBölgesi.fareyiSürükleyince { (x, y) =>
     geçiciRaket.çiz()
 }
 Resim.tuvalBölgesi.fareyiBırakınca { (x, y) =>
-    if (geçiciRaket.çarptıMı(top)) {
+    eğer (geçiciRaket.çarptıMı(top)) {
         geçiciRaket.sil()
     }
-    else {
+    yoksa {
         raket = geçiciRaket
         raket.kalemRenginiKur(sarı)
         raket.boyamaRenginiKur(sarı)
@@ -146,4 +149,3 @@ Resim.tuvalBölgesi.fareyiBırakınca { (x, y) =>
 }
 hedef.girdiyiAktar(Resim.tuvalBölgesi)
 engeller.herbiriİçin { o => o.girdiyiAktar(Resim.tuvalBölgesi) }
-// Bu oyun fikri ve ses mp3'lerini şuradan aldık: https://github.com/shadaj/collidium

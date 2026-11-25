@@ -10,6 +10,7 @@ import scala.collection.mutable
 
 import net.kogics.kojo.core.CompletionInfo
 import net.kogics.kojo.util.Utils
+import net.kogics.kojo.lite.i18n.LanguageBehavior
 import net.kogics.kojo.xscala.CodeCompletionUtils
 import net.kogics.kojo.xscala.CodeTemplates
 import net.kogics.kojo.xscala.Help
@@ -18,7 +19,10 @@ import org.fife.ui.autocomplete.CompletionCellRenderer
 import org.fife.ui.autocomplete.CompletionProviderBase
 import org.fife.ui.autocomplete.TemplateCompletion
 
-class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends CompletionProviderBase {
+class KojoCompletionProvider(
+    execSupport: CodeExecutionSupport,
+    languageBehavior: LanguageBehavior = LanguageBehavior.current
+) extends CompletionProviderBase {
   val Log = Logger.getLogger(getClass.getName)
 
   val METHOD = 10
@@ -67,10 +71,11 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
   }
 
   def proposal(offset: Int, completion: String, kind: Int, template: String) = {
+    val completion2 = languageBehavior.updateTypes(completion)
     new TemplateCompletion(
       this,
-      completion,
-      completion,
+      completion2,
+      completion2,
       rstaTemplate(if (template == null) completion else template),
       null,
       Help(completion)
@@ -94,7 +99,7 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
       case Var           => VARIABLE
     }
 
-    val display = completion.fullCompletion
+    val display = languageBehavior.updateTypes(completion.fullCompletion)
 
     val knownOwners = Set(
       "PicShape",
@@ -122,10 +127,12 @@ class KojoCompletionProvider(execSupport: CodeExecutionSupport) extends Completi
     }
     lazy val qualifiedName = s"${ownerName}.${completion.name}"
 
-    def knownCompletion = knownOwners contains ownerName
+    def knownCompletion = (knownOwners contains ownerName) || languageBehavior.recognizesOwner(completion.owner)
 
+    // Only selected owners permit plain-name fallback after a qualified miss.
     def specialOwner =
-      ownerName.startsWith("Turtle") || ownerName.startsWith("VertexShapeSupport") || ownerName.startsWith("TurkishAPI")
+      ownerName.startsWith("Turtle") || ownerName.startsWith("VertexShapeSupport") ||
+        ownerName.startsWith("TurkishAPI") || languageBehavior.allowsPlainNameFallback(completion.owner)
 
     def knownMethodTemplate: Option[String] = {
       //      println(s"owner for ${completion.name} -- ${completion.owner}")

@@ -16,7 +16,6 @@ import java.awt.BorderLayout
 import java.awt.Dimension
 import java.awt.Event
 import java.awt.Font
-import java.awt.GraphicsEnvironment
 import java.awt.Point
 import java.awt.Toolkit
 import javax.swing.event.CaretEvent
@@ -69,16 +68,18 @@ import org.fife.ui.rtextarea.SearchEngine
 import scalariform.formatter.preferences._
 import scalariform.formatter.ScalaFormatter
 
-class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends JPanel with EditorFileSupport {
+class ScriptEditor(
+    val execSupport: CodeExecutionSupport,
+    frame: JFrame,
+    languageBehavior: i18n.LanguageBehavior = i18n.LanguageBehavior.current
+) extends JPanel with EditorFileSupport {
 
   var tabSize = 4
-  val codePane = new RSyntaxTextArea(5, 80)
-  val codePane2 = new RSyntaxTextArea(5, 80)
+  val codePane: RSyntaxTextArea =
+    new ScriptEditorTextArea(5, 80, languageBehavior.editorBottomPadding, languageBehavior.editorTopPadding)
+  val codePane2: RSyntaxTextArea =
+    new ScriptEditorTextArea(5, 80, languageBehavior.editorBottomPadding, languageBehavior.editorTopPadding)
   val codePanes = List(codePane, codePane2)
-  private val preferredEditorFontFamily = GraphicsEnvironment
-    .getLocalGraphicsEnvironment
-    .getAvailableFontFamilyNames
-    .find(_.equalsIgnoreCase("Consolas"))
   val statusStrip = new StatusStrip()
   val (
     toolbar,
@@ -112,13 +113,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
 
   codePanes.foreach(Theme.currentTheme.loadEditorTheme.apply(_))
   codePanes.foreach { cp =>
-    val oldf = cp.getFont
-    val baseFont = preferredEditorFontFamily match {
-      case Some(family) => new Font(family, oldf.getStyle, oldf.getSize)
-      case None         => oldf
-    }
-    val f = baseFont.deriveFont(getFont.getSize.toFloat)
-    cp.setFont(f)
+    cp.setFont(languageBehavior.editorFont(cp.getFont, getFont.getSize2D))
   }
 
   val inputMap = codePane.getInputMap
@@ -151,7 +146,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     ctm.addTemplate(ct)
   }
 
-  val provider = new KojoCompletionProvider(execSupport)
+  val provider = new KojoCompletionProvider(execSupport, languageBehavior)
   codePanes.foreach { pane =>
     val ac = new AutoCompletion(provider)
     ac.setParameterAssistanceEnabled(true)
@@ -375,7 +370,7 @@ class ScriptEditor(val execSupport: CodeExecutionSupport, frame: JFrame) extends
     def actionPerformed(ev: ActionEvent): Unit = {
       val codePane = execSupport.codePane
       val offset = codePane.getCaretPosition
-      val typeAt = execSupport.typeAt(offset)
+      val typeAt = languageBehavior.updateTypes(execSupport.typeAt(offset))
       val wordStart = Utilities.getWordStart(codePane, offset)
       val wordEnd = Utilities.getWordEnd(codePane, offset)
       val word0 = codePane.getDocument.getText(wordStart, wordEnd - wordStart)

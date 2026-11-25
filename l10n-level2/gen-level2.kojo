@@ -6,7 +6,7 @@ import net.kogics.kojo.util.RichFile.enrichFile
 clearOutput()
 
 val kojoDir = "/home/lalit/work/kojo"
-val targetLangCode = "tr"
+val targetLangCode = "hi"
 
 val templateFile = s"$kojoDir/l10n-level2/langInit.scala.template"
 val replacementsFile = s"$kojoDir/l10n-level2/level2_$targetLangCode.properties"

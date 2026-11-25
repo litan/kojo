@@ -1,57 +1,57 @@
 // temel türleri tanımlayalım burada
-trait Taş {
-    val adı = "taş"
+özellik Taş {
+    dez adı = "taş"
 }
-case object Beyaz extends Taş {
-    override val adı = "beyaz"
-    override def toString() = "B"
+durum nesne Beyaz yayar Taş {
+    baskın dez adı = "beyaz"
+    baskın tanım toString() = "B"
 }
-case object Siyah extends Taş {
-    override val adı = "siyah"
-    override def toString() = "S"
+durum nesne Siyah yayar Taş {
+    baskın dez adı = "siyah"
+    baskın tanım toString() = "S"
 }
-case object Yok extends Taş {
-    override val adı = "boş"
-    override def toString() = "."
+durum nesne Yok yayar Taş {
+    baskın dez adı = "boş"
+    baskın tanım toString() = "."
 }
-case class Oda(str: Sayı, stn: Sayı) {
-    val y = str
-    val x = stn
-    override def toString() = s"${stn + 1}x${str + 1}" // satır ve sütün sırası yazılımda ters!
+durum sınıf Oda(str: Sayı, stn: Sayı) {
+    dez y = str
+    dez x = stn
+    baskın tanım toString() = s"${stn + 1}x${str + 1}" // satır ve sütün sırası yazılımda ters!
 }
-trait Yön
-case object K extends Yön; case object KD extends Yön
-case object D extends Yön; case object GD extends Yön
-case object G extends Yön; case object GB extends Yön
-case object B extends Yön; case object KB extends Yön
-case class Komşu(yön: Yön, oda: Oda)
-trait Ustalık
-case object ErdenAz extends Ustalık
-case object Er extends Ustalık
-case object Çırak extends Ustalık
-case object Kalfa extends Ustalık
-case object Usta extends Ustalık
-case object Doktor extends Ustalık
-case object Aheste extends Ustalık
-case object Deha extends Ustalık
-case object DehadanÇok extends Ustalık
-case object ÇokSabır extends Ustalık
+özellik Yön
+durum nesne K yayar Yön; durum nesne KD yayar Yön
+durum nesne D yayar Yön; durum nesne GD yayar Yön
+durum nesne G yayar Yön; durum nesne GB yayar Yön
+durum nesne B yayar Yön; durum nesne KB yayar Yön
+durum sınıf Komşu(yön: Yön, oda: Oda)
+özellik Ustalık
+durum nesne ErdenAz yayar Ustalık
+durum nesne Er yayar Ustalık
+durum nesne Çırak yayar Ustalık
+durum nesne Kalfa yayar Ustalık
+durum nesne Usta yayar Ustalık
+durum nesne Doktor yayar Ustalık
+durum nesne Aheste yayar Ustalık
+durum nesne Deha yayar Ustalık
+durum nesne DehadanÇok yayar Ustalık
+durum nesne ÇokSabır yayar Ustalık
 
-class HamleSayısı {
+sınıf HamleSayısı {
     // bir sonraki hamle kaçıncı hamle olacak? 1, 2, 3, ...
-    def apply() = say
-    def başaAl() = say = 1
-    def artır() = say += 1
-    def azalt() = say -= 1
-    private var say: Sayı = _
+    tanım apply() = say
+    tanım başaAl() = say = 1
+    tanım artır() = say += 1
+    tanım azalt() = say -= 1
+    gizli den say: Sayı = _
     başaAl()
 }
-class Oyuncu(val kimBaşlar: Taş) {
-    def apply() = oyuncu
-    def karşı: Taş = if (oyuncu == Beyaz) Siyah else Beyaz
-    def başaAl() = oyuncu = kimBaşlar
-    def değiştir() = oyuncu = karşı
-    def kur(o: Taş) = oyuncu = o
-    private var oyuncu: Taş = _
+sınıf Oyuncu(dez kimBaşlar: Taş) {
+    tanım apply() = oyuncu
+    tanım karşı: Taş = eğer (oyuncu == Beyaz) Siyah yoksa Beyaz
+    tanım başaAl() = oyuncu = kimBaşlar
+    tanım değiştir() = oyuncu = karşı
+    tanım kur(o: Taş) = oyuncu = o
+    gizli den oyuncu: Taş = _
     başaAl()
 }

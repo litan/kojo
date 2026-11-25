@@ -81,6 +81,10 @@ object Main extends AppMenu with ScriptLoader { main =>
 
     setupLogging()
     val Log = Logger.getLogger("Main")
+    ScalaToolchainCheck.versionMismatch.foreach { msg =>
+      Log.warning(msg)
+      System.err.println(s"[WARNING] $msg")
+    }
     if (!kojoCtx.subKojo) {
       runMultiInstancehandler()
     }

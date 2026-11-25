@@ -4,41 +4,41 @@
 kojoVarsayılanİkinciBakışaçısınıKur()
 silVeSakla()
 artalanıKur(Renk(60, 63, 65))
-val ta = tuvalAlanı
-val n = 22
-val yatayAdım = ta.eni / (n + 1) / 2
-val dikeyAdım = ta.boyu / (n + 1)
+dez ta = tuvalAlanı
+dez n = 22
+dez yatayAdım = ta.eni / (n + 1) / 2
+dez dikeyAdım = ta.boyu / (n + 1)
 
-case class Nokta(x: Kesir, y: Kesir)
+durum sınıf Nokta(x: Kesir, y: Kesir)
 // Bir sıra dağ nasıl tanımlanır. Her bir x koordinatı için y koordinatını 
 // yani dağın o noktadaki değerini belirleyerek.
 // EğikÇizgi sınıfıyla bu iş tamam. Her bir EğikÇizgi nesnesi bir sıradağı tanımlayacak.
-case class EğikÇizgi(noktalar: Yöney[Nokta]) // Yöney sıralı bir Nokta kümesi tanımlıyor
+durum sınıf EğikÇizgi(noktalar: Yöney[Nokta]) // Yöney sıralı bir Nokta kümesi tanımlıyor
 // EğikÇizgi yerine SıraDağ adını verseydik daha iyi olur muydu?
 
 // Sıra sıra sıra dağlar çizmek istiyoruz. Önce herbir sıradağını hesaplayıp kümeye koyalım
-var çizgiler = Yöney.boş[EğikÇizgi] // bu da boş bir EğikÇizgi kümesi, yani sıra sıra sıra dağlar 
+den çizgiler = Yöney.boş[EğikÇizgi] // bu da boş bir EğikÇizgi kümesi, yani sıra sıra sıra dağlar 
 yineleİçin(Aralık.kesirden(ta.y, ta.y + ta.boyu - 5 * dikeyAdım, dikeyAdım)) { y =>
-    var noktalar = Yöney.boş[Nokta] // boş Nokta kümesiyle başlayalım
+    den noktalar = Yöney.boş[Nokta] // boş Nokta kümesiyle başlayalım
     yineleİçin(Aralık.kesirdenKapalı(ta.x, ta.x + ta.eni, yatayAdım)) { x =>
-        val f = mutlakDeğer(x / ta.eni * 2) // 0 ile 1 arasına taşıdık
-        val f1 = (1 - f) * (1 - f) * 150  // x küçüldükçe f1 büyüyör
+        dez f = mutlakDeğer(x / ta.eni * 2) // 0 ile 1 arasına taşıdık
+        dez f1 = (1 - f) * (1 - f) * 150  // x küçüldükçe f1 büyüyör
         noktalar = noktalar :+ Nokta(x, y + rastgeleKesir(f1.sayıya))
     }
     çizgiler = çizgiler :+ EğikÇizgi(noktalar)
 }
 
 
-def çizgidenResime(eç: EğikÇizgi) =
+tanım çizgidenResime(eç: EğikÇizgi) =
     kalemBoyu(2) * kalemRengi(beyaz) * boyaRengi(Renk(57, 57, 57)) ->
         Resim.yoldan { yol =>
-            val nler = eç.noktalar
-            val ilkNokta = nler(0)
+            dez nler = eç.noktalar
+            dez ilkNokta = nler(0)
             yol.kondur(ilkNokta.x, ilkNokta.y) // yol bu Noktayla başlıyor
             yineleİçin(1 |-| nler.boyu - 2) { i =>
                 // bu noktayla bir sonraki noktanın arasındaki noktayı bulalım      
-                val araX = (nler(i).x + nler(i + 1).x) / 2
-                val araY = (nler(i).y + nler(i + 1).y) / 2
+                dez araX = (nler(i).x + nler(i + 1).x) / 2
+                dez araY = (nler(i).y + nler(i + 1).y) / 2
                 // doğru yerine yumuşak eğri ile birleştirelim
                 yol.eğriÇiz(nler(i).x, nler(i).y, araX, araY)
             }

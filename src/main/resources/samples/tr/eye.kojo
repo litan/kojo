@@ -6,7 +6,7 @@ kalemKalınlığınıKur(2)
 
 // girdiler: merkezX, merkezY, yarıçap, dağılım, renkler, dalgalıDevam
 // KYMS: kırmızı/yeşil/mavi/saydamlık oranı
-val boya = Renk.merkezdenDışarıDoğruÇokluDeğişim(0, 0, 150,
+dez boya = Renk.merkezdenDışarıDoğruÇokluDeğişim(0, 0, 150,
     Dizi(0, 0.7, 1),
     Dizi(
         Renk.kyms(255, 0, 0, 245),

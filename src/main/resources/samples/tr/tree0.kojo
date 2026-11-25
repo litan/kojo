@@ -2,24 +2,24 @@ silVeSakla()
 hızıKur(hızlı)
 artalanıKur(beyaz)
 
-def dal(boy: Kesir) {
+tanım dal(boy: Kesir) {
     ileri(boy)
 }
 
-def ağaç(boy: Kesir) {
+tanım ağaç(boy: Kesir) {
     konumVeYönüBelleğeYaz()
     // dalların rengini uzunluğuyla orantılı olarak değiştirelim.
     // Renk biriminin kym yani kırmızı/yeşil ve mavi adlı metodu kullanalım.
     // 'sayıya' adlı metod, kesirli sayıyı tam sayıya çeviriyor.
     // Yani boy 1.75 olursa boy.sayıya 1 oluyor
     // n % 255 işlemi ile de 255'ten küçük olmasını sağlıyoruz
-    def renk = Renk.kym(boy.sayıya % 255, mutlakDeğer(255 - boy * 3).sayıya % 255, 125)
+    tanım renk = Renk.kym(boy.sayıya % 255, mutlakDeğer(255 - boy * 3).sayıya % 255, 125)
     kalemRenginiKur(renk)
-    if (boy <= 4) {
+    eğer (boy <= 4) {
         kalemKalınlığınıKur(0.5)
         dal(boy / 2)
     }
-    else {
+    yoksa {
         kalemKalınlığınıKur(boy / 7)
         dal(boy)
         sağ(25)

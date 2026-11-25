@@ -1,45 +1,45 @@
-import java.io.File
+getir java.io.File
 
-def sözcükDizininiYükle: Dizin[Yazı] = {
-    val istream = new java.io.FileInputStream(getFile)
-    try {
-        val s = scala.io.Source.fromInputStream(istream)(scala.io.Codec.UTF8)
+tanım sözcükDizininiYükle: Dizin[Yazı] = {
+    dez istream = yeni java.io.FileInputStream(getFile)
+    dene {
+        dez s = scala.io.Source.fromInputStream(istream)(scala.io.Codec.UTF8)
         s.getLines.toList
     }
-    catch {
-        case e: Exception =>
+    yakala {
+        durum e: Exception =>
             println("Sözcük dizinini yükleyemedik: " + e)
-            throw e
+            bildir e
     }
-    finally {
+    sonunda {
         istream.close
     }
 }
 
-// looking for the file under installDir:
+// looking için the file under installDir:
 //   ./examples/anagram/tr/sozcukler.txt or
 //   ./installer/examples/anagram/tr/sozcukler.txt
-def getFile = {
-    val s = File.separatorChar
-    val path = installDir + s + "examples" + s + "anagram" + s + "tr" + s + "sozcukler.txt"
-    val f1 = new java.io.File(path)
-    if (f1.exists) {
+tanım getFile = {
+    dez s = File.separatorChar
+    dez path = installDir + s + "examples" + s + "anagram" + s + "tr" + s + "sozcukler.txt"
+    dez f1 = yeni java.io.File(path)
+    eğer (f1.exists) {
         f1
     }
-    else {
-        val path = installDir + s + "installer" + s + "examples" + s + "anagram" + s + "tr" + s + "sozcukler.txt"
-        val f2 = new java.io.File(path)
-        if (f2.exists) {
+    yoksa {
+        dez path = installDir + s + "installer" + s + "examples" + s + "anagram" + s + "tr" + s + "sozcukler.txt"
+        dez f2 = yeni java.io.File(path)
+        eğer (f2.exists) {
             f2
         }
-        else {
-            throw new Exception("Sözcük dizin dosyasını şurada bulamadık: " + path)
+        yoksa {
+            bildir yeni KuralDışı("Sözcük dizin dosyasını şurada bulamadık: " + path)
         }
     }
 }
 
-def yüklemeyiDene() = {
-    val dict = sözcükDizininiYükle
+tanım yüklemeyiDene() = {
+    dez dict = sözcükDizininiYükle
     println(s"Dizinde ${dict.length} sözcük var.")
     println(s"İlk onu: ${dict take 10 mkString (", ")} ve son onu: ${dict takeRight 10 mkString (", ")}")
     dict

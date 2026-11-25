@@ -18,16 +18,14 @@ package net.kogics.kojo.lite.i18n.tr
 
 // translating user interface widgets
 
-import java.awt.{ event => e }
-import java.awt.Color
-import java.awt.Font
-import javax.{ swing => s }
-import javax.swing.{ BorderFactory => bf }
-import javax.swing.{ SwingConstants => sc }
-import javax.swing.border.Border
-
-import net.kogics.kojo.{ widget => w }
+import net.kogics.kojo.{widget => w}
 import net.kogics.kojo.util.Read
+import javax.{swing => s}
+import javax.swing.{SwingConstants => sc}
+import javax.swing.{BorderFactory => bf}
+import javax.swing.border.Border
+import java.awt.{Font, Color}
+import java.awt.{event => e}
 
 object arayuz {
 
@@ -38,8 +36,8 @@ object arayuz {
   /* ../../../widget/swingwrappers.scala
    Also has traits: PreferredMax Focusable
    */
-  case class BölmeÇizgisi(renk: Renk = yok, saydamMı: İkil = yanlış) extends s.JSeparator {
-    if (renk != yok) {
+  case class BölmeÇizgisi(renk: Renk = null, saydamMı: İkil = false) extends s.JSeparator {
+    if (renk != null) {
       setBackground(renk)
     }
     setOpaque(saydamMı)
@@ -158,8 +156,7 @@ object arayuz {
     def apply[T](ilkSeçenekler: T*)(implicit okur: Read[T]) = new Salındıraç(ilkSeçenekler: _*)(okur)
   }
 
-  class Kaydıraç(enUfak: Sayı, enİri: Sayı, ilkDeğer: Sayı, boşluk: Sayı)
-      extends w.Slider(enUfak, enİri, ilkDeğer, boşluk) {
+  class Kaydıraç(enUfak: Sayı, enİri: Sayı, ilkDeğer: Sayı, boşluk: Sayı) extends w.Slider(enUfak, enİri, ilkDeğer, boşluk) {
     def değeri = value
     def artalanıKur(renk: Renk) = setBackground(renk)
     def önalanıKur(renk: Renk) = setForeground(renk)
@@ -173,48 +170,12 @@ object arayuz {
 
   object değişmez {
     // https://docs.oracle.com/javase/7/docs/api/javax/swing/SwingConstants.html
-    val (
-      merkez,
-      taban,
-      tavan,
-      sol,
-      sağ,
-      doğu,
-      batı,
-      kuzey,
-      güney,
-      kuzeydoğu,
-      kuzeybatı,
-      güneydoğu,
-      güneybatı,
-      yatay,
-      dikey,
-      önceki,
-      sonraki,
-      önder,
-      izler
-    ) =
-      (
-        sc.CENTER,
-        sc.BOTTOM,
-        sc.TOP,
-        sc.LEFT,
-        sc.RIGHT,
-        sc.EAST,
-        sc.WEST,
-        sc.NORTH,
-        sc.SOUTH,
-        sc.NORTH_EAST,
-        sc.NORTH_WEST,
-        sc.SOUTH_EAST,
-        sc.SOUTH_WEST,
-        sc.HORIZONTAL,
-        sc.VERTICAL,
-        sc.PREVIOUS,
-        sc.NEXT,
-        sc.LEADING,
-        sc.TRAILING
-      )
+    val (merkez, taban, tavan, sol, sağ,
+      doğu, batı, kuzey, güney, kuzeydoğu, kuzeybatı, güneydoğu, güneybatı,
+      yatay, dikey, önceki, sonraki, önder, izler) =
+      (sc.CENTER, sc.BOTTOM, sc.TOP, sc.LEFT, sc.RIGHT,
+        sc.EAST, sc.WEST, sc.NORTH, sc.SOUTH, sc.NORTH_EAST, sc.NORTH_WEST, sc.SOUTH_EAST, sc.SOUTH_WEST,
+        sc.HORIZONTAL, sc.VERTICAL, sc.PREVIOUS, sc.NEXT, sc.LEADING, sc.TRAILING)
   }
 
   object çerçeveci {

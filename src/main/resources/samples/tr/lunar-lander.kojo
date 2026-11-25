@@ -7,44 +7,44 @@
 
 silVeSakla()
 
-// uzayın rengi.. ADA (HSL): arı-renk/ton (hue), (doygunluk/parlaklık) saturation, (aydınlık) lightness
+// uzayın rengi.. ADA (HSL): arı-renk/ton (hue), doygunluk/parlaklık (saturation), aydınlık (lightness)
 çizSahne(Renk.ada(240, 0.20, 0.16))
 
-val ta = tuvalAlanı
-def xMerkezKonum(resminEni: Kesir) = { ta.x + (ta.en - resminEni) / 2 }
+dez ta = tuvalAlanı
+tanım xMerkezKonum(resminEni: Kesir) = { ta.x + (ta.en - resminEni) / 2 }
 
-class İnişModülü {
-    val bedenEni = 40; val bedenBoyu = 70
-    val ateşEni = 20; val ateşBoyu = 35
-    val beden = boyaRengi(kırmızı) -> Resim.dikdörtgen(bedenEni, bedenBoyu)
+sınıf İnişModülü {
+    dez bedenEni = 40; dez bedenBoyu = 70
+    dez ateşEni = 20; dez ateşBoyu = 35
+    dez beden = boyaRengi(kırmızı) -> Resim.dikdörtgen(bedenEni, bedenBoyu)
     beden.kondur(xMerkezKonum(bedenEni), ta.y + ta.boy - bedenBoyu - 10)
-    val ateş = boyaRengi(turuncu) -> Resim.dikdörtgen(ateşEni, ateşBoyu)
+    dez ateş = boyaRengi(turuncu) -> Resim.dikdörtgen(ateşEni, ateşBoyu)
     ateşKonumunuKur()
 
-    val yerçekimi = Yöney2B(0, -0.1) // konum, hız ve ivme'nin x ve y boyutları (z yani üçüncü boyuta gerek yok bu oyunda)
-    var hız = Yöney2B(0, 0)
-    val sıfırİtiş = Yöney2B(0, 0)
-    val yukarıİtiş = Yöney2B(0, 1)
-    var itiş = sıfırİtiş
+    dez yerçekimi = Yöney2B(0, -0.1) // konum, hız ve ivme'nin x ve y boyutları (z yani üçüncü boyuta gerek yok bu oyunda)
+    den hız = Yöney2B(0, 0)
+    dez sıfırİtiş = Yöney2B(0, 0)
+    dez yukarıİtiş = Yöney2B(0, 1)
+    den itiş = sıfırİtiş
 
-    def ateşKonumunuKur() {
+    tanım ateşKonumunuKur() {
         ateş.kondur(
             beden.konum.x + (bedenEni - ateşEni) / 2,
             beden.konum.y - (ateşBoyu - 15)
         )
     }
 
-    def çiz() {
+    tanım çiz() {
         beden.çiz()
         ateş.çiz()
         ateş.gizle()
     }
 
-    def adım() {
+    tanım adım() {
         // yukarı tuşuna basılı mı?
-        if (tuşaBasılıMı(tuşlar.VK_UP)) {
+        eğer (tuşaBasılıMı(tuşlar.yukarı)) {
             itişVar()
-        } else {
+        } yoksa {
             itişYok()
         }
         hız = hız + yerçekimi
@@ -53,24 +53,24 @@ class İnişModülü {
         beden.götür(hız)
         ateşKonumunuKur()
 
-        if (beden.çarptıMı(Resim.tuvalinTavanı)) {
+        eğer (beden.çarptıMı(Resim.tuvalinTavanı)) {
             hız = sahneKenarındanYansıtma(beden, hız)
         }
     }
 
-    def itişVar() {
+    tanım itişVar() {
         itiş = yukarıİtiş
         ateş.göster()
     }
 
-    def itişYok() {
+    tanım itişYok() {
         itiş = sıfırİtiş
         ateş.gizle()
     }
 }
 
-class Ay {
-    val resim = Resim {
+sınıf Ay {
+    dez resim = Resim {
         kalemRenginiKur(renkler.lightBlue)
         boyamaRenginiKur(renkler.darkGray)
         sağ(45)
@@ -80,16 +80,16 @@ class Ay {
     // Ayın eni yaklaşık olarak 710 piksel (inç başına nokta sayısı)
     resim.kondur(xMerkezKonum(710), ta.y)
 
-    def çiz() {
+    tanım çiz() {
         resim.çiz()
     }
 
-    def ölç(im: İnişModülü) {
-        if (im.beden.çarptıMı(resim)) {
-            if (im.hız.y.mutlakDeğer > 3) {
+    tanım ölç(im: İnişModülü) {
+        eğer (im.beden.çarptıMı(resim)) {
+            eğer (im.hız.y.mutlakDeğer > 3) {
                 çizMerkezdeYazı("Çarptı ve parçalandı :-(", kırmızı, 39)
             }
-            else {
+            yoksa {
                 çizMerkezdeYazı("Yumuşak iniş! :-)", yeşil, 30)
             }
             durdur() // canlandırmaları durduralım
@@ -98,10 +98,10 @@ class Ay {
 
 }
 
-val im = new İnişModülü()
+dez im = yeni İnişModülü()
 im.çiz()
 
-val ay = new Ay()
+dez ay = yeni Ay()
 ay.çiz()
 
 canlandır {

@@ -1,5 +1,5 @@
 tümEkran
-def kenar(k: Kaplumbağa, a: Kesir) = artalandaOynat {
+tanım kenar(k: Kaplumbağa, a: Kesir) = artalandaOynat {
     k.canlandırmaHızınıKur(200)
     k.kalemRenginiKur(siyah)
     k.sağ()
@@ -22,7 +22,7 @@ def kenar(k: Kaplumbağa, a: Kesir) = artalandaOynat {
     k.gizle()
 }
 
-def çiçek(k: Kaplumbağa, r: Renk) = artalandaOynat {
+tanım çiçek(k: Kaplumbağa, r: Renk) = artalandaOynat {
     k.canlandırmaHızınıKur(400)
     k.kalemRenginiKur(siyah)
     k.boyamaRenginiKur(r)
@@ -38,15 +38,15 @@ def çiçek(k: Kaplumbağa, r: Renk) = artalandaOynat {
 
 silVeSakla()
 
-val k1=yeniKaplumbağa(-600,-150)
-val k2=yeniKaplumbağa(-600, 150)
+dez k1=yeniKaplumbağa(-600,-150)
+dez k2=yeniKaplumbağa(-600, 150)
 
 kenar(k1,120)
 kenar(k2,-120)
 
-val ortadakiKaplumbağa = yeniKaplumbağa(0, 0)
+dez ortadakiKaplumbağa = yeniKaplumbağa(0, 0)
 artalandaOynat {
-    import ortadakiKaplumbağa._
+    getir ortadakiKaplumbağa._
     atla(-50,100)
     canlandırmaHızınıKur(200)
     kalemRenginiKur(siyah)
@@ -61,15 +61,15 @@ artalandaOynat {
     gizle()
 }
 
-val k3=yeniKaplumbağa(-300,100)
-val k4=yeniKaplumbağa(-400,0)
-val k5=yeniKaplumbağa(-500,100)
-val k6=yeniKaplumbağa(-600,0)
+dez k3=yeniKaplumbağa(-300,100)
+dez k4=yeniKaplumbağa(-400,0)
+dez k5=yeniKaplumbağa(-500,100)
+dez k6=yeniKaplumbağa(-600,0)
 
-val k7=yeniKaplumbağa(200,100)
-val k8=yeniKaplumbağa(300,0)
-val k9=yeniKaplumbağa(400,100)
-val k10=yeniKaplumbağa(500,0)
+dez k7=yeniKaplumbağa(200,100)
+dez k8=yeniKaplumbağa(300,0)
+dez k9=yeniKaplumbağa(400,100)
+dez k10=yeniKaplumbağa(500,0)
 
 çiçek(k3, turuncu)
 çiçek(k4, sarı)

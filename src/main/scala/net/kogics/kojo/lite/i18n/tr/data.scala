@@ -274,7 +274,7 @@ object Data {
     nDef("çıktıArtalanınıKur", ""),
     nDef("çıktıYazıRenginiKur", ""),
     nDef("çıktıYazıYüzüBoyunuKur", ""),
-    nDef("tuvalBoyutOranınınKur", ""),
+    nDef("tuvalBoyutOranınıKur", ""),
     nDef("tuvalBoyutlarınıKur", ""),
     nDef("süreTut", ""),
     nDef("oyunSüresiniGöster", ""),

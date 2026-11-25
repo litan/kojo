@@ -24,6 +24,7 @@ trait SetMethodsInTurkish {
   }
   // todo: duplicates in yazi.scala and dizin.scala
   implicit class SetYöntemleri[T](d: Küme[T]) {
+    type Belki[B] = Option[B]
     type Col = Küme[T]
     type Eşlek[A, D] = collection.immutable.Map[A, D]
     def başı: T = d.head
@@ -39,11 +40,11 @@ trait SetMethodsInTurkish {
     def soldanKatla[T2](z: T2)(işlev: (T2, T) => T2): T2 = d.foldLeft(z)(işlev)
     def sağdanKatla[T2](z: T2)(işlev: (T, T2) => T2): T2 = d.foldRight(z)(işlev)
     // https://github.com/scala/scala/blob/v2.12.7/src/library/scala/collection/TraversableOnce.scala#L1
-    def topla[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.sum(num) // foldLeft(num.zero)(num.plus)
+    def topla[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.sum(num)    // foldLeft(num.zero)(num.plus)
     def çarp[T2 >: T](implicit num: scala.math.Numeric[T2]) = d.product(num) // foldLeft(num.one)(num.times)
     def yazıYap: Yazı = d.mkString
     def yazıYap(ara: Yazı): Yazı = d.mkString(ara)
-    def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = d.mkString(baş, ara, son)
+    def yazıYap(başı: Yazı, ara: Yazı, sonu: Yazı): Yazı = d.mkString(başı, ara, sonu)
     def herbiriİçin[S](işlev: T => S): Birim = d.foreach(işlev)
     def varMı(deneme: T => İkil): İkil = d.exists(deneme)
     def hepsiDoğruMu(deneme: T => İkil): İkil = d.forall(deneme)
@@ -56,6 +57,7 @@ trait SetMethodsInTurkish {
     def düşürDoğruKaldıkça(deneme: T => İkil): Col = d.dropWhile(deneme)
     def düşürSağdan(n: Sayı): Col = d.dropRight(n)
 
+    def yineleyici: Yineleyici[T] = d.iterator
     def dizine = d.toList
     def diziye = d.toSeq
     def kümeye = d.toSet
@@ -66,7 +68,7 @@ trait SetMethodsInTurkish {
     def say(işlev: T => İkil): Sayı = d.count(işlev)
 
     def dilim(nereden: Sayı, nereye: Sayı) = d.slice(nereden, nereye)
-    def ikile[S](öbürü: scala.collection.IterableOnce[S]) = d.zip(öbürü)
+    def ikile[S](öbürü: YinelenebilirBirKere[S]) = d.zip(öbürü)
     def ikileSırayla = d.zipWithIndex
     def ikileKonumla = d.zipWithIndex
     def öbekle[A](iş: (T) => A): Eşlek[A, Col] = d.groupBy(iş)
@@ -80,6 +82,63 @@ trait SetMethodsInTurkish {
     def boş: Col = d.empty
     def böl(deneme: T => İkil): (Col, Col) = d.partition(deneme)
 
+    def kesişim(öbürü: Küme[T]): Küme[T] = d.intersect(öbürü)
+    def bileşim(öbürü: Küme[T]): Küme[T] = d.union(öbürü)
+
+    // Partitions elements in fixed size sets.
+    def öbekli(boy: Sayı): Yineleyici[Col] = d.grouped(boy)
+
     // more to come
-  }
+  
+    // --- uçlar, arama --------------------------------------------------
+    def önü: Col = d.init
+    def sonu: T = d.last
+    def başıBelki: Belki[T] = d.headOption
+    def sonuBelki: Belki[T] = d.lastOption
+    def bul(deneme: T => İkil): Belki[T] = d.find(deneme)
+
+    // --- bölme, öbekleme -----------------------------------------------
+    def bölİşle[A1, A2](işlev: T => Either[A1, A2]): (Küme[A1], Küme[A2]) = d.partitionMap(işlev)
+    def bölDoğruKaldıkça(deneme: T => İkil): (Col, Col) = d.span(deneme)
+    def bölYerinden(yeri: Sayı): (Col, Col) = d.splitAt(yeri)
+    def kayarÖbekli(boy: Sayı): Yineleyici[Col] = d.sliding(boy)
+    def kayarÖbekli(boy: Sayı, adım: Sayı): Yineleyici[Col] = d.sliding(boy, adım)
+    def öbekleİşle[K, B](anahtar: T => K)(değer: T => B): Eşlek[K, Küme[B]] = d.groupMap(anahtar)(değer)
+    def öbekleİşleİndirge[K, B](anahtar: T => K)(değer: T => B)(indirge: (B, B) => B): Eşlek[K, B] =
+      d.groupMapReduce(anahtar)(değer)(indirge)
+    def kuyruklar: Yineleyici[Col] = d.tails
+    def önler: Yineleyici[Col] = d.inits
+
+    // --- katlama, indirgeme, tarama ------------------------------------
+    def katla[S >: T](z: S)(işlev: (S, S) => S): S = d.fold(z)(işlev)
+    def indirgeSoldan[S >: T](işlem: (S, T) => S): S = d.reduceLeft(işlem)
+    def indirgeSağdan[S >: T](işlem: (T, S) => S): S = d.reduceRight(işlem)
+    def indirgeBelki[S >: T](işlem: (S, S) => S): Belki[S] = d.reduceOption(işlem)
+    def indirgeSoldanBelki[S >: T](işlem: (S, T) => S): Belki[S] = d.reduceLeftOption(işlem)
+    def indirgeSağdanBelki[S >: T](işlem: (T, S) => S): Belki[S] = d.reduceRightOption(işlem)
+    def tara[S >: T](z: S)(işlev: (S, S) => S): Küme[S] = d.scan(z)(işlev)
+    def taraSoldan[B](z: B)(işlev: (B, T) => B): Küme[B] = d.scanLeft(z)(işlev)
+    def taraSağdan[B](z: B)(işlev: (T, B) => B): Küme[B] = d.scanRight(z)(işlev)
+    def enUfağıBelki[S >: T](implicit sıralama: math.Ordering[S]): Belki[T] = d.minOption(sıralama)
+    def enUfağıBelki[B](iş: T => B)(implicit karşılaştırma: math.Ordering[B]): Belki[T] = d.minByOption(iş)(karşılaştırma)
+    def enİrisiBelki[S >: T](implicit sıralama: math.Ordering[S]): Belki[T] = d.maxOption(sıralama)
+    def enİrisiBelki[B](iş: T => B)(implicit karşılaştırma: math.Ordering[B]): Belki[T] = d.maxByOption(iş)(karşılaştırma)
+
+    // --- seçme, düzleştirme, ikili işlemler ----------------------------
+    def fark(öbürü: Küme[T]): Col = d.diff(öbürü)
+    def seçİşle[B](işlev: PartialFunction[T, B]): Küme[B] = d.collect(işlev)
+    def seçİşleİlk[B](işlev: PartialFunction[T, B]): Belki[B] = d.collectFirst(işlev)
+    def düzleştir[B](implicit delil: T => YinelenebilirBirKere[B]): Küme[B] = d.flatten(delil)
+    def devrik[B](implicit delil: T => Yinelenebilir[B]): Küme[Küme[B]] = d.transpose(delil)
+    def ikiliyiAç[A1, A2](implicit delil: T => (A1, A2)): (Küme[A1], Küme[A2]) = d.unzip(delil)
+    def ikileHepsini[B, S >: T](öbürü: Yinelenebilir[B], buDolgu: S, oDolgu: B): Küme[(S, B)] =
+      d.zipAll(öbürü, buDolgu, oDolgu)
+
+    // --- Küme'ye özgü ----------------------------------------------------
+    // Küme DEĞİŞMEZ: bunlar yeni bir küme verir, olanı değiştirmez.
+    def ekli(öge: T): Col = d.incl(öge)
+    def çıkarılmış(öge: T): Col = d.excl(öge)
+    def hepsiÇıkarılmış(ögeler: YinelenebilirBirKere[T]): Col = d.removedAll(ögeler)
+    def altKümesiMi(öbürü: Küme[T]): İkil = d.subsetOf(öbürü)
+}
 }

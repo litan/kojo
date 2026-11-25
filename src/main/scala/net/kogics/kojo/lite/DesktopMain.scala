@@ -19,6 +19,6 @@ import java.io.File
 object DesktopMain extends StubMain with RmiMultiInstance {
   lazy val classpath = {
     val cp = System.getProperty("java.class.path").split(File.pathSeparatorChar).toList
-    createCp(cp)
+    createCp(ScalaToolchain.select(cp))
   }
 }

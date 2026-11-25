@@ -6,18 +6,18 @@ silVeSakla()
 // k:       kareyi çizen kaplumbağa
 // boy:     karenin kenar uzunluğu
 // bekleme: kaplumbağanın hızını ayarlayarak eş zamanlı çizmek için
-def kare(k: Kaplumbağa, boy: Sayı, bekleme: Sayı) = {
+tanım kare(k: Kaplumbağa, boy: Sayı, bekleme: Sayı) = {
     k.canlandırmaHızınıKur(bekleme)
     yinele(4) {
         k.ileri(boy)
         k.sağ()
     }
 }
-val k1 = yeniKaplumbağa(0, 0)
-val k2 = yeniKaplumbağa(-200, 100)
-val k3 = yeniKaplumbağa(250, 100)
-val k4 = yeniKaplumbağa(250, -50)
-val k5 = yeniKaplumbağa(-200, -50)
+dez k1 = yeniKaplumbağa(0, 0)
+dez k2 = yeniKaplumbağa(-200, 100)
+dez k3 = yeniKaplumbağa(250, 100)
+dez k4 = yeniKaplumbağa(250, -50)
+dez k5 = yeniKaplumbağa(-200, -50)
 
 // davran metoduyla çalışan komutlar işlemci tarafından paralel çalıştırılır
 k1.davran { k =>

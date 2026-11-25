@@ -16,9 +16,9 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
-import net.kogics.kojo.core.SCanvas
 // ../../../tiles/package.scala
 import net.kogics.kojo.tiles
+import net.kogics.kojo.core.SCanvas
 
 // used in Demo Platformer (Mağara Oyunu in Turkish):
 //   ../../../../../../../../../installer/examples/tiledgame/game_tr.kojo.installed
@@ -35,7 +35,7 @@ class ÇiniDünyası(dosya: Yazı)(implicit canvas: SCanvas) {
   val tw = new tiles.TileWorld(dosya)
   def çinidenKojoya(xy: ÇiniXY): Nokta = tw.tileToKojo(xy)
   def kojodanÇiniye(x: Kesir, y: Kesir): ÇiniXY = tw.kojoToTile(x, y)
-
+  
   def yukarıdaÇiniVarMı(resim: Resim, düzey: Sayı): İkil = tw.hasTileAbove(resim.p, düzey)
   def soldaÇiniVarMı(resim: Resim, düzey: Sayı): İkil = tw.hasTileAtLeft(resim.p, düzey)
   def sağdaÇiniVarMı(resim: Resim, düzey: Sayı): İkil = tw.hasTileAtRight(resim.p, düzey)

@@ -10,9 +10,9 @@
 sil()
 artalanıKur(Renk(200, 200, 200))
 // artalana bir resim koymak istersen onu bizim kaplumbağacığa giydir
-kaplumbağa0.giysiKur(Background.trainTrack)  // todo
+giysiKur(Görünüş.demiryolu)
 
-val k1 = yeniKaplumbağa(-50, -180, Costume.womanWaving)
+dez k1 = yeniKaplumbağa(-50, -180, Görünüş.elSallayanKadın)
 k1.davran { kap =>
     yineleDoğruysa(kap.konum.y < 40) {
         kap.konumuDeğiştir(0.6, 0.9)
@@ -21,8 +21,8 @@ k1.davran { kap =>
     }
 }
 
-val k2 = yeniKaplumbağa(-250, 180)
-k2.giysileriKur(Costume.bat1, Costume.bat2)
+dez k2 = yeniKaplumbağa(-250, 180)
+k2.giysileriKur(Görünüş.yarasa1, Görünüş.yarasa2)
 k2.giysiyiBüyült(0.5)
 k2.davran { kap =>
     yineleDoğruysa(kap.konum.x < 200) {
@@ -32,4 +32,4 @@ k2.davran { kap =>
     }
     durdur() // varsa çalan müziği ve bütün canlandırmaları durduralım
 }
-müzikMp3üÇalDöngülü(Sound.medieval1)
+müzikMp3üÇalDöngülü(Ses.ortaçağ1)

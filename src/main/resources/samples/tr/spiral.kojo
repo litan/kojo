@@ -1,5 +1,5 @@
-def sarmal(adım: Sayı, açı: Sayı) {
-    if (adım <= 300) {
+tanım sarmal(adım: Sayı, açı: Sayı) {
+    eğer (adım <= 300) {
         ileri(adım)
         sağ(açı)
         sarmal(adım + 2, açı)

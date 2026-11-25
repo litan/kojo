@@ -8,57 +8,57 @@
 // (1) C. K. Raju'nın Sınırsız Kalkülüs (Calculus without limits) adlı ders notları
 // (2) http://1ucasvb.tumblr.com/
 
-val araSüresi = 1.3 // saniye. Her yeni çizimden sonra bu kadar ara verelim
-val yçBoyu = 200.0 // yarıçapın uzunluğu bu olsun
-val çeyrekYÇ = yçBoyu / 4
-val renk = mavi
-val açıRengi = Renk(0, 204, 51)
-val eskiAçıRengi = açıkGri
-val yayRengi = gri
+dez araSüresi = 1.3 // saniye. Her yeni çizimden sonra bu kadar ara verelim
+dez yçBoyu = 200.0 // yarıçapın uzunluğu bu olsun
+dez çeyrekYÇ = yçBoyu / 4
+dez renk = mavi
+dez açıRengi = Renk(0, 204, 51)
+dez eskiAçıRengi = açıkGri
+dez yayRengi = gri
 
 // Yarıçapı çizerek başlayalım
-def yarıçapıÇiz(açı: Sayı) = kalemRengi(renk) * döndür(açı) -> Resim.dizi(
+tanım yarıçapıÇiz(açı: Sayı) = kalemRengi(renk) * döndür(açı) -> Resim.dizi(
     boyaRengi(renk) -> Resim.daire(3),
     Resim.yatay(yçBoyu),
     götür(yçBoyu, 0) * boyaRengi(renk) -> Resim.daire(3)
 )
 
-def eğriYçÇiz(başı: Kesir, açı: Kesir) = kalemRengi(renk) * döndür(başı) -> Resim.dizi(
+tanım eğriYçÇiz(başı: Kesir, açı: Kesir) = kalemRengi(renk) * döndür(başı) -> Resim.dizi(
     götür(yçBoyu, 0) * boyaRengi(renk) -> Resim.daire(3),
     Resim.yay(yçBoyu, açı),
     döndür(açı) * götür(yçBoyu, 0) * boyaRengi(renk) -> Resim.daire(3)
 )
 
-def yayÇiz(açı: Sayı) = kalemRengi(yayRengi) -> Resim.yay(yçBoyu, açı)
+tanım yayÇiz(açı: Sayı) = kalemRengi(yayRengi) -> Resim.yay(yçBoyu, açı)
 
-def açıÇiz(başı: Kesir, açı: Kesir) = döndür(başı) -> Resim.dizi(
+tanım açıÇiz(başı: Kesir, açı: Kesir) = döndür(başı) -> Resim.dizi(
     Resim.yatay(yçBoyu),
     döndür(açı) -> Resim.yatay(yçBoyu),
     Resim.yay(yçBoyu / 4, açı)
 )
 
 // tuvale 7 tane resim çizeceğiz
-var birYay = yayÇiz(0)
-var birYarıçap = yarıçapıÇiz(0)
-var yçYazısı = götür(yçBoyu / 2, -5) -> Resim.yazı("yarıçap", 20)
-var birAçı: Resim = Resim.yay(0, 0)
-var açıYazısı: Resim = Resim.yazı("", 20)
-var işaret: Resim = Resim.yatay(0)
-var işaret2: Resim = Resim.yatay(0)
+den birYay = yayÇiz(0)
+den birYarıçap = yarıçapıÇiz(0)
+den yçYazısı = götür(yçBoyu / 2, -5) -> Resim.yazı("yarıçap", 20)
+den birAçı: Resim = Resim.yay(0, 0)
+den açıYazısı: Resim = Resim.yazı("", 20)
+den işaret: Resim = Resim.yatay(0)
+den işaret2: Resim = Resim.yatay(0)
 
-def doğruÇiz(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir) = {
-    val uzunluk = karekökü(karesi(x2 - x1) + karesi(y2 - y1))
-    val açı = tanjantınAçısı((y2 - y1) / (x2 - x1)) // verilen tanjanta denk gelen açıyı bulalım
+tanım doğruÇiz(x1: Kesir, y1: Kesir, x2: Kesir, y2: Kesir) = {
+    dez uzunluk = karekökü(karesi(x2 - x1) + karesi(y2 - y1))
+    dez açı = tanjantınAçısı((y2 - y1) / (x2 - x1)) // verilen tanjanta denk gelen açıyı bulalım
     götür(x1, y1) * döndür(dereceye(açı)) -> Resim.yatay(uzunluk)
 }
 
 // tam sayıyı önce kesirli sayıya sonra da radyandan dereceye çevirelim:
-def sayıdanDereceye(s: Sayı) = s.kesire.dereceye
-def dereceye(k: Kesir) = k.dereceye
+tanım sayıdanDereceye(s: Sayı) = s.kesire.dereceye
+tanım dereceye(k: Kesir) = k.dereceye
 
-def radyanAçıÇiz(kaçRadyan: Sayı) {
+tanım radyanAçıÇiz(kaçRadyan: Sayı) {
     durakla(araSüresi) // çizime ufak bir ara verelim ki çok çabuk geçmesin
-    if (kaçRadyan != 1) {
+    eğer (kaçRadyan != 1) {
         birYarıçap = eğriYçÇiz(sayıdanDereceye(kaçRadyan - 1), sayıdanDereceye(1))
         çiz(birYarıçap)
     }
@@ -70,7 +70,7 @@ def radyanAçıÇiz(kaçRadyan: Sayı) {
     işaret2.sil()
     açıYazısı = götür(-18, -yçBoyu / 4) -> Resim.yazı(s"$kaçRadyan radyan", 20)
     çiz(açıYazısı)
-    if (kaçRadyan < 4) { // sinüs ve kosinüs de çok faydalı tanjant gibi
+    eğer (kaçRadyan < 4) { // sinüs ve kosinüs de çok faydalı tanjant gibi
         işaret = doğruÇiz(0, -çeyrekYÇ, çeyrekYÇ - (çeyrekYÇ - çeyrekYÇ * kosinüs(30.radyana)), çeyrekYÇ * sinüs(30.radyana))
         çiz(işaret)
         işaret2 = doğruÇiz(0, -çeyrekYÇ, yçBoyu - (yçBoyu - yçBoyu * kosinüs(30.radyana)), yçBoyu * sinüs(30.radyana))
@@ -78,10 +78,10 @@ def radyanAçıÇiz(kaçRadyan: Sayı) {
     }
 }
 
-def piAçısınınKatınıÇiz(katı: Sayı) {
+tanım piAçısınınKatınıÇiz(katı: Sayı) {
     durakla(araSüresi)
-    val pi = piSayısı  // biliyorsun, pi yaklaşık 3.14 yani üçten biraz çok
-    birYarıçap = if (katı == 1)
+    dez pi = piSayısı  // biliyorsun, pi yaklaşık 3.14 yani üçten biraz çok
+    birYarıçap = eğer (katı == 1)
         eğriYçÇiz(sayıdanDereceye(3), dereceye(pi - 3))
     else
         eğriYçÇiz(sayıdanDereceye(6), dereceye(2*pi - 6))
@@ -94,8 +94,8 @@ def piAçısınınKatınıÇiz(katı: Sayı) {
     çiz(açıYazısı)
 }
 
-var resimSayısı = 1
-def resimÇek() {
+den resimSayısı = 1
+tanım resimÇek() {
     durakla(1.0)
     // çizimiKaydet(s"açılar-$resimSayısı")
     resimSayısı += 1

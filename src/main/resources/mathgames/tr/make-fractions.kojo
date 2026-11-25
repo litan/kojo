@@ -4,26 +4,26 @@
 
 // Bülent Başaran (ben@scala.org) Türkçe'ye çevirirken ufak tefek değişiklikler yaptı.
 
-val yy = Yazıyüzü("Sans Serif", 40)
-val artalanRengi = Renk(255, 232, 181)
+dez yy = Yazıyüzü("Sans Serif", 40)
+dez artalanRengi = Renk(255, 232, 181)
 
-val girdi1 = new ay.Yazıgirdisi("") {
+dez girdi1 = yeni ay.Yazıgirdisi("") {
     yazıYüzünüKur(yy)
     sütunSayısınıKur(2)
     yatayDüzeniKur(ay.değişmez.merkez)
     artalanıKur(artalanRengi)
 }
-val girdi2 = new ay.Yazıgirdisi("") {
+dez girdi2 = yeni ay.Yazıgirdisi("") {
     yazıYüzünüKur(yy)
     sütunSayısınıKur(2)
     yatayDüzeniKur(ay.değişmez.merkez)
     artalanıKur(artalanRengi)
 }
 
-def tıklayıncaYazıyıSil(yg: ay.Yazıgirdisi[Yazı]) {
-    yg.odakDinleyiciEkle(new ay.olay.OdakUyarlayıcısı {
+tanım tıklayıncaYazıyıSil(yg: ay.Yazıgirdisi[Yazı]) {
+    yg.odakDinleyiciEkle(yeni ay.olay.OdakUyarlayıcısı {
         // odağı kazanınca yazıyı siliverelim
-        override def focusGained(o: ay.olay.OdakOlayı) {
+        baskın tanım focusGained(o: ay.olay.OdakOlayı) {
             yg.yazıyıKur("")
         }
     })
@@ -31,74 +31,74 @@ def tıklayıncaYazıyıSil(yg: ay.Yazıgirdisi[Yazı]) {
 tıklayıncaYazıyıSil(girdi1)
 tıklayıncaYazıyıSil(girdi2)
 
-var kesirÇizimi = Resim.yatay(0) // şimdilik
-val düğme = ay.Düğme("Kesiri çizelim") {
-    try { // dene
+den kesirÇizimi = Resim.yatay(0) // şimdilik
+dez düğme = ay.Düğme("Kesiri çizelim") {
+    dene {
         kesirÇizimi.sil()
         ondalıkVeYüzde.sil()
         kesirÇizimi = kesiriÇiz(girdi1.değeri.sayıya, girdi2.değeri.sayıya)
         çiz(kesirÇizimi)
         düğme2.etkinliğiKur(doğru)
     }
-    catch {  // "try" içinde bir yanılgı yani bir hata olunca burada yakalarız
-        case e: ÇalışmaSırasıKuralDışı => // 'case' yani durum şu ise: Java ve Scala'da en genel yanılgı, kural dışı durum türü
-            if (girdi1.değeri.boşMu) {
+    yakala {  // "dene" içinde bir yanılgı yani bir hata olunca burada yakalarız
+        durum e: ÇalışmaSırasıKuralDışı => // Java ve Scala'da en genel yanılgı, kural dışı durum türü
+            eğer (girdi1.değeri.boşMu) {
                 satıryaz("Pay boş!")
             }
-            else if (girdi1.değeri.sayıyaBelki.boşMu) {
+            yoksa eğer (girdi1.değeri.sayıyaBelki.boşMu) {
                 satıryaz("Pay tam sayı değil.")
             }
-            else if (girdi2.değeri.boşMu) {
+            yoksa eğer (girdi2.değeri.boşMu) {
                 satıryaz("Payda boş!")
             }
-            else if (girdi2.değeri.sayıyaBelki.boşMu) {
+            yoksa eğer (girdi2.değeri.sayıyaBelki.boşMu) {
                 satıryaz("Payda tam sayı değil.")
             }
-            else if (girdi2.değeri.sayıya == 0) {
+            yoksa eğer (girdi2.değeri.sayıya == 0) {
                 satıryaz("Payda 1 ya da daha büyük olmalı")
             }
-            else {
+            yoksa {
                 satıryaz("Bir hata var!")
             }
     }
 }
 
-def ondalığıVeYüzdeyiYaz(pay: Kesir, payda: Kesir) = {
-    var ondalık = pay / payda
-    var yüzde = ondalık * 100
+tanım ondalığıVeYüzdeyiYaz(pay: Kesir, payda: Kesir) = {
+    den ondalık = pay / payda
+    den yüzde = ondalık * 100
     Resim.dizi(
         götür(ta.x + 10, -ta.y - 50) -> Resim.arayüz(ay.Tanıt(f"Ondalık olarak: $ondalık%.2f")),
         götür(ta.x + 10, -ta.y - 70) -> Resim.arayüz(ay.Tanıt(f"Yüzde olarak: $yüzde%.2f"))
     )
 }
 
-var ondalıkVeYüzde = Resim.yatay(0) // şimdilik
-val düğme2: ay.Düğme = ay.Düğme("Kesiri ondalık ve yüzde olarak görelim") {
-    try {  // dene
+den ondalıkVeYüzde = Resim.yatay(0) // şimdilik
+dez düğme2: ay.Düğme = ay.Düğme("Kesiri ondalık ve yüzde olarak görelim") {
+    dene {
         ondalıkVeYüzde.sil()
         ondalıkVeYüzde = ondalığıVeYüzdeyiYaz(girdi1.değeri.kesire, girdi2.değeri.kesire)
         çiz(ondalıkVeYüzde)
         düğme2.etkinliğiKur(yanlış)
         düğme.pencereİçindekiOdağıİste()
     }
-    catch {  // yanılgıları yakalayıp göz ardı edelim
-        case e: ÇalışmaSırasıKuralDışı =>  // 'case' yani durum şu ise: Java ve Scala'da en genel yanılgı, kural dışı durum türü
+    yakala {
+        durum e: ÇalışmaSırasıKuralDışı =>  // 'case' yani durum şu ise: Java ve Scala'da en genel yanılgı, kural dışı durum türü
     }
 }
 
-def kesiriÇiz(pay1: Sayı, payda1: Sayı) = Resim {
-    val mavimsi = Renk(90, 199, 255)
-    var pay = mutlakDeğer(pay1)
-    var payda = mutlakDeğer(payda1)
-    val tam = if (pay <= payda) {
+tanım kesiriÇiz(pay1: Sayı, payda1: Sayı) = Resim {
+    dez mavimsi = Renk(90, 199, 255)
+    den pay = mutlakDeğer(pay1)
+    den payda = mutlakDeğer(payda1)
+    dez tam = eğer (pay <= payda) {
         0
     }
-    else {
-        val pay2 = pay
-        pay = if (payda == 0) pay2 else pay2 % payda
-        if (payda == 0) pay1 else pay1 / payda1
+    yoksa {
+        dez pay2 = pay
+        pay = eğer (payda == 0) pay2 yoksa pay2 % payda
+        eğer (payda == 0) pay1 yoksa pay1 / payda1
     }
-    def paydayıÇiz() {
+    tanım paydayıÇiz() {
         // paydaları ayıran çizgiler çemberin yarıçapı
         yinele(payda) {
             ileri(110)
@@ -106,7 +106,7 @@ def kesiriÇiz(pay1: Sayı, payda1: Sayı) = Resim {
             sağ(360.0 / payda)
         }
     }
-    def payıÇiz() {
+    tanım payıÇiz() {
         boyamaRenginiKur(mavimsi)
         ileri(110)
         sağ()
@@ -114,16 +114,16 @@ def kesiriÇiz(pay1: Sayı, payda1: Sayı) = Resim {
         sağ()
         ileri(110)
     }
-    if (payda < 1) {
+    eğer (payda < 1) {
         konumuKur(-150, 0)
         tuvaleYaz("Payda 1 ya da daha büyük olmalı")
     } 
-    else {
-        if (tam != 0) {
+    yoksa {
+        eğer (tam != 0) {
             konumuKur(-5, 160)
             tuvaleYaz(s"$tam")
             konumuKur(-5, 140)
-            tuvaleYaz(if (tam > 0) "+" else "-")
+            tuvaleYaz(eğer (tam > 0) "+" yoksa "-")
             konumuKur(0, 0)
         }
         sağ(90)
@@ -173,7 +173,7 @@ def kesiriÇiz(pay1: Sayı, payda1: Sayı) = Resim {
 
 silVeSakla()
 girdi1.girdiOdağıOl()  // klavye girdisini pay olarak okuyalım
-val ta = tuvalAlanı
+dez ta = tuvalAlanı
 çiz(
     götür(ta.x, ta.y) -> Resim.arayüz(
         ay.Satır(

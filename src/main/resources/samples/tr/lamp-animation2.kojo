@@ -4,7 +4,7 @@
 silVeSakla()
 artalanıKur(renkler.darkSlateBlue) // eflatuna yakın koyu mavi
 
-val alev = Resim {
+dez alev = Resim {
     boyamaRenginiKur(Renk.doğrusalDeğişim(0, 0, kırmızı, 0, 130, sarı))
     kalemRenginiKur(sarı)
     kalemKalınlığınıKur(3)
@@ -14,7 +14,7 @@ val alev = Resim {
     sağ(90, 100)
 }
 
-val lamba = Resim {
+dez lamba = Resim {
     boyamaRenginiKur(Renk.doğrusalDeğişim(0, 10, kırmızı, 0, -25, kahverengi))
     kalemKalınlığınıKur(2)
     kalemRenginiKur(siyah)
@@ -28,13 +28,10 @@ val lamba = Resim {
 
 çiz(lamba)
 
-def büyütme(dizi: Dizi[Kesir]) = dizi(0)
+tanım büyütme(dizi: Dizi[Kesir]) = dizi(0)
 
-def alevlendir(dizi: Dizi[Kesir]) = büyüt(büyütme(dizi)) -> alev
+tanım alevlendir(dizi: Dizi[Kesir]) = büyüt(büyütme(dizi)) -> alev
 
-/* todo: Çeviri yap:
-    easing          hoşGeçiş
-    QuadInOut       Dörtlü yani eğimli GirdiÇıktı */
-val canlandırma = Geçiş(1, Dizi(1), Dizi(0.8), easing.QuadInOut, alevlendir, doğru)
-val canlandırma2 = canlandırmaDizisi(canlandırma, canlandırma.tersten)
+dez canlandırma = Geçiş(1, Dizi(1), Dizi(0.8), YumuşakGeçiş.DörtlüGirdiÇıktı, alevlendir, doğru)
+dez canlandırma2 = canlandırmaDizisi(canlandırma, canlandırma.tersten)
 oynat(canlandırma2.sonsuzYinelenme)

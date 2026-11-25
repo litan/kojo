@@ -4,16 +4,16 @@
 // doğru hızlandırıyor. Aşağı ok tam tersine. Sağ ve sol okları da tahmin edersin.
 // Tuvalin kenarlarına 60 saniye süresince çarpmamaya çalış.
 
-val oyunSüresi = 60
-val hız = 10 // rastgele hareketin hızı. Kolaylaştırmak için bunu azaltabilirsin
-val itiş = 15 // tuşlarla kareye verilen hız
+dez oyunSüresi = 60
+dez hız = 10 // rastgele hareketin hızı. Kolaylaştırmak için bunu azaltabilirsin
+dez itiş = 15 // tuşlarla kareye verilen hız
 
 tümEkran()
 silVeSakla()
 çizSahne(sarı)
 
-val çılgın = Resim {
-    def kare(boy: Sayı) = yinele(4) { ileri(boy); sağ(90) }
+dez çılgın = Resim {
+    tanım kare(boy: Sayı) = yinele(4) { ileri(boy); sağ(90) }
     boyamaRenginiKur(mavi)
     kalemRenginiKur(mavi)
     kare(50)
@@ -24,24 +24,24 @@ val çılgın = Resim {
 çiz(çılgın)
 
 canlandır {
-    val yatayKayış = rastgele(hız) + 1
-    val dikeyKayış = rastgele(hız) + 1
+    dez yatayKayış = rastgele(hız) + 1
+    dez dikeyKayış = rastgele(hız) + 1
     çılgın.götür(yatayKayış, dikeyKayış)
     çılgın.döndür(.5)
-    if (çılgın.çarptıMı(Resim.tuvalSınırları)) {
+    eğer (çılgın.çarptıMı(Resim.tuvalSınırları)) {
         çizMerkezdeYazı("Bir daha dene", kırmızı, 30)
         durdur()
     }
-    if (tuşaBasılıMı(tuşlar.VK_LEFT)) {
+    eğer (tuşaBasılıMı(tuşlar.sol)) {
         çılgın.götür(-itiş, 0)
     }
-    if (tuşaBasılıMı(tuşlar.VK_UP)) {
+    eğer (tuşaBasılıMı(tuşlar.yukarı)) {
         çılgın.götür(0, itiş)
     }
-    if (tuşaBasılıMı(tuşlar.VK_RIGHT)) {
+    eğer (tuşaBasılıMı(tuşlar.sağ)) {
         çılgın.götür(itiş, 0)
     }
-    if (tuşaBasılıMı(tuşlar.VK_DOWN)) {
+    eğer (tuşaBasılıMı(tuşlar.aşağı)) {
         çılgın.götür(0, -itiş)
     }
 }
@@ -66,16 +66,16 @@ Bana inanmazsan okumaya devam et! Kurcalayıp değiştirmek istersen hiç çekin
 Oyunda da kullanmak için yukarıda kullandığımız hazır komut adlarına 2 sayısını 
 eklemen yeter. Ama bir de oyunSüresiniGöster2 komudunu tanımından sonraya taşıyıver.
 
-val ta = tuvalAlanı
-def çizMerkezdeYazı2(yazı: Yazı, renk: Renk, boy: Sayı) {
-    val uzunluk = yazıÇerçevesi(yazı, boy).width // yazının uzunluğu. Yüksekliği için height metodu da var..
-    val resim = kalemRengi(renk) * götür(ta.x + (ta.eni - uzunluk) / 2, 0) ->
+dez ta = tuvalAlanı
+tanım çizMerkezdeYazı2(yazı: Yazı, renk: Renk, boy: Sayı) {
+    dez uzunluk = yazıÇerçevesi(yazı, boy).width // yazının uzunluğu. Yüksekliği için height metodu da var..
+    dez resim = kalemRengi(renk) * götür(ta.x + (ta.eni - uzunluk) / 2, 0) ->
         Resim.yazı(yazı, 30)
     çiz(resim)
 }
-def oyunSüresiniGöster2(oyunSüresi: Sayı, mesaj: Yazı, renk: Renk, boy: Sayı) {
-    var geçenSüre = 0
-    val süreTanıtımı = götür(ta.x + 10, ta.y + 50) -> Resim.yazıRenkli(geçenSüre, 20, mavi)
+tanım oyunSüresiniGöster2(oyunSüresi: Sayı, mesaj: Yazı, renk: Renk, boy: Sayı) {
+    den geçenSüre = 0
+    dez süreTanıtımı = götür(ta.x + 10, ta.y + 50) -> Resim.yazıRenkli(geçenSüre, 20, mavi)
     çiz(süreTanıtımı)
     süreTanıtımı.girdiyiAktar(Resim.tuvalBölgesi)
 
@@ -83,7 +83,7 @@ def oyunSüresiniGöster2(oyunSüresi: Sayı, mesaj: Yazı, renk: Renk, boy: Say
         geçenSüre += 1
         süreTanıtımı.güncelle(geçenSüre)
 
-        if (geçenSüre == oyunSüresi) {
+        eğer (geçenSüre == oyunSüresi) {
             çizMerkezdeYazı2(mesaj, renk, boy)
             durdur()
         }

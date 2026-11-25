@@ -17,6 +17,8 @@ package net.kogics.kojo
 package xscala
 
 import language.implicitConversions
+import net.kogics.kojo.core.{CodingMode, TwMode, VanillaMode}
+import net.kogics.kojo.lite.i18n.LanguageEditorDataRegistry
 
 // Do not format source. It messes up help code formatting.
 
@@ -1883,12 +1885,16 @@ repeat(5) {{
 
   @volatile var modeSpecificContent: Map[String, String] = TwContent
 
+  @volatile private var codingMode: CodingMode = TwMode
+
   def activateTw(): Unit = {
+    codingMode = TwMode
     modeSpecificContent = TwContent
     clearLangContent()
   }
 
   def activateVn(): Unit = {
+    codingMode = VanillaMode
     modeSpecificContent = VnContent
     clearLangContent()
   }
@@ -1912,12 +1918,14 @@ repeat(5) {{
   }
 
   def apply(topic: String): String = {
-    CommonContent.getOrElse(
-      topic,
-      modeSpecificContent.getOrElse(
+    LanguageEditorDataRegistry.current.keywordHelp.get(codingMode).flatMap(_.get(topic)).getOrElse {
+      CommonContent.getOrElse(
         topic,
-        langHelp(topic, System.getProperty("user.language")).getOrElse(null)
+        modeSpecificContent.getOrElse(
+          topic,
+          langHelp(topic, System.getProperty("user.language")).getOrElse(null)
+        )
       )
-    )
+    }
   }
 }

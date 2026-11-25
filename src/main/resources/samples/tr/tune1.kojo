@@ -1,4 +1,4 @@
-val ezgi = MusicScore(
+dez ezgi = MusicScore(
     Melody("ACOUSTIC_Grand", "C C G G A A G R F F E E D D C R R"),
     Rhythm("ACOUSTIC_Bass_Drum", "q", "o.o.o.o.o.o.o.o...")
 )

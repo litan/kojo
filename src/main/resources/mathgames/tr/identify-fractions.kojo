@@ -4,26 +4,26 @@
 
 // Bülent Başaran (ben@scala.org) Türkçe'ye çevirirken ufak tefek değişiklikler yaptı.
 
-val yy = Yazıyüzü("Sans Serif", 40)
-val artalanRengi = Renk(255, 232, 181)
+dez yy = Yazıyüzü("Sans Serif", 40)
+dez artalanRengi = Renk(255, 232, 181)
 
-val girdi1 = new ay.Yazıgirdisi("") {
+dez girdi1 = yeni ay.Yazıgirdisi("") {
     yazıYüzünüKur(yy)
     sütunSayısınıKur(2)
     yatayDüzeniKur(ay.değişmez.merkez)
     artalanıKur(artalanRengi)
 }
-val girdi2 = new ay.Yazıgirdisi("") {
+dez girdi2 = yeni ay.Yazıgirdisi("") {
     yazıYüzünüKur(yy)
     sütunSayısınıKur(2)
     yatayDüzeniKur(ay.değişmez.merkez)
     artalanıKur(artalanRengi)
 }
 
-def tıklayıncaYazıyıSil(yg: ay.Yazıgirdisi[Yazı]) {
-    yg.odakDinleyiciEkle(new ay.olay.OdakUyarlayıcısı {
+tanım tıklayıncaYazıyıSil(yg: ay.Yazıgirdisi[Yazı]) {
+    yg.odakDinleyiciEkle(yeni ay.olay.OdakUyarlayıcısı {
         // odağı kazanınca yazıyı siliverelim
-        override def focusGained(o: ay.olay.OdakOlayı) {
+        baskın tanım focusGained(o: ay.olay.OdakOlayı) {
             yg.yazıyıKur("")
         }
     })
@@ -31,21 +31,21 @@ def tıklayıncaYazıyıSil(yg: ay.Yazıgirdisi[Yazı]) {
 tıklayıncaYazıyıSil(girdi1)
 tıklayıncaYazıyıSil(girdi2)
 
-var pay = rastgele(6) + 2
-var payda = rastgele(10) + 2
-if (pay == payda) {
+den pay = rastgele(6) + 2
+den payda = rastgele(10) + 2
+eğer (pay == payda) {
     pay = payda - 1
 }
-if (pay > payda) {
+eğer (pay > payda) {
     pay = payda
     payda = pay + 2
 }
 
-def kesiriÇiz(a: Sayı, b: Sayı) = Resim {
-    val mavimsi = Renk(90, 199, 255)
-    var pay = a
-    var payda = b
-    def paydayıÇiz() {
+tanım kesiriÇiz(a: Sayı, b: Sayı) = Resim {
+    dez mavimsi = Renk(90, 199, 255)
+    den pay = a
+    den payda = b
+    tanım paydayıÇiz() {
         // paydaları ayıran çizgiler çemberin yarıçapı
         yinele(payda) {
             ileri(110)
@@ -53,7 +53,7 @@ def kesiriÇiz(a: Sayı, b: Sayı) = Resim {
             sağ(360.0 / payda)
         }
     }
-    def payıÇiz() {
+    tanım payıÇiz() {
         boyamaRenginiKur(mavimsi)
         ileri(110)
         sağ()
@@ -61,7 +61,7 @@ def kesiriÇiz(a: Sayı, b: Sayı) = Resim {
         sağ()
         ileri(110)
     }
-    def çizim = {
+    tanım çizim = {
         sağ(90)
         zıpla(110)
         sol(90)
@@ -108,44 +108,44 @@ def kesiriÇiz(a: Sayı, b: Sayı) = Resim {
     çizim
 }
 
-var kesirÇizimi = kesiriÇiz(pay, payda)
-var etiket = ay.Tanıt("")
-var yanıt = Resim.arayüz(etiket)
+den kesirÇizimi = kesiriÇiz(pay, payda)
+den etiket = ay.Tanıt("")
+den yanıt = Resim.arayüz(etiket)
 çiz(yanıt)
-var etiket2 = ay.Tanıt("")
-var yanıt2 = Resim.arayüz(etiket)
+den etiket2 = ay.Tanıt("")
+den yanıt2 = Resim.arayüz(etiket)
 çiz(yanıt2)
-var renk = siyah
+den renk = siyah
 
-val düğme = ay.Düğme("Doğru mu?") {
+dez düğme = ay.Düğme("Doğru mu?") {
     yanıt.sil()
     yanıt2.sil()
-    if (girdi1.value.toIntOption.isDefined && girdi2.value.toIntOption.isDefined) {
-        val ortakBölen = enİriOrtakPayda(pay, payda)
+    eğer (girdi1.value.toIntOption.isDefined && girdi2.value.toIntOption.isDefined) {
+        dez ortakBölen = enİriOrtakPayda(pay, payda)
         belirt(pay <= payda, "Pay paydan büyük olmamalı")
-        val sadePay = pay / ortakBölen
-        val sadePayda = payda / ortakBölen
-        val g1 = girdi1.değeri.sayıya // oyuncunun girdisi Sayı olarak
-        val g2 = girdi2.değeri.sayıya
-        val o2 = enİriOrtakPayda(g1, g2)
-        if (g1 == sadePay && g2 == sadePayda) {
+        dez sadePay = pay / ortakBölen
+        dez sadePayda = payda / ortakBölen
+        dez g1 = girdi1.değeri.sayıya // oyuncunun girdisi Sayı olarak
+        dez g2 = girdi2.değeri.sayıya
+        dez o2 = enİriOrtakPayda(g1, g2)
+        eğer (g1 == sadePay && g2 == sadePayda) {
             etiket = ay.Tanıt("Doğru.")
             renk = Renk(0, 143, 0) // koyu yeşilimsi
             etiket2 = ay.Tanıt(" ")
         }
-        else if (g1 / o2 == sadePay && g2 / o2 == sadePayda) {
+        yoksa eğer (g1 / o2 == sadePay && g2 / o2 == sadePayda) {
             etiket = ay.Tanıt("Doğru ama sade değil.")
             renk = turuncu
             etiket2 = ay.Tanıt(s"Bu oranı $sadePay / $sadePayda olarak yazalım")
         }
-        else {
+        yoksa {
             etiket = ay.Tanıt("Yanlış.")
             renk = kırmızı
             etiket2 = ay.Tanıt(" ")
         }
         etiket.önalanıKur(renk)
     }
-    else {
+    yoksa {
         etiket = ay.Tanıt("Pay ve payda tam sayı olmalı.")
         etiket.önalanıKur(kırmızı)
     }
@@ -156,7 +156,7 @@ val düğme = ay.Düğme("Doğru mu?") {
     çiz(götür(ta.x + 20, -ta.y - 80) -> yanıt2)
 }
 
-val düğme2 = ay.Düğme("Yeni soru") {
+dez düğme2 = ay.Düğme("Yeni soru") {
     kesirÇizimi.sil()
     girdi1.yazıyıKur("")
     girdi2.yazıyıKur("")
@@ -164,10 +164,10 @@ val düğme2 = ay.Düğme("Yeni soru") {
     yanıt2.sil()
     pay = rastgele(4) + 2
     payda = rastgele(8) + 2
-    if (pay == payda) {
+    eğer (pay == payda) {
         pay = payda - 1
     }
-    if (pay > payda) {
+    eğer (pay > payda) {
         pay = payda
         payda = pay + 2
     }
@@ -177,7 +177,7 @@ val düğme2 = ay.Düğme("Yeni soru") {
 
 silVeSakla()
 girdi1.girdiOdağıOl() // klavye girdisini pay olarak okuyalım
-val ta = tuvalAlanı
+dez ta = tuvalAlanı
 çiz(
     götür(ta.x, ta.y) -> Resim.arayüz(
         ay.Satır(

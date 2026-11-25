@@ -1,10 +1,10 @@
 // Yeni başlayanlar için alıştırmalar. Kojo'nun Öykü (Story) özelliğini kullanıyoruz.
 
 // Düzenleme parametrelerimiz (aşağıda yüklediğimiz runner yazılımı tarafından kullanırlar)
-val YanlışlarıGöster = yanlış // yapılan yanlışları sayar ve gösterir
-val AlıştırmaKalemKalınlığı = 6 // alıştırmanın hedefini bu kalınlıkta bir kalemle çizeriz
-val Çözmedenİlerleme = yanlış // doğru yanıt bulunmazsa bir sonraki alıştırmaya geçmeye izin vermez
-val SeçenekSayısı = 4 // komut salındıraçında (dropdown) kaç seçenek olduğunu belirler
+dez YanlışlarıGöster = yanlış // yapılan yanlışları sayar ve gösterir
+dez AlıştırmaKalemKalınlığı = 6 // alıştırmanın hedefini bu kalınlıkta bir kalemle çizeriz
+dez Çözmedenİlerleme = yanlış // doğru yanıt bulunmazsa bir sonraki alıştırmaya geçmeye izin vermez
+dez SeçenekSayısı = 4 // komut salındıraçında (dropdown) kaç seçenek olduğunu belirler
 
 // Yüklediğimiz yazılım, öykü anlatma özelliğini kurar ve çalıştırır:
 // #yükle /challenge/tr/oykucu.kojo
@@ -12,7 +12,7 @@ val SeçenekSayısı = 4 // komut salındıraçında (dropdown) kaç seçenek ol
 // Alıştırmaları ve açıklamalarını burada tanımlıyoruz. İstediğin gibi değiştirebilirsin.
 // Bu iki miskin değişmez (lazy val) yukarıda yüklediğimiz runner.kojo dosyasında tanımlanmış
 // yöntemler içinde kullanılıyor.
-lazy val alıştırmalar = Dizi(
+miskin dez alıştırmalar = Dizi(
     """ileri(50)
 sağ(90)
 ileri(100)
@@ -149,7 +149,7 @@ ileri(88)
 """
 )
 
-lazy val açıklamalar = Eşlem(
+miskin dez açıklamalar = Eşlem(
     1 -> <div>
     Neler öğreniyoruz:
         <ul>
@@ -162,7 +162,7 @@ lazy val açıklamalar = Eşlem(
             <li>Komutların akılda sıraya sokulması</li>
             <li>Mantıksal düşünüş</li>
         </ul>
-      Faydalı tuval komutları:
+      Faydalı tudez komutları:
       <ul>
           <li><em>Eksenler</em> – Eksenleri aç/kapat. Yaklaşık ölçüm yapmak için faydalı olur.</li>
           <li><em>Araçlar</em> – Açıölçer ve cetveli aç/kapat. 
@@ -221,7 +221,7 @@ lazy val açıklamalar = Eşlem(
     7 -> <div>
     Neler öğreniyoruz:
         <ul>
-            <li>Örüntüleri görmeye giriş (İngilice "pattern" yani desen, kalıp ya da motif de diyebiliriz) </li>
+            <li>Örüntüleri görmeye giriş (İngilice "pattern" yani desen, kalıp ya da moteğer de diyebiliriz) </li>
             <li>Kare</li>
             <li>Yeni öğrenilen kavramların pekiştirilmesi</li>
         </ul>

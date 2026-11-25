@@ -1,42 +1,42 @@
 //#yükle tr/anaTanimlar
 //#yükle tr/eTahta
 
-class Bellek(tahta: ETahta) {
-    val odaSayısı = tahta.odaSayısı
+sınıf Bellek(tahta: ETahta) {
+    dez odaSayısı = tahta.odaSayısı
     // ileri geri gidiş için gerekli bellek
-    private val eskiTahtalar = EsnekDizim.boş[Dizim[Array[Taş]]] // todo
-    private val oyuncular = EsnekDizim.boş[Taş]
-    private val hamleler = EsnekDizim.boş[Belki[Oda]]
-    def saklaTahtayı(yeniHamleMi: İkil, hane: Belki[Oda]) = {
-        if (yeniHamleMi) while (tahta.hamleSayısı() <= eskiTahtalar.sayı) {
+    gizli dez eskiTahtalar = EsnekDizim.boş[Dizim[Array[Taş]]] // todo
+    gizli dez oyuncular = EsnekDizim.boş[Taş]
+    gizli dez hamleler = EsnekDizim.boş[Belki[Oda]]
+    tanım saklaTahtayı(yeniHamleMi: İkil, hane: Belki[Oda]) = {
+        eğer (yeniHamleMi) yineleDoğruKaldıkça (tahta.hamleSayısı() <= eskiTahtalar.sayı) {
             eskiTahtalar.çıkar(eskiTahtalar.sayı - 1)
             oyuncular.çıkar(oyuncular.sayı - 1)
             hamleler.çıkar(hamleler.sayı - 1)
         }
-        val yeniTahta = Dizim.boş[Taş](odaSayısı, odaSayısı)
-        for (x <- tahta.satırAralığı; y <- tahta.satırAralığı)
+        dez yeniTahta = Dizim.boş[Taş](odaSayısı, odaSayısı)
+        için (x <- tahta.satırAralığı; y <- tahta.satırAralığı)
             yeniTahta(y)(x) = tahta.taş(y, x)
         eskiTahtalar += yeniTahta
         oyuncular += tahta.oyuncu()
         hamleler += hane
     }
-    def verilenHamleTahtasınaGeç(hamle: Sayı) = {
-        val eski = eskiTahtalar(hamle)
-        for (x <- tahta.satırAralığı; y <- tahta.satırAralığı)
+    tanım verilenHamleTahtasınaGeç(hamle: Sayı) = {
+        dez eski = eskiTahtalar(hamle)
+        için (x <- tahta.satırAralığı; y <- tahta.satırAralığı)
             tahta.taşıKur(y)(x)(eski(y)(x))
         tahta.oyuncu.kur(oyuncular(hamle))
         tahta.sonHamle = hamleler(hamle)
         tahta.sıraGeriDöndüMü =
-            if (hamle > 1) tahta.oyuncu() == oyuncular(hamle - 1)
-            else yanlış
+            eğer (hamle > 1) tahta.oyuncu() == oyuncular(hamle - 1)
+            yoksa yanlış
     }
-    def yeniHamleYapıldı = {
+    tanım yeniHamleYapıldı = {
         yeniHamleEnYeniGeriAlKomutundanDahaGüncel = doğru
     }
     // yeni bir hamleden önce geri/ileri çalışmaz ki
-    private var yeniHamleEnYeniGeriAlKomutundanDahaGüncel = doğru
-    def geriAl = if (tahta.hamleSayısı() > 1) {
-        if (yeniHamleEnYeniGeriAlKomutundanDahaGüncel) {
+    gizli den yeniHamleEnYeniGeriAlKomutundanDahaGüncel = doğru
+    tanım geriAl = eğer (tahta.hamleSayısı() > 1) {
+        eğer (yeniHamleEnYeniGeriAlKomutundanDahaGüncel) {
             yeniHamleEnYeniGeriAlKomutundanDahaGüncel = yanlış
             saklaTahtayı(yanlış, tahta.sonHamle)
         }
@@ -44,12 +44,12 @@ class Bellek(tahta: ETahta) {
         tahta.hamleSayısı.azalt()
         verilenHamleTahtasınaGeç(tahta.hamleSayısı() - 1)
     }
-    def ileriGit = if (tahta.hamleSayısı() < eskiTahtalar.sayı) {
+    tanım ileriGit = eğer (tahta.hamleSayısı() < eskiTahtalar.sayı) {
         verilenHamleTahtasınaGeç(tahta.hamleSayısı())
         tahta.hamleSayısı.artır()
     }
 
-    def başaAl() = {
+    tanım başaAl() = {
         eskiTahtalar.sil()
         oyuncular.sil()
         hamleler.sil()

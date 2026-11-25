@@ -4,6 +4,7 @@ import java.io.File
 
 object NewKojoInstance extends StubMain {
   lazy val classpath = {
+    // Inherit the running Kojo's toolchain; language changes take effect on restart.
     val cp = System.getProperty("java.class.path").split(File.pathSeparatorChar).toList
     createCp(cp)
   }

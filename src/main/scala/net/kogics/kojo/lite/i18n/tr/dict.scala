@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 June
+ * Copyright (C) 2024
  *   Bulent Basaran <ben@scala.org> https://github.com/bulent2k2
  *   Lalit Pant <pant.lalit@gmail.com>
  *
@@ -14,13 +14,91 @@
  * rights and limitations under the License.
  *
  */
+/*
+Koco version tag for timestamping purposes:
+  val KojoRevision = "r3-tr-1"
+  val KojoBuildDate = "31 Mart 2026"
+Ref Kojo version: ../../Versions.scala
+  I do not check in to Version.scala.
+  Makes it hard to sync by fork with Lalit's base.
+*/
 package net.kogics.kojo.lite.i18n.tr
 
 object dict {
+  // Ekşi sözlükten: application programming interface.. yani ne diyor "uygulama programlama arabirimi". demek ki uygulama programlamak icin saglanan arabirimlere grup olarak api deniyormuş
+  val miscCreativeMapping = Map(
+    "group" -> "öbek", // groupBy öbekle, grouped öbekli
+    "hash" -> "kıyma", // hashCode kıymaKodu HashMap KıymaEşlek HashSet KıymaKüme
+    "refresh" -> "ekran tazeleme", // refresh rate, E.T. hızı. ETH
+    "frame" -> "çizim",
+    "nil" -> "boş",
+    "double quotes" -> "çift tırnak işareti",
+    "brace" -> "kıvrık parantez",
+    "trace" -> "izlem",
+    "buffered" -> "bellekte bellekli", //  Bellekteİmge BellekliYineleyici
+    "bootstrap" -> "önyükleme",
+    "regular expression" -> "düzenli deyiş", // regex
+    // Sınama terimleri. "sınama" deponun kendi kullanımı (KoleksiyonYardımıTest'te
+    // "Örnek sınanıyor", türListesiKaynakla_uyuşuyor savları) -- alıntı "test"
+    // yerine onu sürdürüyoruz.
+    "test" -> "sınama",
+    "test driven development" -> "sınamayla güdümlü geliştirme", // TDD -> SGG
+    "failing test" -> "düşen sınama",
+    "regression test" -> "gerileme sınaması",
+    "red-green-refactor" -> "kırmızı-yeşil-düzelt",
+    "companion" -> "eşlik", // HerDeğerinEşliği AnyValCompanion
+    "companion object" -> "eş nesne",
+    "prompt" -> "istem",
+    "api" -> "upa",
+    "hesap" -> "ölçüm",
+    "cebir" -> "ölçülüm",
+    "polynomial" -> "çok terimli",
+    "iterate" -> "yinele",  // todo not repeat -- üzerinden geçmek
+    "iteration" -> "yineleme",
+    "iterator" -> "yineleyici",
+    "iterable" -> "yinelenebilir",
+    "iterableonce" -> "yinelenebilirBirKere",
+    "recurse" -> "özyinele",
+    "recursive" -> "özyineli",
+    "recursion" -> "özyineleme",
+    "exception" -> "kuraldışı",
+    "runtime" -> "çalışmasırası",
+    "compile" -> "derleme",
+    "compiler" -> "derleyici",
+    "point" -> "göster", // işaret et
+    "pointer" -> "gösterge", // işaretçi
+    "reference" -> "gönderge",
+    "operation" -> "işlem",
+    "unary" -> "biril", // todo: unary_!
+    "binary" -> "ikil",
+    "ternary" -> "üçül",
+    "operand" -> "işlenen",
+    "transition" -> "geçiş",
+    "composable" -> "birleşebilen", // RotC: DönBD: DöndürBirlşblnDönüştrc
+    "transform" -> "dönüştürmek",
+    "transformation" -> "dönüşüm",
+    "transformer" -> "dönüştürücü",
+    "breakpoint" -> "duruşnoktası",
+    "URL" -> "BKK",
+    "uniform" -> "birörnek",
+    "resource" -> "kaynak",
+    "locator" -> "konumlayıcı",
+    "wrap" -> "sar sargı",
+    "Wrapper" -> "Sarıcı",
+    "UserCode" -> "KullanıcınınYazılımı",
+    "thread" -> "iş parçacığı", // thread dispatching: iş parçacığı işlemci zamanlaması!
+    "script" -> "betik", // veya yazılımcık
+    "generic" -> "genel",
+  )
+
   // skala kılavuzunda kullanma sırasıyla (yaklaşık olarak)
   // excludes scala (2 and 3) and java keywords which are in the next map
   val otherCommonWords = Map(
-    "set" -> "kur",
+    "cursor" -> "imleç",
+    "programlama" -> "yazılım",
+    "kelime" -> "sözcük", // ttodo!
+    "method" -> "yöntem", // ttodo! metod yerine yöntem sözcüğünü kullan!
+    "set" -> "kur veya küme",
     "to" -> "|-| anlamı: ilkSayıdanSonSayıyaKadar", // 1 to 4 -> Aralık.kapalı(1, 4)
     "until" -> "|- anlamı: ilkSayıdanSonSayıyaKadarAmaSonSayıHariç", // 1 until 4 -> Aralık(1, 4)
     "by" -> "adım", // 1 to 100 by 8
@@ -35,8 +113,8 @@ object dict {
     "map" -> "işle",
     "flatMap" -> "düzİşle", // "ABC".flatMap(_.toLower.toString * 3)
     "sorted" -> "sıralı",
-    "sortBy" -> "sırala", // def sortBy[B](f: A => B)(implicit ord: Ordering[B]): C
-    "sortWith" -> "sırayaSok", // def sortWith(lt: (A, A) => Boolean): C
+    "sortBy" -> "sırala",       // def sortBy[B](f: A => B)(implicit ord: Ordering[B]): C
+    "sortWith" -> "sırayaSok",  // def sortWith(lt: (A, A) => Boolean): C
     "reduce" -> "indirge",
     "fold" -> "katla",
     "foldLeft" -> "soldanKatla",
@@ -59,7 +137,7 @@ object dict {
     "foreach" -> "herbiriİçin",
     "compareTo" -> "kıyasla",
     "compareToIgnoreCase" -> "kıyaslaKüçükHarfBüyükHarfAyrımıYapmadan",
-    "eq" -> "aynıMı", // AnyRef
+    "eq" -> "aynıMı",  // AnyRef
     "equals" -> "eşitMi",
     "equalsIgnoreCase" -> "eşitMiKüçükHarfBüyükHarfAyrımıYapmadan",
     "startsWith" -> "başındaMı",
@@ -80,14 +158,15 @@ object dict {
     "dropRight" -> "düşürSağdan",
     "dropWhile" -> "düşürDoğruKaldıkça",
     "init" -> "önü",
+    "initialize" -> "başlat, ilklendir, en baştan başlat",
     "last" -> "sonu",
     "forall" -> "hepsiİçinDoğruMu", // hepsiDoğruMu
     "slice" -> "dilim",
     "zip" -> "ikile",
     "zipWithIndex" -> "ikileSırayla",
     "spin" -> "çevir",
-    "rgb" -> "kym", // kırmızı yeşil mavi
-    "rgba" -> "kyms", // saydamlık
+    "rgb" -> "kym",  // kırmızı yeşil mavi
+    "rgba" -> "kyms",  // saydamlık
     "linearGradient" -> "doğrusalDeğişim",
     "linearMultipleGradient" -> "doğrusalÇokluDeğişim",
     "radialGradient" -> "merkezdenDışarıDoğruDeğişim",
@@ -123,6 +202,167 @@ object dict {
     "ListBuffer" -> "EsnekDizin", // used in StoryTeller.scala
     "mutable" -> "değişir",
     "immutable" -> "değişmez",
+    "execution" -> "işletim",
+    "application" -> "uygulanış",
+    "" -> "",
+    // Yerinde değiştirenler ve türe özgü yöntemler
+    "filterInPlace" -> "eleYerinde",
+    "mapInPlace" -> "işleYerinde",
+    "flatMapInPlace" -> "düzİşleYerinde",
+    "sortInPlace" -> "sıralıYerinde",
+    "sortInPlaceBy" -> "sıralaYerinde",
+    "sortInPlaceWith" -> "sırayaSokYerinde",
+    "takeInPlace" -> "alYerinde",
+    "takeRightInPlace" -> "alSağdanYerinde",
+    "takeWhileInPlace" -> "alDoğruKaldıkçaYerinde",
+    "dropInPlace" -> "düşürYerinde",
+    "dropRightInPlace" -> "düşürSağdanYerinde",
+    "dropWhileInPlace" -> "düşürDoğruKaldıkçaYerinde",
+    "sliceInPlace" -> "dilimYerinde",
+    "patchInPlace" -> "yamaYerinde",
+    "padToInPlace" -> "uzatYerinde",
+    "addAll" -> "ekleHepsini", // eski ad: hepsiniEkle (eskitildi)
+    "prepend" -> "ekleBaşa", // eski ad: başaEkle (eskitildi)
+    "prependAll" -> "ekleBaşaHepsini", // eski ad: başaEkleHepsini (eskitildi)
+    "insert" -> "ekleAraya", // eski ad: araEkle (eskitildi)
+    "insertAll" -> "ekleArayaHepsini",
+    "removeAll" -> "alHepsini",
+    "removeAllReverse" -> "alHepsiniTersten",
+    "removeFirst" -> "çıkarİlkUyanı",
+    "removeLast" -> "çıkarSondan", // takma adı: sondanÇıkar
+    "removeLastOption" -> "çıkarSondanBelki", // takma adı: sondanÇıkarBelki
+    "removeLastWhile" -> "çıkarSondanDoğruKaldıkça",
+    "popAll" -> "çekHepsini",
+    "popWhile" -> "çekDoğruKaldıkça",
+    "toArray" -> "dizime",
+    "subtractOne" -> "çıkarÖgeyi",
+    "subtractAll" -> "çıkarHepsini",
+    "trimStart" -> "baştanKırp",
+    "trimEnd" -> "sondanKırp",
+    "clear" -> "boşalt",
+    "enqueue" -> "kuyruğaEkle",
+    "enqueueAll" -> "kuyruğaEkleHepsini",
+    "dequeue" -> "baştanÇıkar",
+    "removeHeadOption" -> "baştanÇıkarBelki",
+    "removeHeadWhile" -> "baştanÇıkarDoğruKaldıkça",
+    "dequeueFirst" -> "baştanÇıkarKoşulla",
+    "dequeueWhile" -> "baştanÇıkarHepsiniKoşulla",
+    "removeLast" -> "sondanÇıkar",
+    "removeLastOption" -> "sondanÇıkarBelki",
+    "front" -> "ilki",
+    "toQueue" -> "kuyruğa",
+    // İkisindenBiri (bkz. i18n/tr/ikisindenbiri.scala)
+    "isLeft" -> "solMu",
+    "isRight" -> "sağMı",
+    "swap" -> "takasla",
+    "merge" -> "birleştir",
+    "toOption" -> "belkiye",
+    "cond" -> "koşulla",
+    // Yineleyici (bkz. i18n/tr/yineleyici.scala)
+    "hasNext" -> "dahaVarMı",
+    "next" -> "sıradaki",
+    "nextOption" -> "sıradakiBelki",
+    "buffered" -> "bellekli",
+    "duplicate" -> "ikizYap",
+    "sameElements" -> "gösterdikleriAynıMı",
+    "dequeueAll" -> "baştanAlHepsini",
+    // Yığın (Stack) -- it/koy ve çek/al ikili adlarında sözlüğe İLK ad giriyor
+    "push" -> "it",
+    "pushAll" -> "itHepsini",
+    "pop" -> "çek",
+    "top" -> "tepesi",
+    "remove" -> "çıkar",
+    // Aralık (Range)
+    "inclusive" -> "kapalı",
+    "clone" -> "ikizle",
+    "lift" -> "kaldır",
+    "toMap" -> "eşleğe",
+    "put" -> "koy",
+    "update" -> "güncelle",
+    "updateWith" -> "güncelleİşlevle",
+    "getOrElseUpdate" -> "alYoksaEkle",
+    "mapValuesInPlace" -> "değerleriİşleYerinde",
+    "mapValues" -> "değerleriİşle",
+    "filterKeys" -> "anahtarlarıEle",
+    "updatedWith" -> "değiştirİşlevle",
+    "removed" -> "çıkarılmış",
+    "removedAll" -> "hepsiÇıkarılmış",
+    "withDefault" -> "varsayılanlı",
+    "foreachEntry" -> "herİkiliİçin",
+    "keysIterator" -> "anahtarYineleyici",
+    "valuesIterator" -> "değerYineleyici",
+    "incl" -> "ekli",
+    "excl" -> "çıkarılmış",
+    "subsetOf" -> "altKümesiMi",
+    "lines" -> "satırlar",
+    "linesIterator" -> "satırlar",
+    "stripPrefix" -> "başındanAt",
+    "stripSuffix" -> "sonundanAt",
+    "stripLineEnd" -> "satırSonunuAt",
+    "toLong" -> "uzuna",
+    "toLongOption" -> "uzunaBelki",
+    "orElse" -> "boşsaÖbürü",
+    "toLeft" -> "sola",
+    "toRight" -> "sağa",
+    "when" -> "iseVer",
+    "unless" -> "değilseVer",
+    // Dizi ailesi + MiskinDizin ortak çekirdeği -- bkz. dizi/dizin/dizik/yoney/miskindizin.scala
+    "indexOfSlice" -> "dilimSırası",
+    "lastIndexOfSlice" -> "dilimSırasıSondan",
+    "find" -> "bul",
+    "findLast" -> "bulSondan",
+    "headOption" -> "başıBelki",
+    "lastOption" -> "sonuBelki",
+    "indexWhere" -> "nerede",
+    "lastIndexWhere" -> "neredeSondan",
+    "indices" -> "sıralar",
+    "corresponds" -> "karşılıklıMı",
+    "partition" -> "böl",
+    "partitionMap" -> "bölİşle",
+    "span" -> "bölDoğruKaldıkça",
+    "splitAt" -> "bölYerinden",
+    "grouped" -> "öbekli",
+    "sliding" -> "kayarÖbekli",
+    "groupBy" -> "öbekle",
+    "groupMap" -> "öbekleİşle",
+    "groupMapReduce" -> "öbekleİşleİndirge",
+    "reduceLeft" -> "indirgeSoldan",
+    "reduceRight" -> "indirgeSağdan",
+    "reduceOption" -> "indirgeBelki",
+    "reduceLeftOption" -> "indirgeSoldanBelki",
+    "reduceRightOption" -> "indirgeSağdanBelki",
+    "scan" -> "tara",
+    "scanLeft" -> "taraSoldan",
+    "scanRight" -> "taraSağdan",
+    "minOption" -> "enUfağıBelki",
+    "maxOption" -> "enİrisiBelki",
+    "minByOption" -> "enUfağıBelki",
+    "maxByOption" -> "enİrisiBelki",
+    "appended" -> "sonunaEkle",
+    "prepended" -> "önüneEkle",
+    "#::" -> "önüneEkle",
+    "appendedAll" -> "sonunaEkleHepsini",
+    "lazyAppendedAll" -> "sonunaEkleHepsini",
+    "#:::" -> "sonunaEkleHepsini",
+    "prependedAll" -> "önüneEkleHepsini",
+    "force" -> "hepsiniHesapla",
+    "padTo" -> "uzat",
+    "patch" -> "yama",
+    "diff" -> "fark",
+    "intersect" -> "kesişim",
+    "union" -> "bileşim",
+    "collect" -> "seçİşle",
+    "collectFirst" -> "seçİşleİlk",
+    "flatten" -> "düzleştir",
+    "transpose" -> "devrik",
+    "unzip" -> "ikiliyiAç",
+    "zipAll" -> "ikileHepsini",
+    "reverseMap" -> "tersİşle",
+    "combinations" -> "kombinasyonlar",
+    "permutations" -> "permütasyonlar",
+    "tails" -> "kuyruklar",
+    "inits" -> "önler",
+    "" -> "",
     "" -> "",
     "" -> "",
   )
@@ -130,13 +370,13 @@ object dict {
   // https://docs.scala-lang.org/scala3/reference/syntax.html
   // TODO: make sure these are not used in any turkish samples or turkish translation code!
   // They are in abc-order:
-  //   at baskın bazı birlikte bu damgalı den dene deste dez doğru durum eğer eşle geriDön getir
+  //   baskın bazı bildir birlikte bu damgalı den dene deste dez doğru durum eğer eşle geriDön getir
   //   için koru miskin nesne sakla son sonunda soyut sınıf tanım tür ver yakala yanlış yap
   //   yayar yeni yineleDoğruKaldıkça yok yoksa örtük özellik üst
   val turkishKeywords = List(
-    "at",
     "baskın",
     "bazı",
+    "bildir",
     "birlikte",
     "bu",
     "damgalı",
@@ -150,13 +390,13 @@ object dict {
     "eşle",
     "geriDön",
     "getir",
+    "gizli",
     "için",
     "koru",
     "miskin",
     "nesne",
     "örtük",
     "özellik",
-    "sakla",
     "son",
     "sonunda",
     "soyut",
@@ -189,7 +429,7 @@ object dict {
     "false" -> "yanlış",
     "final" -> "son",
     "finally" -> "sonunda",
-    "for" -> "için", // yerine içinYinele
+    "for" -> "için",  // yerine içinYinele
     "forSome" -> "bazı", // eskitilmiş ve dilden çıkarılmış
     "given" -> "verilen",
     "if" -> "eğer",
@@ -200,16 +440,16 @@ object dict {
     "new" -> "yeni",
     "null" -> "yok",
     "object" -> "nesne",
-    "override" -> "baskın", // override def -> baskın (üstüne) tanım
+    "override" -> "baskın", // override def -> baskın (üstüne ya da yeniden) tanım TODO
     "package" -> "deste",
-    "private" -> "sakla",
+    "private" -> "gizli", // sakla?
     "protected" -> "koru",
     "return" -> "geriDön",
     "sealed" -> "damgalı",
     "super" -> "üst",
     "this" -> "bu",
     "then" -> "yoksa",
-    "throw" -> "at",
+    "throw" -> "bildir", // "at" fails due to variable name in sbt compiler-bridge
     "trait" -> "özellik",
     "true" -> "doğru",
     "try" -> "dene",
@@ -238,7 +478,8 @@ object dict {
     "implements" -> "tanımlar",
     "instanceof" -> "bireyi",
     "int" -> "sayı",
-    "interface" -> "arayüz",
+    "interface" -> "arabirim, arayüz",
+    "UI" -> "arayüz",
     "long" -> "uzun",
     "public" -> "açık",
     "native" -> "yerli",
@@ -271,9 +512,108 @@ object dict {
     "scala" -> "#tr skala",
     "tutorial" -> "kılavuz",
     "cheat-sheet" -> "kılavuzcuk",
+    "tuple" -> "sıralama",
+    "PSınırlar" -> "PBounds",
+    "BenzerDönüşüm" -> "AffineTransform",
   )
 
-  val type2en = Map()
+  // todo: complete
+  val type2en = Map(
+    "Nesne" -> "Object",
+    "Birim" -> "Unit",
+    "Her" -> "Any",
+    "HerDeğer" -> "AnyVal",
+    "HerGönder" -> "AnyRef",
+    "Hiç" -> "Nothing",
+    "Yok" -> "Null",
+    "İkil" -> "Boolean",
+    "Seçim" -> "Boolean",
+    "Lokma" -> "Byte",
+    "Kısa" -> "Short",
+    "Sayı" -> "Int",
+    "Uzun" -> "Long",
+    "İriSayı" -> "BigInt",
+    "Kesir" -> "Double",
+    "UfakKesir" -> "Float",
+    "İriKesir" -> "BigDecimal",
+    "Harf" -> "Char",
+    "Yazı" -> "String",
+    "EsnekYazı" -> "StringBuilder",
+    "Belki" -> "Option",
+    "İkisindenBiri" -> "Either. Ya soldaki değer ya sağdaki; sağ taraf işin yolunda gittiği taraftır",
+    "Sol" -> "Left",
+    "Sağ" -> "Right",
+    "Biri" -> "Some",
+    "Hiçbiri" -> "None",
+    "Aralık" -> "Range",
+    "Diz" -> "collection.Seq",
+    "Dizi" -> "Seq",
+    "Dizik" -> "Array",
+    "Dizim" -> "Array",
+    "EsnekDizim" -> "ArrayBuffer", // older impl
+    "EsnekDizik" -> "ArrayBuffer",
+    "Dizin" -> "List",
+    "SıralıDizi" -> "IndexedSeq",
+    "Eşlek" -> "collection.immutable.Map",
+    "Eşlem" -> "collection.mutable.Map",
+    "Küme" -> "Set",
+    "MiskinDizin" -> "LazyList",
+    "Kuyruk" -> "Queue",
+    "ÖncelikSırası" -> "PriorityQueue",
+    "Yığın" -> "Stack",
+    "Yöney" -> "Vector",
+    "Yineleyici" -> "Iterator",
+    "Yinelenebilir" -> "Iterable",
+    "YinelenebilirBirKere" -> "IterableOnce",
+    "Yapıcıdan" -> "collection.BuildFrom",
+    "Gelecek" -> "Future",
+    "JGelecek" -> "java.util.concurrent.Future",
+    "PEtkinlik" -> "edu.umd.cs.piccolo.activities.PActivity",
+    "İşletimBağlamı" -> "ExecutionContext",
+    "Sayılar" -> "Vector[Int]",
+    "Boya" -> "Paint",
+    "Renk" -> "Color",
+    "Yazıyüzü" -> "Font",
+    "Hız" -> "Speed",
+    "Nokta" -> "Point",
+    "Dikdörtgen" -> "Rectangle",
+    "Üçgen" -> "Triangle2D",
+    "Yöney2B" -> "Vector2D",
+    "Resim" -> "Picture",
+    "BuAn" -> "Now",
+    "Takvim" -> "Calendar",
+    "Tarih" -> "Date",
+    "SaatDilimi" -> "TimeZone",
+    "Bölümselİşlev" -> "PartialFunction",
+    "İşlev1" -> "Function1",
+    "İşlev2" -> "Function2",
+    "İşlev3" -> "Function3",
+    "Sıralama" -> "Tuple",
+    "KuralDışı" -> "Exception",
+    "ÇalışmaSırasıKuralDışı" -> "RuntimeException",
+    "BaskınYazıyaYöntemiyle" -> "Only in Turkish. With 'override def toString'",
+    "Eşsizlik" -> "Only in Turkish. With unique hashCode",
+    "UzunlukBirimi" -> "UnitLen",
+    "Biçim" -> "Shape",
+    "GeoYol" -> "GeneralPath",
+    "GeoNokta" -> "VertexShape",
+    "Grafik2B" -> "Graphics2D",
+    "İmge" -> "Image",
+    "İmgeİşlemi" -> "ImageOp",
+    "Bellekteİmge" -> "BufferedImage",
+    "Bellekteİmgeİşlemi" -> "BufferedImageOp",
+    "ÇiniDünyası" -> "tiles",
+    "ÇiniXY" -> "TileXY",
+    "BirSayfaKostüm" -> "SpriteSheet", // Giysi, Görünüş, Kostüm
+    "Mp3Çalar" -> "KMP3",
+    "Canlandırma" -> "Animation",
+    "BKK" -> "URL",
+    "ay" -> "UI",
+    "tuvalAlanı" -> "canvasBounds",
+    "DRenk" -> "kojo.doodle.Color",
+    "BenzerDönüşüm" -> "java.awt.geom.AffineTransform",
+    "PSınırlar" -> "edu.umd.cs.piccolo.util.PBounds"
+  )
   val def2en = Map()
   val val2en = Map()
   val method2en = Map(
@@ -281,6 +621,15 @@ object dict {
     "Küme.boş" -> "Set.empty",
     "Dizi.doldur" -> "Seq.tabulate",
     "MiskinDizin.sayalım" -> "LazyList.from",
+    "MiskinDizin.ekle" -> "LazyList.concat",
+    "MiskinDizin.sürekli" -> "LazyList.continually",
+    "MiskinDizin.boş" -> "LazyList.empty",
+    "MiskinDizin.doldur" -> "LazyList.fill",
+    "MiskinDizin.sıraylaDoldur" -> "LazyList.tabulate",
+    "MiskinDizin.diziden" -> "LazyList.from",
+    "MiskinDizin.aralık" -> "LazyList.range",
+    "MiskinDizin.yinele" -> "LazyList.iterate",
+    "MiskinDizin.türet" -> "LazyList.unfold",
     "Harf.sayıMı" -> "Character.isDigit",
     "Harf.harfMi" -> "Character.isLetter",
     "Harf.yazıya" -> "Char.toString",
@@ -290,8 +639,14 @@ object dict {
     "Harf.uzuna" -> "Char.char2long",
     "Harf.kesire" -> "Char.char2double",
     "Harf.ufakkesire" -> "Char.char2float",
-    "Harf.enUfağı" -> "Char.MaxValue",
-    "Harf.enİrisi" -> "Char.MinValue",
+    "Harf.enUfağı" -> "Char.MinValue",
+    "Harf.enİrisi" -> "Char.MaxValue",
+    "Aralık.kapalı" -> "Range.inclusive",
+    "Aralık.ilki" -> "Range.start",
+    "Aralık.sonuncu" -> "Range.end",
+    "Aralık.adım" -> "Range.step",
+    "Yığın.boş" -> "Stack.empty",
+    "Yığın.doldur" -> "Stack.from",
     "Aralık.başı" -> "Range.head",
     "Aralık.sonu" -> "Range.last",
     "Aralık.uzunluğu" -> "Range.size",
@@ -313,10 +668,10 @@ object dict {
     "ay.çerçeveci.çizgiKenar" -> "javax.swing.BorderFactory.createLineBorder",
     "ay.çerçeveci.boşKenar" -> "javax.swing.BorderFactory.createEmptyBorder",
   )
-  val altkumeler = Map(
+  val altkumeler = Map (
     "ay" -> List("olay", "değişmez", "çerçeveci")
   )
-  val packageName2en = Map(
+  val packageName2en = Map (
     "ay" -> List("java.awt", "javax.swing"),
   )
   // todo: ./cinidunyasi.scala

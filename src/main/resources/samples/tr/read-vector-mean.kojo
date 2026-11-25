@@ -5,11 +5,11 @@ silVeSakla()
 çıktıArtalanınıKur(siyah)
 çıktıYazıRenginiKur(gri)
 satıryaz("Gelin bir yöney (vektör) kuralım. Öğelerini aşağıda girer misin?")
-var yöney = Yöney[Sayı]()
-val n = sayıOku("Yöney kaç boyutlu olsun, yani kaç öğesi olacak?")
+den yöney = Yöney[Sayı]()
+dez n = sayıOku("Yöney kaç boyutlu olsun, yani kaç öğesi olacak?")
 çıktıYazıRenginiKur(sarı)
-for (i <- 1 |-| n) {
-    val e = sayıOku(s"$i. öğe nedir?")
+için (i <- 1 |-| n) {
+    dez e = sayıOku(s"$i. öğe nedir?")
     yöney = yöney :+ e
 }
 çıktıYazıRenginiKur(yeşil)

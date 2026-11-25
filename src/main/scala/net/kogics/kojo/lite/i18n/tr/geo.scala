@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022
+ * Copyright (C) 2022-2024
  *   Bulent Basaran <ben@scala.org> https://github.com/bulent2k2
  *   Lalit Pant <pant.lalit@gmail.com>
  *
@@ -16,10 +16,16 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
+import edu.umd.cs.piccolo.util.PBounds
 trait GeoMethodsInTurkish {
+
+  type BenzerDönüşüm = java.awt.geom.AffineTransform // used in resim.scala
+  type PSınırlar = PBounds // used in Resim.sınırlar
+  type Geometri = com.vividsolutions.jts.geom.Geometry
+
   implicit class RectYöntemleri(d: Dikdörtgen) {
     def boyu = d.height
-    def eni = d.width
+    def eni  = d.width
     // todo: more to come
   }
 
@@ -44,8 +50,7 @@ trait GeoMethodsInTurkish {
     def bitir() = gn.endShape()
     def nokta(x: Kesir, y: Kesir) = gn.vertex(x, y)
     def ikinciDereceNokta(mx: Kesir, my: Kesir, x2: Kesir, y2: Kesir) = gn.quadraticVertex(mx, my, x2, y2)
-    def bezierNoktası(mx1: Kesir, my1: Kesir, mx2: Kesir, my2: Kesir, x2: Kesir, y2: Kesir) =
-      gn.bezierVertex(mx1, my1, mx2, my2, x2, y2)
+    def bezierNoktası(mx1: Kesir, my1: Kesir, mx2: Kesir, my2: Kesir, x2: Kesir, y2: Kesir) = gn.bezierVertex(mx1, my1, mx2, my2, x2, y2)
     def eğriNoktası(x: Kesir, y: Kesir) = gn.curveVertex(x, y)
     def açısalNokta(boyu: Kesir, açısı: Kesir) = gn.vertexRt(boyu, açısı)
     def açısalEğriNoktası(boyu: Kesir, açısı: Kesir) = gn.curveVertexRt(boyu, açısı)

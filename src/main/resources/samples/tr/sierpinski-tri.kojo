@@ -1,28 +1,28 @@
 silVeSakla()
 canlandırmaHızınıKur(10)
 
-val kirliBeyaz = renkler.hex(0xF2F5F1)
+dez kirliBeyaz = renkler.hex(0xF2F5F1)
 artalanıKur(kirliBeyaz)
-val mavimsi = renkler.darkBlue.fadeOut(0.4)
+dez mavimsi = renkler.darkBlue.fadeOut(0.4)
 kalemRenginiKur(mavimsi)
-val koyuYeşil = renkler.darkSeaGreen
+dez koyuYeşil = renkler.darkSeaGreen
 boyamaRenginiKur(koyuYeşil)
 
-val uzunluk = 400
+dez uzunluk = 400
 
 // boyu verilen bir eşkenar üçgen çizelim
-def üçgen(boy: Kesir) {
+tanım üçgen(boy: Kesir) {
     yinele(3) {
         ileri(boy)
         sağ(120)
     }
 }
 
-def sierpinski(boy: Kesir) {
+tanım sierpinski(boy: Kesir) {
     konumVeYönüBelleğeYaz()
-    if (boy < 10) {
+    eğer (boy < 10) {
         üçgen(boy)
-    } else {
+    } yoksa {
         kalemKalınlığınıKur(25 * boy / uzunluk)
         üçgen(boy)
         sierpinski(boy / 2)

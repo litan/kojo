@@ -1,55 +1,56 @@
-// Arabayı sürmek için dört ok tuşunu kullan
-// Mavi arabalara çarpma
-// Her çarpışmayla dermanı azalır, her saniye dermanı artar
-// Yoldan çıkarsan yani sağ ya da sol kenara çarparsan oyun biter
-// Dermanın biterse oyun biter
-// Kazanmak için bir dakika boyunca arabayı sür
+// Arabayı sürmek için dört ok tuşunu kullan:
+//   sağ, sol, yukarı ve aşağı.
+// Mavi arabalara çarpma.
+// Her çarpışmayla dermanı azalır, her saniye dermanı artar.
+// Yoldan çıkarsan yani sağ ya da sol kenara çarparsan oyun biter.
+// Derman biterse oyun biter.
+// Kazanmak için bir dakika boyunca arabayı sür.
 kojoVarsayılanİkinciBakışaçısınıKur()
 silVeSakla()
 çizSahne(siyah)
 // ekranTazelemeHızınıKur(50)
-val oyunSüresi = 60
+dez oyunSüresi = 60
 
-val ta = tuvalAlanı
-val arabaBoyu = 100
-val çizgiBoyu = 80
+dez ta = tuvalAlanı
+dez arabaBoyu = 100
+dez çizgiBoyu = 80
 
-//  car1.png ve car2.png yani araba resimlerinin boyutlarına epey yakın bir çokkenarlı biçim çizelim
-val arabayaZarf = götür(48, 14) -> Resim {  //todo: 2 -> 48
+//  araba resimlerinin boyutlarına epey yakın bir çokkenarlı biçim çizelim
+dez arabayaZarf = götür(48, 14) -> Resim {
     yinele (2) {
         ileri(70); sol(45); ileri(20); sol(45)
         ileri(18); sol(45); ileri(20); sol(45)
     }
 }
-def araba(imge: Yazı) = Resim.imge(imge, arabayaZarf)
+tanım araba(imge: Yazı) = Resim.imge(imge, arabayaZarf)
 
-val arabalar = Eşlem.boş[Resim, Yöney2B]
-val arabaHızı = 3
-val sürücüTepkiHızı = 3
-var sürücüHızı = Yöney2B(0, 0)
+dez arabalar = Eşlem.boş[Resim, Yöney2B]
+dez arabaHızı = 3
+dez sürücüTepkiHızı = 3
+den sürücüHızı = Yöney2B(0, 0)
 // çarpma anından sonra 0.3 saniye boyunca direksiyon, hız ve fren yani
 // ileri geri sağ sol okları çalışmasın
-var etkisizlikSüresi = 0L
+den etkisizlikSüresi = 0L
 
-val frenSesiÇalar = yeniMp3Çalar
-val çarpışmaSesiÇalar = yeniMp3Çalar
+dez frenSesiÇalar = yeniMp3Çalar
+dez çarpışmaSesiÇalar = yeniMp3Çalar
 
-def arabaYap() {
-    val a = götür(oyuncu.konum.x + rastgeleDoğalKesir * ta.eni / 10, ta.y + ta.boyu) ->
-        araba("/media/car-ride/car2.png")
+tanım arabaYap() {
+    dez a = götür(oyuncu.konum.x + rastgeleDoğalKesir * ta.eni / 10, ta.y + ta.boyu) ->
+        araba(Görünüş.araba2)
     a.çiz
     arabalar += a -> Yöney2B(0, -arabaHızı)
 }
-var yolÇizgileri = Küme.boş[Resim]
-def yolÇizgisiYap() {
-    val eni = 20
-    val yç = boyaRengi(beyaz) * kalemRengi(beyaz) *
+den yolÇizgileri = Küme.boş[Resim]
+tanım yolÇizgisiYap() {
+    dez eni = 20
+    dez yç = boyaRengi(beyaz) * kalemRengi(beyaz) *
         götür(ta.x + ta.eni / 2 - eni / 2, ta.y + ta.boyu) -> Resim.dikdörtgen(eni, çizgiBoyu)
     yç.çiz
     yolÇizgileri += yç
 }
 
-val oyuncu = araba("/media/car-ride/car1.png")
+dez oyuncu = araba(Görünüş.araba1)
 çiz(oyuncu)
 çizVeSakla(arabayaZarf)
 
@@ -61,75 +62,75 @@ yineleSayaçla(800) {
 
 canlandır {
     oyuncu.öneAl()
-    val aktifMi = buAn - etkisizlikSüresi > 300
-    if (aktifMi) {
-        if (tuşaBasılıMı(tuşlar.VK_LEFT)) {
+    dez aktifMi = buAn - etkisizlikSüresi > 300
+    eğer (aktifMi) {
+        eğer (tuşaBasılıMı(tuşlar.sol)) {
             sürücüHızı = Yöney2B(-sürücüTepkiHızı, 0)
             oyuncu.götür(sürücüHızı)
         }
-        if (tuşaBasılıMı(tuşlar.VK_RIGHT)) {
+        eğer (tuşaBasılıMı(tuşlar.sağ)) {
             sürücüHızı = Yöney2B(sürücüTepkiHızı, 0)
             oyuncu.götür(sürücüHızı)
         }
-        if (tuşaBasılıMı(tuşlar.VK_UP)) {
+        eğer (tuşaBasılıMı(tuşlar.yukarı)) {
             sürücüHızı = Yöney2B(0, sürücüTepkiHızı)
             oyuncu.götür(sürücüHızı)
-            if (!Mp3ÇalıyorMu) {
-                sesMp3üÇal("/media/car-ride/car-accel.mp3")
+            eğer (!Mp3ÇalıyorMu) {
+                sesMp3üÇal(Ses.arabaHızlanıyor)
             }
         }
-        else {
+        yoksa {
             Mp3üDurdur()
         }
-        if (tuşaBasılıMı(tuşlar.VK_DOWN)) {
+        eğer (tuşaBasılıMı(tuşlar.aşağı)) {
             sürücüHızı = Yöney2B(0, -sürücüTepkiHızı)
             oyuncu.götür(sürücüHızı)
-            if (!frenSesiÇalar.çalıyorMu) {
-                frenSesiÇalar.sesMp3üÇal("/media/car-ride/car-brake.mp3")
+            eğer (!frenSesiÇalar.çalıyorMu) {
+                frenSesiÇalar.sesMp3üÇal(Ses.arabaFrenYapıyor)
             }
         }
-        else {
+        yoksa {
             frenSesiÇalar.durdur()
         }
     }
-    else {
+    yoksa {
         oyuncu.götür(sürücüHızı)
     }
 
-    if (oyuncu.çarptıMı(Resim.tuvalinSolu) || oyuncu.çarptıMı(Resim.tuvalinSağı)) {
-        çarpışmaSesiÇalar.sesMp3üÇal("/media/car-ride/car-crash.mp3")
+    eğer (oyuncu.çarptıMı(Resim.tuvalinSolu) || oyuncu.çarptıMı(Resim.tuvalinSağı)) {
+        çarpışmaSesiÇalar.sesMp3üÇal(Ses.arabaKazaYaptı)
         oyuncu.saydamlığıKur(0.5)
         çizMerkezdeYazı("Yoldan çıktın. Yine deneyebilirsin.", kırmızı, 30)
         durdur()
     }
-    else if (oyuncu.çarptıMı(Resim.tuvalinTavanı)) {
+    yoksa eğer (oyuncu.çarptıMı(Resim.tuvalinTavanı)) {
         sürücüHızı = Yöney2B(0, -sürücüTepkiHızı)
         oyuncu.götür(sürücüHızı * 2)
         etkisizlikSüresi = buAn
     }
-    else if (oyuncu.çarptıMı(Resim.tuvalinTabanı)) {
+    yoksa eğer (oyuncu.çarptıMı(Resim.tuvalinTabanı)) {
         sürücüHızı = Yöney2B(0, sürücüTepkiHızı)
         oyuncu.götür(sürücüHızı * 2)
         etkisizlikSüresi = buAn
     }
 
     arabalar.herbiriİçin { arabaVeHız =>
-        val (araba, hız) = arabaVeHız
-        //araba.öneAl()   // todo gerekli mi? Bitiş yazısı bazen altta kalıyor...
-        if (oyuncu.çarptıMı(araba)) {
-            çarpışmaSesiÇalar.sesMp3üÇal("/media/car-ride/car-crash.mp3")
+        dez (araba, hız) = arabaVeHız
+        //araba.öneAl()   // toyap gerekli mi? Bitiş yazısı bazen altta kalıyor...
+        eğer (oyuncu.çarptıMı(araba)) {
+            çarpışmaSesiÇalar.sesMp3üÇal(Ses.arabaKazaYaptı)
             sürücüHızı = engeldenYansıtma(oyuncu, sürücüHızı - hız, araba) / 2
             oyuncu.götür(sürücüHızı * 3)
             araba.götür(-sürücüHızı * 3)
             etkisizlikSüresi = buAn
             dermanıAzalt()
         }
-        else {
-            val yeniHız = Yöney2B(hız.x + rastgeleKesir(1) / 2 - 0.25, hız.y)
+        yoksa {
+            dez yeniHız = Yöney2B(hız.x + rastgeleKesir(1) / 2 - 0.25, hız.y)
             arabalar += araba -> yeniHız
             araba.götür(yeniHız)
         }
-        if (araba.konum.y + arabaBoyu < ta.y) {
+        eğer (araba.konum.y + arabaBoyu < ta.y) {
             araba.sil()
             arabalar -= araba
         }
@@ -137,33 +138,33 @@ canlandır {
 
     yolÇizgileri.herbiriİçin { yç => 
         yç.götür(0, -arabaHızı * 2)
-        if (yç.konum.y + çizgiBoyu < ta.y) {
+        eğer (yç.konum.y + çizgiBoyu < ta.y) {
             yç.sil()
             yolÇizgileri -= yç
         }
     }
 }
 
-var derman = 0
-def dermanYazısı = s"Derman: $derman"
-val dermanÇizimi = Resim.yazıRenkli(dermanYazısı, 20, renkler.aquamarine)
+den derman = 0
+tanım dermanYazısı = s"Derman: $derman"
+dez dermanÇizimi = Resim.yazıRenkli(dermanYazısı, 20, renkler.aquamarine)
 dermanÇizimi.götür(ta.x + 10, ta.y + ta.boyu - 10)
-def dermanıArtır() {
+tanım dermanıArtır() {
     derman += 2
     dermanÇizimi.güncelle(dermanYazısı)
 }
-def dermanıAzalt() {
+tanım dermanıAzalt() {
     derman -= 10
     dermanÇizimi.güncelle(dermanYazısı)
-    if (derman < 0) {
+    eğer (derman < 0) {
         çizMerkezdeYazı("Derman kalmadı. Yine deneyebilirsin.", kırmızı, 30)
         durdur()
     }
 }
 
-def skorVeDermanıYönet(oyunSüresi: Sayı) {
-    var kalanSüre = oyunSüresi
-    val kalanSüreGösterimi = Resim.yazıRenkli(kalanSüre, 20, renkler.azure)
+tanım skorVeDermanıYönet(oyunSüresi: Sayı) {
+    den kalanSüre = oyunSüresi
+    dez kalanSüreGösterimi = Resim.yazıRenkli(kalanSüre, 20, renkler.azure)
     kalanSüreGösterimi.götür(ta.x + 10, ta.y + 50)
     çiz(kalanSüreGösterimi)
     çiz(dermanÇizimi)
@@ -174,7 +175,7 @@ def skorVeDermanıYönet(oyunSüresi: Sayı) {
         kalanSüreGösterimi.güncelle(kalanSüre)
         dermanıArtır()
 
-        if (kalanSüre == 0) {
+        eğer (kalanSüre == 0) {
             çizMerkezdeYazı("Süre doldu. Tebrikler!", yeşil, 30)
             durdur()
         }
@@ -182,7 +183,7 @@ def skorVeDermanıYönet(oyunSüresi: Sayı) {
 }
 
 skorVeDermanıYönet(oyunSüresi)
-müzikMp3üÇalDöngülü("/media/car-ride/car-move.mp3")
+müzikMp3üÇalDöngülü(Ses.arabaGidiyor)
 tuvaliEtkinleştir()
 
 // Araba resimleri  google aracılığıyla şunlardan:

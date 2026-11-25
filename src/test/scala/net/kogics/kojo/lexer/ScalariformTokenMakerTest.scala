@@ -2,10 +2,14 @@ package net.kogics.kojo.lexer
 
 import javax.swing.text.Segment
 
+import org.fife.ui.rsyntaxtextarea.TokenTypes
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.Matchers
 import org.scalatest.junit.JUnitRunner
+
+import net.kogics.kojo.lite.i18n.{LanguageEditorData, LanguageTestSupport}
 
 import scalariform.lexer.Token
 import scalariform.lexer.Tokens.EQUALS
@@ -42,6 +46,36 @@ class ScalariformTokenMakerTest extends FunSuite with Matchers {
     )
 
     lexer.tokensForLine(segment, 0) should be(expectedTokens)
+  }
+
+  // The RSTA token type getTokenList assigns to the given lexeme on this line.
+  private def rstaTypeOf(lexeme: String, code: String): Int = {
+    lexer.lexDoc(code)
+    val codeChars = new Array[Char](code.length)
+    code.getChars(0, code.length, codeChars, 0)
+    val segment = new Segment(codeChars, 0, code.length)
+    var t = lexer.getTokenList(segment, TokenTypes.NULL, 0)
+    var tpe = TokenTypes.NULL
+    while (t != null && t.getType != TokenTypes.NULL) {
+      if (t.getLexeme == lexeme) tpe = t.getType
+      t = t.getNextToken
+    }
+    tpe
+  }
+
+  // A localized keyword (`dez` = Turkish `val`) is highlighted as a reserved
+  // word when — and only when — its language is active. This exercises the
+  // language-agnostic highlighting path (getTokenList -> registered keyword set),
+  // which maps the identifier stock scalariform produces to RESERVED_WORD; it
+  // does NOT need a keyword-patched scalariform on the classpath.
+  test("a localized keyword is a reserved word only when its language is active") {
+    val code = "dez x = 10"
+    LanguageTestSupport.withData(LanguageEditorData()) {
+      rstaTypeOf("dez", code) should be(TokenTypes.IDENTIFIER)
+    }
+    LanguageTestSupport.withData(LanguageTestSupport.turkishData) {
+      rstaTypeOf("dez", code) should be(TokenTypes.RESERVED_WORD)
+    }
   }
 
   test("test two line vals - line 2") {

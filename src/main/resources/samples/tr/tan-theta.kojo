@@ -1,8 +1,8 @@
-def eğriÇizgesi(başı: Kesir, sonu: Kesir, adım: Kesir)(işlev: Kesir => Kesir) {
+tanım eğriÇizgesi(başı: Kesir, sonu: Kesir, adım: Kesir)(işlev: Kesir => Kesir) {
     atla(başı, işlev(başı))
-    var girdi = başı
-    while (girdi <= sonu) {
-        val çıktı = işlev(girdi)
+    den girdi = başı
+    yineleDoğruKaldıkça (girdi <= sonu) {
+        dez çıktı = işlev(girdi)
         noktayaGit(girdi, çıktı)
         // tek satırda da yazabilirdik ama girdi ve çıktı ve nasıl kullandığımız belli olsun istedik:
         //   noktayaGit(işlev(girdi))

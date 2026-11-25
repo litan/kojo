@@ -1,5 +1,6 @@
 package net.kogics.kojo.lite
 
+import java.awt.Paint
 import java.awt.geom.GeneralPath
 
 import net.kogics.kojo.core.VertexShapeSupport
@@ -20,8 +21,8 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
 
   import java.awt.geom.AffineTransform
 
-  var fillColor: Color = _
-  var strokeColor: Color = cm.red
+  var fillColor: Paint = _
+  var strokeColor: Paint = cm.red
   var strokeThickness = 2.0
   var textFont: Font = b.Font("Sans Serif", 15)
   var matrices = List.empty[AffineTransform]
@@ -55,7 +56,7 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     fillColor = cm.rgba(r, g, b, a)
   }
 
-  def fill(c: Color): Unit = {
+  def fill(c: Paint): Unit = {
     fillColor = c
   }
 
@@ -63,7 +64,7 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     strokeColor = cm.rgba(r, g, b, a)
   }
 
-  def stroke(c: Color): Unit = {
+  def stroke(c: Paint): Unit = {
     strokeColor = c
   }
 
@@ -77,7 +78,7 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     background(cm.rgba(r, g, b, a))
   }
 
-  def background(c: Color): Unit = {
+  def background(c: Paint): Unit = {
     val rc = bgRectCoords
     tempRect.setRect(rc(0), rc(1), rc(2) - rc(0), rc(3) - rc(1))
     g2d.setPaint(c)
@@ -106,14 +107,14 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     if (strokeColor != null) {
       g2d.setPaint(strokeColor)
       g2d.setStroke(stroke)
+      g2d.setFont(textFont)
+      pushMatrix()
+      scale(1, -1)
+      //    val te = b.textExtent(s, textFont.getSize, textFont.getName)
+      //    translate(0, te.height)
+      g2d.drawString(s, x.toFloat, -y.toFloat)
+      popMatrix()
     }
-    g2d.setFont(textFont)
-    pushMatrix()
-    scale(1, -1)
-//    val te = b.textExtent(s, textFont.getSize, textFont.getName)
-//    translate(0, te.height)
-    g2d.drawString(s, x.toFloat, -y.toFloat)
-    popMatrix()
   }
 
   private def drawImage(image: Image, x: Int, y: Int): Unit = {
@@ -153,8 +154,8 @@ class CanvasDraw(g2d: java.awt.Graphics2D, width: Double, height: Double, val b:
     drawShape(tempLine)
   }
 
-  def rect(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
-    tempRect.setRect(x1, y1, x2, y2)
+  def rect(x: Double, y: Double, w: Double, h: Double): Unit = {
+    tempRect.setRect(x, y, w, h)
     drawShape(tempRect)
   }
 

@@ -3,25 +3,25 @@
 
 tümEkranTuval
 
-val oyunSüresi = 20
+dez oyunSüresi = 20
 
-val uzunluk = 4
-val d = karekökü(2 * uzunluk * uzunluk)
-val d2 = d / 2
-val d4 = d / 4
+dez uzunluk = 4
+dez d = karekökü(2 * uzunluk * uzunluk)
+dez d2 = d / 2
+dez d4 = d / 4
 
 // tangramda yedi şekil var
 // önce iki büyük dik üçgen
-def parça1 = Resim {
+tanım parça1 = Resim {
     ileri(uzunluk)
     sağ(135)
     ileri(d2)
     sağ()
     ileri(d2)
 }
-def parça2 = parça1
+tanım parça2 = parça1
 // sonra iki küçük dik üçgen
-def parça3 = Resim {
+tanım parça3 = Resim {
     sağ()
     ileri(uzunluk / 2)
     sol(135)
@@ -29,16 +29,16 @@ def parça3 = Resim {
     sol()
     ileri(d4)
 }
-def parça4 = parça3
+tanım parça4 = parça3
 // bir kare
-def parça6 = Resim {
+tanım parça6 = Resim {
     yinele(4) {
         ileri(d4)
         sağ()
     }
 }
 // orta boy dik üçgen
-def parça5 = Resim {
+tanım parça5 = Resim {
     sağ()
     ileri(uzunluk / 2)
     sol()
@@ -47,7 +47,7 @@ def parça5 = Resim {
     ileri(d2)
 }
 // yamuk
-def parça7 = Resim {
+tanım parça7 = Resim {
     sağ()
     ileri(uzunluk / 2)
     sol(45)
@@ -58,7 +58,7 @@ def parça7 = Resim {
     ileri(d4)
 }
 // tangram insan
-def tangram = Resim.dizi(
+tanım tangram = Resim.dizi(
     döndür(-120) -> parça3,
     döndür(150) * götür(0, -3.5) -> parça1,
     yansıtY * döndür(120) * götür(1.5, 0) -> parça7,
@@ -69,31 +69,31 @@ def tangram = Resim.dizi(
 )
 
 silVeÇizimBiriminiKur(santim)
-val ta = tuvalAlanı
-val enİriX = ta.x.mutlakDeğer
-val enİriY = ta.y.mutlakDeğer
-val kaçan = boyaRengi(sarı) * götür(enİriX / 3, 2) * büyüt(0.3) -> tangram
-val kovalayan = boyaRengi(siyah) * büyüt(0.3) -> tangram
-val kovalayan2 = boyaRengi(siyah) * götür(-enİriX / 2, 0) * büyüt(0.3) -> tangram
-val kovalayan3 = boyaRengi(siyah) * götür(2 * enİriX / 3, 0) * büyüt(0.3) -> tangram
-val kovalayan4 = boyaRengi(siyah) * götür(-enİriX / 2, enİriY / 2) * büyüt(0.3) -> tangram
-val kovalayan5 = boyaRengi(siyah) * götür(2 * enİriX / 3, enİriY / 2) * büyüt(0.3) -> tangram
+dez ta = tuvalAlanı
+dez enİriX = ta.x.mutlakDeğer
+dez enİriY = ta.y.mutlakDeğer
+dez kaçan = boyaRengi(sarı) * götür(enİriX / 3, 2) * büyüt(0.3) -> tangram
+dez kovalayan = boyaRengi(siyah) * büyüt(0.3) -> tangram
+dez kovalayan2 = boyaRengi(siyah) * götür(-enİriX / 2, 0) * büyüt(0.3) -> tangram
+dez kovalayan3 = boyaRengi(siyah) * götür(2 * enİriX / 3, 0) * büyüt(0.3) -> tangram
+dez kovalayan4 = boyaRengi(siyah) * götür(-enİriX / 2, enİriY / 2) * büyüt(0.3) -> tangram
+dez kovalayan5 = boyaRengi(siyah) * götür(2 * enİriX / 3, enİriY / 2) * büyüt(0.3) -> tangram
 
-müzikMp3üÇalDöngülü("/media/music-loops/Cave.mp3")
+müzikMp3üÇalDöngülü(Ses.mağarada)
 gizle()
 çizSahne(Renk(150, 150, 255))
 çiz(kaçan, kovalayan, kovalayan2, kovalayan3, kovalayan4, kovalayan5)
 
-val hızOranı = 1.5
-val hız = 0.4
+dez hızOranı = 1.5
+dez hız = 0.4
 
-val hızYöneyi = Yöney2B(0, hız)
-val hızYöneyi2 = Yöney2B(hız, 0)
-val hızYöneyi3 = Yöney2B(-hız, 0)
-val hızYöneyi4 = hızYöneyi2
-val hızYöneyi5 = hızYöneyi3
+dez hızYöneyi = Yöney2B(0, hız)
+dez hızYöneyi2 = Yöney2B(hız, 0)
+dez hızYöneyi3 = Yöney2B(-hız, 0)
+dez hızYöneyi4 = hızYöneyi2
+dez hızYöneyi5 = hızYöneyi3
 
-var hızDefteri: Eşlem[Resim, Yöney2B] = _
+den hızDefteri: Eşlem[Resim, Yöney2B] = _
 
 canlandırmaBaşlayınca {
     hızDefteri = Eşlem(
@@ -106,24 +106,24 @@ canlandırmaBaşlayınca {
 }
 
 kaçan.canlan { r =>
-    if (tuşaBasılıMı(tuşlar.VK_RIGHT)) {
+    eğer (tuşaBasılıMı(tuşlar.sağ)) {
         r.götür(hız * hızOranı, 0)
     }
-    if (tuşaBasılıMı(tuşlar.VK_LEFT)) {
+    eğer (tuşaBasılıMı(tuşlar.sol)) {
         r.götür(-hız * hızOranı, 0)
     }
-    if (tuşaBasılıMı(tuşlar.VK_UP)) {
+    eğer (tuşaBasılıMı(tuşlar.yukarı)) {
         r.götür(0, hız * hızOranı)
     }
-    if (tuşaBasılıMı(tuşlar.VK_DOWN)) {
+    eğer (tuşaBasılıMı(tuşlar.aşağı)) {
         r.götür(0, -hız * hızOranı)
     }
 }
 
-def koşuşturma(r: Resim) {
-    var yeniHızYöneyi = hızDefteri(r).döndür(rastgeleKesir(10) - 5)
+tanım koşuşturma(r: Resim) {
+    den yeniHızYöneyi = hızDefteri(r).döndür(rastgeleKesir(10) - 5)
     r.hızınıDönüştür(yeniHızYöneyi)
-    if (r.çarptıMı(Resim.tuvalinSınırları)) {
+    eğer (r.çarptıMı(Resim.tuvalinSınırları)) {
         yeniHızYöneyi = sahneKenarındanYansıtma(r, yeniHızYöneyi)
         r.hızınıDönüştür(yeniHızYöneyi)
     }
@@ -136,14 +136,14 @@ kovalayan3.canlan(koşuşturma)
 kovalayan4.canlan(koşuşturma)
 kovalayan5.canlan(koşuşturma)
 
-val kovalayanlar = List(kovalayan, kovalayan2, kovalayan3, kovalayan4, kovalayan5)
+dez kovalayanlar = Dizi(kovalayan, kovalayan2, kovalayan3, kovalayan4, kovalayan5)
 
 oyunSüresiniGeriyeSayarakGöster(oyunSüresi, "Tebrikler!", yeşil, 30, 1, 2)
-val bitişMesajı = büyüt(3) * götür(-20, 0) -> Resim { yazı("Çarpıştınız :-(\nBir daha dene!") }
+dez bitişMesajı = büyüt(3) * götür(-20, 0) -> Resim { yazı("Çarpıştınız :-(\nBir daha dene!") }
 çizVeSakla(bitişMesajı)
 
 kaçan.canlan { r =>
-    if (varMı(r.çarpışma(kovalayanlar))) {
+    eğer (varMı(r.çarpışma(kovalayanlar))) {
         durdur()
         r.boyamaRenginiKur(kahverengi)
         bitişMesajı.konumuKur(-3, 0) // 2 santim!
@@ -151,21 +151,20 @@ kaçan.canlan { r =>
     }
 
     // oyunda belli durumlarda değişik ses efekti yapmanın başka bir yolu da böyle
-    if (kaçan.çarptıMı(Resim.tuvalinSınırları)) {
-        if (!müzikMp3üÇalıyorMu) {
-            müzikMp3üÇal("/media/music-loops/DrumBeats.mp3")
+    eğer (kaçan.çarptıMı(Resim.tuvalinSınırları)) {
+        eğer (!müzikMp3üÇalıyorMu) {
+            müzikMp3üÇal(Ses.basDavulVuruşları)
         }
     }
-    else {
+    yoksa {
         müzikMp3üKapat()
     }
 }
 
 tuşaBasınca { k =>
-    k match {
-        case tuşlar.VK_ESCAPE =>
-            durdur()
-        case _ =>
+    k eşle {
+        durum tuşlar.d => durdur()
+        durum _ =>
     }
 }
 

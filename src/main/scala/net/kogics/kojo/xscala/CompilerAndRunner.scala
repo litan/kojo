@@ -619,8 +619,16 @@ class CompilerAndRunner(
   }
 
   def execCompiled(logger: ProcessLogger): Process = {
-    val classpath =
+    // The child process runs in the script's base directory.
+    // Convert inherited classpath entries, which could be relative
+    // with respect to Kojo's working directory, to absolute entries
+    val cp =
       s"$execClassLocation${File.pathSeparator}${System.getProperty("java.class.path")}"
+
+    val classpath = cp
+      .split(File.pathSeparator, -1)
+      .map(path => new File(path).getAbsolutePath)
+      .mkString(File.pathSeparator)
 
     val javaHome = System.getProperty("java.home")
     val javaExec =

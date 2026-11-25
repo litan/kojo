@@ -1,24 +1,24 @@
 // Tangram adlı Çin bulmacasını duydun mu? Sadece yedi parçayla neler
 // yapılır neler?! Biz de bir kayakçı yapalım ve kaydıralım.
 
-val boy = 4
-val d = karekökü(2 * boy * boy) // ~= 5.657
-val d2 = d / 2 // ~= 2.828
-val d4 = d / 4 // ~= 1.414 (tam olarak ikinin karekökü)
+dez boy = 4
+dez d = karekökü(2 * boy * boy) // ~= 5.657
+dez d2 = d / 2 // ~= 2.828
+dez d4 = d / 4 // ~= 1.414 (tam olarak ikinin karekökü)
 
 // Tangram'daki yedi geometrik parçayı birer resim olarak tanımlayalım:
 //   r1, r2, r3, r4 ve r5 birer üçgen
 //   r6 kare
 //   r7 paralel kenar
-def r1 = Resim { // büyük üçgenler
+tanım r1 = Resim { // büyük üçgenler
     ileri(boy)
     sağ(135)
     ileri(d2)
     sağ()
     ileri(d2)
 }
-def r2 = r1
-def r3 = Resim { // küçük üçgenler
+tanım r2 = r1
+tanım r3 = Resim { // küçük üçgenler
     sağ()
     ileri(boy / 2)
     sol(135)
@@ -26,8 +26,8 @@ def r3 = Resim { // küçük üçgenler
     sol()
     ileri(d4)
 }
-def r4 = r3
-def r5 = Resim { // ortanca üçgen
+tanım r4 = r3
+tanım r5 = Resim { // ortanca üçgen
     sağ()
     ileri(boy / 2)
     sol()
@@ -35,24 +35,24 @@ def r5 = Resim { // ortanca üçgen
     sol(135)
     ileri(d2)
 }
-def r6 = Resim { // kare
+tanım r6 = Resim { // kare
     yinele(4) {
         ileri(d4)
         sağ()
     }
 }
-def r7 = Resim { // paralel kenar
-    def ikiKenar = { ileri(boy / 2); sol(45); ileri(d4) }
+tanım r7 = Resim { // paralel kenar
+    tanım ikiKenar = { ileri(boy / 2); sol(45); ileri(d4) }
     sağ(); ikiKenar
     sol(135); ikiKenar
 }
 
-def kayak = Resim {
+tanım kayak = Resim {
     ileri(3)
 }
 
-val başlamaNoktası = Nokta(11, 1)
-val kayakçı = kalemRengi(siyah) * götür(başlamaNoktası) * büyüt(0.4) -> Resim.dizi(
+dez başlamaNoktası = Nokta(11, 1)
+dez kayakçı = kalemRengi(siyah) * götür(başlamaNoktası) * büyüt(0.4) -> Resim.dizi(
     götür(-2, -2) * döndür(-75) -> kayak,
     boyaRengi(mor) * döndür(-120) -> r3,
     boyaRengi(sarı) * döndür(150) * götür(0, -3.5) -> r1,
@@ -63,7 +63,7 @@ val kayakçı = kalemRengi(siyah) * götür(başlamaNoktası) * büyüt(0.4) -> 
     boyaRengi(kırmızı) * götür(-1.75, 5.4) * döndürMerkezli(30, d4, 0) -> r6
 )
 
-def parça = Resim {
+tanım parça = Resim {
     sağ()
     konumVeYönüBelleğeYaz()
     kalemKalınlığınıKur(0.2) // 2 milimetre
@@ -71,7 +71,7 @@ def parça = Resim {
     konumVeYönüGeriYükle()
 }
 
-val yer = kalemRengi(kahverengi) * götür(-13, -8) * döndür(10) -> Resim.diziYatay(
+dez yer = kalemRengi(kahverengi) * götür(-13, -8) * döndür(10) -> Resim.diziYatay(
     parça,
     götür(0, 0.5) -> parça,
     götür(0, 1) -> parça,
@@ -82,10 +82,10 @@ val yer = kalemRengi(kahverengi) * götür(-13, -8) * döndür(10) -> Resim.dizi
     götür(0, 3.5) -> parça
 )
 
-def santimeÇevir(nokta: Kesir) = 2.54 / 96 * nokta
+tanım santimeÇevir(nokta: Kesir) = 2.54 / 96 * nokta
 
-def ağaç(uzaklık: Kesir) {
-    if (uzaklık > santimeÇevir(4)) {
+tanım ağaç(uzaklık: Kesir) {
+    eğer (uzaklık > santimeÇevir(4)) {
         kalemKalınlığınıKur(uzaklık / 7)
         kalemRenginiKur(Renk(uzaklık.sayıya, mutlakDeğer(255 - uzaklık * 3).sayıya, 125))
         ileri(uzaklık)
@@ -98,16 +98,16 @@ def ağaç(uzaklık: Kesir) {
     }
 }
 
-def ağaçResmi = Resim {
+tanım ağaçResmi = Resim {
     ağaç(1.5)
 }
 
-def ağaçlarıYap(n: Sayı): Resim = {
-    def ağaçlar(n: Sayı, büyütmeOranı: Kesir): Resim = {
-        if (n == 1) {
+tanım ağaçlarıYap(n: Sayı): Resim = {
+    tanım ağaçlar(n: Sayı, büyütmeOranı: Kesir): Resim = {
+        eğer (n == 1) {
             büyüt(büyütmeOranı) -> ağaçResmi
         }
-        else {
+        yoksa {
             büyüt(büyütmeOranı) -> Resim.diziYatay(
                 ağaçResmi,
                 ağaçlar(n - 1, büyütmeOranı)
@@ -117,22 +117,22 @@ def ağaçlarıYap(n: Sayı): Resim = {
     ağaçlar(n, 0.9)
 }
 
-val ağaçlar = döndür(7) * götür(-10, 1) -> ağaçlarıYap(9)
+dez ağaçlar = döndür(7) * götür(-10, 1) -> ağaçlarıYap(9)
 silVeÇizimBiriminiKur(santim)
 gizle()
 yaklaş(0.4, -1, -1)
 çiz(yer, ağaçlar, kayakçı)
 
 canlandır {
-    val hız = 0.20 // biraz daha hızlandırmak ister misin?
-    val (hızYatay, hızDikey) = (-hız, -hız / 2)
-    if (kayakçı.çarptıMı(yer)) {
+    dez hız = 0.20 // biraz daha hızlandırmak ister misin?
+    dez (hızYatay, hızDikey) = (-hız, -hız / 2)
+    eğer (kayakçı.çarptıMı(yer)) {
         kayakçı.götür(hızYatay, 0)
     }
-    else {
+    yoksa {
         kayakçı.götür(hızYatay, hızDikey)
     }
-    if (kayakçı.uzaklık(yer) > 2) {
+    eğer (kayakçı.uzaklık(yer) > 2) {
         kayakçı.kondur(başlamaNoktası)
     }
 }
@@ -141,7 +141,7 @@ kayakçı.fareyeTıklayınca { (x, y) =>
     kayakçı.kondur(başlamaNoktası)
 }
 
-if (yanlış) { // bunu doğruya çevirerek sadece üç boy üçgeni çizdirebilirsin
+eğer (yanlış) { // bunu doğruya çevirerek sadece üç boy üçgeni çizdirebilirsin
     silVeÇizimBiriminiKur(santim)
     gizle()
     çiz(Resim.diziYatay(r1, r3, r5))

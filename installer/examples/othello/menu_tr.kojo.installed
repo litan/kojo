@@ -3,24 +3,24 @@
 //#yükle tr/araYuz
 //#yükle tr/alfabeta
 
-val açıklama = <html> 
+dez açıklama = <html> 
  <em> KojOtello'ya hoşgeldin! </em> Bu güzel oyun hakkında bilgi edinmek için
  <br/>
  internette "wiki reversi" diye arama yapabilirsin.
   </html>.yazıya
 
-val ay_çeşniler = ay.Salındıraç("geleneksel", "bir çeşni")
-val ay_tahta = ay.Salındıraç(8, 4, 5, 6, 7, 8, 9, 10, 11, 12)
-val ay_tahta2 = ay.Salındıraç(7, 8, 9, 10, 11, 12) // todo
-val ay_ilk = ay.Salındıraç("Siyah", "Beyaz")
-val ay_düzey = ay.Salındıraç("Er", "Çırak", "Kalfa", "Usta", "Doktor", "Deha")
-val ay_bilgisayar = ay.Salındıraç(
+dez ay_çeşniler = ay.Salındıraç("geleneksel", "bir çeşni")
+dez ay_tahta = ay.Salındıraç(8, 4, 5, 6, 7, 8, 9, 10, 11, 12)
+dez ay_tahta2 = ay.Salındıraç(7, 8, 9, 10, 11, 12) // todo
+dez ay_ilk = ay.Salındıraç("Siyah", "Beyaz")
+dez ay_düzey = ay.Salındıraç("Er", "Çırak", "Kalfa", "Usta", "Doktor", "Deha")
+dez ay_bilgisayar = ay.Salındıraç(
     "Oynamasın",
     "Siyahları oynasın",
     "Beyazları oynasın"
 )
 
-def menu: Birim = {
+tanım menu: Birim = {
     silVeSakla
     çizMerkezde(büyüt(1.8) ->
         Resim.arayüz(
@@ -32,38 +32,38 @@ def menu: Birim = {
                 ay.Sıra(ay.Tanıt("Düzey:"), ay_düzey),
                 ay.Sıra(ay.Tanıt("Bilgisayar:"), ay_bilgisayar),
                 ay.Sıra(ay.Düğme("Oyna!") {
-                    val odaSayısı = ay_tahta.değeri
-                    val çeşni = ay_çeşniler.değeri match {
-                        case "geleneksel" => 0
-                        case _            => 1
+                    dez odaSayısı = ay_tahta.değeri
+                    dez çeşni = ay_çeşniler.değeri eşle {
+                        durum "geleneksel" => 0
+                        durum _            => 1
                     }
-                    if (çeşni != 0 && odaSayısı < 7) {
+                    eğer (çeşni != 0 && odaSayısı < 7) {
                         satıryaz("Çeşnili başlangıç taşları için 7x7 ya da daha iri bir tahta seç!")
                     }
-                    else {
-                        val kimBaşlar = ay_ilk.değeri match {
-                            case "Siyah" => Siyah
-                            case _       => Beyaz
+                    yoksa {
+                        dez kimBaşlar = ay_ilk.değeri eşle {
+                            durum "Siyah" => Siyah
+                            durum _       => Beyaz
                         }
-                        val düzey = ay_düzey.değeri match {
-                            case "Er"     => Er
-                            case "Çırak"  => Çırak
-                            case "Kalfa"  => Kalfa
-                            case "Usta"   => Usta
-                            case "Doktor" => Doktor
-                            case "Deha"   => Deha
-                            case _        => Kalfa
+                        dez düzey = ay_düzey.değeri eşle {
+                            durum "Er"     => Er
+                            durum "Çırak"  => Çırak
+                            durum "Kalfa"  => Kalfa
+                            durum "Usta"   => Usta
+                            durum "Doktor" => Doktor
+                            durum "Deha"   => Deha
+                            durum _        => Kalfa
                         }
-                        val bilgisayar = ay_bilgisayar.değeri match {
-                            case "Siyahları oynasın" => Siyah
-                            case "Beyazları oynasın" => Beyaz
-                            case "Oynamasın"         => Yok
-                            case _                   => Yok
+                        dez bilgisayar = ay_bilgisayar.değeri eşle {
+                            durum "Siyahları oynasın" => Siyah
+                            durum "Beyazları oynasın" => Beyaz
+                            durum "Oynamasın"         => Yok
+                            durum _                   => Yok
                         }
-                        val tahta = new ETahta(odaSayısı, kimBaşlar, çeşni)
+                        dez tahta = yeni ETahta(odaSayısı, kimBaşlar, çeşni)
                         çıktıyıSil
                         ABa.ustalık(düzey)
-                        new Arayüz(tahta, new Bellek(tahta), bilgisayar)
+                        yeni Arayüz(tahta, yeni Bellek(tahta), bilgisayar)
                     }
                 })
             )

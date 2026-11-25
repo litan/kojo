@@ -6,13 +6,13 @@
   Şimdi birsürü rastgele nokta seçelim. Bunların kaç tanesi dairenin içine düşer? 
   Daha çok bilgi ve detay istersen, şuraya bak: https://academo.org/demos/estimating-pi-monte-carlo/
 */
-def π(toplamNoktaSayısı: Sayı): Kesir = {
-    def merkezdenUzaklık(x: Kesir, y: Kesir) = karekökü(karesi(x) + karesi(y))
-    var daireninİçineDüşenNoktaSayısı = 0
+tanım π(toplamNoktaSayısı: Sayı): Kesir = {
+    tanım merkezdenUzaklık(x: Kesir, y: Kesir) = karekökü(karesi(x) + karesi(y))
+    den daireninİçineDüşenNoktaSayısı = 0
     yinele(toplamNoktaSayısı) {
-        val (noktaX, noktaY) = (rastgeleKesir(1), rastgeleKesir(1))
-        val daireninİçineDüştüMü = merkezdenUzaklık(noktaX, noktaY) <= 1
-        if (daireninİçineDüştüMü) daireninİçineDüşenNoktaSayısı += 1
+        dez (noktaX, noktaY) = (rastgeleKesir(1), rastgeleKesir(1))
+        dez daireninİçineDüştüMü = merkezdenUzaklık(noktaX, noktaY) <= 1
+        eğer (daireninİçineDüştüMü) daireninİçineDüşenNoktaSayısı += 1
     }
     // neden dörtle çarptık? Farkettiysen noktalar karenin dörtte birine düşüyor, üst sağ çeyreğine..
     4.0 * daireninİçineDüşenNoktaSayısı / toplamNoktaSayısı

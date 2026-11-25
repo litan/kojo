@@ -1,9 +1,9 @@
 // Łukasz Lew adında bir yazılımcının katkısıyla
 
-def ejder(derinlik: Sayı, açı: Kesir): Birim = {
-    if (derinlik == 0) {
+tanım ejder(derinlik: Sayı, açı: Kesir): Birim = {
+    eğer (derinlik == 0) {
         ileri(10)
-    } else {
+    } yoksa {
         sol(açı)
         ejder(derinlik - 1, açı.mutlakDeğer)
         sağ(açı)

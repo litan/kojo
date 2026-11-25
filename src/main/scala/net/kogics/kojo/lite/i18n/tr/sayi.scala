@@ -17,14 +17,14 @@
 package net.kogics.kojo.lite.i18n.tr
 
 // also see: aralik.scala
-trait NumMethodsInTurkish {
+trait SayıYöntemleri {
   // We have Byte/Short/Int/Long which all default to Int and BigInt
   // val n = 1
   // Sayma sayıları
-  type Lokma = Byte
-  type Kısa = Short
-  type Sayı = Int
-  type Uzun = Long
+  type Lokma   = Byte
+  type Kısa    = Short
+  type Sayı    = Int
+  type Uzun    = Long
   type İriSayı = BigInt
   // We have Float/Double which default to Double and BigDecimal
   //   val x = 1.0
@@ -36,28 +36,38 @@ trait NumMethodsInTurkish {
   val İriSayı = BigInt
   val İriKesir = BigDecimal
 
-  type Sayılar = Vector[Sayı] // Used in Conway's game of life code in the tutorial
+  type Sayılar = Vector[Sayı]   // Used in Conway's game of life code in the tutorial
   object Sayılar {
     def apply(elemanlar: Sayı*): Sayılar = Vector.from(elemanlar)
     def unapplySeq(ss: Sayılar) = Vector.unapplySeq(ss)
   }
 
-  implicit class BigIntMethods(a: İriSayı) {
+  implicit class LokmaYöntemleri(a: Lokma) {
+    type S = Byte
+    def yazıya = a.toString
+    def kesire = a.toDouble
+    def mutlakDeğer = a.abs
+    def enİrisi(b: S) = a max b
+    def enUfağı(b: S) = a min b
+  }
+
+  implicit class İriSayıYöntemleri(a: İriSayı) {
     type S = İriSayı
     def yazıya = a.toString
     def kesire = a.toDouble
     def mutlakDeğer = a.abs
     def enİrisi(b: S) = a.max(b)
     def enUfağı(b: S) = a.min(b)
+    def lokmaya: Lokma = a.toByte
   }
 
-  implicit class BigDecimalMethods(a: İriKesir) {
+  implicit class İriKesirYöntemleri(a: İriKesir) {
     type S = İriKesir
     def yazıya = a.toString
     def kesire = a.toDouble
     def mutlakDeğer = a.abs
-    def enİrisi(b: S) = a.max(b)
-    def enUfağı(b: S) = a.min(b)
+    def enİrisi(b: S) = a max b
+    def enUfağı(b: S) = a min b
 
     def iriSayıya = a.toBigInt
     def ölçek = a.scale
@@ -67,11 +77,35 @@ trait NumMethodsInTurkish {
   implicit class SayıYöntemleri(a: Sayı) {
     def |-(b: Sayı): Range = a until b
     def |-|(b: Sayı): Range = a to b
+    def harfe = a.toChar
     def yazıya = a.toString
     def kesire = a.toDouble
     def mutlakDeğer = a.abs
     def enİrisi(b: Sayı) = a.max(b)
     def enUfağı(b: Sayı) = a.min(b)
+    def lokmaya: Lokma = a.toByte
+  }
+
+  implicit class KısaSayıYöntemleri(a: Kısa) {
+    def |-(b: Sayı): Range = a until b
+    def |-|(b: Sayı): Range = a to b
+    def harfe = a.toChar
+    def yazıya = a.toString
+    def kesire = a.toDouble
+    def mutlakDeğer = a.abs
+    def enİrisi(b: Kısa) = a.max(b)
+    def enUfağı(b: Kısa) = a.min(b)
+    def lokmaya: Lokma = a.toByte
+  }
+
+  implicit class UzunSayıYöntemleri(a: Uzun) {
+    def harfe = a.toChar
+    def yazıya = a.toString
+    def kesire = a.toDouble
+    def mutlakDeğer = a.abs
+    def enİrisi(b: Uzun) = a.max(b)
+    def enUfağı(b: Uzun) = a.min(b)
+    def lokmaya: Lokma = a.toByte
   }
 
   implicit class KesirYöntemleri(a: Kesir) {
@@ -80,8 +114,8 @@ trait NumMethodsInTurkish {
     def dereceye = a.toDegrees
     def radyana = a.toRadians
     def mutlakDeğer = a.abs
-    def enİrisi(b: Kesir) = a.max(b)
-    def enUfağı(b: Kesir) = a.min(b)
+    def enİrisi(b: Kesir) = a max b
+    def enUfağı(b: Kesir) = a min b
     def taban = a.floor
     def tavan = a.ceil
     def yakın = a.round

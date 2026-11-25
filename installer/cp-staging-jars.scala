@@ -1,11 +1,14 @@
 import io.Source
-import java.io.File
-import sys.process.stringToProcess
+import sys.process._
 
 val jars = Source.fromFile("./jarlist.txt")
-jars.getLines.foreach { j =>
-  val srcDest = j split " -> "
-  val src = srcDest(0)
-  val dest = if (srcDest.size > 1) srcDest(1) else ""
-  s"cp -v $src ../installerbuild/lib/$dest".!
+try {
+  jars.getLines.foreach { j =>
+    val srcDest = j split " -> "
+    val src = srcDest(0)
+    val dest = if (srcDest.size > 1) srcDest(1) else ""
+    val status = Seq("cp", "-v", src, s"../installerbuild/lib/$dest").!
+    require(status == 0, s"Could not stage $src (cp exited with status $status)")
+  }
 }
+finally jars.close()

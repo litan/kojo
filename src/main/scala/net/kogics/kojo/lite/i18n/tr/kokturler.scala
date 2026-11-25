@@ -18,6 +18,23 @@ package net.kogics.kojo.lite.i18n.tr
 
 // her nesne, herneyse! java Object?
 trait CoreTypeMethodsInTurkish {
+  trait BaskınYazıyaYöntemiyle {
+    def yazıya: Yazı
+    override def toString = yazıya
+  }
+
+  trait Eşsizlik {
+    def kıymaKodu: Sayı
+    override def hashCode = kıymaKodu
+    override def equals(h2: Her) = h2.kıymaKodu == kıymaKodu
+    // iki nesnenin "kıyma kodu" farklıysa, nesneler de farklıdır.
+    // Değilse, o zaman daha yavaş olan equals yöntemi kullanılır.
+    // kıymaKodu/hashCode yöntemini yeniden tanımlamak gerekebiliyor.
+    // Ne zaman? Aynı görünen durum sınıf nesnelerini birbirinden ayırmak gerekince.
+    // O halde çözüm bu özelliği yaymak ve kıymaKodu yöntemini yeniden tanımlamak
+    // github/bulen2k2/kojo-denemeler/a__tam_turkce/tangle-trk.kojo programında kullanıyoruz bunu.
+  }
+
   implicit class NesneYöntemleri(h: Nesne) {
     def kıymaKodu = h.hashCode
     def eşitMi(h2: Her) = h.equals(h2)

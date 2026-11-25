@@ -69,6 +69,17 @@ class FullScreenBaseAction(key: String, fsComp: => JComponent, fsCompHolder: => 
     frame.getContentPane.add(fsComp)
     sdev.setFullScreenWindow(frame)
     frame.validate()
+    // Required on macOS: setFullScreenWindow does not make the window visible by
+    // itself there, so full-screen mode starts with a window that was never shown
+    // and the screen stays black (Esc still works - the window has focus, it just
+    // isn't painted). On Windows and Linux setFullScreenWindow already shows the
+    // window, so this call is a no-op there and needs no platform check.
+    // Measured (JBR 11.0.13 / macOS 26.6.2, pixel at the center of the screen):
+    //   no setVisible            -> R=0   G=0 B=0   (black)
+    //   setVisible AFTER  FSEM   -> R=255 G=0 B=0   (correct)
+    //   setVisible BEFORE FSEM   -> R=0   G=0 B=0   (black - order matters)
+    //   repaint() after FSEM     -> R=0   G=0 B=0   (so it is not a paint problem)
+    frame.setVisible(true)
 
     val escComp = frame.getMostRecentFocusOwner()
     if (escComp != null) {

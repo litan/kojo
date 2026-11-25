@@ -10,35 +10,35 @@
 // Büyük boşluk tuşuyla soruyu rastgele değiştirin
 // Escape tuşuyla pes edin ve iki dakika bitmeden oyuna son verin
 
-val oyunSüresi = 120 // saniye
+dez oyunSüresi = 120 // saniye
 // bu iki sayıyı azaltarak oyunu kolaylaştırabilir, artırarak da zorlaştırabilirsin:
-val enÇokKaçSatır = 9
-val enÇokKaçSütun = 9
-val mesaj = "En az 4 satır ve 4 sütun olmalı"
+dez enÇokKaçSatır = 9
+dez enÇokKaçSütun = 9
+dez mesaj = "En az 4 satır ve 4 sütun olmalı"
 gerekli(enÇokKaçSatır > 3, mesaj)
 gerekli(enÇokKaçSütun > 3, mesaj)
 
-var tümEkran = yanlış
+den tümEkran = yanlış
 tümEkranTuval(); tümEkran = doğru
 // yaklaşmayaİzinVerme()
-val ta = tuvalAlanı
-val evBoyu = enUfağı(200 / enÇokKaçSatır, 300 / enÇokKaçSütun)
-def arayüzTanımı(sayılar: (Sayı, Sayı, Sayı)) = Resim.diziDikey(
+dez ta = tuvalAlanı
+dez evBoyu = enUfağı(200 / enÇokKaçSatır, 300 / enÇokKaçSütun)
+tanım arayüzTanımı(sayılar: (Sayı, Sayı, Sayı)) = Resim.diziDikey(
     götür(-ta.x - 300, ta.y + 60) -> Resim.arayüz(yanıtPenceresi),
     götür(ta.x + 50, -ta.y + 100) -> evResmi(sayılar._1, sayılar._2, sayılar._3),
     götür(ta.x + 20, -ta.y - 340) * kalemRengi(mavi) -> Resim.yazı("Kaç ev var?", 30)
 )
-def yeniArayüz(sayılar: (Sayı, Sayı, Sayı)) {
+tanım yeniArayüz(sayılar: (Sayı, Sayı, Sayı)) {
     arayüz.sil()
     arayüz = arayüzTanımı(sayılar)
     çiz(arayüz)
     arayüz.ardaAl() // yoksa oyun bittiğinde yazdığımız yazı altta kalıyor. Neden?
     yanıtPenceresi.girdiOdağıOl() // klayve girdisini üstüne alsın ve ne gerekiyorsa yapsın
 }
-var arayüz: Resim = Resim.yatay(1) // şimdilik
+den arayüz: Resim = Resim.yatay(1) // şimdilik
  
 // Yazılımcığımızın en becerikli, en çok çalışan kısmı bu:
-val yanıtPenceresi = new ay.Yazıgirdisi(0) {
+dez yanıtPenceresi = yeni ay.Yazıgirdisi(0) {
     yazıYüzünüKur(yazıyüzü("Sans Serif", 60))
     sütunSayısınıKur(5)
     yatayDüzeniKur(ay.değişmez.merkez)
@@ -46,7 +46,7 @@ val yanıtPenceresi = new ay.Yazıgirdisi(0) {
     çerçeveyiKur(ay.çerçeveci.çizgiKenar(siyah))
 }
 
-def ev() {
+tanım ev() {
     kalemRenginiKur(siyah)
     boyamaRenginiKur(Renk(204, 102, 0))
     yinele(4) {
@@ -68,8 +68,8 @@ def ev() {
     zıpla(-evBoyu)
 }
 
-def yazıYaz(y: Sayı, dx: Kesir = 0.0, dy: Kesir = 0.0) = {
-    val k = konum
+tanım yazıYaz(y: Sayı, dx: Kesir = 0.0, dy: Kesir = 0.0) = {
+    dez k = konum
     konumuKur(k.x + dx, k.y + dy)
     biçimleriBelleğeYaz()
     kalemRenginiKur(yeşil)
@@ -78,13 +78,13 @@ def yazıYaz(y: Sayı, dx: Kesir = 0.0, dy: Kesir = 0.0) = {
     konumuKur(k.x, k.y)
 }
 
-def evResmi(satırSayısı: Sayı, sütunSayısı: Sayı, artıkSayısı: Sayı) = Resim {
-    var str = 0
-    var stn = 0
+tanım evResmi(satırSayısı: Sayı, sütunSayısı: Sayı, artıkSayısı: Sayı) = Resim {
+    den str = 0
+    den stn = 0
     yinele(satırSayısı) {
         yinele(sütunSayısı) {
             ev()
-            if (str == 0) {
+            eğer (str == 0) {
                 yazıYaz(stn, -14, 20); stn += 1
             }
             sağ()
@@ -106,83 +106,83 @@ def evResmi(satırSayısı: Sayı, sütunSayısı: Sayı, artıkSayısı: Sayı)
     }
 }
 
-val artalanRengi = Renk(208, 144, 73)
+dez artalanRengi = Renk(208, 144, 73)
 
-var yanıt = 0
-var yanıtUzunluğu = 0
-var süreBittiMi = yanlış
+den yanıt = 0
+den yanıtUzunluğu = 0
+den süreBittiMi = yanlış
 
 // m == 2 => takılıp kalır!  (enÇokKaçSatır ve enÇokKaçSütun = 3 örneğin!)
-def farklıBirSayı(n: Sayı, m: Sayı): Sayı = {
-    def sayı() = 2 + rastgele(m - 1) // rastgele(1) = 0
-    var n2 = 0
-    var tekrar = 0
-    do {
+tanım farklıBirSayı(n: Sayı, m: Sayı): Sayı = {
+    tanım sayı() = 2 + rastgele(m - 1) // rastgele(1) = 0
+    den n2 = 0
+    den tekrar = 0
+    yap {
         n2 = sayı()
         tekrar += 1
-        if (tekrar == 100) {
+        eğer (tekrar == 100) {
             arayüz.sil()
             durdur()
-            if (tümEkran == doğru) {
+            eğer (tümEkran == doğru) {
                 tümEkranTuval(); tümEkran = yanlış
             }
             assert(yanlış, s"takıldı n=$n m=$m")
             return (0)
         }
-    } while (n2 == n)
+    } yineleDoğruKaldıkça (n2 == n)
     n2
 }
 
-def yeniSoru(s1: Sayı, s2: Sayı) = {
-    val sayı1: Sayı = farklıBirSayı(s1, enÇokKaçSatır - 1)
-    val sayı2: Sayı = farklıBirSayı(s2, enÇokKaçSütun)
-    val sayı3: Sayı = rastgeleDiziden(1 to sayı2 - 1)
-    val sayılar = (sayı1, sayı2, sayı3)
+tanım yeniSoru(s1: Sayı, s2: Sayı) = {
+    dez sayı1: Sayı = farklıBirSayı(s1, enÇokKaçSatır - 1)
+    dez sayı2: Sayı = farklıBirSayı(s2, enÇokKaçSütun)
+    dez sayı3: Sayı = rastgeleDiziden(1 to sayı2 - 1)
+    dez sayılar = (sayı1, sayı2, sayı3)
     yanıtıKur(sayılar)
     sayılar
 }
 
-def yanıtıKur(s: (Sayı, Sayı, Sayı)) = {
+tanım yanıtıKur(s: (Sayı, Sayı, Sayı)) = {
     yanıt = s._1 * s._2 + s._3
     yanıtPenceresi.yazıyıKur("")
     yanıtUzunluğu = yanıt.yazıya.boyu
 }
 
-var doğruYanıtSayısı = 0
-var yanlışYanıtSayısı = 0
-var değiştirmeSayısı = 0
+den doğruYanıtSayısı = 0
+den yanlışYanıtSayısı = 0
+den değiştirmeSayısı = 0
 
-var sonSorununSorulduğuZaman = buAn
-def yeterinceZamanVarMı() = {
-    val fark = buAn - sonSorununSorulduğuZaman
-    if (fark > 100) {
+den sonSorununSorulduğuZaman = buAn
+tanım yeterinceZamanVarMı() = {
+    dez fark = buAn - sonSorununSorulduğuZaman
+    eğer (fark > 100) {
         sonSorununSorulduğuZaman = buAn
         doğru
     }
-    else yanlış
+    yoksa yanlış
 }
 
-import ay.olay.TuşaBasmaOlayı
-val s = yeniSoru(0, 0)
-yanıtPenceresi.girdiDinleyiciEkle(new ay.olay.TuşUyarlayıcısı {
-    var sayılarAnımsa = s  // yanlış yanıt verince arayüzü baştan kuruyoruz. Soruyu hatırlayalım ki oyuncu tekrar deneyebilsin
-    def yanıtıDenetle(x: Sayı) {
-        if (x == yanıt) {
+getir ay.olay.TuşaBasmaOlayı
+dez s = yeniSoru(0, 0)
+yanıtPenceresi.girdiDinleyiciEkle(yeni ay.olay.TuşUyarlayıcısı {
+    den sayılarAnımsa = s  // yanlış yanıt verince arayüzü baştan kuruyoruz. Soruyu hatırlayalım ki oyuncu tekrar deneyebilsin
+    tanım yanıtıDenetle(x: Sayı) {
+        eğer (x == yanıt) {
             yanıtPenceresi.önalanıKur(yeşil)
             doğruYanıtSayısı += 1
-            if (!süreBittiMi && yeterinceZamanVarMı()) {
+            eğer (!süreBittiMi && yeterinceZamanVarMı()) {
                 sırayaSok(0.3) {
-                    val sayılar = yeniSoru(sayılarAnımsa._1, sayılarAnımsa._2)
+                    dez sayılar = yeniSoru(sayılarAnımsa._1, sayılarAnımsa._2)
                     sayılarAnımsa = sayılar
                     yeniArayüz(sayılar)
                     yanıtPenceresi.önalanıKur(siyah)
                 }
             }
         }
-        else {
+        yoksa {
             yanıtPenceresi.önalanıKur(kırmızı)
             yanlışYanıtSayısı += 1
-            if (!süreBittiMi) {
+            eğer (!süreBittiMi) {
                 sırayaSok(0.3) {  // kırmızı biraz dursun ki görelim
                     yeniArayüz(sayılarAnımsa)
                 }
@@ -190,69 +190,69 @@ yanıtPenceresi.girdiDinleyiciEkle(new ay.olay.TuşUyarlayıcısı {
         }
     }
 
-    def yanıtHazırMı(olay: TuşaBasmaOlayı) = {
+    tanım yanıtHazırMı(olay: TuşaBasmaOlayı) = {
         yanıtPenceresi.yazıyıAl.boyu >= yanıtUzunluğu
     }
 
     // escape tuşuna basınca oyuna son verelim:
-    override def keyPressed(olay: TuşaBasmaOlayı) {
-        if (olay.tuşKodu == tuşlar.VK_ESCAPE) {
+    baskın tanım keyPressed(olay: TuşaBasmaOlayı) {
+        eğer (olay.tuşKodu == tuşlar.kaç) { // escape tuşu
             olay.tüket()
-            if (!oyunBitti) {
+            eğer (!oyunBitti) {
                 oyunSüresineBak(doğru)
             }
             durdur()
-            if (tümEkran) {
+            eğer (tümEkran) {
                 tümEkranTuval(); tümEkran = yanlış // tüm ekran modunu kapatalım
             }
         } // d tuşu yazılımcığımızı test etmek için:
-        else if (olay.tuşKodu == tuşlar.VK_D) {
-            val sayılar = (enÇokKaçSatır, enÇokKaçSütun, enÇokKaçSütun)
+        yoksa eğer (olay.tuşKodu == tuşlar.d) {
+            dez sayılar = (enÇokKaçSatır, enÇokKaçSütun, enÇokKaçSütun)
             sayılarAnımsa = sayılar
             yanıtıKur(sayılar)
             yeniArayüz(sayılar)
         } // büyük boşluk tuşuna basarak soruyu değiştirebiliriz:
-        else if (olay.tuşKodu == tuşlar.VK_SPACE) {
+        yoksa eğer (olay.tuşKodu == tuşlar.boşluk) {
             değiştirmeSayısı += 1
-            val sayılar = yeniSoru(0, 0)
+            dez sayılar = yeniSoru(0, 0)
             sayılarAnımsa = sayılar
             yeniArayüz(sayılar)
         }
-        else if (olay.tuşKodu == tuşlar.VK_ENTER) {
+        yoksa eğer (olay.tuşKodu == tuşlar.gir) {
             tümEkran = !tümEkran
             tümEkranTuval() // tüm ekran modunu aç/kapat
         }
     }
 
     // sayı dışındaki girdileri yok sayalım
-    override def keyTyped(olay: TuşaBasmaOlayı) {
-        if (!olay.tuşHarfi.sayıMı) {
+    baskın tanım keyTyped(olay: TuşaBasmaOlayı) {
+        eğer (!olay.tuşHarfi.sayıMı) {
             olay.tüket()
         }
     }
 
-    override def keyReleased(olay: TuşaBasmaOlayı) {
-        if (yanıtHazırMı(olay)) {
-            val x = yanıtPenceresi.değeri
+    baskın tanım keyReleased(olay: TuşaBasmaOlayı) {
+        eğer (yanıtHazırMı(olay)) {
+            dez x = yanıtPenceresi.değeri
             yanıtıDenetle(x)
         }
-        else {
+        yoksa {
             yanıtPenceresi.önalanıKur(siyah)
         }
     }
 })
 
-def mesajıYaz(m: Yazı, renk: Renk) {
-    val yç = yazıÇerçevesi(m, 30)
-    val resim = kalemRengi(renk) * götür(ta.x + (ta.eni - yç.width) / 2, 0) ->
+tanım mesajıYaz(m: Yazı, renk: Renk) {
+    dez yç = yazıÇerçevesi(m, 30)
+    dez resim = kalemRengi(renk) * götür(ta.x + (ta.eni - yç.width) / 2, 0) ->
         Resim.yazı(m, 30)
     çiz(resim)
 }
 
-var oyunBitti = yanlış
-def oyunSüresineBak(escapeTuşunaBasıldıMı: İkil = yanlış) {
-    def sonuç(dy: Sayı, yy: Sayı, ps: Sayı) = dy - yy - 0.5*ps
-    val geçenSüreResmi = götür(ta.x + 10, ta.y + 50) -> Resim.yazıRenkli(
+den oyunBitti = yanlış
+tanım oyunSüresineBak(escapeTuşunaBasıldıMı: İkil = yanlış) {
+    tanım sonuç(dy: Sayı, yy: Sayı, ps: Sayı) = dy - yy - 0.5*ps
+    dez geçenSüreResmi = götür(ta.x + 10, ta.y + 50) -> Resim.yazıRenkli(
         geçenSüre,
         20, mavi)
     çiz(geçenSüreResmi)
@@ -262,12 +262,12 @@ def oyunSüresineBak(escapeTuşunaBasıldıMı: İkil = yanlış) {
         geçenSüre += 1
         geçenSüreResmi.güncelle(geçenSüre)
 
-        if (geçenSüre == oyunSüresi || escapeTuşunaBasıldıMı) {
+        eğer (geçenSüre == oyunSüresi || escapeTuşunaBasıldıMı) {
             oyunBitti = doğru
             süreBittiMi = doğru
-            val evre = if (escapeTuşunaBasıldıMı) s"Oyun $geçenSüre saniye sonra durduruldu."
-            else "Oyun bitti!"
-            val mesaj = s"""$evre
+            dez evre = eğer (escapeTuşunaBasıldıMı) s"Oyun $geçenSüre saniye sonra durduruldu."
+            yoksa "Oyun bitti!"
+            dez mesaj = s"""$evre
             |Doğrular: $doğruYanıtSayısı
             |Yanlışlar: $yanlışYanıtSayısı
             |Pas geçme: $değiştirmeSayısı
@@ -284,7 +284,7 @@ silVeSakla()
 artalanıKur(artalanRengi)
 
 yeniArayüz(s)
-var geçenSüre = 0
+den geçenSüre = 0
 oyunSüresineBak()
 sırayaSok(1) {
     yanıtPenceresi.girdiOdağıOl() // klayve girdisini üstüne alsın

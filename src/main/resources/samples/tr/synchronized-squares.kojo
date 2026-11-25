@@ -8,18 +8,18 @@ silVeSakla()
 // 
 // artlandaOynat komutu sayesinde kare komutu çalışmasını bitirmeden 
 // diger komutları da başlatabiliriz
-def kare(k: Kaplumbağa, boy: Sayı, bekleme: Sayı) = artalandaOynat {
+tanım kare(k: Kaplumbağa, boy: Sayı, bekleme: Sayı) = artalandaOynat {
     k.canlandırmaHızınıKur(bekleme)
     yinele(4) {
         k.ileri(boy)
         k.sağ()
     }
 }
-val k1 = yeniKaplumbağa(0, 0)
-val k2 = yeniKaplumbağa(-200, 100)
-val k3 = yeniKaplumbağa(250, 100)
-val k4 = yeniKaplumbağa(250, -50)
-val k5 = yeniKaplumbağa(-200, -50)
+dez k1 = yeniKaplumbağa(0, 0)
+dez k2 = yeniKaplumbağa(-200, 100)
+dez k3 = yeniKaplumbağa(250, 100)
+dez k4 = yeniKaplumbağa(250, -50)
+dez k5 = yeniKaplumbağa(-200, -50)
 
 kare(k1, 100, 100) // iki kat daha hızlı çizelim. Neden?
 kare(k2, 50, 200)

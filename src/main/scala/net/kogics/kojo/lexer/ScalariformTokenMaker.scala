@@ -73,14 +73,23 @@ class ScalariformTokenMaker extends AbstractTokenMaker {
     TokenTypes.NULL
   }
 
+  import net.kogics.kojo.lite.i18n.LanguageEditorDataRegistry
+
   override def getTokenList(segment: Segment, initialTokenType: Int, docOffset: Int): Token = {
+    val keywordSet = LanguageEditorDataRegistry.current.keywordSet
+
     def addRstaToken(t: SfToken): Unit = {
       debug("  %s".format(t))
       // offset of token within its segment = offset in doc - offset of segment within doc
       val segStartOffset = t.offset - (docOffset - segment.offset)
       val segEndOffset = segStartOffset + t.length - 1
       val docStartOffset = t.offset
-      addToken(segment.array, segStartOffset, segEndOffset, convertTokenType(t.tokenType), docStartOffset)
+      val ttEn = convertTokenType(t.tokenType) // token type for English keywords only
+      val tt =
+        if (ttEn == TokenTypes.IDENTIFIER && keywordSet.contains(t.text))
+          TokenTypes.RESERVED_WORD
+        else ttEn
+      addToken(segment.array, segStartOffset, segEndOffset, tt, docStartOffset)
     }
 
     debug(

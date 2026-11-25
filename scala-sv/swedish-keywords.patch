@@ -1,0 +1,128 @@
+Swedish keywords for the Scala compiler (Kojo).
+
+DRAFT — the Swedish keyword strings below are AI-suggested starting points and
+MUST be reviewed by a native Swedish speaker (see scala-sv/README). The
+mechanism mirrors scala-tr/turkish-keywords.patch exactly.
+
+Generated against the pristine scala/scala v2.13.18 sources, so it applies to a
+clean checkout of that tag:
+
+    git clone https://github.com/scala/scala ~/src/scala-2.13.18
+    cd ~/src/scala-2.13.18 && git checkout v2.13.18
+    git apply <kojo-clone>/scala-sv/swedish-keywords.patch
+    sbt 'set Global/baseVersionSuffix := ""' dist/mkPack
+
+The change to Main.scala is only a diagnostic println and is not required; the
+keywords come from Scanners.scala (the Swedish entries go FIRST in allKeywords,
+so compiler errors still report the English keyword) and StdNames.scala.
+
+--- a/src/compiler/scala/tools/nsc/Main.scala
++++ b/src/compiler/scala/tools/nsc/Main.scala
+@@ -26,6 +26,7 @@
+   override def newCompiler(): Global = Global(settings)
+ 
+   override def doCompile(compiler: Global): Unit = {
++    println("[Kojo] Scala Compiler v2.13.18 with Swedish keywords")
+     if (settings.resident.value) resident(compiler)
+     else super.doCompile(compiler)
+   }
+--- a/src/compiler/scala/tools/nsc/ast/parser/Scanners.scala
++++ b/src/compiler/scala/tools/nsc/ast/parser/Scanners.scala
+@@ -1475,6 +1475,47 @@
+   // ------------- keyword configuration -----------------------------------
+ 
+   private val allKeywords = List[(Name, Token)](
++    // Swedish first so that compiler errors report with English keywords
++    nme.svABSTRACTkw  -> ABSTRACT,
++    nme.svCASEkw      -> CASE,
++    nme.svCATCHkw     -> CATCH,
++    nme.svCLASSkw     -> CLASS,
++    nme.svDEFkw       -> DEF,
++    nme.svDOkw        -> DO,
++    nme.svELSEkw      -> ELSE,
++    nme.svEXTENDSkw   -> EXTENDS,
++    nme.svFALSEkw     -> FALSE,
++    nme.svFINALkw     -> FINAL,
++    nme.svFINALLYkw   -> FINALLY,
++    nme.svFORkw       -> FOR,
++    nme.svFORSOMEkw   -> FORSOME,
++    nme.svIFkw        -> IF,
++    nme.svIMPLICITkw  -> IMPLICIT,
++    nme.svIMPORTkw    -> IMPORT,
++    nme.svLAZYkw      -> LAZY,
++    nme.svMATCHkw     -> MATCH,
++    nme.svNEWkw       -> NEW,
++    nme.svNULLkw      -> NULL,
++    nme.svOBJECTkw    -> OBJECT,
++    nme.svOVERRIDEkw  -> OVERRIDE,
++    nme.svPACKAGEkw   -> PACKAGE,
++    nme.svPRIVATEkw   -> PRIVATE,
++    nme.svPROTECTEDkw -> PROTECTED,
++    nme.svRETURNkw    -> RETURN,
++    nme.svSEALEDkw    -> SEALED,
++    nme.svSUPERkw     -> SUPER,
++    nme.svTHISkw      -> THIS,
++    nme.svTHROWkw     -> THROW,
++    nme.svTRAITkw     -> TRAIT,
++    nme.svTRUEkw      -> TRUE,
++    nme.svTRYkw       -> TRY,
++    nme.svTYPEkw      -> TYPE,
++    nme.svVALkw       -> VAL,
++    nme.svVARkw       -> VAR,
++    nme.svWHILEkw     -> WHILE,
++    nme.svWITHkw      -> WITH,
++    nme.svYIELDkw     -> YIELD,
++
+     nme.ABSTRACTkw  -> ABSTRACT,
+     nme.CASEkw      -> CASE,
+     nme.CATCHkw     -> CATCH,
+--- a/src/reflect/scala/reflect/internal/StdNames.scala
++++ b/src/reflect/scala/reflect/internal/StdNames.scala
+@@ -231,6 +231,47 @@
+     final val HASHkw: TermName      = kw("#")
+     final val ATkw: TermName        = kw("@")
+ 
++    final val svABSTRACTkw: TermName  = kw("abstrakt")
++    final val svCASEkw: TermName      = kw("fall")
++    final val svCATCHkw: TermName     = kw("fånga")
++    final val svCLASSkw: TermName     = kw("klass")
++    final val svDEFkw: TermName       = kw("definiera")
++    final val svDOkw: TermName        = kw("utför")
++    final val svELSEkw: TermName      = kw("annars")
++    final val svEXTENDSkw: TermName   = kw("ärver")
++    final val svFALSEkw: TermName     = kw("falskt")
++    final val svFINALkw: TermName     = kw("slutlig")
++    final val svFINALLYkw: TermName   = kw("slutligen")
++    final val svFORkw: TermName       = kw("för")
++    final val svFORSOMEkw: TermName   = kw("förNågra")
++    final val svIFkw: TermName        = kw("om")
++    final val svIMPLICITkw: TermName  = kw("implicit")
++    final val svIMPORTkw: TermName    = kw("importera")
++    final val svLAZYkw: TermName      = kw("lat")
++    final val svMATCHkw: TermName     = kw("matcha")
++    final val svNEWkw: TermName       = kw("ny")
++    final val svNULLkw: TermName      = kw("ingen")
++    final val svOBJECTkw: TermName    = kw("objekt")
++    final val svOVERRIDEkw: TermName  = kw("åsidosätt")
++    final val svPACKAGEkw: TermName   = kw("paket")
++    final val svPRIVATEkw: TermName   = kw("privat")
++    final val svPROTECTEDkw: TermName = kw("skyddad")
++    final val svRETURNkw: TermName    = kw("returnera")
++    final val svSEALEDkw: TermName    = kw("förseglad")
++    final val svSUPERkw: TermName     = kw("super")
++    final val svTHISkw: TermName      = kw("denna")
++    // NOTE (throw->kasta): make sure no compiler-internal identifier is named "kasta".
++    final val svTHROWkw: TermName     = kw("kasta")
++    final val svTRAITkw: TermName     = kw("egenskap")
++    final val svTRUEkw: TermName      = kw("sant")
++    final val svTRYkw: TermName       = kw("försök")
++    final val svTYPEkw: TermName      = kw("typ")
++    final val svVALkw: TermName       = kw("värde")
++    final val svVARkw: TermName       = kw("variabel")
++    final val svWHILEkw: TermName     = kw("medan")
++    final val svWITHkw: TermName      = kw("med")
++    final val svYIELDkw: TermName     = kw("ge")
++
+     final val keywords = kw.result
+   } with CommonNames {
+     final val javaKeywords = new JavaKeywords()

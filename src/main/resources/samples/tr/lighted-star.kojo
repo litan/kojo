@@ -1,4 +1,4 @@
-def resim = Resim {
+tanım resim = Resim {
     kalemRenginiKur(renksiz)
     boyamaRenginiKur(Renk(0, 102, 255))
     yinele(4) {
@@ -14,7 +14,7 @@ def resim = Resim {
 }
 
 silVeSakla()
-val sı1 = SahneIşığı(0.2, 0.8, 300, 30, 130)
-val sı2 = SahneIşığı(0.5, 0.4, 0, 70, 80)
-val resim2 = ışıklar(sı1, sı2) -> resim
+dez sı1 = SahneIşığı(0.2, 0.8, 300, 30, 130)
+dez sı2 = SahneIşığı(0.5, 0.4, 0, 70, 80)
+dez resim2 = ışıklar(sı1, sı2) -> resim
 çizMerkezde(resim2)

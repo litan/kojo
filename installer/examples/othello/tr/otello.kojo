@@ -4,16 +4,16 @@
 //#yükle tr/alfabeta
 
 çıktıyıSil
-val çeşni = 0 // ya da 1
-val odaSayısı = 8
-val kimBaşlar = Siyah // Beyaz ya da Siyah başlayabilir. Seç :-)
-val bilgisayar = Siyah // Siyah ya da Beyaz oynar ya da Yok (yani oynamaz)
+dez çeşni = 0 // ya da 1
+dez odaSayısı = 8
+dez kimBaşlar = Siyah // Beyaz ya da Siyah başlayabilir. Seç :-)
+dez bilgisayar = Siyah // Siyah ya da Beyaz oynar ya da Yok (yani oynamaz)
 
-val tahta = new ETahta(odaSayısı, kimBaşlar, çeşni)
-val bellek = new Bellek(tahta)
-val düzey = Usta
+dez tahta = yeni ETahta(odaSayısı, kimBaşlar, çeşni)
+dez bellek = yeni Bellek(tahta)
+dez düzey = Usta
 ABa.ustalık(düzey)
-val araYüz = new Arayüz(tahta, bellek, bilgisayar)
+dez araYüz = yeni Arayüz(tahta, bellek, bilgisayar)
 // 1) istersen bilgisayar çabucak bir oyunla başlayabilir
 // araYüz.özdevin(0.02) 
 

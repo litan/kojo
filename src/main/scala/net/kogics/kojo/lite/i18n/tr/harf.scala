@@ -17,9 +17,20 @@
 package net.kogics.kojo.lite.i18n.tr
 
 trait CharMethodsInTurkish {
-  type Harf = Char
+  private type Dizik[T]=Array[T]
 
-  // todo: move to harf.scala?
+  type Harf = Char
+  type JHarf = java.lang.Character
+  type HarfDizisindenDizik=ArrayCharSequence
+  type HarfDizisindenDizi=SeqCharSequence
+  type HarfDiziğiDizisi = collection.mutable.ArraySeq.ofChar
+
+  def HarftenHarfe(h: JHarf): Harf = Character2char(h)
+  def harftenHarfe(h: Harf): JHarf = char2Character(h)
+
+  def HarfDizisindenDizik(harfDiziği: Dizik[Harf]): HarfDizisindenDizik = ArrayCharSequence(harfDiziği)
+  def HarfDizisindenDizi(harfDizisi: SıralıDizi[Harf]): HarfDizisindenDizi = SeqCharSequence(harfDizisi)
+
   object Harf {
     def sayıMı(h: Harf): İkil = Character.isDigit(h)
     def harfMi(h: Harf): İkil = Character.isLetter(h)
@@ -34,8 +45,8 @@ trait CharMethodsInTurkish {
     def kesire(h: Harf) = Char.char2double(h)
     def ufakkesire(h: Harf) = Char.char2float(h)
 
-    val enUfağı = Char.MaxValue
-    val enİrisi = Char.MinValue
+    val enUfağı = Char.MinValue // '\u0000'; ters yazılmıştı (MaxValue), TurkishAPITest'teki sav bu yüzden yorumdaydı
+    val enİrisi = Char.MaxValue // '\uffff'
   }
 
   implicit class HarfYöntemleri(h: Harf) {

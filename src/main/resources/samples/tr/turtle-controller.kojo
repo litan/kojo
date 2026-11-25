@@ -2,29 +2,29 @@
 // en temel birkaç komudu çağıran onbeş tane düğmecik
 
 // Düğmelerin işlevini birazcık değiştirmek için bu değerleri değiştirebilirsin
-val ileriAdım = 50
-val ileriAdım2 = 10
-val ileriAdım3 = 5
-val dönüşAçısı = 90
-val dönüşAçısı2 = 10
-val dönüşAçısı3 = 5
-val aaRengi = beyaz
-val aaRengiYaz = "beyaz"
+dez ileriAdım = 50
+dez ileriAdım2 = 10
+dez ileriAdım3 = 5
+dez dönüşAçısı = 90
+dez dönüşAçısı2 = 10
+dez dönüşAçısı3 = 5
+dez aaRengi = beyaz
+dez aaRengiYaz = "beyaz"
 
 sil()
 çıktıyıSil()
 ışınlarıAç()
-val en = tuvalAlanı.en
-val boy = tuvalAlanı.boy
+dez en = tuvalAlanı.en
+dez boy = tuvalAlanı.boy
 
 artalanıKur(aaRengi)
 boyamaRenginiKur(mor)
 
-def eylem(komutlar: Yazı) {
+tanım eylem(komutlar: Yazı) {
     yorumla(komutlar); satıryaz(komutlar)
 }
 
-val komutlar = Eşlek(
+dez komutlar = Eşlek(
     "ileri1" -> s"ileri($ileriAdım)",
     "ileri2" -> s"ileri($ileriAdım2)",
     "ileri3" -> s"ileri( $ileriAdım3 )",
@@ -39,12 +39,12 @@ val komutlar = Eşlek(
     "sol3" -> s"sol( $dönüşAçısı3 )"
 )
 
-def silKomudu(n: Int) =
+tanım silKomudu(n: Int) =
     s"biçimleriBelleğeYaz(); kalemRenginiKur($aaRengiYaz); kalemKalınlığınıKur(4); geri($n); biçimleriGeriYükle()"
 
-def düğme(komutAdı: Yazı) = Resim.düğme(komutlar(komutAdı)) { eylem(komutlar(komutAdı)) }
+tanım düğme(komutAdı: Yazı) = Resim.düğme(komutlar(komutAdı)) { eylem(komutlar(komutAdı)) }
 
-val düğmePanosu = götür(-en / 2, -boy / 2) * büyüt(1.4) -> Resim.diziDikey(
+dez düğmePanosu = götür(-en / 2, -boy / 2) * büyüt(1.4) -> Resim.diziDikey(
     Resim.diziYatay(
         düğme("sol3"),
         düğme("ileri3"),

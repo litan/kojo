@@ -16,8 +16,7 @@
  */
 package net.kogics.kojo.lite.i18n.tr
 
-import net.kogics.kojo.lite.Builtins
-import net.kogics.kojo.lite.CoreBuiltins
+import net.kogics.kojo.lite.{Builtins, CoreBuiltins}
 
 // ../../util/Vector2D.scala
 case class Yöney2B(x: Kesir, y: Kesir) {
@@ -48,7 +47,7 @@ case class Yöney2B(x: Kesir, y: Kesir) {
   override def toString = "Yöney2B(%.2f, %.2f)".format(x, y)
   override def equals(y2: Any) = y2 match {
     case y3: Yöney2B => v.equals(y3.v)
-    case _           => yanlış
+    case _ => false
   }
 }
 object Yöney2B {

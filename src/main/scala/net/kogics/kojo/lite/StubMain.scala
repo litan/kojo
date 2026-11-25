@@ -198,12 +198,25 @@ trait StubMain {
     // allow another way to customize classpath
     val kojoCp = System.getenv("KOJO_CLASSPATH")
     if (kojoCp != null) {
+      // KOJO_CLASSPATH is set deliberately, so a toolchain jar in it is honored -
+      // but it shadows Kojo's own Scala jars, so say so
+      val (strays, _) = ScalaToolchainCheck.partitionStrays(kojoCp.split(File.pathSeparatorChar).toList)
+      strays.foreach { s =>
+        log(s"[WARNING] KOJO_CLASSPATH has a Scala toolchain jar that will shadow Kojo's own: $s")
+      }
       ourCp.append(kojoCp)
       ourCp.append(File.pathSeparatorChar)
     }
 
     def addJars(dir: String): Unit = {
-      Utils.filesInDir(dir, "jar").foreach { x =>
+      // user jars are prepended, so a Scala toolchain jar among them would shadow
+      // Kojo's own and break the compiler with a version mix - skip those
+      val (strays, jars) = ScalaToolchainCheck.partitionStrays(Utils.filesInDir(dir, "jar"))
+      strays.foreach { s =>
+        log(s"[WARNING] Ignoring stray Scala toolchain jar in $dir: $s " +
+          "(it would shadow Kojo's Scala toolchain; safe to delete)")
+      }
+      jars.foreach { x =>
         ourCp.append(dir)
         ourCp.append(File.separatorChar)
         ourCp.append(x)

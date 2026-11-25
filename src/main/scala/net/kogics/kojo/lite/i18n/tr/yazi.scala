@@ -18,9 +18,11 @@ package net.kogics.kojo.lite.i18n.tr
 
 trait StringMethodsInTurkish {
   type Yazı = String
-  type EsnekYazı = collection.mutable.StringBuilder
+  type EsnekYazı=collection.mutable.StringBuilder
 
   object Yazı {
+    // https://stackoverflow.com/questions/21086263/how-to-insert-double-quotes-into-string-with-interpolation-in-scala
+    val tırnak = """ " """.trim // spaces just for legibility
     type Harf = Char
     def olarak(n: Nesne) = String.valueOf(n)
     def olarak(n: Kesir) = String.valueOf(n)
@@ -34,6 +36,7 @@ trait StringMethodsInTurkish {
   }
 
   implicit class YazıYöntemleri(y: Yazı) {
+    type Belki[B] = Option[B]
     type Harf = Char
     type Eşlek[A, D] = collection.immutable.Map[A, D]
     // todo: duplicated from dizi.scala with minor changes
@@ -57,13 +60,13 @@ trait StringMethodsInTurkish {
     def soldanKatla[T2](z: T2)(işlev: (T2, Harf) => T2): T2 = y.foldLeft(z)(işlev)
     def sağdanKatla[T2](z: T2)(işlev: (Harf, T2) => T2): T2 = y.foldRight(z)(işlev)
     // https://github.com/scala/scala/blob/v2.12.7/src/library/scala/collection/TraversableOnce.scala#L1
-    def topla[T2 >: Harf](implicit num: scala.math.Numeric[T2]) = y.sum(num) // foldLeft(num.zero)(num.plus)
+    def topla[T2 >: Harf](implicit num: scala.math.Numeric[T2]) = y.sum(num)    // foldLeft(num.zero)(num.plus)
     def çarp[T2 >: Harf](implicit num: scala.math.Numeric[T2]) = y.product(num) // foldLeft(num.one)(num.times)
     def yinelemesiz = y.distinct
     def yinelemesizİşlevle[T2](işlev: Harf => T2): Yazı = y.distinctBy(işlev)
     def yazıYap: Yazı = y.mkString
     def yazıYap(ara: Yazı): Yazı = y.mkString(ara)
-    def yazıYap(baş: Yazı, ara: Yazı, son: Yazı): Yazı = y.mkString(baş, ara, son)
+    def yazıYap(başı: Yazı, ara: Yazı, sonu: Yazı): Yazı = y.mkString(başı, ara, sonu)
     def tersi = y.reverse
     def değiştir(yeri: Sayı, değeri: Harf): Yazı = y.updated(yeri, değeri)
     // todo: doesn't compile
@@ -118,6 +121,7 @@ trait StringMethodsInTurkish {
     def sonundaMı(öbürü: Yazı): İkil = y.endsWith(öbürü)
 
     def kenarPayınıÇıkar = y.stripMargin
+    def eşlenirMi(düzenliDeyiş: Yazı): İkil = y.matches(düzenliDeyiş)
 
     def dizime[S >: Harf](implicit delil: scala.reflect.ClassTag[S]): Dizim[S] = new Dizim(y.toArray(delil))
     def ikile = y.toBoolean
@@ -141,9 +145,54 @@ trait StringMethodsInTurkish {
     def kısayaBelki = y.toShortOption
     def öbekle(iş: (Harf) => Harf): Eşlek[Harf, Yazı] = y.groupBy(iş)
     // more to come..
-  }
+  
+    // --- ortak çekirdek --------------------------------------------------
+    // NOT: Yazı'da `böl` = split (ayraçla parçalama). Bu yüzden partition'a
+    // burada ad verilmedi; span/splitAt karşılıkları aşağıda.
+    def başıBelki: Belki[Harf] = y.headOption
+    def sonuBelki: Belki[Harf] = y.lastOption
+    def bul(deneme: Harf => İkil): Belki[Harf] = y.find(deneme)
+    def nerede(deneme: Harf => İkil): Sayı = y.indexWhere(deneme)
+    def neredeSondan(deneme: Harf => İkil): Sayı = y.lastIndexWhere(deneme)
+    def sıralar: Range = y.indices
+    def bölDoğruKaldıkça(deneme: Harf => İkil): (Yazı, Yazı) = y.span(deneme)
+    def bölYerinden(yeri: Sayı): (Yazı, Yazı) = y.splitAt(yeri)
+    def öbekli(boy: Sayı): Yineleyici[Yazı] = y.grouped(boy)
+    def kayarÖbekli(boy: Sayı): Yineleyici[Yazı] = y.sliding(boy)
+    def kayarÖbekli(boy: Sayı, adım: Sayı): Yineleyici[Yazı] = y.sliding(boy, adım)
+    def kuyruklar: Yineleyici[Yazı] = y.tails
+    def önler: Yineleyici[Yazı] = y.inits
+    def kombinasyonlar(harfSayısı: Sayı): Yineleyici[Yazı] = y.combinations(harfSayısı)
+    def permütasyonlar: Yineleyici[Yazı] = y.permutations
+    def katla(z: Harf)(işlev: (Harf, Harf) => Harf): Harf = y.fold(z)(işlev)
+    def dilim(nereden: Sayı, nereye: Sayı): Yazı = y.slice(nereden, nereye)
+    def uzat(boy: Sayı, harf: Harf): Yazı = y.padTo(boy, harf)
+    def yama(nereden: Sayı, yenisi: YinelenebilirBirKere[Harf], kaçTane: Sayı): Yazı =
+      y.patch(nereden, yenisi, kaçTane)
+    def fark(öbürü: Dizi[Harf]): Yazı = y.diff(öbürü)
+    def kesişim(öbürü: Dizi[Harf]): Yazı = y.intersect(öbürü)
+    def sonunaEkle(harf: Harf): Yazı = y.appended(harf)
+    def önüneEkle(harf: Harf): Yazı = y.prepended(harf)
+    def sonunaEkleHepsini(öbürü: Yazı): Yazı = y.appendedAll(öbürü)
+    def önüneEkleHepsini(öbürü: Yazı): Yazı = y.prependedAll(öbürü)
+
+    // --- Yazı'ya özgü ----------------------------------------------------
+    // NOT: `böl` = split olduğu için partition'ın adı ikiyeAyır.
+    def ikiyeAyır(deneme: Harf => İkil): (Yazı, Yazı) = y.partition(deneme)
+    def ikiyeAyırİşle[A1, A2](işlev: Harf => Either[A1, A2]): (Dizi[A1], Dizi[A2]) =
+      // Yazı'ya özgü aşırı yükleme genel olanı gölgeliyor: harf dizisi üstünden
+      (y: Dizi[Harf]).partitionMap(işlev)
+    def seçİşle[B](işlev: PartialFunction[Harf, B]): Dizi[B] = y.collect(işlev)
+    def satırlar: Yineleyici[Yazı] = y.linesIterator
+    def başındanAt(önek: Yazı): Yazı = y.stripPrefix(önek)
+    def sonundanAt(sonek: Yazı): Yazı = y.stripSuffix(sonek)
+    def satırSonunuAt: Yazı = y.stripLineEnd
+    def uzuna: Uzun = y.toLong
+    def uzunaBelki: Belki[Uzun] = y.toLongOption
+}
 
   implicit class EsnekYazıYöntemleri(ey: EsnekYazı) {
+    type Harf = Char
     def boşMu = ey.size == 0
     def doluMu = ey.size != 0
     def boyu = ey.size
@@ -151,6 +200,32 @@ trait StringMethodsInTurkish {
     def ekle[T](x: T) = ey.append(x)
     def yazıya = ey.toString
     def sayıya = ey.toString.toInt
-  }
+  
+    // --- tampon tarafı (yerinde değiştirenler) ---------------------------
+    // EsnekYazı hem bir harf DİZİSİ (Diz sarmalayıcısı buraya da uygulanıyor:
+    // bul, böl, öbekli, enİrisi... hepsi çalışır) hem de bir yazı TAMPONU.
+    // Aşağıdakiler tampon tarafı; tamponun kendisini değiştirirler.
+    def ekleHepsini(harfler: YinelenebilirBirKere[Harf]): EsnekYazı = ey.appendAll(harfler)
+    def ekleAraya(yeri: Sayı, x: Yazı): EsnekYazı = ey.insert(yeri, x)
+    def ekleArayaHepsini(yeri: Sayı, harfler: YinelenebilirBirKere[Harf]): EsnekYazı = ey.insertAll(yeri, harfler)
+    @deprecated("eylemle başlayan ada geçildi: ekleAraya kullanın", "Eylül 2026")
+    def araEkle(yeri: Sayı, x: Yazı): EsnekYazı = ekleAraya(yeri, x)
+    @deprecated("eylemle başlayan ada geçildi: ekleArayaHepsini kullanın", "Eylül 2026")
+    def araEkleHepsini(yeri: Sayı, harfler: YinelenebilirBirKere[Harf]): EsnekYazı = ekleArayaHepsini(yeri, harfler)
+    def aralığıSil(nereden: Sayı, nereye: Sayı): EsnekYazı = ey.delete(nereden, nereye)
+    def harfiSil(yeri: Sayı): EsnekYazı = ey.deleteCharAt(yeri)
+    def değiştirAralığını(nereden: Sayı, nereye: Sayı, yenisi: Yazı): EsnekYazı =
+      ey.replace(nereden, nereye, yenisi)
+    def harfiKur(yeri: Sayı, harf: Harf): Birim = ey.setCharAt(yeri, harf)
+    def boyuKur(boy: Sayı): Birim = ey.setLength(boy)
+    def tersiYerinde: EsnekYazı = ey.reverseInPlace()
+    def yerAyır(boy: Sayı): Birim = ey.ensureCapacity(boy)
+    def kapasitesi: Sayı = ey.capacity
+    def harf(yeri: Sayı): Harf = ey.charAt(yeri)
+    def parçası(nereden: Sayı): Yazı = ey.substring(nereden)
+    def parçası(nereden: Sayı, nereye: Sayı): Yazı = ey.substring(nereden, nereye)
+    def kesire: Kesir = ey.toString.toDouble
+    def uzuna: Uzun = ey.toString.toLong
+}
 
 }

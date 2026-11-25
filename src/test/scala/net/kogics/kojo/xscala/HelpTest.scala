@@ -23,6 +23,31 @@ import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class HelpTest extends FunSuite with Matchers with BeforeAndAfter {
+  test("keyword overrides precede English help while registered API help remains a fallback") {
+    import net.kogics.kojo.core.TwMode
+    import net.kogics.kojo.lite.i18n.{LanguageEditorData, LanguageTestSupport}
+    val saved = Help.langContent.toMap
+    val language = System.getProperty("user.language")
+    try LanguageTestSupport.withData(LanguageEditorData(keywordHelp = Map(TwMode -> Map("val" -> "keyword override")))) {
+      Help.activateTw()
+      Help.addContent(language, Map("gridOn" -> "wrong common", "towards" -> "wrong mode",
+        "val" -> "wrong keyword", "language-api" -> "API fallback"))
+      Help("val") should be("keyword override")
+      Help("gridOn") should be("gridOn() - Shows a grid on the turtle canvas.")
+      Help("towards") should include("Turns the turtle")
+      Help("language-api") should be("API fallback")
+      Help("unknown-topic") should be(null)
+      Help.activateVn()
+      Help("val") should be(null)
+      Help.activateTw()
+      Help("val") should be("keyword override")
+    }
+    finally {
+      Help.activateTw()
+      Help.langContent ++= saved
+    }
+  }
+
 
   after {
     Help.clearLangContent()

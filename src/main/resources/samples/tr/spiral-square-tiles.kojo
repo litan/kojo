@@ -15,12 +15,12 @@
 // Senin bilgisayarında komut tuşu var mı? Yoksa Alt ya da Windows tuşlarını dene.
 sil()
 
-val yavaşlatma = 4 // 0 bir anda çizer. 100 epey yavaşlatır
-val dönüşSayısı = 8 // kaç kere dönsün sarmalımız? Merkezdeki taşı saymıyoruz
+dez yavaşlatma = 4 // 0 bir anda çizer. 100 epey yavaşlatır
+dez dönüşSayısı = 8 // kaç kere dönsün sarmalımız? Merkezdeki taşı saymıyoruz
 
-val kenarUzunluğu = 50 // taşımızın kenar uzunluğu.
+dez kenarUzunluğu = 50 // taşımızın kenar uzunluğu.
 
-def taşıÇiz {
+tanım taşıÇiz {
     kalemiİndir()
     // önce bir kare çizelim
     kalemRenginiKur(kırmızı)
@@ -40,7 +40,7 @@ def taşıÇiz {
     kalemiKaldır // bir sonraki taşın ilk noktasına giderken çizim yapmak istemiyoruz
 }
 
-def koluÇiz(taşSayısı: Sayı, doğrultu: Kesir) {
+tanım koluÇiz(taşSayısı: Sayı, doğrultu: Kesir) {
     // Bu yazılımcık çalışırken bu komudun içine her girişinde
     // durarak sarmalın kollarının nasıl çizildiğini görebiliriz:
     // buradaDur(s"taşSayısı: $taşSayısı")
@@ -53,7 +53,7 @@ def koluÇiz(taşSayısı: Sayı, doğrultu: Kesir) {
     sağ(90)
 }
 
-def sarmalıÇiz(taşSayısı: Sayı) {
+tanım sarmalıÇiz(taşSayısı: Sayı) {
     koluÇiz(taşSayısı, 0) //       1  3  5 ...
     koluÇiz(taşSayısı + 1, 90) //  2  4  6 ...
     koluÇiz(taşSayısı + 1, 180) // 2  5  7 ...
@@ -62,13 +62,13 @@ def sarmalıÇiz(taşSayısı: Sayı) {
 
 canlandırmaHızınıKur(yavaşlatma)
 // merkezdeki taşı çizelim önce
-val merkezdekiTaşıBelirginleştir = yanlış // bunu doğru yap istersen
-if (merkezdekiTaşıBelirginleştir) {
+dez merkezdekiTaşıBelirginleştir = yanlış // bunu doğru yap istersen
+eğer (merkezdekiTaşıBelirginleştir) {
     biçimleriBelleğeYaz()
     kalemKalınlığınıKur(4)
 }
 taşıÇiz
-if (merkezdekiTaşıBelirginleştir)
+eğer (merkezdekiTaşıBelirginleştir)
     biçimleriGeriYükle()
 
 // etrafına sarmalı çizmek için kaplumbağacığımızı konuşlandıralım
@@ -79,6 +79,6 @@ sağ()
 // Her sarmal kolun ilk kenarı en kısa kenar. Yani taş sayısı az.
 // Her dönüşte ikişer ikişer artıyor.
 // 1, 3, 5, ... 2 x dönüşSayısı değerlerini alacak
-for (kısaKenardakiTaşSayısı <- 1 to 2 * dönüşSayısı by 2) {
+için (kısaKenardakiTaşSayısı <- 1 to 2 * dönüşSayısı by 2) {
     sarmalıÇiz(kısaKenardakiTaşSayısı)
 }

@@ -14,26 +14,26 @@
 // Bir de başlarken ve bittiğinde kuzeye bakıyor olmalı.
 // Aşağıdaki notlarda biraz daha açıklama bulacaksın.
 
-val kenarUzunluğu: Kesir = 40 // taşımızın kenar uzunluğu
+dez kenarUzunluğu: Kesir = 40 // taşımızın kenar uzunluğu
 
-val dönüşSayısı = 8 // kaç dönüş olsun? Merkezdeki taşı saymıyoruz.
-val yavaşlatma = 4 // 0 bir anda çizer. 1000 çok yavaşlatır ve her bir taşın nasıl çizildiğini görebilirsin
+dez dönüşSayısı = 8 // kaç dönüş olsun? Merkezdeki taşı saymıyoruz.
+dez yavaşlatma = 4 // 0 bir anda çizer. 1000 çok yavaşlatır ve her bir taşın nasıl çizildiğini görebilirsin
 
 sil()
 yaklaş(0.4) // 8 dönüşün sığması için uzaklaşalım biraz
 
 // Başlangıç renkleri ve merkezdeki taş türü. Bunları her dönüşte değiştiriyoruz
-var renk1 = Renk(235, 0, 20)
-var renk2 = Renk(20, 0, 235)
-var renk3 = Renk(0, 235, 20)
-var taşTürü = 3 // üçüncü taşı merkeze koyalım. İstersen ikinciyi veya birinci de koyabilirsin
+den renk1 = Renk(235, 0, 20)
+den renk2 = Renk(20, 0, 235)
+den renk3 = Renk(0, 235, 20)
+den taşTürü = 3 // üçüncü taşı merkeze koyalım. İstersen ikinciyi veya birinci de koyabilirsin
 
 // Kendi taş tasarımını bu üçüncü taş tanımına ekleyebilir,
 // ya da dördüncü bir taş ekleyebilirsin.
 // Unutma: sol alt köşede başlayıp bitirmek gerekiyor. Başladığında kuzeye bakıyor
 // olacak kaplumbağa. Bitirince de kuzeye baksın. Kenar uzunluğu da değişmesin.
 // Bu üçüncü taş en sade desen :-) Bunula başlamak senin için biraz daha kolay olur umarım..
-def taş3 {
+tanım taş3 {
     kalemRenginiKur(renk3)
     kalemiİndir()
     sol(30) // sol alt köşeden çizilen kenarın 90+30 dereceyle çizilmesi gerek
@@ -45,7 +45,7 @@ def taş3 {
     kalemiKaldır
 }
 
-def taş1 {
+tanım taş1 {
     kalemRenginiKur(renk1)
     kalemiİndir()
     sol(30)
@@ -83,7 +83,7 @@ def taş1 {
     sağ(30) // kuzeye bakalım
 }
 
-def taş2 {
+tanım taş2 {
     // Altıgenin içine bir daire çizelim
     // Merkezi taşın merkezinde olacak
     sağ()
@@ -122,14 +122,14 @@ def taş2 {
 }
 
 // her dönüşte yeni bir taş/desen seçimi yapıyoruz
-def birTaş(taşTürü: Int) = taşTürü match {
-    case 1 => taş1
-    case 2 => taş2
-    case 3 => taş3
+tanım birTaş(taşTürü: Int) = taşTürü eşle {
+    durum 1 => taş1
+    durum 2 => taş2
+    durum 3 => taş3
 }
 
 // verilen taş sayısı kadar taşı bir doğrultu üzerinde çizeceğiz
-def birKenar(taşSayısı: Int, doğrultu: Double, taşTürü: Integer) {
+tanım birKenar(taşSayısı: Int, doğrultu: Double, taşTürü: Integer) {
     // burdaDur(s"birKenar taşSayısı: $taşSayısı")
     yinele(taşSayısı) {
         sol(doğrultu)
@@ -145,12 +145,12 @@ def birKenar(taşSayısı: Int, doğrultu: Double, taşTürü: Integer) {
 }
 
 // altı kenar çizerek bir dönüşü tamamlayacağız
-def birDönüş(kısaKenar: Int) {
+tanım birDönüş(kısaKenar: Int) {
     // burdaDur(s"birDönüş kısaKenar: $kısaKenar")
-    taşTürü = taşTürü match { // her dönüşte bir sonraki taş desenini kullanalım
-        case 1 => 2
-        case 2 => 3
-        case 3 => 1
+    taşTürü = taşTürü eşle { // her dönüşte bir sonraki taş desenini kullanalım
+        durum 1 => 2
+        durum 2 => 3
+        durum 3 => 1
     }
     // ilk dönüşte ilk kenar taş çizmez! Bir kenardaki taş sayısı her dönüşte artıyor:
     birKenar(kısaKenar, 0, taşTürü)       // 0  1  2 ...
@@ -170,10 +170,10 @@ birTaş(taşTürü) // merkez taş
 // bir sonraki dönüşün sol alt köşesindeki başlangıç konumuna ve doğrultusuna gidelim
 sol(30); ileri(kenarUzunluğu)
 sol(60); ileri(kenarUzunluğu); sağ()
-for (i <- 0 to dönüşSayısı - 1) {
-    if (dönüşSayısı != 0) { // ilk taş için renkleri değiştirmeye gerek yok
-        val r1 = 128 / dönüşSayısı * (i + 1)
-        val r2 = 235 - r1
+için (i <- 0 to dönüşSayısı - 1) {
+    eğer (dönüşSayısı != 0) { // ilk taş için renkleri değiştirmeye gerek yok
+        dez r1 = 128 / dönüşSayısı * (i + 1)
+        dez r2 = 235 - r1
         renk1 = Renk(r2, r1, 20)
         renk2 = Renk(20, r1, r2)
         renk3 = Renk(r1, 20, r2)

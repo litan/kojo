@@ -940,10 +940,7 @@ object Utils {
   }
 
   def roundDouble(d: Double, n: Int) = {
-    if (needsSanitizing)
-      s"%.${n}f".format(d).replace(decimalSep, ".").toDouble
-    else
-      s"%.${n}f".format(d).toDouble
+    s"%.${n}f".formatLocal(Locale.ROOT, d).toDouble
   }
 
   val kojoProps = new Properties

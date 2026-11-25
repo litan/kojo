@@ -1,21 +1,21 @@
 // #yükle ~/kojo-includes/ka-bridge.kojo
 // aşağıda kullandığımız pinMode, digitalRead/Write ve delay komutlarını yükledik ilk satırda
 
-def setup() {  // kurulum için gerekli komutları buraya koyarız. Arduinomuz bununla başlar.
+tanım setup() {  // kurulum için gerekli komutları buraya koyarız. Arduinomuz bununla başlar.
     pinMode(2, INPUT) // bir girdi
     pinMode(3, OUTPUT) // üç çıktımız var
     pinMode(4, OUTPUT)
     pinMode(5, OUTPUT)
 }
 
-def loop() { // Bir döngü tanımlarız. Arduino böylece çalışır durur bizim için.
-    val dügmeninEvresi = digitalRead(2)  // ikinciden oku
-    if (dügmeninEvresi == LOW) {
+tanım loop() { // Bir döngü tanımlarız. Arduino böylece çalışır durur bizim için.
+    dez dügmeninEvresi = digitalRead(2)  // ikinciden oku
+    eğer (dügmeninEvresi == LOW) {
         digitalWrite(3, HIGH)  // üçüncüyü yükselt
         digitalWrite(4, LOW)  // dördüncu ve beşinciyi düşür
         digitalWrite(5, LOW)
     }
-    else {
+    yoksa {
         digitalWrite(3, LOW)
         digitalWrite(4, LOW)
         digitalWrite(5, HIGH)

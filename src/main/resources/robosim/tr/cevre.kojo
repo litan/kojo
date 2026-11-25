@@ -1,22 +1,22 @@
-def duvar(en: Kesir, boy: Kesir) = {
-    val renk = renkler.darkOliveGreen
+tanım duvar(en: Kesir, boy: Kesir) = {
+    dez renk = renkler.darkOliveGreen
     boyaRengi(renk) * kalemRengi(renk) -> Resim.dikdörtgen(en, boy)
 }
-val duvarBatı = duvar(50, 500)
-val duvarKuzey = duvar(800, 50)
-val duvarDoğu = duvar(50, 500)
-val duvarGüney = duvar(800, 50)
-val duvar1 = duvar(50, 150)
-val duvar1a = duvar(50, 150)
-val duvar2 = duvar(200, 100)
-val duvar3 = duvar(100, 200)
-val duvar4 = duvar(200, 50)
-val duvar4a = duvar(200, 50)
-val duvar5 = duvar(50, 400)
-val duvar6 = duvar(100, 150)
-val duvar6a = duvar(100, 150)
-val duvar7 = duvar(250, 100)
-val duvar8 = duvar(25, 50)
+dez duvarBatı = duvar(50, 500)
+dez duvarKuzey = duvar(800, 50)
+dez duvarDoğu = duvar(50, 500)
+dez duvarGüney = duvar(800, 50)
+dez duvar1 = duvar(50, 150)
+dez duvar1a = duvar(50, 150)
+dez duvar2 = duvar(200, 100)
+dez duvar3 = duvar(100, 200)
+dez duvar4 = duvar(200, 50)
+dez duvar4a = duvar(200, 50)
+dez duvar5 = duvar(50, 400)
+dez duvar6 = duvar(100, 150)
+dez duvar6a = duvar(100, 150)
+dez duvar7 = duvar(250, 100)
+dez duvar8 = duvar(25, 50)
 
 duvarBatı.konumuKur(-450, -250)
 duvarKuzey.konumuKur(-400, 250)
@@ -34,5 +34,5 @@ duvar6a.konumuKur(150, -250)
 duvar7.konumuKur(100, -50)
 duvar8.konumuKur(-75, -250)
 
-val duvarlar = Resim.dizi(duvarBatı, duvarKuzey, duvarDoğu, duvarGüney, duvar1, duvar2,
+dez duvarlar = Resim.dizi(duvarBatı, duvarKuzey, duvarDoğu, duvarGüney, duvar1, duvar2,
     duvar3, duvar4, duvar1a, duvar4a, duvar5, duvar6, duvar6a, duvar7, duvar8)

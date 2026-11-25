@@ -15,89 +15,89 @@
  *     http://lalitpant.blogspot.in/2012/05/playing-with-l-systems-in-kojo.html
 */
 
-case class LYapısı(
+durum sınıf LYapısı(
     belit:        Yazı,
     açı:          Kesir,
     uzunluk:      Sayı  = 100,
     büyütmeOranı: Kesir = 0.6
 )(kurallar: Bölümselİşlev[Harf, Yazı]) {
-    var kuram = belit
-    var nesil = 0
-    def evir() {
+    den kuram = belit
+    den nesil = 0
+    tanım evir() {
         nesil += 1
         kuram = kuram.işle { h =>
             // h harfi için tanımlanmışsa, yani h kuralı varsa:
-            if (kurallar.tanımlıMı(h)) kurallar(h) else h
+            eğer (kurallar.tanımlıMı(h)) kurallar(h) yoksa h
             // dik çizgilerin yerine nesil sayısını koy:
         }.yazıYap.değiştirHepsini("""\|""", nesil.yazıya)
     }
 
-    def çiz() {
-        def sayıMı(h: Harf) = Harf.sayıMı(h)
-        val üretilmişSayı = new EsnekYazı
-        def düzGidebilir() {
-            if (üretilmişSayı.doluMu) {
-                val n = üretilmişSayı.sayıya
+    tanım çiz() {
+        tanım sayıMı(h: Harf) = Harf.sayıMı(h)
+        dez üretilmişSayı = yeni EsnekYazı
+        tanım düzGidebilir() {
+            eğer (üretilmişSayı.doluMu) {
+                dez n = üretilmişSayı.sayıya
                 üretilmişSayı.sil()
                 ileri(uzunluk * kuvveti(büyütmeOranı, n))
             }
         }
         kuram.herbiriİçin { c =>
-            if (!sayıMı(c)) {
+            eğer (!sayıMı(c)) {
                 düzGidebilir()
             }
 
-            c match {
-                case 'F' => ileri(uzunluk)
-                case 'f' => ileri(uzunluk)
-                case 'G' =>
+            c eşle {
+                durum 'F' => ileri(uzunluk)
+                durum 'f' => ileri(uzunluk)
+                durum 'G' =>
                     kalemiKaldır(); ileri(uzunluk); kalemiİndir()
-                case '['            => konumVeYönüBelleğeYaz()
-                case ']'            => konumVeYönüGeriYükle()
-                case '+'            => sağ(açı)
-                case '-'            => sol(açı)
-                case s if sayıMı(s) => üretilmişSayı.ekle(s) // sona ekleyelim
-                case _              =>
+                durum '['            => konumVeYönüBelleğeYaz()
+                durum ']'            => konumVeYönüGeriYükle()
+                durum '+'            => sağ(açı)
+                durum '-'            => sol(açı)
+                durum s eğer sayıMı(s) => üretilmişSayı.ekle(s) // sona ekleyelim
+                durum _              =>
             }
         }
         düzGidebilir()
     }
 }
 
-val ydBölüm = LYapısı("[G]--G", 90, 100, 0.65) { case 'G' => "|[+G][-G]" }
-val eğikYdBölüm = LYapısı("[G]--G", 80, 100, 0.65) { case 'G' => "|[+G][-G]" }
-val çalı = LYapısı("G", 20) { case 'G' => "|[+G]|[-G]+G" }
-val ağaç = LYapısı("G", 8, 100, 0.35) {
-    case 'G' => "|[+++++G][-------G]-|[++++G][------G]-|[+++G][-----G]-|G"
+dez ydBölüm = LYapısı("[G]--G", 90, 100, 0.65) { durum 'G' => "|[+G][-G]" }
+dez eğikYdBölüm = LYapısı("[G]--G", 80, 100, 0.65) { durum 'G' => "|[+G][-G]" }
+dez çalı = LYapısı("G", 20) { durum 'G' => "|[+G]|[-G]+G" }
+dez ağaç = LYapısı("G", 8, 100, 0.35) {
+    durum 'G' => "|[+++++G][-------G]-|[++++G][------G]-|[+++G][-----G]-|G"
 }
-val kilim = LYapısı("F-F-F-F", 90, 1) { case 'F' => "F[F]-F+F[--F]+F-F" }
-val koch = LYapısı("F", 90, 10) { case 'F' => "F-F+F+F-F" } // koch kartanesi
-val sierp = LYapısı("F", 60, 2) { // sierpinski üçgeni
-    case 'F' => "f+F+f"
-    case 'f' => "F-f-F"
+dez kilim = LYapısı("F-F-F-F", 90, 1) { durum 'F' => "F[F]-F+F[--F]+F-F" }
+dez koch = LYapısı("F", 90, 10) { durum 'F' => "F-F+F+F-F" } // koch kartanesi
+dez sierp = LYapısı("F", 60, 2) { // sierpinski üçgeni
+    durum 'F' => "f+F+f"
+    durum 'f' => "F-f-F"
 }
-val ejder = LYapısı("FX", 90, 20) {
-    case 'X' => "X+YF"
-    case 'Y' => "FX-Y"
+dez ejder = LYapısı("FX", 90, 20) {
+    durum 'X' => "X+YF"
+    durum 'Y' => "FX-Y"
 }
-val söğüt = LYapısı("X", 25, 4) {
-    case 'X' => "F-[[X]+X]+F[+FX]-X"
-    case 'F' => "FF"
+dez söğüt = LYapısı("X", 25, 4) {
+    durum 'X' => "F-[[X]+X]+F[+FX]-X"
+    durum 'F' => "FF"
 }
 
-val seçim = 8
+dez seçim = 8
 
-def dahaKalınÇiz(kalınlık: Sayı) = { kalemKalınlığınıKur(kalınlık) }
-val (örnek, nesil, ayarlamalar) = seçim match {
-    case 0 => (ydBölüm, 6, () => { dahaKalınÇiz(2); yaklaş(1.8) })
-    case 1 => (eğikYdBölüm, 6, () => { dahaKalınÇiz(3); yaklaş(1.8) })
-    case 2 => (çalı, 6, () => { dahaKalınÇiz(2); yaklaş(1.4, 0, 150) })
-    case 3 => (ağaç, 4, () => yaklaş(2, 0, 80))
-    case 4 => (kilim, 5, () => yaklaş(1.5, -120, 120))
-    case 5 => (koch, 5, () => yaklaş(0.2, -600, 1200))
-    case 6 => (sierp, 8, () => yaklaş(0.9, -200, 250))
-    case 7 => (ejder, 10, () => yaklaş(0.5, 200, 80))
-    case _ => (söğüt, 7, () => yaklaş(0.3, 0, 600))
+tanım dahaKalınÇiz(kalınlık: Sayı) = { kalemKalınlığınıKur(kalınlık) }
+dez (örnek, nesil, ayarlamalar) = seçim eşle {
+    durum 0 => (ydBölüm, 6, () => { dahaKalınÇiz(2); yaklaş(1.8) })
+    durum 1 => (eğikYdBölüm, 6, () => { dahaKalınÇiz(3); yaklaş(1.8) })
+    durum 2 => (çalı, 6, () => { dahaKalınÇiz(2); yaklaş(1.4, 0, 150) })
+    durum 3 => (ağaç, 4, () => yaklaş(2, 0, 80))
+    durum 4 => (kilim, 5, () => yaklaş(1.5, -120, 120))
+    durum 5 => (koch, 5, () => yaklaş(0.2, -600, 1200))
+    durum 6 => (sierp, 8, () => yaklaş(0.9, -200, 250))
+    durum 7 => (ejder, 10, () => yaklaş(0.5, 200, 80))
+    durum _ => (söğüt, 7, () => yaklaş(0.3, 0, 600))
 }
 
 yinele(nesil) {
