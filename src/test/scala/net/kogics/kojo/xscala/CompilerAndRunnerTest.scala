@@ -16,6 +16,7 @@
 package net.kogics.kojo.xscala
 
 import java.io.File
+import java.nio.charset.StandardCharsets.UTF_8
 import java.nio.file.Files
 import java.nio.file.Paths
 
@@ -27,6 +28,7 @@ import org.junit.Test
 import net.kogics.kojo.core.Interpreter.IR
 import net.kogics.kojo.lite.NoOpRunContext
 import net.kogics.kojo.lite.ToolchainTestSupport._
+import net.kogics.kojo.util.Utils
 
 class CompilerAndRunnerTest extends CompilerAndRunnerTestBase {
   def makeRunner() = new CompilerAndRunner(
@@ -35,6 +37,70 @@ class CompilerAndRunnerTest extends CompilerAndRunnerTestBase {
       listener,
       new NoOpRunContext
       )
+
+  @Test
+  def testSketchTemplateWithTemplatedInclude(): Unit = withTempDir { root =>
+    val helper = root.toPath.resolve("size.kojo")
+    val helperTemplate = root.toPath.resolve("size-template.kojo")
+    val marker = "${usercode}"
+    Files.write(helper, s"// #include template $helperTemplate\nval minDiameter = 5\n".getBytes(UTF_8))
+    Files.write(helperTemplate, s"object Sizes {\n$marker\n}\n".getBytes(UTF_8))
+    val code = s"""// #include template /sketch
+                  |//  #include $helper
+                  |
+                  |def setup(surface: CanvasDraw): Unit = {
+                  |  import surface._
+                  |  stroke(gray)
+                  |  strokeWeight(1)
+                  |}
+                  |
+                  |def drawLoop(surface: CanvasDraw): Unit = {
+                  |  import surface._
+                  |  val xloc = random(cwidth)
+                  |  val yloc = random(cheight)
+                  |  fill(cm.rgba(0, 50, mathx.constrain(yloc, 100, 150).toInt, 50))
+                  |  val dia = mathx.constrain(xloc / 10, Sizes.minDiameter, 100)
+                  |  ellipse(xloc, yloc, dia, dia)
+                  |}
+                  |""".stripMargin
+    val (expanded, linesBeforeEditor, charsBeforeEditor) = Utils.preProcessInclude(code)
+    val sketchTemplate = Utils.absolutePath("/sketch.kojo")
+    val helperPath = Utils.absolutePath(helper.toString)
+    assertEquals("// #begin-usercode", expanded.linesIterator.drop(linesBeforeEditor - 1).next())
+    assertEquals("// #Include template /sketch", expanded.linesIterator.drop(linesBeforeEditor).next())
+    assertTrue(expanded.substring(charsBeforeEditor).startsWith(s"// #Include template /sketch\n//  #Include $helper\n"))
+    assertTrue(expanded.substring(charsBeforeEditor + code.length).startsWith("// #end-usercode\n}"))
+    assertTrue(expanded.startsWith(s"// #begin-template: $sketchTemplate\n// #begin-include: $helperPath\n"))
+    assertTrue(expanded.contains(s"// #end-include: $helperPath\ncleari()"))
+    assertTrue(expanded.endsWith(s"// #end-template: $sketchTemplate\n"))
+    assertEquals(IR.Success, runner.compileForRunning(code))
+
+    val broken = code.replace("ellipse(xloc", "missing(xloc")
+    val offset = broken.indexOf("missing(xloc")
+    assertEquals(IR.Error, runner.compileForRunning(broken))
+    assertEquals(16, errLine)
+    assertEquals(3, errColumn)
+    assertEquals(offset, errOffset)
+  }
+
+  @Test
+  def testIncludeTemplateRunsInProcess(): Unit = withTempDir { root =>
+    val template = root.toPath.resolve("run.kojo")
+    val output = root.toPath.resolve("result.txt")
+    val marker = "${usercode}"
+    Files.write(template, s"object Body {\r\n  $marker\r\n}\r\nBody.run()\r\n".getBytes(UTF_8))
+    val inProcessRunner = new CompilerAndRunner(() => settings, None, listener, new NoOpRunContext {
+      override val compilerPrefix = " {\n  class UserCode {\n"
+    })
+    val code = s"""// #include template $template
+                  |def run(): Unit = {
+                  |  java.nio.file.Files.write(java.nio.file.Paths.get(java.net.URI.create("${output.toUri}")),
+                  |    "ran".getBytes(java.nio.charset.StandardCharsets.UTF_8))
+                  |}
+                  |""".stripMargin
+    assertEquals(IR.Success, inProcessRunner.compileAndRun(code))
+    assertEquals("ran", new String(Files.readAllBytes(output), UTF_8))
+  }
 
   @Test
   def testExecWithRelativeClasspathAndDifferentWorkingDirectory(): Unit = {
@@ -57,7 +123,10 @@ class CompilerAndRunnerTest extends CompilerAndRunnerTestBase {
           |  }
           |}
           |""".stripMargin
-        assertEquals(IR.Success, execRunner.compileForExecing(code))
+        val template = root.toPath.resolve("exec.kojo")
+        val marker = "${usercode}"
+        Files.write(template, s"// Exec template\n$marker\n".getBytes(UTF_8))
+        assertEquals(IR.Success, execRunner.compileForExecing(s"// #exec template $template\n$code"))
         val stdout = new StringBuilder
         val stderr = new StringBuilder
         val logger = ProcessLogger(line => { stdout.append(line).append('\n'); () },

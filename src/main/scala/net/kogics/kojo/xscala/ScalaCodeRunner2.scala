@@ -676,7 +676,7 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
         }
     }
 
-    def interpretAsWorksheet(code: String, includedLines: Int): IR.Result = {
+    def interpretAsWorksheet(code: String, sourceLines: Range): IR.Result = {
       var inMultiLineComment = false
       def shouldIgnoreLine(line: String): Boolean = {
         line.trim match {
@@ -692,12 +692,12 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
       }
       val lines = code.split("\n").toList.zipWithIndex.filter { case (line, _) => !shouldIgnoreLine(line) }
       try {
-        outputHandler.includedLines = includedLines
+        outputHandler.worksheetSourceLines = sourceLines
         interpretWorksheetLines(lines)
       }
       finally {
         outputHandler.worksheetLineNum = None
-        outputHandler.includedLines = 0
+        outputHandler.worksheetSourceLines = Range(0, 0)
       }
     }
 
@@ -706,8 +706,10 @@ class ScalaCodeRunner2(val runContext: RunContext, val defaultMode: CodingMode) 
     def interpret(code0: String, asWorksheet: Boolean): IR.Result = {
       try {
         val (code, includedLines, _) = Utils.preProcessInclude(code0)
-        if (asWorksheet)
-          interpretAsWorksheet(code, includedLines)
+        if (asWorksheet) {
+          val sourceLineCount = code0.count(_ == '\n') + (if (code0.nonEmpty && code0.last != '\n') 1 else 0)
+          interpretAsWorksheet(code, includedLines until (includedLines + sourceLineCount))
+        }
         else
           interpretAllLines(code)
       }

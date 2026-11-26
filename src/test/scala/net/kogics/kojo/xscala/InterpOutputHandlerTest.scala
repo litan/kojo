@@ -64,6 +64,30 @@ class InterpOutputHandlerTest {
   }
 
   @Test
+  def testWorksheetOutputOnlyAnnotatesSourceLines(): Unit = {
+    val prefix = "template prefix\n"
+    val first = "first editor result\n"
+    val last = "last editor result\n"
+    val suffix = "template suffix\n"
+    val runCtx = context.mock(classOf[RunContext])
+    context.checking(new Expectations {
+      one(runCtx).reportOutput(prefix)
+      one(runCtx).reportOutput(first)
+      one(runCtx).reportOutput(last)
+      one(runCtx).reportOutput(suffix)
+      one(runCtx).reportWorksheetOutput(first, 0)
+      one(runCtx).reportWorksheetOutput(last, 1)
+    })
+
+    val outputHandler = new InterpOutputHandler(runCtx)
+    outputHandler.worksheetSourceLines = 7 until 9
+    for ((line, text) <- Seq(6 -> prefix, 7 -> first, 8 -> last, 9 -> suffix)) {
+      outputHandler.worksheetLineNum = Some(line)
+      outputHandler.reportInterpOutput(text)
+    }
+  }
+
+  @Test
   def testErrorPattern1 = {
     val output1 = """     error: Invalid literal number
 error: Invalid literal number

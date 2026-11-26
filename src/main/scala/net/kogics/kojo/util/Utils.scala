@@ -844,6 +844,11 @@ object Utils {
   lazy val includeRE = ("""//\s*#""" ++ includePragma ++ """.*""").r
   lazy val filenameRE = ("""//\s*#""" ++ includePragma).r
   lazy val basecodeRE = ("""//(\s)*#""" ++ includePragma ++ """(.*)""").r
+  private lazy val basecodeWithSpacingRE = ("""//(\s*)#""" ++ includePragma ++ """(.*)""").r
+  private lazy val templateIncludeRE = {
+    val keyword = java.util.regex.Pattern.quote(includePragma)
+    ("""(?m)^[ \t]*(//[ \t]*#(?:include|""" + keyword + """)[ \t]+template[ \t]+(\S[^\r\n]*))""").r
+  }
 
   private def addKojoExtension(fileName: String) = {
     val justFileName = new File(fileName).getName
@@ -871,7 +876,7 @@ object Utils {
   def preProcessInclude(code: String): (String, Int, Int) = {
     val included = new mutable.HashSet[String]()
 
-    def _preProcessInclude(code: String): (String, Int, Int) = {
+    def _preProcessInclude(code: String, preserveDirectiveSpacing: Boolean = false): (String, Int, Int) = {
       val includes = includeRE.findAllIn(code)
       def getFileName(s: String) = filenameRE.replaceFirstIn(s, "").trim
       def load(fileName0: String): String = {
@@ -884,8 +889,9 @@ object Utils {
           else {
             included.add(fileName)
             val fileContent = readFileContent(fileName, fileNameDotKojo)
-            val codeToInclude = s"// #begin-include: $fileName\n$fileContent\n// #end-include: $fileName\n"
-            val (result, _, _) = _preProcessInclude(codeToInclude) // non-tail-recursive call
+            val begin = s"// #begin-include: $fileName\n"
+            val end = s"\n// #end-include: $fileName\n"
+            val (result, _, _) = expandSource(fileContent, begin, end)
             result
           }
         }
@@ -893,11 +899,66 @@ object Utils {
       }
 
       val addedCode = (for (i <- includes) yield load(getFileName(i))).mkString
-      val baseCode = basecodeRE.replaceAllIn(code, "//$1#" ++ includePragma.capitalize ++ "$2")
+      val markerRE = if (preserveDirectiveSpacing) basecodeWithSpacingRE else basecodeRE
+      val baseCode = markerRE.replaceAllIn(code, "//$1#" ++ includePragma.capitalize ++ "$2")
       (addedCode + baseCode, countLines(addedCode), addedCode.length)
     }
 
-    _preProcessInclude(code)
+    case class IncludeTemplate(
+        beginMarker: String,
+        prefix: String,
+        suffix: String,
+        directiveStart: Int,
+        processedDirective: String
+    )
+
+    def _preProcessTemplate(source: String): Option[IncludeTemplate] =
+      templateIncludeRE.findAllMatchIn(source).toList match {
+        case Nil => None
+        case directive :: Nil =>
+          val name = addKojoExtension(directive.group(2).trim)
+          val fileName = absolutePath(name)
+          val template = try readFileContent(fileName, name) catch {
+            case scala.util.control.NonFatal(e) =>
+              throw new IllegalArgumentException(s"Error when loading template: $fileName", e)
+          }
+          val marker = "${usercode}"
+          val markerLine = """(?m)^[ \t]*\$\{usercode\}[ \t]*$""".r.findFirstMatchIn(template)
+            .filter(_ => template.indexOf(marker) == template.lastIndexOf(marker))
+            .getOrElse(throw new IllegalArgumentException(s"Template $name must contain exactly one $marker on its own line"))
+          val comment = directive.group(1)
+          val keywordStart = comment.indexOf('#') + 1
+          val processedDirective = comment.patch(keywordStart, comment(keywordStart).toUpper.toString, 1)
+          Some(IncludeTemplate(
+            s"// #begin-template: $fileName\n",
+            template.substring(0, markerLine.start),
+            template.substring(markerLine.end) + s"\n// #end-template: $fileName\n",
+            directive.start(1),
+            processedDirective
+          ))
+        case _ => throw new IllegalArgumentException("Only one #include template directive is allowed per script")
+      }
+
+    def expandSource(source: String, begin: String = "", end: String = ""): (String, Int, Int) =
+      _preProcessTemplate(source) match {
+        case None => _preProcessInclude(begin + source + end)
+        case Some(IncludeTemplate(beginMarker, prefix, suffix, directiveStart, processedDirective)) =>
+          val opening = begin + beginMarker
+          val beforeSource = opening + prefix + "// #begin-usercode\n"
+          val afterSource = if (source.endsWith("\n")) "// #end-usercode" else "\n// #end-usercode"
+          val wrapped = beforeSource + source + afterSource + suffix + end
+          val directiveOffset = beforeSource.length + directiveStart
+          val directiveLength = processedDirective.length
+          val includeInput = wrapped.patch(directiveOffset, " " * directiveLength, directiveLength)
+          val (expanded, includedLines, includedChars) = _preProcessInclude(includeInput, preserveDirectiveSpacing = true)
+          val restored = expanded.patch(includedChars + directiveOffset, processedDirective, directiveLength)
+          val (dependencies, body) = restored.splitAt(includedChars)
+          val (openingMarkers, remainder) = body.splitAt(opening.length)
+          val reordered = openingMarkers + dependencies + remainder
+          (reordered, includedLines + countLines(beforeSource), includedChars + beforeSource.length)
+      }
+
+    expandSource(code)
   }
 
   lazy val execPragma = loadBundleString("S_ExecPragma")

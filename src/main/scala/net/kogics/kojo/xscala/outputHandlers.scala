@@ -37,7 +37,7 @@ class InterpOutputHandler(ctx: RunContext) {
   @volatile var interpOutputSuppressed = false
   @volatile var worksheetLineNum: Option[Int] = None
   @volatile var firstWorksheetError: Option[String] = None
-  @volatile var includedLines: Int = 0
+  @volatile var worksheetSourceLines: Range = Range(0, 0)
 
   def showInterpOutput(lineFragment: String): Unit = {
     if (!interpOutputSuppressed) reportInterpOutput(lineFragment)
@@ -46,9 +46,9 @@ class InterpOutputHandler(ctx: RunContext) {
   private def reportWorksheetOutput(output: String, line: Int): Unit = {
     if (output.trim == "") return
 
-    val wline = line - includedLines
-    if (wline >= 0) {
-      ctx.reportWorksheetOutput(output, wline)
+    val sourceLines = worksheetSourceLines
+    if (sourceLines.contains(line)) {
+      ctx.reportWorksheetOutput(output, line - sourceLines.start)
     }
   }
 
