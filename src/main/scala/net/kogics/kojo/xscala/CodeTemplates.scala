@@ -137,6 +137,23 @@ draw(pic)
 """,
     "canvasSketch" -> canvasSketch,
     "sketchpic" -> canvasSketch,
+    "sketch" -> """// #include template /sketch
+
+def setup(surface: CanvasDraw) {
+    import surface._
+    stroke(${cursor}gray)
+    strokeWeight(1)
+}
+
+def drawLoop(surface: CanvasDraw) {
+    import surface._
+    val xloc = random(cwidth)
+    val yloc = random(cheight)
+    fill(cm.rgba(0, 50, mathx.constrain(yloc, 100, 150).toInt, 50))
+    val dia = mathx.constrain(xloc / 10, 5, 100)
+    ellipse(xloc, yloc, dia, dia)
+}
+""",
     "transition" -> """cleari()
                       |drawStage(white)
                       |

@@ -957,9 +957,7 @@ object Utils {
           (reordered, includedLines + countLines(beforeSource), includedChars + beforeSource.length)
       }
 
-    val ret = expandSource(code)
-    println(ret)
-    ret
+    expandSource(code)
   }
 
   lazy val execPragma = loadBundleString("S_ExecPragma")
