@@ -39,6 +39,29 @@ class CompilerAndRunnerTest extends CompilerAndRunnerTestBase {
       )
 
   @Test
+  def testNestedIncludesPreserveEditorErrorPositions(): Unit = withTempDir { root =>
+    val first = root.toPath.resolve("include1.kojo")
+    val second = root.toPath.resolve("include2.kojo")
+    val third = root.toPath.resolve("include3.kojo")
+    val template = root.toPath.resolve("template.kojo")
+    val marker = "${usercode}"
+    Files.write(first, s"// #include $second\nval x = inc2 + 2".getBytes(UTF_8))
+    Files.write(second, s"// #include $third\nval inc2 = incl3 + 10".getBytes(UTF_8))
+    Files.write(third, "val incl3 = 100".getBytes(UTF_8))
+    Files.write(template, s"object Body {\n$marker\n}\n".getBytes(UTF_8))
+    val plainCode = s"// #include $first\nval toplevel = x\n"
+    for (code <- Seq(plainCode, s"// #include template $template\n$plainCode")) {
+      assertEquals(IR.Success, runner.compileForRunning(code))
+      val broken = code.replace("= x", "= missing")
+      val offset = broken.indexOf("missing")
+      assertEquals(IR.Error, runner.compileForRunning(broken))
+      assertEquals(broken.take(offset).count(_ == '\n') + 1, errLine)
+      assertEquals(offset - broken.lastIndexOf('\n', offset), errColumn)
+      assertEquals(offset, errOffset)
+    }
+  }
+
+  @Test
   def testSketchTemplateWithTemplatedInclude(): Unit = withTempDir { root =>
     val helper = root.toPath.resolve("size.kojo")
     val helperTemplate = root.toPath.resolve("size-template.kojo")

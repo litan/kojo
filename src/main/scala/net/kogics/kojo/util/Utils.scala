@@ -891,8 +891,8 @@ object Utils {
             val fileContent = readFileContent(fileName, fileNameDotKojo)
             val begin = s"// #begin-include: $fileName\n"
             val end = s"\n// #end-include: $fileName\n"
-            val (result, _, _) = expandSource(fileContent, begin, end)
-            result
+            val (result, _, _) = expandSource(fileContent)
+            begin + result + end
           }
         }
         catch { case e: Throwable => throw new IllegalArgumentException(s"Error when including file: $fileName", e) }
@@ -939,26 +939,27 @@ object Utils {
         case _ => throw new IllegalArgumentException("Only one #include template directive is allowed per script")
       }
 
-    def expandSource(source: String, begin: String = "", end: String = ""): (String, Int, Int) =
+    def expandSource(source: String): (String, Int, Int) =
       _preProcessTemplate(source) match {
-        case None => _preProcessInclude(begin + source + end)
+        case None => _preProcessInclude(source)
         case Some(IncludeTemplate(beginMarker, prefix, suffix, directiveStart, processedDirective)) =>
-          val opening = begin + beginMarker
-          val beforeSource = opening + prefix + "// #begin-usercode\n"
+          val beforeSource = beginMarker + prefix + "// #begin-usercode\n"
           val afterSource = if (source.endsWith("\n")) "// #end-usercode" else "\n// #end-usercode"
-          val wrapped = beforeSource + source + afterSource + suffix + end
+          val wrapped = beforeSource + source + afterSource + suffix
           val directiveOffset = beforeSource.length + directiveStart
           val directiveLength = processedDirective.length
           val includeInput = wrapped.patch(directiveOffset, " " * directiveLength, directiveLength)
           val (expanded, includedLines, includedChars) = _preProcessInclude(includeInput, preserveDirectiveSpacing = true)
           val restored = expanded.patch(includedChars + directiveOffset, processedDirective, directiveLength)
           val (dependencies, body) = restored.splitAt(includedChars)
-          val (openingMarkers, remainder) = body.splitAt(opening.length)
-          val reordered = openingMarkers + dependencies + remainder
+          val (templateOpening, remainder) = body.splitAt(beginMarker.length)
+          val reordered = templateOpening + dependencies + remainder
           (reordered, includedLines + countLines(beforeSource), includedChars + beforeSource.length)
       }
 
-    expandSource(code)
+    val ret = expandSource(code)
+    println(ret)
+    ret
   }
 
   lazy val execPragma = loadBundleString("S_ExecPragma")

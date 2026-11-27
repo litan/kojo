@@ -16,6 +16,59 @@ class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
   
   val kojoCtx = new NoOpKojoCtx
 
+  private def assertExpansionMarkersNested(expanded: String): Unit = {
+    val marker = "// #(begin|end)-(include: .+|template: .+|usercode)".r
+    var openings = List.empty[String]
+    expanded.linesIterator.foreach {
+      case marker("begin", name) => openings = name :: openings
+      case marker("end", name) =>
+        assertTrue(s"Closing marker without opening: $name", openings.nonEmpty)
+        assertEquals("Closing marker must match the innermost opening", openings.head, name)
+        openings = openings.tail
+      case _ =>
+    }
+    assertTrue(s"Unclosed expansion markers: $openings", openings.isEmpty)
+  }
+
+  @Test def nestedIncludeAndTemplateMarkers(): Unit = withTempDir { root =>
+    val first = root.toPath.resolve("include1.kojo")
+    val second = root.toPath.resolve("include2.kojo")
+    val third = root.toPath.resolve("include3.kojo")
+    val template = root.toPath.resolve("template.kojo")
+    val marker = "${usercode}"
+    Files.write(template, s"// #include $first\nclass X {\n$marker\n}\n".getBytes(UTF_8))
+
+    for (fileEnding <- Seq("", "\n")) {
+      Files.write(first, s"// #include $second\nval x = 2$fileEnding".getBytes(UTF_8))
+      Files.write(second, s"// #include $third\nval inc2 = 10$fileEnding".getBytes(UTF_8))
+      Files.write(third, s"val incl3 = 100$fileEnding".getBytes(UTF_8))
+      val includes = s"""// #begin-include: $first
+                        |// #begin-include: $second
+                        |// #begin-include: $third
+                        |val incl3 = 100$fileEnding
+                        |// #end-include: $third
+                        |// #Include $third
+                        |val inc2 = 10$fileEnding
+                        |// #end-include: $second
+                        |// #Include $second
+                        |val x = 2$fileEnding
+                        |// #end-include: $first
+                        |""".stripMargin
+      val plainCode = s"// #include $first\nval toplevel = 0"
+      val templateCode = s"// #include template $template\n$plainCode"
+      val templatePrefix = s"// #begin-template: $template\n$includes// #Include $first\nclass X {\n// #begin-usercode\n"
+      val templateSuffix = s"\n// #end-usercode\n}\n\n// #end-template: $template\n"
+      for ((code, prefix, suffix) <- Seq((plainCode, includes, ""), (templateCode, templatePrefix, templateSuffix))) {
+        val (expanded, lines, chars) = Utils.preProcessInclude(code)
+        expanded shouldBe prefix + code.replace("#include", "#Include") + suffix
+        lines shouldBe prefix.count(_ == '\n')
+        chars shouldBe prefix.length
+        expanded.substring(chars, chars + code.length) shouldBe code.replace("#include", "#Include")
+        assertExpansionMarkersNested(expanded)
+      }
+    }
+  }
+
   @Test def includeTemplateValidation(): Unit = withTempDir { root =>
     val path = root.toPath.resolve("test template.kojo")
     val directive = s"// #include template $path"
@@ -55,16 +108,18 @@ class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
     Files.write(dependencyTemplate, s"val fromTemplate = {\n$marker\n}\n".getBytes(UTF_8))
 
     val code = s"// #include $parent\n// #include $first\nval result = total\n"
-    val (expanded, _, _) = Utils.preProcessInclude(code)
+    val (expanded, lines, chars) = Utils.preProcessInclude(code)
 
     def resolved(path: java.nio.file.Path) = Utils.absolutePath(path.toString)
+    val parentBegin = s"// #begin-include: ${resolved(parent)}"
+    val parentEnd = s"// #end-include: ${resolved(parent)}"
     val firstBegin = s"// #begin-include: ${resolved(first)}"
     val firstEnd = s"// #end-include: ${resolved(first)}"
     val sharedBegin = s"// #begin-template: ${resolved(sharedTemplate)}"
     val sharedEnd = s"// #end-template: ${resolved(sharedTemplate)}"
     val dependencyBegin = s"// #begin-include: ${resolved(dependency)}"
     val dependencyEnd = s"// #end-include: ${resolved(dependency)}"
-    expanded should include (s"$firstBegin\n$sharedBegin\n$dependencyBegin")
+    expanded should startWith (s"$parentBegin\n$firstBegin\n$sharedBegin\n$dependencyBegin")
     expanded should include (s"$dependencyEnd\n//  #Include $dependency\n// shared prefix")
     expanded should include (s"val fromTemplate = {\n// #begin-usercode\n// #Include template $dependencyTemplate\n// #Include $parent\n3\n// #end-usercode\n}")
     for ((name, value) <- Seq("first" -> 1, "second" -> 2)) {
@@ -76,6 +131,12 @@ class UtilsTest extends JUnitSuite with org.scalatest.Matchers {
     for (path <- Seq(parent, first, second, dependency)) {
       expanded.linesIterator.count(_ == s"// #begin-include: ${resolved(path)}") shouldBe 1
     }
+    expanded.linesIterator.count(_ == sharedBegin) shouldBe 2
+    expanded.linesIterator.count(_ == sharedEnd) shouldBe 2
+    expanded should include (s"$parentEnd\n// #Include $parent\n// #Include $first\n")
+    expanded.substring(chars) shouldBe code.replace("#include", "#Include")
+    lines shouldBe expanded.take(chars).count(_ == '\n')
+    assertExpansionMarkersNested(expanded)
     expanded should endWith ("val result = total\n")
   }
 
